@@ -65,6 +65,162 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_user_id: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          new_values: Json | null
+          old_values: Json | null
+          reason: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          is_active: boolean
+          password_hash: string | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          is_active?: boolean
+          password_hash?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          is_active?: boolean
+          password_hash?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: Database["public"]["Enums"]["actor_type_enum"]
+          created_at: string
+          details: Json | null
+          id: string
+          target_id: string | null
+          target_table: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type: Database["public"]["Enums"]["actor_type_enum"]
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: Database["public"]["Enums"]["actor_type_enum"]
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          new_value: Json | null
+          old_value: Json | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       availability_blocks: {
         Row: {
           cleaner_id: string
@@ -155,6 +311,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      backup_runs: {
+        Row: {
+          id: string
+          metadata: Json | null
+          notes: string | null
+          run_at: string
+          status: string
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          run_at?: string
+          status: string
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          run_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      backups: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          label: string
+          metadata: Json
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          id?: string
+          label: string
+          metadata?: Json
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          label?: string
+          metadata?: Json
+        }
+        Relationships: []
       }
       blackout_periods: {
         Row: {
@@ -1287,6 +1491,33 @@ export type Database = {
           },
         ]
       }
+      cleaners: {
+        Row: {
+          bio: string | null
+          hourly_rate: number | null
+          id: string
+          rating: number | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          hourly_rate?: number | null
+          id?: string
+          rating?: number | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          hourly_rate?: number | null
+          id?: string
+          rating?: number | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cleaning_subscriptions: {
         Row: {
           address: string
@@ -1535,6 +1766,45 @@ export type Database = {
           },
         ]
       }
+      clients: {
+        Row: {
+          created_at: string
+          credit_balance: number
+          email: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          reliability_score: number | null
+          status: Database["public"]["Enums"]["client_status_enum"]
+          stripe_customer_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credit_balance?: number
+          email: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          reliability_score?: number | null
+          status?: Database["public"]["Enums"]["client_status_enum"]
+          stripe_customer_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credit_balance?: number
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          reliability_score?: number | null
+          status?: Database["public"]["Enums"]["client_status_enum"]
+          stripe_customer_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credit_accounts: {
         Row: {
           created_at: string
@@ -1729,6 +1999,69 @@ export type Database = {
           },
         ]
       }
+      customers: {
+        Row: {
+          address: string | null
+          city: string | null
+          id: string
+          state: string | null
+          user_id: string | null
+          zipcode: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          id?: string
+          state?: string | null
+          user_id?: string | null
+          zipcode?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          id?: string
+          state?: string | null
+          user_id?: string | null
+          zipcode?: string | null
+        }
+        Relationships: []
+      }
+      device_tokens: {
+        Row: {
+          created_at: string
+          device_name: string | null
+          id: string
+          is_active: boolean
+          last_used_at: string | null
+          platform: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_name?: string | null
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          platform: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_name?: string | null
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          platform?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       dispute_actions: {
         Row: {
           action: string
@@ -1887,6 +2220,36 @@ export type Database = {
           },
         ]
       }
+      feature_flags: {
+        Row: {
+          created_at: string
+          description: string | null
+          enabled: boolean
+          key: string
+          metadata: Json | null
+          rollout_percentage: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          key: string
+          metadata?: Json | null
+          rollout_percentage?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          key?: string
+          metadata?: Json | null
+          rollout_percentage?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       flexibility_decline_events: {
         Row: {
           cleaner_id: string
@@ -1922,6 +2285,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      fraud_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          metadata: Json | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description: string
+          id?: string
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       grace_cancellations: {
         Row: {
@@ -2016,6 +2421,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      integration_events: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string
+          external_id: string | null
+          id: string
+          payload: Json | null
+          provider: string
+          related_cleaner_id: string | null
+          related_client_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          external_id?: string | null
+          id?: string
+          payload?: Json | null
+          provider: string
+          related_cleaner_id?: string | null
+          related_client_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          external_id?: string | null
+          id?: string
+          payload?: Json | null
+          provider?: string
+          related_cleaner_id?: string | null
+          related_client_id?: string | null
+          status?: string | null
+        }
+        Relationships: []
       }
       job_checkins: {
         Row: {
@@ -2524,6 +2968,81 @@ export type Database = {
           },
         ]
       }
+      kpi_daily: {
+        Row: {
+          created_at: string
+          id: string
+          jobs_completed: number
+          jobs_created: number
+          metric_date: string
+          new_cleaners: number
+          new_clients: number
+          snapshot: Json | null
+          total_credits_purchased: number
+          total_credits_used: number
+          total_payouts_cents: number
+          total_revenue_cents: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jobs_completed?: number
+          jobs_created?: number
+          metric_date: string
+          new_cleaners?: number
+          new_clients?: number
+          snapshot?: Json | null
+          total_credits_purchased?: number
+          total_credits_used?: number
+          total_payouts_cents?: number
+          total_revenue_cents?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jobs_completed?: number
+          jobs_created?: number
+          metric_date?: string
+          new_cleaners?: number
+          new_clients?: number
+          snapshot?: Json | null
+          total_credits_purchased?: number
+          total_credits_used?: number
+          total_payouts_cents?: number
+          total_revenue_cents?: number
+        }
+        Relationships: []
+      }
+      kpi_snapshots: {
+        Row: {
+          cancelled_jobs: number
+          completed_jobs: number
+          created_at: string
+          date: string
+          disputed_jobs: number
+          id: string
+          total_jobs: number
+        }
+        Insert: {
+          cancelled_jobs?: number
+          completed_jobs?: number
+          created_at?: string
+          date: string
+          disputed_jobs?: number
+          id?: string
+          total_jobs?: number
+        }
+        Update: {
+          cancelled_jobs?: number
+          completed_jobs?: number
+          created_at?: string
+          date?: string
+          disputed_jobs?: number
+          id?: string
+          total_jobs?: number
+        }
+        Relationships: []
+      }
       match_recommendations: {
         Row: {
           breakdown: Json | null
@@ -2683,6 +3202,183 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_failures: {
+        Row: {
+          channel: string
+          created_at: string
+          error_message: string | null
+          id: string
+          last_attempt_at: string | null
+          payload: Json
+          retry_count: number
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          payload: Json
+          retry_count?: number
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          payload?: Json
+          retry_count?: number
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      notification_log: {
+        Row: {
+          channel: string
+          created_at: string
+          error_message: string | null
+          id: string
+          payload: Json
+          sent_at: string | null
+          status: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      notification_logs: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          provider_id: string | null
+          recipient: string
+          status: string
+          subject: string | null
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          provider_id?: string | null
+          recipient: string
+          status: string
+          subject?: string | null
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          provider_id?: string | null
+          recipient?: string
+          status?: string
+          subject?: string | null
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_enabled: boolean
+          id: string
+          push_enabled: boolean
+          sms_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          push_enabled?: boolean
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          push_enabled?: boolean
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_templates: {
+        Row: {
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          subject: string | null
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          subject?: string | null
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          subject?: string | null
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       payment_failures: {
         Row: {
@@ -3218,6 +3914,48 @@ export type Database = {
           },
         ]
       }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          referee_credits: number
+          reward_credits: number
+          type: string
+          user_id: string
+          uses_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          referee_credits?: number
+          reward_credits?: number
+          type?: string
+          user_id: string
+          uses_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          referee_credits?: number
+          reward_credits?: number
+          type?: string
+          user_id?: string
+          uses_count?: number
+        }
+        Relationships: []
+      }
       referrals: {
         Row: {
           completed_at: string | null
@@ -3247,6 +3985,51 @@ export type Database = {
           referral_code?: string
           referred_id?: string | null
           referrer_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      referrals_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          jobs_completed: number
+          jobs_required: number
+          referee_id: string
+          referee_reward: number
+          referee_role: string
+          referral_code: string
+          referrer_id: string
+          referrer_reward: number
+          rewarded_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jobs_completed?: number
+          jobs_required?: number
+          referee_id: string
+          referee_reward?: number
+          referee_role: string
+          referral_code: string
+          referrer_id: string
+          referrer_reward?: number
+          rewarded_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jobs_completed?: number
+          jobs_required?: number
+          referee_id?: string
+          referee_reward?: number
+          referee_role?: string
+          referral_code?: string
+          referrer_id?: string
+          referrer_reward?: number
+          rewarded_at?: string | null
           status?: string
         }
         Relationships: []
