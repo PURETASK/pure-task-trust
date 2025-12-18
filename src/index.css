@@ -8,117 +8,123 @@
   :root {
     /* PureTask Design System - Clean, Calm, Trustworthy */
     
-    /* Background - Warm cream/off-white */
-    --background: 40 33% 98%;
-    --foreground: 200 25% 15%;
+    /* Background - Soft Cloud */
+    --background: 216 44% 98%;
+    /* Foreground - Graphite */
+    --foreground: 218 28% 16%;
 
-    /* Card - Pure white for contrast */
+    /* Card - Pure white */
     --card: 0 0% 100%;
-    --card-foreground: 200 25% 15%;
+    --card-foreground: 218 28% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 25% 15%;
+    --popover-foreground: 218 28% 16%;
 
-    /* Primary - Sage/Teal (trust, calm, clean) */
-    --primary: 165 35% 45%;
+    /* Primary - PureTask Blue #66B3FF */
+    --primary: 209 100% 70%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Soft warm gray */
-    --secondary: 40 20% 94%;
-    --secondary-foreground: 200 25% 25%;
+    /* Secondary - Light gray */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 218 28% 20%;
 
     /* Muted - Light neutral */
-    --muted: 40 15% 92%;
-    --muted-foreground: 200 15% 50%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 14% 46%;
 
-    /* Accent - Soft teal highlight */
-    --accent: 165 30% 92%;
-    --accent-foreground: 165 35% 35%;
+    /* Accent - PureTask Aqua #00D4FF */
+    --accent: 190 100% 50%;
+    --accent-foreground: 218 28% 16%;
 
-    /* Destructive */
-    --destructive: 0 65% 55%;
+    /* Destructive - Red-500 */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Success - For approvals */
-    --success: 145 50% 45%;
+    /* Success - Fresh Mint #28C76F */
+    --success: 145 65% 47%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning - For pending states */
-    --warning: 40 90% 55%;
-    --warning-foreground: 40 90% 15%;
+    /* Warning - Amber-500 */
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 15%;
 
-    /* Trust indicator */
-    --trust: 200 70% 50%;
+    /* Trust indicator - PureTask Blue */
+    --trust: 209 100% 70%;
     --trust-foreground: 0 0% 100%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 165 35% 45%;
+    /* Border - Gray-200 (#E5E7EB) */
+    --border: 220 13% 91%;
+    /* Input Border */
+    --input: 220 13% 91%;
+    --ring: 209 100% 70%;
 
     --radius: 0.75rem;
 
-    /* Custom shadows */
-    --shadow-soft: 0 2px 8px -2px hsl(200 25% 15% / 0.08);
-    --shadow-card: 0 4px 16px -4px hsl(200 25% 15% / 0.1);
-    --shadow-elevated: 0 8px 32px -8px hsl(200 25% 15% / 0.15);
+    /* Brand Gradient */
+    --gradient-brand: linear-gradient(135deg, hsl(209 100% 70%) 0%, hsl(190 100% 50%) 100%);
+
+    /* Custom shadows using Graphite */
+    --shadow-soft: 0 2px 8px -2px hsl(218 28% 16% / 0.06);
+    --shadow-card: 0 4px 16px -4px hsl(218 28% 16% / 0.08);
+    --shadow-elevated: 0 8px 32px -8px hsl(218 28% 16% / 0.12);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 200 25% 25%;
-    --sidebar-primary: 165 35% 45%;
+    --sidebar-foreground: 218 28% 20%;
+    --sidebar-primary: 209 100% 70%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 165 30% 95%;
-    --sidebar-accent-foreground: 165 35% 35%;
-    --sidebar-border: 40 20% 90%;
-    --sidebar-ring: 165 35% 45%;
+    --sidebar-accent: 209 100% 97%;
+    --sidebar-accent-foreground: 209 100% 40%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 209 100% 70%;
   }
 
   .dark {
-    --background: 200 25% 8%;
-    --foreground: 40 20% 95%;
+    --background: 218 28% 10%;
+    --foreground: 220 14% 96%;
 
-    --card: 200 20% 12%;
-    --card-foreground: 40 20% 95%;
+    --card: 218 28% 14%;
+    --card-foreground: 220 14% 96%;
 
-    --popover: 200 20% 12%;
-    --popover-foreground: 40 20% 95%;
+    --popover: 218 28% 14%;
+    --popover-foreground: 220 14% 96%;
 
-    --primary: 165 40% 50%;
-    --primary-foreground: 200 25% 8%;
+    --primary: 209 100% 70%;
+    --primary-foreground: 218 28% 10%;
 
-    --secondary: 200 15% 18%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 218 20% 20%;
+    --secondary-foreground: 220 14% 90%;
 
-    --muted: 200 15% 20%;
-    --muted-foreground: 40 15% 60%;
+    --muted: 218 20% 22%;
+    --muted-foreground: 215 14% 60%;
 
-    --accent: 165 25% 20%;
-    --accent-foreground: 165 40% 70%;
+    --accent: 190 100% 50%;
+    --accent-foreground: 218 28% 10%;
 
-    --destructive: 0 60% 50%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 145 45% 50%;
-    --success-foreground: 200 25% 8%;
+    --success: 145 65% 47%;
+    --success-foreground: 218 28% 10%;
 
-    --warning: 40 85% 50%;
-    --warning-foreground: 40 90% 10%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 10%;
 
-    --trust: 200 65% 55%;
-    --trust-foreground: 200 25% 8%;
+    --trust: 209 100% 70%;
+    --trust-foreground: 218 28% 10%;
 
-    --border: 200 15% 20%;
-    --input: 200 15% 20%;
-    --ring: 165 40% 50%;
+    --border: 218 20% 22%;
+    --input: 218 20% 22%;
+    --ring: 209 100% 70%;
 
-    --sidebar-background: 200 20% 10%;
-    --sidebar-foreground: 40 20% 90%;
-    --sidebar-primary: 165 40% 50%;
-    --sidebar-primary-foreground: 200 25% 8%;
-    --sidebar-accent: 165 20% 18%;
-    --sidebar-accent-foreground: 165 40% 70%;
-    --sidebar-border: 200 15% 18%;
-    --sidebar-ring: 165 40% 50%;
+    --sidebar-background: 218 28% 12%;
+    --sidebar-foreground: 220 14% 90%;
+    --sidebar-primary: 209 100% 70%;
+    --sidebar-primary-foreground: 218 28% 10%;
+    --sidebar-accent: 209 40% 20%;
+    --sidebar-accent-foreground: 209 100% 80%;
+    --sidebar-border: 218 20% 20%;
+    --sidebar-ring: 209 100% 70%;
   }
 }
 
@@ -166,11 +172,23 @@
 
   /* Gradient backgrounds */
   .gradient-hero {
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(165 30% 95%) 100%);
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(209 100% 97%) 100%);
   }
 
   .gradient-card {
-    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(40 25% 97%) 100%);
+    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(216 44% 97%) 100%);
+  }
+
+  /* Brand gradient */
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(209 100% 70%) 0%, hsl(190 100% 50%) 100%);
+  }
+
+  .gradient-brand-text {
+    background: linear-gradient(135deg, hsl(209 100% 70%) 0%, hsl(190 100% 50%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   /* Animation classes */
