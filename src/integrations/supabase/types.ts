@@ -228,6 +228,156 @@ export type Database = {
           },
         ]
       }
+      cancellation_events: {
+        Row: {
+          after_reschedule_declined: boolean
+          bonus_credits_to_client: number
+          bucket: string | null
+          cancelled_by: string
+          cleaner_comp_credits: number
+          cleaner_id: string | null
+          client_id: string | null
+          created_at: string
+          fee_credits: number
+          fee_pct: number
+          grace_used: boolean
+          hours_before_start: number | null
+          id: number
+          is_emergency: boolean
+          job_id: string
+          job_status_at_cancellation: string | null
+          platform_comp_credits: number
+          reason_code: string | null
+          refund_credits: number
+          t_cancel: string
+          type: string | null
+        }
+        Insert: {
+          after_reschedule_declined?: boolean
+          bonus_credits_to_client?: number
+          bucket?: string | null
+          cancelled_by: string
+          cleaner_comp_credits?: number
+          cleaner_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          fee_credits?: number
+          fee_pct?: number
+          grace_used?: boolean
+          hours_before_start?: number | null
+          id?: number
+          is_emergency?: boolean
+          job_id: string
+          job_status_at_cancellation?: string | null
+          platform_comp_credits?: number
+          reason_code?: string | null
+          refund_credits?: number
+          t_cancel: string
+          type?: string | null
+        }
+        Update: {
+          after_reschedule_declined?: boolean
+          bonus_credits_to_client?: number
+          bucket?: string | null
+          cancelled_by?: string
+          cleaner_comp_credits?: number
+          cleaner_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          fee_credits?: number
+          fee_pct?: number
+          grace_used?: boolean
+          hours_before_start?: number | null
+          id?: number
+          is_emergency?: boolean
+          job_id?: string
+          job_status_at_cancellation?: string | null
+          platform_comp_credits?: number
+          reason_code?: string | null
+          refund_credits?: number
+          t_cancel?: string
+          type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cancellation_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cancellation_events_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cancellation_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cancellation_records: {
+        Row: {
+          cancellation_time: string
+          cancelled_by: string
+          cancelled_by_role: string
+          created_at: string
+          fee_percent: number | null
+          hours_before: number
+          id: string
+          is_grace_period: boolean
+          job_id: string
+          penalty_applied: boolean
+          penalty_credits: number | null
+          refund_credits: number | null
+          scheduled_start: string
+        }
+        Insert: {
+          cancellation_time?: string
+          cancelled_by: string
+          cancelled_by_role: string
+          created_at?: string
+          fee_percent?: number | null
+          hours_before: number
+          id?: string
+          is_grace_period?: boolean
+          job_id: string
+          penalty_applied?: boolean
+          penalty_credits?: number | null
+          refund_credits?: number | null
+          scheduled_start: string
+        }
+        Update: {
+          cancellation_time?: string
+          cancelled_by?: string
+          cancelled_by_role?: string
+          created_at?: string
+          fee_percent?: number | null
+          hours_before?: number
+          id?: string
+          is_grace_period?: boolean
+          job_id?: string
+          penalty_applied?: boolean
+          penalty_credits?: number | null
+          refund_credits?: number | null
+          scheduled_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cancellation_records_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country_code: string
@@ -879,6 +1029,492 @@ export type Database = {
           },
         ]
       }
+      dispute_actions: {
+        Row: {
+          action: string
+          actor_type: string
+          actor_user_id: string | null
+          attachments: Json | null
+          created_at: string
+          details: Json | null
+          dispute_id: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_type: string
+          actor_user_id?: string | null
+          attachments?: Json | null
+          created_at?: string
+          details?: Json | null
+          dispute_id: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_type?: string
+          actor_user_id?: string | null
+          attachments?: Json | null
+          created_at?: string
+          details?: Json | null
+          dispute_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dispute_actions_dispute_id_fkey"
+            columns: ["dispute_id"]
+            isOneToOne: false
+            referencedRelation: "disputes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      disputes: {
+        Row: {
+          admin_notes: string | null
+          client_id: string
+          client_notes: string
+          created_at: string
+          description: string | null
+          id: string
+          job_completed_at: string | null
+          job_id: string
+          opened_by_user_id: string | null
+          reason_code: string | null
+          refund_amount_credits: number | null
+          resolution_notes: string | null
+          resolution_type: string | null
+          resolved_at: string | null
+          resolved_by_user_id: string | null
+          status: Database["public"]["Enums"]["dispute_status"]
+          updated_at: string
+          within_window: boolean | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          client_id: string
+          client_notes: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_completed_at?: string | null
+          job_id: string
+          opened_by_user_id?: string | null
+          reason_code?: string | null
+          refund_amount_credits?: number | null
+          resolution_notes?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          resolved_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          updated_at?: string
+          within_window?: boolean | null
+        }
+        Update: {
+          admin_notes?: string | null
+          client_id?: string
+          client_notes?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_completed_at?: string | null
+          job_id?: string
+          opened_by_user_id?: string | null
+          reason_code?: string | null
+          refund_amount_credits?: number | null
+          resolution_notes?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          resolved_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          updated_at?: string
+          within_window?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disputes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "disputes_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grace_cancellations: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: number
+          job_id: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: number
+          job_id?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: number
+          job_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grace_cancellations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grace_cancellations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_checkins: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          device_info: Json | null
+          distance_from_job_meters: number | null
+          id: string
+          is_within_radius: boolean | null
+          job_id: string
+          lat: number | null
+          lng: number | null
+          type: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          device_info?: Json | null
+          distance_from_job_meters?: number | null
+          id?: string
+          is_within_radius?: boolean | null
+          job_id: string
+          lat?: number | null
+          lng?: number | null
+          type: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          device_info?: Json | null
+          distance_from_job_meters?: number | null
+          id?: string
+          is_within_radius?: boolean | null
+          job_id?: string
+          lat?: number | null
+          lng?: number | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_checkins_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_checkins_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_events: {
+        Row: {
+          actor_id: string | null
+          actor_type: string
+          created_at: string | null
+          event_type: Database["public"]["Enums"]["job_event_type"]
+          id: number
+          job_id: string | null
+          meta: Json | null
+          payload: Json
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_type: string
+          created_at?: string | null
+          event_type: Database["public"]["Enums"]["job_event_type"]
+          id?: number
+          job_id?: string | null
+          meta?: Json | null
+          payload?: Json
+        }
+        Update: {
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string | null
+          event_type?: Database["public"]["Enums"]["job_event_type"]
+          id?: number
+          job_id?: string | null
+          meta?: Json | null
+          payload?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_gps_logs: {
+        Row: {
+          created_at: string | null
+          id: number
+          job_id: string | null
+          lat: number | null
+          lng: number | null
+          type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          lat?: number | null
+          lng?: number | null
+          type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          lat?: number | null
+          lng?: number | null
+          type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_gps_logs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_offers: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          decline_reason: string | null
+          expires_at: string
+          id: string
+          job_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          decline_reason?: string | null
+          expires_at: string
+          id?: string
+          job_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          decline_reason?: string | null
+          expires_at?: string
+          id?: string
+          job_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_offers_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_offers_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_photos: {
+        Row: {
+          created_at: string | null
+          id: number
+          job_id: string | null
+          photo_url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          photo_url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          photo_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_photos_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_queue: {
+        Row: {
+          attempts: number
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: number
+          max_attempts: number
+          payload: Json
+          priority: number
+          queue_name: string
+          scheduled_at: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: number
+          max_attempts?: number
+          payload: Json
+          priority?: number
+          queue_name: string
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: number
+          max_attempts?: number
+          payload?: Json
+          priority?: number
+          queue_name?: string
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      job_status_history: {
+        Row: {
+          changed_by_type: string | null
+          changed_by_user_id: string | null
+          created_at: string
+          from_status: string | null
+          id: string
+          job_id: string
+          metadata: Json | null
+          reason: string | null
+          to_status: string
+        }
+        Insert: {
+          changed_by_type?: string | null
+          changed_by_user_id?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          job_id: string
+          metadata?: Json | null
+          reason?: string | null
+          to_status: string
+        }
+        Update: {
+          changed_by_type?: string | null
+          changed_by_user_id?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          job_id?: string
+          metadata?: Json | null
+          reason?: string | null
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_status_history_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_time_logs: {
+        Row: {
+          created_at: string | null
+          id: number
+          job_id: string | null
+          seconds: number | null
+          segment_end: string | null
+          segment_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          seconds?: number | null
+          segment_end?: string | null
+          segment_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          job_id?: string | null
+          seconds?: number | null
+          segment_end?: string | null
+          segment_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_time_logs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
           actual_end_at: string | null
@@ -1051,6 +1687,111 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "cleaner_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_threads: {
+        Row: {
+          cleaner_id: string | null
+          client_id: string | null
+          created_at: string
+          id: string
+          job_id: string | null
+          metadata: Json | null
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_threads_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_threads_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_threads_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          external_id: string | null
+          id: string
+          is_read: boolean
+          metadata: Json | null
+          read_at: string | null
+          sender_id: string | null
+          sender_type: Database["public"]["Enums"]["sender_type"]
+          sent_via: string | null
+          thread_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          is_read?: boolean
+          metadata?: Json | null
+          read_at?: string | null
+          sender_id?: string | null
+          sender_type: Database["public"]["Enums"]["sender_type"]
+          sent_via?: string | null
+          thread_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          is_read?: boolean
+          metadata?: Json | null
+          read_at?: string | null
+          sender_id?: string | null
+          sender_type?: Database["public"]["Enums"]["sender_type"]
+          sent_via?: string | null
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
             referencedColumns: ["id"]
           },
         ]
@@ -1374,6 +2115,57 @@ export type Database = {
           },
         ]
       }
+      photo_compliance: {
+        Row: {
+          after_photos: number
+          before_photos: number
+          bonus_applied: boolean
+          cleaner_id: string
+          created_at: string
+          id: string
+          job_id: string
+          meets_minimum: boolean
+          total_photos: number
+        }
+        Insert: {
+          after_photos?: number
+          before_photos?: number
+          bonus_applied?: boolean
+          cleaner_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          meets_minimum?: boolean
+          total_photos?: number
+        }
+        Update: {
+          after_photos?: number
+          before_photos?: number
+          bonus_applied?: boolean
+          cleaner_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          meets_minimum?: boolean
+          total_photos?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photo_compliance_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_compliance_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_service_areas: {
         Row: {
           base_multiplier: number
@@ -1568,6 +2360,118 @@ export type Database = {
           referred_id?: string | null
           referrer_id?: string
           status?: string
+        }
+        Relationships: []
+      }
+      reschedule_events: {
+        Row: {
+          bucket: Database["public"]["Enums"]["reschedule_bucket"]
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          decline_reason_code: string | null
+          declined_by: string | null
+          hours_before_original: number
+          id: number
+          is_reasonable: boolean
+          job_id: string
+          reason_code: string | null
+          requested_by: string
+          requested_to: string
+          status: Database["public"]["Enums"]["reschedule_status"]
+          t_request: string
+          t_start_new: string
+          t_start_original: string
+          updated_at: string
+        }
+        Insert: {
+          bucket: Database["public"]["Enums"]["reschedule_bucket"]
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          decline_reason_code?: string | null
+          declined_by?: string | null
+          hours_before_original: number
+          id?: number
+          is_reasonable?: boolean
+          job_id: string
+          reason_code?: string | null
+          requested_by: string
+          requested_to: string
+          status?: Database["public"]["Enums"]["reschedule_status"]
+          t_request: string
+          t_start_new: string
+          t_start_original: string
+          updated_at?: string
+        }
+        Update: {
+          bucket?: Database["public"]["Enums"]["reschedule_bucket"]
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          decline_reason_code?: string | null
+          declined_by?: string | null
+          hours_before_original?: number
+          id?: number
+          is_reasonable?: boolean
+          job_id?: string
+          reason_code?: string | null
+          requested_by?: string
+          requested_to?: string
+          status?: Database["public"]["Enums"]["reschedule_status"]
+          t_request?: string
+          t_start_new?: string
+          t_start_original?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reschedule_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reschedule_events_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reschedule_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reschedule_reason_codes: {
+        Row: {
+          code: string
+          created_at: string
+          id: number
+          is_active: boolean
+          reason_text: string
+          requester_type: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          reason_text: string
+          requester_type: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          reason_text?: string
+          requester_type?: string
         }
         Relationships: []
       }
