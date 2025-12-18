@@ -106,6 +106,56 @@ export type Database = {
           },
         ]
       }
+      background_checks: {
+        Row: {
+          cleaner_id: string
+          completed_at: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          provider: string
+          provider_id: string | null
+          report_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          provider_id?: string | null
+          report_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          provider_id?: string | null
+          report_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "background_checks_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blackout_periods: {
         Row: {
           cleaner_id: string
@@ -464,6 +514,53 @@ export type Database = {
           },
         ]
       }
+      cleaner_boosts: {
+        Row: {
+          boost_type: string
+          cleaner_id: string
+          created_at: string
+          credits_spent: number
+          ends_at: string
+          id: string
+          jobs_during: number
+          multiplier: number
+          starts_at: string
+          status: string
+        }
+        Insert: {
+          boost_type?: string
+          cleaner_id: string
+          created_at?: string
+          credits_spent: number
+          ends_at: string
+          id?: string
+          jobs_during?: number
+          multiplier?: number
+          starts_at?: string
+          status?: string
+        }
+        Update: {
+          boost_type?: string
+          cleaner_id?: string
+          created_at?: string
+          credits_spent?: number
+          ends_at?: string
+          id?: string
+          jobs_during?: number
+          multiplier?: number
+          starts_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_boosts_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cleaner_earnings: {
         Row: {
           cleaner_id: string
@@ -508,6 +605,294 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_events: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          event_type: Database["public"]["Enums"]["cleaner_event_type"]
+          id: number
+          job_id: string | null
+          metadata: Json | null
+          weight: number
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          event_type: Database["public"]["Enums"]["cleaner_event_type"]
+          id?: number
+          job_id?: string | null
+          metadata?: Json | null
+          weight: number
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["cleaner_event_type"]
+          id?: number
+          job_id?: string | null
+          metadata?: Json | null
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_flex_profiles: {
+        Row: {
+          badge_assigned_at: string | null
+          badge_removed_at: string | null
+          cleaner_id: string
+          last_evaluated_at: string
+          low_flexibility_active: boolean
+          reasonable_declines_14d: number
+          reasonable_declines_30d: number
+        }
+        Insert: {
+          badge_assigned_at?: string | null
+          badge_removed_at?: string | null
+          cleaner_id: string
+          last_evaluated_at?: string
+          low_flexibility_active?: boolean
+          reasonable_declines_14d?: number
+          reasonable_declines_30d?: number
+        }
+        Update: {
+          badge_assigned_at?: string | null
+          badge_removed_at?: string | null
+          cleaner_id?: string
+          last_evaluated_at?: string
+          low_flexibility_active?: boolean
+          reasonable_declines_14d?: number
+          reasonable_declines_30d?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_flex_profiles_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_goals: {
+        Row: {
+          awarded_at: string | null
+          cleaner_id: string
+          created_at: string
+          current_value: number
+          goal_type: string
+          id: number
+          is_awarded: boolean
+          month: string
+          reward_credits: number
+          target_value: number
+        }
+        Insert: {
+          awarded_at?: string | null
+          cleaner_id: string
+          created_at?: string
+          current_value?: number
+          goal_type?: string
+          id?: number
+          is_awarded?: boolean
+          month: string
+          reward_credits: number
+          target_value: number
+        }
+        Update: {
+          awarded_at?: string | null
+          cleaner_id?: string
+          created_at?: string
+          current_value?: number
+          goal_type?: string
+          id?: number
+          is_awarded?: boolean
+          month?: string
+          reward_credits?: number
+          target_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_goals_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_metrics: {
+        Row: {
+          attended_jobs: number
+          cleaner_id: string
+          communication_ok_jobs: number
+          completion_ok_jobs: number
+          no_show_jobs: number
+          on_time_checkins: number
+          photo_compliant_jobs: number
+          ratings_count: number
+          ratings_sum: number
+          total_jobs_window: number
+          updated_at: string
+        }
+        Insert: {
+          attended_jobs?: number
+          cleaner_id: string
+          communication_ok_jobs?: number
+          completion_ok_jobs?: number
+          no_show_jobs?: number
+          on_time_checkins?: number
+          photo_compliant_jobs?: number
+          ratings_count?: number
+          ratings_sum?: number
+          total_jobs_window?: number
+          updated_at?: string
+        }
+        Update: {
+          attended_jobs?: number
+          cleaner_id?: string
+          communication_ok_jobs?: number
+          completion_ok_jobs?: number
+          no_show_jobs?: number
+          on_time_checkins?: number
+          photo_compliant_jobs?: number
+          ratings_count?: number
+          ratings_sum?: number
+          total_jobs_window?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_metrics_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_no_shows: {
+        Row: {
+          bonus_credits: number
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          id: string
+          job_id: string
+          processed: boolean
+        }
+        Insert: {
+          bonus_credits?: number
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          processed?: boolean
+        }
+        Update: {
+          bonus_credits?: number
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          processed?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_no_shows_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_no_shows_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_no_shows_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_preferences: {
+        Row: {
+          accepts_deep_clean: boolean
+          accepts_move_out: boolean
+          accepts_pets: boolean
+          cleaner_id: string
+          created_at: string
+          has_own_supplies: boolean
+          has_vehicle: boolean
+          id: string
+          max_job_duration_h: number
+          max_jobs_per_day: number
+          min_job_duration_h: number
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          accepts_deep_clean?: boolean
+          accepts_move_out?: boolean
+          accepts_pets?: boolean
+          cleaner_id: string
+          created_at?: string
+          has_own_supplies?: boolean
+          has_vehicle?: boolean
+          id?: string
+          max_job_duration_h?: number
+          max_jobs_per_day?: number
+          min_job_duration_h?: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accepts_deep_clean?: boolean
+          accepts_move_out?: boolean
+          accepts_pets?: boolean
+          cleaner_id?: string
+          created_at?: string
+          has_own_supplies?: boolean
+          has_vehicle?: boolean
+          id?: string
+          max_job_duration_h?: number
+          max_jobs_per_day?: number
+          min_job_duration_h?: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_preferences_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -614,6 +999,130 @@ export type Database = {
         }
         Relationships: []
       }
+      cleaner_reliability_events: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          event_type: Database["public"]["Enums"]["reliability_event_type"]
+          id: string
+          job_id: string | null
+          metadata: Json | null
+          notes: string | null
+          weight: number
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          event_type: Database["public"]["Enums"]["reliability_event_type"]
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          weight?: number
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["reliability_event_type"]
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_reliability_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_reliability_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_reliability_scores: {
+        Row: {
+          cleaner_id: string
+          current_score: number
+          last_event_at: string | null
+          last_recalculated_at: string
+          total_events: number
+        }
+        Insert: {
+          cleaner_id: string
+          current_score?: number
+          last_event_at?: string | null
+          last_recalculated_at?: string
+          total_events?: number
+        }
+        Update: {
+          cleaner_id?: string
+          current_score?: number
+          last_event_at?: string | null
+          last_recalculated_at?: string
+          total_events?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_reliability_scores_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_service_areas: {
+        Row: {
+          city: string | null
+          cleaner_id: string
+          created_at: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          radius_miles: number | null
+          state: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          city?: string | null
+          cleaner_id: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          radius_miles?: number | null
+          state?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          city?: string | null
+          cleaner_id?: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          radius_miles?: number | null
+          state?: string | null
+          zip_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_service_areas_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cleaner_teams: {
         Row: {
           created_at: string
@@ -649,6 +1158,53 @@ export type Database = {
           {
             foreignKeyName: "cleaner_teams_owner_cleaner_id_fkey"
             columns: ["owner_cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_tier_history: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          from_tier: string | null
+          id: string
+          reason: string | null
+          to_tier: string
+          triggered_by: string | null
+          triggered_by_user_id: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          from_tier?: string | null
+          id?: string
+          reason?: string | null
+          to_tier: string
+          triggered_by?: string | null
+          triggered_by_user_id?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          from_tier?: string | null
+          id?: string
+          reason?: string | null
+          to_tier?: string
+          triggered_by?: string | null
+          triggered_by_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_tier_history_cleaner_id_fkey"
+            columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
@@ -692,6 +1248,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "cleaner_time_off_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_weekly_streaks: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          id: number
+          is_streak: boolean
+          week_start: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          id?: number
+          is_streak?: boolean
+          week_start: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          id?: number
+          is_streak?: boolean
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_weekly_streaks_cleaner_id_fkey"
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
@@ -793,6 +1381,44 @@ export type Database = {
           },
         ]
       }
+      client_flex_profiles: {
+        Row: {
+          cancellations_30d: number
+          client_id: string
+          flex_score: number
+          last_computed_at: string
+          late_reschedules_30d: number
+          metadata: Json | null
+          reschedules_30d: number
+        }
+        Insert: {
+          cancellations_30d?: number
+          client_id: string
+          flex_score?: number
+          last_computed_at?: string
+          late_reschedules_30d?: number
+          metadata?: Json | null
+          reschedules_30d?: number
+        }
+        Update: {
+          cancellations_30d?: number
+          client_id?: string
+          flex_score?: number
+          last_computed_at?: string
+          late_reschedules_30d?: number
+          metadata?: Json | null
+          reschedules_30d?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_flex_profiles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_profiles: {
         Row: {
           created_at: string
@@ -834,6 +1460,80 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      client_risk_events: {
+        Row: {
+          client_id: string
+          created_at: string
+          event_type: Database["public"]["Enums"]["client_risk_event_type"]
+          id: number
+          job_id: string | null
+          metadata: Json | null
+          weight: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          event_type: Database["public"]["Enums"]["client_risk_event_type"]
+          id?: number
+          job_id?: string | null
+          metadata?: Json | null
+          weight: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["client_risk_event_type"]
+          id?: number
+          job_id?: string | null
+          metadata?: Json | null
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_risk_events_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_risk_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_risk_scores: {
+        Row: {
+          client_id: string
+          last_recomputed_at: string
+          risk_band: Database["public"]["Enums"]["client_risk_band"]
+          risk_score: number
+        }
+        Insert: {
+          client_id: string
+          last_recomputed_at?: string
+          risk_band?: Database["public"]["Enums"]["client_risk_band"]
+          risk_score?: number
+        }
+        Update: {
+          client_id?: string
+          last_recomputed_at?: string
+          risk_band?: Database["public"]["Enums"]["client_risk_band"]
+          risk_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_risk_scores_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       credit_accounts: {
         Row: {
@@ -1148,6 +1848,81 @@ export type Database = {
           },
         ]
       }
+      favorite_cleaners: {
+        Row: {
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          id: number
+          notes: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          id?: number
+          notes?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          id?: number
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_cleaners_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorite_cleaners_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flexibility_decline_events: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          id: number
+          reschedule_event_id: number | null
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          id?: number
+          reschedule_event_id?: number | null
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          id?: number
+          reschedule_event_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flexibility_decline_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flexibility_decline_events_reschedule_event_id_fkey"
+            columns: ["reschedule_event_id"]
+            isOneToOne: false
+            referencedRelation: "reschedule_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grace_cancellations: {
         Row: {
           client_id: string
@@ -1177,6 +1952,64 @@ export type Database = {
           },
           {
             foreignKeyName: "grace_cancellations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inconvenience_logs: {
+        Row: {
+          caused_by: string
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          id: number
+          job_id: string
+          metadata: Json | null
+          reason_link: string | null
+          score: number
+        }
+        Insert: {
+          caused_by: string
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          id?: number
+          job_id: string
+          metadata?: Json | null
+          reason_link?: string | null
+          score: number
+        }
+        Update: {
+          caused_by?: string
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          id?: number
+          job_id?: string
+          metadata?: Json | null
+          reason_link?: string | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inconvenience_logs_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inconvenience_logs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inconvenience_logs_job_id_fkey"
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
@@ -1687,6 +2520,61 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "cleaner_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_recommendations: {
+        Row: {
+          breakdown: Json | null
+          cleaner_id: string
+          client_id: string
+          generated_at: string
+          id: number
+          job_id: string
+          match_score: number
+          rank: number
+        }
+        Insert: {
+          breakdown?: Json | null
+          cleaner_id: string
+          client_id: string
+          generated_at?: string
+          id?: number
+          job_id: string
+          match_score: number
+          rank: number
+        }
+        Update: {
+          breakdown?: Json | null
+          cleaner_id?: string
+          client_id?: string
+          generated_at?: string
+          id?: number
+          job_id?: string
+          match_score?: number
+          rank?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_recommendations_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_recommendations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_recommendations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
             referencedColumns: ["id"]
           },
         ]
@@ -2362,6 +3250,91 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      reliability_history: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          new_score: number
+          new_tier: string
+          old_score: number
+          old_tier: string
+          reason: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_score: number
+          new_tier: string
+          old_score: number
+          old_tier: string
+          reason: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_score?: number
+          new_tier?: string
+          old_score?: number
+          old_tier?: string
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reliability_history_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reliability_snapshots: {
+        Row: {
+          breakdown: Json | null
+          cleaner_id: string
+          computed_at: string
+          created_at: string
+          id: string
+          inputs: Json
+          score: number
+          tier: string | null
+        }
+        Insert: {
+          breakdown?: Json | null
+          cleaner_id: string
+          computed_at?: string
+          created_at?: string
+          id?: string
+          inputs: Json
+          score: number
+          tier?: string | null
+        }
+        Update: {
+          breakdown?: Json | null
+          cleaner_id?: string
+          computed_at?: string
+          created_at?: string
+          id?: string
+          inputs?: Json
+          score?: number
+          tier?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reliability_snapshots_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reschedule_events: {
         Row: {
