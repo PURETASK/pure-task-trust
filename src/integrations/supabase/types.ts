@@ -65,6 +65,169 @@ export type Database = {
         }
         Relationships: []
       }
+      availability_blocks: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: number
+          is_active: boolean
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: number
+          is_active?: boolean
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: number
+          is_active?: boolean
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "availability_blocks_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blackout_periods: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          end_ts: string
+          id: number
+          reason: string | null
+          start_ts: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          end_ts: string
+          id?: number
+          reason?: string | null
+          start_ts: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          end_ts?: string
+          id?: number
+          reason?: string | null
+          start_ts?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blackout_periods_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendar_connections: {
+        Row: {
+          access_token: string
+          created_at: string
+          email: string | null
+          external_id: string
+          id: number
+          last_synced_at: string | null
+          provider: string
+          refresh_token: string | null
+          sync_enabled: boolean
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          created_at?: string
+          email?: string | null
+          external_id: string
+          id?: number
+          last_synced_at?: string | null
+          provider: string
+          refresh_token?: string | null
+          sync_enabled?: boolean
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          created_at?: string
+          email?: string | null
+          external_id?: string
+          id?: number
+          last_synced_at?: string | null
+          provider?: string
+          refresh_token?: string | null
+          sync_enabled?: boolean
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      calendar_events: {
+        Row: {
+          connection_id: number
+          event_type: string
+          external_event_id: string
+          id: number
+          job_id: string | null
+          synced_at: string
+        }
+        Insert: {
+          connection_id: number
+          event_type?: string
+          external_event_id: string
+          id?: number
+          job_id?: string | null
+          synced_at?: string
+        }
+        Update: {
+          connection_id?: number
+          event_type?: string
+          external_event_id?: string
+          id?: number
+          job_id?: string | null
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country_code: string
@@ -94,6 +257,110 @@ export type Database = {
           timezone?: string
         }
         Relationships: []
+      }
+      cleaner_availability: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          date: string | null
+          day_of_week: number | null
+          end_time_local: string | null
+          id: string
+          is_blocked: boolean
+          metadata: Json | null
+          notes: string | null
+          recurrence_type: Database["public"]["Enums"]["availability_recurrence_enum"]
+          start_time_local: string | null
+          timezone: string | null
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          date?: string | null
+          day_of_week?: number | null
+          end_time_local?: string | null
+          id?: string
+          is_blocked?: boolean
+          metadata?: Json | null
+          notes?: string | null
+          recurrence_type?: Database["public"]["Enums"]["availability_recurrence_enum"]
+          start_time_local?: string | null
+          timezone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          date?: string | null
+          day_of_week?: number | null
+          end_time_local?: string | null
+          id?: string
+          is_blocked?: boolean
+          metadata?: Json | null
+          notes?: string | null
+          recurrence_type?: Database["public"]["Enums"]["availability_recurrence_enum"]
+          start_time_local?: string | null
+          timezone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_availability_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_earnings: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          gross_credits: number
+          id: string
+          job_id: string
+          net_credits: number
+          payout_id: string | null
+          platform_fee_credits: number
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          gross_credits: number
+          id?: string
+          job_id: string
+          net_credits: number
+          payout_id?: string | null
+          platform_fee_credits?: number
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          gross_credits?: number
+          id?: string
+          job_id?: string
+          net_credits?: number
+          payout_id?: string | null
+          platform_fee_credits?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_earnings_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_earnings_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cleaner_profiles: {
         Row: {
@@ -238,6 +505,144 @@ export type Database = {
           },
         ]
       }
+      cleaner_time_off: {
+        Row: {
+          all_day: boolean
+          cleaner_id: string
+          created_at: string
+          end_date: string
+          end_time: string | null
+          id: string
+          reason: string | null
+          start_date: string
+          start_time: string | null
+        }
+        Insert: {
+          all_day?: boolean
+          cleaner_id: string
+          created_at?: string
+          end_date: string
+          end_time?: string | null
+          id?: string
+          reason?: string | null
+          start_date: string
+          start_time?: string | null
+        }
+        Update: {
+          all_day?: boolean
+          cleaner_id?: string
+          created_at?: string
+          end_date?: string
+          end_time?: string | null
+          id?: string
+          reason?: string | null
+          start_date?: string
+          start_time?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_time_off_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaning_subscriptions: {
+        Row: {
+          address: string
+          base_hours: number | null
+          cancelled_at: string | null
+          cleaner_id: string | null
+          cleaning_type: string | null
+          client_id: string
+          created_at: string
+          credit_amount: number
+          day_of_week: number | null
+          frequency: string
+          id: string
+          jobs_created: number
+          latitude: number | null
+          longitude: number | null
+          next_job_date: string | null
+          paused_reason: string | null
+          preferred_time: string | null
+          property_id: number | null
+          status: string
+          timezone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          base_hours?: number | null
+          cancelled_at?: string | null
+          cleaner_id?: string | null
+          cleaning_type?: string | null
+          client_id: string
+          created_at?: string
+          credit_amount: number
+          day_of_week?: number | null
+          frequency: string
+          id?: string
+          jobs_created?: number
+          latitude?: number | null
+          longitude?: number | null
+          next_job_date?: string | null
+          paused_reason?: string | null
+          preferred_time?: string | null
+          property_id?: number | null
+          status?: string
+          timezone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          base_hours?: number | null
+          cancelled_at?: string | null
+          cleaner_id?: string | null
+          cleaning_type?: string | null
+          client_id?: string
+          created_at?: string
+          credit_amount?: number
+          day_of_week?: number | null
+          frequency?: string
+          id?: string
+          jobs_created?: number
+          latitude?: number | null
+          longitude?: number | null
+          next_job_date?: string | null
+          paused_reason?: string | null
+          preferred_time?: string | null
+          property_id?: number | null
+          status?: string
+          timezone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaning_subscriptions_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaning_subscriptions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaning_subscriptions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_profiles: {
         Row: {
           created_at: string
@@ -279,6 +684,200 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      credit_accounts: {
+        Row: {
+          created_at: string
+          current_balance: number
+          held_balance: number
+          id: string
+          lifetime_purchased: number
+          lifetime_refunded: number
+          lifetime_spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_balance?: number
+          held_balance?: number
+          id?: string
+          lifetime_purchased?: number
+          lifetime_refunded?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_balance?: number
+          held_balance?: number
+          id?: string
+          lifetime_purchased?: number
+          lifetime_refunded?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      credit_bonuses: {
+        Row: {
+          amount: number
+          bonus_type: string
+          created_at: string
+          id: string
+          source: string | null
+          user_id: string
+          week_of_year: number
+          year: number
+        }
+        Insert: {
+          amount: number
+          bonus_type: string
+          created_at?: string
+          id?: string
+          source?: string | null
+          user_id: string
+          week_of_year: number
+          year: number
+        }
+        Update: {
+          amount?: number
+          bonus_type?: string
+          created_at?: string
+          id?: string
+          source?: string | null
+          user_id?: string
+          week_of_year?: number
+          year?: number
+        }
+        Relationships: []
+      }
+      credit_ledger: {
+        Row: {
+          created_at: string
+          delta_credits: number
+          id: string
+          job_id: string | null
+          reason: Database["public"]["Enums"]["credit_reason"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delta_credits: number
+          id?: string
+          job_id?: string | null
+          reason: Database["public"]["Enums"]["credit_reason"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delta_credits?: number
+          id?: string
+          job_id?: string | null
+          reason?: Database["public"]["Enums"]["credit_reason"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_ledger_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_purchases: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          credits_amount: number
+          id: string
+          package_id: string
+          price_usd: number
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          credits_amount: number
+          id?: string
+          package_id: string
+          price_usd: number
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          credits_amount?: number
+          id?: string
+          package_id?: string
+          price_usd?: number
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      credit_transactions: {
+        Row: {
+          amount_credits: number
+          balance_after: number | null
+          client_id: string
+          created_at: string
+          id: string
+          idempotency_key: string | null
+          job_id: string | null
+          note: string | null
+          type: Database["public"]["Enums"]["credit_transaction_type"]
+        }
+        Insert: {
+          amount_credits: number
+          balance_after?: number | null
+          client_id: string
+          created_at?: string
+          id?: string
+          idempotency_key?: string | null
+          job_id?: string | null
+          note?: string | null
+          type: Database["public"]["Enums"]["credit_transaction_type"]
+        }
+        Update: {
+          amount_credits?: number
+          balance_after?: number | null
+          client_id?: string
+          created_at?: string
+          id?: string
+          idempotency_key?: string | null
+          job_id?: string | null
+          note?: string | null
+          type?: Database["public"]["Enums"]["credit_transaction_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_transactions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       jobs: {
         Row: {
@@ -452,6 +1051,325 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "cleaner_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_failures: {
+        Row: {
+          amount_cents: number | null
+          client_id: string | null
+          created_at: string
+          currency: string | null
+          id: string
+          raw_event: Json | null
+          stripe_error_code: string | null
+          stripe_error_message: string | null
+          stripe_event_id: string | null
+          stripe_payment_intent_id: string | null
+        }
+        Insert: {
+          amount_cents?: number | null
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          raw_event?: Json | null
+          stripe_error_code?: string | null
+          stripe_error_message?: string | null
+          stripe_event_id?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Update: {
+          amount_cents?: number | null
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          raw_event?: Json | null
+          stripe_error_code?: string | null
+          stripe_error_message?: string | null
+          stripe_event_id?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_failures_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_intents: {
+        Row: {
+          amount_cents: number
+          cleaner_id: string | null
+          client_id: string | null
+          credits_amount: number | null
+          currency: string
+          id: string
+          job_id: string | null
+          last_event_type: string | null
+          purpose: string
+          raw: Json
+          status: string
+          updated_at_utc: string
+        }
+        Insert: {
+          amount_cents?: number
+          cleaner_id?: string | null
+          client_id?: string | null
+          credits_amount?: number | null
+          currency?: string
+          id: string
+          job_id?: string | null
+          last_event_type?: string | null
+          purpose?: string
+          raw: Json
+          status: string
+          updated_at_utc?: string
+        }
+        Update: {
+          amount_cents?: number
+          cleaner_id?: string | null
+          client_id?: string | null
+          credits_amount?: number | null
+          currency?: string
+          id?: string
+          job_id?: string | null
+          last_event_type?: string | null
+          purpose?: string
+          raw?: Json
+          status?: string
+          updated_at_utc?: string
+        }
+        Relationships: []
+      }
+      payout_adjustments: {
+        Row: {
+          adjustment_type: string
+          amount_cents: number
+          cleaner_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          initiated_by: string | null
+          metadata: Json | null
+          payout_id: string | null
+          reason: string
+          status: string
+          stripe_reversal_id: string | null
+        }
+        Insert: {
+          adjustment_type: string
+          amount_cents: number
+          cleaner_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          payout_id?: string | null
+          reason: string
+          status?: string
+          stripe_reversal_id?: string | null
+        }
+        Update: {
+          adjustment_type?: string
+          amount_cents?: number
+          cleaner_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          payout_id?: string | null
+          reason?: string
+          status?: string
+          stripe_reversal_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_adjustments_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payout_adjustments_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payout_requests: {
+        Row: {
+          amount_cents: number
+          amount_credits: number
+          cleaner_id: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          id: string
+          metadata: Json | null
+          payout_id: string | null
+          rejection_reason: string | null
+          requested_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          amount_credits: number
+          cleaner_id: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          metadata?: Json | null
+          payout_id?: string | null
+          rejection_reason?: string | null
+          requested_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          amount_credits?: number
+          cleaner_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          metadata?: Json | null
+          payout_id?: string | null
+          rejection_reason?: string | null
+          requested_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_requests_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payout_requests_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payout_retry_queue: {
+        Row: {
+          amount_cents: number
+          cleaner_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          max_retries: number
+          next_retry_at: string | null
+          payout_id: string
+          retry_count: number
+          status: string
+          stripe_account_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          cleaner_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_retries?: number
+          next_retry_at?: string | null
+          payout_id: string
+          retry_count?: number
+          status?: string
+          stripe_account_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          cleaner_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_retries?: number
+          next_retry_at?: string | null
+          payout_id?: string
+          retry_count?: number
+          status?: string
+          stripe_account_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_retry_queue_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payout_retry_queue_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payouts: {
+        Row: {
+          amount_credits: number
+          amount_usd: number | null
+          cleaner_id: string
+          created_at: string
+          external_ref: string | null
+          id: string
+          metadata: Json
+          processed_at: string | null
+          status: Database["public"]["Enums"]["payout_status"]
+        }
+        Insert: {
+          amount_credits: number
+          amount_usd?: number | null
+          cleaner_id: string
+          created_at?: string
+          external_ref?: string | null
+          id?: string
+          metadata?: Json
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["payout_status"]
+        }
+        Update: {
+          amount_credits?: number
+          amount_usd?: number | null
+          cleaner_id?: string
+          created_at?: string
+          external_ref?: string | null
+          id?: string
+          metadata?: Json
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["payout_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payouts_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
         ]
