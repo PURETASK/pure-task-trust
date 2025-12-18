@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Primary Display - Open Sans (H1, H2, Buttons, UI Labels)
-        display: ["Open Sans", "system-ui", "sans-serif"],
+        // Primary Display - Montserrat (H1, H2, Buttons, UI Labels)
+        display: ["Montserrat", "system-ui", "sans-serif"],
         // Body - Open Sans (Paragraphs, forms, small UI)
         body: ["Open Sans", "system-ui", "sans-serif"],
         // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
