@@ -1,0 +1,332 @@
+import { useState } from "react";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+
+const cleaningTypes = [
+  {
+    id: "standard",
+    name: "Standard Clean",
+    description: "Regular maintenance cleaning for a tidy home",
+    baseCredits: 35,
+    icon: Home,
+  },
+  {
+    id: "deep",
+    name: "Deep Clean",
+    description: "Thorough cleaning including hard-to-reach areas",
+    baseCredits: 55,
+    icon: Sparkles,
+  },
+  {
+    id: "moveout",
+    name: "Move-out Clean",
+    description: "Complete cleaning for end of lease",
+    baseCredits: 75,
+    icon: Building,
+  },
+];
+
+const addOns = [
+  { id: "fridge", name: "Inside Fridge", credits: 15 },
+  { id: "oven", name: "Inside Oven", credits: 20 },
+  { id: "windows", name: "Interior Windows", credits: 25 },
+  { id: "laundry", name: "Laundry (wash & fold)", credits: 20 },
+  { id: "organizing", name: "Closet Organizing", credits: 30 },
+];
+
+export default function Book() {
+  const [step, setStep] = useState(1);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [hours, setHours] = useState(3);
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const selectedCleaningType = cleaningTypes.find((t) => t.id === selectedType);
+  const addOnCredits = selectedAddOns.reduce((sum, id) => {
+    const addOn = addOns.find((a) => a.id === id);
+    return sum + (addOn?.credits || 0);
+  }, 0);
+  const totalCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
+
+  const handleConfirm = () => {
+    toast({
+      title: "Booking confirmed!",
+      description: "Your credits have been held. Looking for available cleaners...",
+    });
+    navigate("/booking/1");
+  };
+
+  const toggleAddOn = (id: string) => {
+    setSelectedAddOns((prev) =>
+      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
+    );
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 pt-24 pb-12">
+        <div className="container max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Progress */}
+            <div className="flex items-center justify-center gap-2 mb-8">
+              {[1, 2, 3, 4].map((s) => (
+                <div
+                  key={s}
+                  className={`h-2 w-12 rounded-full transition-colors ${
+                    s <= step ? "bg-primary" : "bg-border"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+              {/* Step 1: Cleaning Type */}
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <h1 className="text-2xl font-bold mb-2">What type of cleaning?</h1>
+                  <p className="text-muted-foreground mb-6">Choose the service that fits your needs</p>
+
+                  <div className="space-y-4">
+                    {cleaningTypes.map((type) => (
+                      <Card
+                        key={type.id}
+                        className={`cursor-pointer transition-all ${
+                          selectedType === type.id
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "hover:border-primary/30"
+                        }`}
+                        onClick={() => setSelectedType(type.id)}
+                      >
+                        <CardContent className="flex items-center gap-4 p-5">
+                          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <type.icon className="h-6 w-6 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">{type.name}</h3>
+                            <p className="text-sm text-muted-foreground">{type.description}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold">{type.baseCredits}</p>
+                            <p className="text-xs text-muted-foreground">credits/hr</p>
+                          </div>
+                          {selectedType === type.id && (
+                            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
+                              <Check className="h-4 w-4 text-primary-foreground" />
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <Button
+                    className="w-full mt-6"
+                    size="lg"
+                    disabled={!selectedType}
+                    onClick={() => setStep(2)}
+                  >
+                    Continue
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
+
+              {/* Step 2: Hours */}
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <h1 className="text-2xl font-bold mb-2">How many hours?</h1>
+                  <p className="text-muted-foreground mb-6">Estimate the time needed for your space</p>
+
+                  <Card className="mb-6">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-center gap-6">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setHours(Math.max(1, hours - 1))}
+                          disabled={hours <= 1}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <div className="text-center">
+                          <p className="text-5xl font-bold">{hours}</p>
+                          <p className="text-muted-foreground">hours</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setHours(Math.min(8, hours + 1))}
+                          disabled={hours >= 8}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 mt-4">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">
+                          Typical {selectedCleaningType?.name.toLowerCase()}: 2-4 hours
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="lg" onClick={() => setStep(1)}>
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button className="flex-1" size="lg" onClick={() => setStep(3)}>
+                      Continue
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3: Add-ons */}
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <h1 className="text-2xl font-bold mb-2">Any add-ons?</h1>
+                  <p className="text-muted-foreground mb-6">Optional extras for a more thorough clean</p>
+
+                  <div className="space-y-3 mb-6">
+                    {addOns.map((addOn) => (
+                      <Card
+                        key={addOn.id}
+                        className={`cursor-pointer transition-all ${
+                          selectedAddOns.includes(addOn.id)
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "hover:border-primary/30"
+                        }`}
+                        onClick={() => toggleAddOn(addOn.id)}
+                      >
+                        <CardContent className="flex items-center gap-4 p-4">
+                          <div
+                            className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center transition-colors ${
+                              selectedAddOns.includes(addOn.id)
+                                ? "bg-primary border-primary"
+                                : "border-border"
+                            }`}
+                          >
+                            {selectedAddOns.includes(addOn.id) && (
+                              <Check className="h-4 w-4 text-primary-foreground" />
+                            )}
+                          </div>
+                          <span className="flex-1 font-medium">{addOn.name}</span>
+                          <span className="text-muted-foreground">+{addOn.credits} credits</span>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="lg" onClick={() => setStep(2)}>
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button className="flex-1" size="lg" onClick={() => setStep(4)}>
+                      Continue
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Summary */}
+              {step === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <h1 className="text-2xl font-bold mb-2">Confirm your booking</h1>
+                  <p className="text-muted-foreground mb-6">Review and place your credit hold</p>
+
+                  <Card className="mb-6">
+                    <CardContent className="p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">{selectedCleaningType?.name}</span>
+                        <span>{selectedCleaningType?.baseCredits} × {hours} hrs</span>
+                      </div>
+                      {selectedAddOns.length > 0 && (
+                        <div className="border-t border-border pt-4 space-y-2">
+                          {selectedAddOns.map((id) => {
+                            const addOn = addOns.find((a) => a.id === id);
+                            return (
+                              <div key={id} className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">{addOn?.name}</span>
+                                <span>+{addOn?.credits} credits</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      <div className="border-t border-border pt-4 flex items-center justify-between">
+                        <span className="font-semibold">Credit Hold</span>
+                        <span className="text-2xl font-bold">{totalCredits} credits</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="mb-6 bg-accent/30 border-accent">
+                    <CardContent className="p-4">
+                      <div className="flex gap-3">
+                        <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Pay only for time worked</p>
+                          <p className="text-xs text-muted-foreground">
+                            Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="lg" onClick={() => setStep(3)}>
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button className="flex-1" size="lg" onClick={handleConfirm}>
+                      Confirm Booking
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
