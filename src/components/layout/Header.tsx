@@ -3,14 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
-
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass">
+  return <header className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -18,21 +15,15 @@ export function Header() {
             <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">P</span>
             </div>
-            <span className="font-semibold text-xl text-foreground">PureTask</span>
+            <span className="font-semibold text-xl text-[#12a6fd] bg-primary-foreground">PureTask</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link 
-              to="/discover" 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link to="/discover" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Find Cleaners
             </Link>
-            <Link 
-              to="/help" 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link to="/help" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               How It Works
             </Link>
           </nav>
@@ -48,10 +39,7 @@ export function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
+          <button className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -59,26 +47,21 @@ export function Header() {
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-card border-t border-border"
-          >
+        {mobileMenuOpen && <motion.div initial={{
+        opacity: 0,
+        height: 0
+      }} animate={{
+        opacity: 1,
+        height: "auto"
+      }} exit={{
+        opacity: 0,
+        height: 0
+      }} className="md:hidden bg-card border-t border-border">
             <div className="container py-4 flex flex-col gap-4">
-              <Link 
-                to="/discover" 
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/discover" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
                 Find Cleaners
               </Link>
-              <Link 
-                to="/help" 
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/help" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
                 How It Works
               </Link>
               <hr className="border-border" />
@@ -89,9 +72,7 @@ export function Header() {
                 <Link to="/book" onClick={() => setMobileMenuOpen(false)}>Book a Cleaning</Link>
               </Button>
             </div>
-          </motion.div>
-        )}
+          </motion.div>}
       </AnimatePresence>
-    </header>
-  );
+    </header>;
 }
