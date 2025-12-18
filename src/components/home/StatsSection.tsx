@@ -1,80 +1,93 @@
 import { motion } from "framer-motion";
-import { Clock, Camera, Star, CheckCircle } from "lucide-react";
+import { Shield, UserCheck, Star, Camera } from "lucide-react";
 
 const stats = [
   {
-    icon: Clock,
-    title: "On-Time Arrival",
-    description: "GPS-verified check-ins track punctuality",
-    value: "95%",
-    borderColor: "border-l-pt-cyan",
-    bgClass: "bg-cyan-soft",
-    iconColor: "text-pt-cyan",
-    valueColor: "text-pt-cyan",
+    value: "500+",
+    label: "Verified Cleaners",
+    color: "text-pt-green",
   },
   {
-    icon: Camera,
-    title: "Before & After Photos",
-    description: "Visual proof of quality work",
-    value: "100%",
-    borderColor: "border-l-pt-aqua",
-    bgClass: "bg-cyan-soft",
-    iconColor: "text-pt-aqua",
-    valueColor: "text-pt-aqua",
+    value: "10k+",
+    label: "Jobs Completed",
+    color: "text-pt-amber",
+  },
+  {
+    value: "4.9★",
+    label: "Average Rating",
+    color: "text-pt-amber",
+  },
+];
+
+const trustBadges = [
+  {
+    icon: Shield,
+    label: "Background Checked",
+    bgClass: "bg-slate-50 border-slate-200",
+    iconColor: "text-foreground",
+  },
+  {
+    icon: UserCheck,
+    label: "Identity Verified",
+    bgClass: "bg-slate-50 border-slate-200",
+    iconColor: "text-foreground",
   },
   {
     icon: Star,
-    title: "Customer Satisfaction",
-    description: "Real reviews from verified bookings",
-    value: "4.9★",
-    borderColor: "border-l-pt-amber",
-    bgClass: "bg-amber-soft",
+    label: "Rated by Clients",
+    bgClass: "bg-amber-50 border-amber-200",
     iconColor: "text-pt-amber",
-    valueColor: "text-pt-amber",
   },
   {
-    icon: CheckCircle,
-    title: "Consistent Completion",
-    description: "Track record of finished jobs",
-    value: "98%",
-    borderColor: "border-l-pt-green",
-    bgClass: "bg-green-soft",
-    iconColor: "text-pt-green",
-    valueColor: "text-pt-green",
+    icon: Camera,
+    label: "Photo Proof",
+    bgClass: "bg-purple-50 border-purple-200",
+    iconColor: "text-pt-purple",
   },
 ];
 
 export function StatsSection() {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-gradient-to-b from-cyan-50/50 to-background">
       <div className="container">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Stats Row */}
+        <div className="flex flex-wrap justify-center gap-6 mb-12">
           {stats.map((stat, index) => (
             <motion.div
-              key={stat.title}
+              key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`${stat.bgClass} rounded-2xl p-6 border-l-4 ${stat.borderColor} hover-lift`}
+              className="bg-white rounded-2xl px-10 py-6 shadow-soft border border-border/50 text-center min-w-[180px]"
             >
-              <stat.icon className={`h-8 w-8 ${stat.iconColor} mb-4`} />
-              <h3 className="font-semibold text-foreground mb-1">{stat.title}</h3>
-              <p className="text-muted-foreground text-sm mb-4">{stat.description}</p>
-              <p className={`text-4xl font-bold ${stat.valueColor}`}>{stat.value}</p>
+              <p className={`text-3xl md:text-4xl font-bold ${stat.color} mb-1`}>
+                {stat.value}
+              </p>
+              <p className="text-muted-foreground text-sm">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-center mt-10 text-lg text-foreground font-medium"
-        >
-          You're not just booking a cleaner — you're booking a proven professional.
-        </motion.p>
+        {/* Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent mb-12" />
+
+        {/* Trust Badges Row */}
+        <div className="flex flex-wrap justify-center gap-4">
+          {trustBadges.map((badge, index) => (
+            <motion.div
+              key={badge.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              className={`${badge.bgClass} border rounded-2xl px-8 py-5 flex flex-col items-center gap-3 min-w-[160px]`}
+            >
+              <badge.icon className={`h-6 w-6 ${badge.iconColor}`} />
+              <span className="text-sm font-medium text-foreground">{badge.label}</span>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
