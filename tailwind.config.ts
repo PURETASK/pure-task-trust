@@ -14,14 +14,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Primary Display - Fredoka (H1, H2, Buttons, UI Labels)
-        display: ["Fredoka", "system-ui", "sans-serif"],
-        // Body - DM Sans (Paragraphs, forms, small UI)
-        body: ["DM Sans", "system-ui", "sans-serif"],
+        // Primary Display - Open Sans (H1, H2, Buttons, UI Labels)
+        display: ["Open Sans", "system-ui", "sans-serif"],
+        // Body - Open Sans (Paragraphs, forms, small UI)
+        body: ["Open Sans", "system-ui", "sans-serif"],
         // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
         accent: ["Lilita One", "cursive"],
         // Default sans = body font
-        sans: ["DM Sans", "system-ui", "sans-serif"],
+        sans: ["Open Sans", "system-ui", "sans-serif"],
       },
       colors: {
         // PureTask Brand Colors
