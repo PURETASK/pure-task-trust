@@ -1,50 +1,34 @@
+import { useState } from 'react';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, CreditCard } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw } from "lucide-react";
+import { useWallet } from "@/hooks/useWallet";
+import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
-const transactions = [
-  {
-    id: "1",
-    type: "purchase",
-    amount: 100,
-    description: "Credit purchase",
-    date: "Dec 18, 2024",
-    status: "completed",
-  },
-  {
-    id: "2",
-    type: "payment",
-    amount: -96,
-    description: "Cleaning - Sarah M.",
-    date: "Dec 15, 2024",
-    status: "completed",
-  },
-  {
-    id: "3",
-    type: "refund",
-    amount: 9,
-    description: "Unused time refund",
-    date: "Dec 15, 2024",
-    status: "completed",
-  },
-  {
-    id: "4",
-    type: "hold",
-    amount: -105,
-    description: "Pending cleaning",
-    date: "Dec 20, 2024",
-    status: "held",
-  },
-];
+const reasonLabels: Record<string, string> = {
+  purchase: 'Credit purchase',
+  payment: 'Job payment',
+  hold: 'Credits held',
+  release: 'Credits released',
+  refund: 'Refund',
+  bonus: 'Bonus credits',
+  cancellation_fee: 'Cancellation fee',
+  payout: 'Cleaner payout',
+};
 
 export default function Wallet() {
-  const availableCredits = 208;
-  const heldCredits = 105;
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing } = useWallet();
+
+  const availableCredits = account?.current_balance || 0;
+  const heldCredits = account?.held_balance || 0;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -66,7 +50,11 @@ export default function Wallet() {
                     <span className="text-primary-foreground/80">Available</span>
                     <WalletIcon className="h-5 w-5 text-primary-foreground/60" />
                   </div>
-                  <p className="text-4xl font-bold mb-1">{availableCredits}</p>
+                  {isLoadingAccount ? (
+                    <Skeleton className="h-10 w-20 bg-primary-foreground/20" />
+                  ) : (
+                    <p className="text-4xl font-bold mb-1">{availableCredits}</p>
+                  )}
                   <p className="text-sm text-primary-foreground/70">credits</p>
                 </CardContent>
               </Card>
@@ -77,7 +65,11 @@ export default function Wallet() {
                     <span className="text-muted-foreground">Held</span>
                     <Clock className="h-5 w-5 text-muted-foreground" />
                   </div>
-                  <p className="text-4xl font-bold mb-1 text-warning">{heldCredits}</p>
+                  {isLoadingAccount ? (
+                    <Skeleton className="h-10 w-20" />
+                  ) : (
+                    <p className="text-4xl font-bold mb-1 text-warning">{heldCredits}</p>
+                  )}
                   <p className="text-sm text-muted-foreground">credits for pending jobs</p>
                 </CardContent>
               </Card>
@@ -91,7 +83,7 @@ export default function Wallet() {
                     <h3 className="font-semibold mb-1">Need more credits?</h3>
                     <p className="text-sm text-muted-foreground">1 credit = $1 USD</p>
                   </div>
-                  <Button className="gap-2">
+                  <Button className="gap-2" onClick={() => setBuyDialogOpen(true)}>
                     <Plus className="h-4 w-4" />
                     Buy Credits
                   </Button>
@@ -105,57 +97,83 @@ export default function Wallet() {
                 <CardTitle className="text-lg">Transaction History</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {transactions.map((transaction) => (
-                    <div
-                      key={transaction.id}
-                      className="flex items-center gap-4 pb-4 border-b border-border last:border-0 last:pb-0"
-                    >
-                      <div
-                        className={`h-10 w-10 rounded-xl flex items-center justify-center ${
-                          transaction.type === "purchase"
-                            ? "bg-success/10"
-                            : transaction.type === "refund"
-                            ? "bg-success/10"
-                            : transaction.type === "hold"
-                            ? "bg-warning/10"
-                            : "bg-secondary"
-                        }`}
-                      >
-                        {transaction.type === "purchase" ? (
-                          <ArrowDownLeft className="h-5 w-5 text-success" />
-                        ) : transaction.type === "refund" ? (
-                          <ArrowDownLeft className="h-5 w-5 text-success" />
-                        ) : transaction.type === "hold" ? (
-                          <Clock className="h-5 w-5 text-warning" />
-                        ) : (
-                          <ArrowUpRight className="h-5 w-5 text-foreground" />
-                        )}
+                {isLoadingLedger ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <Skeleton className="h-10 w-10 rounded-xl" />
+                        <div className="flex-1">
+                          <Skeleton className="h-4 w-32 mb-2" />
+                          <Skeleton className="h-3 w-20" />
+                        </div>
+                        <Skeleton className="h-5 w-12" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">{transaction.description}</p>
-                        <p className="text-sm text-muted-foreground">{transaction.date}</p>
-                      </div>
-                      <div className="text-right">
-                        <p
-                          className={`font-semibold ${
-                            transaction.amount > 0
-                              ? "text-success"
-                              : transaction.status === "held"
-                              ? "text-warning"
-                              : ""
-                          }`}
+                    ))}
+                  </div>
+                ) : ledger.length === 0 ? (
+                  <div className="py-8 text-center text-muted-foreground">
+                    <WalletIcon className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p>No transactions yet</p>
+                    <p className="text-sm mt-1">Buy some credits to get started!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {ledger.map((entry) => {
+                      const isPositive = entry.delta_credits > 0;
+                      const isHold = entry.reason === 'hold';
+                      const isRelease = entry.reason === 'release';
+                      
+                      return (
+                        <div
+                          key={entry.id}
+                          className="flex items-center gap-4 pb-4 border-b border-border last:border-0 last:pb-0"
                         >
-                          {transaction.amount > 0 ? "+" : ""}
-                          {transaction.amount}
-                        </p>
-                        {transaction.status === "held" && (
-                          <Badge variant="warning" className="text-xs">Held</Badge>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                          <div
+                            className={cn(
+                              "h-10 w-10 rounded-xl flex items-center justify-center",
+                              isPositive ? "bg-success/10" :
+                              isHold ? "bg-warning/10" :
+                              isRelease ? "bg-primary/10" :
+                              "bg-secondary"
+                            )}
+                          >
+                            {isPositive ? (
+                              <ArrowDownLeft className="h-5 w-5 text-success" />
+                            ) : isHold ? (
+                              <Clock className="h-5 w-5 text-warning" />
+                            ) : isRelease ? (
+                              <RefreshCw className="h-5 w-5 text-primary" />
+                            ) : (
+                              <ArrowUpRight className="h-5 w-5 text-foreground" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium">
+                              {reasonLabels[entry.reason] || entry.reason}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(entry.created_at), 'MMM d, yyyy')}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p
+                              className={cn(
+                                "font-semibold",
+                                isPositive && "text-success",
+                                isHold && "text-warning"
+                              )}
+                            >
+                              {isPositive ? '+' : ''}{entry.delta_credits}
+                            </p>
+                            {isHold && (
+                              <Badge variant="warning" className="text-xs">Held</Badge>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -167,6 +185,13 @@ export default function Wallet() {
         </div>
       </main>
       <Footer />
+
+      <BuyCreditsDialog
+        open={buyDialogOpen}
+        onOpenChange={setBuyDialogOpen}
+        onPurchase={purchaseCredits}
+        isPurchasing={isPurchasing}
+      />
     </div>
   );
 }
