@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 export type UserRole = 'client' | 'cleaner' | 'admin';
 
@@ -12,10 +14,11 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ error?: string }>;
-  signup: (email: string, password: string, role: UserRole) => Promise<{ error?: string }>;
+  signup: (email: string, password: string, role: UserRole, fullName?: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   loginWithGoogle: (role: UserRole) => Promise<{ error?: string }>;
 }
@@ -24,56 +27,114 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session on mount
-    checkSession();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        setSession(currentSession);
+        
+        if (currentSession?.user) {
+          // Defer profile fetch to avoid blocking
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user);
+          }, 0);
+        } else {
+          setUser(null);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      setSession(existingSession);
+      if (existingSession?.user) {
+        fetchUserProfile(existingSession.user);
+      }
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const checkSession = async () => {
+  const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
-      // In production, this would call the auth API
-      // For now, check localStorage for demo purposes
-      const storedUser = localStorage.getItem('puretask_user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
+      // Get user role
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', supabaseUser.id)
+        .maybeSingle();
+
+      // Get profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('full_name, avatar_url')
+        .eq('id', supabaseUser.id)
+        .maybeSingle();
+
+      setUser({
+        id: supabaseUser.id,
+        email: supabaseUser.email || '',
+        name: profileData?.full_name || supabaseUser.email?.split('@')[0] || 'User',
+        role: (roleData?.role as UserRole) || 'client',
+        avatar: profileData?.avatar_url || undefined,
+      });
     } catch (error) {
-      console.error('Failed to check session:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to fetch user profile:', error);
+      // Set basic user info even if profile fetch fails
+      setUser({
+        id: supabaseUser.id,
+        email: supabaseUser.email || '',
+        name: supabaseUser.email?.split('@')[0] || 'User',
+        role: 'client',
+      });
     }
   };
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      // In production, this would call the auth API
-      // Demo: accept any email/password
-      const mockUser: User = {
-        id: crypto.randomUUID(),
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        name: email.split('@')[0],
-        role: 'client',
-      };
-      setUser(mockUser);
-      localStorage.setItem('puretask_user', JSON.stringify(mockUser));
+        password,
+      });
+      
+      if (error) {
+        return { error: error.message };
+      }
+      
       return {};
     } catch (error) {
       return { error: 'Login failed' };
     }
   };
 
-  const signup = async (email: string, password: string, role: UserRole): Promise<{ error?: string }> => {
+  const signup = async (
+    email: string, 
+    password: string, 
+    role: UserRole,
+    fullName?: string
+  ): Promise<{ error?: string }> => {
     try {
-      const mockUser: User = {
-        id: crypto.randomUUID(),
+      const { error } = await supabase.auth.signUp({
         email,
-        name: email.split('@')[0],
-        role,
-      };
-      setUser(mockUser);
-      localStorage.setItem('puretask_user', JSON.stringify(mockUser));
+        password,
+        options: {
+          data: {
+            role,
+            full_name: fullName || email.split('@')[0],
+          },
+        },
+      });
+      
+      if (error) {
+        return { error: error.message };
+      }
+      
       return {};
     } catch (error) {
       return { error: 'Signup failed' };
@@ -81,21 +142,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('puretask_user');
+    setSession(null);
   };
 
   const loginWithGoogle = async (role: UserRole): Promise<{ error?: string }> => {
     try {
-      // In production, this would initiate OAuth flow
-      const mockUser: User = {
-        id: crypto.randomUUID(),
-        email: 'demo@example.com',
-        name: 'Demo User',
-        role,
-      };
-      setUser(mockUser);
-      localStorage.setItem('puretask_user', JSON.stringify(mockUser));
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+      
+      if (error) {
+        return { error: error.message };
+      }
+      
       return {};
     } catch (error) {
       return { error: 'Google login failed' };
@@ -106,6 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        session,
         isLoading,
         isAuthenticated: !!user,
         login,
