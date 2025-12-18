@@ -5,31 +5,34 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-display font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.02] active:scale-[0.98]",
   {
     variants: {
       variant: {
+        // Primary - Gradient pill button (per design system)
         default:
-          "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90 hover:shadow-card",
+          "gradient-brand text-white shadow-soft hover:shadow-card",
         destructive:
           "bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90",
         outline:
           "border-2 border-border bg-transparent hover:bg-secondary hover:border-primary/30",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         // PureTask custom variants
-        hero: "bg-primary text-primary-foreground shadow-card hover:shadow-elevated hover:bg-primary/95 text-base px-8",
+        hero: "gradient-brand text-white shadow-card hover:shadow-elevated text-base px-8",
         trust: "bg-trust/10 text-trust border-2 border-trust/20 hover:bg-trust/20 hover:border-trust/40",
         success: "bg-success text-success-foreground shadow-soft hover:bg-success/90",
-        glass: "bg-card/80 backdrop-blur-lg border border-border/50 hover:bg-card/90",
+        glass: "bg-card/80 backdrop-blur-lg border border-border/50 hover:bg-card/90 text-foreground",
+        // Solid primary (non-gradient)
+        solid: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90",
       },
       size: {
-        default: "h-11 px-5 py-2",
-        sm: "h-9 rounded-lg px-4 text-xs",
-        lg: "h-12 rounded-xl px-8 text-base",
-        xl: "h-14 rounded-2xl px-10 text-lg",
+        default: "h-11 px-6 py-2 text-base",
+        sm: "h-9 px-4 text-sm",
+        lg: "h-12 px-8 text-base",
+        xl: "h-14 px-10 text-lg",
         icon: "h-10 w-10",
       },
     },

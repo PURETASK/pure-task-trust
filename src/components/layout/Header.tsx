@@ -12,18 +12,18 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">P</span>
+            <div className="h-9 w-9 rounded-xl gradient-brand flex items-center justify-center">
+              <span className="text-white font-display font-bold text-lg">P</span>
             </div>
-            <span className="font-semibold text-xl text-[#12a6fd] bg-primary-foreground">PureTask</span>
+            <span className="font-display font-semibold text-xl gradient-brand-text">PureTask</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="/discover" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/discover" className="text-sm font-body font-medium text-muted-foreground hover:text-foreground transition-colors">
               Find Cleaners
             </Link>
-            <Link to="/help" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/help" className="text-sm font-body font-medium text-muted-foreground hover:text-foreground transition-colors">
               How It Works
             </Link>
           </nav>

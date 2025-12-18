@@ -38,9 +38,9 @@ export function Hero() {
         }} transition={{
           duration: 0.5,
           delay: 0.1
-        }} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+        }} className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
             Cleaning you can{" "}
-            <span className="text-[#31a7fc]">trust</span>
+            <span className="gradient-brand-text">trust</span>
           </motion.h1>
 
           <motion.p initial={{

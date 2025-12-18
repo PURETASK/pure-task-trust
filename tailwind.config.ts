@@ -14,9 +14,23 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["DM Sans", "system-ui", "sans-serif"],
+        // Primary Display - Fredoka (H1, H2, Buttons, UI Labels)
+        display: ["Fredoka", "system-ui", "sans-serif"],
+        // Body - Poppins (Paragraphs, forms, small UI)
+        body: ["Poppins", "system-ui", "sans-serif"],
+        // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
+        accent: ["Lilita One", "cursive"],
+        // Default sans = body font
+        sans: ["Poppins", "system-ui", "sans-serif"],
       },
       colors: {
+        // PureTask Brand Colors
+        "pt-blue": "hsl(210 100% 50%)",
+        "pt-aqua": "hsl(190 100% 50%)",
+        "pt-mint": "hsl(145 65% 47%)",
+        "pt-slate": "hsl(218 28% 16%)",
+        "pt-cloud": "hsl(216 44% 98%)",
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -79,11 +93,24 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         xl: "calc(var(--radius) + 4px)",
         "2xl": "calc(var(--radius) + 8px)",
+        pill: "9999px",
+        card: "var(--radius-card)",
       },
       boxShadow: {
         soft: "var(--shadow-soft)",
         card: "var(--shadow-card)",
         elevated: "var(--shadow-elevated)",
+      },
+      spacing: {
+        // PureTask spacing scale
+        "4": "4px",
+        "8": "8px",
+        "12": "12px",
+        "16": "16px",
+        "24": "24px",
+        "32": "32px",
+        "48": "48px",
+        "64": "64px",
       },
       keyframes: {
         "accordion-down": {
