@@ -1,166 +1,263 @@
+import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { HelpCircle, Shield, CreditCard, Clock, MessageCircle, FileText, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion } from "framer-motion";
+import {
+  Send,
+  MessageSquare,
+  FileText,
+  Mail,
+  Phone,
+  MessageCircle,
+  Calendar,
+  AlertCircle,
+  Clock,
+  ShieldAlert,
+  CreditCard,
+  Zap,
+  User,
+  MoreHorizontal,
+  ExternalLink,
+} from "lucide-react";
 
-const faqItems = [
-  {
-    question: "How does PureTask ensure trust?",
-    answer: "Every job includes GPS check-in/check-out verification, before & after photos, and an approval step before payment is released. Your credits are held in escrow until you're satisfied with the work.",
-  },
-  {
-    question: "What happens if I'm not satisfied?",
-    answer: "If you're not happy with the cleaning, you can report an issue before approving payment. Our support team will review and help resolve the situation fairly.",
-  },
-  {
-    question: "How does the credit system work?",
-    answer: "Credits are PureTask's currency (1 credit = $1). When you book, credits are held as a deposit. Only the time actually worked is charged, and unused credits are automatically refunded.",
-  },
-  {
-    question: "Can I get a cash refund for credits?",
-    answer: "Credits cannot be refunded to cash—they can only be used for future bookings. This helps us keep the platform running smoothly and prices fair.",
-  },
-  {
-    question: "Are cleaners employees of PureTask?",
-    answer: "No, cleaners are independent contractors who set their own rates and schedules. PureTask is a marketplace that connects clients with vetted, professional cleaners.",
-  },
-  {
-    question: "How are cleaners verified?",
-    answer: "All cleaners undergo identity verification and background checks. They also build reliability scores based on on-time arrivals, job completion, and client approval rates.",
-  },
-  {
-    question: "What if my cleaner cancels?",
-    answer: "If a cleaner cancels, your held credits are immediately released and you can book another cleaner. We're building features to help match you quickly with available cleaners.",
-  },
-  {
-    question: "Can I tip my cleaner?",
-    answer: "Yes! You can add a tip after approving the job. Tips go directly to your cleaner with no platform fees.",
-  },
+const issueTypes = [
+  { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-pt-red" },
+  { id: "no-show", icon: AlertCircle, label: "No Show", color: "text-pt-red" },
+  { id: "late-arrival", icon: Clock, label: "Late Arrival", color: "text-pt-amber" },
+  { id: "quality", icon: ShieldAlert, label: "Quality Issue", color: "text-pt-purple" },
+  { id: "payment", icon: CreditCard, label: "Payment", color: "text-pt-blue" },
+  { id: "technical", icon: Zap, label: "Technical", color: "text-pt-amber" },
+  { id: "account", icon: User, label: "Account", color: "text-pt-cyan" },
+  { id: "other", icon: MoreHorizontal, label: "Other", color: "text-pt-purple" },
 ];
 
-const sections = [
-  {
-    icon: Shield,
-    title: "Trust & Safety",
-    description: "How we keep you and your home safe",
-  },
-  {
-    icon: CreditCard,
-    title: "Payments & Credits",
-    description: "Understanding the credit system",
-  },
-  {
-    icon: Clock,
-    title: "Booking Process",
-    description: "From booking to approval",
-  },
-  {
-    icon: MessageCircle,
-    title: "Support",
-    description: "Get help when you need it",
-  },
+const quickLinks = [
+  { label: "Cancellation Policy", href: "#" },
+  { label: "Damage & Claims", href: "#" },
+  { label: "How It Works", href: "/help" },
 ];
 
 export default function Help() {
+  const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 pt-24 pb-12">
-        <div className="container max-w-4xl">
+        <div className="container max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             {/* Header */}
-            <div className="text-center mb-12">
-              <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <HelpCircle className="h-8 w-8 text-primary" />
-              </div>
-              <h1 className="text-3xl font-bold mb-3">Help Center</h1>
-              <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-                Everything you need to know about using PureTask safely and confidently
-              </p>
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold mb-2">Support Center</h1>
+              <p className="text-muted-foreground">We're here to help you 24/7</p>
             </div>
 
-            {/* Quick Links */}
-            <div className="grid md:grid-cols-4 gap-4 mb-12">
-              {sections.map((section) => (
-                <Card key={section.title} className="hover:shadow-elevated transition-all cursor-pointer">
-                  <CardContent className="p-5 text-center">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <section.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <h3 className="font-semibold text-sm mb-1">{section.title}</h3>
-                    <p className="text-xs text-muted-foreground">{section.description}</p>
+            {/* Tabs */}
+            <Tabs defaultValue="submit" className="w-full">
+              <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
+                <TabsTrigger value="submit" className="gap-2">
+                  <Send className="h-4 w-4" />
+                  Submit Ticket
+                </TabsTrigger>
+                <TabsTrigger value="tickets" className="gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  My Tickets
+                </TabsTrigger>
+                <TabsTrigger value="faq" className="gap-2">
+                  <FileText className="h-4 w-4" />
+                  FAQ
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="submit">
+                <div className="grid lg:grid-cols-3 gap-8">
+                  {/* Main Form */}
+                  <div className="lg:col-span-2">
+                    <Card className="overflow-hidden">
+                      {/* Form Header */}
+                      <div className="gradient-brand text-white p-6">
+                        <div className="flex items-center gap-3">
+                          <Send className="h-5 w-5" />
+                          <div>
+                            <h2 className="text-lg font-semibold">Submit a Support Ticket</h2>
+                            <p className="text-white/80 text-sm">We typically respond within 24 hours</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <CardContent className="p-6 space-y-6">
+                        {/* Issue Type */}
+                        <div>
+                          <Label className="text-base mb-4 block">
+                            What do you need help with? *
+                          </Label>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {issueTypes.map((issue) => (
+                              <button
+                                key={issue.id}
+                                type="button"
+                                onClick={() => setSelectedIssue(issue.id)}
+                                className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                  selectedIssue === issue.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border hover:border-primary/30"
+                                }`}
+                              >
+                                <issue.icon className={`h-5 w-5 mb-2 ${issue.color}`} />
+                                <span className="text-sm font-medium">{issue.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Priority & Booking ID */}
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="priority">Priority</Label>
+                            <Select defaultValue="medium">
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select priority" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="low">Low - General question</SelectItem>
+                                <SelectItem value="medium">Medium - Issue needs attention</SelectItem>
+                                <SelectItem value="high">High - Urgent issue</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="booking-id">Booking ID (if applicable)</Label>
+                            <Input id="booking-id" placeholder="e.g., BK123456" />
+                          </div>
+                        </div>
+
+                        {/* Subject */}
+                        <div>
+                          <Label htmlFor="subject">Subject *</Label>
+                          <Input id="subject" placeholder="Brief summary of your issue" />
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                          <Label htmlFor="description">Description *</Label>
+                          <Textarea
+                            id="description"
+                            placeholder="Please provide as much detail as possible about your issue. Include booking ID, dates, cleaner names, etc."
+                            rows={5}
+                          />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Tip: More details help us resolve your issue faster
+                          </p>
+                        </div>
+
+                        <Button size="lg" className="w-full">
+                          <Send className="h-4 w-4 mr-2" />
+                          Submit Ticket
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Sidebar */}
+                  <div className="space-y-6">
+                    {/* Immediate Help */}
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="font-semibold text-lg mb-4">Need Immediate Help?</h3>
+                        
+                        <div className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-medium">Email Support</p>
+                              <p className="text-sm text-primary">support@puretask.com</p>
+                              <p className="text-xs text-muted-foreground">Response within 24 hours</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-medium">Emergency Line</p>
+                              <p className="text-sm">1-800-PURETASK</p>
+                              <p className="text-xs text-muted-foreground">Available 24/7</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <MessageCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-medium">Live Chat</p>
+                              <p className="text-sm text-pt-green">Coming Soon</p>
+                              <p className="text-xs text-muted-foreground">Instant support via chat</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Quick Links */}
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
+                        <div className="space-y-3">
+                          {quickLinks.map((link) => (
+                            <a
+                              key={link.label}
+                              href={link.href}
+                              className="flex items-center justify-between text-sm hover:text-primary transition-colors"
+                            >
+                              {link.label}
+                              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                            </a>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="tickets">
+                <Card className="text-center py-12">
+                  <CardContent>
+                    <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No tickets yet</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Submit a ticket to get help from our support team
+                    </p>
+                    <Button>Submit Your First Ticket</Button>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              </TabsContent>
 
-            {/* FAQ */}
-            <Card className="mb-12">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Frequently Asked Questions</h2>
-                <Accordion type="single" collapsible className="w-full">
-                  {faqItems.map((item, index) => (
-                    <AccordionItem key={index} value={`item-${index}`}>
-                      <AccordionTrigger className="text-left">
-                        {item.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground">
-                        {item.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </CardContent>
-            </Card>
-
-            {/* Contact & Legal */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Mail className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold">Contact Support</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Can't find what you're looking for? Our support team is here to help.
-                  </p>
-                  <p className="text-sm">
-                    Email: <a href="mailto:support@puretask.com" className="text-primary hover:underline">support@puretask.com</a>
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <FileText className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold">Legal</h3>
-                  </div>
-                  <div className="space-y-2">
-                    <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      Terms of Service
-                    </a>
-                    <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      Privacy Policy
-                    </a>
-                    <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      Cleaner Agreement
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              <TabsContent value="faq">
+                <Card>
+                  <CardContent className="p-6">
+                    <p className="text-center text-muted-foreground">
+                      FAQ section coming soon...
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </main>
