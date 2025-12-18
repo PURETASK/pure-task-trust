@@ -7,29 +7,43 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      padding: "2rem",
       screens: {
-        "2xl": "1280px",
+        "2xl": "1200px",
       },
     },
     extend: {
       fontFamily: {
-        // Primary Display - Quicksand (H1, H2, Buttons, UI Labels)
-        display: ["Quicksand", "system-ui", "sans-serif"],
-        // Body - Jost (Paragraphs, forms, small UI)
-        body: ["Jost", "system-ui", "sans-serif"],
-        // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
+        // Display - Cormorant Garamond (Elegant serif for headings)
+        display: ["Cormorant Garamond", "Georgia", "serif"],
+        // Body - Inter (Clean, refined sans-serif)
+        body: ["Inter", "system-ui", "sans-serif"],
+        // Marketing Accent
         accent: ["Lilita One", "cursive"],
         // Default sans = body font
-        sans: ["Jost", "system-ui", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        // Refined type scale
+        'xs': ['0.75rem', { lineHeight: '1.5' }],
+        'sm': ['0.875rem', { lineHeight: '1.6' }],
+        'base': ['1rem', { lineHeight: '1.7' }],
+        'lg': ['1.125rem', { lineHeight: '1.6' }],
+        'xl': ['1.25rem', { lineHeight: '1.5' }],
+        '2xl': ['1.5rem', { lineHeight: '1.4' }],
+        '3xl': ['1.875rem', { lineHeight: '1.3' }],
+        '4xl': ['2.25rem', { lineHeight: '1.2' }],
+        '5xl': ['3rem', { lineHeight: '1.15' }],
+        '6xl': ['3.75rem', { lineHeight: '1.1' }],
       },
       colors: {
-        // PureTask Brand Colors
-        "pt-blue": "hsl(210 100% 50%)",
-        "pt-aqua": "hsl(190 100% 50%)",
-        "pt-mint": "hsl(145 65% 47%)",
-        "pt-slate": "hsl(218 28% 16%)",
-        "pt-cloud": "hsl(216 44% 98%)",
+        // PureTask Luxury Brand Colors
+        "pt-blue": "hsl(220 60% 50%)",
+        "pt-aqua": "hsl(200 70% 55%)",
+        "pt-gold": "hsl(40 60% 55%)",
+        "pt-charcoal": "hsl(220 15% 15%)",
+        "pt-pearl": "hsl(220 20% 98%)",
+        "pt-mint": "hsl(160 45% 45%)",
         
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -100,17 +114,22 @@ export default {
         soft: "var(--shadow-soft)",
         card: "var(--shadow-card)",
         elevated: "var(--shadow-elevated)",
+        luxury: "var(--shadow-luxury)",
       },
       spacing: {
-        // PureTask spacing scale
-        "4": "4px",
-        "8": "8px",
-        "12": "12px",
-        "16": "16px",
-        "24": "24px",
-        "32": "32px",
-        "48": "48px",
-        "64": "64px",
+        // Generous luxury spacing
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '26': '6.5rem',
+        '30': '7.5rem',
+      },
+      letterSpacing: {
+        'tighter': '-0.03em',
+        'tight': '-0.02em',
+        'snug': '-0.01em',
+        'wide': '0.02em',
+        'wider': '0.05em',
+        'widest': '0.1em',
       },
       keyframes: {
         "accordion-down": {
