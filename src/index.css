@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Lilita+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,147 +7,128 @@
 @layer base {
   :root {
     /* ========================================
-       PURETASK LUXURY DESIGN SYSTEM
-       Elegant, Refined, Premium
+       PURETASK DESIGN SYSTEM
+       Clean, Modern, Trustworthy
        ======================================== */
     
-    /* Primary Brand Colors - Sophisticated Blue */
-    --pt-blue: 220 60% 50%;
-    --pt-aqua: 200 70% 55%;
+    /* Primary Brand Colors */
+    --pt-blue: 210 100% 50%;
+    --pt-aqua: 190 100% 50%;
     
-    /* Luxury Neutrals */
-    --pt-charcoal: 220 15% 15%;
-    --pt-slate: 220 10% 25%;
-    --pt-silver: 220 10% 60%;
-    --pt-pearl: 220 20% 98%;
-    --pt-cream: 45 30% 96%;
+    /* Accent Colors - Vibrant & Friendly */
+    --pt-cyan: 190 90% 50%;
+    --pt-green: 145 65% 47%;
+    --pt-amber: 38 95% 55%;
+    --pt-orange: 25 95% 55%;
+    --pt-purple: 280 70% 55%;
+    --pt-red: 0 75% 55%;
     
-    /* Accent - Champagne Gold */
-    --pt-gold: 40 60% 55%;
-    --pt-mint: 160 45% 45%;
+    /* Neutrals */
+    --pt-slate: 220 15% 20%;
+    --pt-gray: 220 10% 45%;
+    --pt-light: 220 20% 98%;
 
-    /* Background - Pearl White */
-    --background: 220 20% 98%;
-    /* Foreground - Deep Charcoal */
-    --foreground: 220 15% 15%;
+    /* Background - Clean white/light */
+    --background: 0 0% 100%;
+    --foreground: 220 15% 20%;
 
-    /* Card - Pure white with warmth */
+    /* Card */
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 220 15% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 220 15% 20%;
 
-    /* Primary - Deep Elegant Blue */
-    --primary: 220 60% 50%;
+    /* Primary - PureTask Blue */
+    --primary: 210 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Warm Cream */
-    --secondary: 45 30% 96%;
-    --secondary-foreground: 220 15% 20%;
+    /* Secondary */
+    --secondary: 220 15% 96%;
+    --secondary-foreground: 220 15% 25%;
 
-    /* Muted - Soft Silver */
-    --muted: 220 15% 95%;
+    /* Muted */
+    --muted: 220 15% 96%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent - Champagne Gold */
-    --accent: 40 60% 55%;
-    --accent-foreground: 220 15% 15%;
+    /* Accent - Aqua */
+    --accent: 190 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    /* Destructive */
-    --destructive: 0 65% 50%;
+    /* Status Colors */
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Success - Refined Green */
-    --success: 160 45% 45%;
+    --success: 145 65% 47%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning - Warm Amber */
-    --warning: 40 85% 55%;
-    --warning-foreground: 40 90% 15%;
+    --warning: 38 95% 55%;
+    --warning-foreground: 38 95% 15%;
 
-    /* Trust - Primary Blue */
-    --trust: 220 60% 50%;
+    --trust: 210 100% 50%;
     --trust-foreground: 0 0% 100%;
 
-    /* Borders - Refined & Subtle */
+    /* Borders */
     --border: 220 15% 90%;
     --input: 220 15% 90%;
-    --ring: 220 60% 50%;
+    --ring: 210 100% 50%;
 
-    /* Radius - Softer, more refined */
-    --radius: 0.5rem;
-    --radius-pill: 9999px;
-    --radius-card: 0.75rem;
-    --radius-small: 0.25rem;
+    /* Radius */
+    --radius: 0.75rem;
 
-    /* Luxury Gradient */
-    --gradient-brand: linear-gradient(135deg, hsl(220 60% 50%) 0%, hsl(200 70% 55%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(40 60% 55%) 0%, hsl(35 70% 60%) 100%);
+    /* Brand Gradient */
+    --gradient-brand: linear-gradient(135deg, #0078FF 0%, #00D4FF 100%);
 
-    /* Refined Shadows */
-    --shadow-soft: 0 1px 3px 0 hsl(220 15% 15% / 0.04), 0 1px 2px -1px hsl(220 15% 15% / 0.04);
-    --shadow-card: 0 4px 6px -1px hsl(220 15% 15% / 0.05), 0 2px 4px -2px hsl(220 15% 15% / 0.05);
-    --shadow-elevated: 0 10px 15px -3px hsl(220 15% 15% / 0.08), 0 4px 6px -4px hsl(220 15% 15% / 0.08);
-    --shadow-luxury: 0 25px 50px -12px hsl(220 15% 15% / 0.15);
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(220 15% 20% / 0.08);
+    --shadow-card: 0 4px 20px -4px hsl(220 15% 20% / 0.1);
+    --shadow-elevated: 0 12px 40px -8px hsl(220 15% 20% / 0.15);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 15% 20%;
-    --sidebar-primary: 220 60% 50%;
+    --sidebar-foreground: 220 15% 25%;
+    --sidebar-primary: 210 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 60% 97%;
-    --sidebar-accent-foreground: 220 60% 40%;
+    --sidebar-accent: 210 100% 97%;
+    --sidebar-accent-foreground: 210 100% 40%;
     --sidebar-border: 220 15% 92%;
-    --sidebar-ring: 220 60% 50%;
+    --sidebar-ring: 210 100% 50%;
   }
 
   .dark {
     --background: 220 20% 8%;
     --foreground: 220 15% 95%;
-
     --card: 220 18% 12%;
     --card-foreground: 220 15% 95%;
-
     --popover: 220 18% 12%;
     --popover-foreground: 220 15% 95%;
-
-    --primary: 220 60% 60%;
+    --primary: 210 100% 55%;
     --primary-foreground: 220 20% 8%;
-
     --secondary: 220 15% 18%;
     --secondary-foreground: 220 15% 90%;
-
     --muted: 220 15% 20%;
     --muted-foreground: 220 10% 55%;
-
-    --accent: 40 50% 50%;
+    --accent: 190 100% 50%;
     --accent-foreground: 220 20% 8%;
-
-    --destructive: 0 60% 50%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-
-    --success: 160 40% 50%;
+    --success: 145 60% 50%;
     --success-foreground: 220 20% 8%;
-
-    --warning: 40 80% 50%;
-    --warning-foreground: 40 90% 10%;
-
-    --trust: 220 60% 60%;
+    --warning: 38 90% 50%;
+    --warning-foreground: 38 90% 10%;
+    --trust: 210 100% 55%;
     --trust-foreground: 220 20% 8%;
-
     --border: 220 15% 20%;
     --input: 220 15% 20%;
-    --ring: 220 60% 60%;
-
+    --ring: 210 100% 55%;
     --sidebar-background: 220 18% 10%;
     --sidebar-foreground: 220 15% 90%;
-    --sidebar-primary: 220 60% 60%;
+    --sidebar-primary: 210 100% 55%;
     --sidebar-primary-foreground: 220 20% 8%;
-    --sidebar-accent: 220 30% 18%;
-    --sidebar-accent-foreground: 220 60% 75%;
+    --sidebar-accent: 210 40% 18%;
+    --sidebar-accent-foreground: 210 100% 75%;
     --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 220 60% 60%;
+    --sidebar-ring: 210 100% 55%;
   }
 }
 
@@ -161,33 +142,11 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
-    letter-spacing: 0.01em;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
-  /* Luxury Typography Hierarchy */
-  h1 {
-    @apply font-display font-semibold text-4xl md:text-5xl lg:text-6xl tracking-tight;
-    letter-spacing: -0.02em;
-  }
-
-  h2 {
-    @apply font-display font-semibold text-3xl md:text-4xl tracking-tight;
-    letter-spacing: -0.015em;
-  }
-
-  h3 {
-    @apply font-display font-medium text-2xl md:text-3xl;
-    letter-spacing: -0.01em;
-  }
-
-  h4, h5, h6 {
-    @apply font-display font-medium;
-  }
-
-  /* Refined paragraph spacing */
-  p {
-    @apply leading-relaxed;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
   }
 }
 
@@ -196,98 +155,59 @@
     text-wrap: balance;
   }
 
-  /* Luxury Glass Effect */
   .glass {
-    @apply bg-card/90 backdrop-blur-xl border border-border/40 shadow-soft;
+    @apply bg-card/90 backdrop-blur-xl border border-border/50 shadow-soft;
   }
 
-  /* Trust badge styling */
   .trust-badge {
-    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-trust/8 text-trust text-sm font-medium tracking-wide;
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium;
   }
 
-  /* Status indicators */
-  .status-pending {
-    @apply bg-warning/10 text-warning border-warning/20;
-  }
-
-  .status-active {
-    @apply bg-primary/10 text-primary border-primary/20;
-  }
-
-  .status-success {
-    @apply bg-success/10 text-success border-success/20;
-  }
-
-  /* Luxury Gradient backgrounds */
-  .gradient-hero {
-    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(45 30% 97%) 100%);
-  }
-
-  .gradient-card {
-    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(220 20% 99%) 100%);
-  }
-
-  /* Brand gradient */
+  /* Gradient backgrounds */
   .gradient-brand {
-    background: linear-gradient(135deg, hsl(220 60% 50%) 0%, hsl(200 70% 55%) 100%);
-  }
-
-  .gradient-gold {
-    background: linear-gradient(135deg, hsl(40 60% 55%) 0%, hsl(35 70% 60%) 100%);
+    background: linear-gradient(135deg, #0078FF 0%, #00D4FF 100%);
   }
 
   .gradient-brand-text {
-    background: linear-gradient(135deg, hsl(220 60% 50%) 0%, hsl(200 70% 55%) 100%);
+    background: linear-gradient(135deg, #0078FF 0%, #00D4FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Luxury divider */
-  .luxury-divider {
-    @apply h-px bg-gradient-to-r from-transparent via-border to-transparent;
-  }
+  /* Colored card backgrounds */
+  .bg-cyan-soft { background: linear-gradient(135deg, #E0F7FA 0%, #E8F5FC 100%); }
+  .bg-green-soft { background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); }
+  .bg-amber-soft { background: linear-gradient(135deg, #FFF8E1 0%, #FFFDE7 100%); }
+  .bg-orange-soft { background: linear-gradient(135deg, #FFF3E0 0%, #FBE9E7 100%); }
+  .bg-purple-soft { background: linear-gradient(135deg, #F3E5F5 0%, #EDE7F6 100%); }
+  .bg-red-soft { background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%); }
 
-  /* Elegant hover effect */
-  .hover-lift {
-    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-elevated;
-  }
-
-  /* Refined link underline */
-  .link-elegant {
-    @apply relative inline-block;
-  }
-  .link-elegant::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-full h-px bg-current scale-x-0 origin-right transition-transform duration-300;
-  }
-  .link-elegant:hover::after {
-    @apply scale-x-100 origin-left;
-  }
+  /* Colored borders */
+  .border-cyan-accent { border-color: #00BCD4; }
+  .border-green-accent { border-color: #28C76F; }
+  .border-amber-accent { border-color: #FFC107; }
+  .border-orange-accent { border-color: #FF9800; }
+  .border-purple-accent { border-color: #9C27B0; }
 
   /* Animation classes */
   .animate-fade-up {
-    animation: fadeUp 0.6s ease-out forwards;
+    animation: fadeUp 0.5s ease-out forwards;
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.4s ease-out forwards;
   }
 
-  .animate-scale-in {
-    animation: scaleIn 0.4s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated;
   }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -296,30 +216,6 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
