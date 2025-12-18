@@ -40,7 +40,7 @@ export function Hero() {
           delay: 0.1
         }} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
             Cleaning you can{" "}
-            <span className="text-[#25bdfe]">trust</span>
+            <span className="text-[#31a7fc]">trust</span>
           </motion.h1>
 
           <motion.p initial={{
