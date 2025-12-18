@@ -18,6 +18,14 @@ import Messages from "./pages/Messages";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
+// Cleaner pages
+import CleanerDashboard from "./pages/cleaner/CleanerDashboard";
+import CleanerSchedule from "./pages/cleaner/CleanerSchedule";
+import CleanerEarnings from "./pages/cleaner/CleanerEarnings";
+import CleanerReferral from "./pages/cleaner/CleanerReferral";
+import CleanerMessages from "./pages/cleaner/CleanerMessages";
+import CancellationPolicy from "./pages/cleaner/CancellationPolicy";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -28,18 +36,27 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/cleaner/:id" element={<CleanerProfile />} />
-          <Route path="/book" element={<Book />} />
-          <Route path="/booking/:id" element={<BookingStatus />} />
-          <Route path="/job/:id" element={<JobInProgress />} />
-          <Route path="/job/:id/approve" element={<JobApproval />} />
-          <Route path="/wallet" element={<Wallet />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/help" element={<Help />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/cleaner/:id" element={<CleanerProfile />} />
+            <Route path="/book" element={<Book />} />
+            <Route path="/booking/:id" element={<BookingStatus />} />
+            <Route path="/job/:id" element={<JobInProgress />} />
+            <Route path="/job/:id/approve" element={<JobApproval />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/help" element={<Help />} />
+            
+            {/* Cleaner routes */}
+            <Route path="/cleaner/dashboard" element={<CleanerDashboard />} />
+            <Route path="/cleaner/schedule" element={<CleanerSchedule />} />
+            <Route path="/cleaner/earnings" element={<CleanerEarnings />} />
+            <Route path="/cleaner/referral" element={<CleanerReferral />} />
+            <Route path="/cleaner/messages" element={<CleanerMessages />} />
+            <Route path="/cleaner/cancellation-policy" element={<CancellationPolicy />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

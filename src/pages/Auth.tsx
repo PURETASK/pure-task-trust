@@ -5,28 +5,72 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { User, Briefcase, Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth, UserRole } from "@/contexts/AuthContext";
 
 export default function AuthPage() {
-  const [role, setRole] = useState<"client" | "cleaner" | null>(null);
+  const [role, setRole] = useState<UserRole | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login, signup, loginWithGoogle } = useAuth();
 
-  const handleAuth = (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock auth - would connect to backend
-    toast({
-      title: isSignUp ? "Account created!" : "Welcome back!",
-      description: role === "client" ? "Redirecting to your dashboard..." : "Redirecting to cleaner portal...",
-    });
-    setTimeout(() => {
-      navigate(role === "client" ? "/dashboard" : "/dashboard");
-    }, 1000);
+    if (!role) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      let result;
+      if (isSignUp) {
+        result = await signup(email, password, role, fullName);
+      } else {
+        result = await login(email, password);
+      }
+      
+      if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: isSignUp ? "Account created!" : "Welcome back!",
+          description: role === "client" 
+            ? "Redirecting to your dashboard..." 
+            : "Redirecting to cleaner portal...",
+        });
+        
+        setTimeout(() => {
+          navigate(role === "cleaner" ? "/cleaner/dashboard" : "/dashboard");
+        }, 500);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    if (!role) return;
+    
+    const result = await loginWithGoogle(role);
+    if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive",
+      });
+    }
   };
 
   if (!role) {
@@ -124,6 +168,23 @@ export default function AuthPage() {
 
                   <form onSubmit={handleAuth}>
                     <div className="space-y-4">
+                      {isSignUp && (
+                        <div className="space-y-2">
+                          <Label htmlFor="fullName">Full Name</Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                              id="fullName" 
+                              type="text" 
+                              placeholder="John Doe"
+                              className="pl-10"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
                         <div className="relative">
@@ -133,6 +194,8 @@ export default function AuthPage() {
                             type="email" 
                             placeholder="you@example.com"
                             className="pl-10"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                           />
                         </div>
@@ -147,13 +210,23 @@ export default function AuthPage() {
                             type="password" 
                             placeholder="••••••••"
                             className="pl-10"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             required
+                            minLength={6}
                           />
                         </div>
                       </div>
 
-                      <Button type="submit" className="w-full" size="lg">
-                        {isSignUp ? "Create Account" : "Sign In"}
+                      <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            {isSignUp ? "Creating Account..." : "Signing In..."}
+                          </>
+                        ) : (
+                          isSignUp ? "Create Account" : "Sign In"
+                        )}
                       </Button>
                     </div>
                   </form>
@@ -168,7 +241,12 @@ export default function AuthPage() {
                   </div>
                 </div>
 
-                <Button variant="outline" className="w-full" size="lg">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  size="lg"
+                  onClick={handleGoogleLogin}
+                >
                   <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
