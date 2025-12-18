@@ -16,12 +16,12 @@ export default {
       fontFamily: {
         // Primary Display - Fredoka (H1, H2, Buttons, UI Labels)
         display: ["Fredoka", "system-ui", "sans-serif"],
-        // Body - Poppins (Paragraphs, forms, small UI)
-        body: ["Poppins", "system-ui", "sans-serif"],
+        // Body - DM Sans (Paragraphs, forms, small UI)
+        body: ["DM Sans", "system-ui", "sans-serif"],
         // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
         accent: ["Lilita One", "cursive"],
         // Default sans = body font
-        sans: ["Poppins", "system-ui", "sans-serif"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       colors: {
         // PureTask Brand Colors
