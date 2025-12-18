@@ -14,14 +14,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Primary Display - Poppins (H1, H2, Buttons, UI Labels)
-        display: ["Poppins", "system-ui", "sans-serif"],
-        // Body - Open Sans (Paragraphs, forms, small UI)
-        body: ["Open Sans", "system-ui", "sans-serif"],
+        // Primary Display - Quicksand (H1, H2, Buttons, UI Labels)
+        display: ["Quicksand", "system-ui", "sans-serif"],
+        // Body - Jost (Paragraphs, forms, small UI)
+        body: ["Jost", "system-ui", "sans-serif"],
         // Marketing Accent - Lilita One (Promo, ads only - NOT for UI)
         accent: ["Lilita One", "cursive"],
         // Default sans = body font
-        sans: ["Open Sans", "system-ui", "sans-serif"],
+        sans: ["Jost", "system-ui", "sans-serif"],
       },
       colors: {
         // PureTask Brand Colors
