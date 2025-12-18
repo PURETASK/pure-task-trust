@@ -25,6 +25,7 @@ import CleanerEarnings from "./pages/cleaner/CleanerEarnings";
 import CleanerReferral from "./pages/cleaner/CleanerReferral";
 import CleanerMessages from "./pages/cleaner/CleanerMessages";
 import CancellationPolicy from "./pages/cleaner/CancellationPolicy";
+import CleanerProfileSettings from "./pages/cleaner/CleanerProfile";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/cleaner/referral" element={<CleanerReferral />} />
             <Route path="/cleaner/messages" element={<CleanerMessages />} />
             <Route path="/cleaner/cancellation-policy" element={<CancellationPolicy />} />
+            <Route path="/cleaner/profile" element={<CleanerProfileSettings />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
