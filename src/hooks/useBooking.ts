@@ -3,8 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import type { Database } from '@/integrations/supabase/types';
 
-export type CleaningType = 'standard' | 'deep' | 'moveout';
+export type CleaningType = Database['public']['Enums']['cleaning_type'];
 
 export interface BookingData {
   cleaningType: CleaningType;
@@ -51,19 +52,25 @@ export function useBooking() {
       if (clientError) throw clientError;
       if (!clientProfile) throw new Error('Client profile not found. Please complete your profile first.');
 
-      // 3. Create the job
+      // 3. Validate cleaner is provided (required by schema)
+      if (!booking.cleanerId) {
+        throw new Error('Please select a cleaner before booking.');
+      }
+
+      // 4. Create the job
+      const jobInsert: Database['public']['Tables']['jobs']['Insert'] = {
+        client_id: clientProfile.id,
+        cleaner_id: booking.cleanerId,
+        cleaning_type: booking.cleaningType,
+        estimated_hours: booking.hours,
+        escrow_credits_reserved: booking.totalCredits,
+        notes: booking.notes || null,
+        scheduled_start_at: booking.scheduledDate || null,
+      };
+
       const { data: job, error: jobError } = await supabase
         .from('jobs')
-        .insert({
-          client_id: clientProfile.id,
-          cleaner_id: booking.cleanerId || null,
-          status: 'pending',
-          cleaning_type: booking.cleaningType,
-          estimated_hours: booking.hours,
-          escrow_credits_reserved: booking.totalCredits,
-          notes: booking.notes || null,
-          scheduled_start_at: booking.scheduledDate || null,
-        })
+        .insert(jobInsert)
         .select()
         .single();
 
