@@ -31,6 +31,7 @@ import CancellationPolicy from "./pages/cleaner/CancellationPolicy";
 import CleanerProfileSettings from "./pages/cleaner/CleanerProfile";
 import CleanerMarketplace from "./pages/cleaner/CleanerMarketplace";
 import CleanerJobs from "./pages/cleaner/CleanerJobs";
+import CleanerJobDetail from "./pages/cleaner/CleanerJobDetail";
 import CleanerAnalytics from "./pages/cleaner/CleanerAnalytics";
 import CleanerResources from "./pages/cleaner/CleanerResources";
 
@@ -152,6 +153,11 @@ const App = () => (
               <Route path="/cleaner/jobs" element={
                 <RequireCleaner>
                   <CleanerJobs />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/jobs/:jobId" element={
+                <RequireCleaner>
+                  <CleanerJobDetail />
                 </RequireCleaner>
               } />
               <Route path="/cleaner/analytics" element={
