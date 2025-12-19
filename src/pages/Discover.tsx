@@ -6,69 +6,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Search, MapPin, Star, Filter, Shield } from "lucide-react";
+import { Search, MapPin, Star, Filter, Shield, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-
-const cleaners = [
-  {
-    id: "1",
-    name: "Sarah Mitchell",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-    rating: 4.9,
-    reviews: 127,
-    reliability: 98,
-    rate: "35-50",
-    services: ["Standard Clean", "Deep Clean", "Move-out"],
-    distance: "2.3 mi",
-    verified: true,
-  },
-  {
-    id: "2",
-    name: "Mike Robinson",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-    rating: 4.8,
-    reviews: 89,
-    reliability: 96,
-    rate: "30-45",
-    services: ["Standard Clean", "Office Clean"],
-    distance: "3.1 mi",
-    verified: true,
-  },
-  {
-    id: "3",
-    name: "Emma Thompson",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
-    rating: 5.0,
-    reviews: 64,
-    reliability: 100,
-    rate: "40-60",
-    services: ["Deep Clean", "Eco-friendly", "Move-out"],
-    distance: "4.5 mi",
-    verified: true,
-  },
-  {
-    id: "4",
-    name: "David Chen",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
-    rating: 4.7,
-    reviews: 52,
-    reliability: 94,
-    rate: "28-40",
-    services: ["Standard Clean", "Post-construction"],
-    distance: "5.2 mi",
-    verified: true,
-  },
-];
+import { useCleaners } from "@/hooks/useCleaners";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function Discover() {
   const [searchQuery, setSearchQuery] = useState("");
   const [smartMatch, setSmartMatch] = useState(false);
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
 
-  const filteredCleaners = cleaners.filter((cleaner) =>
-    cleaner.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { data: cleaners, isLoading, error } = useCleaners({
+    searchQuery,
+    onlyAvailable,
+  });
+
+  // Generate avatar placeholder from name
+  const getAvatarUrl = (name: string, index: number) => {
+    // Use a consistent set of placeholder images
+    const avatars = [
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop",
+    ];
+    return avatars[index % avatars.length];
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -100,6 +67,16 @@ export default function Discover() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Switch
+                    id="available-only"
+                    checked={onlyAvailable}
+                    onCheckedChange={setOnlyAvailable}
+                  />
+                  <Label htmlFor="available-only" className="text-sm cursor-pointer">
+                    Available Only
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
                     id="smart-match"
                     checked={smartMatch}
                     onCheckedChange={setSmartMatch}
@@ -115,77 +92,104 @@ export default function Discover() {
               </div>
             </div>
 
+            {/* Loading State */}
+            {isLoading && (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+              <div className="text-center py-20">
+                <p className="text-destructive">Failed to load cleaners. Please try again.</p>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!isLoading && !error && cleaners?.length === 0 && (
+              <EmptyState
+                title="No cleaners found"
+                description={searchQuery 
+                  ? `No cleaners match "${searchQuery}". Try a different search.`
+                  : "No cleaners are available at the moment. Check back later!"
+                }
+              />
+            )}
+
             {/* Results */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {filteredCleaners.map((cleaner, index) => (
-                <motion.div
-                  key={cleaner.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="hover:shadow-elevated transition-all overflow-hidden">
-                    <CardContent className="p-0">
-                      <div className="flex">
-                        <div className="relative">
-                          <img
-                            src={cleaner.image}
-                            alt={cleaner.name}
-                            className="h-full w-32 md:w-40 object-cover"
-                          />
-                          {cleaner.verified && (
-                            <div className="absolute top-2 left-2">
-                              <Badge variant="trust" className="gap-1">
-                                <Shield className="h-3 w-3" />
-                                Verified
-                              </Badge>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 p-5">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h3 className="font-semibold text-lg">{cleaner.name}</h3>
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                                  {cleaner.rating}
+            {!isLoading && cleaners && cleaners.length > 0 && (
+              <div className="grid md:grid-cols-2 gap-6">
+                {cleaners.map((cleaner, index) => (
+                  <motion.div
+                    key={cleaner.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="hover:shadow-elevated transition-all overflow-hidden">
+                      <CardContent className="p-0">
+                        <div className="flex">
+                          <div className="relative">
+                            <img
+                              src={getAvatarUrl(cleaner.name, index)}
+                              alt={cleaner.name}
+                              className="h-full w-32 md:w-40 object-cover"
+                            />
+                            {cleaner.verified && (
+                              <div className="absolute top-2 left-2">
+                                <Badge variant="trust" className="gap-1">
+                                  <Shield className="h-3 w-3" />
+                                  Verified
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 p-5">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h3 className="font-semibold text-lg">{cleaner.name}</h3>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                                    {cleaner.avgRating?.toFixed(1) || 'New'}
+                                  </div>
+                                  <span>•</span>
+                                  <span>{cleaner.jobsCompleted} jobs</span>
                                 </div>
-                                <span>•</span>
-                                <span>{cleaner.reviews} reviews</span>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-semibold">{cleaner.hourlyRate}</p>
+                                <p className="text-xs text-muted-foreground">credits/hr</p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-semibold">{cleaner.rate}</p>
-                              <p className="text-xs text-muted-foreground">credits/hr</p>
+
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                              <MapPin className="h-3.5 w-3.5" />
+                              {cleaner.distance}
+                              <span>•</span>
+                              <span className="text-success">{cleaner.reliabilityScore}% reliable</span>
                             </div>
-                          </div>
 
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                            <MapPin className="h-3.5 w-3.5" />
-                            {cleaner.distance}
-                            <span>•</span>
-                            <span className="text-success">{cleaner.reliability}% reliable</span>
-                          </div>
+                            <div className="flex flex-wrap gap-1.5 mb-4">
+                              {cleaner.services.slice(0, 3).map((service) => (
+                                <Badge key={service} variant="secondary" className="text-xs">
+                                  {service}
+                                </Badge>
+                              ))}
+                            </div>
 
-                          <div className="flex flex-wrap gap-1.5 mb-4">
-                            {cleaner.services.slice(0, 3).map((service) => (
-                              <Badge key={service} variant="secondary" className="text-xs">
-                                {service}
-                              </Badge>
-                            ))}
+                            <Button className="w-full" asChild>
+                              <Link to={`/cleaner/${cleaner.id}`}>View Profile</Link>
+                            </Button>
                           </div>
-
-                          <Button className="w-full" asChild>
-                            <Link to={`/cleaner/${cleaner.id}`}>View Profile</Link>
-                          </Button>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         </div>
       </main>
