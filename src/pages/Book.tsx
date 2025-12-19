@@ -2,30 +2,34 @@ import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useBooking, CleaningType } from "@/hooks/useBooking";
+import { useWallet } from "@/hooks/useWallet";
+import { useCleaner } from "@/hooks/useCleaners";
+import { Link } from "react-router-dom";
 
 const cleaningTypes = [
   {
-    id: "standard",
+    id: "standard" as CleaningType,
     name: "Standard Clean",
     description: "Regular maintenance cleaning for a tidy home",
     baseCredits: 35,
     icon: Home,
   },
   {
-    id: "deep",
+    id: "deep" as CleaningType,
     name: "Deep Clean",
     description: "Thorough cleaning including hard-to-reach areas",
     baseCredits: 55,
     icon: Sparkles,
   },
   {
-    id: "moveout",
+    id: "moveout" as CleaningType,
     name: "Move-out Clean",
     description: "Complete cleaning for end of lease",
     baseCredits: 75,
@@ -42,12 +46,18 @@ const addOns = [
 ];
 
 export default function Book() {
+  const [searchParams] = useSearchParams();
+  const cleanerId = searchParams.get('cleaner');
+  
   const [step, setStep] = useState(1);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { createBooking, isCreating } = useBooking();
+  const { account, isLoadingAccount } = useWallet();
+  const { data: selectedCleaner } = useCleaner(cleanerId || '');
 
   const selectedCleaningType = cleaningTypes.find((t) => t.id === selectedType);
   const addOnCredits = selectedAddOns.reduce((sum, id) => {
@@ -56,12 +66,23 @@ export default function Book() {
   }, 0);
   const totalCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
 
-  const handleConfirm = () => {
-    toast({
-      title: "Booking confirmed!",
-      description: "Your credits have been held. Looking for available cleaners...",
-    });
-    navigate("/booking/1");
+  const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
+  const hasEnoughCredits = availableCredits >= totalCredits;
+
+  const handleConfirm = async () => {
+    if (!selectedType) return;
+    
+    try {
+      await createBooking({
+        cleaningType: selectedType,
+        hours,
+        addOns: selectedAddOns,
+        totalCredits,
+        cleanerId: cleanerId || undefined,
+      });
+    } catch (error) {
+      // Error is handled in the hook
+    }
   };
 
   const toggleAddOn = (id: string) => {
@@ -80,6 +101,22 @@ export default function Book() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            {/* Selected Cleaner Banner */}
+            {selectedCleaner && (
+              <Card className="mb-6 bg-primary/5 border-primary/20">
+                <CardContent className="p-4 flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary">
+                    {selectedCleaner.name.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium">Booking with {selectedCleaner.name}</p>
+                    <p className="text-sm text-muted-foreground">{selectedCleaner.hourlyRate} credits/hr</p>
+                  </div>
+                  <Badge variant="secondary">Selected</Badge>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Progress */}
             <div className="flex items-center justify-center gap-2 mb-8">
               {[1, 2, 3, 4].map((s) => (
@@ -297,27 +334,62 @@ export default function Book() {
                     </CardContent>
                   </Card>
 
-                  <Card className="mb-6 bg-accent/30 border-accent">
-                    <CardContent className="p-4">
-                      <div className="flex gap-3">
-                        <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-sm mb-1">Pay only for time worked</p>
-                          <p className="text-xs text-muted-foreground">
-                            Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
-                          </p>
+                  {/* Credit Balance Check */}
+                  {!isLoadingAccount && (
+                    <Card className={`mb-6 ${hasEnoughCredits ? 'bg-accent/30 border-accent' : 'bg-destructive/10 border-destructive/30'}`}>
+                      <CardContent className="p-4">
+                        <div className="flex gap-3">
+                          {hasEnoughCredits ? (
+                            <>
+                              <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                              <div>
+                                <p className="font-medium text-sm mb-1">Pay only for time worked</p>
+                                <p className="text-xs text-muted-foreground">
+                                  Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Available balance: <span className="font-medium">{availableCredits} credits</span>
+                                </p>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                              <div>
+                                <p className="font-medium text-sm mb-1 text-destructive">Insufficient credits</p>
+                                <p className="text-xs text-muted-foreground">
+                                  You have {availableCredits} credits available but need {totalCredits} for this booking.
+                                </p>
+                                <Button variant="link" className="p-0 h-auto text-xs mt-1" asChild>
+                                  <Link to="/wallet">Add credits to your wallet →</Link>
+                                </Button>
+                              </div>
+                            </>
+                          )}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  )}
 
                   <div className="flex gap-3">
                     <Button variant="outline" size="lg" onClick={() => setStep(3)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Back
                     </Button>
-                    <Button className="flex-1" size="lg" onClick={handleConfirm}>
-                      Confirm Booking
+                    <Button 
+                      className="flex-1" 
+                      size="lg" 
+                      onClick={handleConfirm}
+                      disabled={isCreating || !hasEnoughCredits}
+                    >
+                      {isCreating ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Creating Booking...
+                        </>
+                      ) : (
+                        'Confirm Booking'
+                      )}
                     </Button>
                   </div>
                 </motion.div>
