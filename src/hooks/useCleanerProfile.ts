@@ -17,6 +17,9 @@ export interface CleanerStats {
   availableBalance: number;
   pendingBalance: number;
   paidOutBalance: number;
+  totalJobs: number;
+  completedJobs: number;
+  avgRating: number | null;
 }
 
 export interface CleanerJobWithClient extends Job {
@@ -70,6 +73,9 @@ export function useCleanerStats() {
           availableBalance: 0,
           pendingBalance: 0,
           paidOutBalance: 0,
+          totalJobs: 0,
+          completedJobs: 0,
+          avgRating: null,
         };
       }
 
@@ -131,6 +137,17 @@ export function useCleanerStats() {
 
       const pendingBalance = pendingJobs?.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0) || 0;
 
+      // Fetch all jobs for total count
+      const { data: allJobs, error: allJobsError } = await supabase
+        .from('jobs')
+        .select('id, status')
+        .eq('cleaner_id', profile.id);
+
+      if (allJobsError) throw allJobsError;
+
+      const totalJobs = allJobs?.length || 0;
+      const completedJobs = allJobs?.filter(j => j.status === 'completed').length || 0;
+
       return {
         jobsThisWeek,
         hoursThisWeek: Math.round(hoursThisWeek * 10) / 10,
@@ -140,6 +157,9 @@ export function useCleanerStats() {
         availableBalance,
         pendingBalance,
         paidOutBalance,
+        totalJobs,
+        completedJobs,
+        avgRating: profile.avg_rating,
       };
     },
     enabled: !!profile?.id,
@@ -155,6 +175,9 @@ export function useCleanerStats() {
       availableBalance: 0,
       pendingBalance: 0,
       paidOutBalance: 0,
+      totalJobs: 0,
+      completedJobs: 0,
+      avgRating: null,
     },
     isLoading: statsQuery.isLoading,
   };
