@@ -12,6 +12,10 @@ import { useBooking, CleaningType } from "@/hooks/useBooking";
 import { useWallet } from "@/hooks/useWallet";
 import { useCleaner } from "@/hooks/useCleaners";
 import { Link } from "react-router-dom";
+import { DateTimePicker } from "@/components/booking/DateTimePicker";
+import { AddressSelector } from "@/components/booking/AddressSelector";
+import { Address } from "@/hooks/useAddresses";
+import { setHours, setMinutes } from "date-fns";
 
 const cleaningTypes = [
   {
@@ -53,6 +57,9 @@ export default function Book() {
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedTime, setSelectedTime] = useState<string | undefined>();
+  const [selectedAddress, setSelectedAddress] = useState<Address | undefined>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { createBooking, isCreating } = useBooking();
@@ -69,6 +76,15 @@ export default function Book() {
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
 
+  // Combine date and time into a single datetime
+  const getScheduledDateTime = () => {
+    if (!selectedDate || !selectedTime) return undefined;
+    const [hourStr, minuteStr] = selectedTime.split(':');
+    let dt = setHours(selectedDate, parseInt(hourStr));
+    dt = setMinutes(dt, parseInt(minuteStr));
+    return dt.toISOString();
+  };
+
   const handleConfirm = async () => {
     if (!selectedType) return;
     
@@ -79,6 +95,8 @@ export default function Book() {
         addOns: selectedAddOns,
         totalCredits,
         cleanerId: cleanerId || undefined,
+        scheduledStartAt: getScheduledDateTime(),
+        address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
     } catch (error) {
       // Error is handled in the hook
@@ -90,6 +108,8 @@ export default function Book() {
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
     );
   };
+
+  const canProceedToSummary = selectedDate && selectedTime;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -119,10 +139,10 @@ export default function Book() {
 
             {/* Progress */}
             <div className="flex items-center justify-center gap-2 mb-8">
-              {[1, 2, 3, 4].map((s) => (
+              {[1, 2, 3, 4, 5].map((s) => (
                 <div
                   key={s}
-                  className={`h-2 w-12 rounded-full transition-colors ${
+                  className={`h-2 w-10 rounded-full transition-colors ${
                     s <= step ? "bg-primary" : "bg-border"
                   }`}
                 />
@@ -297,10 +317,53 @@ export default function Book() {
                 </motion.div>
               )}
 
-              {/* Step 4: Summary */}
+              {/* Step 4: Date, Time & Address */}
               {step === 4 && (
                 <motion.div
                   key="step4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <h1 className="text-2xl font-bold mb-2">When and where?</h1>
+                  <p className="text-muted-foreground mb-6">Choose your preferred date, time and location</p>
+
+                  <div className="space-y-8 mb-6">
+                    <DateTimePicker
+                      selectedDate={selectedDate}
+                      selectedTime={selectedTime}
+                      onDateChange={setSelectedDate}
+                      onTimeChange={setSelectedTime}
+                    />
+
+                    <AddressSelector
+                      selectedAddressId={selectedAddress?.id}
+                      onSelect={setSelectedAddress}
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="lg" onClick={() => setStep(3)}>
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button 
+                      className="flex-1" 
+                      size="lg" 
+                      onClick={() => setStep(5)}
+                      disabled={!canProceedToSummary}
+                    >
+                      Continue
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 5: Summary */}
+              {step === 5 && (
+                <motion.div
+                  key="step5"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
@@ -325,6 +388,24 @@ export default function Book() {
                               </div>
                             );
                           })}
+                        </div>
+                      )}
+                      {selectedDate && selectedTime && (
+                        <div className="border-t border-border pt-4">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Scheduled</span>
+                            <span>
+                              {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {selectedTime}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {selectedAddress && (
+                        <div className="border-t border-border pt-4">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Location</span>
+                            <span className="text-right">{selectedAddress.line1}, {selectedAddress.city}</span>
+                          </div>
                         </div>
                       )}
                       <div className="border-t border-border pt-4 flex items-center justify-between">
@@ -372,7 +453,7 @@ export default function Book() {
                   )}
 
                   <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(3)}>
+                    <Button variant="outline" size="lg" onClick={() => setStep(4)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Back
                     </Button>

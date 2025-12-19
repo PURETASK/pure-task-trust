@@ -4231,6 +4231,93 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          id: string
+          job_id: string
+          rating: number
+          review_text: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          rating: number
+          review_text?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          rating?: number
+          review_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          booking_id: string | null
+          created_at: string
+          description: string
+          id: string
+          issue_type: string
+          priority: string
+          resolved_at: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          issue_type: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          issue_type?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_credits: {
         Row: {
           balance: number
