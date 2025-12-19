@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
 import { Address } from "@/hooks/useAddresses";
-import { setHours, setMinutes } from "date-fns";
+import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
 
 const cleaningTypes = [
   {
@@ -80,8 +80,8 @@ export default function Book() {
   const getScheduledDateTime = () => {
     if (!selectedDate || !selectedTime) return undefined;
     const [hourStr, minuteStr] = selectedTime.split(':');
-    let dt = setHours(selectedDate, parseInt(hourStr));
-    dt = setMinutes(dt, parseInt(minuteStr));
+    let dt = setDateHours(selectedDate, parseInt(hourStr));
+    dt = setDateMinutes(dt, parseInt(minuteStr));
     return dt.toISOString();
   };
 
@@ -95,7 +95,7 @@ export default function Book() {
         addOns: selectedAddOns,
         totalCredits,
         cleanerId: cleanerId || undefined,
-        scheduledStartAt: getScheduledDateTime(),
+        scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
     } catch (error) {
