@@ -10,6 +10,8 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { 
   DollarSign, 
   Clock, 
@@ -21,11 +23,13 @@ import {
   Building2,
   Dog,
   Leaf,
-  Package
+  Package,
+  User
 } from "lucide-react";
 
 export default function CleanerProfile() {
   const { toast } = useToast();
+  const { profile } = useCleanerProfile();
   const [saving, setSaving] = useState(false);
 
   // Form state
@@ -92,6 +96,24 @@ export default function CleanerProfile() {
             Manage your rates, availability, and services
           </p>
         </div>
+
+        {/* Profile Photo */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-primary" />
+              Profile Photo
+            </CardTitle>
+            <CardDescription>
+              Upload a professional photo to build trust with clients
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ProfilePhotoUpload
+              userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"}
+            />
+          </CardContent>
+        </Card>
 
         {/* Rates Section */}
         <Card>
