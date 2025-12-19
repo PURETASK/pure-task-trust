@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { RequireAuth, RequireClient, RequireCleaner } from "@/components/auth/RequireAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import RoleSelection from "./pages/RoleSelection";
@@ -27,45 +29,148 @@ import CleanerReferral from "./pages/cleaner/CleanerReferral";
 import CleanerMessages from "./pages/cleaner/CleanerMessages";
 import CancellationPolicy from "./pages/cleaner/CancellationPolicy";
 import CleanerProfileSettings from "./pages/cleaner/CleanerProfile";
+import CleanerMarketplace from "./pages/cleaner/CleanerMarketplace";
+import CleanerJobs from "./pages/cleaner/CleanerJobs";
+import CleanerAnalytics from "./pages/cleaner/CleanerAnalytics";
+import CleanerResources from "./pages/cleaner/CleanerResources";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/role-selection" element={<RoleSelection />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/cleaner/:id" element={<CleanerProfile />} />
-            <Route path="/book" element={<Book />} />
-            <Route path="/booking/:id" element={<BookingStatus />} />
-            <Route path="/job/:id" element={<JobInProgress />} />
-            <Route path="/job/:id/approve" element={<JobApproval />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/help" element={<Help />} />
-            
-            {/* Cleaner routes */}
-            <Route path="/cleaner/dashboard" element={<CleanerDashboard />} />
-            <Route path="/cleaner/schedule" element={<CleanerSchedule />} />
-            <Route path="/cleaner/earnings" element={<CleanerEarnings />} />
-            <Route path="/cleaner/referral" element={<CleanerReferral />} />
-            <Route path="/cleaner/messages" element={<CleanerMessages />} />
-            <Route path="/cleaner/cancellation-policy" element={<CancellationPolicy />} />
-            <Route path="/cleaner/profile" element={<CleanerProfileSettings />} />
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="light" storageKey="puretask-theme">
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              
+              {/* Role selection (requires auth but no role check) */}
+              <Route path="/role-selection" element={
+                <RequireAuth requireRole={false}>
+                  <RoleSelection />
+                </RequireAuth>
+              } />
+              
+              {/* Client routes */}
+              <Route path="/dashboard" element={
+                <RequireClient>
+                  <Dashboard />
+                </RequireClient>
+              } />
+              <Route path="/discover" element={
+                <RequireClient>
+                  <Discover />
+                </RequireClient>
+              } />
+              <Route path="/cleaner/:id" element={
+                <RequireClient>
+                  <CleanerProfile />
+                </RequireClient>
+              } />
+              <Route path="/book" element={
+                <RequireClient>
+                  <Book />
+                </RequireClient>
+              } />
+              <Route path="/booking/:id" element={
+                <RequireClient>
+                  <BookingStatus />
+                </RequireClient>
+              } />
+              <Route path="/job/:id" element={
+                <RequireClient>
+                  <JobInProgress />
+                </RequireClient>
+              } />
+              <Route path="/job/:id/approve" element={
+                <RequireClient>
+                  <JobApproval />
+                </RequireClient>
+              } />
+              <Route path="/wallet" element={
+                <RequireClient>
+                  <Wallet />
+                </RequireClient>
+              } />
+              <Route path="/messages" element={
+                <RequireClient>
+                  <Messages />
+                </RequireClient>
+              } />
+              <Route path="/help" element={
+                <RequireAuth>
+                  <Help />
+                </RequireAuth>
+              } />
+              
+              {/* Cleaner routes */}
+              <Route path="/cleaner/dashboard" element={
+                <RequireCleaner>
+                  <CleanerDashboard />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/schedule" element={
+                <RequireCleaner>
+                  <CleanerSchedule />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/earnings" element={
+                <RequireCleaner>
+                  <CleanerEarnings />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/referral" element={
+                <RequireCleaner>
+                  <CleanerReferral />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/messages" element={
+                <RequireCleaner>
+                  <CleanerMessages />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/cancellation-policy" element={
+                <RequireCleaner>
+                  <CancellationPolicy />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/profile" element={
+                <RequireCleaner>
+                  <CleanerProfileSettings />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/marketplace" element={
+                <RequireCleaner>
+                  <CleanerMarketplace />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/jobs" element={
+                <RequireCleaner>
+                  <CleanerJobs />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/analytics" element={
+                <RequireCleaner>
+                  <CleanerAnalytics />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/resources" element={
+                <RequireCleaner>
+                  <CleanerResources />
+                </RequireCleaner>
+              } />
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
