@@ -14,13 +14,15 @@ import { cn } from '@/lib/utils';
 
 const reasonLabels: Record<string, string> = {
   purchase: 'Credit purchase',
-  payment: 'Job payment',
-  hold: 'Credits held',
-  release: 'Credits released',
   refund: 'Refund',
+  job_payment: 'Job payment',
+  job_earned: 'Job earned',
   bonus: 'Bonus credits',
+  referral: 'Referral bonus',
   cancellation_fee: 'Cancellation fee',
-  payout: 'Cleaner payout',
+  dispute_refund: 'Dispute refund',
+  promo: 'Promo credits',
+  adjustment: 'Adjustment',
 };
 
 export default function Wallet() {
@@ -120,8 +122,8 @@ export default function Wallet() {
                   <div className="space-y-4">
                     {ledger.map((entry) => {
                       const isPositive = entry.delta_credits > 0;
-                      const isHold = entry.reason === 'hold';
-                      const isRelease = entry.reason === 'release';
+                      const isPayment = entry.reason === 'job_payment';
+                      const isRefund = entry.reason === 'refund' || entry.reason === 'dispute_refund';
                       
                       return (
                         <div
@@ -132,16 +134,13 @@ export default function Wallet() {
                             className={cn(
                               "h-10 w-10 rounded-xl flex items-center justify-center",
                               isPositive ? "bg-success/10" :
-                              isHold ? "bg-warning/10" :
-                              isRelease ? "bg-primary/10" :
+                              isPayment ? "bg-primary/10" :
                               "bg-secondary"
                             )}
                           >
                             {isPositive ? (
                               <ArrowDownLeft className="h-5 w-5 text-success" />
-                            ) : isHold ? (
-                              <Clock className="h-5 w-5 text-warning" />
-                            ) : isRelease ? (
+                            ) : isRefund ? (
                               <RefreshCw className="h-5 w-5 text-primary" />
                             ) : (
                               <ArrowUpRight className="h-5 w-5 text-foreground" />
@@ -159,15 +158,11 @@ export default function Wallet() {
                             <p
                               className={cn(
                                 "font-semibold",
-                                isPositive && "text-success",
-                                isHold && "text-warning"
+                                isPositive && "text-success"
                               )}
                             >
                               {isPositive ? '+' : ''}{entry.delta_credits}
                             </p>
-                            {isHold && (
-                              <Badge variant="warning" className="text-xs">Held</Badge>
-                            )}
                           </div>
                         </div>
                       );

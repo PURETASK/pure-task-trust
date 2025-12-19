@@ -3,6 +3,8 @@ import { StatCard } from "@/components/cleaner/StatCard";
 import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
 import { QuickAction, FeatureCard } from "@/components/cleaner/QuickActions";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCleanerProfile, useCleanerStats } from "@/hooks/useCleanerProfile";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Briefcase, 
   Clock, 
@@ -19,13 +21,11 @@ import {
 
 export default function CleanerDashboard() {
   const { user } = useAuth();
+  const { profile, isLoading: isLoadingProfile } = useCleanerProfile();
+  const { stats, isLoading: isLoadingStats } = useCleanerStats();
 
-  const stats = {
-    jobsThisWeek: 0,
-    hoursThisWeek: 0,
-    earnedThisWeek: "$0",
-    unreadMessages: 0,
-  };
+  const displayName = profile?.first_name || user?.name || "Cleaner";
+  const tier = (profile?.tier || 'bronze') as 'bronze' | 'silver' | 'gold' | 'elite';
 
   return (
     <CleanerLayout>
@@ -34,7 +34,7 @@ export default function CleanerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
-              Welcome back, {user?.name || "Cleaner"}! 
+              Welcome back, {displayName}! 
               <span className="text-3xl">👋</span>
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -45,38 +45,55 @@ export default function CleanerDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard
-            icon={Briefcase}
-            value={stats.jobsThisWeek}
-            label="Jobs This Week"
-            iconColor="text-primary"
-            iconBgColor="bg-primary/10"
-          />
-          <StatCard
-            icon={Clock}
-            value={stats.hoursThisWeek}
-            label="Hours This Week"
-            iconColor="text-violet-500"
-            iconBgColor="bg-violet-500/10"
-          />
-          <StatCard
-            icon={DollarSign}
-            value={stats.earnedThisWeek}
-            label="Earned This Week"
-            iconColor="text-success"
-            iconBgColor="bg-success/10"
-          />
-          <StatCard
-            icon={MessageSquare}
-            value={stats.unreadMessages}
-            label="Unread Messages"
-            iconColor="text-amber-500"
-            iconBgColor="bg-amber-100"
-          />
+          {isLoadingStats ? (
+            <>
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-24 rounded-xl" />
+              ))}
+            </>
+          ) : (
+            <>
+              <StatCard
+                icon={Briefcase}
+                value={stats.jobsThisWeek}
+                label="Jobs This Week"
+                iconColor="text-primary"
+                iconBgColor="bg-primary/10"
+              />
+              <StatCard
+                icon={Clock}
+                value={stats.hoursThisWeek}
+                label="Hours This Week"
+                iconColor="text-violet-500"
+                iconBgColor="bg-violet-500/10"
+              />
+              <StatCard
+                icon={DollarSign}
+                value={`$${stats.earnedThisWeek}`}
+                label="Earned This Week"
+                iconColor="text-success"
+                iconBgColor="bg-success/10"
+              />
+              <StatCard
+                icon={MessageSquare}
+                value={stats.unreadMessages}
+                label="Unread Messages"
+                iconColor="text-amber-500"
+                iconBgColor="bg-amber-100"
+              />
+            </>
+          )}
         </div>
 
         {/* Reliability Score */}
-        <ReliabilityScore score={0} tier="bronze" />
+        {isLoadingProfile ? (
+          <Skeleton className="h-32 rounded-xl" />
+        ) : (
+          <ReliabilityScore 
+            score={profile?.reliability_score || 0} 
+            tier={tier} 
+          />
+        )}
 
         {/* Quick Actions */}
         <section>
