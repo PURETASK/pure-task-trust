@@ -6,22 +6,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Search, MapPin, Star, Filter, Shield, Loader2 } from "lucide-react";
+import { Search, MapPin, Star, Filter, Shield, Loader2, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useCleaners } from "@/hooks/useCleaners";
+import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Discover() {
   const [searchQuery, setSearchQuery] = useState("");
   const [smartMatch, setSmartMatch] = useState(false);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+  const { toast } = useToast();
 
   const { data: cleaners, isLoading, error } = useCleaners({
     searchQuery,
     onlyAvailable,
   });
+
+  const { data: favorites } = useFavorites();
+  const { toggleFavorite, isToggling } = useFavoriteActions();
+
+  const favoriteCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
 
   // Generate avatar placeholder from name
   const getAvatarUrl = (name: string, index: number) => {
@@ -35,6 +43,28 @@ export default function Discover() {
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop",
     ];
     return avatars[index % avatars.length];
+  };
+
+  const handleToggleFavorite = async (cleanerId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const isFavorite = favoriteCleanerIds.has(cleanerId);
+    try {
+      await toggleFavorite({ cleanerId, isFavorite });
+      toast({
+        title: isFavorite ? 'Removed from favorites' : 'Added to favorites',
+        description: isFavorite 
+          ? 'Cleaner removed from your favorites list.'
+          : 'Cleaner added to your favorites list.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update favorites. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -158,9 +188,24 @@ export default function Discover() {
                                   <span>{cleaner.jobsCompleted} jobs</span>
                                 </div>
                               </div>
-                              <div className="text-right">
-                                <p className="font-semibold">{cleaner.hourlyRate}</p>
-                                <p className="text-xs text-muted-foreground">credits/hr</p>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={(e) => handleToggleFavorite(cleaner.id, e)}
+                                  disabled={isToggling}
+                                  className="p-2 rounded-full hover:bg-secondary transition-colors"
+                                >
+                                  <Heart 
+                                    className={`h-5 w-5 ${
+                                      favoriteCleanerIds.has(cleaner.id) 
+                                        ? 'fill-destructive text-destructive' 
+                                        : 'text-muted-foreground'
+                                    }`} 
+                                  />
+                                </button>
+                                <div className="text-right">
+                                  <p className="font-semibold">{cleaner.hourlyRate}</p>
+                                  <p className="text-xs text-muted-foreground">credits/hr</p>
+                                </div>
                               </div>
                             </div>
 
