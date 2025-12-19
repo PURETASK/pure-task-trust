@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 const cleaningTypes = [
   {
-    id: "standard" as CleaningType,
+    id: "basic" as CleaningType,
     name: "Standard Clean",
     description: "Regular maintenance cleaning for a tidy home",
     baseCredits: 35,
@@ -29,7 +29,7 @@ const cleaningTypes = [
     icon: Sparkles,
   },
   {
-    id: "moveout" as CleaningType,
+    id: "move_out" as CleaningType,
     name: "Move-out Clean",
     description: "Complete cleaning for end of lease",
     baseCredits: 75,

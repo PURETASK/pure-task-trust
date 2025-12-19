@@ -46,11 +46,10 @@ export default function BookingStatus() {
   // Map job status to display status
   const getStatusDisplay = () => {
     switch (job.status) {
-      case 'pending_match':
+      case 'created':
+      case 'pending':
         return { status: 'pending', label: 'Finding Cleaner', description: "We're matching you with the perfect cleaner" };
-      case 'pending_acceptance':
-        return { status: 'pending', label: 'Awaiting Response', description: "Waiting for cleaner to accept" };
-      case 'accepted':
+      case 'confirmed':
         return { status: 'accepted', label: 'Confirmed', description: "Your cleaner has accepted the job" };
       case 'in_progress':
         return { status: 'active', label: 'In Progress', description: "Cleaning is underway" };
@@ -60,6 +59,8 @@ export default function BookingStatus() {
         return { status: 'declined', label: 'Cancelled', description: "This booking was cancelled" };
       case 'disputed':
         return { status: 'disputed', label: 'Under Review', description: "Issue is being reviewed" };
+      case 'no_show':
+        return { status: 'declined', label: 'No Show', description: "Cleaner did not arrive" };
       default:
         return { status: 'pending', label: 'Processing', description: "Processing your booking" };
     }
@@ -73,12 +74,12 @@ export default function BookingStatus() {
 
   const cleanerRating = job.cleaner?.avg_rating?.toFixed(1) || 'New';
 
-  const formattedDate = job.scheduled_start 
-    ? format(new Date(job.scheduled_start), 'MMM d, yyyy')
+  const formattedDate = job.scheduled_start_at 
+    ? format(new Date(job.scheduled_start_at), 'MMM d, yyyy')
     : 'To be scheduled';
 
-  const formattedTime = job.scheduled_start
-    ? format(new Date(job.scheduled_start), 'h:mm a')
+  const formattedTime = job.scheduled_start_at
+    ? format(new Date(job.scheduled_start_at), 'h:mm a')
     : 'TBD';
 
   return (
