@@ -117,6 +117,11 @@ export function useWallet() {
     },
   });
 
+  const refetch = () => {
+    queryClient.invalidateQueries({ queryKey: ['credit-account', user?.id] });
+    queryClient.invalidateQueries({ queryKey: ['credit-ledger', user?.id] });
+  };
+
   return {
     account: accountQuery.data,
     isLoadingAccount: accountQuery.isLoading,
@@ -124,5 +129,6 @@ export function useWallet() {
     isLoadingLedger: ledgerQuery.isLoading,
     purchaseCredits: purchaseMutation.mutate,
     isPurchasing: purchaseMutation.isPending,
+    refetch,
   };
 }

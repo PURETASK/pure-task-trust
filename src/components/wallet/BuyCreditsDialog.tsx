@@ -3,7 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { CreditCard, Sparkles } from 'lucide-react';
+import { CreditCard, Sparkles, ExternalLink, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const CREDIT_PACKAGES = [
   { id: 'starter', amount: 50, price: 50, label: 'Starter' },
@@ -26,8 +28,42 @@ export function BuyCreditsDialog({
   isPurchasing 
 }: BuyCreditsDialogProps) {
   const [selectedPackage, setSelectedPackage] = useState(CREDIT_PACKAGES[1]);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const { toast } = useToast();
 
-  const handlePurchase = () => {
+  const handleStripeCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { packageId: selectedPackage.id },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        // Open Stripe checkout in new tab
+        window.open(data.url, '_blank');
+        onOpenChange(false);
+        toast({
+          title: 'Checkout opened',
+          description: 'Complete your purchase in the new tab. Return here after payment.',
+        });
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      toast({
+        title: 'Checkout failed',
+        description: error.message || 'Failed to start checkout',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
+  const handleDemoPurchase = () => {
     onPurchase(selectedPackage.amount);
     onOpenChange(false);
   };
@@ -84,25 +120,46 @@ export function BuyCreditsDialog({
           ))}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3">
           <Button 
-            variant="outline" 
-            className="flex-1"
-            onClick={() => onOpenChange(false)}
+            className="w-full" 
+            onClick={handleStripeCheckout}
+            disabled={isCheckingOut || isPurchasing}
           >
-            Cancel
+            {isCheckingOut ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Opening Checkout...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Pay with Stripe
+              </>
+            )}
           </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">or for demo</span>
+            </div>
+          </div>
+
           <Button 
-            className="flex-1" 
-            onClick={handlePurchase}
-            disabled={isPurchasing}
+            variant="outline"
+            className="w-full" 
+            onClick={handleDemoPurchase}
+            disabled={isPurchasing || isCheckingOut}
           >
-            {isPurchasing ? 'Processing...' : `Buy ${selectedPackage.amount} Credits`}
+            {isPurchasing ? 'Processing...' : `Add ${selectedPackage.amount} Credits (Demo)`}
           </Button>
         </div>
 
         <p className="text-xs text-muted-foreground text-center">
-          Demo mode: Credits are added instantly without real payment.
+          Stripe checkout opens in a new tab. Demo mode adds credits instantly.
         </p>
       </DialogContent>
     </Dialog>
