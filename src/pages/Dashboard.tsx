@@ -7,14 +7,19 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Plus, Calendar, Clock, MapPin, Star, Heart, Repeat, Loader2 } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
+import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
+import { useRecurringBookings } from "@/hooks/useRecurringBookings";
 import { format } from "date-fns";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
   const { data: jobs, isLoading } = useClientJobs();
+  const { data: favorites, isLoading: loadingFavorites } = useFavorites();
+  const { data: recurring, isLoading: loadingRecurring } = useRecurringBookings();
+  const { removeFavorite, isRemoving } = useFavoriteActions();
 
   const upcomingJobs = jobs?.filter(j => ['created', 'pending', 'confirmed', 'in_progress'].includes(j.status)) || [];
   const pastJobs = jobs?.filter(j => ['completed', 'cancelled'].includes(j.status)) || [];
@@ -33,6 +38,15 @@ export default function Dashboard() {
   const getCleanerName = (job: typeof upcomingJobs[0]) => {
     if (!job.cleaner) return 'Finding cleaner...';
     return `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Assigned';
+  };
+
+  const getFrequencyLabel = (freq: string) => {
+    switch (freq) {
+      case 'weekly': return 'Weekly';
+      case 'biweekly': return 'Every 2 weeks';
+      case 'monthly': return 'Monthly';
+      default: return freq;
+    }
   };
 
   return (
@@ -70,11 +84,11 @@ export default function Dashboard() {
                 </TabsTrigger>
                 <TabsTrigger value="favorites" className="gap-2">
                   <Heart className="h-4 w-4" />
-                  Favorites
+                  Favorites ({favorites?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="recurring" className="gap-2">
                   <Repeat className="h-4 w-4" />
-                  Recurring
+                  Recurring ({recurring?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -192,29 +206,139 @@ export default function Dashboard() {
               </TabsContent>
 
               <TabsContent value="favorites">
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="font-semibold mb-2">No favorites yet</h3>
-                    <p className="text-muted-foreground mb-4">Save cleaners you love for quick rebooking</p>
-                    <Button variant="outline" asChild>
-                      <Link to="/discover">Browse Cleaners</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                {loadingFavorites ? (
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+                  </div>
+                ) : favorites && favorites.length > 0 ? (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {favorites.map((fav, index) => (
+                      <motion.div
+                        key={fav.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Card className="hover:shadow-elevated transition-all">
+                          <CardContent className="p-5">
+                            <div className="flex items-start gap-4">
+                              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary">
+                                {fav.cleaner?.first_name?.charAt(0) || 'C'}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold truncate">
+                                  {fav.cleaner?.first_name} {fav.cleaner?.last_name}
+                                </h3>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  {fav.cleaner?.avg_rating && (
+                                    <span className="flex items-center gap-1">
+                                      <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                                      {fav.cleaner.avg_rating.toFixed(1)}
+                                    </span>
+                                  )}
+                                  <span>•</span>
+                                  <span>{fav.cleaner?.jobs_completed || 0} jobs</span>
+                                </div>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {fav.cleaner?.hourly_rate_credits || 35} credits/hr
+                                </p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="flex-shrink-0 text-muted-foreground hover:text-destructive"
+                                onClick={() => removeFavorite(fav.cleaner_id)}
+                                disabled={isRemoving}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <div className="flex gap-2 mt-4">
+                              <Button variant="outline" size="sm" className="flex-1" asChild>
+                                <Link to={`/cleaner/${fav.cleaner_id}`}>View Profile</Link>
+                              </Button>
+                              <Button size="sm" className="flex-1" asChild>
+                                <Link to={`/book?cleaner=${fav.cleaner_id}`}>Book</Link>
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-12 text-center">
+                      <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="font-semibold mb-2">No favorites yet</h3>
+                      <p className="text-muted-foreground mb-4">Save cleaners you love for quick rebooking</p>
+                      <Button variant="outline" asChild>
+                        <Link to="/discover">Browse Cleaners</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
 
               <TabsContent value="recurring">
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <Repeat className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="font-semibold mb-2">Set up recurring cleanings</h3>
-                    <p className="text-muted-foreground mb-4">Schedule weekly or bi-weekly cleanings</p>
-                    <Button asChild>
-                      <Link to="/book">Create Schedule</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                {loadingRecurring ? (
+                  <Skeleton className="h-32 rounded-xl" />
+                ) : recurring && recurring.length > 0 ? (
+                  <div className="space-y-4">
+                    {recurring.map((sub, index) => (
+                      <motion.div
+                        key={sub.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Card className="hover:shadow-elevated transition-all">
+                          <CardContent className="p-6">
+                            <div className="flex flex-col md:flex-row md:items-center gap-4">
+                              <div className="h-14 w-14 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                                <Repeat className="h-6 w-6 text-violet-500" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h3 className="font-semibold capitalize">
+                                    {sub.cleaning_type?.replace('_', ' ') || 'Standard'} Clean
+                                  </h3>
+                                  <Badge variant={sub.status === 'active' ? 'success' : 'secondary'}>
+                                    {sub.status}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                  {getFrequencyLabel(sub.frequency)} • {sub.credit_amount} credits
+                                </p>
+                                {sub.next_job_date && (
+                                  <p className="text-sm text-muted-foreground">
+                                    Next: {format(new Date(sub.next_job_date), 'MMM d, yyyy')}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button variant="outline" size="sm">
+                                  Manage
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-12 text-center">
+                      <Repeat className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="font-semibold mb-2">Set up recurring cleanings</h3>
+                      <p className="text-muted-foreground mb-4">Schedule weekly or bi-weekly cleanings for consistent care</p>
+                      <Button asChild>
+                        <Link to="/book">Create Schedule</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
           </motion.div>

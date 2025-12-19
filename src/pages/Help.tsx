@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -31,27 +33,66 @@ import {
   User,
   MoreHorizontal,
   ExternalLink,
+  Loader2,
+  CheckCircle,
 } from "lucide-react";
+import { useCreateTicket, useSupportTickets } from "@/hooks/useSupportTickets";
+import { FAQSection } from "@/components/faq/FAQSection";
+import { format } from "date-fns";
 
 const issueTypes = [
-  { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-pt-red" },
-  { id: "no-show", icon: AlertCircle, label: "No Show", color: "text-pt-red" },
-  { id: "late-arrival", icon: Clock, label: "Late Arrival", color: "text-pt-amber" },
-  { id: "quality", icon: ShieldAlert, label: "Quality Issue", color: "text-pt-purple" },
-  { id: "payment", icon: CreditCard, label: "Payment", color: "text-pt-blue" },
-  { id: "technical", icon: Zap, label: "Technical", color: "text-pt-amber" },
-  { id: "account", icon: User, label: "Account", color: "text-pt-cyan" },
-  { id: "other", icon: MoreHorizontal, label: "Other", color: "text-pt-purple" },
+  { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-destructive" },
+  { id: "no-show", icon: AlertCircle, label: "No Show", color: "text-destructive" },
+  { id: "late-arrival", icon: Clock, label: "Late Arrival", color: "text-warning" },
+  { id: "quality", icon: ShieldAlert, label: "Quality Issue", color: "text-violet-500" },
+  { id: "payment", icon: CreditCard, label: "Payment", color: "text-primary" },
+  { id: "technical", icon: Zap, label: "Technical", color: "text-warning" },
+  { id: "account", icon: User, label: "Account", color: "text-cyan-500" },
+  { id: "other", icon: MoreHorizontal, label: "Other", color: "text-violet-500" },
 ];
 
 const quickLinks = [
-  { label: "Cancellation Policy", href: "#" },
-  { label: "Damage & Claims", href: "#" },
-  { label: "How It Works", href: "/help" },
+  { label: "Cancellation Policy", href: "/cleaner/cancellation-policy" },
+  { label: "How It Works", href: "/" },
 ];
 
 export default function Help() {
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
+  const [priority, setPriority] = useState("medium");
+  const [bookingId, setBookingId] = useState("");
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
+  
+  const { mutateAsync: createTicket, isPending } = useCreateTicket();
+  const { data: tickets, isLoading: loadingTickets } = useSupportTickets();
+
+  const handleSubmit = async () => {
+    if (!selectedIssue || !subject || !description) return;
+
+    await createTicket({
+      issueType: selectedIssue,
+      priority,
+      subject,
+      description,
+      bookingId: bookingId || undefined,
+    });
+
+    // Reset form
+    setSelectedIssue(null);
+    setPriority("medium");
+    setBookingId("");
+    setSubject("");
+    setDescription("");
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'open': return <Badge variant="warning">Open</Badge>;
+      case 'in_progress': return <Badge variant="default">In Progress</Badge>;
+      case 'resolved': return <Badge variant="success">Resolved</Badge>;
+      default: return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -92,12 +133,12 @@ export default function Help() {
                   <div className="lg:col-span-2">
                     <Card className="overflow-hidden">
                       {/* Form Header */}
-                      <div className="gradient-brand text-white p-6">
+                      <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-6">
                         <div className="flex items-center gap-3">
                           <Send className="h-5 w-5" />
                           <div>
                             <h2 className="text-lg font-semibold">Submit a Support Ticket</h2>
-                            <p className="text-white/80 text-sm">We typically respond within 24 hours</p>
+                            <p className="text-primary-foreground/80 text-sm">We typically respond within 24 hours</p>
                           </div>
                         </div>
                       </div>
@@ -131,7 +172,7 @@ export default function Help() {
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="priority">Priority</Label>
-                            <Select defaultValue="medium">
+                            <Select value={priority} onValueChange={setPriority}>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select priority" />
                               </SelectTrigger>
@@ -144,14 +185,24 @@ export default function Help() {
                           </div>
                           <div>
                             <Label htmlFor="booking-id">Booking ID (if applicable)</Label>
-                            <Input id="booking-id" placeholder="e.g., BK123456" />
+                            <Input 
+                              id="booking-id" 
+                              placeholder="e.g., BK123456" 
+                              value={bookingId}
+                              onChange={(e) => setBookingId(e.target.value)}
+                            />
                           </div>
                         </div>
 
                         {/* Subject */}
                         <div>
                           <Label htmlFor="subject">Subject *</Label>
-                          <Input id="subject" placeholder="Brief summary of your issue" />
+                          <Input 
+                            id="subject" 
+                            placeholder="Brief summary of your issue"
+                            value={subject}
+                            onChange={(e) => setSubject(e.target.value)}
+                          />
                         </div>
 
                         {/* Description */}
@@ -161,15 +212,31 @@ export default function Help() {
                             id="description"
                             placeholder="Please provide as much detail as possible about your issue. Include booking ID, dates, cleaner names, etc."
                             rows={5}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                           />
                           <p className="text-xs text-muted-foreground mt-2">
                             Tip: More details help us resolve your issue faster
                           </p>
                         </div>
 
-                        <Button size="lg" className="w-full">
-                          <Send className="h-4 w-4 mr-2" />
-                          Submit Ticket
+                        <Button 
+                          size="lg" 
+                          className="w-full"
+                          onClick={handleSubmit}
+                          disabled={!selectedIssue || !subject || !description || isPending}
+                        >
+                          {isPending ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Submitting...
+                            </>
+                          ) : (
+                            <>
+                              <Send className="h-4 w-4 mr-2" />
+                              Submit Ticket
+                            </>
+                          )}
                         </Button>
                       </CardContent>
                     </Card>
@@ -205,7 +272,7 @@ export default function Help() {
                             <MessageCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
                             <div>
                               <p className="font-medium">Live Chat</p>
-                              <p className="text-sm text-pt-green">Coming Soon</p>
+                              <p className="text-sm text-success">Coming Soon</p>
                               <p className="text-xs text-muted-foreground">Instant support via chat</p>
                             </div>
                           </div>
@@ -236,24 +303,56 @@ export default function Help() {
               </TabsContent>
 
               <TabsContent value="tickets">
-                <Card className="text-center py-12">
-                  <CardContent>
-                    <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No tickets yet</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Submit a ticket to get help from our support team
-                    </p>
-                    <Button>Submit Your First Ticket</Button>
-                  </CardContent>
-                </Card>
+                {loadingTickets ? (
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+                  </div>
+                ) : tickets && tickets.length > 0 ? (
+                  <div className="space-y-4">
+                    {tickets.map((ticket) => (
+                      <Card key={ticket.id}>
+                        <CardContent className="p-6">
+                          <div className="flex flex-col md:flex-row md:items-center gap-4">
+                            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                              <MessageSquare className="h-5 w-5 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-semibold">{ticket.subject}</h3>
+                                {getStatusBadge(ticket.status)}
+                              </div>
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                {ticket.description}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Submitted {format(new Date(ticket.created_at), 'MMM d, yyyy')}
+                              </p>
+                            </div>
+                            <Badge variant="outline" className="capitalize">
+                              {ticket.issue_type.replace('-', ' ')}
+                            </Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Card className="text-center py-12">
+                    <CardContent>
+                      <CheckCircle className="h-12 w-12 text-success mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No tickets yet</h3>
+                      <p className="text-muted-foreground mb-4">
+                        You haven't submitted any support tickets
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
 
               <TabsContent value="faq">
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-center text-muted-foreground">
-                      FAQ section coming soon...
-                    </p>
+                    <FAQSection />
                   </CardContent>
                 </Card>
               </TabsContent>
