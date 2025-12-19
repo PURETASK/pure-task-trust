@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,11 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw } from "lucide-react";
+import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, CheckCircle } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const reasonLabels: Record<string, string> = {
   purchase: 'Credit purchase',
@@ -26,11 +28,40 @@ const reasonLabels: Record<string, string> = {
 };
 
 export default function Wallet() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
-  const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing } = useWallet();
+  const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing, refetch } = useWallet();
+  const { toast } = useToast();
 
   const availableCredits = account?.current_balance || 0;
   const heldCredits = account?.held_balance || 0;
+
+  // Handle Stripe success redirect
+  useEffect(() => {
+    const success = searchParams.get('success');
+    const credits = searchParams.get('credits');
+    const canceled = searchParams.get('canceled');
+
+    if (success === 'true' && credits) {
+      toast({
+        title: 'Payment Successful! 🎉',
+        description: `${credits} credits have been added to your wallet.`,
+      });
+      // Clean up URL params
+      setSearchParams({});
+      // Refresh wallet data
+      refetch();
+    }
+
+    if (canceled === 'true') {
+      toast({
+        title: 'Payment Canceled',
+        description: 'Your purchase was not completed.',
+        variant: 'destructive',
+      });
+      setSearchParams({});
+    }
+  }, [searchParams, toast, setSearchParams, refetch]);
 
   return (
     <div className="min-h-screen flex flex-col">
