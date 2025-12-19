@@ -149,6 +149,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithGoogle = async (role: UserRole): Promise<{ error?: string }> => {
     try {
+      // Store selected role in localStorage for retrieval after OAuth redirect
+      localStorage.setItem('pendingOAuthRole', role);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -156,16 +159,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             access_type: 'offline',
             prompt: 'consent',
           },
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/role-selection`,
         },
       });
       
       if (error) {
+        localStorage.removeItem('pendingOAuthRole');
         return { error: error.message };
       }
       
       return {};
     } catch (error) {
+      localStorage.removeItem('pendingOAuthRole');
       return { error: 'Google login failed' };
     }
   };
