@@ -1,14 +1,23 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Package } from "lucide-react";
+import { useCleanerStats, useCleanerEarnings } from "@/hooks/useCleanerProfile";
+import { format } from "date-fns";
 
 export default function CleanerEarnings() {
-  const stats = {
-    totalEarned: "$0.00",
-    available: "$0.00",
-    pending: "$0.00",
-    paidOut: "$0.00",
+  const { stats, isLoading: isLoadingStats } = useCleanerStats();
+  const { earnings, isLoading: isLoadingEarnings } = useCleanerEarnings();
+
+  // Calculate next Friday for payout
+  const getNextFriday = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const daysUntilFriday = (5 - dayOfWeek + 7) % 7 || 7;
+    const nextFriday = new Date(today);
+    nextFriday.setDate(today.getDate() + daysUntilFriday);
+    return format(nextFriday, 'MMM d');
   };
 
   return (
@@ -22,42 +31,52 @@ export default function CleanerEarnings() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="border-border/50">
-            <CardContent className="p-5">
-              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3">
-                <TrendingUp className="h-5 w-5 text-emerald-500" />
-              </div>
-              <div className="text-sm text-muted-foreground">Total Earned</div>
-              <div className="text-2xl font-bold">{stats.totalEarned}</div>
-            </CardContent>
-          </Card>
-          <Card className="border-border/50">
-            <CardContent className="p-5">
-              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center mb-3">
-                <DollarSign className="h-5 w-5 text-success" />
-              </div>
-              <div className="text-sm text-muted-foreground">Available</div>
-              <div className="text-2xl font-bold">{stats.available}</div>
-            </CardContent>
-          </Card>
-          <Card className="border-border/50">
-            <CardContent className="p-5">
-              <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-3">
-                <Clock className="h-5 w-5 text-amber-500" />
-              </div>
-              <div className="text-sm text-muted-foreground">Pending</div>
-              <div className="text-2xl font-bold">{stats.pending}</div>
-            </CardContent>
-          </Card>
-          <Card className="border-border/50">
-            <CardContent className="p-5">
-              <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
-                <CheckCircle className="h-5 w-5 text-cyan-500" />
-              </div>
-              <div className="text-sm text-muted-foreground">Paid Out</div>
-              <div className="text-2xl font-bold">{stats.paidOut}</div>
-            </CardContent>
-          </Card>
+          {isLoadingStats ? (
+            <>
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-28 rounded-xl" />
+              ))}
+            </>
+          ) : (
+            <>
+              <Card className="border-border/50">
+                <CardContent className="p-5">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3">
+                    <TrendingUp className="h-5 w-5 text-emerald-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Total Earned</div>
+                  <div className="text-2xl font-bold">${stats.totalEarned.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+              <Card className="border-border/50">
+                <CardContent className="p-5">
+                  <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center mb-3">
+                    <DollarSign className="h-5 w-5 text-success" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Available</div>
+                  <div className="text-2xl font-bold">${stats.availableBalance.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+              <Card className="border-border/50">
+                <CardContent className="p-5">
+                  <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-3">
+                    <Clock className="h-5 w-5 text-amber-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Pending</div>
+                  <div className="text-2xl font-bold">${stats.pendingBalance.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+              <Card className="border-border/50">
+                <CardContent className="p-5">
+                  <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
+                    <CheckCircle className="h-5 w-5 text-cyan-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Paid Out</div>
+                  <div className="text-2xl font-bold">${stats.paidOutBalance.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         {/* Pending Earnings & Weekly Payout */}
@@ -68,7 +87,7 @@ export default function CleanerEarnings() {
                 <h3 className="text-lg font-semibold">Pending Earnings</h3>
                 <DollarSign className="h-8 w-8 text-muted-foreground/30" />
               </div>
-              <div className="text-3xl font-bold mb-4">$0.00</div>
+              <div className="text-3xl font-bold mb-4">${stats.pendingBalance.toFixed(2)}</div>
               <p className="text-sm text-muted-foreground mb-2">Minimum $10 required</p>
               <p className="text-xs text-muted-foreground">Weekly payouts are free every Friday</p>
             </CardContent>
@@ -85,8 +104,10 @@ export default function CleanerEarnings() {
                   <p className="text-sm text-muted-foreground">Free • Every Friday</p>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-2">Next payout (if ≥ $20):</p>
-              <div className="text-2xl font-bold text-success mb-4">$0.00</div>
+              <p className="text-sm text-muted-foreground mb-2">Next payout on {getNextFriday()} (if ≥ $20):</p>
+              <div className="text-2xl font-bold text-success mb-4">
+                ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(2) : '0.00'}
+              </div>
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Check className="h-3 w-3 text-success" /> No fees
@@ -120,15 +141,54 @@ export default function CleanerEarnings() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="earnings">
-              <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                <Package className="h-16 w-16 text-muted-foreground/30 mb-4" />
-                <p className="text-muted-foreground">No earnings to display</p>
+              <CardContent>
+                {isLoadingEarnings ? (
+                  <div className="space-y-4 py-4">
+                    {[1, 2, 3].map((i) => (
+                      <Skeleton key={i} className="h-16 rounded-lg" />
+                    ))}
+                  </div>
+                ) : earnings.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Package className="h-16 w-16 text-muted-foreground/30 mb-4" />
+                    <p className="text-muted-foreground">No earnings to display</p>
+                    <p className="text-sm text-muted-foreground mt-1">Complete jobs to start earning!</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-border">
+                    {earnings.map((earning) => (
+                      <div key={earning.id} className="py-4 flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">
+                            {earning.job?.cleaning_type === 'deep' ? 'Deep Clean' : 
+                             earning.job?.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {earning.job?.client?.first_name} {earning.job?.client?.last_name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(earning.created_at), 'MMM d, yyyy')}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-success">+${earning.net_credits.toFixed(2)}</p>
+                          {earning.platform_fee_credits > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                              Fee: ${earning.platform_fee_credits.toFixed(2)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </TabsContent>
             <TabsContent value="payouts">
               <CardContent className="flex flex-col items-center justify-center py-16 text-center">
                 <Package className="h-16 w-16 text-muted-foreground/30 mb-4" />
                 <p className="text-muted-foreground">No payouts to display</p>
+                <p className="text-sm text-muted-foreground mt-1">Payouts are processed every Friday</p>
               </CardContent>
             </TabsContent>
           </Tabs>
