@@ -2,6 +2,10 @@ import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
 import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
 import { QuickAction, FeatureCard } from "@/components/cleaner/QuickActions";
+import { GoalsCard } from "@/components/gamification/GoalsCard";
+import { StreakCard } from "@/components/gamification/StreakCard";
+import { BoostCard } from "@/components/gamification/BoostCard";
+import { TierBadge } from "@/components/gamification/TierBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile, useCleanerStats } from "@/hooks/useCleanerProfile";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,7 +20,9 @@ import {
   BookOpen,
   Settings,
   TrendingUp,
-  Package
+  Package,
+  Gift,
+  Users
 } from "lucide-react";
 
 export default function CleanerDashboard() {
@@ -85,15 +91,30 @@ export default function CleanerDashboard() {
           )}
         </div>
 
-        {/* Reliability Score */}
-        {isLoadingProfile ? (
-          <Skeleton className="h-32 rounded-xl" />
-        ) : (
-          <ReliabilityScore 
-            score={profile?.reliability_score || 0} 
-            tier={tier} 
-          />
-        )}
+        {/* Reliability Score & Tier Badge */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            {isLoadingProfile ? (
+              <Skeleton className="h-32 rounded-xl" />
+            ) : (
+              <ReliabilityScore 
+                score={profile?.reliability_score || 0} 
+                tier={tier} 
+              />
+            )}
+          </div>
+          <TierBadge />
+        </div>
+
+        {/* Gamification Section */}
+        <section>
+          <h2 className="text-xl font-semibold mb-4">Goals & Rewards</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <GoalsCard />
+            <StreakCard />
+            <BoostCard />
+          </div>
+        </section>
 
         {/* Quick Actions */}
         <section>
@@ -207,6 +228,22 @@ export default function CleanerDashboard() {
               href="/cleaner/materials"
               iconColor="text-cyan-500"
               iconBgColor="bg-cyan-500/10"
+            />
+            <FeatureCard
+              icon={Gift}
+              title="Referral Program"
+              description="Earn credits by referring cleaners"
+              href="/cleaner/referral"
+              iconColor="text-amber-500"
+              iconBgColor="bg-amber-500/10"
+            />
+            <FeatureCard
+              icon={Users}
+              title="My Team"
+              description="Manage your cleaning team"
+              href="/cleaner/team"
+              iconColor="text-teal-500"
+              iconBgColor="bg-teal-500/10"
             />
           </div>
         </section>
