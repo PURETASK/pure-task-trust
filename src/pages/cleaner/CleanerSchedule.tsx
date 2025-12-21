@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings } from "lucide-react";
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 
@@ -100,7 +101,15 @@ export default function CleanerSchedule() {
   return (
     <CleanerLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">My Schedule</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">My Schedule</h1>
+          <Button variant="outline" asChild>
+            <Link to="/cleaner/availability">
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Availability
+            </Link>
+          </Button>
+        </div>
 
         {/* Calendar Card */}
         <Card>

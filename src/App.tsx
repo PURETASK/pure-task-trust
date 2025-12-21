@@ -35,6 +35,7 @@ import CleanerJobs from "./pages/cleaner/CleanerJobs";
 import CleanerJobDetail from "./pages/cleaner/CleanerJobDetail";
 import CleanerAnalytics from "./pages/cleaner/CleanerAnalytics";
 import CleanerResources from "./pages/cleaner/CleanerResources";
+import CleanerAvailability from "./pages/cleaner/CleanerAvailability";
 
 const queryClient = new QueryClient();
 
@@ -174,6 +175,11 @@ const App = () => (
               <Route path="/cleaner/resources" element={
                 <RequireCleaner>
                   <CleanerResources />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/availability" element={
+                <RequireCleaner>
+                  <CleanerAvailability />
                 </RequireCleaner>
               } />
               

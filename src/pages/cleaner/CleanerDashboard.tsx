@@ -22,7 +22,8 @@ import {
   TrendingUp,
   Package,
   Gift,
-  Users
+  Users,
+  CalendarClock
 } from "lucide-react";
 
 export default function CleanerDashboard() {
@@ -220,6 +221,14 @@ export default function CleanerDashboard() {
               href="/cleaner/reliability"
               iconColor="text-emerald-500"
               iconBgColor="bg-emerald-500/10"
+            />
+            <FeatureCard
+              icon={CalendarClock}
+              title="Availability Settings"
+              description="Set your working hours & time off"
+              href="/cleaner/availability"
+              iconColor="text-orange-500"
+              iconBgColor="bg-orange-500/10"
             />
             <FeatureCard
               icon={Package}
