@@ -7,7 +7,8 @@ import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
 import { TierBadge } from "@/components/gamification/TierBadge";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCleanerProfile, useCleanerStats } from "@/hooks/useCleanerProfile";
+import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { useCleanerStats } from "@/hooks/useCleanerEarnings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Briefcase, 
