@@ -19,6 +19,7 @@ import JobApproval from "./pages/JobApproval";
 import Wallet from "./pages/Wallet";
 import Messages from "./pages/Messages";
 import Help from "./pages/Help";
+import NotificationSettings from "./pages/NotificationSettings";
 import NotFound from "./pages/NotFound";
 
 // Cleaner pages
@@ -106,6 +107,11 @@ const App = () => (
               <Route path="/help" element={
                 <RequireAuth>
                   <Help />
+                </RequireAuth>
+              } />
+              <Route path="/settings/notifications" element={
+                <RequireAuth>
+                  <NotificationSettings />
                 </RequireAuth>
               } />
               
