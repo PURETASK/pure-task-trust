@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { User, Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { User, Briefcase, Mail, Lock, ArrowRight, Loader2, Gift } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
 
 export default function AuthPage() {
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get('ref');
   const [role, setRole] = useState<UserRole | null>(null);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(!!referralCode); // Auto switch to signup if referral
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
