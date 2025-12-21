@@ -1,0 +1,63 @@
+name: Audit Auto-Fix
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 3 * * 1' # weekly on Monday at 03:00 UTC
+
+jobs:
+  audit-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Run npm audit
+        id: audit
+        run: |
+          npm audit --json > audit.json || true
+          cat audit.json
+
+      - name: Attempt non-breaking fixes
+        id: fix
+        run: |
+          # `npm audit fix` applies non-breaking fixes only
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm audit fix || true
+          if [ -n "$(git status --porcelain)" ]; then
+            git checkout -b chore/audit-fixes-$(date +%s)
+            git add package.json package-lock.json || true
+            git commit -m "chore(deps): apply npm audit fix (automated)" || true
+            echo "CHANGES=1" >> $GITHUB_OUTPUT
+          else
+            echo "CHANGES=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR if fixes applied
+        if: steps.fix.outputs.CHANGES == '1'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: chore(deps): apply npm audit fix (automated)
+          branch: chore/audit-fixes
+          title: "chore(deps): apply npm audit fix (automated)"
+          body: |
+            This PR applies non-breaking dependency fixes produced by `npm audit fix`.
+
+            Please review, run CI, and confirm no regressions. If the fixes are insufficient to remediate all high/critical findings, I will follow up with targeted upgrade PRs.
+
+      - name: Upload audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: audit.json
+
