@@ -35,10 +35,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           npm audit fix || true
           if [ -n "$(git status --porcelain)" ]; then
-            git checkout -b chore/audit-fixes-$(date +%s)
+            BRANCH_NAME="chore/audit-fixes-$(date +%s)"
+            git checkout -b "$BRANCH_NAME"
             git add package.json package-lock.json || true
             git commit -m "chore(deps): apply npm audit fix (automated)" || true
             echo "CHANGES=1" >> $GITHUB_OUTPUT
+            echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_OUTPUT
           else
             echo "CHANGES=0" >> $GITHUB_OUTPUT
           fi
@@ -48,7 +50,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           commit-message: chore(deps): apply npm audit fix (automated)
-          branch: chore/audit-fixes
+          branch: ${{ steps.fix.outputs.BRANCH_NAME }}
           title: "chore(deps): apply npm audit fix (automated)"
           body: |
             This PR applies non-breaking dependency fixes produced by `npm audit fix`.
@@ -60,4 +62,3 @@ jobs:
         with:
           name: npm-audit-report
           path: audit.json
-
