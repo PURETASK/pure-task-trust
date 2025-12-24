@@ -180,7 +180,7 @@ export default function AboutUs() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <Badge variant="outline" className="mb-4">
+            <Badge variant="outline" className="mb-4 bg-purple-500/10 border-purple-600/40 text-purple-700 dark:text-purple-300">
               <Heart className="h-3 w-3 mr-1" />
               Our Values
             </Badge>
@@ -219,9 +219,9 @@ export default function AboutUs() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full border-border/50 hover:border-primary/30 transition-colors">
+                <Card className="h-full bg-purple-500/5 border-purple-600/30 hover:border-purple-500/50 transition-colors">
                   <CardContent className="p-6">
-                    <value.icon className="h-8 w-8 text-primary mb-4" />
+                    <value.icon className="h-8 w-8 text-purple-600 dark:text-purple-400 mb-4" />
                     <h3 className="text-lg font-semibold text-foreground mb-2">{value.title}</h3>
                     <p className="text-sm text-muted-foreground">{value.description}</p>
                   </CardContent>
