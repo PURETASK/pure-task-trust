@@ -3788,6 +3788,45 @@ export type Database = {
           },
         ]
       }
+      pricing_rules: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          display_label: string
+          id: string
+          is_active: boolean
+          multiplier: number
+          priority: number
+          rule_name: string
+          rule_type: string
+          updated_at: string
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          display_label: string
+          id?: string
+          is_active?: boolean
+          multiplier?: number
+          priority?: number
+          rule_name: string
+          rule_type: string
+          updated_at?: string
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          display_label?: string
+          id?: string
+          is_active?: boolean
+          multiplier?: number
+          priority?: number
+          rule_name?: string
+          rule_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
