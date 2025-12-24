@@ -5,276 +5,268 @@ import {
   Star, XCircle, AlertTriangle, DollarSign, Zap, Shield, Info
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 
 export default function ReliabilityScoreExplained() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container py-12">
-        {/* Hero Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
-            <TrendingUp className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Reliability Score Guide
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            How we calculate your score and what it means for your success
+    <main className="container py-12">
+      {/* Hero Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-12"
+      >
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
+          <TrendingUp className="w-10 h-10 text-primary" />
+        </div>
+        <h1 className="text-4xl font-bold text-foreground mb-4">
+          Reliability Score Guide
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          How we calculate your score and what it means for your success
+        </p>
+      </motion.div>
+
+      {/* Score Overview */}
+      <Card className="mb-8 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+        <CardContent className="p-8 text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Your Score Matters</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Higher scores mean more bookings, higher rates, and better client trust. 
+            Your reliability score ranges from 0-100 and updates after each job.
           </p>
-        </motion.div>
+        </CardContent>
+      </Card>
 
-        {/* Score Overview */}
-        <Card className="mb-8 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Your Score Matters</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Higher scores mean more bookings, higher rates, and better client trust. 
-              Your reliability score ranges from 0-100 and updates after each job.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Tier System */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-primary" />
-              Tier System
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <TierCard 
-                tier="Bronze"
-                score="0-69"
-                rateRange="80-100"
-                color="amber"
-                features={[
-                  "Standard visibility",
-                  "Basic support",
-                  "Limited marketplace access"
-                ]}
-              />
-              <TierCard 
-                tier="Silver"
-                score="70-84"
-                rateRange="100-130"
-                color="slate"
-                features={[
-                  "Improved visibility",
-                  "Priority job matching",
-                  "Full marketplace access"
-                ]}
-              />
-              <TierCard 
-                tier="Gold"
-                score="85-94"
-                rateRange="130-170"
-                color="yellow"
-                features={[
-                  "Top search results",
-                  "Premium client matching",
-                  "Early job notifications"
-                ]}
-                highlight
-              />
-              <TierCard 
-                tier="Platinum"
-                score="95-100"
-                rateRange="170-220"
-                color="violet"
-                features={[
-                  "VIP client access",
-                  "Exclusive job offers",
-                  "Maximum earning potential"
-                ]}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Scoring Components */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-primary" />
-              How Your Score is Calculated
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ComponentExplanation 
-              icon={CheckCircle}
-              name="Job Completion"
-              points={25}
-              description="Complete jobs on time without issues. Each successful completion adds to your score."
-              color="green"
-            />
-            <ComponentExplanation 
-              icon={Clock}
-              name="On-Time Check-ins"
-              points={20}
-              description="GPS check-in within 15 minutes of scheduled start time. Punctuality builds trust."
-              color="blue"
-            />
-            <ComponentExplanation 
-              icon={Camera}
-              name="Photo Documentation"
-              points={20}
-              description="Submit clear before/after photos for every job. Photos protect you and verify quality."
-              color="purple"
-            />
-            <ComponentExplanation 
-              icon={MessageSquare}
-              name="Communication"
-              points={15}
-              description="Respond to messages promptly and keep clients informed about any changes."
-              color="teal"
-            />
-            <ComponentExplanation 
-              icon={Star}
-              name="Client Ratings"
-              points={20}
-              description="Average rating from client reviews. Great service = great ratings = higher score."
+      {/* Tier System */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Award className="w-5 h-5 text-primary" />
+            Tier System
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <TierCard 
+              tier="Bronze"
+              score="0-69"
+              rateRange="80-100"
               color="amber"
+              features={[
+                "Standard visibility",
+                "Basic support",
+                "Limited marketplace access"
+              ]}
             />
+            <TierCard 
+              tier="Silver"
+              score="70-84"
+              rateRange="100-130"
+              color="slate"
+              features={[
+                "Improved visibility",
+                "Priority job matching",
+                "Full marketplace access"
+              ]}
+            />
+            <TierCard 
+              tier="Gold"
+              score="85-94"
+              rateRange="130-170"
+              color="yellow"
+              features={[
+                "Top search results",
+                "Premium client matching",
+                "Early job notifications"
+              ]}
+              highlight
+            />
+            <TierCard 
+              tier="Platinum"
+              score="95-100"
+              rateRange="170-220"
+              color="violet"
+              features={[
+                "VIP client access",
+                "Exclusive job offers",
+                "Maximum earning potential"
+              ]}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-            <div className="mt-8 pt-6 border-t border-border">
-              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
-                <AlertTriangle className="w-5 h-5 text-destructive" />
-                Penalties (Things to Avoid)
-              </h3>
-              <div className="grid gap-4 md:grid-cols-3">
-                <PenaltyExplanation 
-                  name="No-Shows"
-                  maxPoints="-30"
-                  description="Missing a scheduled job without notice severely impacts your score."
-                />
-                <PenaltyExplanation 
-                  name="Late Cancellations"
-                  maxPoints="-15"
-                  description="Canceling within 24 hours of a job start time."
-                />
-                <PenaltyExplanation 
-                  name="Disputes Lost"
-                  maxPoints="-20"
-                  description="Client disputes resolved against you affect your reliability."
-                />
-              </div>
+      {/* Scoring Components */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Star className="w-5 h-5 text-primary" />
+            How Your Score is Calculated
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ComponentExplanation 
+            icon={CheckCircle}
+            name="Job Completion"
+            points={25}
+            description="Complete jobs on time without issues. Each successful completion adds to your score."
+            color="green"
+          />
+          <ComponentExplanation 
+            icon={Clock}
+            name="On-Time Check-ins"
+            points={20}
+            description="GPS check-in within 15 minutes of scheduled start time. Punctuality builds trust."
+            color="blue"
+          />
+          <ComponentExplanation 
+            icon={Camera}
+            name="Photo Documentation"
+            points={20}
+            description="Submit clear before/after photos for every job. Photos protect you and verify quality."
+            color="purple"
+          />
+          <ComponentExplanation 
+            icon={MessageSquare}
+            name="Communication"
+            points={15}
+            description="Respond to messages promptly and keep clients informed about any changes."
+            color="teal"
+          />
+          <ComponentExplanation 
+            icon={Star}
+            name="Client Ratings"
+            points={20}
+            description="Average rating from client reviews. Great service = great ratings = higher score."
+            color="amber"
+          />
+
+          <div className="mt-8 pt-6 border-t border-border">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
+              Penalties (Things to Avoid)
+            </h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              <PenaltyExplanation 
+                name="No-Shows"
+                maxPoints="-30"
+                description="Missing a scheduled job without notice severely impacts your score."
+              />
+              <PenaltyExplanation 
+                name="Late Cancellations"
+                maxPoints="-15"
+                description="Canceling within 24 hours of a job start time."
+              />
+              <PenaltyExplanation 
+                name="Disputes Lost"
+                maxPoints="-20"
+                description="Client disputes resolved against you affect your reliability."
+              />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Quick Wins */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-primary" />
-              Easy Ways to Improve Your Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <QuickWin 
-                icon={Clock}
-                title="Arrive 10 Minutes Early"
-                description="Check in via GPS right when you arrive. On-time check-ins are the easiest points to earn."
-              />
-              <QuickWin 
-                icon={Camera}
-                title="Take Clear Photos"
-                description="Before and after photos for every room. Good lighting and clear angles make a difference."
-              />
-              <QuickWin 
-                icon={MessageSquare}
-                title="Communicate Proactively"
-                description="Send a quick message when you're on your way. Clients love being informed."
-              />
-              <QuickWin 
-                icon={Star}
-                title="Go the Extra Mile"
-                description="Small touches like straightening pillows or wiping doorknobs lead to 5-star reviews."
-              />
-            </div>
-          </CardContent>
-        </Card>
+      {/* Quick Wins */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="w-5 h-5 text-primary" />
+            Easy Ways to Improve Your Score
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <QuickWin 
+              icon={Clock}
+              title="Arrive 10 Minutes Early"
+              description="Check in via GPS right when you arrive. On-time check-ins are the easiest points to earn."
+            />
+            <QuickWin 
+              icon={Camera}
+              title="Take Clear Photos"
+              description="Before and after photos for every room. Good lighting and clear angles make a difference."
+            />
+            <QuickWin 
+              icon={MessageSquare}
+              title="Communicate Proactively"
+              description="Send a quick message when you're on your way. Clients love being informed."
+            />
+            <QuickWin 
+              icon={Star}
+              title="Go the Extra Mile"
+              description="Small touches like straightening pillows or wiping doorknobs lead to 5-star reviews."
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Benefits of High Score */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-primary" />
-              Why a High Score Matters
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              <BenefitItem 
-                icon={DollarSign}
-                text="Earn up to 2x higher rates than lower-tier cleaners"
-              />
-              <BenefitItem 
-                icon={Star}
-                text="Appear first in client search results"
-              />
-              <BenefitItem 
-                icon={Zap}
-                text="Get notified about premium jobs before others"
-              />
-              <BenefitItem 
-                icon={Shield}
-                text="Build long-term relationships with repeat clients"
-              />
-              <BenefitItem 
-                icon={Award}
-                text="Unlock exclusive bonuses and promotions"
-              />
-            </div>
-          </CardContent>
-        </Card>
+      {/* Benefits of High Score */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-primary" />
+            Why a High Score Matters
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            <BenefitItem 
+              icon={DollarSign}
+              text="Earn up to 2x higher rates than lower-tier cleaners"
+            />
+            <BenefitItem 
+              icon={Star}
+              text="Appear first in client search results"
+            />
+            <BenefitItem 
+              icon={Zap}
+              text="Get notified about premium jobs before others"
+            />
+            <BenefitItem 
+              icon={Shield}
+              text="Build long-term relationships with repeat clients"
+            />
+            <BenefitItem 
+              icon={Award}
+              text="Unlock exclusive bonuses and promotions"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* FAQs */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="w-5 h-5 text-primary" />
-              Frequently Asked Questions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <FAQItem 
-              question="How often does my score update?"
-              answer="Your score updates after each completed job, typically within 24 hours. Major events like no-shows update immediately."
-            />
-            <FAQItem 
-              question="Can I recover from a low score?"
-              answer="Yes! Your score is based on your last 30 jobs, so consistent good performance will improve your score over time. Focus on completing jobs well and avoiding penalties."
-            />
-            <FAQItem 
-              question="What happens if I get a bad review?"
-              answer="One bad review won't tank your score. It's averaged with all your other reviews. Focus on addressing the feedback and delivering great service going forward."
-            />
-            <FAQItem 
-              question="Do cancellations always hurt my score?"
-              answer="Not always. Cancellations with 48+ hours notice have minimal impact. Emergency cancellations with documentation are also handled fairly. It's last-minute cancellations and no-shows that hurt most."
-            />
-            <FAQItem 
-              question="How do I see my current score breakdown?"
-              answer="Visit your Cleaner Dashboard to see your overall score and individual component scores. You can track your progress and identify areas for improvement."
-            />
-          </CardContent>
-        </Card>
-      </main>
-
-      <Footer />
-    </div>
+      {/* FAQs */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5 text-primary" />
+            Frequently Asked Questions
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <FAQItem 
+            question="How often does my score update?"
+            answer="Your score updates after each completed job, typically within 24 hours. Major events like no-shows update immediately."
+          />
+          <FAQItem 
+            question="Can I recover from a low score?"
+            answer="Yes! Your score is based on your last 30 jobs, so consistent good performance will improve your score over time. Focus on completing jobs well and avoiding penalties."
+          />
+          <FAQItem 
+            question="What happens if I get a bad review?"
+            answer="One bad review won't tank your score. It's averaged with all your other reviews. Focus on addressing the feedback and delivering great service going forward."
+          />
+          <FAQItem 
+            question="Do cancellations always hurt my score?"
+            answer="Not always. Cancellations with 48+ hours notice have minimal impact. Emergency cancellations with documentation are also handled fairly. It's last-minute cancellations and no-shows that hurt most."
+          />
+          <FAQItem 
+            question="How do I see my current score breakdown?"
+            answer="Visit your Cleaner Dashboard to see your overall score and individual component scores. You can track your progress and identify areas for improvement."
+          />
+        </CardContent>
+      </Card>
+    </main>
   );
 }
 
