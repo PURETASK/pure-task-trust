@@ -252,7 +252,7 @@ export default function AboutUs() {
                   Find a Cleaner <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10" asChild>
                 <Link to="/auth?role=cleaner">
                   Become a Cleaner
                 </Link>
