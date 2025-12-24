@@ -26,7 +26,7 @@ export default function AboutUs() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <Badge variant="secondary" className="mb-4">
+            <Badge className="mb-4 bg-primary text-primary-foreground">
               <Sparkles className="h-3 w-3 mr-1" />
               Our Story
             </Badge>
