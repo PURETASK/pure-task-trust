@@ -55,6 +55,7 @@ import Pricing from "./pages/Pricing";
 import TrustSafetyDashboard from "./pages/admin/TrustSafetyDashboard";
 import AboutUs from "./pages/AboutUs";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
+import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +82,7 @@ const App = () => (
               <Route path="/admin/trust-safety" element={<TrustSafetyDashboard />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/admin/analytics" element={<AdminAnalyticsDashboard />} />
+              <Route path="/admin/bookings" element={<AdminBookingsConsole />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={
