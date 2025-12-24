@@ -219,7 +219,7 @@ export default function CleaningScope() {
                 <span className="text-primary">Your Cleaning</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                A friendly guide to help you understand what cleaning services typically include.
+                A friendly guide to help you understand what cleaning services <strong className="underline">typically</strong> include.
               </p>
               
               {/* Disclaimer */}
