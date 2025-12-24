@@ -395,6 +395,54 @@ export type Database = {
           },
         ]
       }
+      bundle_offers: {
+        Row: {
+          created_at: string
+          credits_price: number
+          current_uses: number | null
+          description: string | null
+          discount_percent: number | null
+          hours_included: number
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          name: string
+          updated_at: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          credits_price: number
+          current_uses?: number | null
+          description?: string | null
+          discount_percent?: number | null
+          hours_included?: number
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          name: string
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          credits_price?: number
+          current_uses?: number | null
+          description?: string | null
+          discount_percent?: number | null
+          hours_included?: number
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          name?: string
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       calendar_connections: {
         Row: {
           access_token: string
