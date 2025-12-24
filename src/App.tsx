@@ -50,6 +50,7 @@ import ForAirbnbHosts from "./pages/ForAirbnbHosts";
 import ForFamilies from "./pages/ForFamilies";
 import ForRetirees from "./pages/ForRetirees";
 import ForProfessionals from "./pages/ForProfessionals";
+import CleaningScope from "./pages/CleaningScope";
 import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,7 @@ const App = () => (
               <Route path="/for-families" element={<ForFamilies />} />
               <Route path="/for-retirees" element={<ForRetirees />} />
               <Route path="/for-professionals" element={<ForProfessionals />} />
+              <Route path="/cleaning-scope" element={<CleaningScope />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={
