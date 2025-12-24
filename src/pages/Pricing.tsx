@@ -187,8 +187,8 @@ export default function Pricing() {
                       </div>
                       <h4 className="font-semibold text-foreground mb-2">Deep Clean</h4>
                       <p className="text-sm text-muted-foreground mb-4">Baseboards, fans, inside appliances</p>
-                      <Badge className="bg-primary/10 text-primary">+30-80 credits/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">≈ +$3-8/hour</p>
+                      <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
+                      <p className="text-xs text-muted-foreground mt-2">≈ +3-8 credits/hour</p>
                     </CardContent>
                   </Card>
 
@@ -197,8 +197,8 @@ export default function Pricing() {
                       <div className="text-4xl mb-4">📦</div>
                       <h4 className="font-semibold text-foreground mb-2">Move-Out/In</h4>
                       <p className="text-sm text-muted-foreground mb-4">Complete vacant property deep clean</p>
-                      <Badge className="bg-primary/10 text-primary">+30-80 credits/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">≈ +$3-8/hour</p>
+                      <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
+                      <p className="text-xs text-muted-foreground mt-2">≈ +3-8 credits/hour</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -264,11 +264,11 @@ export default function Pricing() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Semi Pro cleaner</span>
-                        <span className="font-medium">400 credits/hr</span>
+                        <span className="font-medium">$40/hr</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">3 hours × 400</span>
-                        <span className="font-medium">1,200 credits</span>
+                        <span className="text-muted-foreground">3 hours × $40</span>
+                        <span className="font-medium">120 credits</span>
                       </div>
                       <div className="border-t pt-3 flex justify-between">
                         <span className="font-semibold">Total Cost</span>
@@ -287,15 +287,15 @@ export default function Pricing() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Pro cleaner base</span>
-                        <span className="font-medium">500 credits/hr</span>
+                        <span className="font-medium">$50/hr</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Deep clean add-on</span>
-                        <span className="font-medium">+50 credits/hr</span>
+                        <span className="font-medium">+$5/hr</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">4 hours × 550</span>
-                        <span className="font-medium">2,200 credits</span>
+                        <span className="text-muted-foreground">4 hours × $55</span>
+                        <span className="font-medium">220 credits</span>
                       </div>
                       <div className="border-t pt-3 flex justify-between">
                         <span className="font-semibold">Total Cost</span>
@@ -314,15 +314,15 @@ export default function Pricing() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Elite cleaner base</span>
-                        <span className="font-medium">700 credits/hr</span>
+                        <span className="font-medium">$70/hr</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Move-out add-on</span>
-                        <span className="font-medium">+60 credits/hr</span>
+                        <span className="font-medium">+$6/hr</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">5 hours × 760</span>
-                        <span className="font-medium">3,800 credits</span>
+                        <span className="text-muted-foreground">5 hours × $76</span>
+                        <span className="font-medium">380 credits</span>
                       </div>
                       <div className="border-t pt-3 flex justify-between">
                         <span className="font-semibold">Total Cost</span>
@@ -350,10 +350,10 @@ export default function Pricing() {
             {/* Tier Earnings */}
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
               {[
-                { tier: 'Developing', baseRange: '150-350', earnRange: '$12-28/hr', score: '0-59', payout: '80%' },
-                { tier: 'Semi Pro', baseRange: '350-450', earnRange: '$28-36/hr', score: '60-74', payout: '80%' },
-                { tier: 'Pro', baseRange: '450-600', earnRange: '$36-48/hr', score: '75-89', payout: '80%', popular: true },
-                { tier: 'Elite', baseRange: '600-850', earnRange: '$51-72/hr', score: '90-100', payout: '85%' }
+                { tier: 'Developing', baseRange: '$15-35', earnRange: '$12-28/hr', score: '0-59', payout: '80%' },
+                { tier: 'Semi Pro', baseRange: '$35-45', earnRange: '$28-36/hr', score: '60-74', payout: '80%' },
+                { tier: 'Pro', baseRange: '$45-60', earnRange: '$36-48/hr', score: '75-89', payout: '80%', popular: true },
+                { tier: 'Elite', baseRange: '$60-85', earnRange: '$51-72/hr', score: '90-100', payout: '85%' }
               ].map((tier, idx) => (
                 <Card key={idx} className={tier.popular ? 'ring-2 ring-primary' : ''}>
                   <CardContent className="pt-6 text-center">
@@ -365,7 +365,7 @@ export default function Pricing() {
                     <div className="mb-4">
                       <p className="text-sm text-muted-foreground">You charge:</p>
                       <p className="text-2xl font-bold text-foreground">{tier.baseRange}</p>
-                      <p className="text-muted-foreground text-sm">credits/hour</p>
+                      <p className="text-muted-foreground text-sm">per hour</p>
                     </div>
                     <div className="bg-primary/10 rounded-lg p-4">
                       <p className="text-sm text-muted-foreground">You earn ({tier.payout}):</p>
