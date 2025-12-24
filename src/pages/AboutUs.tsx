@@ -111,7 +111,7 @@ export default function AboutUs() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-4 bg-warning/10 border-warning/30 text-warning-foreground">
                 <Zap className="h-3 w-3 mr-1" />
                 Why We're Different
               </Badge>
