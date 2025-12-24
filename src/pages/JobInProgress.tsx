@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Check, MapPin, Clock, MessageCircle, Navigation, Loader2 } from "lucide-react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { useJob, useJobActions } from "@/hooks/useJob";
+import { Check, Clock, MessageCircle, Navigation, Loader2 } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
 
 const timelineSteps = [
@@ -18,9 +18,7 @@ const timelineSteps = [
 
 export default function JobInProgress() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { data: job, isLoading, error } = useJob(id || '');
-  const { updateStatus, isUpdatingStatus } = useJobActions(id || '');
 
   if (isLoading) {
     return (
@@ -75,15 +73,6 @@ export default function JobInProgress() {
     ? format(new Date(job.scheduled_start_at), 'h:mm a')
     : 'TBD';
 
-  const handleSimulateComplete = async () => {
-    try {
-      await updateStatus('completed');
-      navigate(`/job/${id}/approve`);
-    } catch (error) {
-      console.error('Failed to update status:', error);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -125,8 +114,10 @@ export default function JobInProgress() {
                       {job.status === 'in_progress' ? 'Currently cleaning' : 'Assigned cleaner'}
                     </p>
                   </div>
-                  <Button variant="outline" size="icon">
-                    <MessageCircle className="h-4 w-4" />
+                  <Button variant="outline" size="icon" asChild>
+                    <Link to="/messages">
+                      <MessageCircle className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -207,25 +198,9 @@ export default function JobInProgress() {
                 <Link to={`/job/${id}/approve`}>Review & Approve</Link>
               </Button>
             ) : (
-              <>
-                <Button 
-                  className="w-full" 
-                  onClick={handleSimulateComplete}
-                  disabled={isUpdatingStatus}
-                >
-                  {isUpdatingStatus ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    'Simulate: Job Completed'
-                  )}
-                </Button>
-                <p className="text-xs text-center text-muted-foreground mt-3">
-                  This button simulates the job being completed for demo purposes
-                </p>
-              </>
+              <div className="text-center text-sm text-muted-foreground">
+                <p>You'll be notified when the cleaning is complete.</p>
+              </div>
             )}
           </motion.div>
         </div>

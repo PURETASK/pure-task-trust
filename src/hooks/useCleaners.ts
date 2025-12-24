@@ -112,8 +112,7 @@ export function useCleaners(options: UseCleanersOptions = {}) {
           backgroundCheckStatus: cleaner.background_check_status,
           verified: cleaner.background_check_status === 'completed',
           services: getServicesFromTier(cleaner.tier || 'standard'),
-          // Mock distance for now - would need geolocation to calculate real distance
-          distance: `${(Math.random() * 10 + 1).toFixed(1)} mi`,
+          distance: cleaner.travel_radius_km ? `${cleaner.travel_radius_km} km radius` : undefined,
         };
       });
 
@@ -196,7 +195,7 @@ export function useCleaner(cleanerId: string) {
         backgroundCheckStatus: data.background_check_status,
         verified: data.background_check_status === 'completed',
         services: getServicesFromTier(data.tier || 'standard'),
-        distance: `${(Math.random() * 10 + 1).toFixed(1)} mi`,
+        distance: data.travel_radius_km ? `${data.travel_radius_km} km radius` : undefined,
       };
     },
     enabled: !!cleanerId,

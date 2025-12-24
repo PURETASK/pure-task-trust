@@ -31,18 +31,13 @@ export default function Discover() {
 
   const favoriteCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
 
-  // Generate avatar placeholder from name
-  const getAvatarUrl = (name: string, index: number) => {
-    // Use a consistent set of placeholder images
-    const avatars = [
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop",
-    ];
-    return avatars[index % avatars.length];
+  // Get initials from name
+  const getInitials = (name: string) => {
+    const parts = name.split(' ').filter(Boolean);
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return (parts[0]?.[0] || 'C').toUpperCase();
   };
 
   const handleToggleFavorite = async (cleanerId: string, e: React.MouseEvent) => {
@@ -160,12 +155,12 @@ export default function Discover() {
                     <Card className="hover:shadow-elevated transition-all overflow-hidden">
                       <CardContent className="p-0">
                         <div className="flex">
-                          <div className="relative">
-                            <img
-                              src={getAvatarUrl(cleaner.name, index)}
-                              alt={cleaner.name}
-                              className="h-full w-32 md:w-40 object-cover"
-                            />
+                          <div className="relative w-32 md:w-40 flex-shrink-0">
+                            <div className="h-full min-h-[160px] bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                              <span className="text-4xl font-bold text-primary/60">
+                                {getInitials(cleaner.name)}
+                              </span>
+                            </div>
                             {cleaner.verified && (
                               <div className="absolute top-2 left-2">
                                 <Badge variant="trust" className="gap-1">
