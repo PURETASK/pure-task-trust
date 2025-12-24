@@ -22,6 +22,7 @@ import Help from "./pages/Help";
 import NotificationSettings from "./pages/NotificationSettings";
 import Properties from "./pages/Properties";
 import RescheduleRequests from "./pages/RescheduleRequests";
+import FavoriteCleaners from "./pages/FavoriteCleaners";
 import NotFound from "./pages/NotFound";
 
 // Cleaner pages
@@ -136,6 +137,11 @@ const App = () => (
               <Route path="/reschedule-requests" element={
                 <RequireClient>
                   <RescheduleRequests />
+                </RequireClient>
+              } />
+              <Route path="/favorites" element={
+                <RequireClient>
+                  <FavoriteCleaners />
                 </RequireClient>
               } />
               
