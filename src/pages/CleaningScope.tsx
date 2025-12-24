@@ -59,30 +59,41 @@ const CLEANING_DUTIES = {
     icon: '✨',
     color: 'purple',
     duties: {
-      'Additional Tasks': [
+      'Deep Clean Tasks': [
         'Baseboards - wipe down all baseboards in every room',
         'Ceiling fans - dust and wipe blades',
         'Light fixtures - dust and clean',
         'Window sills and tracks - thorough cleaning',
         'Inside windows - clean interior glass',
-        'Blinds and shutters - dust each slat',
         'Door frames and trim - wipe down',
-        'Vents and air returns - dust and wipe'
-      ],
-      'Kitchen Deep Clean': [
+        'Behind toilet deep clean',
+        'Inside cabinets and drawers (if empty)'
+      ]
+    }
+  },
+  specialRequests: {
+    title: 'Special Request Items',
+    subtitle: 'Individual tasks priced separately - discuss with your cleaner',
+    icon: '💎',
+    color: 'rose',
+    duties: {
+      'Kitchen Special Requests': [
         'Inside microwave - thorough cleaning',
-        'Inside oven - detailed cleaning (if requested)',
+        'Inside oven - detailed cleaning',
         'Inside refrigerator - remove items, clean shelves',
-        'Inside cabinets and drawers (if empty)',
         'Behind appliances (if accessible)',
         'Degrease range hood and filter'
       ],
-      'Bathroom Deep Clean': [
+      'Bathroom Special Requests': [
         'Grout scrubbing and whitening',
         'Deep descale fixtures and showerheads',
-        'Inside cabinets and drawers (if empty)',
-        'Behind toilet deep clean',
         'Tile scrubbing'
+      ],
+      'Other Special Requests': [
+        'Blinds and shutters - dust each slat',
+        'Vents and air returns - dust and wipe',
+        'Inside cabinets and drawers (detailed)',
+        'Walls - spot cleaning or full wipe down'
       ]
     }
   },
@@ -159,6 +170,7 @@ const colorMap: Record<string, string> = {
   purple: 'bg-pt-purple/10 text-pt-purple border-pt-purple/20',
   amber: 'bg-pt-amber/10 text-pt-amber border-pt-amber/20',
   cyan: 'bg-pt-cyan/10 text-pt-cyan border-pt-cyan/20',
+  rose: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
 };
 
 const iconColorMap: Record<string, string> = {
@@ -166,6 +178,7 @@ const iconColorMap: Record<string, string> = {
   purple: 'text-pt-purple',
   amber: 'text-pt-amber',
   cyan: 'text-pt-cyan',
+  rose: 'text-rose-600',
 };
 
 export default function CleaningScope() {
@@ -227,7 +240,7 @@ export default function CleaningScope() {
         <section className="py-12">
           <div className="container max-w-5xl">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto gap-2 bg-transparent p-0 mb-8">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0 mb-8">
                 {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
                   <TabsTrigger
                     key={key}
