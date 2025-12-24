@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Bell } from "lucide-react";
+import { LogOut, Settings, HelpCircle, Bell, Home, ArrowLeft } from "lucide-react";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -51,6 +51,28 @@ export function MainLayout({ children }: MainLayoutProps) {
             <div className="flex h-full items-center justify-between px-4">
               <div className="flex items-center gap-3">
                 <SidebarTrigger className="h-8 w-8" />
+                
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => navigate(-1)}
+                  className="h-8 w-8"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  asChild
+                  className="h-8 w-8"
+                  aria-label="Go home"
+                >
+                  <Link to={getHomePath()}>
+                    <Home className="h-4 w-4" />
+                  </Link>
+                </Button>
                 
                 <Link to={getHomePath()} className="flex items-center gap-2">
                   <div className="h-8 w-8 rounded-lg gradient-brand flex items-center justify-center">
