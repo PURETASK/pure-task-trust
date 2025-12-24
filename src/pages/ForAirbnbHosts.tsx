@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import {
   Home, Clock, Star, Zap, CheckCircle, Camera,
   Calendar, DollarSign, Award, TrendingUp, Shield
@@ -12,36 +10,12 @@ import {
 import { motion } from 'framer-motion';
 
 const features = [
-  {
-    icon: Clock,
-    title: 'Same-Day Turnovers',
-    description: 'Guest checking out at 11am, next one at 3pm? We will have your place spotless in between.',
-  },
-  {
-    icon: Camera,
-    title: 'Photo Documentation',
-    description: 'Every cleaning includes timestamped before/after photos so you can verify from anywhere.',
-  },
-  {
-    icon: Star,
-    title: 'Protect Your Rating',
-    description: 'Consistent, high-quality cleans help maintain your 5-star guest reviews.',
-  },
-  {
-    icon: Shield,
-    title: 'Verified Cleaners',
-    description: 'All cleaners are background-checked and trained for short-term rental standards.',
-  },
-  {
-    icon: Calendar,
-    title: 'Recurring Schedules',
-    description: 'Set up regular cleans that sync with your booking calendar automatically.',
-  },
-  {
-    icon: DollarSign,
-    title: 'Transparent Pricing',
-    description: 'No hidden fees. Know exactly what you\'ll pay before booking.',
-  },
+  { icon: Clock, title: 'Same-Day Turnovers', description: 'Guest checking out at 11am, next one at 3pm? We will have your place spotless in between.' },
+  { icon: Camera, title: 'Photo Documentation', description: 'Every cleaning includes timestamped before/after photos so you can verify from anywhere.' },
+  { icon: Star, title: 'Protect Your Rating', description: 'Consistent, high-quality cleans help maintain your 5-star guest reviews.' },
+  { icon: Shield, title: 'Verified Cleaners', description: 'All cleaners are background-checked and trained for short-term rental standards.' },
+  { icon: Calendar, title: 'Recurring Schedules', description: 'Set up regular cleans that sync with your booking calendar automatically.' },
+  { icon: DollarSign, title: 'Transparent Pricing', description: "No hidden fees. Know exactly what you'll pay before booking." },
 ];
 
 const stats = [
@@ -53,10 +27,7 @@ const stats = [
 
 export default function ForAirbnbHosts() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="pt-16">
+    <main className="pt-8">
         {/* Hero */}
         <section className="py-20 md:py-28 bg-gradient-to-b from-pt-amber/10 to-background">
           <div className="container">
@@ -214,9 +185,6 @@ export default function ForAirbnbHosts() {
             </Card>
           </div>
         </section>
-      </main>
-
-      <Footer />
-    </div>
+    </main>
   );
 }

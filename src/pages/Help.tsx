@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,10 +93,8 @@ export default function Help() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-12">
-        <div className="container max-w-6xl">
+    <main className="flex-1 py-8">
+      <div className="container max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -358,9 +354,7 @@ export default function Help() {
               </TabsContent>
             </Tabs>
           </motion.div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </main>
   );
 }

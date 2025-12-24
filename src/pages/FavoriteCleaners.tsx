@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -84,10 +82,8 @@ export default function FavoriteCleaners() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-12">
-        <div className="container max-w-4xl">
+    <main className="flex-1 py-8">
+      <div className="container max-w-4xl">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
@@ -311,34 +307,32 @@ export default function FavoriteCleaners() {
               ))}
             </div>
           </AnimatePresence>
-        </div>
-      </main>
-      <Footer />
 
-      {/* Confirm Remove Dialog */}
-      <AlertDialog open={!!confirmRemove} onOpenChange={() => setConfirmRemove(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remove from favorites?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This cleaner will be removed from your favorites list. You can always add them back later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => confirmRemove && handleRemoveFavorite(confirmRemove)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isRemoving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                'Remove'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+          {/* Confirm Remove Dialog */}
+          <AlertDialog open={!!confirmRemove} onOpenChange={() => setConfirmRemove(null)}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Remove from favorites?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cleaner will be removed from your favorites list. You can always add them back later.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => confirmRemove && handleRemoveFavorite(confirmRemove)}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {isRemoving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    'Remove'
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+      </div>
+    </main>
   );
 }
