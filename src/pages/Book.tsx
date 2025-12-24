@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -113,9 +111,7 @@ export default function Book() {
   const canProceedToVerification = selectedDate && selectedTime && selectedAddress;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-12">
+    <main className="flex-1 py-12">
         <div className="container max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

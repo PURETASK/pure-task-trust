@@ -4,8 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Info, Sparkles, Home as HomeIcon, Key, Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -197,209 +195,203 @@ export default function CleaningScope() {
   const [activeTab, setActiveTab] = useState('basic');
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="pt-16">
-        {/* Hero */}
-        <section className="py-16 md:py-20 bg-gradient-to-b from-secondary/50 to-background">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <Badge variant="outline" className="mb-6">
-                <Sparkles className="h-4 w-4 mr-2" />
-                Scope of Work
-              </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                What's Included in{' '}
-                <span className="text-primary">Your Cleaning</span>
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8">
-                A friendly guide to help you understand what cleaning services <strong className="underline">typically</strong> include.
-              </p>
-              
-              {/* Disclaimer */}
-              <Alert className="max-w-2xl mx-auto bg-amber-500/10 border-amber-500/30 text-left">
-                <Info className="h-5 w-5 text-amber-600" />
-                <AlertDescription className="text-amber-800 dark:text-amber-200">
-                  <strong className="block mb-1">Important: This is a Guide Only</strong>
-                  All cleaners on PureTask are independent contractors who set their own standards and methods. 
-                  Nothing described on this page is mandatory. Each cleaner decides how they clean and what 
-                  tasks they perform. We recommend discussing specific expectations directly with your cleaner 
-                  before booking.
-                </AlertDescription>
-              </Alert>
-              
-              {/* Cleaner-focused message */}
-              <Alert className="max-w-2xl mx-auto mt-4 bg-primary/10 border-primary/30 text-left">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <AlertDescription className="text-foreground/80">
-                  <strong className="block mb-1">For Our Cleaners</strong>
-                  Our goal is to help cleaners on PureTask understand what customers typically expect when 
-                  booking through our platform. We hope this guide serves as a helpful reference that you 
-                  can use and build upon over time to deliver great experiences.
-                </AlertDescription>
-              </Alert>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Cleaning Types Tabs */}
-        <section className="py-12">
-          <div className="container max-w-5xl">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0 mb-8">
-                {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
-                  <TabsTrigger
-                    key={key}
-                    value={key}
-                    className={`flex flex-col items-center gap-1 p-4 rounded-xl border-2 transition-all ${tabActiveColorMap[value.color]}`}
-                  >
-                    <span className="text-2xl">{value.icon}</span>
-                    <span className="text-sm font-medium">{value.title.split('(')[0].trim()}</span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
-                <TabsContent key={key} value={key} className="mt-0">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card className={`mb-8 ${colorMap[value.color]}`}>
-                      <CardHeader>
-                        <div className="flex items-center gap-3">
-                          <span className="text-4xl">{value.icon}</span>
-                          <div>
-                            <CardTitle className="text-2xl">{value.title}</CardTitle>
-                            <p className="text-muted-foreground mt-1">{value.subtitle}</p>
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </Card>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {Object.entries(value.duties).map(([room, tasks], index) => (
-                        <motion.div
-                          key={room}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                        >
-                          <Card className={`h-full ${colorMap[value.color]}`}>
-                            <CardHeader className="pb-3">
-                              <CardTitle className="text-lg flex items-center gap-2">
-                                {room.includes('Not') ? (
-                                  <Info className={`h-5 w-5 ${iconColorMap[value.color]}`} />
-                                ) : (
-                                  <CheckCircle className={`h-5 w-5 ${iconColorMap[value.color]}`} />
-                                )}
-                                {room}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2">
-                                {tasks.map((task, taskIndex) => (
-                                  <li 
-                                    key={taskIndex} 
-                                    className="flex items-start gap-2 text-sm text-muted-foreground"
-                                  >
-                                    <span className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
-                                      room.includes('Not') ? 'bg-muted-foreground' : 'bg-primary'
-                                    }`} />
-                                    {task}
-                                  </li>
-                                ))}
-                              </ul>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
-        </section>
-
-        {/* Important Notes */}
-        <section className="py-12 bg-secondary/30">
-          <div className="container max-w-5xl">
-            <h2 className="text-2xl font-bold mb-6 text-center">Important Notes</h2>
+    <main className="py-12">
+      {/* Hero */}
+      <section className="py-16 md:py-20 bg-gradient-to-b from-secondary/50 to-background">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            <Badge variant="outline" className="mb-6">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Scope of Work
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              What's Included in{' '}
+              <span className="text-primary">Your Cleaning</span>
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              A friendly guide to help you understand what cleaning services <strong className="underline">typically</strong> include.
+            </p>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <Alert className="bg-primary/10 border-primary/30">
-                <Info className="h-4 w-4 text-primary" />
-                <AlertDescription>
-                  <strong>Time Estimates:</strong> All cleaning times vary. Duration depends primarily on the 
-                  individual cleaner and how dirty the property is. Times shown are rough estimates only.
-                </AlertDescription>
-              </Alert>
-              
-              <Alert className="bg-pt-purple/10 border-pt-purple/30">
-                <Info className="h-4 w-4 text-pt-purple" />
-                <AlertDescription>
-                  <strong>Supplies:</strong> Most cleaners bring their own supplies. If you have specific product 
-                  preferences (eco-friendly, allergen-free) or special requests, please mention during booking. 
-                  If you require a specific product or have an out-of-the-ordinary request, you should supply it yourself.
-                </AlertDescription>
-              </Alert>
-              
-              <Alert className="bg-pt-amber/10 border-pt-amber/30">
-                <Info className="h-4 w-4 text-pt-amber" />
-                <AlertDescription>
-                  <strong>Access:</strong> Please ensure the cleaner can access all areas needing cleaning. 
-                  Locked rooms or areas with pets may affect the scope.
-                </AlertDescription>
-              </Alert>
-              
-              <Alert className="bg-pt-cyan/10 border-pt-cyan/30">
-                <Info className="h-4 w-4 text-pt-cyan" />
-                <AlertDescription>
-                  <strong>Special Requests:</strong> Need something specific? Add notes during booking or message 
-                  your cleaner directly to discuss custom requirements.
-                </AlertDescription>
-              </Alert>
-            </div>
-          </div>
-        </section>
+            {/* Disclaimer */}
+            <Alert className="max-w-2xl mx-auto bg-amber-500/10 border-amber-500/30 text-left">
+              <Info className="h-5 w-5 text-amber-600" />
+              <AlertDescription className="text-amber-800 dark:text-amber-200">
+                <strong className="block mb-1">Important: This is a Guide Only</strong>
+                All cleaners on PureTask are independent contractors who set their own standards and methods. 
+                Nothing described on this page is mandatory. Each cleaner decides how they clean and what 
+                tasks they perform. We recommend discussing specific expectations directly with your cleaner 
+                before booking.
+              </AlertDescription>
+            </Alert>
+            
+            {/* Cleaner-focused message */}
+            <Alert className="max-w-2xl mx-auto mt-4 bg-primary/10 border-primary/30 text-left">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <AlertDescription className="text-foreground/80">
+                <strong className="block mb-1">For Our Cleaners</strong>
+                Our goal is to help cleaners on PureTask understand what customers typically expect when 
+                booking through our platform. We hope this guide serves as a helpful reference that you 
+                can use and build upon over time to deliver great experiences.
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        </div>
+      </section>
 
-        {/* CTA */}
-        <section className="py-16">
-          <div className="container">
-            <Card className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground max-w-3xl mx-auto">
-              <CardContent className="p-8 text-center">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                  Ready to Book Your Cleaning?
-                </h2>
-                <p className="text-primary-foreground/90 mb-6">
-                  Now that you know what's included, find a verified cleaner in your area.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" variant="secondary" asChild>
-                    <Link to="/book">
-                      Book a Cleaning
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-white/40 text-white bg-white/10 hover:bg-white/20" asChild>
-                    <Link to="/discover">Browse Cleaners</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      </main>
+      {/* Cleaning Types Tabs */}
+      <section className="py-12">
+        <div className="container max-w-5xl">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0 mb-8">
+              {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
+                <TabsTrigger
+                  key={key}
+                  value={key}
+                  className={`flex flex-col items-center gap-1 p-4 rounded-xl border-2 transition-all ${tabActiveColorMap[value.color]}`}
+                >
+                  <span className="text-2xl">{value.icon}</span>
+                  <span className="text-sm font-medium">{value.title.split('(')[0].trim()}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-      <Footer />
-    </div>
+            {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
+              <TabsContent key={key} value={key} className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className={`mb-8 ${colorMap[value.color]}`}>
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <span className="text-4xl">{value.icon}</span>
+                        <div>
+                          <CardTitle className="text-2xl">{value.title}</CardTitle>
+                          <p className="text-muted-foreground mt-1">{value.subtitle}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {Object.entries(value.duties).map(([room, tasks], index) => (
+                      <motion.div
+                        key={room}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Card className={`h-full ${colorMap[value.color]}`}>
+                          <CardHeader className="pb-3">
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              {room.includes('Not') ? (
+                                <Info className={`h-5 w-5 ${iconColorMap[value.color]}`} />
+                              ) : (
+                                <CheckCircle className={`h-5 w-5 ${iconColorMap[value.color]}`} />
+                              )}
+                              {room}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <ul className="space-y-2">
+                              {tasks.map((task, taskIndex) => (
+                                <li 
+                                  key={taskIndex} 
+                                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                                >
+                                  <span className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
+                                    room.includes('Not') ? 'bg-muted-foreground' : 'bg-primary'
+                                  }`} />
+                                  {task}
+                                </li>
+                              ))}
+                            </ul>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+      </section>
+
+      {/* Important Notes */}
+      <section className="py-12 bg-secondary/30">
+        <div className="container max-w-5xl">
+          <h2 className="text-2xl font-bold mb-6 text-center">Important Notes</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <Alert className="bg-primary/10 border-primary/30">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertDescription>
+                <strong>Time Estimates:</strong> All cleaning times vary. Duration depends primarily on the 
+                individual cleaner and how dirty the property is. Times shown are rough estimates only.
+              </AlertDescription>
+            </Alert>
+            
+            <Alert className="bg-pt-purple/10 border-pt-purple/30">
+              <Info className="h-4 w-4 text-pt-purple" />
+              <AlertDescription>
+                <strong>Supplies:</strong> Most cleaners bring their own supplies. If you have specific product 
+                preferences (eco-friendly, allergen-free) or special requests, please mention during booking. 
+                If you require a specific product or have an out-of-the-ordinary request, you should supply it yourself.
+              </AlertDescription>
+            </Alert>
+            
+            <Alert className="bg-pt-amber/10 border-pt-amber/30">
+              <Info className="h-4 w-4 text-pt-amber" />
+              <AlertDescription>
+                <strong>Access:</strong> Please ensure the cleaner can access all areas needing cleaning. 
+                Locked rooms or areas with pets may affect the scope.
+              </AlertDescription>
+            </Alert>
+            
+            <Alert className="bg-pt-cyan/10 border-pt-cyan/30">
+              <Info className="h-4 w-4 text-pt-cyan" />
+              <AlertDescription>
+                <strong>Special Requests:</strong> Need something specific? Add notes during booking or message 
+                your cleaner directly to discuss custom requirements.
+              </AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16">
+        <div className="container">
+          <Card className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground max-w-3xl mx-auto">
+            <CardContent className="p-8 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                Ready to Book Your Cleaning?
+              </h2>
+              <p className="text-primary-foreground/90 mb-6">
+                Now that you know what's included, find a verified cleaner in your area.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" variant="secondary" asChild>
+                  <Link to="/book">
+                    Book a Cleaning
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-white/40 text-white bg-white/10 hover:bg-white/20" asChild>
+                  <Link to="/discover">Browse Cleaners</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </main>
   );
 }

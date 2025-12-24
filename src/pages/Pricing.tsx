@@ -14,7 +14,7 @@ export default function Pricing() {
   const [userType, setUserType] = useState('client');
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="py-12">
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-16">
         <div className="max-w-6xl mx-auto px-4 text-center">
@@ -361,75 +361,92 @@ export default function Pricing() {
                       <Badge className="mb-2 bg-primary text-primary-foreground">Most Cleaners</Badge>
                     )}
                     <h3 className="text-xl font-bold text-foreground mb-1">{tier.tier}</h3>
-                    <Badge variant="outline" className="mb-4">Score: {tier.score}</Badge>
-                    <div className="mb-4">
-                      <p className="text-sm text-muted-foreground">You charge:</p>
-                      <p className="text-2xl font-bold text-foreground">{tier.baseRange}</p>
-                      <p className="text-muted-foreground text-sm">per hour</p>
+                    <p className="text-sm text-muted-foreground mb-4">Score: {tier.score}</p>
+                    <div className="bg-primary/10 rounded-lg p-4 mb-4">
+                      <p className="text-3xl font-bold text-primary">{tier.earnRange}</p>
+                      <p className="text-sm text-muted-foreground">Your take-home</p>
                     </div>
-                    <div className="bg-primary/10 rounded-lg p-4">
-                      <p className="text-sm text-muted-foreground">You earn ({tier.payout}):</p>
-                      <p className="text-2xl font-bold text-primary">{tier.earnRange}</p>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-4">Plus add-ons: +$2.40-6.40/hr</p>
+                    <p className="text-sm text-muted-foreground">
+                      Base rate: {tier.baseRange}/hr
+                    </p>
+                    <p className="text-sm font-medium text-primary mt-2">
+                      You keep {tier.payout}
+                    </p>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            {/* Payout Options */}
-            <div className="max-w-4xl mx-auto">
-              <h3 className="text-2xl font-bold text-foreground text-center mb-8">Payout Options</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-primary" />
-                      Weekly Payouts (Free)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {[
-                        'Automatic weekly deposits',
-                        'No fees - 100% of earnings',
-                        'Direct deposit to your bank',
-                        'Processing time: 2-3 business days'
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-center gap-2 text-sm">
-                          <CheckCircle className="h-4 w-4 text-primary" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+            {/* How to Increase Score */}
+            <Card className="mb-16">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  How to Increase Your Score & Earnings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <Clock className="h-6 w-6 text-primary" />
+                    </div>
+                    <h4 className="font-semibold mb-2">On-Time Arrivals</h4>
+                    <p className="text-sm text-muted-foreground">GPS check-in within 15 min of scheduled time</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <Camera className="h-6 w-6 text-primary" />
+                    </div>
+                    <h4 className="font-semibold mb-2">Photo Documentation</h4>
+                    <p className="text-sm text-muted-foreground">Before/after photos for every job</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <Star className="h-6 w-6 text-primary" />
+                    </div>
+                    <h4 className="font-semibold mb-2">5-Star Reviews</h4>
+                    <p className="text-sm text-muted-foreground">Consistently high client ratings</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <Target className="h-6 w-6 text-primary" />
+                    </div>
+                    <h4 className="font-semibold mb-2">Job Completion</h4>
+                    <p className="text-sm text-muted-foreground">Complete every accepted job</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Zap className="h-5 w-5 text-amber-500" />
-                      Instant Payout (5% fee)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {[
-                        'Cash out anytime',
-                        '5% convenience fee',
-                        'Money in your account within hours',
-                        'FREE for milestone achievements!'
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-center gap-2 text-sm">
-                          <CheckCircle className="h-4 w-4 text-primary" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+            {/* Weekly Earnings Calculator */}
+            <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-primary" />
+                  Weekly Earnings Potential
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-6 bg-card rounded-xl">
+                    <p className="text-muted-foreground mb-2">Part-Time (15 hrs/week)</p>
+                    <p className="text-3xl font-bold text-foreground mb-1">$420-$720</p>
+                    <p className="text-sm text-muted-foreground">As a Pro cleaner</p>
+                  </div>
+                  <div className="text-center p-6 bg-card rounded-xl ring-2 ring-primary">
+                    <p className="text-muted-foreground mb-2">Full-Time (30 hrs/week)</p>
+                    <p className="text-3xl font-bold text-primary mb-1">$1,080-$1,440</p>
+                    <p className="text-sm text-muted-foreground">As a Pro cleaner</p>
+                  </div>
+                  <div className="text-center p-6 bg-card rounded-xl">
+                    <p className="text-muted-foreground mb-2">Elite (40 hrs/week)</p>
+                    <p className="text-3xl font-bold text-foreground mb-1">$2,040-$2,880</p>
+                    <p className="text-sm text-muted-foreground">As an Elite cleaner</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       )}
@@ -438,21 +455,27 @@ export default function Pricing() {
       <div className="py-16 bg-gradient-to-r from-primary to-primary/80">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-primary-foreground mb-4">
-            {userType === 'client' ? 'Ready to Book?' : 'Ready to Start Earning?'}
+            {userType === 'client' ? 'Ready to Book?' : 'Ready to Earn?'}
           </h2>
-          <p className="text-primary-foreground/80 mb-8">
-            {userType === 'client'
-              ? 'Find your perfect cleaner and book in minutes'
-              : 'Join hundreds of cleaners earning on their own terms'}
+          <p className="text-xl text-primary-foreground/90 mb-8">
+            {userType === 'client' 
+              ? 'Find verified, reliable cleaners in your area today.'
+              : 'Join thousands of cleaners earning on their own schedule.'}
           </p>
-          <Button asChild size="lg" variant="secondary">
-            <Link to={userType === 'client' ? '/discover' : '/auth'}>
-              <Sparkles className="mr-2 h-5 w-5" />
-              Get Started Now
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="secondary" asChild>
+              <Link to={userType === 'client' ? '/book' : '/auth'}>
+                {userType === 'client' ? 'Book a Cleaning' : 'Start Earning'}
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="border-white/40 text-white bg-white/10 hover:bg-white/20" asChild>
+              <Link to={userType === 'client' ? '/discover' : '/reliability-score'}>
+                {userType === 'client' ? 'Browse Cleaners' : 'Learn About Scoring'}
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
