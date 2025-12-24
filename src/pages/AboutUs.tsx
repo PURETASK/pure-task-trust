@@ -158,7 +158,7 @@ export default function AboutUs() {
                 { icon: Star, value: '4.9', label: 'Average Rating' },
                 { icon: MapPin, value: '50+', label: 'Cities Served' }
               ].map((stat, index) => (
-                <Card key={index} className="border-border/50">
+                <Card key={index} className="border-warning/30 bg-warning/5">
                   <CardContent className="p-6 text-center">
                     <stat.icon className="h-8 w-8 text-primary mx-auto mb-2" />
                     <p className="text-2xl font-bold text-foreground">{stat.value}</p>
