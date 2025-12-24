@@ -1,91 +1,166 @@
 import { Link } from "react-router-dom";
+import { 
+  Sparkles, Shield, Users, Home, Calendar, DollarSign, 
+  MessageSquare, Settings, Heart, MapPin, Award, HelpCircle,
+  FileText, Scale, TrendingUp, Briefcase, Building2, UserPlus
+} from "lucide-react";
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const footerSections = [
+    {
+      title: "Company",
+      links: [
+        { name: "About Us", path: "/about" },
+        { name: "How It Works", path: "/help" },
+        { name: "Pricing", path: "/pricing" },
+        { name: "Cleaning Scope", path: "/cleaning-scope" },
+        { name: "Reliability Score", path: "/reliability-score" },
+      ]
+    },
+    {
+      title: "For Clients",
+      links: [
+        { name: "Find Cleaners", path: "/discover" },
+        { name: "Book Cleaning", path: "/book" },
+        { name: "My Dashboard", path: "/dashboard" },
+        { name: "My Properties", path: "/properties" },
+        { name: "My Wallet", path: "/wallet" },
+        { name: "Messages", path: "/messages" },
+        { name: "Favorite Cleaners", path: "/favorites" },
+        { name: "Reschedule Requests", path: "/reschedule-requests" },
+      ]
+    },
+    {
+      title: "For Cleaners",
+      links: [
+        { name: "Become a Cleaner", path: "/auth?role=cleaner" },
+        { name: "Cleaner Dashboard", path: "/cleaner/dashboard" },
+        { name: "Find Jobs", path: "/cleaner/marketplace" },
+        { name: "My Schedule", path: "/cleaner/schedule" },
+        { name: "Active Jobs", path: "/cleaner/jobs" },
+        { name: "Earnings", path: "/cleaner/earnings" },
+        { name: "Analytics", path: "/cleaner/analytics" },
+        { name: "Referral Program", path: "/cleaner/referral" },
+      ]
+    },
+    {
+      title: "Cleaner Tools",
+      links: [
+        { name: "Availability", path: "/cleaner/availability" },
+        { name: "Service Areas", path: "/cleaner/service-areas" },
+        { name: "Calendar Sync", path: "/cleaner/calendar-sync" },
+        { name: "Team Management", path: "/cleaner/team" },
+        { name: "Verification", path: "/cleaner/verification" },
+        { name: "Reliability Score", path: "/cleaner/reliability" },
+        { name: "Cancellation Policy", path: "/cleaner/cancellation-policy" },
+        { name: "Resources", path: "/cleaner/resources" },
+      ]
+    },
+    {
+      title: "Use Cases",
+      links: [
+        { name: "For Airbnb Hosts", path: "/for-airbnb-hosts" },
+        { name: "For Families", path: "/for-families" },
+        { name: "For Retirees", path: "/for-retirees" },
+        { name: "For Professionals", path: "/for-professionals" },
+      ]
+    },
+    {
+      title: "Legal & Support",
+      links: [
+        { name: "Privacy Policy", path: "/legal" },
+        { name: "Terms of Service", path: "/legal" },
+        { name: "Legal Center", path: "/legal" },
+        { name: "Help Center", path: "/help" },
+        { name: "Notification Settings", path: "/settings/notifications" },
+      ]
+    },
+  ];
+
   return (
-    <footer className="border-t border-border bg-card/50">
-      <div className="container py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold">P</span>
+    <footer className="border-t border-border bg-muted/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h4 className="font-semibold text-foreground mb-4 text-sm">
+                {section.title}
+              </h4>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link 
+                      to={link.path} 
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Brand Section */}
+        <div className="border-t border-border pt-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+            {/* Logo & Description */}
+            <div className="max-w-md">
+              <Link to="/" className="flex items-center gap-2 mb-3">
+                <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <span className="font-bold text-xl text-foreground">PureTask</span>
+              </Link>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Trust-first cleaning marketplace. GPS-verified check-ins, photo proof, 
+                and pay only when you're happy. Connecting quality cleaners with happy homes.
+              </p>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
+                <Shield className="h-4 w-4 text-success" />
+                <span className="text-xs font-medium text-foreground">Background Checked</span>
               </div>
-              <span className="font-semibold text-lg">PureTask</span>
-            </Link>
-            <p className="text-sm text-muted-foreground">
-              Trust-first cleaning marketplace. Pay only when you're happy.
-            </p>
-          </div>
-
-          {/* For Clients */}
-          <div>
-            <h4 className="font-semibold mb-4 text-sm">For Clients</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/discover" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Find Cleaners
-                </Link>
-              </li>
-              <li>
-                <Link to="/book" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Book Cleaning
-                </Link>
-              </li>
-              <li>
-                <Link to="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  How It Works
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* For Cleaners */}
-          <div>
-            <h4 className="font-semibold mb-4 text-sm">For Cleaners</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Become a Cleaner
-                </Link>
-              </li>
-              <li>
-                <Link to="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Cleaner FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4 className="font-semibold mb-4 text-sm">Legal</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Legal Center
-                </Link>
-              </li>
-            </ul>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium text-foreground">GPS Verified</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
+                <Award className="h-4 w-4 text-warning" />
+                <span className="text-xs font-medium text-foreground">Satisfaction Guaranteed</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* Bottom Bar */}
+        <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} PureTask. All rights reserved.
+            © {currentYear} PureTask. All rights reserved.
           </p>
+          <div className="flex items-center gap-6">
+            <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Privacy
+            </Link>
+            <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Terms
+            </Link>
+            <Link to="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Support
+            </Link>
+            <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              About
+            </Link>
+          </div>
           <p className="text-sm text-muted-foreground">
-            Built with trust in mind.
+            Built with trust in mind ✨
           </p>
         </div>
       </div>
