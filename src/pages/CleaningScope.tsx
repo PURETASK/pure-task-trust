@@ -71,7 +71,9 @@ const CLEANING_DUTIES = {
         'Inside windows - clean interior glass',
         'Door frames and trim - wipe down',
         'Behind toilet deep clean',
-        'Inside cabinets and drawers (if empty)'
+        'Inside cabinets and drawers (if empty)',
+        'Inside microwave - thorough cleaning',
+        'Walls - spot cleaning or full wipe down'
       ]
     }
   },
@@ -82,7 +84,6 @@ const CLEANING_DUTIES = {
     color: 'rose',
     duties: {
       'Kitchen Special Requests': [
-        'Inside microwave - thorough cleaning',
         'Inside oven - detailed cleaning',
         'Inside refrigerator - remove items, clean shelves',
         'Behind appliances (if accessible)',
@@ -96,8 +97,7 @@ const CLEANING_DUTIES = {
       'Other Special Requests': [
         'Blinds and shutters - dust each slat',
         'Vents and air returns - dust and wipe',
-        'Inside cabinets and drawers (detailed)',
-        'Walls - spot cleaning or full wipe down'
+        'Inside cabinets and drawers (detailed)'
       ]
     }
   },
