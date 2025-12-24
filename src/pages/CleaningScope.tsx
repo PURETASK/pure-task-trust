@@ -55,7 +55,7 @@ const CLEANING_DUTIES = {
   },
   deep: {
     title: 'Deep Clean Add-Ons',
-    subtitle: 'Additional tasks beyond basic cleaning (+$3-8/hour in credits)',
+    subtitle: 'Additional tasks beyond basic cleaning (+$3-8/hour)',
     icon: '✨',
     color: 'purple',
     duties: {
