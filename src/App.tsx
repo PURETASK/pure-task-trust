@@ -43,6 +43,7 @@ import CleanerServiceAreas from "./pages/cleaner/CleanerServiceAreas";
 import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
 import Legal from "./pages/Legal";
+import ReliabilityScoreExplained from "./pages/ReliabilityScoreExplained";
 
 const queryClient = new QueryClient();
 
@@ -59,7 +60,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/legal" element={<Legal />} />
-              <Route path="/auth" element={<Auth />} />
+              <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={
