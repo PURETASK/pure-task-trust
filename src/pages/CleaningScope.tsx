@@ -335,32 +335,32 @@ export default function CleaningScope() {
             <h2 className="text-2xl font-bold mb-6 text-center">Important Notes</h2>
             
             <div className="grid md:grid-cols-2 gap-6">
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="bg-primary/10 border-primary/30">
+                <Info className="h-4 w-4 text-primary" />
                 <AlertDescription>
                   <strong>Time Estimates:</strong> Times are approximate for a 2 bed/2 bath home in average condition. 
                   Larger homes or heavily soiled properties may require additional time.
                 </AlertDescription>
               </Alert>
               
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="bg-pt-purple/10 border-pt-purple/30">
+                <Info className="h-4 w-4 text-pt-purple" />
                 <AlertDescription>
                   <strong>Supplies:</strong> Most cleaners bring their own supplies. If you have specific product 
                   preferences (eco-friendly, allergen-free), please mention during booking.
                 </AlertDescription>
               </Alert>
               
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="bg-pt-amber/10 border-pt-amber/30">
+                <Info className="h-4 w-4 text-pt-amber" />
                 <AlertDescription>
                   <strong>Access:</strong> Please ensure the cleaner can access all areas needing cleaning. 
                   Locked rooms or areas with pets may affect the scope.
                 </AlertDescription>
               </Alert>
               
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="bg-pt-cyan/10 border-pt-cyan/30">
+                <Info className="h-4 w-4 text-pt-cyan" />
                 <AlertDescription>
                   <strong>Special Requests:</strong> Need something specific? Add notes during booking or message 
                   your cleaner directly to discuss custom requirements.
