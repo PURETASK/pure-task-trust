@@ -55,11 +55,15 @@ const CLEANING_DUTIES = {
   },
   deep: {
     title: 'Deep Clean Add-Ons',
-    subtitle: 'Additional tasks beyond basic cleaning (+$3-8/hour)',
+    subtitle: 'Everything in Basic Clean PLUS these additional tasks (+$3-8/hour)',
     icon: '✨',
     color: 'purple',
     duties: {
-      'Deep Clean Tasks': [
+      '✓ Includes All Basic Clean Tasks': [
+        'All kitchen, bathroom, bedroom, and living area tasks from Basic Clean are included',
+        'Floors, surfaces, appliances, fixtures - everything covered in Basic'
+      ],
+      'Additional Deep Clean Tasks': [
         'Baseboards - wipe down all baseboards in every room',
         'Ceiling fans - dust and wipe blades',
         'Light fixtures - dust and clean',
