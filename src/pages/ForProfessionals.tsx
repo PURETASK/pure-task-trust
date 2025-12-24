@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import {
   Briefcase, Clock, Shield, Zap, CheckCircle, Star,
   Calendar, TrendingUp, Coffee, Laptop
@@ -52,11 +50,8 @@ const features = [
 
 export default function ForProfessionals() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="pt-16">
-        {/* Hero */}
+    <main className="pt-8">
+      {/* Hero */}
         <section className="py-20 md:py-28 bg-gradient-to-b from-pt-cyan/10 to-background">
           <div className="container">
             <motion.div
@@ -253,9 +248,6 @@ export default function ForProfessionals() {
             </Card>
           </div>
         </section>
-      </main>
-
-      <Footer />
-    </div>
+    </main>
   );
 }

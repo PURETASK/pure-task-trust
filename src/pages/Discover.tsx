@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +29,6 @@ export default function Discover() {
 
   const favoriteCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
 
-  // Get initials from name
   const getInitials = (name: string) => {
     const parts = name.split(' ').filter(Boolean);
     if (parts.length >= 2) {
@@ -63,177 +60,167 @@ export default function Discover() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-12">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold mb-2">Find Cleaners</h1>
-              <p className="text-muted-foreground">Browse verified cleaners in your area</p>
-            </div>
+    <main className="flex-1 py-8">
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Find Cleaners</h1>
+            <p className="text-muted-foreground">Browse verified cleaners in your area</p>
+          </div>
 
-            {/* Search & Filters */}
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by name or service..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Switch
-                    id="available-only"
-                    checked={onlyAvailable}
-                    onCheckedChange={setOnlyAvailable}
-                  />
-                  <Label htmlFor="available-only" className="text-sm cursor-pointer">
-                    Available Only
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    id="smart-match"
-                    checked={smartMatch}
-                    onCheckedChange={setSmartMatch}
-                  />
-                  <Label htmlFor="smart-match" className="text-sm cursor-pointer">
-                    Smart Match
-                  </Label>
-                </div>
-                <Button variant="outline" className="gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filters
-                </Button>
-              </div>
-            </div>
-
-            {/* Loading State */}
-            {isLoading && (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              </div>
-            )}
-
-            {/* Error State */}
-            {error && (
-              <div className="text-center py-20">
-                <p className="text-destructive">Failed to load cleaners. Please try again.</p>
-              </div>
-            )}
-
-            {/* Empty State */}
-            {!isLoading && !error && cleaners?.length === 0 && (
-              <EmptyState
-                title="No cleaners found"
-                description={searchQuery 
-                  ? `No cleaners match "${searchQuery}". Try a different search.`
-                  : "No cleaners are available at the moment. Check back later!"
-                }
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name or service..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
               />
-            )}
-
-            {/* Results */}
-            {!isLoading && cleaners && cleaners.length > 0 && (
-              <div className="grid md:grid-cols-2 gap-6">
-                {cleaners.map((cleaner, index) => (
-                  <motion.div
-                    key={cleaner.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card className="hover:shadow-elevated transition-all overflow-hidden">
-                      <CardContent className="p-0">
-                        <div className="flex">
-                          <div className="relative w-32 md:w-40 flex-shrink-0">
-                            <div className="h-full min-h-[160px] bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                              <span className="text-4xl font-bold text-primary/60">
-                                {getInitials(cleaner.name)}
-                              </span>
-                            </div>
-                            {cleaner.verified && (
-                              <div className="absolute top-2 left-2">
-                                <Badge variant="trust" className="gap-1">
-                                  <Shield className="h-3 w-3" />
-                                  Verified
-                                </Badge>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1 p-5">
-                            <div className="flex items-start justify-between mb-2">
-                              <div>
-                                <h3 className="font-semibold text-lg">{cleaner.name}</h3>
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <div className="flex items-center gap-1">
-                                    <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                                    {cleaner.avgRating?.toFixed(1) || 'New'}
-                                  </div>
-                                  <span>•</span>
-                                  <span>{cleaner.jobsCompleted} jobs</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  onClick={(e) => handleToggleFavorite(cleaner.id, e)}
-                                  disabled={isToggling}
-                                  className="p-2 rounded-full hover:bg-secondary transition-colors"
-                                >
-                                  <Heart 
-                                    className={`h-5 w-5 ${
-                                      favoriteCleanerIds.has(cleaner.id) 
-                                        ? 'fill-destructive text-destructive' 
-                                        : 'text-muted-foreground'
-                                    }`} 
-                                  />
-                                </button>
-                                <div className="text-right">
-                                  <p className="font-semibold">{cleaner.hourlyRate}</p>
-                                  <p className="text-xs text-muted-foreground">credits/hr</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                              <MapPin className="h-3.5 w-3.5" />
-                              {cleaner.distance}
-                              <span>•</span>
-                              <span className="text-success">{cleaner.reliabilityScore}% reliable</span>
-                            </div>
-
-                            <div className="flex flex-wrap gap-1.5 mb-4">
-                              {cleaner.services.slice(0, 3).map((service) => (
-                                <Badge key={service} variant="secondary" className="text-xs">
-                                  {service}
-                                </Badge>
-                              ))}
-                            </div>
-
-                            <Button className="w-full" asChild>
-                              <Link to={`/cleaner/${cleaner.id}`}>View Profile</Link>
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="available-only"
+                  checked={onlyAvailable}
+                  onCheckedChange={setOnlyAvailable}
+                />
+                <Label htmlFor="available-only" className="text-sm cursor-pointer">
+                  Available Only
+                </Label>
               </div>
-            )}
-          </motion.div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="smart-match"
+                  checked={smartMatch}
+                  onCheckedChange={setSmartMatch}
+                />
+                <Label htmlFor="smart-match" className="text-sm cursor-pointer">
+                  Smart Match
+                </Label>
+              </div>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filters
+              </Button>
+            </div>
+          </div>
+
+          {isLoading && (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center py-20">
+              <p className="text-destructive">Failed to load cleaners. Please try again.</p>
+            </div>
+          )}
+
+          {!isLoading && !error && cleaners?.length === 0 && (
+            <EmptyState
+              title="No cleaners found"
+              description={searchQuery 
+                ? `No cleaners match "${searchQuery}". Try a different search.`
+                : "No cleaners are available at the moment. Check back later!"
+              }
+            />
+          )}
+
+          {!isLoading && cleaners && cleaners.length > 0 && (
+            <div className="grid md:grid-cols-2 gap-6">
+              {cleaners.map((cleaner, index) => (
+                <motion.div
+                  key={cleaner.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="hover:shadow-elevated transition-all overflow-hidden">
+                    <CardContent className="p-0">
+                      <div className="flex">
+                        <div className="relative w-32 md:w-40 flex-shrink-0">
+                          <div className="h-full min-h-[160px] bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                            <span className="text-4xl font-bold text-primary/60">
+                              {getInitials(cleaner.name)}
+                            </span>
+                          </div>
+                          {cleaner.verified && (
+                            <div className="absolute top-2 left-2">
+                              <Badge variant="trust" className="gap-1">
+                                <Shield className="h-3 w-3" />
+                                Verified
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 p-5">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <h3 className="font-semibold text-lg">{cleaner.name}</h3>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                                  {cleaner.avgRating?.toFixed(1) || 'New'}
+                                </div>
+                                <span>•</span>
+                                <span>{cleaner.jobsCompleted} jobs</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={(e) => handleToggleFavorite(cleaner.id, e)}
+                                disabled={isToggling}
+                                className="p-2 rounded-full hover:bg-secondary transition-colors"
+                              >
+                                <Heart 
+                                  className={`h-5 w-5 ${
+                                    favoriteCleanerIds.has(cleaner.id) 
+                                      ? 'fill-destructive text-destructive' 
+                                      : 'text-muted-foreground'
+                                  }`} 
+                                />
+                              </button>
+                              <div className="text-right">
+                                <p className="font-semibold">{cleaner.hourlyRate}</p>
+                                <p className="text-xs text-muted-foreground">credits/hr</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {cleaner.distance}
+                            <span>•</span>
+                            <span className="text-success">{cleaner.reliabilityScore}% reliable</span>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {cleaner.services.slice(0, 3).map((service) => (
+                              <Badge key={service} variant="secondary" className="text-xs">
+                                {service}
+                              </Badge>
+                            ))}
+                          </div>
+
+                          <Button className="w-full" asChild>
+                            <Link to={`/cleaner/${cleaner.id}`}>View Profile</Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </div>
+    </main>
   );
 }

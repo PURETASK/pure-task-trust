@@ -8,13 +8,10 @@ import {
   CheckCircle, Star, Camera, MapPin, Award, Zap, ArrowRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <main className="bg-background">
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
@@ -261,8 +258,6 @@ export default function AboutUs() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </main>
   );
 }

@@ -9,8 +9,6 @@ import {
   ArrowRight, Download, Mail
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 
 export default function Legal() {
   const [activeTab, setActiveTab] = useState('privacy');
@@ -63,13 +61,10 @@ export default function Legal() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container py-12">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+    <main className="container py-8">
+      {/* Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
@@ -203,10 +198,7 @@ export default function Legal() {
             </div>
           </CardContent>
         </Card>
-      </main>
-
-      <Footer />
-    </div>
+    </main>
   );
 }
 
