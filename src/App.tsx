@@ -59,6 +59,15 @@ import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
 import AdminPricingRules from "./pages/admin/AdminPricingRules";
 import AdminPricingManagement from "./pages/admin/AdminPricingManagement";
+import AdminCEODashboard from "./pages/admin/AdminCEODashboard";
+import AdminOperationsDashboard from "./pages/admin/AdminOperationsDashboard";
+import AdminFinanceDashboard from "./pages/admin/AdminFinanceDashboard";
+import AdminGrowthDashboard from "./pages/admin/AdminGrowthDashboard";
+import AdminPerformanceMetrics from "./pages/admin/AdminPerformanceMetrics";
+import AdminFraudAlerts from "./pages/admin/AdminFraudAlerts";
+import AdminDisputes from "./pages/admin/AdminDisputes";
+import AdminClientRisk from "./pages/admin/AdminClientRisk";
+import AdminTrustSafetyReports from "./pages/admin/AdminTrustSafetyReports";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +98,15 @@ const App = () => (
               <Route path="/admin/client-jobs" element={<AdminClientJobs />} />
               <Route path="/admin/pricing-rules" element={<AdminPricingRules />} />
               <Route path="/admin/pricing" element={<AdminPricingManagement />} />
+              <Route path="/admin/ceo" element={<AdminCEODashboard />} />
+              <Route path="/admin/operations" element={<AdminOperationsDashboard />} />
+              <Route path="/admin/finance" element={<AdminFinanceDashboard />} />
+              <Route path="/admin/growth" element={<AdminGrowthDashboard />} />
+              <Route path="/admin/performance" element={<AdminPerformanceMetrics />} />
+              <Route path="/admin/fraud-alerts" element={<AdminFraudAlerts />} />
+              <Route path="/admin/disputes" element={<AdminDisputes />} />
+              <Route path="/admin/client-risk" element={<AdminClientRisk />} />
+              <Route path="/admin/trust-safety-reports" element={<AdminTrustSafetyReports />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={

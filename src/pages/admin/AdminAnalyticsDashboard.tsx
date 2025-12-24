@@ -33,7 +33,7 @@ export default function AdminAnalyticsDashboard() {
       description: 'High-level business metrics, GMV, revenue, and growth trends',
       icon: TrendingUp,
       gradient: 'from-blue-500 to-cyan-500',
-      path: '/admin/ceo-dashboard',
+      path: '/admin/ceo',
       stats: [
         { label: 'GMV (30d)', value: `$${analyticsData.gmv.toLocaleString()}` },
         { label: 'Revenue', value: `$${analyticsData.revenue.toLocaleString()}` }
@@ -44,7 +44,7 @@ export default function AdminAnalyticsDashboard() {
       description: 'Booking status, cancellations, disputes, and cleaner performance',
       icon: Activity,
       gradient: 'from-green-500 to-emerald-500',
-      path: '/admin/ops-dashboard',
+      path: '/admin/operations',
       stats: [
         { label: 'Total Bookings', value: analyticsData.bookings },
         { label: 'Cancel Rate', value: `${analyticsData.cancelRate.toFixed(1)}%` }
@@ -55,7 +55,7 @@ export default function AdminAnalyticsDashboard() {
       description: 'Detailed financial breakdown, payouts, refunds, and margins',
       icon: DollarSign,
       gradient: 'from-purple-500 to-pink-500',
-      path: '/admin/finance-dashboard',
+      path: '/admin/finance',
       stats: [
         { label: 'Platform Revenue', value: `$${analyticsData.revenue.toLocaleString()}` },
         { label: 'MRR', value: `$${analyticsData.mrr.toLocaleString()}` }
@@ -66,7 +66,7 @@ export default function AdminAnalyticsDashboard() {
       description: 'User acquisition, funnel metrics, subscription & membership growth',
       icon: Users,
       gradient: 'from-amber-500 to-orange-500',
-      path: '/admin/growth-dashboard',
+      path: '/admin/growth',
       stats: [
         { label: 'New Clients', value: analyticsData.newClients },
         { label: 'Active Cleaners', value: analyticsData.activeCleaners }

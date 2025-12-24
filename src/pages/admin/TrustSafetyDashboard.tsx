@@ -50,7 +50,7 @@ export default function TrustSafetyDashboard() {
       icon: Shield,
       colorClass: 'text-success',
       bgClass: 'bg-success/10',
-      path: '/admin/risk-scores',
+      path: '/admin/client-risk',
       stats: [
         { label: 'Profiles', value: '-', colorClass: 'text-muted-foreground' }
       ]
@@ -61,7 +61,7 @@ export default function TrustSafetyDashboard() {
       icon: BarChart3,
       colorClass: 'text-secondary-foreground',
       bgClass: 'bg-secondary',
-      path: '/admin/trust-reports',
+      path: '/admin/trust-safety-reports',
       stats: [
         { label: 'View Reports', value: '→', colorClass: 'text-muted-foreground' }
       ]
