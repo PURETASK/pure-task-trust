@@ -496,7 +496,5 @@ export default function Book() {
           </motion.div>
         </div>
       </main>
-      <Footer />
-    </div>
   );
 }
