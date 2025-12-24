@@ -27,7 +27,8 @@ import {
   AlertTriangle,
   FileText,
   Activity,
-  PieChart
+  PieChart,
+  Scale
 } from "lucide-react";
 import {
   Sidebar,
@@ -65,6 +66,7 @@ const clientNavItems = [
       { title: "Wallet", url: "/wallet", icon: Wallet },
       { title: "Help & Support", url: "/help", icon: MessageSquare },
       { title: "Notifications", url: "/settings/notifications", icon: Settings },
+      { title: "Legal Center", url: "/legal", icon: Scale },
     ]
   }
 ];
@@ -154,6 +156,7 @@ const publicNavItems = [
       { title: "Pricing", url: "/pricing", icon: DollarSign },
       { title: "About Us", url: "/about", icon: Users },
       { title: "Help", url: "/help", icon: MessageSquare },
+      { title: "Legal Center", url: "/legal", icon: Scale },
     ]
   }
 ];
