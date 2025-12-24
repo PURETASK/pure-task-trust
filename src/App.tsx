@@ -57,6 +57,7 @@ import AboutUs from "./pages/AboutUs";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
+import AdminPricingRules from "./pages/admin/AdminPricingRules";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,7 @@ const App = () => (
               <Route path="/admin/analytics" element={<AdminAnalyticsDashboard />} />
               <Route path="/admin/bookings" element={<AdminBookingsConsole />} />
               <Route path="/admin/client-jobs" element={<AdminClientJobs />} />
+              <Route path="/admin/pricing-rules" element={<AdminPricingRules />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={
