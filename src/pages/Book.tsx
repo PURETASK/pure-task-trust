@@ -14,6 +14,7 @@ import { useCleaner } from "@/hooks/useCleaners";
 import { Link } from "react-router-dom";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
+import { AddressVerification } from "@/components/booking/AddressVerification";
 import { Address } from "@/hooks/useAddresses";
 import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
 
@@ -109,7 +110,7 @@ export default function Book() {
     );
   };
 
-  const canProceedToSummary = selectedDate && selectedTime;
+  const canProceedToVerification = selectedDate && selectedTime && selectedAddress;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -139,10 +140,10 @@ export default function Book() {
 
             {/* Progress */}
             <div className="flex items-center justify-center gap-2 mb-8">
-              {[1, 2, 3, 4, 5].map((s) => (
+              {[1, 2, 3, 4, 5, 6].map((s) => (
                 <div
                   key={s}
-                  className={`h-2 w-10 rounded-full transition-colors ${
+                  className={`h-2 w-8 rounded-full transition-colors ${
                     s <= step ? "bg-primary" : "bg-border"
                   }`}
                 />
@@ -351,7 +352,7 @@ export default function Book() {
                       className="flex-1" 
                       size="lg" 
                       onClick={() => setStep(5)}
-                      disabled={!canProceedToSummary}
+                      disabled={!canProceedToVerification}
                     >
                       Continue
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -360,10 +361,26 @@ export default function Book() {
                 </motion.div>
               )}
 
-              {/* Step 5: Summary */}
-              {step === 5 && (
+              {/* Step 5: Address Verification */}
+              {step === 5 && selectedAddress && (
                 <motion.div
                   key="step5"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <AddressVerification
+                    address={selectedAddress}
+                    onConfirm={() => setStep(6)}
+                    onBack={() => setStep(4)}
+                  />
+                </motion.div>
+              )}
+
+              {/* Step 6: Summary */}
+              {step === 6 && (
+                <motion.div
+                  key="step6"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
@@ -406,6 +423,10 @@ export default function Book() {
                             <span className="text-muted-foreground">Location</span>
                             <span className="text-right">{selectedAddress.line1}, {selectedAddress.city}</span>
                           </div>
+                          <Badge variant="outline" className="mt-2 text-xs gap-1">
+                            <Check className="h-3 w-3" />
+                            Address Verified
+                          </Badge>
                         </div>
                       )}
                       <div className="border-t border-border pt-4 flex items-center justify-between">
@@ -453,7 +474,7 @@ export default function Book() {
                   )}
 
                   <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(4)}>
+                    <Button variant="outline" size="lg" onClick={() => setStep(5)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Back
                     </Button>
