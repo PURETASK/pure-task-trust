@@ -66,7 +66,7 @@ export default function Pricing() {
                     score: '0-59',
                     creditsRange: '15-35',
                     usdRange: '$15-35',
-                    color: 'slate',
+                    bgClass: 'bg-[hsl(var(--pt-cyan)/.08)] border-[hsl(var(--pt-cyan)/.4)]',
                     description: 'Great for regular maintenance and budget-friendly options',
                     features: [
                       'ID verified & background checked',
@@ -82,7 +82,7 @@ export default function Pricing() {
                     score: '60-74',
                     creditsRange: '35-45',
                     usdRange: '$35-45',
-                    color: 'blue',
+                    bgClass: 'bg-[hsl(var(--pt-green)/.08)] border-[hsl(var(--pt-green)/.4)]',
                     description: 'Consistent performers with proven track records',
                     features: [
                       'All Developing features',
@@ -98,7 +98,7 @@ export default function Pricing() {
                     score: '75-89',
                     creditsRange: '45-60',
                     usdRange: '$45-60',
-                    color: 'purple',
+                    bgClass: 'bg-[hsl(var(--pt-purple)/.08)] border-[hsl(var(--pt-purple)/.4)]',
                     popular: true,
                     description: 'Experienced professionals - our most popular tier',
                     features: [
@@ -115,7 +115,7 @@ export default function Pricing() {
                     score: '90-100',
                     creditsRange: '60-85',
                     usdRange: '$60-85',
-                    color: 'emerald',
+                    bgClass: 'bg-[hsl(var(--pt-amber)/.08)] border-[hsl(var(--pt-amber)/.4)]',
                     description: 'Top 10% of all cleaners - exceptional service',
                     features: [
                       'All Pro features',
@@ -127,7 +127,7 @@ export default function Pricing() {
                     ]
                   }
                 ].map((plan, idx) => (
-                  <Card key={idx} className={`relative ${plan.popular ? 'ring-2 ring-primary shadow-lg' : ''}`}>
+                  <Card key={idx} className={`relative border-2 ${plan.bgClass} ${plan.popular ? 'ring-2 ring-primary shadow-lg' : ''}`}>
                     {plan.popular && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                         <Badge className="bg-primary text-primary-foreground">
