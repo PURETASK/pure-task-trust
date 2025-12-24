@@ -42,6 +42,7 @@ import CleanerTeam from "./pages/cleaner/CleanerTeam";
 import CleanerServiceAreas from "./pages/cleaner/CleanerServiceAreas";
 import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
+import CleanerReliability from "./pages/cleaner/CleanerReliability";
 import Legal from "./pages/Legal";
 import ReliabilityScoreExplained from "./pages/ReliabilityScoreExplained";
 import Pricing from "./pages/Pricing";
@@ -222,6 +223,11 @@ const App = () => (
               <Route path="/cleaner/verification" element={
                 <RequireCleaner>
                   <CleanerVerification />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/reliability" element={
+                <RequireCleaner>
+                  <CleanerReliability />
                 </RequireCleaner>
               } />
               
