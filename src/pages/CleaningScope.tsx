@@ -338,8 +338,8 @@ export default function CleaningScope() {
               <Alert className="bg-primary/10 border-primary/30">
                 <Info className="h-4 w-4 text-primary" />
                 <AlertDescription>
-                  <strong>Time Estimates:</strong> Times are approximate for a 2 bed/2 bath home in average condition. 
-                  Larger homes or heavily soiled properties may require additional time.
+                  <strong>Time Estimates:</strong> All cleaning times vary. Duration depends primarily on the 
+                  individual cleaner and how dirty the property is. Times shown are rough estimates only.
                 </AlertDescription>
               </Alert>
               
