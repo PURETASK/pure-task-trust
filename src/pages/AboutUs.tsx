@@ -87,9 +87,9 @@ export default function AboutUs() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full border-border/50 hover:shadow-lg transition-shadow">
+                <Card className="h-full bg-primary/5 border-primary/30 rounded-xl hover:shadow-lg transition-shadow">
                   <CardContent className="p-6 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/20 border border-primary/40 mb-4">
                       <item.icon className="h-7 w-7 text-primary" />
                     </div>
                     <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
