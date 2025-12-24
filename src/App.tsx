@@ -53,6 +53,7 @@ import ForProfessionals from "./pages/ForProfessionals";
 import CleaningScope from "./pages/CleaningScope";
 import Pricing from "./pages/Pricing";
 import TrustSafetyDashboard from "./pages/admin/TrustSafetyDashboard";
+import AboutUs from "./pages/AboutUs";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +78,7 @@ const App = () => (
               <Route path="/for-professionals" element={<ForProfessionals />} />
               <Route path="/cleaning-scope" element={<CleaningScope />} />
               <Route path="/admin/trust-safety" element={<TrustSafetyDashboard />} />
+              <Route path="/about" element={<AboutUs />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={
