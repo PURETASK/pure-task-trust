@@ -193,10 +193,21 @@ export default function CleaningScope() {
                 What's Included in{' '}
                 <span className="text-primary">Your Cleaning</span>
               </h1>
-              <p className="text-xl text-muted-foreground">
-                Transparent expectations for every type of cleaning service we offer. 
-                Know exactly what to expect before you book.
+              <p className="text-xl text-muted-foreground mb-8">
+                A friendly guide to help you understand what cleaning services typically include.
               </p>
+              
+              {/* Disclaimer */}
+              <Alert className="max-w-2xl mx-auto bg-amber-500/10 border-amber-500/30 text-left">
+                <Info className="h-5 w-5 text-amber-600" />
+                <AlertDescription className="text-amber-800 dark:text-amber-200">
+                  <strong className="block mb-1">Important: This is a Guide Only</strong>
+                  All cleaners on PureTask are independent contractors who set their own standards and methods. 
+                  Nothing described on this page is mandatory. Each cleaner decides how they clean and what 
+                  tasks they perform. We recommend discussing specific expectations directly with your cleaner 
+                  before booking.
+                </AlertDescription>
+              </Alert>
             </motion.div>
           </div>
         </section>
