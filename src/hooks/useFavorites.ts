@@ -119,6 +119,23 @@ export function useFavoriteActions() {
     },
   });
 
+  const updateNotesMutation = useMutation({
+    mutationFn: async ({ cleanerId, notes }: { cleanerId: string; notes: string }) => {
+      if (!clientProfile?.id) throw new Error('Not authenticated');
+
+      const { error } = await supabase
+        .from('favorite_cleaners')
+        .update({ notes })
+        .eq('client_id', clientProfile.id)
+        .eq('cleaner_id', cleanerId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+    },
+  });
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async ({ cleanerId, isFavorite }: { cleanerId: string; isFavorite: boolean }) => {
       if (isFavorite) {
@@ -134,6 +151,8 @@ export function useFavoriteActions() {
     isAdding: addFavoriteMutation.isPending,
     removeFavorite: removeFavoriteMutation.mutateAsync,
     isRemoving: removeFavoriteMutation.isPending,
+    updateNotes: updateNotesMutation.mutateAsync,
+    isUpdatingNotes: updateNotesMutation.isPending,
     toggleFavorite: toggleFavoriteMutation.mutateAsync,
     isToggling: toggleFavoriteMutation.isPending,
   };
