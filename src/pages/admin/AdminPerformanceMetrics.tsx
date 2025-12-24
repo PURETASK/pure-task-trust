@@ -13,8 +13,6 @@ import {
   Medal
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import {
   ChartContainer,
@@ -66,10 +64,7 @@ const chartConfig = {
 
 const AdminPerformanceMetrics = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -265,9 +260,6 @@ const AdminPerformanceMetrics = () => {
             </Button>
           </div>
         </motion.div>
-      </main>
-      
-      <Footer />
     </div>
   );
 };
