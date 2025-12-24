@@ -26,7 +26,7 @@ export default function Pricing() {
           </p>
           <div className="flex justify-center gap-8 mb-8">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">10 credits = $1</p>
+              <p className="text-2xl font-bold text-foreground">1 credit = $1</p>
               <p className="text-muted-foreground">Simple conversion</p>
             </div>
             <div className="text-center">
