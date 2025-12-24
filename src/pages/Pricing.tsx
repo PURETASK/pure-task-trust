@@ -64,7 +64,7 @@ export default function Pricing() {
                   {
                     tier: 'Developing',
                     score: '0-59',
-                    creditsRange: '150-350',
+                    creditsRange: '15-35',
                     usdRange: '$15-35',
                     color: 'slate',
                     description: 'Great for regular maintenance and budget-friendly options',
@@ -80,7 +80,7 @@ export default function Pricing() {
                   {
                     tier: 'Semi Pro',
                     score: '60-74',
-                    creditsRange: '350-450',
+                    creditsRange: '35-45',
                     usdRange: '$35-45',
                     color: 'blue',
                     description: 'Consistent performers with proven track records',
@@ -96,7 +96,7 @@ export default function Pricing() {
                   {
                     tier: 'Pro',
                     score: '75-89',
-                    creditsRange: '450-600',
+                    creditsRange: '45-60',
                     usdRange: '$45-60',
                     color: 'purple',
                     popular: true,
@@ -113,7 +113,7 @@ export default function Pricing() {
                   {
                     tier: 'Elite',
                     score: '90-100',
-                    creditsRange: '600-850',
+                    creditsRange: '60-85',
                     usdRange: '$60-85',
                     color: 'emerald',
                     description: 'Top 10% of all cleaners - exceptional service',
