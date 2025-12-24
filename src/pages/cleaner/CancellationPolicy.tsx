@@ -1,10 +1,14 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Gift, AlertTriangle, DollarSign, Mail, HelpCircle, CloudRain } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Clock, Gift, AlertTriangle, DollarSign, Mail, HelpCircle, CloudRain, TrendingUp, XCircle, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCleanerCancellationStats } from "@/hooks/useCancellations";
 
 export default function CancellationPolicy() {
+  const { stats, isLoading } = useCleanerCancellationStats();
+
   return (
     <CleanerLayout>
       <div className="max-w-3xl mx-auto space-y-8">
@@ -13,6 +17,62 @@ export default function CancellationPolicy() {
           <h1 className="text-3xl font-bold">Cancellation Policy</h1>
           <p className="text-muted-foreground mt-1">Last updated: November 9, 2024</p>
         </div>
+
+        {/* Your Stats - Live Data */}
+        <section>
+          <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
+            <TrendingUp className="h-5 w-5" />
+            Your Cancellation Stats (Last 30 Days)
+          </h2>
+          
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-24 rounded-xl" />
+              ))}
+            </div>
+          ) : stats ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold">{stats.total}</p>
+                  <p className="text-sm text-muted-foreground">Total Cancellations</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold text-amber-500">{stats.byClient}</p>
+                  <p className="text-sm text-muted-foreground">By Clients</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold text-destructive">{stats.byCleaner}</p>
+                  <p className="text-sm text-muted-foreground">By You</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-success/10 border-success/20">
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold text-success">{stats.totalCompCredits}</p>
+                  <p className="text-sm text-muted-foreground">Compensation Credits</p>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-6 text-center text-muted-foreground">
+                <p>No cancellation data available yet</p>
+              </CardContent>
+            </Card>
+          )}
+          
+          {stats && stats.emergencies > 0 && (
+            <div className="mt-3 flex items-center gap-2 text-sm text-amber-600">
+              <Zap className="h-4 w-4" />
+              <span>{stats.emergencies} emergency cancellation(s) in this period</span>
+            </div>
+          )}
+        </section>
 
         {/* Intro */}
         <p className="text-muted-foreground">
