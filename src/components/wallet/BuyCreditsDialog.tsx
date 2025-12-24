@@ -63,11 +63,6 @@ export function BuyCreditsDialog({
     }
   };
 
-  const handleDemoPurchase = () => {
-    onPurchase(selectedPackage.amount);
-    onOpenChange(false);
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -120,46 +115,26 @@ export function BuyCreditsDialog({
           ))}
         </div>
 
-        <div className="flex flex-col gap-3">
-          <Button 
-            className="w-full" 
-            onClick={handleStripeCheckout}
-            disabled={isCheckingOut || isPurchasing}
-          >
-            {isCheckingOut ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Opening Checkout...
-              </>
-            ) : (
-              <>
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Pay with Stripe
-              </>
-            )}
-          </Button>
-          
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or for demo</span>
-            </div>
-          </div>
-
-          <Button 
-            variant="outline"
-            className="w-full" 
-            onClick={handleDemoPurchase}
-            disabled={isPurchasing || isCheckingOut}
-          >
-            {isPurchasing ? 'Processing...' : `Add ${selectedPackage.amount} Credits (Demo)`}
-          </Button>
-        </div>
+        <Button 
+          className="w-full" 
+          onClick={handleStripeCheckout}
+          disabled={isCheckingOut || isPurchasing}
+        >
+          {isCheckingOut ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Opening Checkout...
+            </>
+          ) : (
+            <>
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Pay ${selectedPackage.price} with Stripe
+            </>
+          )}
+        </Button>
 
         <p className="text-xs text-muted-foreground text-center">
-          Stripe checkout opens in a new tab. Demo mode adds credits instantly.
+          Secure payment powered by Stripe. Credits are added instantly after payment.
         </p>
       </DialogContent>
     </Dialog>
