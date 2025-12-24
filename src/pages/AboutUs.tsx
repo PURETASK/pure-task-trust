@@ -53,7 +53,7 @@ export default function AboutUs() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <Badge variant="outline" className="mb-4">
+            <Badge variant="outline" className="mb-4 bg-emerald-500/10 border-emerald-600/40 text-emerald-700 dark:text-emerald-300">
               <Target className="h-3 w-3 mr-1" />
               Our Mission
             </Badge>
@@ -87,10 +87,10 @@ export default function AboutUs() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full bg-primary/5 border-primary/30 rounded-xl hover:shadow-lg transition-shadow">
+                <Card className="h-full bg-emerald-500/5 border-emerald-600/30 rounded-xl hover:shadow-lg transition-shadow">
                   <CardContent className="p-6 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/20 border border-primary/40 mb-4">
-                      <item.icon className="h-7 w-7 text-primary" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-600/40 mb-4">
+                      <item.icon className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
