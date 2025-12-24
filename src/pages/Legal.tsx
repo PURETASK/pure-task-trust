@@ -26,36 +26,42 @@ export default function Legal() {
       icon: Shield, 
       title: 'Privacy Policy', 
       desc: 'How we protect your data',
-      tabId: 'privacy'
+      tabId: 'privacy',
+      href: undefined
     },
     { 
       icon: FileText, 
       title: 'Terms of Service', 
       desc: 'Platform rules & guidelines',
-      tabId: 'terms'
+      tabId: 'terms',
+      href: undefined
     },
     { 
       icon: Camera, 
       title: 'Photo Consent', 
       desc: 'Transparency through photos',
-      tabId: 'photo'
+      tabId: 'photo',
+      href: undefined
     },
     { 
       icon: Clock, 
       title: 'Cancellation Policy', 
       desc: 'Fees & grace cancellations',
-      tabId: 'cancellation'
+      tabId: undefined,
+      href: '/cancellationpolicy'
     },
     { 
       icon: AlertTriangle, 
       title: 'Damage & Claims', 
       desc: 'Property protection policy',
-      tabId: 'damage'
+      tabId: 'damage',
+      href: undefined
     },
     { 
       icon: Mail, 
       title: 'Contact Legal', 
       desc: 'Get help with legal matters',
+      tabId: undefined,
       href: 'mailto:legal@puretask.com'
     }
   ];
@@ -110,7 +116,8 @@ export default function Legal() {
               </Card>
             );
 
-            if (item.href) {
+            // External links (mailto, etc)
+            if (item.href && item.href.startsWith('mailto:')) {
               return (
                 <motion.a
                   key={idx}
@@ -124,6 +131,23 @@ export default function Legal() {
               );
             }
 
+            // Internal page links
+            if (item.href && item.href.startsWith('/')) {
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                >
+                  <Link to={item.href}>
+                    {content}
+                  </Link>
+                </motion.div>
+              );
+            }
+
+            // Tab switching
             return (
               <motion.div
                 key={idx}

@@ -46,6 +46,7 @@ import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
 import CleanerReliability from "./pages/cleaner/CleanerReliability";
 import Legal from "./pages/Legal";
+import CancellationPolicyPage from "./pages/CancellationPolicy";
 import ReliabilityScoreExplained from "./pages/ReliabilityScoreExplained";
 import ForAirbnbHosts from "./pages/ForAirbnbHosts";
 import ForFamilies from "./pages/ForFamilies";
@@ -98,6 +99,7 @@ const App = () => (
                     {/* Public routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
+                    <Route path="/cancellationpolicy" element={<CancellationPolicyPage />} />
                     <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />
