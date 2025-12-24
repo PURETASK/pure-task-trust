@@ -42,6 +42,7 @@ import CleanerTeam from "./pages/cleaner/CleanerTeam";
 import CleanerServiceAreas from "./pages/cleaner/CleanerServiceAreas";
 import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
+import Legal from "./pages/Legal";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,8 @@ const App = () => (
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/legal" element={<Legal />} />
               <Route path="/auth" element={<Auth />} />
               
               {/* Role selection (requires auth but no role check) */}
