@@ -185,6 +185,14 @@ const iconColorMap: Record<string, string> = {
   rose: 'text-rose-600',
 };
 
+const tabActiveColorMap: Record<string, string> = {
+  blue: 'data-[state=active]:border-primary data-[state=active]:bg-primary/10',
+  purple: 'data-[state=active]:border-pt-purple data-[state=active]:bg-pt-purple/10',
+  amber: 'data-[state=active]:border-pt-amber data-[state=active]:bg-pt-amber/10',
+  cyan: 'data-[state=active]:border-pt-cyan data-[state=active]:bg-pt-cyan/10',
+  rose: 'data-[state=active]:border-rose-500 data-[state=active]:bg-rose-500/10',
+};
+
 export default function CleaningScope() {
   const [activeTab, setActiveTab] = useState('basic');
 
@@ -249,7 +257,7 @@ export default function CleaningScope() {
                   <TabsTrigger
                     key={key}
                     value={key}
-                    className={`flex flex-col items-center gap-1 p-4 rounded-xl border-2 data-[state=active]:border-primary data-[state=active]:bg-primary/5 transition-all`}
+                    className={`flex flex-col items-center gap-1 p-4 rounded-xl border-2 transition-all ${tabActiveColorMap[value.color]}`}
                   >
                     <span className="text-2xl">{value.icon}</span>
                     <span className="text-sm font-medium">{value.title.split('(')[0].trim()}</span>
