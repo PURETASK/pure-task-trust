@@ -36,7 +36,7 @@ export default function AboutUs() {
               <span className="text-primary">Rebuilt on Trust</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed font-poppins">
               We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. 
               Every homeowner deserves transparency, accountability, and peace of mind.
             </p>
