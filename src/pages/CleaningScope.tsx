@@ -208,6 +208,17 @@ export default function CleaningScope() {
                   before booking.
                 </AlertDescription>
               </Alert>
+              
+              {/* Cleaner-focused message */}
+              <Alert className="max-w-2xl mx-auto mt-4 bg-primary/10 border-primary/30 text-left">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <AlertDescription className="text-foreground/80">
+                  <strong className="block mb-1">For Our Cleaners</strong>
+                  Our goal is to help cleaners on PureTask understand what customers typically expect when 
+                  booking through our platform. We hope this guide serves as a helpful reference that you 
+                  can use and build upon over time to deliver great experiences.
+                </AlertDescription>
+              </Alert>
             </motion.div>
           </div>
         </section>
