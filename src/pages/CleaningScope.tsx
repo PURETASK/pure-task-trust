@@ -284,7 +284,7 @@ export default function CleaningScope() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
                         >
-                          <Card className="h-full">
+                          <Card className={`h-full ${colorMap[value.color]}`}>
                             <CardHeader className="pb-3">
                               <CardTitle className="text-lg flex items-center gap-2">
                                 {room.includes('Not') ? (
