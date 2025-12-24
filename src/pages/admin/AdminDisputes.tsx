@@ -13,8 +13,8 @@ import {
   DollarSign
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -35,7 +35,7 @@ const AdminDisputes = () => {
   };
 
   const openCount = disputes?.filter(d => d.status === 'open').length || 0;
-  const inReviewCount = disputes?.filter(d => d.status === 'in_review').length || 0;
+  const investigatingCount = disputes?.filter(d => d.status === 'investigating').length || 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -83,8 +83,8 @@ const AdminDisputes = () => {
                     <Clock className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">In Review</p>
-                    <p className="text-2xl font-bold">{inReviewCount}</p>
+                    <p className="text-sm text-muted-foreground">Investigating</p>
+                    <p className="text-2xl font-bold">{investigatingCount}</p>
                   </div>
                 </div>
               </CardContent>

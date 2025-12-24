@@ -13,15 +13,15 @@ import {
   Activity
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useClientRisk } from "@/hooks/useClientRisk";
 
 const AdminClientRisk = () => {
-  const { riskScores, isLoading } = useClientRisk();
+  const { isLoading } = useClientRisk();
 
   const getRiskBadge = (band: string) => {
     switch (band) {
