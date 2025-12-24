@@ -347,7 +347,8 @@ export default function CleaningScope() {
                 <Info className="h-4 w-4 text-pt-purple" />
                 <AlertDescription>
                   <strong>Supplies:</strong> Most cleaners bring their own supplies. If you have specific product 
-                  preferences (eco-friendly, allergen-free), please mention during booking.
+                  preferences (eco-friendly, allergen-free) or special requests, please mention during booking. 
+                  If you require a specific product or have an out-of-the-ordinary request, you should supply it yourself.
                 </AlertDescription>
               </Alert>
               
