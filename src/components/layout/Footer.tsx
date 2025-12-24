@@ -43,6 +43,8 @@ export function Footer() {
         { name: "Earnings", path: "/cleaner/earnings" },
         { name: "Analytics", path: "/cleaner/analytics" },
         { name: "Referral Program", path: "/cleaner/referral" },
+        { name: "Messages", path: "/cleaner/messages" },
+        { name: "My Profile", path: "/cleaner/profile" },
       ]
     },
     {
@@ -65,6 +67,17 @@ export function Footer() {
         { name: "For Families", path: "/for-families" },
         { name: "For Retirees", path: "/for-retirees" },
         { name: "For Professionals", path: "/for-professionals" },
+      ]
+    },
+    {
+      title: "Admin",
+      links: [
+        { name: "Analytics Dashboard", path: "/admin/analytics" },
+        { name: "Bookings Console", path: "/admin/bookings" },
+        { name: "Client Jobs", path: "/admin/client-jobs" },
+        { name: "Pricing Management", path: "/admin/pricing" },
+        { name: "Pricing Rules", path: "/admin/pricing-rules" },
+        { name: "Trust & Safety", path: "/admin/trust-safety" },
       ]
     },
     {
