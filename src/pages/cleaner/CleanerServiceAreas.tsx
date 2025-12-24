@@ -41,7 +41,7 @@ export default function CleanerServiceAreas() {
     }
 
     try {
-      await addServiceArea.mutateAsync({ city, state, zip_code: zipCode, radius_miles: radius });
+      await addServiceArea.mutateAsync({ city, state, zip_code: zipCode, radius_miles: radius, latitude: null, longitude: null });
       toast({ title: "Service area added!" });
       setDialogOpen(false);
       setCity("");

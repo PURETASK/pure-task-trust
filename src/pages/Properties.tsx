@@ -1,12 +1,24 @@
 import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useProperties } from "@/hooks/useProperties";
+import { useToast } from "@/hooks/use-toast";
+import { Plus, Building2, Home, MapPin, Bed, Bath, Edit2, Trash2, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Properties() {
   const { toast } = useToast();
@@ -178,7 +190,7 @@ export default function Properties() {
                           <h3 className="font-semibold text-lg">{property.label || 'Property'}</h3>
                           <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                             <MapPin className="h-3.5 w-3.5" />
-                            {property.address_text || 'No address'}
+                            {property.address_line1 || 'No address'}
                           </p>
                           <div className="flex items-center gap-3 mt-3">
                             {property.bedrooms && (
