@@ -46,6 +46,10 @@ import CleanerVerification from "./pages/cleaner/CleanerVerification";
 import CleanerReliability from "./pages/cleaner/CleanerReliability";
 import Legal from "./pages/Legal";
 import ReliabilityScoreExplained from "./pages/ReliabilityScoreExplained";
+import ForAirbnbHosts from "./pages/ForAirbnbHosts";
+import ForFamilies from "./pages/ForFamilies";
+import ForRetirees from "./pages/ForRetirees";
+import ForProfessionals from "./pages/ForProfessionals";
 import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
@@ -65,6 +69,10 @@ const App = () => (
               <Route path="/legal" element={<Legal />} />
               <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />
+              <Route path="/for-families" element={<ForFamilies />} />
+              <Route path="/for-retirees" element={<ForRetirees />} />
+              <Route path="/for-professionals" element={<ForProfessionals />} />
               
               {/* Role selection (requires auth but no role check) */}
               <Route path="/role-selection" element={

@@ -11,6 +11,7 @@ const audiences = [
     borderColor: "border-pt-cyan/20",
     titleColor: "text-foreground",
     linkColor: "text-foreground",
+    link: "/for-professionals",
   },
   {
     icon: Heart,
@@ -20,6 +21,7 @@ const audiences = [
     borderColor: "border-pt-purple/20",
     titleColor: "text-pt-purple",
     linkColor: "text-pt-purple",
+    link: "/for-retirees",
   },
   {
     icon: Home,
@@ -29,6 +31,7 @@ const audiences = [
     borderColor: "border-pt-amber/20",
     titleColor: "text-pt-amber",
     linkColor: "text-pt-amber",
+    link: "/for-airbnb-hosts",
   },
   {
     icon: Users,
@@ -38,6 +41,7 @@ const audiences = [
     borderColor: "border-pt-green/20",
     titleColor: "text-foreground",
     linkColor: "text-foreground",
+    link: "/for-families",
   },
 ];
 
@@ -78,7 +82,7 @@ export function WhoIsFor() {
                 {audience.description}
               </p>
               <Link
-                to="/discover"
+                to={audience.link}
                 className={`${audience.linkColor} text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all`}
               >
                 Learn More <ArrowRight className="h-4 w-4" />
