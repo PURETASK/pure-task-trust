@@ -20,6 +20,8 @@ import Wallet from "./pages/Wallet";
 import Messages from "./pages/Messages";
 import Help from "./pages/Help";
 import NotificationSettings from "./pages/NotificationSettings";
+import Properties from "./pages/Properties";
+import RescheduleRequests from "./pages/RescheduleRequests";
 import NotFound from "./pages/NotFound";
 
 // Cleaner pages
@@ -36,6 +38,10 @@ import CleanerJobDetail from "./pages/cleaner/CleanerJobDetail";
 import CleanerAnalytics from "./pages/cleaner/CleanerAnalytics";
 import CleanerResources from "./pages/cleaner/CleanerResources";
 import CleanerAvailability from "./pages/cleaner/CleanerAvailability";
+import CleanerTeam from "./pages/cleaner/CleanerTeam";
+import CleanerServiceAreas from "./pages/cleaner/CleanerServiceAreas";
+import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
+import CleanerVerification from "./pages/cleaner/CleanerVerification";
 
 const queryClient = new QueryClient();
 
@@ -115,6 +121,16 @@ const App = () => (
                   <NotificationSettings />
                 </RequireAuth>
               } />
+              <Route path="/properties" element={
+                <RequireClient>
+                  <Properties />
+                </RequireClient>
+              } />
+              <Route path="/reschedule-requests" element={
+                <RequireClient>
+                  <RescheduleRequests />
+                </RequireClient>
+              } />
               
               {/* Cleaner routes */}
               <Route path="/cleaner/dashboard" element={
@@ -180,6 +196,26 @@ const App = () => (
               <Route path="/cleaner/availability" element={
                 <RequireCleaner>
                   <CleanerAvailability />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/team" element={
+                <RequireCleaner>
+                  <CleanerTeam />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/service-areas" element={
+                <RequireCleaner>
+                  <CleanerServiceAreas />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/calendar-sync" element={
+                <RequireCleaner>
+                  <CleanerCalendarSync />
+                </RequireCleaner>
+              } />
+              <Route path="/cleaner/verification" element={
+                <RequireCleaner>
+                  <CleanerVerification />
                 </RequireCleaner>
               } />
               
