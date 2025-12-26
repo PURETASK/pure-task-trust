@@ -48,10 +48,10 @@ const trustBadges = [
 
 export function StatsSection() {
   return (
-    <section className="py-16 bg-gradient-to-b from-cyan-50/50 to-background">
-      <div className="container">
+    <section className="py-10 sm:py-16 bg-gradient-to-b from-cyan-50/50 to-background">
+      <div className="container px-4 sm:px-6">
         {/* Stats Row */}
-        <div className="flex flex-wrap justify-center gap-6 mb-12">
+        <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-6 mb-8 sm:mb-12">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -59,21 +59,21 @@ export function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white rounded-2xl px-10 py-6 shadow-soft border border-border/50 text-center min-w-[180px]"
+              className="bg-white rounded-xl sm:rounded-2xl px-3 sm:px-10 py-4 sm:py-6 shadow-soft border border-border/50 text-center sm:min-w-[180px]"
             >
-              <p className={`text-3xl md:text-4xl font-bold ${stat.color} mb-1`}>
+              <p className={`text-xl sm:text-3xl md:text-4xl font-bold ${stat.color} mb-0.5 sm:mb-1`}>
                 {stat.value}
               </p>
-              <p className="text-muted-foreground text-sm">{stat.label}</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent mb-12" />
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8 sm:mb-12" />
 
         {/* Trust Badges Row */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-3 sm:gap-4">
           {trustBadges.map((badge, index) => (
             <motion.div
               key={badge.label}
@@ -81,10 +81,10 @@ export function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              className={`${badge.bgClass} border rounded-2xl px-8 py-5 flex flex-col items-center gap-3 min-w-[160px]`}
+              className={`${badge.bgClass} border rounded-xl sm:rounded-2xl px-4 sm:px-8 py-4 sm:py-5 flex flex-col items-center gap-2 sm:gap-3 sm:min-w-[160px]`}
             >
-              <badge.icon className={`h-6 w-6 ${badge.iconColor}`} />
-              <span className="text-sm font-medium text-foreground">{badge.label}</span>
+              <badge.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${badge.iconColor}`} />
+              <span className="text-xs sm:text-sm font-medium text-foreground text-center">{badge.label}</span>
             </motion.div>
           ))}
         </div>
