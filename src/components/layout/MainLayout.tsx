@@ -48,15 +48,15 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="flex-1 flex flex-col min-h-screen">
           {/* Header */}
           <header className="sticky top-0 z-40 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex h-full items-center justify-between px-4">
-              <div className="flex items-center gap-3">
+            <div className="flex h-full items-center justify-between px-3 sm:px-4">
+              <div className="flex items-center gap-1.5 sm:gap-3">
                 <SidebarTrigger className="h-8 w-8" />
                 
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => navigate(-1)}
-                  className="h-8 w-8"
+                  className="h-8 w-8 hidden sm:flex"
                   aria-label="Go back"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -66,7 +66,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                   variant="ghost" 
                   size="icon" 
                   asChild
-                  className="h-8 w-8"
+                  className="h-8 w-8 hidden sm:flex"
                   aria-label="Go home"
                 >
                   <Link to={getHomePath()}>
@@ -75,19 +75,19 @@ export function MainLayout({ children }: MainLayoutProps) {
                 </Button>
                 
                 <Link to={getHomePath()} className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg gradient-brand flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">P</span>
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg gradient-brand flex items-center justify-center">
+                    <span className="text-white font-bold text-xs sm:text-sm">P</span>
                   </div>
-                  <span className="font-bold text-lg text-foreground hidden sm:inline">PureTask</span>
+                  <span className="font-bold text-base sm:text-lg text-foreground">PureTask</span>
                 </Link>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <ThemeToggle />
                 
                 {isAuthenticated && user ? (
                   <>
-                    <Button variant="ghost" size="icon" asChild>
+                    <Button variant="ghost" size="icon" asChild className="h-8 w-8">
                       <Link to="/settings/notifications">
                         <Bell className="h-4 w-4" />
                       </Link>
@@ -95,14 +95,14 @@ export function MainLayout({ children }: MainLayoutProps) {
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center gap-2 px-2">
-                          <Avatar className="h-8 w-8">
+                        <Button variant="ghost" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2">
+                          <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                             <AvatarImage src={user.avatar} />
-                            <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                            <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm">
                               {getInitials(user.name)}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="font-medium hidden sm:inline">{user.name}</span>
+                          <span className="font-medium hidden md:inline text-sm">{user.name}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-56">

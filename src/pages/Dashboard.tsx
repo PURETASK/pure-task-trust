@@ -48,19 +48,19 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="flex-1 py-8">
-      <div className="container">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div className="flex flex-col gap-4 mb-6">
             <div>
-              <h1 className="text-3xl font-bold mb-1">Your Dashboard</h1>
-              <p className="text-muted-foreground">Manage your bookings and find cleaners</p>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1">Your Dashboard</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Manage your bookings and find cleaners</p>
             </div>
-            <Button asChild>
+            <Button asChild className="w-full sm:w-auto self-start">
               <Link to="/book">
                 <Plus className="h-4 w-4 mr-2" />
                 Book a Cleaning
@@ -69,24 +69,26 @@ export default function Dashboard() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8">
-              <TabsTrigger value="upcoming" className="gap-2">
-                <Calendar className="h-4 w-4" />
-                Upcoming ({upcomingJobs.length})
-              </TabsTrigger>
-              <TabsTrigger value="past" className="gap-2">
-                <Clock className="h-4 w-4" />
-                Past Jobs ({pastJobs.length})
-              </TabsTrigger>
-              <TabsTrigger value="favorites" className="gap-2">
-                <Heart className="h-4 w-4" />
-                Favorites ({favorites?.length || 0})
-              </TabsTrigger>
-              <TabsTrigger value="recurring" className="gap-2">
-                <Repeat className="h-4 w-4" />
-                Recurring ({recurring?.length || 0})
-              </TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-6">
+              <TabsList className="w-max md:w-auto">
+                <TabsTrigger value="upcoming" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
+                  <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden xs:inline">Upcoming</span> ({upcomingJobs.length})
+                </TabsTrigger>
+                <TabsTrigger value="past" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
+                  <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden xs:inline">Past</span> ({pastJobs.length})
+                </TabsTrigger>
+                <TabsTrigger value="favorites" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
+                  <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden xs:inline">Favs</span> ({favorites?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="recurring" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
+                  <Repeat className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden xs:inline">Recurring</span> ({recurring?.length || 0})
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="upcoming">
               {isLoading ? (
@@ -103,39 +105,43 @@ export default function Dashboard() {
                       transition={{ delay: index * 0.1 }}
                     >
                       <Card className="hover:shadow-elevated transition-all">
-                        <CardContent className="p-6">
-                          <div className="flex flex-col md:flex-row md:items-center gap-4">
-                            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary">
-                              {getCleanerName(job).charAt(0)}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <h3 className="font-semibold">{getCleanerName(job)}</h3>
-                                {job.cleaner?.avg_rating && (
-                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                    <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                                    {job.cleaner.avg_rating.toFixed(1)}
-                                  </div>
-                                )}
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex flex-col gap-3 sm:gap-4">
+                            <div className="flex items-start gap-3">
+                              <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary text-sm sm:text-base flex-shrink-0">
+                                {getCleanerName(job).charAt(0)}
                               </div>
-                              <p className="text-sm text-muted-foreground mb-2 capitalize">
-                                {job.cleaning_type?.replace('_', ' ')} Clean
-                              </p>
-                              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                  <h3 className="font-semibold text-sm sm:text-base truncate">{getCleanerName(job)}</h3>
+                                  {job.cleaner?.avg_rating && (
+                                    <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+                                      <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-warning text-warning" />
+                                      {job.cleaner.avg_rating.toFixed(1)}
+                                    </div>
+                                  )}
+                                </div>
+                                <p className="text-xs sm:text-sm text-muted-foreground capitalize">
+                                  {job.cleaning_type?.replace('_', ' ')} Clean
+                                </p>
+                              </div>
+                              <div className="flex-shrink-0">
+                                {getStatusBadge(job.status)}
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
                                 <span className="flex items-center gap-1">
-                                  <Calendar className="h-3.5 w-3.5" />
-                                  {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d, yyyy') : 'TBD'}
+                                  <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                                  {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d') : 'TBD'}
                                 </span>
                                 <span className="flex items-center gap-1">
-                                  <Clock className="h-3.5 w-3.5" />
+                                  <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                                   {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
                                 </span>
+                                <span className="font-medium text-foreground">{job.escrow_credits_reserved || 0} cr</span>
                               </div>
-                            </div>
-                            <div className="flex flex-col items-end gap-2">
-                              {getStatusBadge(job.status)}
-                              <p className="text-sm font-medium">{job.escrow_credits_reserved || 0} credits</p>
-                              <Button variant="outline" size="sm" asChild>
+                              <Button variant="outline" size="sm" asChild className="text-xs sm:text-sm h-8">
                                 <Link to={`/booking/${job.id}`}>View</Link>
                               </Button>
                             </div>
