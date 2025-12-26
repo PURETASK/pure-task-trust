@@ -6,22 +6,22 @@ import heroImage from "@/assets/hero-cleaning.jpg";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-14 sm:pt-16 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img src={heroImage} alt="Clean, modern home interior" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/98 via-white/90 to-white/60 sm:from-white/95 sm:via-white/80 sm:to-white/40" />
       </div>
 
-      <div className="container relative z-10 py-20">
+      <div className="container relative z-10 py-8 sm:py-20 px-4 sm:px-6">
         <div className="max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pt-blue/10 text-pt-blue text-sm font-medium mb-6">
-              <Shield className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-pt-blue/10 text-pt-blue text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+              <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Pay Only When Happy
             </div>
           </motion.div>
@@ -30,7 +30,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-foreground"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 text-foreground"
           >
             Cleaning you can{" "}
             <span className="gradient-brand-text">trust</span>
@@ -40,7 +40,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-lg"
           >
             Book independent cleaners, track every job with GPS and photos, and only release payment when you approve the work.
           </motion.p>
@@ -49,15 +49,15 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
           >
-            <Button size="lg" asChild>
+            <Button size="lg" className="w-full sm:w-auto" asChild>
               <Link to="/book">
                 Book a Cleaning
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
               <Link to="/discover">Browse Cleaners</Link>
             </Button>
           </motion.div>
@@ -66,7 +66,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-12 flex items-center gap-6 text-sm text-muted-foreground"
+            className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground"
           >
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-pt-green" />

@@ -94,20 +94,20 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border bg-muted/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="font-semibold text-foreground mb-4 text-sm">
+              <h4 className="font-semibold text-foreground mb-3 sm:mb-4 text-xs sm:text-sm">
                 {section.title}
               </h4>
-              <ul className="space-y-2">
+              <ul className="space-y-1.5 sm:space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link 
                       to={link.path} 
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
                       {link.name}
                     </Link>
@@ -119,60 +119,60 @@ export function Footer() {
         </div>
 
         {/* Brand Section */}
-        <div className="border-t border-border pt-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+        <div className="border-t border-border pt-6 sm:pt-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8">
             {/* Logo & Description */}
             <div className="max-w-md">
-              <Link to="/" className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-primary-foreground" />
+              <Link to="/" className="flex items-center gap-2 mb-2 sm:mb-3">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary flex items-center justify-center">
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
                 </div>
-                <span className="font-bold text-xl text-foreground">PureTask</span>
+                <span className="font-bold text-lg sm:text-xl text-foreground">PureTask</span>
               </Link>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Trust-first cleaning marketplace. GPS-verified check-ins, photo proof, 
                 and pay only when you're happy. Connecting quality cleaners with happy homes.
               </p>
             </div>
 
             {/* Trust Badges */}
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
-                <Shield className="h-4 w-4 text-success" />
-                <span className="text-xs font-medium text-foreground">Background Checked</span>
+            <div className="flex flex-wrap gap-2 sm:gap-4">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-background border border-border">
+                <Shield className="h-3 w-3 sm:h-4 sm:w-4 text-success" />
+                <span className="text-[10px] sm:text-xs font-medium text-foreground">Background Checked</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span className="text-xs font-medium text-foreground">GPS Verified</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-background border border-border">
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
+                <span className="text-[10px] sm:text-xs font-medium text-foreground">GPS Verified</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border">
-                <Award className="h-4 w-4 text-warning" />
-                <span className="text-xs font-medium text-foreground">Satisfaction Guaranteed</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-background border border-border">
+                <Award className="h-3 w-3 sm:h-4 sm:w-4 text-warning" />
+                <span className="text-[10px] sm:text-xs font-medium text-foreground">Satisfaction Guaranteed</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             © {currentYear} PureTask. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Privacy
             </Link>
-            <Link to="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Terms
             </Link>
-            <Link to="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/help" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Support
             </Link>
-            <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               About
             </Link>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Built with trust in mind ✨
           </p>
         </div>
