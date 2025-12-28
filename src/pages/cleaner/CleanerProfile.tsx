@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { AdditionalServicesSetup } from "@/components/cleaner/AdditionalServicesSetup";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { getTierFromScore, getTierConfig, CleanerTier } from "@/lib/tier-config";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   DollarSign, 
   Clock, 
@@ -24,7 +27,10 @@ import {
   Dog,
   Leaf,
   Package,
-  User
+  User,
+  TrendingUp,
+  Award,
+  Info
 } from "lucide-react";
 
 export default function CleanerProfile() {
@@ -32,10 +38,25 @@ export default function CleanerProfile() {
   const { profile } = useCleanerProfile();
   const [saving, setSaving] = useState(false);
 
+  // Get tier info
+  const reliabilityScore = profile?.reliability_score || 0;
+  const tier = getTierFromScore(reliabilityScore) as CleanerTier;
+  const tierConfig = getTierConfig(tier);
+  const hourlyRateRange = tierConfig.hourlyRateRange;
+
   // Form state
-  const [hourlyRate, setHourlyRate] = useState(35);
+  const [hourlyRate, setHourlyRate] = useState(hourlyRateRange.min);
   const [travelRadius, setTravelRadius] = useState(15);
   const [bio, setBio] = useState("");
+  
+  // Initialize from profile
+  useEffect(() => {
+    if (profile) {
+      setHourlyRate(Math.max(hourlyRateRange.min, Math.min(hourlyRateRange.max, profile.hourly_rate_credits || hourlyRateRange.min)));
+      setTravelRadius(profile.travel_radius_km || 15);
+      setBio(profile.bio || "");
+    }
+  }, [profile, hourlyRateRange.min, hourlyRateRange.max]);
   
   // Availability
   const [availability, setAvailability] = useState({
@@ -59,14 +80,34 @@ export default function CleanerProfile() {
   });
 
   const handleSave = async () => {
+    if (!profile?.id) return;
+    
     setSaving(true);
-    // Simulate save
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setSaving(false);
-    toast({
-      title: "Profile Updated",
-      description: "Your settings have been saved successfully.",
-    });
+    try {
+      const { error } = await supabase
+        .from('cleaner_profiles')
+        .update({
+          hourly_rate_credits: hourlyRate,
+          travel_radius_km: travelRadius,
+          bio,
+        })
+        .eq('id', profile.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Profile Updated",
+        description: "Your settings have been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const toggleDay = (day: keyof typeof availability) => {
@@ -91,11 +132,37 @@ export default function CleanerProfile() {
     <CleanerLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Profile Settings</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Profile Settings</h1>
           <p className="text-muted-foreground mt-1">
             Manage your rates, availability, and services
           </p>
         </div>
+
+        {/* Tier Status Banner */}
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Award className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold">Your Tier: {tier.charAt(0).toUpperCase() + tier.slice(1)}</h3>
+                  <Badge variant="outline">{reliabilityScore} points</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  You can charge ${hourlyRateRange.min}-${hourlyRateRange.max}/hr • {tierConfig.platformFeePercent}% platform fee
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  {tier === 'platinum' ? 'Max tier!' : 'Keep improving to unlock higher rates'}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Profile Photo */}
         <Card>
@@ -120,45 +187,48 @@ export default function CleanerProfile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-success" />
-              Rates & Pricing
+              Hourly Rate
             </CardTitle>
-            <CardDescription>
-              Set your hourly rate and travel preferences
+            <CardDescription className="flex items-center gap-2">
+              Set your rate within your tier's range
+              <Badge variant="outline" className="text-xs">
+                ${hourlyRateRange.min} - ${hourlyRateRange.max}
+              </Badge>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-4">
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-300">
+                <Info className="h-4 w-4 shrink-0" />
+                <p className="text-sm">
+                  Your rate range is based on your <strong>{tier}</strong> tier. Improve your reliability score to unlock higher rates!
+                </p>
+              </div>
+              
               <div>
-                <Label className="text-base">Hourly Rate</Label>
-                <div className="flex items-center gap-4 mt-2">
+                <div className="flex items-center gap-4">
                   <div className="flex-1">
                     <Slider
                       value={[hourlyRate]}
                       onValueChange={([value]) => setHourlyRate(value)}
-                      min={20}
-                      max={100}
-                      step={5}
+                      min={hourlyRateRange.min}
+                      max={hourlyRateRange.max}
+                      step={1}
                       className="w-full"
                     />
-                  </div>
-                  <div className="w-24">
-                    <div className="flex items-center gap-1 text-2xl font-bold text-success">
-                      <span>$</span>
-                      <Input
-                        type="number"
-                        value={hourlyRate}
-                        onChange={(e) => setHourlyRate(Number(e.target.value))}
-                        className="w-20 text-center text-xl font-bold border-0 p-0 h-auto"
-                        min={20}
-                        max={100}
-                      />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>${hourlyRateRange.min}</span>
+                      <span>${hourlyRateRange.max}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground text-center">per hour</p>
+                  </div>
+                  <div className="w-24 text-right">
+                    <div className="flex items-center justify-end gap-1 text-2xl font-bold text-success">
+                      <span>$</span>
+                      <span>{hourlyRate}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">per hour</p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Suggested range: $25-$50/hr based on your area
-                </p>
               </div>
 
               <Separator />
@@ -189,6 +259,22 @@ export default function CleanerProfile() {
           </CardContent>
         </Card>
 
+        {/* Additional Services Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-violet-500" />
+              Additional Services & Pricing
+            </CardTitle>
+            <CardDescription>
+              Set prices for add-on services (ranges based on your tier)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AdditionalServicesSetup />
+          </CardContent>
+        </Card>
+
         {/* Availability Section */}
         <Card>
           <CardHeader>
@@ -207,7 +293,7 @@ export default function CleanerProfile() {
                   key={key}
                   onClick={() => toggleDay(key)}
                   className={`
-                    px-4 py-3 rounded-lg font-medium transition-all
+                    px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base
                     ${availability[key] 
                       ? "bg-primary text-primary-foreground" 
                       : "bg-secondary text-muted-foreground hover:bg-secondary/80"
@@ -229,7 +315,7 @@ export default function CleanerProfile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Briefcase className="h-5 w-5 text-violet-500" />
-              Services Offered
+              Cleaning Types
             </CardTitle>
             <CardDescription>
               Choose the cleaning services you provide
@@ -237,14 +323,14 @@ export default function CleanerProfile() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Home className="h-5 w-5 text-primary" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Home className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium">Basic Cleaning</p>
-                    <p className="text-sm text-muted-foreground">Regular maintenance cleaning</p>
+                    <p className="font-medium text-sm sm:text-base">Basic Cleaning</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Regular maintenance cleaning</p>
                   </div>
                 </div>
                 <Switch 
@@ -253,14 +339,14 @@ export default function CleanerProfile() {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
-                    <Sparkles className="h-5 w-5 text-violet-500" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-violet-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Deep Cleaning</p>
-                    <p className="text-sm text-muted-foreground">Thorough, detailed cleaning</p>
+                    <p className="font-medium text-sm sm:text-base">Deep Cleaning</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Thorough, detailed cleaning</p>
                   </div>
                 </div>
                 <Switch 
@@ -269,14 +355,14 @@ export default function CleanerProfile() {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                    <Building2 className="h-5 w-5 text-amber-500" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                    <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Move In/Out Cleaning</p>
-                    <p className="text-sm text-muted-foreground">Complete property cleaning</p>
+                    <p className="font-medium text-sm sm:text-base">Move In/Out Cleaning</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Complete property cleaning</p>
                   </div>
                 </div>
                 <Switch 
@@ -287,14 +373,14 @@ export default function CleanerProfile() {
 
               <Separator />
 
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-rose-500/10 flex items-center justify-center">
-                    <Dog className="h-5 w-5 text-rose-500" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                    <Dog className="h-4 w-4 sm:h-5 sm:w-5 text-rose-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Pet-Friendly</p>
-                    <p className="text-sm text-muted-foreground">Comfortable working with pets</p>
+                    <p className="font-medium text-sm sm:text-base">Pet-Friendly</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Comfortable working with pets</p>
                   </div>
                 </div>
                 <Switch 
@@ -303,14 +389,14 @@ export default function CleanerProfile() {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <Leaf className="h-5 w-5 text-emerald-500" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Eco-Friendly Products</p>
-                    <p className="text-sm text-muted-foreground">Use environmentally safe products</p>
+                    <p className="font-medium text-sm sm:text-base">Eco-Friendly Products</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Use environmentally safe products</p>
                   </div>
                 </div>
                 <Switch 
@@ -319,14 +405,14 @@ export default function CleanerProfile() {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                    <Package className="h-5 w-5 text-cyan-500" />
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                    <Package className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Bring Own Supplies</p>
-                    <p className="text-sm text-muted-foreground">I bring my own cleaning supplies</p>
+                    <p className="font-medium text-sm sm:text-base">Bring Own Supplies</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">I bring my own cleaning supplies</p>
                   </div>
                 </div>
                 <Switch 
@@ -371,6 +457,7 @@ export default function CleanerProfile() {
                 ${hourlyRate}/hr
               </Badge>
               <Badge variant="secondary">{travelRadius} mile radius</Badge>
+              <Badge variant="outline">{tier.charAt(0).toUpperCase() + tier.slice(1)} Tier</Badge>
               {services.basicCleaning && <Badge variant="outline">Basic Cleaning</Badge>}
               {services.deepCleaning && <Badge variant="outline">Deep Cleaning</Badge>}
               {services.moveInOut && <Badge variant="outline">Move In/Out</Badge>}

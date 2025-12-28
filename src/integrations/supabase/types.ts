@@ -710,6 +710,44 @@ export type Database = {
         }
         Relationships: []
       }
+      cleaner_additional_services: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          id: string
+          is_enabled: boolean
+          price: number
+          service_id: string
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          price: number
+          service_id: string
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          price?: number
+          service_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_additional_services_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cleaner_availability: {
         Row: {
           cleaner_id: string
@@ -806,6 +844,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "cleaner_boosts_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cleaner_custom_services: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_enabled: boolean
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_enabled?: boolean
+          name: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_enabled?: boolean
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_custom_services_cleaner_id_fkey"
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
