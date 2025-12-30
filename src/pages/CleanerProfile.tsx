@@ -56,25 +56,25 @@ export default function CleanerProfile() {
   ];
 
   return (
-    <main className="flex-1 py-12">
-      <div className="container max-w-4xl">
+    <main className="flex-1 py-4 sm:py-12">
+      <div className="container px-4 sm:px-6 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           {/* Profile Header */}
-          <Card className="mb-6 overflow-hidden">
+          <Card className="mb-4 sm:mb-6 overflow-hidden">
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row">
                 <div className="relative">
                   <img
                     src={getAvatarUrl(cleaner.name)}
                     alt={cleaner.name}
-                    className="w-full md:w-64 h-64 object-cover"
+                    className="w-full md:w-64 h-48 sm:h-64 object-cover"
                   />
                   {cleaner.verified && (
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                       <Badge variant="trust" className="gap-1">
                         <Shield className="h-3 w-3" />
                         Verified
@@ -82,13 +82,13 @@ export default function CleanerProfile() {
                     </div>
                   )}
                 </div>
-                <div className="flex-1 p-6">
-                  <div className="flex items-start justify-between mb-4">
+                <div className="flex-1 p-4 sm:p-6">
+                  <div className="flex items-start justify-between mb-3 sm:mb-4">
                     <div>
-                      <h1 className="text-2xl font-bold mb-2">{cleaner.name}</h1>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{cleaner.name}</h1>
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-warning text-warning" />
+                          <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-warning text-warning" />
                           <span className="font-medium text-foreground">
                             {cleaner.avgRating?.toFixed(1) || 'New'}
                           </span>
@@ -99,47 +99,47 @@ export default function CleanerProfile() {
                         </span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <Heart className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                   </div>
 
-                  <p className="text-muted-foreground mb-6">
+                  <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                     {cleaner.bio || "Professional cleaner ready to make your space shine!"}
                   </p>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-2xl font-bold">{cleaner.jobsCompleted}</p>
-                      <p className="text-xs text-muted-foreground">Jobs Done</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
+                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
+                      <p className="text-lg sm:text-2xl font-bold">{cleaner.jobsCompleted}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Jobs Done</p>
                     </div>
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-2xl font-bold">{cleaner.hourlyRate}</p>
-                      <p className="text-xs text-muted-foreground">Credits/hr</p>
+                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
+                      <p className="text-lg sm:text-2xl font-bold">{cleaner.hourlyRate}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Credits/hr</p>
                     </div>
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-2xl font-bold">{"< 2hrs"}</p>
-                      <p className="text-xs text-muted-foreground">Response</p>
+                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
+                      <p className="text-lg sm:text-2xl font-bold">{"< 2hrs"}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Response</p>
                     </div>
-                    <div className="text-center p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-2xl font-bold text-success">{cleaner.reliabilityScore}%</p>
-                      <p className="text-xs text-muted-foreground">Reliability</p>
+                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
+                      <p className="text-lg sm:text-2xl font-bold text-success">{cleaner.reliabilityScore}%</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Reliability</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                     {cleaner.services.map((service) => (
-                      <Badge key={service} variant="secondary">
+                      <Badge key={service} variant="secondary" className="text-xs">
                         {service}
                       </Badge>
                     ))}
                   </div>
 
-                  <div className="flex gap-3">
-                    <Button className="flex-1" asChild>
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <Button className="flex-1" size="sm" asChild>
                       <Link to={`/book?cleaner=${cleaner.id}`}>Book This Cleaner</Link>
                     </Button>
-                    <Button variant="outline" className="gap-2">
+                    <Button variant="outline" size="sm" className="gap-2">
                       <MessageCircle className="h-4 w-4" />
                       Message
                     </Button>
@@ -150,13 +150,13 @@ export default function CleanerProfile() {
           </Card>
 
           {/* Reliability Score Explanation */}
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Shield className="h-5 w-5 text-trust" />
+          <Card className="mb-4 sm:mb-6">
+            <CardContent className="p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-trust" />
                 Reliability Score Breakdown
               </h2>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">On-time arrivals</span>
                   <span className="font-medium">{Math.min(cleaner.reliabilityScore + 1, 100)}%</span>
@@ -179,29 +179,29 @@ export default function CleanerProfile() {
 
           {/* Reviews */}
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-6">Reviews ({cleaner.jobsCompleted})</h2>
+            <CardContent className="p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">Reviews ({cleaner.jobsCompleted})</h2>
               {mockReviews.length > 0 ? (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {mockReviews.map((review) => (
-                    <div key={review.id} className="border-b border-border pb-6 last:border-0 last:pb-0">
+                    <div key={review.id} className="border-b border-border pb-4 sm:pb-6 last:border-0 last:pb-0">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center font-semibold">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-secondary flex items-center justify-center font-semibold text-sm">
                             {review.name.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-medium">{review.name}</p>
-                            <p className="text-xs text-muted-foreground">{review.date}</p>
+                            <p className="font-medium text-sm sm:text-base">{review.name}</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground">{review.date}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-0.5">
                           {Array.from({ length: review.rating }).map((_, i) => (
-                            <Star key={i} className="h-4 w-4 fill-warning text-warning" />
+                            <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-warning text-warning" />
                           ))}
                         </div>
                       </div>
-                      <p className="text-muted-foreground">{review.comment}</p>
+                      <p className="text-sm text-muted-foreground">{review.comment}</p>
                     </div>
                   ))}
                 </div>

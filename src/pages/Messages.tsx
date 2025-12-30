@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { Send, Calendar, Loader2, MessageCircle } from "lucide-react";
+import { Send, Calendar, Loader2, MessageCircle, ArrowLeft } from "lucide-react";
 import { useMessageThreads, useThreadMessages, useMessageActions, type MessageThread } from "@/hooks/useMessages";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -70,14 +70,14 @@ export default function Messages() {
   }
 
   return (
-    <main className="flex-1 py-12">
-      <div className="container">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold mb-8">Messages</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Messages</h1>
 
           {!threads || threads.length === 0 ? (
             <EmptyState
@@ -86,9 +86,9 @@ export default function Messages() {
               description="Messages from your booked cleaners will appear here."
             />
           ) : (
-            <div className="grid md:grid-cols-3 gap-6 h-[600px]">
-              {/* Conversation List */}
-              <Card className="md:col-span-1 overflow-hidden">
+            <div className="flex flex-col md:grid md:grid-cols-3 gap-4 sm:gap-6 h-auto md:h-[600px]">
+              {/* Conversation List - shows as list on mobile, collapses when chat selected */}
+              <Card className={`md:col-span-1 overflow-hidden ${selectedThread ? 'hidden md:block' : ''}`}>
                 <CardContent className="p-0">
                   <div className="divide-y divide-border overflow-y-auto max-h-[600px]">
                     {threads.map((thread) => (
@@ -139,18 +139,26 @@ export default function Messages() {
               </Card>
 
               {/* Chat Area */}
-              <Card className="md:col-span-2 flex flex-col overflow-hidden">
+              <Card className={`md:col-span-2 flex flex-col overflow-hidden min-h-[400px] md:min-h-0 ${!selectedThread ? 'hidden md:flex' : ''}`}>
                 <CardContent className="p-0 flex flex-col h-full">
                   {selectedThread ? (
                     <>
                       {/* Chat Header */}
-                      <div className="p-4 border-b border-border flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary">
+                      <div className="p-3 sm:p-4 border-b border-border flex items-center gap-3">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="md:hidden h-8 w-8 flex-shrink-0"
+                          onClick={() => setSelectedThread(null)}
+                        >
+                          <ArrowLeft className="h-4 w-4" />
+                        </Button>
+                        <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary flex-shrink-0">
                           {getOtherPartyName(selectedThread).charAt(0)}
                         </div>
-                        <div>
-                          <p className="font-medium">{getOtherPartyName(selectedThread)}</p>
-                          <p className="text-xs text-muted-foreground">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium truncate">{getOtherPartyName(selectedThread)}</p>
+                          <p className="text-xs text-muted-foreground truncate">
                             {selectedThread.subject || (selectedThread.job_id ? 'Booking conversation' : 'Direct message')}
                           </p>
                         </div>
@@ -197,14 +205,14 @@ export default function Messages() {
                       </div>
 
                       {/* Input */}
-                      <div className="p-4 border-t border-border">
+                      <div className="p-3 sm:p-4 border-t border-border">
                         <div className="flex gap-2">
                           <Input
                             placeholder="Type a message..."
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            className="flex-1"
+                            className="flex-1 text-base"
                             disabled={isSending}
                           />
                           <Button 
