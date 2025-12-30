@@ -147,32 +147,32 @@ export default function AuthPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center py-20 pt-32">
+        <main className="flex-1 flex items-center justify-center py-8 sm:py-20 pt-20 sm:pt-32 px-4">
           <div className="container max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-3">Join PureTask</h1>
-                <p className="text-muted-foreground">Choose how you'd like to use PureTask</p>
+              <div className="text-center mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Join PureTask</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Choose how you'd like to use PureTask</p>
               </div>
 
-              <div className="grid gap-4">
+              <div className="grid gap-3 sm:gap-4">
                 <Card 
                   className="cursor-pointer hover:border-primary/50 hover:shadow-elevated transition-all"
                   onClick={() => setRole("client")}
                 >
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <User className="h-7 w-7 text-primary" />
+                  <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-6">
+                    <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <User className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">I need cleaning</h3>
-                      <p className="text-sm text-muted-foreground">Book trusted cleaners for your home</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-base sm:text-lg">I need cleaning</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Book trusted cleaners for your home</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                   </CardContent>
                 </Card>
 
@@ -180,20 +180,20 @@ export default function AuthPage() {
                   className="cursor-pointer hover:border-primary/50 hover:shadow-elevated transition-all"
                   onClick={() => setRole("cleaner")}
                 >
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <div className="h-14 w-14 rounded-2xl bg-success/10 flex items-center justify-center">
-                      <Briefcase className="h-7 w-7 text-success" />
+                  <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-6">
+                    <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-success/10 flex items-center justify-center flex-shrink-0">
+                      <Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-success" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">I'm a cleaner</h3>
-                      <p className="text-sm text-muted-foreground">Set your rates and find clients</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-base sm:text-lg">I'm a cleaner</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Set your rates and find clients</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                   </CardContent>
                 </Card>
               </div>
 
-              <p className="text-center text-sm text-muted-foreground mt-6">
+              <p className="text-center text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6">
                 Already have an account?{" "}
                 <button 
                   onClick={() => setIsSignUp(false)} 
@@ -213,7 +213,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 flex items-center justify-center py-20 pt-32">
+      <main className="flex-1 flex items-center justify-center py-8 sm:py-20 pt-20 sm:pt-32 px-4">
         <div className="container max-w-md">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -60,20 +60,20 @@ export default function Discover() {
   };
 
   return (
-    <main className="flex-1 py-8">
-      <div className="container">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Find Cleaners</h1>
-            <p className="text-muted-foreground">Browse verified cleaners in your area</p>
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Find Cleaners</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Browse verified cleaners in your area</p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="relative flex-1">
+          <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name or service..."
@@ -82,14 +82,14 @@ export default function Discover() {
                 className="pl-10"
               />
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
                 <Switch
                   id="available-only"
                   checked={onlyAvailable}
                   onCheckedChange={setOnlyAvailable}
                 />
-                <Label htmlFor="available-only" className="text-sm cursor-pointer">
+                <Label htmlFor="available-only" className="text-xs sm:text-sm cursor-pointer whitespace-nowrap">
                   Available Only
                 </Label>
               </div>
@@ -99,13 +99,13 @@ export default function Discover() {
                   checked={smartMatch}
                   onCheckedChange={setSmartMatch}
                 />
-                <Label htmlFor="smart-match" className="text-sm cursor-pointer">
+                <Label htmlFor="smart-match" className="text-xs sm:text-sm cursor-pointer whitespace-nowrap">
                   Smart Match
                 </Label>
               </div>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2 ml-auto">
                 <Filter className="h-4 w-4" />
-                Filters
+                <span className="hidden sm:inline">Filters</span>
               </Button>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function Discover() {
           )}
 
           {!isLoading && cleaners && cleaners.length > 0 && (
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
               {cleaners.map((cleaner, index) => (
                 <motion.div
                   key={cleaner.id}
@@ -143,9 +143,9 @@ export default function Discover() {
                 >
                   <Card className="hover:shadow-elevated transition-all overflow-hidden">
                     <CardContent className="p-0">
-                      <div className="flex">
-                        <div className="relative w-32 md:w-40 flex-shrink-0">
-                          <div className="h-full min-h-[160px] bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                      <div className="flex flex-col sm:flex-row">
+                        <div className="relative w-full sm:w-32 md:w-40 flex-shrink-0">
+                          <div className="h-32 sm:h-full sm:min-h-[160px] bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                             <span className="text-4xl font-bold text-primary/60">
                               {getInitials(cleaner.name)}
                             </span>
@@ -159,11 +159,11 @@ export default function Discover() {
                             </div>
                           )}
                         </div>
-                        <div className="flex-1 p-5">
+                        <div className="flex-1 p-4 sm:p-5">
                           <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h3 className="font-semibold text-lg">{cleaner.name}</h3>
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="min-w-0 flex-1">
+                              <h3 className="font-semibold text-base sm:text-lg truncate">{cleaner.name}</h3>
+                              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1">
                                   <Star className="h-3.5 w-3.5 fill-warning text-warning" />
                                   {cleaner.avgRating?.toFixed(1) || 'New'}
@@ -172,14 +172,14 @@ export default function Discover() {
                                 <span>{cleaner.jobsCompleted} jobs</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                               <button
                                 onClick={(e) => handleToggleFavorite(cleaner.id, e)}
                                 disabled={isToggling}
-                                className="p-2 rounded-full hover:bg-secondary transition-colors"
+                                className="p-1.5 sm:p-2 rounded-full hover:bg-secondary transition-colors"
                               >
                                 <Heart 
-                                  className={`h-5 w-5 ${
+                                  className={`h-4 w-4 sm:h-5 sm:w-5 ${
                                     favoriteCleanerIds.has(cleaner.id) 
                                       ? 'fill-destructive text-destructive' 
                                       : 'text-muted-foreground'
@@ -187,28 +187,28 @@ export default function Discover() {
                                 />
                               </button>
                               <div className="text-right">
-                                <p className="font-semibold">{cleaner.hourlyRate}</p>
-                                <p className="text-xs text-muted-foreground">credits/hr</p>
+                                <p className="font-semibold text-sm sm:text-base">{cleaner.hourlyRate}</p>
+                                <p className="text-[10px] sm:text-xs text-muted-foreground">credits/hr</p>
                               </div>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                            <MapPin className="h-3.5 w-3.5" />
-                            {cleaner.distance}
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-3">
+                            <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                            <span className="truncate">{cleaner.distance}</span>
                             <span>•</span>
-                            <span className="text-success">{cleaner.reliabilityScore}% reliable</span>
+                            <span className="text-success whitespace-nowrap">{cleaner.reliabilityScore}% reliable</span>
                           </div>
 
-                          <div className="flex flex-wrap gap-1.5 mb-4">
+                          <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4">
                             {cleaner.services.slice(0, 3).map((service) => (
-                              <Badge key={service} variant="secondary" className="text-xs">
+                              <Badge key={service} variant="secondary" className="text-[10px] sm:text-xs">
                                 {service}
                               </Badge>
                             ))}
                           </div>
 
-                          <Button className="w-full" asChild>
+                          <Button className="w-full" size="sm" asChild>
                             <Link to={`/cleaner/${cleaner.id}`}>View Profile</Link>
                           </Button>
                         </div>

@@ -93,72 +93,74 @@ export default function Help() {
   };
 
   return (
-    <main className="flex-1 py-8">
-      <div className="container max-w-6xl">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">Support Center</h1>
-              <p className="text-muted-foreground">We're here to help you 24/7</p>
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Support Center</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">We're here to help you 24/7</p>
             </div>
 
             {/* Tabs */}
             <Tabs defaultValue="submit" className="w-full">
-              <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
-                <TabsTrigger value="submit" className="gap-2">
-                  <Send className="h-4 w-4" />
-                  Submit Ticket
-                </TabsTrigger>
-                <TabsTrigger value="tickets" className="gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  My Tickets
-                </TabsTrigger>
-                <TabsTrigger value="faq" className="gap-2">
-                  <FileText className="h-4 w-4" />
-                  FAQ
-                </TabsTrigger>
-              </TabsList>
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 mb-6 sm:mb-8">
+                <TabsList className="w-max sm:w-full sm:max-w-md mx-auto grid grid-cols-3">
+                  <TabsTrigger value="submit" className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                    <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <span className="hidden xs:inline">Submit</span> Ticket
+                  </TabsTrigger>
+                  <TabsTrigger value="tickets" className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                    <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <span className="hidden xs:inline">My</span> Tickets
+                  </TabsTrigger>
+                  <TabsTrigger value="faq" className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                    <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    FAQ
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <TabsContent value="submit">
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
                   {/* Main Form */}
                   <div className="lg:col-span-2">
                     <Card className="overflow-hidden">
                       {/* Form Header */}
-                      <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-6">
+                      <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 sm:p-6">
                         <div className="flex items-center gap-3">
-                          <Send className="h-5 w-5" />
+                          <Send className="h-5 w-5 flex-shrink-0" />
                           <div>
-                            <h2 className="text-lg font-semibold">Submit a Support Ticket</h2>
-                            <p className="text-primary-foreground/80 text-sm">We typically respond within 24 hours</p>
+                            <h2 className="text-base sm:text-lg font-semibold">Submit a Support Ticket</h2>
+                            <p className="text-primary-foreground/80 text-xs sm:text-sm">We typically respond within 24 hours</p>
                           </div>
                         </div>
                       </div>
 
-                      <CardContent className="p-6 space-y-6">
+                      <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                         {/* Issue Type */}
                         <div>
-                          <Label className="text-base mb-4 block">
+                          <Label className="text-sm sm:text-base mb-3 sm:mb-4 block">
                             What do you need help with? *
                           </Label>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                             {issueTypes.map((issue) => (
                               <button
                                 key={issue.id}
                                 type="button"
                                 onClick={() => setSelectedIssue(issue.id)}
-                                className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                className={`p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
                                   selectedIssue === issue.id
                                     ? "border-primary bg-primary/5"
                                     : "border-border hover:border-primary/30"
                                 }`}
                               >
-                                <issue.icon className={`h-5 w-5 mb-2 ${issue.color}`} />
-                                <span className="text-sm font-medium">{issue.label}</span>
+                                <issue.icon className={`h-4 w-4 sm:h-5 sm:w-5 mb-1.5 sm:mb-2 ${issue.color}`} />
+                                <span className="text-xs sm:text-sm font-medium">{issue.label}</span>
                               </button>
                             ))}
                           </div>

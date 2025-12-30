@@ -112,8 +112,8 @@ export default function Book() {
   const canProceedToVerification = selectedDate && selectedTime && selectedAddress;
 
   return (
-    <main className="flex-1 py-12">
-        <div className="container max-w-2xl">
+    <main className="flex-1 py-6 sm:py-12">
+        <div className="container px-4 sm:px-6 max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,26 +121,26 @@ export default function Book() {
           >
             {/* Selected Cleaner Banner */}
             {selectedCleaner && (
-              <Card className="mb-6 bg-primary/5 border-primary/20">
-                <CardContent className="p-4 flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary">
+              <Card className="mb-4 sm:mb-6 bg-primary/5 border-primary/20">
+                <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary text-sm sm:text-base flex-shrink-0">
                     {selectedCleaner.name.charAt(0)}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Booking with {selectedCleaner.name}</p>
-                    <p className="text-sm text-muted-foreground">{selectedCleaner.hourlyRate} credits/hr</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm sm:text-base truncate">Booking with {selectedCleaner.name}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{selectedCleaner.hourlyRate} credits/hr</p>
                   </div>
-                  <Badge variant="secondary">Selected</Badge>
+                  <Badge variant="secondary" className="flex-shrink-0">Selected</Badge>
                 </CardContent>
               </Card>
             )}
 
             {/* Progress */}
-            <div className="flex items-center justify-center gap-2 mb-8">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8">
               {[1, 2, 3, 4, 5, 6].map((s) => (
                 <div
                   key={s}
-                  className={`h-2 w-8 rounded-full transition-colors ${
+                  className={`h-1.5 sm:h-2 w-6 sm:w-8 rounded-full transition-colors ${
                     s <= step ? "bg-primary" : "bg-border"
                   }`}
                 />
@@ -156,10 +156,10 @@ export default function Book() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                 >
-                  <h1 className="text-2xl font-bold mb-2">What type of cleaning?</h1>
-                  <p className="text-muted-foreground mb-6">Choose the service that fits your needs</p>
+                  <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">What type of cleaning?</h1>
+                  <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">Choose the service that fits your needs</p>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {cleaningTypes.map((type) => (
                       <Card
                         key={type.id}
@@ -170,21 +170,21 @@ export default function Book() {
                         }`}
                         onClick={() => setSelectedType(type.id)}
                       >
-                        <CardContent className="flex items-center gap-4 p-5">
-                          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <type.icon className="h-6 w-6 text-primary" />
+                        <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
+                          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <type.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                           </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold">{type.name}</h3>
-                            <p className="text-sm text-muted-foreground">{type.description}</p>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm sm:text-base">{type.name}</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{type.description}</p>
                           </div>
-                          <div className="text-right">
-                            <p className="font-semibold">{type.baseCredits}</p>
-                            <p className="text-xs text-muted-foreground">credits/hr</p>
+                          <div className="text-right flex-shrink-0">
+                            <p className="font-semibold text-sm sm:text-base">{type.baseCredits}</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground">credits/hr</p>
                           </div>
                           {selectedType === type.id && (
-                            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-                              <Check className="h-4 w-4 text-primary-foreground" />
+                            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                              <Check className="h-3 w-3 sm:h-4 sm:w-4 text-primary-foreground" />
                             </div>
                           )}
                         </CardContent>

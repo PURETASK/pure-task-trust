@@ -59,55 +59,55 @@ export default function Wallet() {
   }, [searchParams, toast, setSearchParams, refetch]);
 
   return (
-    <main className="flex-1 py-8">
-      <div className="container max-w-2xl">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6 max-w-2xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold mb-8">Wallet</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Wallet</h1>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
             <Card className="bg-primary text-primary-foreground">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-primary-foreground/80">Available</span>
-                  <WalletIcon className="h-5 w-5 text-primary-foreground/60" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <span className="text-primary-foreground/80 text-xs sm:text-sm">Available</span>
+                  <WalletIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground/60" />
                 </div>
                 {isLoadingAccount ? (
-                  <Skeleton className="h-10 w-20 bg-primary-foreground/20" />
+                  <Skeleton className="h-8 sm:h-10 w-16 sm:w-20 bg-primary-foreground/20" />
                 ) : (
-                  <p className="text-4xl font-bold mb-1">{availableCredits}</p>
+                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1">{availableCredits}</p>
                 )}
-                <p className="text-sm text-primary-foreground/70">credits</p>
+                <p className="text-xs sm:text-sm text-primary-foreground/70">credits</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-muted-foreground">Held</span>
-                  <Clock className="h-5 w-5 text-muted-foreground" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <span className="text-muted-foreground text-xs sm:text-sm">Held</span>
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                 </div>
                 {isLoadingAccount ? (
-                  <Skeleton className="h-10 w-20" />
+                  <Skeleton className="h-8 sm:h-10 w-16 sm:w-20" />
                 ) : (
-                  <p className="text-4xl font-bold mb-1 text-warning">{heldCredits}</p>
+                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1 text-warning">{heldCredits}</p>
                 )}
-                <p className="text-sm text-muted-foreground">credits for pending jobs</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">for pending jobs</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+          <Card className="mb-6 sm:mb-8">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                  <h3 className="font-semibold mb-1">Need more credits?</h3>
-                  <p className="text-sm text-muted-foreground">1 credit = $1 USD</p>
+                  <h3 className="font-semibold text-sm sm:text-base mb-0.5 sm:mb-1">Need more credits?</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">1 credit = $1 USD</p>
                 </div>
-                <Button className="gap-2" onClick={() => setBuyDialogOpen(true)}>
+                <Button className="gap-2 w-full sm:w-auto" onClick={() => setBuyDialogOpen(true)}>
                   <Plus className="h-4 w-4" />
                   Buy Credits
                 </Button>
