@@ -25,11 +25,13 @@ export interface MessageThread {
 export interface Message {
   id: string;
   thread_id: string;
-  sender_type: 'client' | 'cleaner' | 'system';
+  sender_type: 'client' | 'cleaner' | 'system' | 'admin';
   sender_id: string | null;
   body: string;
   is_read: boolean;
   created_at: string;
+  inserted_at?: string;
+  read_at?: string | null;
 }
 
 export function useMessageThreads() {
