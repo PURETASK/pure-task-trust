@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const CREDIT_PACKAGES = [
+  { id: 'mini', amount: 5, price: 5, label: 'Mini' },
   { id: 'starter', amount: 50, price: 50, label: 'Starter' },
   { id: 'standard', amount: 100, price: 100, label: 'Standard', popular: true },
   { id: 'value', amount: 200, price: 190, label: 'Value Pack', savings: 10 },
