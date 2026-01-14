@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap } from "lucide-react";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +16,13 @@ import { AddressSelector } from "@/components/booking/AddressSelector";
 import { AddressVerification } from "@/components/booking/AddressVerification";
 import { Address } from "@/hooks/useAddresses";
 import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
+import { 
+  isSameDayBooking, 
+  isCleaningTypeAllowedSameDay, 
+  calculateRushFee,
+  validateSameDayBooking,
+  SAME_DAY_CONFIG 
+} from "@/lib/same-day-booking";
 
 const cleaningTypes = [
   {
@@ -71,10 +78,19 @@ export default function Book() {
     const addOn = addOns.find((a) => a.id === id);
     return sum + (addOn?.credits || 0);
   }, 0);
-  const totalCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
+  
+  // Calculate rush fee for same-day bookings
+  const rushFee = calculateRushFee(selectedDate);
+  const isSameDay = selectedDate ? isSameDayBooking(selectedDate) : false;
+  
+  const baseCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
+  const totalCredits = baseCredits + rushFee;
 
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
+  
+  // Check if selected cleaning type is allowed for same-day booking
+  const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
 
   // Combine date and time into a single datetime
   const getScheduledDateTime = () => {
@@ -330,9 +346,44 @@ export default function Book() {
                     <DateTimePicker
                       selectedDate={selectedDate}
                       selectedTime={selectedTime}
-                      onDateChange={setSelectedDate}
+                      onDateChange={(date) => {
+                        setSelectedDate(date);
+                        // Reset time if becoming same-day and time slot may be invalid
+                        if (date && isSameDayBooking(date) && selectedTime) {
+                          const availableSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+                          const { valid } = selectedType ? validateSameDayBooking(date, selectedTime, selectedType) : { valid: true };
+                          if (!valid) {
+                            setSelectedTime(undefined);
+                          }
+                        }
+                      }}
                       onTimeChange={setSelectedTime}
                     />
+
+                    {/* Same-day restriction warning for move-out cleaning */}
+                    {selectedType && isSameDay && !isCleaningTypeAllowed && (
+                      <Card className="bg-destructive/10 border-destructive/30">
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="font-medium text-sm text-destructive">Move-Out Cleaning Not Available Same-Day</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Move-out cleaning requires at least 1 day advance notice. Please select a future date or choose a different cleaning type.
+                              </p>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="mt-3"
+                                onClick={() => setStep(1)}
+                              >
+                                Change Cleaning Type
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
 
                     <AddressSelector
                       selectedAddressId={selectedAddress?.id}
@@ -349,7 +400,7 @@ export default function Book() {
                       className="flex-1" 
                       size="lg" 
                       onClick={() => setStep(5)}
-                      disabled={!canProceedToVerification}
+                      disabled={!canProceedToVerification || !isCleaningTypeAllowed}
                     >
                       Continue
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -389,7 +440,7 @@ export default function Book() {
                     <CardContent className="p-6 space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-muted-foreground">{selectedCleaningType?.name}</span>
-                        <span>{selectedCleaningType?.baseCredits} × {hours} hrs</span>
+                        <span>{selectedCleaningType?.baseCredits} × {hours} hrs = {(selectedCleaningType?.baseCredits || 0) * hours}</span>
                       </div>
                       {selectedAddOns.length > 0 && (
                         <div className="border-t border-border pt-4 space-y-2">
@@ -404,13 +455,34 @@ export default function Book() {
                           })}
                         </div>
                       )}
+                      
+                      {/* Rush Fee for Same-Day Booking */}
+                      {isSameDay && rushFee > 0 && (
+                        <div className="border-t border-border pt-4">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground flex items-center gap-2">
+                              <Zap className="h-4 w-4 text-amber-500" />
+                              Same-Day Rush Fee
+                            </span>
+                            <span className="text-amber-600 font-medium">+{rushFee} credits</span>
+                          </div>
+                        </div>
+                      )}
+                      
                       {selectedDate && selectedTime && (
                         <div className="border-t border-border pt-4">
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Scheduled</span>
-                            <span>
-                              {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {selectedTime}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span>
+                                {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {selectedTime}
+                              </span>
+                              {isSameDay && (
+                                <Badge variant="outline" className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30 text-xs">
+                                  Today
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -426,8 +498,31 @@ export default function Book() {
                           </Badge>
                         </div>
                       )}
+                      
+                      {/* Subtotal breakdown */}
+                      {(rushFee > 0 || selectedAddOns.length > 0) && (
+                        <div className="border-t border-border pt-4 space-y-2 text-sm">
+                          <div className="flex items-center justify-between text-muted-foreground">
+                            <span>Base ({selectedCleaningType?.name} × {hours}h)</span>
+                            <span>{(selectedCleaningType?.baseCredits || 0) * hours} credits</span>
+                          </div>
+                          {selectedAddOns.length > 0 && (
+                            <div className="flex items-center justify-between text-muted-foreground">
+                              <span>Add-ons</span>
+                              <span>+{addOnCredits} credits</span>
+                            </div>
+                          )}
+                          {rushFee > 0 && (
+                            <div className="flex items-center justify-between text-amber-600">
+                              <span>Rush fee</span>
+                              <span>+{rushFee} credits</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
                       <div className="border-t border-border pt-4 flex items-center justify-between">
-                        <span className="font-semibold">Credit Hold</span>
+                        <span className="font-semibold">Total Credit Hold</span>
                         <span className="text-2xl font-bold">{totalCredits} credits</span>
                       </div>
                     </CardContent>
