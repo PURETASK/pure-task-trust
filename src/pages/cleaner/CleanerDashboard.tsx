@@ -33,7 +33,7 @@ export default function CleanerDashboard() {
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
 
   const displayName = profile?.first_name || user?.name || "Cleaner";
-  const tier = (profile?.tier || 'bronze') as 'bronze' | 'silver' | 'gold' | 'elite';
+  const tier = profile?.tier || 'bronze';
 
   return (
     <CleanerLayout>

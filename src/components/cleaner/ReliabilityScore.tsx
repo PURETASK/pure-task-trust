@@ -4,18 +4,20 @@ import { Badge } from "@/components/ui/badge";
 
 interface ReliabilityScoreProps {
   score: number;
-  tier: "bronze" | "silver" | "gold" | "elite";
+  tier: string;
 }
 
-const tierConfig = {
+const tierConfig: Record<string, { label: string; color: string; textColor: string }> = {
+  standard: { label: "Standard", color: "bg-slate-500", textColor: "text-slate-500" },
   bronze: { label: "Bronze", color: "bg-amber-600", textColor: "text-amber-600" },
   silver: { label: "Silver", color: "bg-slate-400", textColor: "text-slate-400" },
   gold: { label: "Gold", color: "bg-yellow-500", textColor: "text-yellow-500" },
+  platinum: { label: "Platinum", color: "bg-cyan-500", textColor: "text-cyan-500" },
   elite: { label: "Elite", color: "bg-orange-500", textColor: "text-orange-500" },
 };
 
 export function ReliabilityScore({ score, tier }: ReliabilityScoreProps) {
-  const config = tierConfig[tier];
+  const config = tierConfig[tier] || tierConfig.bronze;
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
