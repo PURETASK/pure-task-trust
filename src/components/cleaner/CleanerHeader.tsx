@@ -7,7 +7,8 @@ import {
   ChevronDown,
   LogOut,
   Settings,
-  User
+  User,
+  Bot
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ const navItems = [
   { label: "Schedule", href: "/cleaner/schedule", icon: Calendar },
   { label: "Earnings", href: "/cleaner/earnings", icon: DollarSign },
   { label: "Messages", href: "/cleaner/messages", icon: MessageSquare },
+  { label: "AI Assistant", href: "/cleaner/ai-assistant", icon: Bot },
 ];
 
 export function CleanerHeader() {
