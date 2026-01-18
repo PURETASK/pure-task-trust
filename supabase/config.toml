@@ -14,3 +14,6 @@ verify_jwt = true
 
 [functions.admin-workflows]
 verify_jwt = true
+
+[functions.cleaner-ai-assistant]
+verify_jwt = false
