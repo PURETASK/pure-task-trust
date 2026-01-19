@@ -336,8 +336,9 @@ export default function CleanerTeam() {
                                 {team.description || "No description"}
                               </p>
                               <div className="flex items-center gap-2 mt-2">
-                                <Badge variant="secondary">
-                                  Max {team.max_members} members
+                                <Badge variant="secondary" className="gap-1">
+                                  <Shield className="h-3 w-3" />
+                                  Verification Required
                                 </Badge>
                                 <Badge variant={team.is_active ? "default" : "secondary"}>
                                   {team.is_active ? "Active" : "Inactive"}
@@ -496,7 +497,7 @@ export default function CleanerTeam() {
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 rounded-lg bg-muted/50 text-center">
                   <p className="text-xs text-muted-foreground">Members</p>
-                  <p className="text-xl font-bold">{memberCount}/{detailTeam?.max_members}</p>
+                  <p className="text-xl font-bold">{memberCount}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50 text-center">
                   <p className="text-xs text-muted-foreground">Pending</p>
@@ -507,6 +508,17 @@ export default function CleanerTeam() {
                   <Badge className="mt-1" variant={detailTeam?.is_active ? "default" : "secondary"}>
                     {detailTeam?.is_active ? "Active" : "Inactive"}
                   </Badge>
+                </div>
+              </div>
+
+              {/* Verification Requirement Notice */}
+              <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 flex items-start gap-3">
+                <Shield className="h-5 w-5 text-primary mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium">Verification Required</p>
+                  <p className="text-xs text-muted-foreground">
+                    All team members must complete a background check and ID verification to participate in team jobs.
+                  </p>
                 </div>
               </div>
 
