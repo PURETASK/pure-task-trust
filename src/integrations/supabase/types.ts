@@ -4484,6 +4484,64 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          cleaner_id: string
+          created_at: string | null
+          id: string
+          invited_by: string | null
+          joined_at: string | null
+          role: string | null
+          status: string | null
+          team_id: number
+          updated_at: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          joined_at?: string | null
+          role?: string | null
+          status?: string | null
+          team_id: number
+          updated_at?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          joined_at?: string | null
+          role?: string | null
+          status?: string | null
+          team_id?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_credits: {
         Row: {
           balance: number

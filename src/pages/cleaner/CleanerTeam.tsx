@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useCleanerTeams, CleanerTeam as CleanerTeamType } from "@/hooks/useCleanerTeams";
+import { useTeamMembers, TeamMember } from "@/hooks/useTeamMembers";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Plus, UserMinus, Crown, Mail, Loader2, Copy, Check } from "lucide-react";
+import { 
+  Users, Plus, UserMinus, Crown, Mail, Loader2, Copy, Check,
+  CheckCircle, Clock, XCircle, ShieldAlert, Calendar, Shield
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,16 +22,141 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { format } from "date-fns";
+
+// Background check status badge component
+function BackgroundCheckBadge({ status }: { status: string | null }) {
+  if (!status) {
+    return (
+      <Badge variant="outline" className="text-muted-foreground">
+        <ShieldAlert className="h-3 w-3 mr-1" />
+        Not Started
+      </Badge>
+    );
+  }
+
+  switch (status.toLowerCase()) {
+    case "passed":
+    case "clear":
+    case "approved":
+      return (
+        <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Passed
+        </Badge>
+      );
+    case "pending":
+    case "in_progress":
+      return (
+        <Badge variant="secondary">
+          <Clock className="h-3 w-3 mr-1" />
+          Pending
+        </Badge>
+      );
+    case "failed":
+    case "rejected":
+      return (
+        <Badge variant="destructive">
+          <XCircle className="h-3 w-3 mr-1" />
+          Failed
+        </Badge>
+      );
+    default:
+      return (
+        <Badge variant="outline" className="text-muted-foreground">
+          <ShieldAlert className="h-3 w-3 mr-1" />
+          {status}
+        </Badge>
+      );
+  }
+}
+
+// Member card component
+function MemberCard({ 
+  member, 
+  isOwner, 
+  onRemove,
+  isRemoving
+}: { 
+  member: TeamMember; 
+  isOwner: boolean;
+  onRemove: () => void;
+  isRemoving: boolean;
+}) {
+  const initials = [
+    member.cleaner_profile?.first_name?.[0] || '',
+    member.cleaner_profile?.last_name?.[0] || ''
+  ].join('').toUpperCase() || '?';
+
+  const name = [
+    member.cleaner_profile?.first_name,
+    member.cleaner_profile?.last_name
+  ].filter(Boolean).join(' ') || 'Unknown Member';
+
+  return (
+    <div className="flex items-center justify-between p-4 border rounded-lg bg-card">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-10 w-10">
+          <AvatarFallback className="bg-primary/10 text-primary">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <div className="flex items-center gap-2">
+            <p className="font-medium">{name}</p>
+            {member.role === "lead" && (
+              <Badge variant="secondary" className="text-xs">Lead</Badge>
+            )}
+            {member.status === "pending" && (
+              <Badge variant="outline" className="text-xs">Pending</Badge>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2 mt-1">
+            <BackgroundCheckBadge status={member.background_check?.status || null} />
+          </div>
+          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            Joined {format(new Date(member.joined_at), "MMM d, yyyy")}
+          </p>
+        </div>
+      </div>
+      {isOwner && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={onRemove}
+          disabled={isRemoving}
+        >
+          {isRemoving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <UserMinus className="h-4 w-4" />
+          )}
+        </Button>
+      )}
+    </div>
+  );
+}
 
 export default function CleanerTeam() {
   const { toast } = useToast();
   const { profile } = useCleanerProfile();
-  const { ownedTeams, isLoading, createTeam, updateTeam, deleteTeam } = useCleanerTeams();
+  const { ownedTeams, isLoading, createTeam, updateTeam, deleteTeam, cleanerId } = useCleanerTeams();
   const isCreating = createTeam.isPending;
   const isDeleting = deleteTeam.isPending;
-  // No memberTeams in current schema (team_members table doesn't exist)
   const memberTeams: typeof ownedTeams = [];
   
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -42,6 +172,18 @@ export default function CleanerTeam() {
   // Team detail dialog state
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [detailTeam, setDetailTeam] = useState<CleanerTeamType | null>(null);
+
+  // Remove member confirmation
+  const [memberToRemove, setMemberToRemove] = useState<TeamMember | null>(null);
+
+  // Get team members for the selected detail team
+  const { 
+    members, 
+    isLoading: loadingMembers, 
+    memberCount, 
+    pendingCount,
+    removeMember 
+  } = useTeamMembers(detailTeam?.id || null);
 
   const handleCreateTeam = async () => {
     if (!teamName.trim()) {
@@ -102,6 +244,12 @@ export default function CleanerTeam() {
     setCopied(true);
     toast({ title: "Link copied!" });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!memberToRemove) return;
+    await removeMember.mutateAsync(memberToRemove.id);
+    setMemberToRemove(null);
   };
 
   return (
@@ -331,9 +479,9 @@ export default function CleanerTeam() {
           </DialogContent>
         </Dialog>
 
-        {/* Team Detail Dialog */}
+        {/* Team Detail Dialog with Members */}
         <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Crown className="h-5 w-5 text-amber-500" />
@@ -344,29 +492,87 @@ export default function CleanerTeam() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground">Max Members</p>
-                  <p className="text-2xl font-bold">{detailTeam?.max_members}</p>
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg bg-muted/50 text-center">
+                  <p className="text-xs text-muted-foreground">Members</p>
+                  <p className="text-xl font-bold">{memberCount}/{detailTeam?.max_members}</p>
                 </div>
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground">Status</p>
+                <div className="p-3 rounded-lg bg-muted/50 text-center">
+                  <p className="text-xs text-muted-foreground">Pending</p>
+                  <p className="text-xl font-bold">{pendingCount}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-muted/50 text-center">
+                  <p className="text-xs text-muted-foreground">Status</p>
                   <Badge className="mt-1" variant={detailTeam?.is_active ? "default" : "secondary"}>
                     {detailTeam?.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </div>
               </div>
-              <div className="p-4 rounded-lg bg-muted/50">
-                <p className="text-sm text-muted-foreground">Created</p>
-                <p className="font-medium">
-                  {detailTeam?.created_at && new Date(detailTeam.created_at).toLocaleDateString()}
+
+              {/* Members List */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    Team Members
+                  </h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      if (detailTeam) {
+                        setSelectedTeam(detailTeam);
+                        setInviteDialogOpen(true);
+                      }
+                    }}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    Add
+                  </Button>
+                </div>
+
+                {loadingMembers ? (
+                  <div className="space-y-2">
+                    {[1, 2].map(i => (
+                      <Skeleton key={i} className="h-20 rounded-lg" />
+                    ))}
+                  </div>
+                ) : members.length > 0 ? (
+                  <div className="space-y-2">
+                    {members.map((member) => (
+                      <MemberCard
+                        key={member.id}
+                        member={member}
+                        isOwner={true}
+                        onRemove={() => setMemberToRemove(member)}
+                        isRemoving={removeMember.isPending}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-8 text-center border rounded-lg border-dashed">
+                    <Users className="h-8 w-8 mx-auto text-muted-foreground/30 mb-2" />
+                    <p className="text-sm text-muted-foreground">No members yet</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Invite cleaners to join your team
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Created Date */}
+              <div className="pt-2 border-t">
+                <p className="text-xs text-muted-foreground">
+                  Created {detailTeam?.created_at && format(new Date(detailTeam.created_at), "MMMM d, yyyy")}
                 </p>
               </div>
+
+              {/* Action Buttons */}
               <div className="flex gap-2">
                 <Button 
                   className="flex-1"
                   onClick={() => {
-                    setDetailDialogOpen(false);
                     if (detailTeam) {
                       setSelectedTeam(detailTeam);
                       setInviteDialogOpen(true);
@@ -386,6 +592,34 @@ export default function CleanerTeam() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Remove Member Confirmation Dialog */}
+        <AlertDialog open={!!memberToRemove} onOpenChange={(open) => !open && setMemberToRemove(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remove team member?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to remove{" "}
+                <span className="font-medium">
+                  {memberToRemove?.cleaner_profile?.first_name || "this member"}
+                </span>{" "}
+                from your team? They will need to be invited again to rejoin.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={handleConfirmRemove}
+              >
+                {removeMember.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                Remove
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </CleanerLayout>
   );
