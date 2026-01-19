@@ -95,12 +95,12 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
             </div>
             <div className="text-right space-y-1">
               <p className="font-semibold text-lg text-success">
-                +${(earning.net_credits / 10).toFixed(2)}
+                +${earning.net_credits.toFixed(2)}
               </p>
               {earning.platform_fee_credits > 0 && (
                 <div className="text-xs text-muted-foreground space-y-0.5">
-                  <p>Gross: ${(earning.gross_credits / 10).toFixed(2)}</p>
-                  <p>Fee: -${(earning.platform_fee_credits / 10).toFixed(2)}</p>
+                  <p>Gross: ${earning.gross_credits.toFixed(2)}</p>
+                  <p>Fee: -${earning.platform_fee_credits.toFixed(2)}</p>
                 </div>
               )}
             </div>

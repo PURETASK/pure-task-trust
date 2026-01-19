@@ -66,7 +66,7 @@ export default function CleanerEarnings() {
                     <TrendingUp className="h-5 w-5 text-emerald-500" />
                   </div>
                   <div className="text-sm text-muted-foreground">Total Earned</div>
-                  <div className="text-2xl font-bold">${(stats.totalEarned / 10).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">${stats.totalEarned.toFixed(2)}</div>
                 </CardContent>
               </Card>
               <Card className="border-border/50">
@@ -75,7 +75,7 @@ export default function CleanerEarnings() {
                     <DollarSign className="h-5 w-5 text-success" />
                   </div>
                   <div className="text-sm text-muted-foreground">Available</div>
-                  <div className="text-2xl font-bold">${(stats.availableBalance / 10).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">${stats.availableBalance.toFixed(2)}</div>
                 </CardContent>
               </Card>
               <Card className="border-border/50">
@@ -84,7 +84,7 @@ export default function CleanerEarnings() {
                     <Clock className="h-5 w-5 text-amber-500" />
                   </div>
                   <div className="text-sm text-muted-foreground">Pending</div>
-                  <div className="text-2xl font-bold">${(stats.pendingPayout / 10).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">${stats.pendingPayout.toFixed(2)}</div>
                 </CardContent>
               </Card>
               <Card className="border-border/50">
@@ -93,7 +93,7 @@ export default function CleanerEarnings() {
                     <CheckCircle className="h-5 w-5 text-cyan-500" />
                   </div>
                   <div className="text-sm text-muted-foreground">Paid Out</div>
-                  <div className="text-2xl font-bold">${(stats.paidOut / 10).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">${stats.paidOut.toFixed(2)}</div>
                 </CardContent>
               </Card>
             </>
@@ -108,11 +108,11 @@ export default function CleanerEarnings() {
                 <h3 className="text-lg font-semibold">Pending Earnings</h3>
                 <DollarSign className="h-8 w-8 text-muted-foreground/30" />
               </div>
-              <div className="text-3xl font-bold mb-4">${(stats.availableBalance / 10).toFixed(2)}</div>
+              <div className="text-3xl font-bold mb-4">${stats.availableBalance.toFixed(2)}</div>
               <p className="text-sm text-muted-foreground mb-4">Minimum $10 required for payout</p>
               
               <InstantPayoutButton
-                availableBalance={stats.availableBalance / 10}
+                availableBalance={stats.availableBalance}
                 onRequestPayout={handleInstantPayout}
                 minPayout={10}
                 feePercentage={5}
@@ -133,7 +133,7 @@ export default function CleanerEarnings() {
               </div>
               <p className="text-sm text-muted-foreground mb-2">Next payout on {getNextFriday()} (if ≥ $20):</p>
               <div className="text-2xl font-bold text-success mb-4">
-                ${stats.availableBalance >= 200 ? (stats.availableBalance / 10).toFixed(2) : '0.00'}
+                ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(2) : '0.00'}
               </div>
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
