@@ -93,7 +93,7 @@ function TransactionItem({ transaction }: { transaction: Transaction }) {
             status === 'held' && "text-warning"
           )}
         >
-          {amount > 0 ? '+' : ''}{amount}
+          {amount > 0 ? '+$' : '-$'}{Math.abs(amount)}
         </p>
         {status === 'held' && (
           <Badge variant="warning" className="text-xs">Held</Badge>
@@ -129,7 +129,7 @@ export function RecentTransactions({
             t.amount > 0 && "text-success",
             t.status === 'held' && "text-warning"
           )}>
-            {t.amount > 0 ? '+' : ''}{t.amount}
+            {t.amount > 0 ? '+$' : '-$'}{Math.abs(t.amount)}
           </span>
         </div>
       ))}

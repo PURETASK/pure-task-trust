@@ -142,10 +142,10 @@ export default function Pricing() {
                       </CardTitle>
                       <div className="mt-4">
                         <p className="text-sm text-muted-foreground">Reliability Score: {plan.score}</p>
-                        <p className="text-3xl font-bold text-foreground mt-2">{plan.creditsRange}</p>
-                        <p className="text-muted-foreground">credits/hour</p>
+                        <p className="text-3xl font-bold text-foreground mt-2">${plan.creditsRange}</p>
+                        <p className="text-muted-foreground">/hour</p>
                       </div>
-                      <p className="text-sm font-medium text-primary mt-2">≈ {plan.usdRange}/hour</p>
+                      <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
                       <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
                     </CardHeader>
                     <CardContent>
@@ -188,7 +188,7 @@ export default function Pricing() {
                       <h4 className="font-semibold text-foreground mb-2">Deep Clean</h4>
                       <p className="text-sm text-muted-foreground mb-4">Baseboards, fans, inside appliances</p>
                       <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">≈ +3-8 credits/hour</p>
+                      <p className="text-xs text-muted-foreground mt-2">per hour extra</p>
                     </CardContent>
                   </Card>
 
@@ -198,7 +198,7 @@ export default function Pricing() {
                       <h4 className="font-semibold text-foreground mb-2">Move-Out/In</h4>
                       <p className="text-sm text-muted-foreground mb-4">Complete vacant property deep clean</p>
                       <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">≈ +3-8 credits/hour</p>
+                      <p className="text-xs text-muted-foreground mt-2">per hour extra</p>
                     </CardContent>
                   </Card>
                 </div>

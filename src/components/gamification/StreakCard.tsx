@@ -112,7 +112,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
         {!compact && currentStreakCount >= 4 && (
           <div className="mt-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
             <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-              🔥 You're on fire! {currentStreakCount} week streak bonus: +{currentStreakCount * 25} credits
+              🔥 You're on fire! {currentStreakCount} week streak bonus: +${currentStreakCount * 25}
             </p>
           </div>
         )}

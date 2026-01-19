@@ -144,7 +144,7 @@ export default function Book() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm sm:text-base truncate">Booking with {selectedCleaner.name}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{selectedCleaner.hourlyRate} credits/hr</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">${selectedCleaner.hourlyRate}/hr</p>
                   </div>
                   <Badge variant="secondary" className="flex-shrink-0">Selected</Badge>
                 </CardContent>
@@ -195,8 +195,8 @@ export default function Book() {
                             <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{type.description}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-semibold text-sm sm:text-base">{type.baseCredits}</p>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground">credits/hr</p>
+                            <p className="font-semibold text-sm sm:text-base">${type.baseCredits}</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground">/hour</p>
                           </div>
                           {selectedType === type.id && (
                             <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
@@ -504,26 +504,26 @@ export default function Book() {
                         <div className="border-t border-border pt-4 space-y-2 text-sm">
                           <div className="flex items-center justify-between text-muted-foreground">
                             <span>Base ({selectedCleaningType?.name} × {hours}h)</span>
-                            <span>{(selectedCleaningType?.baseCredits || 0) * hours} credits</span>
+                            <span>${(selectedCleaningType?.baseCredits || 0) * hours}</span>
                           </div>
                           {selectedAddOns.length > 0 && (
                             <div className="flex items-center justify-between text-muted-foreground">
                               <span>Add-ons</span>
-                              <span>+{addOnCredits} credits</span>
+                              <span>+${addOnCredits}</span>
                             </div>
                           )}
                           {rushFee > 0 && (
                             <div className="flex items-center justify-between text-amber-600">
                               <span>Rush fee</span>
-                              <span>+{rushFee} credits</span>
+                              <span>+${rushFee}</span>
                             </div>
                           )}
                         </div>
                       )}
                       
                       <div className="border-t border-border pt-4 flex items-center justify-between">
-                        <span className="font-semibold">Total Credit Hold</span>
-                        <span className="text-2xl font-bold">{totalCredits} credits</span>
+                        <span className="font-semibold">Total</span>
+                        <span className="text-2xl font-bold">${totalCredits}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -542,7 +542,7 @@ export default function Book() {
                                   Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
                                 </p>
                                 <p className="text-xs text-muted-foreground mt-2">
-                                  Available balance: <span className="font-medium">{availableCredits} credits</span>
+                                  Available balance: <span className="font-medium">${availableCredits}</span>
                                 </p>
                               </div>
                             </>
@@ -550,9 +550,9 @@ export default function Book() {
                             <>
                               <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
                               <div>
-                                <p className="font-medium text-sm mb-1 text-destructive">Insufficient credits</p>
+                                <p className="font-medium text-sm mb-1 text-destructive">Insufficient balance</p>
                                 <p className="text-xs text-muted-foreground">
-                                  You have {availableCredits} credits available but need {totalCredits} for this booking.
+                                  You have ${availableCredits} available but need ${totalCredits} for this booking.
                                 </p>
                                 <Button variant="link" className="p-0 h-auto text-xs mt-1" asChild>
                                   <Link to="/wallet">Add credits to your wallet →</Link>

@@ -15,7 +15,7 @@ const goalTypeConfig: Record<string, { icon: React.ElementType; label: string; f
   earnings: { 
     icon: DollarSign, 
     label: 'Earnings', 
-    format: (v) => `${v} credits` 
+    format: (v) => `$${v}` 
   },
   five_star_reviews: { 
     icon: Star, 
@@ -113,7 +113,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
                       {goal.current_value}/{goal.target_value}
                     </span>
                     <Badge variant={goal.is_awarded ? "default" : "secondary"} className="text-xs">
-                      +{goal.reward_credits}
+                      +${goal.reward_credits}
                     </Badge>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
         
         {!compact && (
           <p className="text-xs text-muted-foreground mt-4">
-            Complete goals to earn bonus credits. Goals reset monthly.
+            Complete goals to earn bonus rewards. Goals reset monthly.
           </p>
         )}
       </CardContent>

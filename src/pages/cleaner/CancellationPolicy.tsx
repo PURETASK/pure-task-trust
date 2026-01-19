@@ -239,7 +239,7 @@ export default function CancellationPolicy() {
                   If a cleaner doesn't arrive within 30 minutes of scheduled time:
                 </p>
                 <ul className="text-sm space-y-1 text-muted-foreground">
-                  <li>• Client receives <strong className="text-success">full refund + 50 bonus credits</strong></li>
+                  <li>• Client receives <strong className="text-success">full refund + $50 bonus</strong></li>
                   <li>• Serious reliability score penalty for cleaner</li>
                   <li>• Account suspension after multiple no-shows</li>
                   <li>• We'll help find a backup cleaner if possible</li>

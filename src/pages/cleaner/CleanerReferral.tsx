@@ -47,16 +47,16 @@ export default function CleanerReferral() {
   };
 
   const shareViaEmail = () => {
-    const subject = encodeURIComponent("Join PureTask and get 500 credits!");
+    const subject = encodeURIComponent("Join PureTask and get $500!");
     const body = encodeURIComponent(
-      `Hey! I've been using PureTask for cleaning services and it's been great. Use my referral link to sign up and we'll both get 500 credits!\n\n${referralLink}`
+      `Hey! I've been using PureTask for cleaning services and it's been great. Use my referral link to sign up and we'll both get $500!\n\n${referralLink}`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
 
   const shareViaSMS = () => {
     const text = encodeURIComponent(
-      `Join PureTask using my referral link and we'll both get 500 credits! ${referralLink}`
+      `Join PureTask using my referral link and we'll both get $500! ${referralLink}`
     );
     window.open(`sms:?body=${text}`);
   };
@@ -66,7 +66,7 @@ export default function CleanerReferral() {
       try {
         await navigator.share({
           title: 'Join PureTask',
-          text: `Use my referral code to get ${referralCode?.referee_credits || 500} credits!`,
+          text: `Use my referral code to get $${referralCode?.referee_credits || 500}!`,
           url: referralLink,
         });
       } catch (err) {
@@ -278,7 +278,7 @@ export default function CleanerReferral() {
                 {[
                   { step: 1, title: "Share Your Link", desc: "Send your unique referral link to friends, family, or on social media", icon: Share2 },
                   { step: 2, title: "They Sign Up", desc: "Your friend creates an account and completes their first booking", icon: Users },
-                  { step: 3, title: "Both Earn Credits", desc: `You both receive ${referralCode?.reward_credits || 500} credits to use on cleanings!`, icon: Sparkles },
+                  { step: 3, title: "Both Earn Credits", desc: `You both receive $${referralCode?.reward_credits || 500} to use on cleanings!`, icon: Sparkles },
                 ].map((item, index) => (
                   <motion.div 
                     key={item.step}

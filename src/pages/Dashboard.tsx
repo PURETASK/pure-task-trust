@@ -139,7 +139,7 @@ export default function Dashboard() {
                                   <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                                   {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
                                 </span>
-                                <span className="font-medium text-foreground">{job.escrow_credits_reserved || 0} cr</span>
+                                <span className="font-medium text-foreground">${job.escrow_credits_reserved || 0}</span>
                               </div>
                               <Button variant="outline" size="sm" asChild className="text-xs sm:text-sm h-8">
                                 <Link to={`/booking/${job.id}`}>View</Link>
@@ -242,7 +242,7 @@ export default function Dashboard() {
                                 <span>{fav.cleaner?.jobs_completed || 0} jobs</span>
                               </div>
                               <p className="text-sm text-muted-foreground mt-1">
-                                {fav.cleaner?.hourly_rate_credits || 35} credits/hr
+                                ${fav.cleaner?.hourly_rate_credits || 35}/hr
                               </p>
                             </div>
                             <Button
@@ -310,7 +310,7 @@ export default function Dashboard() {
                                 </Badge>
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                {getFrequencyLabel(sub.frequency)} • {sub.credit_amount} credits
+                                {getFrequencyLabel(sub.frequency)} • ${sub.credit_amount}
                               </p>
                               {sub.next_job_date && (
                                 <p className="text-sm text-muted-foreground">

@@ -297,7 +297,7 @@ function TierCard({ tier, score, rateRange, color, features, highlight = false }
         )}
         <h3 className="text-xl font-bold text-foreground mb-1">{tier}</h3>
         <p className="text-2xl font-bold text-primary mb-1">{score}</p>
-        <p className="text-sm text-muted-foreground mb-4">{rateRange} credits/hr</p>
+        <p className="text-sm text-muted-foreground mb-4">${rateRange}/hr</p>
         <ul className="space-y-2 text-left">
           {features.map((feature, idx) => (
             <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
