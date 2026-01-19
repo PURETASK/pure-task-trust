@@ -23,13 +23,12 @@ export function WalletSummary({
       <div className={cn("flex items-center gap-4", className)}>
         <div className="flex items-center gap-2">
           <Wallet className="h-4 w-4 text-primary" />
-          <span className="font-semibold">{availableCredits}</span>
-          <span className="text-sm text-muted-foreground">credits</span>
+          <span className="font-semibold">${availableCredits}</span>
         </div>
         {heldCredits > 0 && (
           <div className="flex items-center gap-1.5 text-warning">
             <Clock className="h-3.5 w-3.5" />
-            <span className="text-sm">{heldCredits} held</span>
+            <span className="text-sm">${heldCredits} held</span>
           </div>
         )}
       </div>
@@ -44,8 +43,8 @@ export function WalletSummary({
             <span className="text-primary-foreground/80">Available</span>
             <Wallet className="h-5 w-5 text-primary-foreground/60" />
           </div>
-          <p className="text-4xl font-bold mb-1">{availableCredits}</p>
-          <p className="text-sm text-primary-foreground/70">credits</p>
+          <p className="text-4xl font-bold mb-1">${availableCredits}</p>
+          <p className="text-sm text-primary-foreground/70">available</p>
         </CardContent>
       </Card>
 
@@ -55,8 +54,8 @@ export function WalletSummary({
             <span className="text-muted-foreground">Held</span>
             <Clock className="h-5 w-5 text-muted-foreground" />
           </div>
-          <p className="text-4xl font-bold mb-1 text-warning">{heldCredits}</p>
-          <p className="text-sm text-muted-foreground">credits for pending jobs</p>
+          <p className="text-4xl font-bold mb-1 text-warning">${heldCredits}</p>
+          <p className="text-sm text-muted-foreground">held for jobs</p>
         </CardContent>
       </Card>
     </div>
@@ -94,7 +93,7 @@ export function WalletBadge({ credits }: { credits: number }) {
   return (
     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary rounded-full">
       <Wallet className="h-4 w-4 text-primary" />
-      <span className="font-semibold text-sm">{credits}</span>
+      <span className="font-semibold text-sm">${credits}</span>
     </div>
   );
 }

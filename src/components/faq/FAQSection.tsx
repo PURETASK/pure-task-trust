@@ -23,7 +23,7 @@ const faqData = [
       },
       {
         q: 'What if my cleaner doesn\'t show up?',
-        a: 'If your cleaner fails to arrive, you\'ll receive a full refund plus bonus credits. We take no-shows very seriously and may suspend cleaners who repeatedly miss appointments.',
+        a: 'If your cleaner fails to arrive, you\'ll receive a full refund plus bonus credits ($50). We take no-shows very seriously and may suspend cleaners who repeatedly miss appointments.',
       },
     ],
   },
@@ -32,7 +32,7 @@ const faqData = [
     questions: [
       {
         q: 'What are credits?',
-        a: 'Credits are our in-app currency. 1 credit equals approximately $1 USD. You purchase credits in advance and use them to book cleanings.',
+        a: 'Credits are our in-app currency. 1 credit = $1 USD. You purchase credits in advance and use them to book cleanings. All prices shown in dollars are equivalent to credits.',
       },
       {
         q: 'Why use credits instead of paying per booking?',

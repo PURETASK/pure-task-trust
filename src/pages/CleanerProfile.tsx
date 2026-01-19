@@ -114,8 +114,8 @@ export default function CleanerProfile() {
                       <p className="text-[10px] sm:text-xs text-muted-foreground">Jobs Done</p>
                     </div>
                     <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-lg sm:text-2xl font-bold">{cleaner.hourlyRate}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Credits/hr</p>
+                      <p className="text-lg sm:text-2xl font-bold">${cleaner.hourlyRate}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">/hour</p>
                     </div>
                     <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
                       <p className="text-lg sm:text-2xl font-bold">{"< 2hrs"}</p>

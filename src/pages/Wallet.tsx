@@ -17,7 +17,7 @@ const reasonLabels: Record<string, string> = {
   refund: 'Refund',
   job_payment: 'Job payment',
   job_earned: 'Job earned',
-  bonus: 'Bonus credits',
+  bonus: 'Bonus',
   referral: 'Referral bonus',
   cancellation_fee: 'Cancellation fee',
   dispute_refund: 'Dispute refund',
@@ -78,9 +78,9 @@ export default function Wallet() {
                 {isLoadingAccount ? (
                   <Skeleton className="h-8 sm:h-10 w-16 sm:w-20 bg-primary-foreground/20" />
                 ) : (
-                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1">{availableCredits}</p>
+                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1">${availableCredits}</p>
                 )}
-                <p className="text-xs sm:text-sm text-primary-foreground/70">credits</p>
+                <p className="text-xs sm:text-sm text-primary-foreground/70">available</p>
               </CardContent>
             </Card>
 
@@ -93,9 +93,9 @@ export default function Wallet() {
                 {isLoadingAccount ? (
                   <Skeleton className="h-8 sm:h-10 w-16 sm:w-20" />
                 ) : (
-                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1 text-warning">{heldCredits}</p>
+                  <p className="text-2xl sm:text-4xl font-bold mb-0.5 sm:mb-1 text-warning">${heldCredits}</p>
                 )}
-                <p className="text-xs sm:text-sm text-muted-foreground">for pending jobs</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">held for jobs</p>
               </CardContent>
             </Card>
           </div>
@@ -182,7 +182,7 @@ export default function Wallet() {
                               isPositive && "text-success"
                             )}
                           >
-                            {isPositive ? '+' : ''}{entry.delta_credits}
+                            {isPositive ? '+$' : '-$'}{Math.abs(entry.delta_credits)}
                           </p>
                         </div>
                       </div>

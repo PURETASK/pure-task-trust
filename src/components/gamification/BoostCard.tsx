@@ -174,7 +174,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
                                   {dur.hours < 24 ? `${dur.hours}h` : `${dur.hours / 24}d`}
                                 </span>
                                 <span className={`text-xs ${canAfford ? 'text-muted-foreground' : 'text-destructive'}`}>
-                                  {dur.credits} credits
+                                  ${dur.credits}
                                 </span>
                               </Button>
                             );
@@ -187,7 +187,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
 
                 <div className="mt-4 p-3 bg-muted rounded-lg">
                   <p className="text-sm">
-                    Your balance: <span className="font-bold">{account?.current_balance || 0} credits</span>
+                    Your balance: <span className="font-bold">${account?.current_balance || 0}</span>
                   </p>
                 </div>
               </DialogContent>

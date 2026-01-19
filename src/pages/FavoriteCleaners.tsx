@@ -205,7 +205,7 @@ export default function FavoriteCleaners() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <DollarSign className="h-4 w-4 text-primary" />
-                                {favorite.cleaner?.hourly_rate_credits || 0} credits/hr
+                                ${favorite.cleaner?.hourly_rate_credits || 0}/hr
                               </span>
                             </div>
 

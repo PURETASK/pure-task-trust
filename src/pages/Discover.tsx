@@ -187,8 +187,8 @@ export default function Discover() {
                                 />
                               </button>
                               <div className="text-right">
-                                <p className="font-semibold text-sm sm:text-base">{cleaner.hourlyRate}</p>
-                                <p className="text-[10px] sm:text-xs text-muted-foreground">credits/hr</p>
+                                <p className="font-semibold text-sm sm:text-base">${cleaner.hourlyRate}</p>
+                                <p className="text-[10px] sm:text-xs text-muted-foreground">/hour</p>
                               </div>
                             </div>
                           </div>
