@@ -9,6 +9,8 @@ import { RequireAuth, RequireClient, RequireCleaner } from "@/components/auth/Re
 import { MainLayout } from "@/components/layout/MainLayout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import RoleSelection from "./pages/RoleSelection";
 import Dashboard from "./pages/Dashboard";
 import Discover from "./pages/Discover";
@@ -83,8 +85,10 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Auth page - no layout */}
+              {/* Auth pages - no layout */}
               <Route path="/auth" element={<Auth />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               
               {/* Role selection - no layout */}
               <Route path="/role-selection" element={

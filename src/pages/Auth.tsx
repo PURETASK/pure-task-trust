@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { User, Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -318,6 +318,17 @@ export default function AuthPage() {
                           isSignUp ? "Create Account" : "Sign In"
                         )}
                       </Button>
+                      
+                      {!isSignUp && (
+                        <div className="text-center">
+                          <Link 
+                            to="/forgot-password" 
+                            className="text-sm text-muted-foreground hover:text-primary"
+                          >
+                            Forgot your password?
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </form>
                 </Tabs>
