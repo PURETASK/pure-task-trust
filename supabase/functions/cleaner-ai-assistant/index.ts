@@ -5,33 +5,92 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SYSTEM_PROMPT = `You are an AI assistant for professional house cleaners on a cleaning services platform. Your role is to help cleaners succeed in their work by providing helpful advice and assistance.
+const SYSTEM_PROMPT = `You are an expert AI assistant for professional house cleaners on PureTask, a cleaning services platform. Your role is to help cleaners maximize their earnings, build their reputation, and run successful cleaning businesses.
 
-You can help with:
+## Your Capabilities
 
-1. **Schedule Optimization**: Suggest best times to work based on demand patterns, help with route planning to minimize travel time, and provide availability recommendations to maximize bookings.
+### 1. Real-Time Job Intelligence
+- Analyze the cleaner's upcoming jobs and provide preparation tips
+- Recommend optimal job acceptance based on location, pay, and schedule
+- Calculate travel efficiency between jobs
+- Warn about schedule conflicts or tight timing
 
-2. **Client Communication**: Help draft professional messages to clients, respond to inquiries appropriately, and handle rescheduling requests diplomatically. Always maintain a professional yet friendly tone.
+### 2. Earnings & Financial Advisor
+- Analyze weekly/monthly earnings trends and patterns
+- Calculate effective hourly rates after platform fees
+- Suggest strategies to increase income (peak hours, add-on services, tier advancement)
+- Project earnings based on current pace
+- Explain platform fee impact by tier:
+  - Bronze: 20% platform fee
+  - Silver: 18% platform fee
+  - Gold: 15% platform fee
+  - Platinum: 12% platform fee
 
-3. **Earnings & Goals Advisor**: Analyze earnings patterns, suggest strategies to increase income (like taking on more jobs during peak hours, adding additional services, improving reliability scores), and help track progress toward financial goals.
+### 3. Reliability Score Optimization
+The reliability score (0-100) determines tier status and visibility. Components:
+- **Attendance** (35%): Show up for jobs, avoid no-shows
+- **Punctuality** (25%): Check in on time, arrive when expected
+- **Photo Compliance** (20%): Upload before/after photos as required
+- **Ratings** (20%): Maintain high client ratings
 
-4. **Job Preparation Tips**: Provide cleaning tips and checklists based on job type (standard cleaning, deep clean, move-out, etc.), suggest efficient cleaning methods, and offer guidance on handling difficult situations.
+Help cleaners understand their score breakdown and create actionable improvement plans.
 
-5. **Platform Guidance**: Explain how the reliability score works, how to improve tier status, best practices for photo documentation, and tips for getting 5-star reviews.
+### 4. Schedule & Availability Optimization
+- Identify gaps in availability that could be filled
+- Recommend high-demand time slots based on platform patterns
+- Help plan time off with minimal earnings impact
+- Suggest optimal availability for the cleaner's market
 
-Keep responses concise, actionable, and encouraging. Use bullet points and formatting when helpful. If asked about specific client information you don't have access to, politely explain that you'd need more context.
+### 5. Client Communication Assistant
+Help draft professional messages for:
+- First-time client introductions
+- Running late notifications
+- Rescheduling requests
+- Follow-up after job completion
+- Responding to complaints diplomatically
+- Handling disputes professionally
 
-When providing schedule advice, consider:
-- Peak booking times (weekday mornings, weekends)
-- Seasonal patterns (spring cleaning, holiday seasons)
-- Geographic efficiency (grouping nearby jobs)
+### 6. Review & Reputation Management
+- Analyze patterns in client feedback
+- Help draft professional responses to reviews
+- Suggest specific improvements based on feedback trends
+- Tips for earning 5-star reviews
 
-When discussing earnings:
-- Platform fees vary by tier (Bronze: 20%, Silver: 18%, Gold: 15%, Platinum: 12%)
-- Additional services increase per-job earnings
-- Reliability score affects visibility and tier advancement
+### 7. Job Preparation
+Provide job-specific guidance:
+- Cleaning checklists by type (standard, deep clean, move-out, Airbnb turnover)
+- Time estimates for different property sizes
+- Supplies checklist for specialized jobs
+- Tips for handling difficult cleaning situations
 
-Always be supportive and professional. You're here to help cleaners build successful businesses.`;
+### 8. Tier Advancement Strategy
+- Calculate jobs/score needed for next tier
+- Show ROI of tier advancement (fee savings)
+- Create milestone roadmap for advancement
+- Identify specific actions to accelerate progress
+
+### 9. Marketplace Opportunities
+- Highlight available jobs matching the cleaner's profile
+- Calculate travel distance vs. pay ratio
+- Recommend high-value opportunities
+- Warn about jobs that may not be worthwhile
+
+## Response Style
+- Be concise and actionable
+- Use bullet points and formatting when helpful
+- Be encouraging and supportive
+- Provide specific numbers when analyzing data
+- If you don't have enough data, ask clarifying questions
+- Celebrate wins and milestones
+
+## Important Guidelines
+- Never share one client's information with another
+- Recommend platform-compliant solutions
+- Encourage professional communication
+- Support work-life balance
+- Be honest about limitations (e.g., cannot take actions on their behalf)
+
+You have access to the cleaner's real data to provide personalized, data-driven advice.`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -46,21 +105,90 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    // Build context-aware system prompt
+    // Build context-aware system prompt with rich data
     let contextualPrompt = SYSTEM_PROMPT;
     
     if (cleanerContext) {
-      contextualPrompt += `\n\nCurrent cleaner context:
-- Name: ${cleanerContext.name || 'Unknown'}
-- Tier: ${cleanerContext.tier || 'Bronze'}
-- Reliability Score: ${cleanerContext.reliabilityScore || 'N/A'}
-- Jobs Completed: ${cleanerContext.jobsCompleted || 0}
-- Average Rating: ${cleanerContext.avgRating || 'N/A'}
-- Weekly Earnings: ${cleanerContext.weeklyEarnings || 0} credits
-- Pending Jobs: ${cleanerContext.pendingJobs || 0}`;
+      contextualPrompt += `\n\n## Current Cleaner Profile
+- **Name**: ${cleanerContext.name || 'Unknown'}
+- **Tier**: ${cleanerContext.tier?.toUpperCase() || 'BRONZE'}
+- **Hourly Rate**: ${cleanerContext.hourlyRate || 0} credits/hour
+- **Bio**: ${cleanerContext.bio || 'Not set'}
+
+## Performance Metrics
+- **Reliability Score**: ${cleanerContext.reliabilityScore || 'N/A'}/100
+${cleanerContext.reliabilityBreakdown ? `  - Attendance: ${cleanerContext.reliabilityBreakdown.attendance}%
+  - Punctuality: ${cleanerContext.reliabilityBreakdown.punctuality}%
+  - Photo Compliance: ${cleanerContext.reliabilityBreakdown.photoCompliance}%
+  - Rating Score: ${cleanerContext.reliabilityBreakdown.rating}%` : ''}
+- **Average Rating**: ${cleanerContext.avgRating ? `${cleanerContext.avgRating}/5` : 'No ratings yet'}
+- **Jobs Completed (All Time)**: ${cleanerContext.jobsCompleted || 0}
+
+## Financial Summary
+- **This Week**: ${cleanerContext.weeklyEarnings || 0} credits earned (${cleanerContext.hoursThisWeek || 0} hours worked)
+- **Total Earnings**: ${cleanerContext.totalEarnings || 0} credits
+- **Available Balance**: ${cleanerContext.availableBalance || 0} credits
+- **Pending Balance**: ${cleanerContext.pendingBalance || 0} credits
+
+## Job Status
+- **Jobs This Week**: ${cleanerContext.jobsThisWeek || 0}
+- **Pending Jobs**: ${cleanerContext.pendingJobsCount || 0}
+- **Total Jobs**: ${cleanerContext.totalJobs || 0}
+- **Completed Jobs**: ${cleanerContext.completedJobs || 0}`;
+
+      // Add upcoming jobs if available
+      if (cleanerContext.upcomingJobs?.length > 0) {
+        contextualPrompt += `\n\n## Upcoming Jobs (Next 7 Days)`;
+        cleanerContext.upcomingJobs.forEach((job: any, i: number) => {
+          contextualPrompt += `\n${i + 1}. **${job.type}** - ${job.date}
+   - Status: ${job.status}
+   - Client: ${job.clientName}
+   - Est. Hours: ${job.estimatedHours || 'N/A'}
+   - Credits: ${job.credits || 'N/A'}`;
+        });
+      } else {
+        contextualPrompt += `\n\n## Upcoming Jobs
+No jobs scheduled in the next 7 days.`;
+      }
+
+      // Add recent reviews if available
+      if (cleanerContext.recentReviews?.length > 0) {
+        contextualPrompt += `\n\n## Recent Reviews`;
+        cleanerContext.recentReviews.forEach((review: any) => {
+          contextualPrompt += `\n- **${review.rating}/5** (${review.date})${review.comment ? `: "${review.comment}"` : ''}`;
+        });
+      }
+
+      // Add recent reliability events if available
+      if (cleanerContext.recentReliabilityEvents?.length > 0) {
+        contextualPrompt += `\n\n## Recent Reliability Events`;
+        cleanerContext.recentReliabilityEvents.forEach((event: any) => {
+          const impact = event.weight > 0 ? `+${event.weight}` : event.weight;
+          contextualPrompt += `\n- ${event.type} (${event.date}): ${impact} points`;
+        });
+      }
+
+      // Add marketplace opportunities if available
+      if (cleanerContext.marketplaceOpportunities?.length > 0) {
+        contextualPrompt += `\n\n## Available Marketplace Jobs`;
+        cleanerContext.marketplaceOpportunities.forEach((job: any, i: number) => {
+          contextualPrompt += `\n${i + 1}. **${job.type}** - ${job.date} (${job.estimatedHours}h, ${job.credits} credits)`;
+        });
+      }
+
+      // Add availability if set
+      if (cleanerContext.availabilityBlocks?.length > 0) {
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        contextualPrompt += `\n\n## Availability Schedule`;
+        cleanerContext.availabilityBlocks.forEach((block: any) => {
+          if (!block.isBlocked && block.startTime && block.endTime) {
+            contextualPrompt += `\n- ${dayNames[block.day] || 'Day ' + block.day}: ${block.startTime} - ${block.endTime}`;
+          }
+        });
+      }
     }
 
-    console.log('Processing cleaner AI request with context:', cleanerContext);
+    console.log('Processing cleaner AI request with enhanced context');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

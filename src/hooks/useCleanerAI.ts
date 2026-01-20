@@ -1,5 +1,10 @@
 import { useState, useCallback } from 'react';
-import { useCleanerProfile, useCleanerStats } from './useCleanerProfile';
+import { useCleanerProfile, useCleanerStats, useCleanerJobs } from './useCleanerProfile';
+import { useReliabilityScore } from './useReliabilityScore';
+import { useAvailabilityBlocks } from './useAvailability';
+import { useCleanerReviews } from './useReviews';
+import { useMarketplaceJobs } from './useMarketplaceJobs';
+import { format, addDays, isAfter, isBefore } from 'date-fns';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -15,6 +20,11 @@ export function useCleanerAI() {
   
   const { profile } = useCleanerProfile();
   const { stats } = useCleanerStats();
+  const { jobs } = useCleanerJobs();
+  const { score, scoreBreakdown, events } = useReliabilityScore(profile?.id);
+  const { blocks: availability } = useAvailabilityBlocks();
+  const { jobs: marketplaceJobs } = useMarketplaceJobs('all');
+  const { data: reviews } = useCleanerReviews(profile?.id || '');
 
   const sendMessage = useCallback(async (input: string) => {
     const userMsg: Message = { role: 'user', content: input };
@@ -36,15 +46,94 @@ export function useCleanerAI() {
     };
 
     try {
-      // Build cleaner context for the AI
+      // Get upcoming jobs (next 7 days)
+      const now = new Date();
+      const sevenDaysFromNow = addDays(now, 7);
+      const upcomingJobs = jobs
+        .filter(job => {
+          if (!job.scheduled_start_at) return false;
+          const startDate = new Date(job.scheduled_start_at);
+          return isAfter(startDate, now) && isBefore(startDate, sevenDaysFromNow) &&
+            ['created', 'pending', 'confirmed', 'in_progress'].includes(job.status);
+        })
+        .slice(0, 10)
+        .map(job => ({
+          id: job.id,
+          type: job.cleaning_type,
+          date: job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'EEE MMM d, h:mm a') : 'TBD',
+          status: job.status,
+          estimatedHours: job.estimated_hours,
+          credits: job.escrow_credits_reserved,
+          clientName: job.client ? `${job.client.first_name || ''} ${job.client.last_name || ''}`.trim() : 'Unknown',
+        }));
+
+      // Get recent reliability events
+      const recentEvents = (events || []).slice(0, 5).map(e => ({
+        type: e.event_type,
+        date: format(new Date(e.created_at), 'MMM d'),
+        weight: e.weight,
+      }));
+
+      // Get availability summary
+      const availabilitySummary = (availability || []).map(a => ({
+        day: a.day_of_week,
+        startTime: a.start_time,
+        endTime: a.end_time,
+        isBlocked: !a.is_active,
+      }));
+
+      // Get top marketplace opportunities
+      const topOpportunities = (marketplaceJobs || []).slice(0, 5).map(job => ({
+        type: job.cleaning_type,
+        date: job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'EEE MMM d, h:mm a') : 'TBD',
+        estimatedHours: job.estimated_hours,
+        credits: job.escrow_credits_reserved,
+      }));
+
+      // Get recent reviews
+      const recentReviews = (reviews || []).slice(0, 5).map(r => ({
+        rating: r.rating,
+        comment: r.review_text,
+        date: format(new Date(r.created_at), 'MMM d'),
+      }));
+
+      // Build comprehensive cleaner context for the AI
       const cleanerContext = {
+        // Basic profile
         name: profile?.first_name || 'Cleaner',
         tier: profile?.tier || 'bronze',
-        reliabilityScore: profile?.reliability_score || 75,
+        hourlyRate: profile?.hourly_rate_credits || 0,
+        bio: profile?.bio || null,
+        
+        // Performance metrics
+        reliabilityScore: score?.current_score || profile?.reliability_score || 75,
+        reliabilityBreakdown: scoreBreakdown,
+        recentReliabilityEvents: recentEvents,
         jobsCompleted: profile?.jobs_completed || 0,
         avgRating: profile?.avg_rating || null,
+        
+        // Financial data
         weeklyEarnings: stats?.earnedThisWeek || 0,
+        totalEarnings: stats?.totalEarned || 0,
+        availableBalance: stats?.availableBalance || 0,
+        pendingBalance: stats?.pendingBalance || 0,
+        hoursThisWeek: stats?.hoursThisWeek || 0,
+        
+        // Job data
         totalJobs: stats?.totalJobs || 0,
+        completedJobs: stats?.completedJobs || 0,
+        jobsThisWeek: stats?.jobsThisWeek || 0,
+        upcomingJobs: upcomingJobs,
+        pendingJobsCount: jobs.filter(j => ['pending', 'created'].includes(j.status)).length,
+        
+        // Availability
+        availabilityBlocks: availabilitySummary,
+        
+        // Reviews
+        recentReviews: recentReviews,
+        
+        // Marketplace opportunities
+        marketplaceOpportunities: topOpportunities,
       };
 
       const resp = await fetch(CHAT_URL, {
@@ -127,7 +216,7 @@ export function useCleanerAI() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, profile, stats]);
+  }, [messages, profile, stats, jobs, score, scoreBreakdown, events, availability, marketplaceJobs, reviews]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);

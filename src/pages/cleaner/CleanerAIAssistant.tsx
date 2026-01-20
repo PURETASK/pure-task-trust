@@ -15,36 +15,107 @@ import {
   Sparkles,
   Loader2,
   AlertCircle,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  Star,
+  Target,
+  Clock,
+  Briefcase,
+  Shield,
+  Route
 } from "lucide-react";
 import { useCleanerAI } from "@/hooks/useCleanerAI";
 import { cn } from "@/lib/utils";
 
 const QUICK_PROMPTS = [
   {
+    icon: Briefcase,
+    label: "What jobs should I take?",
+    prompt: "Based on my current schedule and the available marketplace jobs, which jobs should I prioritize accepting today and why?",
+    category: "jobs",
+  },
+  {
+    icon: Shield,
+    label: "Improve my reliability",
+    prompt: "Analyze my reliability score breakdown and recent events. What specific actions should I take to improve my score and advance to the next tier?",
+    category: "performance",
+  },
+  {
     icon: Calendar,
     label: "Optimize my schedule",
-    prompt: "What are the best times to work this week to maximize my earnings? Can you suggest an optimal schedule?",
+    prompt: "Review my availability and upcoming jobs. How can I optimize my schedule this week to maximize earnings while avoiding burnout?",
+    category: "schedule",
+  },
+  {
+    icon: DollarSign,
+    label: "Boost my earnings",
+    prompt: "Analyze my earnings data and give me 3-5 actionable strategies to increase my income this month. Be specific with numbers.",
+    category: "earnings",
+  },
+  {
+    icon: TrendingUp,
+    label: "Path to next tier",
+    prompt: "What's my roadmap to advance to the next tier? How many more jobs do I need, and how much would I save in platform fees?",
+    category: "advancement",
+  },
+  {
+    icon: Star,
+    label: "Get better reviews",
+    prompt: "Based on my recent reviews, what patterns do you see? Give me specific tips to consistently earn 5-star ratings.",
+    category: "reviews",
   },
   {
     icon: MessageSquare,
     label: "Draft client message",
-    prompt: "Help me draft a professional message to a client about rescheduling their appointment.",
+    prompt: "Help me draft a professional message to a client. I need to [reschedule an appointment / follow up after a job / respond to a complaint].",
+    category: "communication",
   },
   {
-    icon: DollarSign,
-    label: "Increase earnings",
-    prompt: "What strategies can I use to increase my earnings this month? Analyze my current situation and give me actionable tips.",
+    icon: Sparkles,
+    label: "Prepare for next job",
+    prompt: "Look at my next scheduled job and give me a preparation checklist, time estimate, and any tips specific to that cleaning type.",
+    category: "preparation",
+  },
+  {
+    icon: Target,
+    label: "Weekly goal check",
+    prompt: "Based on my current week's performance, am I on track to hit my goals? What should I focus on for the rest of the week?",
+    category: "goals",
+  },
+  {
+    icon: Route,
+    label: "Route my jobs",
+    prompt: "Looking at my scheduled jobs, what's the most efficient order to complete them to minimize travel time?",
+    category: "efficiency",
+  },
+  {
+    icon: Clock,
+    label: "Best times to work",
+    prompt: "What are the highest-demand time slots in my service area? When should I be available to get the most bookings?",
+    category: "availability",
   },
   {
     icon: Sparkles,
     label: "Deep clean checklist",
-    prompt: "Give me a comprehensive deep cleaning checklist and tips for efficient completion.",
+    prompt: "Give me a comprehensive deep cleaning checklist with time estimates for each area and pro tips for efficiency.",
+    category: "preparation",
   },
+];
+
+const CAPABILITY_BADGES = [
+  "Schedule Optimization",
+  "Earnings Analysis",
+  "Tier Strategy",
+  "Client Messaging",
+  "Reliability Coach",
+  "Review Management",
+  "Job Preparation",
+  "Route Planning",
 ];
 
 export default function CleanerAIAssistant() {
   const [input, setInput] = useState("");
+  const [showAllPrompts, setShowAllPrompts] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
@@ -77,6 +148,8 @@ export default function CleanerAIAssistant() {
     await sendMessage(prompt);
   };
 
+  const displayedPrompts = showAllPrompts ? QUICK_PROMPTS : QUICK_PROMPTS.slice(0, 6);
+
   return (
     <CleanerLayout>
       <div className="space-y-6">
@@ -87,8 +160,8 @@ export default function CleanerAIAssistant() {
               <Bot className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">AI Assistant</h1>
-              <p className="text-muted-foreground">Your personal cleaning business advisor</p>
+              <h1 className="text-2xl font-bold">AI Business Advisor</h1>
+              <p className="text-muted-foreground">Personalized insights for your cleaning business</p>
             </div>
           </div>
           {messages.length > 0 && (
@@ -112,10 +185,17 @@ export default function CleanerAIAssistant() {
                       <Bot className="h-8 w-8 text-primary" />
                     </div>
                     <h3 className="text-lg font-semibold mb-2">How can I help you today?</h3>
-                    <p className="text-muted-foreground max-w-md">
-                      I can help with scheduling, client communication, earnings optimization, and cleaning tips. 
-                      Try one of the quick prompts or ask me anything!
+                    <p className="text-muted-foreground max-w-md mb-4">
+                      I have access to your real performance data, upcoming jobs, and earnings. 
+                      Ask me anything about growing your cleaning business!
                     </p>
+                    <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                      {CAPABILITY_BADGES.map((badge) => (
+                        <Badge key={badge} variant="outline" className="text-xs">
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -204,39 +284,66 @@ export default function CleanerAIAssistant() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {QUICK_PROMPTS.map((item, index) => (
+              <CardContent className="space-y-1">
+                {displayedPrompts.map((item, index) => (
                   <Button
                     key={index}
                     variant="ghost"
-                    className="w-full justify-start h-auto py-3 px-3"
+                    className="w-full justify-start h-auto py-2.5 px-3"
                     onClick={() => handleQuickPrompt(item.prompt)}
                     disabled={isLoading}
                   >
                     <item.icon className="h-4 w-4 mr-3 text-primary flex-shrink-0" />
-                    <span className="text-sm text-left">{item.label}</span>
-                    <ChevronRight className="h-4 w-4 ml-auto text-muted-foreground" />
+                    <span className="text-sm text-left truncate">{item.label}</span>
+                    <ChevronRight className="h-4 w-4 ml-auto text-muted-foreground flex-shrink-0" />
                   </Button>
                 ))}
+                {QUICK_PROMPTS.length > 6 && (
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center h-auto py-2 text-xs text-muted-foreground"
+                    onClick={() => setShowAllPrompts(!showAllPrompts)}
+                  >
+                    {showAllPrompts ? 'Show less' : `Show ${QUICK_PROMPTS.length - 6} more...`}
+                  </Button>
+                )}
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium">Capabilities</CardTitle>
+                <CardTitle className="text-sm font-medium">Your Data</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex flex-wrap gap-1">
-                  <Badge variant="secondary" className="text-xs">Schedule</Badge>
-                  <Badge variant="secondary" className="text-xs">Messaging</Badge>
-                  <Badge variant="secondary" className="text-xs">Earnings</Badge>
-                  <Badge variant="secondary" className="text-xs">Tips</Badge>
-                  <Badge variant="secondary" className="text-xs">Checklists</Badge>
-                  <Badge variant="secondary" className="text-xs">Reviews</Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Your assistant has access to your profile data to provide personalized advice.
+              <CardContent>
+                <p className="text-xs text-muted-foreground">
+                  I can see your real-time data including:
                 </p>
+                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Profile & tier status
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Reliability score breakdown
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Upcoming & past jobs
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Earnings & balances
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Recent reviews
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Marketplace opportunities
+                  </li>
+                </ul>
               </CardContent>
             </Card>
           </div>
