@@ -20,7 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ error?: string }>;
   signup: (email: string, password: string, role: UserRole, fullName?: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
-  loginWithGoogle: (role: UserRole) => Promise<{ error?: string }>;
+  loginWithGoogle: (role?: UserRole) => Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -147,10 +147,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
   };
 
-  const loginWithGoogle = async (role: UserRole): Promise<{ error?: string }> => {
+  const loginWithGoogle = async (role?: UserRole): Promise<{ error?: string }> => {
     try {
-      // Store selected role in localStorage for retrieval after OAuth redirect
-      localStorage.setItem('pendingOAuthRole', role);
+      // Store selected role in localStorage only for new sign-ups (when role is provided)
+      if (role) {
+        localStorage.setItem('pendingOAuthRole', role);
+      } else {
+        localStorage.removeItem('pendingOAuthRole');
+      }
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -159,7 +163,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             access_type: 'offline',
             prompt: 'consent',
           },
-          redirectTo: `${window.location.origin}/role-selection`,
+          redirectTo: `${window.location.origin}/`,
         },
       });
       

@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useAddresses, useAddressActions, Address } from '@/hooks/useAddresses';
 import { MapPin, Plus, Check, Star, Trash2, Loader2 } from 'lucide-react';
+import { AddressAutocompleteInput } from './AddressAutocompleteInput';
+import { AddressSuggestion } from '@/hooks/useAddressAutocomplete';
 import { cn } from '@/lib/utils';
 
 interface AddressSelectorProps {
@@ -157,11 +159,20 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
             </div>
             <div>
               <Label htmlFor="line1">Street Address *</Label>
-              <Input
+              <AddressAutocompleteInput
                 id="line1"
-                placeholder="123 Main St"
                 value={newAddress.line1}
-                onChange={(e) => setNewAddress({ ...newAddress, line1: e.target.value })}
+                onChange={(value) => setNewAddress({ ...newAddress, line1: value })}
+                onSelect={(suggestion: AddressSuggestion) => {
+                  setNewAddress({
+                    ...newAddress,
+                    line1: suggestion.line1,
+                    city: suggestion.city,
+                    state: suggestion.state,
+                    postalCode: suggestion.postalCode,
+                  });
+                }}
+                placeholder="Start typing an address..."
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
