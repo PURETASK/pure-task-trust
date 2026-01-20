@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
 import { AddressVerification } from "@/components/booking/AddressVerification";
-import { Address } from "@/hooks/useAddresses";
+import { Address, useAddresses } from "@/hooks/useAddresses";
 import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
 import { 
   isSameDayBooking, 
@@ -72,6 +72,15 @@ export default function Book() {
   const { createBooking, isCreating } = useBooking();
   const { account, isLoadingAccount } = useWallet();
   const { data: selectedCleaner } = useCleaner(cleanerId || '');
+  const { data: savedAddresses } = useAddresses();
+
+  // Auto-select default or first address when addresses load
+  useEffect(() => {
+    if (savedAddresses && savedAddresses.length > 0 && !selectedAddress) {
+      const defaultAddress = savedAddresses.find(a => a.is_default) || savedAddresses[0];
+      setSelectedAddress(defaultAddress);
+    }
+  }, [savedAddresses, selectedAddress]);
 
   const selectedCleaningType = cleaningTypes.find((t) => t.id === selectedType);
   const addOnCredits = selectedAddOns.reduce((sum, id) => {
@@ -126,7 +135,15 @@ export default function Book() {
   };
 
   const canProceedToVerification = selectedDate && selectedTime && selectedAddress;
-
+  
+  // Helper to show what's missing
+  const getMissingRequirements = () => {
+    const missing = [];
+    if (!selectedDate) missing.push('date');
+    if (!selectedTime) missing.push('time');
+    if (!selectedAddress) missing.push('address');
+    return missing;
+  };
   return (
     <main className="flex-1 py-6 sm:py-12">
         <div className="container px-4 sm:px-6 max-w-2xl">
@@ -391,20 +408,27 @@ export default function Book() {
                     />
                   </div>
 
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(3)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button 
-                      className="flex-1" 
-                      size="lg" 
-                      onClick={() => setStep(5)}
-                      disabled={!canProceedToVerification || !isCleaningTypeAllowed}
-                    >
-                      Continue
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                  <div className="space-y-4">
+                    {!canProceedToVerification && getMissingRequirements().length > 0 && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        Please select: {getMissingRequirements().join(', ')}
+                      </p>
+                    )}
+                    <div className="flex gap-3">
+                      <Button variant="outline" size="lg" onClick={() => setStep(3)}>
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back
+                      </Button>
+                      <Button 
+                        className="flex-1" 
+                        size="lg" 
+                        onClick={() => setStep(5)}
+                        disabled={!canProceedToVerification || !isCleaningTypeAllowed}
+                      >
+                        Continue
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               )}
