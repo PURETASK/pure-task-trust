@@ -30,11 +30,14 @@ export default function JobApproval() {
   const { approveJob, isApproving, reportIssue, isReportingIssue } = useJobActions(id || '');
   const { data: jobPhotos, isLoading: loadingPhotos } = useJobPhotos(id || '');
 
-  // Photos are stored in order - first half are typically "before", second half "after"
+  // Filter photos by type (database column or URL fallback)
   const allPhotos = jobPhotos || [];
-  const midpoint = Math.ceil(allPhotos.length / 2);
-  const beforePhotos = allPhotos.slice(0, midpoint);
-  const afterPhotos = allPhotos.slice(midpoint);
+  const beforePhotos = allPhotos.filter(p => 
+    p.photo_type === 'before' || p.photo_url.includes('/before-')
+  );
+  const afterPhotos = allPhotos.filter(p => 
+    p.photo_type === 'after' || p.photo_url.includes('/after-')
+  );
   const hasPhotos = beforePhotos.length > 0 || afterPhotos.length > 0;
   const maxPhotos = Math.max(beforePhotos.length, afterPhotos.length, 1);
 

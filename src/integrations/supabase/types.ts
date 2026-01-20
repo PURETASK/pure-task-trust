@@ -2818,18 +2818,21 @@ export type Database = {
           created_at: string | null
           id: number
           job_id: string | null
+          photo_type: string | null
           photo_url: string
         }
         Insert: {
           created_at?: string | null
           id?: number
           job_id?: string | null
+          photo_type?: string | null
           photo_url: string
         }
         Update: {
           created_at?: string | null
           id?: number
           job_id?: string | null
+          photo_type?: string | null
           photo_url?: string
         }
         Relationships: [

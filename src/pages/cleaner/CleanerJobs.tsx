@@ -4,52 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Clock, Calendar, MessageCircle, Navigation, CheckCircle, Loader2 } from "lucide-react";
+import { MapPin, Clock, Calendar, MessageCircle, Play, Eye, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { Link } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 export default function CleanerJobs() {
   const { jobs, isLoading } = useCleanerJobs();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const activeJobs = jobs.filter(j => ['confirmed', 'in_progress', 'on_way', 'arrived'].includes(j.status));
   const pendingJobs = jobs.filter(j => ['pending', 'created'].includes(j.status));
   const completedJobs = jobs.filter(j => j.status === 'completed');
-
-  const updateStatusMutation = useMutation({
-    mutationFn: async ({ jobId, status }: { jobId: string; status: string }) => {
-      const updates: Record<string, unknown> = { status };
-      
-      if (status === 'in_progress') {
-        updates.check_in_at = new Date().toISOString();
-      } else if (status === 'completed') {
-        updates.check_out_at = new Date().toISOString();
-      }
-
-      const { error } = await supabase
-        .from('jobs')
-        .update(updates)
-        .eq('id', jobId);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast({ title: "Status updated!" });
-      queryClient.invalidateQueries({ queryKey: ['cleaner-jobs'] });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to update status",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -71,55 +36,36 @@ export default function CleanerJobs() {
     }
   };
 
+  // All job actions now go through the detail page for proper GPS verification
   const getNextAction = (job: { id: string; status: string }) => {
     switch (job.status) {
       case 'confirmed':
         return (
-          <Button 
-            size="sm" 
-            onClick={() => updateStatusMutation.mutate({ jobId: job.id, status: 'on_way' })}
-            disabled={updateStatusMutation.isPending}
-          >
-            <Navigation className="h-4 w-4 mr-2" />
-            Start Travel
-          </Button>
-        );
-      case 'on_way':
-        return (
-          <Button 
-            size="sm" 
-            onClick={() => updateStatusMutation.mutate({ jobId: job.id, status: 'arrived' })}
-            disabled={updateStatusMutation.isPending}
-          >
-            <MapPin className="h-4 w-4 mr-2" />
-            I've Arrived
-          </Button>
-        );
-      case 'arrived':
-        return (
-          <Button 
-            size="sm" 
-            onClick={() => updateStatusMutation.mutate({ jobId: job.id, status: 'in_progress' })}
-            disabled={updateStatusMutation.isPending}
-          >
-            <Clock className="h-4 w-4 mr-2" />
-            Start Cleaning
+          <Button size="sm" asChild>
+            <Link to={`/cleaner/jobs/${job.id}`}>
+              <Play className="h-4 w-4 mr-2" />
+              Start Job
+            </Link>
           </Button>
         );
       case 'in_progress':
         return (
-          <Button 
-            size="sm" 
-            variant="success"
-            onClick={() => updateStatusMutation.mutate({ jobId: job.id, status: 'completed' })}
-            disabled={updateStatusMutation.isPending}
-          >
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Complete Job
+          <Button size="sm" variant="default" asChild>
+            <Link to={`/cleaner/jobs/${job.id}`}>
+              <ArrowRight className="h-4 w-4 mr-2" />
+              Continue
+            </Link>
           </Button>
         );
       default:
-        return null;
+        return (
+          <Button size="sm" variant="outline" asChild>
+            <Link to={`/cleaner/jobs/${job.id}`}>
+              <Eye className="h-4 w-4 mr-2" />
+              View
+            </Link>
+          </Button>
+        );
     }
   };
 

@@ -237,12 +237,81 @@ export function useJobCheckins(jobId?: string) {
         })
         .eq('id', jobId);
 
-      return { checkin: data, isWithinRadius, distance };
+      return { checkin: data, isWithinRadius, distance, jobId };
     },
-    onSuccess: () => {
+    onSuccess: async ({ jobId }) => {
       queryClient.invalidateQueries({ queryKey: ['job-checkins'] });
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
-      toast.success('GPS check-out successful!');
+      queryClient.invalidateQueries({ queryKey: ['cleaner-jobs'] });
+      toast.success('GPS check-out successful! Job submitted for client approval.');
+
+      // Notify client that job is complete
+      try {
+        // Get job with client info
+        const { data: jobData } = await supabase
+          .from('jobs')
+          .select(`
+            id,
+            cleaning_type,
+            client_id,
+            client:client_id (
+              user_id,
+              first_name
+            )
+          `)
+          .eq('id', jobId)
+          .single();
+
+        if (jobData?.client?.user_id) {
+          // Get cleaner name for notification
+          const { data: cleanerProfile } = await supabase
+            .from('cleaner_profiles')
+            .select('first_name, last_name')
+            .eq('user_id', user!.id)
+            .single();
+
+          const cleanerName = cleanerProfile 
+            ? `${cleanerProfile.first_name || ''} ${cleanerProfile.last_name || ''}`.trim() || 'Your cleaner'
+            : 'Your cleaner';
+
+          // Send push notification
+          await supabase.functions.invoke('send-push-notification', {
+            body: {
+              user_id: jobData.client.user_id,
+              title: 'Cleaning Complete! 🎉',
+              body: `${cleanerName} has finished cleaning. Review photos and approve to release payment.`,
+            }
+          });
+
+          // Send email notification
+          await supabase.functions.invoke('send-email', {
+            body: {
+              template: 'job_completed',
+              to: jobData.client.user_id,
+              data: {
+                job_id: jobId,
+                cleaner_name: cleanerName,
+                cleaning_type: jobData.cleaning_type,
+              }
+            }
+          });
+
+          // Create in-app notification
+          await supabase.from('notification_logs').insert({
+            user_id: jobData.client.user_id,
+            channel: 'in_app',
+            type: 'job_completed',
+            recipient: jobData.client.user_id,
+            subject: 'Cleaning Complete - Review Required',
+            body: `${cleanerName} has finished your cleaning. Review and approve to release payment.`,
+            status: 'sent',
+            metadata: { job_id: jobId }
+          });
+        }
+      } catch (notifyError) {
+        console.error('Failed to send completion notification:', notifyError);
+        // Don't fail the checkout if notification fails
+      }
     },
     onError: (error) => {
       toast.error('Failed to check out');
