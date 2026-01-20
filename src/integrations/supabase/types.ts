@@ -3873,6 +3873,36 @@ export type Database = {
           },
         ]
       }
+      phone_verifications: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          otp_code: string
+          phone_number: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          otp_code: string
+          phone_number: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          phone_number?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       photo_compliance: {
         Row: {
           after_photos: number
@@ -4009,6 +4039,8 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          phone_number: string | null
+          phone_verified: boolean | null
           updated_at: string
         }
         Insert: {
@@ -4018,6 +4050,8 @@ export type Database = {
           full_name?: string | null
           id: string
           phone?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -4027,6 +4061,8 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean | null
           updated_at?: string
         }
         Relationships: []
