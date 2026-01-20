@@ -28,17 +28,26 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
   const handleAddAddress = async () => {
     if (!newAddress.line1 || !newAddress.city) return;
     
-    await createAddress({
-      label: newAddress.label || undefined,
-      line1: newAddress.line1,
-      city: newAddress.city,
-      state: newAddress.state || undefined,
-      postalCode: newAddress.postalCode || undefined,
-      isDefault: addresses?.length === 0,
-    });
-    
-    setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '' });
-    setIsAddDialogOpen(false);
+    try {
+      const createdAddress = await createAddress({
+        label: newAddress.label || undefined,
+        line1: newAddress.line1,
+        city: newAddress.city,
+        state: newAddress.state || undefined,
+        postalCode: newAddress.postalCode || undefined,
+        isDefault: addresses?.length === 0,
+      });
+      
+      // Auto-select the newly created address
+      if (createdAddress) {
+        onSelect(createdAddress as Address);
+      }
+      
+      setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '' });
+      setIsAddDialogOpen(false);
+    } catch (error) {
+      // Error is handled in the hook
+    }
   };
 
   if (isLoading) {
