@@ -68,7 +68,7 @@ export function useAddressActions() {
           .eq('user_id', user.id);
       }
 
-      const { error } = await supabase.from('addresses').insert({
+      const { data: insertedData, error } = await supabase.from('addresses').insert({
         user_id: user.id,
         label: data.label || null,
         line1: data.line1,
@@ -77,13 +77,18 @@ export function useAddressActions() {
         state: data.state || null,
         postal_code: data.postalCode || null,
         is_default: data.isDefault || false,
-      });
+      }).select().single();
 
       if (error) throw error;
+      return insertedData;
     },
-    onSuccess: () => {
+    onSuccess: (newAddress) => {
       toast({ title: 'Address Added' });
-      queryClient.invalidateQueries({ queryKey: ['addresses'] });
+      // Update cache immediately instead of invalidating
+      queryClient.setQueryData(['addresses', user?.id], (old: Address[] | undefined) => {
+        if (!old) return [newAddress];
+        return [newAddress, ...old];
+      });
     },
     onError: (error: Error) => {
       toast({
