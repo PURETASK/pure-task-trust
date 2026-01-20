@@ -2491,6 +2491,53 @@ export type Database = {
           },
         ]
       }
+      id_verifications: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          document_type: string | null
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          provider: string
+          status: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          document_type?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          status?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          document_type?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          status?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "id_verifications_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inconvenience_logs: {
         Row: {
           caused_by: string

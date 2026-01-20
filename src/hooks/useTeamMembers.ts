@@ -23,12 +23,18 @@ export interface TeamMember {
     completed_at: string | null;
     expires_at: string | null;
   } | null;
+  id_verification: {
+    status: string;
+    verified_at: string | null;
+    expires_at: string | null;
+    document_type: string | null;
+  } | null;
 }
 
 export function useTeamMembers(teamId: number | null) {
   const queryClient = useQueryClient();
 
-  // Fetch team members with their profiles and background checks
+  // Fetch team members with their profiles, background checks, and ID verifications
   const { data: members = [], isLoading } = useQuery({
     queryKey: ["team-members", teamId],
     queryFn: async () => {
@@ -73,6 +79,15 @@ export function useTeamMembers(teamId: number | null) {
       
       if (bgError) throw bgError;
 
+      // Get ID verifications for these cleaners
+      const { data: idVerifications, error: idError } = await supabase
+        .from("id_verifications")
+        .select("cleaner_id, status, verified_at, expires_at, document_type")
+        .in("cleaner_id", cleanerIds)
+        .order("created_at", { ascending: false });
+      
+      if (idError) throw idError;
+
       // Create lookup maps
       const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
       const bgCheckMap = new Map<string, typeof bgChecks[0]>();
@@ -82,12 +97,20 @@ export function useTeamMembers(teamId: number | null) {
           bgCheckMap.set(check.cleaner_id, check);
         }
       });
+      const idVerificationMap = new Map<string, typeof idVerifications[0]>();
+      idVerifications?.forEach(verification => {
+        // Only keep the latest verification per cleaner
+        if (!idVerificationMap.has(verification.cleaner_id)) {
+          idVerificationMap.set(verification.cleaner_id, verification);
+        }
+      });
 
       // Combine data
       return memberData.map(member => ({
         ...member,
         cleaner_profile: profileMap.get(member.cleaner_id) || null,
         background_check: bgCheckMap.get(member.cleaner_id) || null,
+        id_verification: idVerificationMap.get(member.cleaner_id) || null,
       })) as TeamMember[];
     },
     enabled: !!teamId,

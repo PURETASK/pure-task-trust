@@ -10,9 +10,10 @@ import { useCleanerTeams, CleanerTeam as CleanerTeamType } from "@/hooks/useClea
 import { useTeamMembers, TeamMember } from "@/hooks/useTeamMembers";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useToast } from "@/hooks/use-toast";
+import { VerificationChecklist } from "@/components/verification/VerificationChecklist";
 import { 
   Users, Plus, UserMinus, Crown, Mail, Loader2, Copy, Check,
-  CheckCircle, Clock, XCircle, ShieldAlert, Calendar, Shield
+  Calendar, Shield
 } from "lucide-react";
 import {
   Dialog,
@@ -35,53 +36,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-
-// Background check status badge component
-function BackgroundCheckBadge({ status }: { status: string | null }) {
-  if (!status) {
-    return (
-      <Badge variant="outline" className="text-muted-foreground">
-        <ShieldAlert className="h-3 w-3 mr-1" />
-        Not Started
-      </Badge>
-    );
-  }
-
-  switch (status.toLowerCase()) {
-    case "passed":
-    case "clear":
-    case "approved":
-      return (
-        <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground">
-          <CheckCircle className="h-3 w-3 mr-1" />
-          Passed
-        </Badge>
-      );
-    case "pending":
-    case "in_progress":
-      return (
-        <Badge variant="secondary">
-          <Clock className="h-3 w-3 mr-1" />
-          Pending
-        </Badge>
-      );
-    case "failed":
-    case "rejected":
-      return (
-        <Badge variant="destructive">
-          <XCircle className="h-3 w-3 mr-1" />
-          Failed
-        </Badge>
-      );
-    default:
-      return (
-        <Badge variant="outline" className="text-muted-foreground">
-          <ShieldAlert className="h-3 w-3 mr-1" />
-          {status}
-        </Badge>
-      );
-  }
-}
 
 // Member card component
 function MemberCard({ 
@@ -106,47 +60,70 @@ function MemberCard({
   ].filter(Boolean).join(' ') || 'Unknown Member';
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg bg-card">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10">
-          <AvatarFallback className="bg-primary/10 text-primary">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <div className="flex items-center gap-2">
-            <p className="font-medium">{name}</p>
-            {member.role === "lead" && (
-              <Badge variant="secondary" className="text-xs">Lead</Badge>
-            )}
-            {member.status === "pending" && (
-              <Badge variant="outline" className="text-xs">Pending</Badge>
-            )}
+    <div className="p-4 border rounded-lg bg-card space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-primary/10 text-primary">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="font-medium">{name}</p>
+              {member.role === "lead" && (
+                <Badge variant="secondary" className="text-xs">Lead</Badge>
+              )}
+              {member.status === "pending" && (
+                <Badge variant="outline" className="text-xs">Pending</Badge>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              Joined {new Date(member.joined_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </p>
           </div>
-          <div className="flex flex-wrap gap-2 mt-1">
-            <BackgroundCheckBadge status={member.background_check?.status || null} />
-          </div>
-          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            Joined {format(new Date(member.joined_at), "MMM d, yyyy")}
-          </p>
         </div>
+        {isOwner && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={onRemove}
+            disabled={isRemoving}
+          >
+            {isRemoving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <UserMinus className="h-4 w-4" />
+            )}
+          </Button>
+        )}
       </div>
-      {isOwner && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-          onClick={onRemove}
-          disabled={isRemoving}
-        >
-          {isRemoving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <UserMinus className="h-4 w-4" />
-          )}
-        </Button>
-      )}
+      
+      {/* Verification Checklist */}
+      <VerificationChecklist
+        backgroundCheck={
+          member.background_check
+            ? {
+                status: member.background_check.status,
+                completedAt: member.background_check.completed_at,
+                expiresAt: member.background_check.expires_at,
+              }
+            : null
+        }
+        idVerification={
+          member.id_verification
+            ? {
+                status: member.id_verification.status,
+                completedAt: member.id_verification.verified_at,
+                expiresAt: member.id_verification.expires_at,
+                documentType: member.id_verification.document_type,
+              }
+            : null
+        }
+        compact
+      />
     </div>
   );
 }
