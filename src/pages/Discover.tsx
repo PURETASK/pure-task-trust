@@ -5,29 +5,48 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { Search, MapPin, Star, Filter, Shield, Loader2, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useCleaners } from "@/hooks/useCleaners";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Slider } from "@/components/ui/slider";
 
 export default function Discover() {
   const [searchQuery, setSearchQuery] = useState("");
   const [smartMatch, setSmartMatch] = useState(false);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [minRating, setMinRating] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(100);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: cleaners, isLoading, error } = useCleaners({
     searchQuery,
     onlyAvailable,
+    minRating: minRating > 0 ? minRating : undefined,
   });
 
   const { data: favorites } = useFavorites();
   const { toggleFavorite, isToggling } = useFavoriteActions();
 
   const favoriteCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
+
+  // Filter by max price on client side
+  const filteredCleaners = cleaners?.filter(c => c.hourlyRate <= maxPrice);
 
   const getInitials = (name: string) => {
     const parts = name.split(' ').filter(Boolean);
@@ -41,6 +60,16 @@ export default function Discover() {
     e.preventDefault();
     e.stopPropagation();
     
+    if (!user) {
+      toast({
+        title: 'Sign in required',
+        description: 'Please sign in to save favorite cleaners.',
+        variant: 'destructive',
+      });
+      navigate('/auth');
+      return;
+    }
+    
     const isFavorite = favoriteCleanerIds.has(cleanerId);
     try {
       await toggleFavorite({ cleanerId, isFavorite });
@@ -53,11 +82,13 @@ export default function Discover() {
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to update favorites. Please try again.',
+        description: 'Failed to update favorites. Please sign in and try again.',
         variant: 'destructive',
       });
     }
   };
+
+  const activeFiltersCount = (minRating > 0 ? 1 : 0) + (maxPrice < 100 ? 1 : 0);
 
   return (
     <main className="flex-1 py-4 sm:py-8">
@@ -103,10 +134,77 @@ export default function Discover() {
                   Smart Match
                 </Label>
               </div>
-              <Button variant="outline" size="sm" className="gap-2 ml-auto">
-                <Filter className="h-4 w-4" />
-                <span className="hidden sm:inline">Filters</span>
-              </Button>
+              <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 ml-auto relative">
+                    <Filter className="h-4 w-4" />
+                    <span className="hidden sm:inline">Filters</span>
+                    {activeFiltersCount > 0 && (
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary text-primary-foreground text-[10px] rounded-full flex items-center justify-center">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Filter Cleaners</SheetTitle>
+                    <SheetDescription>
+                      Narrow down your search results
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-6">
+                    <div className="space-y-3">
+                      <Label>Minimum Rating: {minRating > 0 ? minRating.toFixed(1) : 'Any'}</Label>
+                      <Slider
+                        value={[minRating]}
+                        onValueChange={([val]) => setMinRating(val)}
+                        min={0}
+                        max={5}
+                        step={0.5}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Any</span>
+                        <span>5 stars</span>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <Label>Max Hourly Rate: ${maxPrice}</Label>
+                      <Slider
+                        value={[maxPrice]}
+                        onValueChange={([val]) => setMaxPrice(val)}
+                        min={10}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>$10</span>
+                        <span>$100+</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 pt-4">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          setMinRating(0);
+                          setMaxPrice(100);
+                        }}
+                      >
+                        Reset
+                      </Button>
+                      <Button 
+                        className="flex-1"
+                        onClick={() => setFilterOpen(false)}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 
@@ -132,9 +230,9 @@ export default function Discover() {
             />
           )}
 
-          {!isLoading && cleaners && cleaners.length > 0 && (
+          {!isLoading && filteredCleaners && filteredCleaners.length > 0 && (
             <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-              {cleaners.map((cleaner, index) => (
+              {filteredCleaners.map((cleaner, index) => (
                 <motion.div
                   key={cleaner.id}
                   initial={{ opacity: 0, y: 20 }}
