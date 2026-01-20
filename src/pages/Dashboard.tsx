@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2 } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
@@ -20,7 +20,8 @@ export default function Dashboard() {
   const { removeFavorite, isRemoving } = useFavoriteActions();
 
   const upcomingJobs = jobs?.filter(j => ['created', 'pending', 'confirmed', 'in_progress'].includes(j.status)) || [];
-  const pastJobs = jobs?.filter(j => ['completed', 'cancelled'].includes(j.status)) || [];
+  const pendingApprovalJobs = jobs?.filter(j => j.status === 'completed' && !j.final_charge_credits) || [];
+  const pastJobs = jobs?.filter(j => j.status === 'completed' && j.final_charge_credits || j.status === 'cancelled') || [];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -74,6 +75,15 @@ export default function Dashboard() {
                 <TabsTrigger value="upcoming" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
                   <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden xs:inline">Upcoming</span> ({upcomingJobs.length})
+                </TabsTrigger>
+                <TabsTrigger value="approval" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4 relative">
+                  <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden xs:inline">Approve</span>
+                  {pendingApprovalJobs.length > 0 && (
+                    <span className="ml-1 h-5 min-w-5 px-1 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
+                      {pendingApprovalJobs.length}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="past" className="gap-1.5 text-xs sm:text-sm px-2 sm:px-4">
                   <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -160,6 +170,70 @@ export default function Dashboard() {
                     <Button asChild>
                       <Link to="/book">Book a Cleaning</Link>
                     </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            {/* Pending Approval Tab */}
+            <TabsContent value="approval">
+              {isLoading ? (
+                <div className="space-y-4">
+                  {[1, 2].map((i) => <Skeleton key={i} className="h-32 rounded-xl" />)}
+                </div>
+              ) : pendingApprovalJobs.length > 0 ? (
+                <div className="space-y-4">
+                  {pendingApprovalJobs.map((job, index) => (
+                    <motion.div
+                      key={job.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className="hover:shadow-elevated transition-all border-success/30 bg-success/5">
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex flex-col gap-3 sm:gap-4">
+                            <div className="flex items-start gap-3">
+                              <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl bg-success/10 flex items-center justify-center font-semibold text-success text-sm sm:text-base flex-shrink-0">
+                                <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                  <h3 className="font-semibold text-sm sm:text-base truncate">{getCleanerName(job)}</h3>
+                                </div>
+                                <p className="text-xs sm:text-sm text-muted-foreground capitalize">
+                                  {job.cleaning_type?.replace('_', ' ')} Clean • Ready for review
+                                </p>
+                              </div>
+                              <Badge variant="success">Complete</Badge>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                                  {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d') : 'TBD'}
+                                </span>
+                                <span className="font-medium text-foreground">${job.escrow_credits_reserved || 0}</span>
+                              </div>
+                              <Button variant="success" size="sm" asChild className="text-xs sm:text-sm h-8">
+                                <Link to={`/job-approval/${job.id}`}>
+                                  <Check className="h-3.5 w-3.5 mr-1" />
+                                  Review & Approve
+                                </Link>
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Check className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="font-semibold mb-2">No jobs awaiting approval</h3>
+                    <p className="text-muted-foreground">Completed jobs will appear here for your review</p>
                   </CardContent>
                 </Card>
               )}

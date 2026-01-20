@@ -1,13 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
-
-type JobStatus = Database['public']['Enums']['job_status'];
 
 export interface JobPhoto {
   id: number;
   job_id: string;
   photo_url: string;
+  photo_type: 'before' | 'after' | 'other' | null;
   created_at: string;
 }
 
@@ -49,12 +47,13 @@ export function useUploadJobPhoto(jobId: string) {
         .from('job-photos')
         .getPublicUrl(fileName);
 
-      // Insert into job_photos table
+      // Insert into job_photos table with photo_type
       const { error: insertError } = await supabase
         .from('job_photos')
         .insert({
           job_id: jobId,
           photo_url: publicUrl,
+          photo_type: type, // Store the type in the database
         });
 
       if (insertError) throw insertError;
@@ -63,49 +62,6 @@ export function useUploadJobPhoto(jobId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job-photos', jobId] });
-    },
-  });
-}
-
-export function useJobCheckin(jobId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ 
-      type, 
-      cleanerId,
-      lat,
-      lng,
-    }: { 
-      type: 'checkin' | 'checkout';
-      cleanerId: string;
-      lat?: number;
-      lng?: number;
-    }) => {
-      const { error } = await supabase.from('job_checkins').insert({
-        job_id: jobId,
-        cleaner_id: cleanerId,
-        type,
-        lat,
-        lng,
-      });
-
-      if (error) throw error;
-
-      // Update job status
-      const newStatus: JobStatus = type === 'checkin' ? 'in_progress' : 'completed';
-      const updateData: { status: JobStatus; check_in_at?: string; check_out_at?: string } = type === 'checkin' 
-        ? { status: newStatus, check_in_at: new Date().toISOString() }
-        : { status: newStatus, check_out_at: new Date().toISOString() };
-
-      await supabase
-        .from('jobs')
-        .update(updateData)
-        .eq('id', jobId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['job', jobId] });
-      queryClient.invalidateQueries({ queryKey: ['cleaner-jobs'] });
     },
   });
 }

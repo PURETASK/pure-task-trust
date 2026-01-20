@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useJob } from "@/hooks/useJob";
-import { useJobPhotos, useUploadJobPhoto, useJobCheckin } from "@/hooks/useJobPhotos";
+import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
+import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { PhotoRequirements, useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { format } from "date-fns";
 import { 
   MapPin, 
@@ -16,14 +18,13 @@ import {
   Calendar, 
   Camera, 
   CheckCircle, 
-  Navigation, 
   Play, 
   ArrowLeft,
   User,
   Image,
   Loader2,
-  X,
-  Upload
+  Upload,
+  AlertTriangle
 } from "lucide-react";
 
 export default function CleanerJobDetail() {
@@ -34,10 +35,13 @@ export default function CleanerJobDetail() {
   const { data: photos = [] } = useJobPhotos(jobId || "");
   const { profile } = useCleanerProfile();
   const uploadPhoto = useUploadJobPhoto(jobId || "");
-  const checkin = useJobCheckin(jobId || "");
+  const { checkIn, checkOut, hasCheckedIn, hasCheckedOut } = useJobCheckins(jobId);
   
   const [selectedPhotoType, setSelectedPhotoType] = useState<"before" | "after">("before");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Photo validation
+  const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,32 +60,14 @@ export default function CleanerJobDetail() {
   };
 
   const handleCheckin = async () => {
-    if (!profile?.id) return;
+    if (!profile?.id || !job) return;
     
     try {
-      // Try to get location
-      let lat: number | undefined;
-      let lng: number | undefined;
-      
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
-          });
-          lat = position.coords.latitude;
-          lng = position.coords.longitude;
-        } catch {
-          // Location not available, continue without it
-        }
-      }
-
-      await checkin.mutateAsync({ 
-        type: "checkin", 
-        cleanerId: profile.id,
-        lat,
-        lng,
+      await checkIn.mutateAsync({ 
+        jobId: jobId!,
+        jobLat: job.checkin_lat || 0,
+        jobLng: job.checkin_lng || 0,
       });
-      toast({ title: "Checked in successfully!" });
     } catch (error: any) {
       toast({
         title: "Check-in failed",
@@ -92,14 +78,28 @@ export default function CleanerJobDetail() {
   };
 
   const handleCheckout = async () => {
-    if (!profile?.id) return;
+    if (!profile?.id || !job) return;
+    
+    // Validate photos before allowing checkout
+    if (!canCheckout) {
+      let description = "Please upload required photos before completing the job:";
+      if (missingBefore) description += " • At least 1 before photo";
+      if (missingAfter) description += " • At least 1 after photo";
+      
+      toast({
+        title: "Photos Required",
+        description,
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
-      await checkin.mutateAsync({ 
-        type: "checkout", 
-        cleanerId: profile.id,
+      await checkOut.mutateAsync({ 
+        jobId: jobId!,
+        jobLat: job.checkin_lat || 0,
+        jobLng: job.checkin_lng || 0,
       });
-      toast({ title: "Job completed! Great work!" });
       navigate("/cleaner/jobs");
     } catch (error: any) {
       toast({
@@ -167,10 +167,8 @@ export default function CleanerJobDetail() {
   }
 
   const isInProgress = job.status === "in_progress";
-  const canCheckin = job.status === "confirmed";
-  const canCheckout = job.status === "in_progress";
-  const beforePhotos = photos.filter(p => p.photo_url.includes("/before-"));
-  const afterPhotos = photos.filter(p => p.photo_url.includes("/after-"));
+  const canCheckin = job.status === "confirmed" && !hasCheckedIn;
+  const canCheckoutNow = job.status === "in_progress" && !hasCheckedOut;
 
   return (
     <CleanerLayout>
@@ -251,56 +249,34 @@ export default function CleanerJobDetail() {
           </CardContent>
         </Card>
 
-        {/* Check-in / Checkout Actions */}
-        {(canCheckin || canCheckout) && (
+        {/* Check-in Action */}
+        {canCheckin && (
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="p-6">
-              {canCheckin && (
-                <Button 
-                  size="lg" 
-                  className="w-full"
-                  onClick={handleCheckin}
-                  disabled={checkin.isPending}
-                >
-                  {checkin.isPending ? (
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  ) : (
-                    <Play className="h-5 w-5 mr-2" />
-                  )}
-                  Check In & Start Job
-                </Button>
-              )}
-              {canCheckout && (
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Job in progress since</p>
-                    <p className="font-medium">
-                      {job.check_in_at 
-                        ? format(new Date(job.check_in_at), "h:mm a")
-                        : "Just now"}
-                    </p>
-                  </div>
-                  <Button 
-                    size="lg" 
-                    variant="success"
-                    className="w-full"
-                    onClick={handleCheckout}
-                    disabled={checkin.isPending}
-                  >
-                    {checkin.isPending ? (
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    ) : (
-                      <CheckCircle className="h-5 w-5 mr-2" />
-                    )}
-                    Complete & Check Out
-                  </Button>
-                </div>
-              )}
+              <div className="text-center mb-4">
+                <h3 className="font-semibold mb-1">Ready to start?</h3>
+                <p className="text-sm text-muted-foreground">
+                  Check in with GPS to begin the job
+                </p>
+              </div>
+              <Button 
+                size="lg" 
+                className="w-full"
+                onClick={handleCheckin}
+                disabled={checkIn.isPending}
+              >
+                {checkIn.isPending ? (
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Play className="h-5 w-5 mr-2" />
+                )}
+                Check In & Start Job
+              </Button>
             </CardContent>
           </Card>
         )}
 
-        {/* Photo Upload Section */}
+        {/* Photo Upload Section (in progress) */}
         {isInProgress && (
           <Card>
             <CardHeader>
@@ -310,20 +286,35 @@ export default function CleanerJobDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Photo Requirements */}
+              <PhotoRequirements 
+                beforeCount={beforeCount} 
+                afterCount={afterCount} 
+              />
+              
+              {!canCheckout && (
+                <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/30 rounded-lg text-sm">
+                  <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+                  <span className="text-warning">
+                    Upload at least 1 before photo and 1 after photo to complete the job
+                  </span>
+                </div>
+              )}
+
               <div className="flex gap-2">
                 <Button
                   variant={selectedPhotoType === "before" ? "default" : "outline"}
                   onClick={() => setSelectedPhotoType("before")}
                   className="flex-1"
                 >
-                  Before ({beforePhotos.length})
+                  Before ({beforeCount})
                 </Button>
                 <Button
                   variant={selectedPhotoType === "after" ? "default" : "outline"}
                   onClick={() => setSelectedPhotoType("after")}
                   className="flex-1"
                 >
-                  After ({afterPhotos.length})
+                  After ({afterCount})
                 </Button>
               </div>
 
@@ -356,16 +347,52 @@ export default function CleanerJobDetail() {
               {photos.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
                   {photos.map((photo) => (
-                    <div key={photo.id} className="aspect-square rounded-lg overflow-hidden bg-muted">
+                    <div key={photo.id} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                       <img 
                         src={photo.photo_url} 
                         alt="Job photo"
                         className="w-full h-full object-cover"
                       />
+                      <Badge 
+                        className="absolute top-1 left-1 text-xs"
+                        variant={photo.photo_type === 'before' || photo.photo_url.includes('/before-') ? 'secondary' : 'success'}
+                      >
+                        {photo.photo_type === 'before' || photo.photo_url.includes('/before-') ? 'B' : 'A'}
+                      </Badge>
                     </div>
                   ))}
                 </div>
               )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Checkout Action */}
+        {canCheckoutNow && (
+          <Card className={canCheckout ? "border-success/20 bg-success/5" : "border-warning/20 bg-warning/5"}>
+            <CardContent className="p-6">
+              <div className="text-center mb-4">
+                <p className="text-sm text-muted-foreground mb-1">Job in progress since</p>
+                <p className="font-medium">
+                  {job.check_in_at 
+                    ? format(new Date(job.check_in_at), "h:mm a")
+                    : "Just now"}
+                </p>
+              </div>
+              <Button 
+                size="lg" 
+                variant={canCheckout ? "success" : "outline"}
+                className="w-full"
+                onClick={handleCheckout}
+                disabled={checkOut.isPending || !canCheckout}
+              >
+                {checkOut.isPending ? (
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle className="h-5 w-5 mr-2" />
+                )}
+                {canCheckout ? "Complete & Check Out" : "Upload Required Photos First"}
+              </Button>
             </CardContent>
           </Card>
         )}
@@ -382,12 +409,18 @@ export default function CleanerJobDetail() {
             <CardContent>
               <div className="grid grid-cols-3 gap-2">
                 {photos.map((photo) => (
-                  <div key={photo.id} className="aspect-square rounded-lg overflow-hidden bg-muted">
+                  <div key={photo.id} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                     <img 
                       src={photo.photo_url} 
                       alt="Job photo"
                       className="w-full h-full object-cover"
                     />
+                    <Badge 
+                      className="absolute top-1 left-1 text-xs"
+                      variant={photo.photo_type === 'before' || photo.photo_url.includes('/before-') ? 'secondary' : 'success'}
+                    >
+                      {photo.photo_type === 'before' || photo.photo_url.includes('/before-') ? 'Before' : 'After'}
+                    </Badge>
                   </div>
                 ))}
               </div>
