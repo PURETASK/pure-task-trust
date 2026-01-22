@@ -143,7 +143,11 @@ const App = () => (
                         <CleanerProfile />
                       </RequireClient>
                     } />
-                    <Route path="/book" element={<Book />} />
+                    <Route path="/book" element={
+                      <RequireClient>
+                        <Book />
+                      </RequireClient>
+                    } />
                     <Route path="/booking/:id" element={
                       <RequireClient>
                         <BookingStatus />
