@@ -156,26 +156,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('pendingOAuthRole');
       }
       
-      const { error } = await supabase.auth.signInWithOAuth({
+      const redirectUrl = `${window.location.origin}/`;
+      console.log('Google OAuth: Initiating with redirect to:', redirectUrl);
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
+          redirectTo: redirectUrl,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent',
+            prompt: 'select_account',
           },
-          redirectTo: `${window.location.origin}/`,
         },
       });
       
       if (error) {
+        console.error('Google OAuth error:', error);
         localStorage.removeItem('pendingOAuthRole');
         return { error: error.message };
       }
       
+      console.log('Google OAuth: Redirect initiated', data);
       return {};
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Google OAuth exception:', error);
       localStorage.removeItem('pendingOAuthRole');
-      return { error: 'Google login failed' };
+      return { error: error?.message || 'Google login failed' };
     }
   };
 
