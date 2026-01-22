@@ -8,6 +8,7 @@ import { BookingServicesPicker } from "@/components/booking/BookingServicesPicke
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBooking, CleaningType } from "@/hooks/useBooking";
+import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
 import { useCleaner } from "@/hooks/useCleaners";
 import { Link } from "react-router-dom";
@@ -69,6 +70,7 @@ export default function Book() {
   const [selectedAddress, setSelectedAddress] = useState<Address | undefined>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const { createBooking, isCreating } = useBooking();
   const { account, isLoadingAccount } = useWallet();
   const { data: selectedCleaner } = useCleaner(cleanerId || '');
@@ -111,10 +113,24 @@ export default function Book() {
   };
 
   const handleConfirm = async () => {
-    if (!selectedType) return;
+    if (!selectedType) {
+      toast({ title: "Please select a cleaning type", variant: "destructive" });
+      return;
+    }
+    
+    if (!user) {
+      toast({ title: "Please sign in to book", variant: "destructive" });
+      navigate('/auth');
+      return;
+    }
+
+    if (!hasEnoughCredits) {
+      toast({ title: "Insufficient credits", description: "Please add more credits to your wallet", variant: "destructive" });
+      return;
+    }
     
     try {
-      await createBooking({
+      const job = await createBooking({
         cleaningType: selectedType,
         hours,
         addOns: selectedAddOns,
@@ -123,8 +139,16 @@ export default function Book() {
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
-    } catch (error) {
-      // Error is handled in the hook
+      
+      // Success - navigation is handled in the hook
+      toast({ title: "Booking confirmed!", description: "Your credits have been held." });
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      toast({ 
+        title: "Booking failed", 
+        description: error?.message || "Something went wrong. Please try again.",
+        variant: "destructive" 
+      });
     }
   };
 
