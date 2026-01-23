@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,18 +9,10 @@ import {
   MapPin, Shield, ExternalLink, AlertTriangle, CheckCircle, 
   Lock, Navigation, Home, Loader2
 } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import { Address } from '@/hooks/useAddresses';
 
-// Fix for default marker icon in react-leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+// Lazy load the Leaflet map component to avoid SSR/context issues
+const LeafletMap = lazy(() => import('./LeafletMap').then(mod => ({ default: mod.LeafletMap })));
 
 interface AddressVerificationProps {
   address: Address;
@@ -168,24 +160,17 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
             </div>
           ) : coordinates ? (
             <div className="h-64 rounded-lg overflow-hidden border">
-              <MapContainer
-                center={[coordinates.lat, coordinates.lng]}
-                zoom={16}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              <Suspense fallback={
+                <div className="h-full flex items-center justify-center bg-muted">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+              }>
+                <LeafletMap 
+                  lat={coordinates.lat} 
+                  lng={coordinates.lng} 
+                  addressLine={address.line1} 
                 />
-                <Marker position={[coordinates.lat, coordinates.lng]}>
-                  <Popup>
-                    <div className="text-sm">
-                      <p className="font-medium">Cleaning Location</p>
-                      <p className="text-muted-foreground">{address.line1}</p>
-                    </div>
-                  </Popup>
-                </Marker>
-              </MapContainer>
+              </Suspense>
             </div>
           ) : (
             <div className="h-64 rounded-lg bg-muted flex items-center justify-center">
