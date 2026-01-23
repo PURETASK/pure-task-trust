@@ -130,12 +130,24 @@ export function Header() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col">
-                      <span>{user.name}</span>
-                      <span className="text-xs text-muted-foreground font-normal">{user.email}</span>
+                  <Link 
+                    to={user.role === "cleaner" ? "/cleaner/profile/view" : "/profile"}
+                    className="block px-2 py-1.5 hover:bg-accent rounded-sm transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.avatar} />
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {getInitials(user.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{user.name}</span>
+                        <span className="text-xs text-muted-foreground">{user.email}</span>
+                        <span className="text-xs text-primary font-medium capitalize">{user.role}</span>
+                      </div>
                     </div>
-                  </DropdownMenuLabel>
+                  </Link>
                   <DropdownMenuSeparator />
                   
                   {user.role === "cleaner" ? (
@@ -175,7 +187,12 @@ export function Header() {
                       </DropdownMenuItem>
                     </>
                   )}
-                  
+                  <DropdownMenuItem asChild>
+                    <Link to="/notification-settings" className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="h-4 w-4" />
+                      Notifications
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/help" className="flex items-center gap-2 cursor-pointer">
                       <HelpCircle className="h-4 w-4" />
@@ -227,7 +244,11 @@ export function Header() {
             <div className="container py-4 flex flex-col gap-2">
               {/* User info on mobile */}
               {isAuthenticated && user && (
-                <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-secondary/50 rounded-lg">
+                <Link 
+                  to={user.role === "cleaner" ? "/cleaner/profile/view" : "/profile"}
+                  className="flex items-center gap-3 px-4 py-3 mb-2 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.avatar} />
                     <AvatarFallback className="bg-primary/10 text-primary">
@@ -236,9 +257,9 @@ export function Header() {
                   </Avatar>
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+                    <p className="text-xs text-primary font-medium capitalize">{user.role}</p>
                   </div>
-                </div>
+                </Link>
               )}
 
               {navItems.map((item) => {
