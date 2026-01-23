@@ -26,6 +26,8 @@ import NotificationSettings from "./pages/NotificationSettings";
 import Properties from "./pages/Properties";
 import RescheduleRequests from "./pages/RescheduleRequests";
 import FavoriteCleaners from "./pages/FavoriteCleaners";
+import ClientProfilePage from "./pages/ClientProfile";
+import ClientProfileEdit from "./pages/ClientProfileEdit";
 import NotFound from "./pages/NotFound";
 
 // Cleaner pages
@@ -47,6 +49,7 @@ import CleanerServiceAreas from "./pages/cleaner/CleanerServiceAreas";
 import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
 import CleanerReliability from "./pages/cleaner/CleanerReliability";
+import CleanerProfileView from "./pages/cleaner/CleanerProfileView";
 import CleanerAIAssistant from "./pages/cleaner/CleanerAIAssistant";
 import CleanerOnboarding from "./pages/cleaner/CleanerOnboarding";
 import Legal from "./pages/Legal";
@@ -204,6 +207,21 @@ const App = () => (
                         <FavoriteCleaners />
                       </RequireClient>
                     } />
+                    <Route path="/profile" element={
+                      <RequireClient>
+                        <ClientProfilePage />
+                      </RequireClient>
+                    } />
+                    <Route path="/profile/edit" element={
+                      <RequireClient>
+                        <ClientProfileEdit />
+                      </RequireClient>
+                    } />
+                    <Route path="/notification-settings" element={
+                      <RequireAuth>
+                        <NotificationSettings />
+                      </RequireAuth>
+                    } />
                     
                     {/* Cleaner routes */}
                     <Route path="/cleaner/dashboard" element={
@@ -239,6 +257,11 @@ const App = () => (
                     <Route path="/cleaner/profile" element={
                       <RequireCleaner>
                         <CleanerProfileSettings />
+                      </RequireCleaner>
+                    } />
+                    <Route path="/cleaner/profile/view" element={
+                      <RequireCleaner>
+                        <CleanerProfileView />
                       </RequireCleaner>
                     } />
                     <Route path="/cleaner/marketplace" element={
