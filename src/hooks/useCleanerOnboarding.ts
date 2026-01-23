@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -50,7 +50,8 @@ export function useCleanerOnboarding() {
   const { user } = useAuth();
   const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>('terms');
+  const [currentStep, setCurrentStepLocal] = useState<OnboardingStep>('terms');
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Track completed data for review step
   const [completedData, setCompletedData] = useState({
@@ -58,21 +59,50 @@ export function useCleanerOnboarding() {
     availableDays: 0,
   });
 
+  // Load saved step from database on mount
+  useEffect(() => {
+    if (profile && !isInitialized) {
+      const savedStep = profile.onboarding_current_step as OnboardingStep | null;
+      if (savedStep && STEPS.includes(savedStep)) {
+        setCurrentStepLocal(savedStep);
+      }
+      setIsInitialized(true);
+    }
+  }, [profile, isInitialized]);
+
   const currentStepIndex = STEPS.indexOf(currentStep);
   const totalSteps = STEPS.length;
   const progress = ((currentStepIndex + 1) / totalSteps) * 100;
 
+  // Save step to database
+  const saveStepToDatabase = async (step: OnboardingStep) => {
+    if (!profile?.id) return;
+    await supabase
+      .from('cleaner_profiles')
+      .update({ onboarding_current_step: step })
+      .eq('id', profile.id);
+  };
+
+  const setCurrentStep = (step: OnboardingStep) => {
+    setCurrentStepLocal(step);
+    saveStepToDatabase(step);
+  };
+
   const goToNextStep = () => {
     const nextIndex = currentStepIndex + 1;
     if (nextIndex < STEPS.length) {
-      setCurrentStep(STEPS[nextIndex]);
+      const nextStep = STEPS[nextIndex];
+      setCurrentStepLocal(nextStep);
+      saveStepToDatabase(nextStep);
     }
   };
 
   const goToPreviousStep = () => {
     const prevIndex = currentStepIndex - 1;
     if (prevIndex >= 0) {
-      setCurrentStep(STEPS[prevIndex]);
+      const prevStep = STEPS[prevIndex];
+      setCurrentStepLocal(prevStep);
+      saveStepToDatabase(prevStep);
     }
   };
 
