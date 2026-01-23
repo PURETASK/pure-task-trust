@@ -151,6 +151,8 @@ export function useCleaner(cleanerId: string) {
   return useQuery({
     queryKey: ['cleaner', cleanerId],
     queryFn: async (): Promise<CleanerListing | null> => {
+      if (!cleanerId) return null;
+      
       const { data, error } = await supabase
         .from('cleaner_profiles')
         .select(`
@@ -199,5 +201,6 @@ export function useCleaner(cleanerId: string) {
       };
     },
     enabled: !!cleanerId,
+    staleTime: 1000 * 60 * 5, // 5 minutes - profile data doesn't change frequently
   });
 }

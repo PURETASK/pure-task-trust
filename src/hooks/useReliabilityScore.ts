@@ -57,7 +57,7 @@ export function useReliabilityScore(cleanerId?: string) {
   const queryClient = useQueryClient();
 
   // Helper to get cleaner ID - prefer passed cleanerId, otherwise look up from user
-  const getEffectiveCleanerId = async () => {
+  const getEffectiveCleanerId = async (): Promise<string | null> => {
     if (cleanerId) return cleanerId;
     if (!user) return null;
     
@@ -65,14 +65,17 @@ export function useReliabilityScore(cleanerId?: string) {
       .from('cleaner_profiles')
       .select('id')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     return data?.id || null;
   };
 
+  // Determine if query should be enabled
+  const isEnabled = !!cleanerId || !!user;
+
   // Fetch reliability score
-  const { data: score, isLoading: scoreLoading } = useQuery({
-    queryKey: ['reliability-score', cleanerId],
+  const { data: score, isLoading: scoreLoading, error: scoreError } = useQuery({
+    queryKey: ['reliability-score', cleanerId, user?.id],
     queryFn: async () => {
       const id = await getEffectiveCleanerId();
       if (!id) return null;
@@ -81,17 +84,18 @@ export function useReliabilityScore(cleanerId?: string) {
         .from('cleaner_reliability_scores')
         .select('*')
         .eq('cleaner_id', id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       return data as ReliabilityScore | null;
     },
-    enabled: !!user || !!cleanerId,
+    enabled: isEnabled,
+    staleTime: 1000 * 60 * 5, // 5 minutes - reliability score doesn't change frequently
   });
 
   // Fetch reliability events
-  const { data: events, isLoading: eventsLoading } = useQuery({
-    queryKey: ['reliability-events', cleanerId],
+  const { data: events, isLoading: eventsLoading, error: eventsError } = useQuery({
+    queryKey: ['reliability-events', cleanerId, user?.id],
     queryFn: async () => {
       const id = await getEffectiveCleanerId();
       if (!id) return [];
@@ -106,12 +110,13 @@ export function useReliabilityScore(cleanerId?: string) {
       if (error) throw error;
       return data as ReliabilityEvent[];
     },
-    enabled: !!user || !!cleanerId,
+    enabled: isEnabled,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   // Fetch cleaner metrics
-  const { data: metrics, isLoading: metricsLoading } = useQuery({
-    queryKey: ['cleaner-metrics', cleanerId],
+  const { data: metrics, isLoading: metricsLoading, error: metricsError } = useQuery({
+    queryKey: ['cleaner-metrics', cleanerId, user?.id],
     queryFn: async () => {
       const id = await getEffectiveCleanerId();
       if (!id) return null;
@@ -120,12 +125,13 @@ export function useReliabilityScore(cleanerId?: string) {
         .from('cleaner_metrics')
         .select('*')
         .eq('cleaner_id', id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       return data as CleanerMetrics | null;
     },
-    enabled: !!user || !!cleanerId,
+    enabled: isEnabled,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Record a reliability event
@@ -187,6 +193,7 @@ export function useReliabilityScore(cleanerId?: string) {
     metrics,
     scoreBreakdown,
     isLoading: scoreLoading || eventsLoading || metricsLoading,
+    error: scoreError || eventsError || metricsError,
     recordEvent,
     EVENT_WEIGHTS,
   };
