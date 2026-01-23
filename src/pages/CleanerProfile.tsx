@@ -139,9 +139,11 @@ export default function CleanerProfile() {
                     <Button className="flex-1" size="sm" asChild>
                       <Link to={`/book?cleaner=${cleaner.id}`}>Book This Cleaner</Link>
                     </Button>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <MessageCircle className="h-4 w-4" />
-                      Message
+                    <Button variant="outline" size="sm" className="gap-2" asChild>
+                      <Link to={`/messages?cleaner=${cleaner.id}`}>
+                        <MessageCircle className="h-4 w-4" />
+                        Message
+                      </Link>
                     </Button>
                   </div>
                 </div>
