@@ -4678,6 +4678,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleaner_has_job_with_client: {
+        Args: { cleaner_user_id: string; client_profile_id: string }
+        Returns: boolean
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
