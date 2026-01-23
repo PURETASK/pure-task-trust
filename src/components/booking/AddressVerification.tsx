@@ -12,7 +12,7 @@ import {
 import { Address } from '@/hooks/useAddresses';
 
 // Lazy load the Leaflet map component to avoid SSR/context issues
-const LeafletMap = lazy(() => import('./LeafletMap').then(mod => ({ default: mod.LeafletMap })));
+const LeafletMap = lazy(() => import('./LeafletMap'));
 
 interface AddressVerificationProps {
   address: Address;
