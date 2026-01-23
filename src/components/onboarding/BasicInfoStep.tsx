@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Loader2, User } from 'lucide-react';
+import { Loader2, User, ArrowLeft } from 'lucide-react';
 import type { BasicInfoData } from '@/hooks/useCleanerOnboarding';
 
 interface BasicInfoStepProps {
@@ -14,10 +14,11 @@ interface BasicInfoStepProps {
     bio?: string | null;
   };
   onSubmit: (data: BasicInfoData) => Promise<void>;
+  onBack?: () => void;
   isSubmitting: boolean;
 }
 
-export function BasicInfoStep({ initialData, onSubmit, isSubmitting }: BasicInfoStepProps) {
+export function BasicInfoStep({ initialData, onSubmit, onBack, isSubmitting }: BasicInfoStepProps) {
   const [firstName, setFirstName] = useState(initialData?.firstName || '');
   const [lastName, setLastName] = useState(initialData?.lastName || '');
   const [bio, setBio] = useState(initialData?.bio || '');
@@ -91,21 +92,29 @@ export function BasicInfoStep({ initialData, onSubmit, isSubmitting }: BasicInfo
             </p>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full" 
-            size="lg"
-            disabled={!isValid || isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              'Continue'
+          <div className="flex gap-3">
+            {onBack && (
+              <Button type="button" variant="outline" onClick={onBack}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
             )}
-          </Button>
+            <Button 
+              type="submit" 
+              className="flex-1" 
+              size="lg"
+              disabled={!isValid || isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Continue'
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
