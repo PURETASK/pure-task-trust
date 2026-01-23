@@ -15,17 +15,69 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     
+    // First, verify the user is authenticated and is an admin
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Missing authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Create a client with the user's token to verify their identity
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    if (authError || !user) {
+      console.error('[admin-workflows] Auth error:', authError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify user has admin role using the service client (bypasses RLS)
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (roleError || roleData?.role !== 'admin') {
+      console.error('[admin-workflows] User is not admin:', user.id, roleData?.role);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Forbidden: Admin access required' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`[admin-workflows] Admin ${user.email} executing action`);
 
     const body = await req.json();
     const { action, job_id, ...data } = body;
 
     console.log(`[admin-workflows] Action: ${action}, Job ID: ${job_id}`);
 
-    if (!action || !job_id) {
+    // Validate action
+    const validActions = ['reschedule', 'reassign', 'cancel', 'refund'];
+    if (!action || !validActions.includes(action)) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Missing action or job_id' }),
+        JSON.stringify({ success: false, error: `Invalid action. Must be one of: ${validActions.join(', ')}` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate job_id format (UUID)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!job_id || !uuidRegex.test(job_id)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid job_id format' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -51,14 +103,54 @@ serve(async (req) => {
       case 'reschedule': {
         const { new_date, new_time, reason } = data;
         
-        if (!new_date || !new_time) {
+        // Validate date format (YYYY-MM-DD)
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!new_date || !dateRegex.test(new_date)) {
           return new Response(
-            JSON.stringify({ success: false, error: 'Missing new_date or new_time' }),
+            JSON.stringify({ success: false, error: 'Invalid date format. Use YYYY-MM-DD' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Validate time format (HH:MM)
+        const timeRegex = /^\d{2}:\d{2}$/;
+        if (!new_time || !timeRegex.test(new_time)) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'Invalid time format. Use HH:MM' }),
             { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
 
         const newScheduledStart = new Date(`${new_date}T${new_time}`);
+        
+        // Validate date is valid and in the future
+        if (isNaN(newScheduledStart.getTime())) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'Invalid date/time combination' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        const now = new Date();
+        if (newScheduledStart <= now) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'Scheduled date must be in the future' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Limit to 90 days in the future
+        const maxFuture = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
+        if (newScheduledStart > maxFuture) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'Cannot schedule more than 90 days in advance' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        // Sanitize reason (max 500 chars)
+        const sanitizedReason = reason ? String(reason).slice(0, 500) : 'No reason provided';
+
         const estimatedHours = job.estimated_hours || 2;
         const newScheduledEnd = new Date(newScheduledStart.getTime() + estimatedHours * 60 * 60 * 1000);
 
@@ -81,7 +173,7 @@ serve(async (req) => {
           job_id,
           from_status: job.status,
           to_status: job.status,
-          reason: `Admin reschedule: ${reason || 'No reason provided'}`,
+          reason: `Admin reschedule: ${sanitizedReason}`,
           changed_by_type: 'admin'
         });
 

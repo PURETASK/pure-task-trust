@@ -114,22 +114,22 @@ const App = () => (
                     <Route path="/cleaning-scope" element={<CleaningScope />} />
                     <Route path="/about" element={<AboutUs />} />
                     
-                    {/* Admin routes */}
-                    <Route path="/admin/analytics" element={<AdminAnalyticsDashboard />} />
-                    <Route path="/admin/trust-safety" element={<TrustSafetyDashboard />} />
-                    <Route path="/admin/bookings" element={<AdminBookingsConsole />} />
-                    <Route path="/admin/client-jobs" element={<AdminClientJobs />} />
-                    <Route path="/admin/pricing-rules" element={<AdminPricingRules />} />
-                    <Route path="/admin/pricing" element={<AdminPricingManagement />} />
-                    <Route path="/admin/ceo" element={<AdminCEODashboard />} />
-                    <Route path="/admin/operations" element={<AdminOperationsDashboard />} />
-                    <Route path="/admin/finance" element={<AdminFinanceDashboard />} />
-                    <Route path="/admin/growth" element={<AdminGrowthDashboard />} />
-                    <Route path="/admin/performance" element={<AdminPerformanceMetrics />} />
-                    <Route path="/admin/fraud-alerts" element={<AdminFraudAlerts />} />
-                    <Route path="/admin/disputes" element={<AdminDisputes />} />
-                    <Route path="/admin/client-risk" element={<AdminClientRisk />} />
-                    <Route path="/admin/trust-safety-reports" element={<AdminTrustSafetyReports />} />
+                    {/* Admin routes - protected by RequireAuth with admin role */}
+                    <Route path="/admin/analytics" element={<RequireAuth allowedRoles={['admin']}><AdminAnalyticsDashboard /></RequireAuth>} />
+                    <Route path="/admin/trust-safety" element={<RequireAuth allowedRoles={['admin']}><TrustSafetyDashboard /></RequireAuth>} />
+                    <Route path="/admin/bookings" element={<RequireAuth allowedRoles={['admin']}><AdminBookingsConsole /></RequireAuth>} />
+                    <Route path="/admin/client-jobs" element={<RequireAuth allowedRoles={['admin']}><AdminClientJobs /></RequireAuth>} />
+                    <Route path="/admin/pricing-rules" element={<RequireAuth allowedRoles={['admin']}><AdminPricingRules /></RequireAuth>} />
+                    <Route path="/admin/pricing" element={<RequireAuth allowedRoles={['admin']}><AdminPricingManagement /></RequireAuth>} />
+                    <Route path="/admin/ceo" element={<RequireAuth allowedRoles={['admin']}><AdminCEODashboard /></RequireAuth>} />
+                    <Route path="/admin/operations" element={<RequireAuth allowedRoles={['admin']}><AdminOperationsDashboard /></RequireAuth>} />
+                    <Route path="/admin/finance" element={<RequireAuth allowedRoles={['admin']}><AdminFinanceDashboard /></RequireAuth>} />
+                    <Route path="/admin/growth" element={<RequireAuth allowedRoles={['admin']}><AdminGrowthDashboard /></RequireAuth>} />
+                    <Route path="/admin/performance" element={<RequireAuth allowedRoles={['admin']}><AdminPerformanceMetrics /></RequireAuth>} />
+                    <Route path="/admin/fraud-alerts" element={<RequireAuth allowedRoles={['admin']}><AdminFraudAlerts /></RequireAuth>} />
+                    <Route path="/admin/disputes" element={<RequireAuth allowedRoles={['admin']}><AdminDisputes /></RequireAuth>} />
+                    <Route path="/admin/client-risk" element={<RequireAuth allowedRoles={['admin']}><AdminClientRisk /></RequireAuth>} />
+                    <Route path="/admin/trust-safety-reports" element={<RequireAuth allowedRoles={['admin']}><AdminTrustSafetyReports /></RequireAuth>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
