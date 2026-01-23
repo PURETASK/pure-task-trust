@@ -48,6 +48,7 @@ import CleanerCalendarSync from "./pages/cleaner/CleanerCalendarSync";
 import CleanerVerification from "./pages/cleaner/CleanerVerification";
 import CleanerReliability from "./pages/cleaner/CleanerReliability";
 import CleanerAIAssistant from "./pages/cleaner/CleanerAIAssistant";
+import CleanerOnboarding from "./pages/cleaner/CleanerOnboarding";
 import Legal from "./pages/Legal";
 import CancellationPolicyPage from "./pages/CancellationPolicy";
 import ReliabilityScoreExplained from "./pages/ReliabilityScoreExplained";
@@ -94,6 +95,13 @@ const App = () => (
               <Route path="/role-selection" element={
                 <RequireAuth requireRole={false}>
                   <RoleSelection />
+                </RequireAuth>
+              } />
+              
+              {/* Cleaner onboarding - no layout */}
+              <Route path="/cleaner/onboarding" element={
+                <RequireAuth requireRole={false}>
+                  <CleanerOnboarding />
                 </RequireAuth>
               } />
               

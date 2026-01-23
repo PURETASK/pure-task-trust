@@ -33,7 +33,7 @@ function AuthLoadingSkeleton() {
 
 export function RequireAuth({ children, allowedRoles, requireRole = true }: RequireAuthProps) {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
-  const { needsRoleSelection, isLoading: profileLoading } = useUserProfile();
+  const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
   const isLoading = authLoading || (isAuthenticated && profileLoading);
@@ -50,6 +50,13 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   // Check if user needs to select a role (for OAuth users without role metadata)
   if (requireRole && needsRoleSelection && location.pathname !== '/role-selection') {
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
+  }
+
+  // Check if cleaner needs to complete onboarding
+  if (requireRole && role === 'cleaner' && needsOnboarding && 
+      location.pathname !== '/cleaner/onboarding' && 
+      location.pathname !== '/role-selection') {
+    return <Navigate to="/cleaner/onboarding" replace />;
   }
 
   // Check role if specified

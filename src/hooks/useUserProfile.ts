@@ -73,8 +73,8 @@ export function useUserProfile() {
           .eq('user_id', user.id)
           .maybeSingle();
         cleanerProfile = data;
-        // Check if cleaner has completed basic profile setup
-        needsOnboarding = !cleanerProfile || !cleanerProfile.bio || !cleanerProfile.hourly_rate_credits;
+        // Check if cleaner has completed onboarding
+        needsOnboarding = !cleanerProfile || !cleanerProfile.onboarding_completed_at;
       }
 
       return {

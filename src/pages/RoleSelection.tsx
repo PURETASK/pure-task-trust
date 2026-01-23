@@ -30,7 +30,8 @@ export default function RoleSelection() {
       
       // Navigate to appropriate destination
       if (role === "cleaner") {
-        navigate("/cleaner/dashboard");
+        // Cleaners go to onboarding first
+        navigate("/cleaner/onboarding");
       } else {
         navigate("/dashboard");
       }

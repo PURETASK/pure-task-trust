@@ -1251,8 +1251,10 @@ export type Database = {
           max_jobs_per_day: number | null
           minimum_payout_cents: number | null
           moveout_addon_cph: number | null
+          onboarding_completed_at: string | null
           payout_percent: number | null
           payout_schedule: string | null
+          profile_photo_url: string | null
           push_token: string | null
           reliability_score: number
           stripe_account_id: string | null
@@ -1284,8 +1286,10 @@ export type Database = {
           max_jobs_per_day?: number | null
           minimum_payout_cents?: number | null
           moveout_addon_cph?: number | null
+          onboarding_completed_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
           stripe_account_id?: string | null
@@ -1317,8 +1321,10 @@ export type Database = {
           max_jobs_per_day?: number | null
           minimum_payout_cents?: number | null
           moveout_addon_cph?: number | null
+          onboarding_completed_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
           stripe_account_id?: string | null
