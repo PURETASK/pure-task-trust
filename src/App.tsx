@@ -74,6 +74,7 @@ import AdminFraudAlerts from "./pages/admin/AdminFraudAlerts";
 import AdminDisputes from "./pages/admin/AdminDisputes";
 import AdminClientRisk from "./pages/admin/AdminClientRisk";
 import AdminTrustSafetyReports from "./pages/admin/AdminTrustSafetyReports";
+import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
 
 const queryClient = new QueryClient();
 
@@ -138,6 +139,7 @@ const App = () => (
                     <Route path="/admin/disputes" element={<RequireAuth allowedRoles={['admin']}><AdminDisputes /></RequireAuth>} />
                     <Route path="/admin/client-risk" element={<RequireAuth allowedRoles={['admin']}><AdminClientRisk /></RequireAuth>} />
                     <Route path="/admin/trust-safety-reports" element={<RequireAuth allowedRoles={['admin']}><AdminTrustSafetyReports /></RequireAuth>} />
+                    <Route path="/admin/id-verifications" element={<RequireAuth allowedRoles={['admin']}><AdminIDVerifications /></RequireAuth>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
