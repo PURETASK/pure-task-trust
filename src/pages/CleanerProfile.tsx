@@ -6,11 +6,14 @@ import { Star, Shield, MapPin, MessageCircle, Heart, Loader2 } from "lucide-reac
 import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
 import { useReliabilityScore } from "@/hooks/useReliabilityScore";
+import { useCleanerReviews } from "@/hooks/useReviews";
+import { format } from "date-fns";
 
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
   const { data: cleaner, isLoading, error } = useCleaner(id || '');
   const { metrics, scoreBreakdown, isLoading: metricsLoading } = useReliabilityScore(id);
+  const { data: reviews, isLoading: reviewsLoading } = useCleanerReviews(id || '');
 
   // Generate avatar placeholder
   const getAvatarUrl = (name: string) => {
@@ -39,23 +42,14 @@ export default function CleanerProfile() {
     );
   }
 
-  // Mock reviews for now - will be connected to reviews table in later phases
-  const mockReviews = [
-    {
-      id: "1",
-      name: "Jennifer K.",
-      rating: 5,
-      date: "Dec 10, 2024",
-      comment: "Did an amazing job! My apartment has never been cleaner. Thorough, professional, and finished on time.",
-    },
-    {
-      id: "2",
-      name: "Michael T.",
-      rating: 5,
-      date: "Dec 5, 2024",
-      comment: "Excellent attention to detail. Even cleaned areas I didn't expect. Will definitely book again!",
-    },
-  ];
+  // Format review date
+  const formatReviewDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch {
+      return 'Recent';
+    }
+  };
 
   return (
     <main className="flex-1 py-4 sm:py-12">
@@ -215,19 +209,27 @@ export default function CleanerProfile() {
           {/* Reviews */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">Reviews ({cleaner.jobsCompleted})</h2>
-              {mockReviews.length > 0 ? (
+              <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+                Reviews ({reviews?.length || 0})
+              </h2>
+              {reviewsLoading ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : reviews && reviews.length > 0 ? (
                 <div className="space-y-4 sm:space-y-6">
-                  {mockReviews.map((review) => (
+                  {reviews.map((review) => (
                     <div key={review.id} className="border-b border-border pb-4 sm:pb-6 last:border-0 last:pb-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2 sm:gap-3">
                           <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-secondary flex items-center justify-center font-semibold text-sm">
-                            {review.name.charAt(0)}
+                            C
                           </div>
                           <div>
-                            <p className="font-medium text-sm sm:text-base">{review.name}</p>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground">{review.date}</p>
+                            <p className="font-medium text-sm sm:text-base">Client</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground">
+                              {formatReviewDate(review.created_at)}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-0.5">
@@ -236,7 +238,9 @@ export default function CleanerProfile() {
                           ))}
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">{review.comment}</p>
+                      {review.review_text && (
+                        <p className="text-sm text-muted-foreground">{review.review_text}</p>
+                      )}
                     </div>
                   ))}
                 </div>

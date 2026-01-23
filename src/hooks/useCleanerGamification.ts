@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCleanerProfile } from './useCleanerProfile';
 import { toast } from 'sonner';
 
 // ==================== BOOSTS ====================
@@ -20,8 +21,11 @@ export interface CleanerBoost {
 
 export function useCleanerBoosts(cleanerId?: string) {
   const { user } = useAuth();
+  const { profile } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const targetCleanerId = cleanerId || user?.id;
+  
+  // Use passed cleanerId, or fall back to current user's cleaner profile ID
+  const targetCleanerId = cleanerId || profile?.id;
 
   const boostsQuery = useQuery({
     queryKey: ['cleaner-boosts', targetCleanerId],
@@ -129,8 +133,11 @@ export interface CleanerGoal {
 
 export function useCleanerGoals(cleanerId?: string) {
   const { user } = useAuth();
+  const { profile } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const targetCleanerId = cleanerId || user?.id;
+  
+  // Use passed cleanerId, or fall back to current user's cleaner profile ID
+  const targetCleanerId = cleanerId || profile?.id;
 
   const goalsQuery = useQuery({
     queryKey: ['cleaner-goals', targetCleanerId],
@@ -262,8 +269,11 @@ export interface WeeklyStreak {
 
 export function useCleanerStreaks(cleanerId?: string) {
   const { user } = useAuth();
+  const { profile } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const targetCleanerId = cleanerId || user?.id;
+  
+  // Use passed cleanerId, or fall back to current user's cleaner profile ID
+  const targetCleanerId = cleanerId || profile?.id;
 
   const streaksQuery = useQuery({
     queryKey: ['cleaner-streaks', targetCleanerId],
@@ -435,7 +445,10 @@ export interface TierHistory {
 
 export function useTierHistory(cleanerId?: string) {
   const { user } = useAuth();
-  const targetCleanerId = cleanerId || user?.id;
+  const { profile } = useCleanerProfile();
+  
+  // Use passed cleanerId, or fall back to current user's cleaner profile ID
+  const targetCleanerId = cleanerId || profile?.id;
 
   const historyQuery = useQuery({
     queryKey: ['tier-history', targetCleanerId],
