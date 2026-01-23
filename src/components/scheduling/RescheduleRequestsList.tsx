@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Calendar, CalendarClock, Check, X, Clock } from "lucide-react";
+import { Calendar, CalendarClock, Check, X, Clock, Sparkles } from "lucide-react";
 import { 
   useRescheduleEvents, 
   useRescheduleReasonCodes, 
@@ -176,7 +177,14 @@ export function RescheduleRequestsList({ jobId }: { jobId?: string }) {
         {!events || events.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No reschedule requests</p>
+            <p className="mb-4">No reschedule requests</p>
+            <p className="text-sm mb-6">When a cleaner requests to reschedule your booking, it will appear here.</p>
+            <Button asChild>
+              <Link to="/dashboard" className="gap-2">
+                <Sparkles className="h-4 w-4" />
+                View My Bookings
+              </Link>
+            </Button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -190,7 +198,7 @@ export function RescheduleRequestsList({ jobId }: { jobId?: string }) {
                     <RescheduleCard 
                       key={event.id} 
                       event={event} 
-                      isIncoming={event.requested_to === 'cleaner'} 
+                      isIncoming={event.requested_by === 'cleaner'} 
                     />
                   ))}
                 </div>

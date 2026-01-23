@@ -1,4 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RescheduleRequestsList } from "@/components/scheduling/RescheduleRequestsList";
 import { CalendarClock } from "lucide-react";
 
@@ -16,17 +15,7 @@ export default function RescheduleRequests() {
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Pending Requests</CardTitle>
-            <CardDescription>
-              Accept or decline requests to reschedule your bookings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RescheduleRequestsList />
-          </CardContent>
-        </Card>
+        <RescheduleRequestsList />
       </div>
     </main>
   );
