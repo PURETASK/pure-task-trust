@@ -1,5 +1,3 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface PageSkeletonProps {
@@ -9,14 +7,17 @@ interface PageSkeletonProps {
 }
 
 export function PageSkeleton({ 
-  showHeader = true, 
-  showFooter = true,
+  showHeader = false, 
+  showFooter = false,
   variant = 'default' 
 }: PageSkeletonProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      {showHeader && <Header />}
-      <main className="flex-1 pt-24 pb-12">
+    <div className="min-h-screen flex flex-col bg-background">
+      {/* Simple loading header placeholder */}
+      {showHeader && (
+        <div className="h-16 border-b border-border/50 bg-background/90 backdrop-blur-xl" />
+      )}
+      <main className="flex-1 pt-8 pb-12">
         <div className="container max-w-4xl">
           {variant === 'default' && <DefaultSkeleton />}
           {variant === 'cards' && <CardsSkeleton />}
@@ -24,7 +25,10 @@ export function PageSkeleton({
           {variant === 'profile' && <ProfileSkeleton />}
         </div>
       </main>
-      {showFooter && <Footer />}
+      {/* Simple loading footer placeholder */}
+      {showFooter && (
+        <div className="h-24 border-t border-border/50 bg-muted/30" />
+      )}
     </div>
   );
 }
