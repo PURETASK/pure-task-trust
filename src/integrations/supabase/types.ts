@@ -748,6 +748,47 @@ export type Database = {
           },
         ]
       }
+      cleaner_agreements: {
+        Row: {
+          accepted_at: string
+          agreement_type: string
+          cleaner_id: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          version: string
+        }
+        Insert: {
+          accepted_at?: string
+          agreement_type: string
+          cleaner_id: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          version?: string
+        }
+        Update: {
+          accepted_at?: string
+          agreement_type?: string
+          cleaner_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaner_agreements_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cleaner_availability: {
         Row: {
           cleaner_id: string
@@ -1254,6 +1295,7 @@ export type Database = {
           onboarding_completed_at: string | null
           payout_percent: number | null
           payout_schedule: string | null
+          professional_headline: string | null
           profile_photo_url: string | null
           push_token: string | null
           reliability_score: number
@@ -1289,6 +1331,7 @@ export type Database = {
           onboarding_completed_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
@@ -1324,6 +1367,7 @@ export type Database = {
           onboarding_completed_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
