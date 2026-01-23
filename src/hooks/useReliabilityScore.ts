@@ -56,11 +56,25 @@ export function useReliabilityScore(cleanerId?: string) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+  // Helper to get cleaner ID - prefer passed cleanerId, otherwise look up from user
+  const getEffectiveCleanerId = async () => {
+    if (cleanerId) return cleanerId;
+    if (!user) return null;
+    
+    const { data } = await supabase
+      .from('cleaner_profiles')
+      .select('id')
+      .eq('user_id', user.id)
+      .single();
+
+    return data?.id || null;
+  };
+
   // Fetch reliability score
   const { data: score, isLoading: scoreLoading } = useQuery({
     queryKey: ['reliability-score', cleanerId],
     queryFn: async () => {
-      const id = cleanerId || await getCleanerIdFromUser();
+      const id = await getEffectiveCleanerId();
       if (!id) return null;
 
       const { data, error } = await supabase
@@ -79,7 +93,7 @@ export function useReliabilityScore(cleanerId?: string) {
   const { data: events, isLoading: eventsLoading } = useQuery({
     queryKey: ['reliability-events', cleanerId],
     queryFn: async () => {
-      const id = cleanerId || await getCleanerIdFromUser();
+      const id = await getEffectiveCleanerId();
       if (!id) return [];
 
       const { data, error } = await supabase
@@ -99,7 +113,7 @@ export function useReliabilityScore(cleanerId?: string) {
   const { data: metrics, isLoading: metricsLoading } = useQuery({
     queryKey: ['cleaner-metrics', cleanerId],
     queryFn: async () => {
-      const id = cleanerId || await getCleanerIdFromUser();
+      const id = await getEffectiveCleanerId();
       if (!id) return null;
 
       const { data, error } = await supabase
@@ -114,19 +128,6 @@ export function useReliabilityScore(cleanerId?: string) {
     enabled: !!user || !!cleanerId,
   });
 
-  // Helper to get cleaner ID from current user
-  async function getCleanerIdFromUser() {
-    if (!user) return null;
-    
-    const { data } = await supabase
-      .from('cleaner_profiles')
-      .select('id')
-      .eq('user_id', user.id)
-      .single();
-
-    return data?.id || null;
-  }
-
   // Record a reliability event
   const recordEvent = useMutation({
     mutationFn: async ({
@@ -140,7 +141,7 @@ export function useReliabilityScore(cleanerId?: string) {
       notes?: string;
       metadata?: Record<string, unknown>;
     }) => {
-      const cleanerIdToUse = cleanerId || await getCleanerIdFromUser();
+      const cleanerIdToUse = await getEffectiveCleanerId();
       if (!cleanerIdToUse) throw new Error('Cleaner not found');
 
       const weight = EVENT_WEIGHTS[eventType] || 0;
