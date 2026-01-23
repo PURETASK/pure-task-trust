@@ -106,13 +106,24 @@ export function MainLayout({ children }: MainLayoutProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel>
-                          <div className="flex flex-col">
-                            <span>{user.name}</span>
-                            <span className="text-xs text-muted-foreground font-normal">{user.email}</span>
-                            <span className="text-xs text-primary font-medium capitalize mt-1">{user.role}</span>
+                        <Link 
+                          to={user.role === "cleaner" ? "/cleaner/profile/view" : "/profile"}
+                          className="block px-2 py-1.5 hover:bg-accent rounded-sm transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={user.avatar} />
+                              <AvatarFallback className="bg-primary/10 text-primary">
+                                {getInitials(user.name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{user.name}</span>
+                              <span className="text-xs text-muted-foreground">{user.email}</span>
+                              <span className="text-xs text-primary font-medium capitalize">{user.role}</span>
+                            </div>
                           </div>
-                        </DropdownMenuLabel>
+                        </Link>
                         <DropdownMenuSeparator />
                         
                         {user.role === "cleaner" && (
