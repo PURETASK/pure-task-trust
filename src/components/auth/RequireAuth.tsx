@@ -2,12 +2,33 @@ import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { PageSkeleton } from '@/components/ui/page-skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface RequireAuthProps {
   children: ReactNode;
   allowedRoles?: UserRole[];
   requireRole?: boolean;
+}
+
+// Simple inline loading state to avoid circular dependencies
+function AuthLoadingSkeleton() {
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <main className="flex-1 pt-8 pb-12">
+        <div className="container max-w-4xl">
+          <div className="space-y-6">
+            <Skeleton className="h-10 w-48" />
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+            <Skeleton className="h-64 w-full rounded-2xl" />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 }
 
 export function RequireAuth({ children, allowedRoles, requireRole = true }: RequireAuthProps) {
@@ -18,7 +39,7 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   const isLoading = authLoading || (isAuthenticated && profileLoading);
 
   if (isLoading) {
-    return <PageSkeleton />;
+    return <AuthLoadingSkeleton />;
   }
 
   if (!isAuthenticated) {
