@@ -2,22 +2,65 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Star, Shield, MapPin, MessageCircle, Heart, Loader2 } from "lucide-react";
+import { Star, Shield, MessageCircle, Heart, Loader2, AlertCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
 import { useReliabilityScore } from "@/hooks/useReliabilityScore";
 import { useCleanerReviews } from "@/hooks/useReviews";
 import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
   const { data: cleaner, isLoading, error } = useCleaner(id || '');
-  const { metrics, scoreBreakdown, isLoading: metricsLoading } = useReliabilityScore(id);
+  const { metrics, scoreBreakdown, isLoading: metricsLoading, error: metricsError } = useReliabilityScore(id);
   const { data: reviews, isLoading: reviewsLoading } = useCleanerReviews(id || '');
 
-  // Generate avatar placeholder
-  const getAvatarUrl = (name: string) => {
-    return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop";
+  // Fetch cleaner's profile photo from storage
+  const { data: profilePhotoUrl } = useQuery({
+    queryKey: ['cleaner-photo', cleaner?.userId],
+    queryFn: async () => {
+      if (!cleaner?.userId) return null;
+      
+      // Try to get the profile photo from storage
+      const { data } = await supabase
+        .storage
+        .from('profile-photos')
+        .getPublicUrl(`${cleaner.userId}/avatar`);
+      
+      // Check if the file exists by making a HEAD request
+      try {
+        const response = await fetch(data.publicUrl, { method: 'HEAD' });
+        if (response.ok) {
+          return data.publicUrl;
+        }
+      } catch {
+        // File doesn't exist, return null
+      }
+      return null;
+    },
+    enabled: !!cleaner?.userId,
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  });
+
+  // Generate initials-based avatar as fallback
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  // Format review date safely
+  const formatReviewDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch {
+      return 'Recent';
+    }
   };
 
   if (isLoading) {
@@ -32,6 +75,7 @@ export default function CleanerProfile() {
     return (
       <main className="flex-1 flex items-center justify-center py-12">
         <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Cleaner not found</h1>
           <p className="text-muted-foreground mb-4">This cleaner profile doesn't exist or has been removed.</p>
           <Button asChild>
@@ -41,15 +85,6 @@ export default function CleanerProfile() {
       </main>
     );
   }
-
-  // Format review date
-  const formatReviewDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d, yyyy');
-    } catch {
-      return 'Recent';
-    }
-  };
 
   return (
     <main className="flex-1 py-4 sm:py-12">
@@ -64,11 +99,23 @@ export default function CleanerProfile() {
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row">
                 <div className="relative">
-                  <img
-                    src={getAvatarUrl(cleaner.name)}
-                    alt={cleaner.name}
-                    className="w-full md:w-64 h-48 sm:h-64 object-cover"
-                  />
+                  {profilePhotoUrl ? (
+                    <img
+                      src={profilePhotoUrl}
+                      alt={cleaner.name}
+                      className="w-full md:w-64 h-48 sm:h-64 object-cover"
+                      onError={(e) => {
+                        // Fallback to initials on error
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <div className={`w-full md:w-64 h-48 sm:h-64 bg-secondary flex items-center justify-center ${profilePhotoUrl ? 'hidden' : ''}`}>
+                    <span className="text-4xl sm:text-6xl font-bold text-muted-foreground">
+                      {getInitials(cleaner.name)}
+                    </span>
+                  </div>
                   {cleaner.verified && (
                     <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                       <Badge variant="trust" className="gap-1">
