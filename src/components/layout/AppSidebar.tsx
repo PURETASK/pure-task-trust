@@ -9,6 +9,7 @@ import {
   Calendar,
   DollarSign,
   Users,
+  User,
   Star,
   MapPin,
   Briefcase,
@@ -63,6 +64,7 @@ const clientNavItems = [
   {
     group: "Account",
     items: [
+      { title: "My Profile", url: "/profile", icon: User },
       { title: "Wallet", url: "/wallet", icon: Wallet },
       { title: "Help & Support", url: "/help", icon: MessageSquare },
       { title: "Notifications", url: "/settings/notifications", icon: Settings },
@@ -93,7 +95,8 @@ const cleanerNavItems = [
   {
     group: "Settings",
     items: [
-      { title: "Profile", url: "/cleaner/profile", icon: Settings },
+      { title: "My Profile", url: "/cleaner/profile/view", icon: User },
+      { title: "Profile Settings", url: "/cleaner/profile", icon: Settings },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
       { title: "Service Areas", url: "/cleaner/service-areas", icon: MapPin },
       { title: "Team", url: "/cleaner/team", icon: Users },
