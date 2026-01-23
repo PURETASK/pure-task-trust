@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 interface LeafletMapProps {
   lat: number;
@@ -7,66 +8,79 @@ interface LeafletMapProps {
   addressLine: string;
 }
 
-// This component dynamically loads Leaflet only on the client side
-// to avoid the "render2 is not a function" error from react-leaflet
+const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const tileAttribution =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+function popupHtml(addressLine: string) {
+  // Keep popup markup simple (Leaflet expects HTML string)
+  const safeAddress = addressLine.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `
+    <div style="font-size: 12px; line-height: 1.2;">
+      <div style="font-weight: 600; margin-bottom: 2px;">Cleaning Location</div>
+      <div style="opacity: 0.8;">${safeAddress}</div>
+    </div>
+  `.trim();
+}
+
+/**
+ * IMPORTANT: We intentionally do NOT use react-leaflet here.
+ * The current react-leaflet/@react-leaflet/core versions in this project
+ * are incompatible and can throw: "render2 is not a function".
+ */
 export default function LeafletMap({ lat, lng, addressLine }: LeafletMapProps) {
-  const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
 
+  // Configure marker icons (Vite path fix)
   useEffect(() => {
-    // Dynamically import react-leaflet only on the client side
-    const loadMap = async () => {
-      try {
-        const L = await import('leaflet');
-        await import('leaflet/dist/leaflet.css');
-        
-        // Fix for default marker icon
-        delete (L.Icon.Default.prototype as any)._getIconUrl;
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        });
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl:
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      iconUrl:
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      shadowUrl:
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+  }, []);
 
-        const { MapContainer, TileLayer, Marker, Popup } = await import('react-leaflet');
+  // Create the map once
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
 
-        // Create the map component
-        const Map = () => (
-          <MapContainer
-            center={[lat, lng]}
-            zoom={16}
-            style={{ height: '100%', width: '100%' }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[lat, lng]}>
-              <Popup>
-                <div className="text-sm">
-                  <p className="font-medium">Cleaning Location</p>
-                  <p className="text-muted-foreground">{addressLine}</p>
-                </div>
-              </Popup>
-            </Marker>
-          </MapContainer>
-        );
+    const map = L.map(containerRef.current, {
+      zoomControl: true,
+      attributionControl: true,
+    });
 
-        setMapComponent(() => Map);
-      } catch (error) {
-        console.error('Failed to load map:', error);
-      }
+    mapRef.current = map;
+    L.tileLayer(tileUrl, { attribution: tileAttribution }).addTo(map);
+    map.setView([lat, lng], 16);
+
+    const marker = L.marker([lat, lng]).addTo(map);
+    marker.bindPopup(popupHtml(addressLine));
+    markerRef.current = marker;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      markerRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    loadMap();
+  // Update view/marker when coords change
+  useEffect(() => {
+    const map = mapRef.current;
+    const marker = markerRef.current;
+    if (!map || !marker) return;
+
+    map.setView([lat, lng], map.getZoom(), { animate: false });
+    marker.setLatLng([lat, lng]);
+    marker.getPopup()?.setContent(popupHtml(addressLine));
   }, [lat, lng, addressLine]);
 
-  if (!MapComponent) {
-    return (
-      <div className="h-full flex items-center justify-center bg-muted">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  return <MapComponent />;
+  return <div ref={containerRef} className="h-full w-full" />;
 }
