@@ -5,10 +5,12 @@ import { motion } from "framer-motion";
 import { Star, Shield, MapPin, MessageCircle, Heart, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
+import { useReliabilityScore } from "@/hooks/useReliabilityScore";
 
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
   const { data: cleaner, isLoading, error } = useCleaner(id || '');
+  const { metrics, scoreBreakdown, isLoading: metricsLoading } = useReliabilityScore(id);
 
   // Generate avatar placeholder
   const getAvatarUrl = (name: string) => {
@@ -158,24 +160,55 @@ export default function CleanerProfile() {
                 <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-trust" />
                 Reliability Score Breakdown
               </h2>
-              <div className="space-y-2 sm:space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">On-time arrivals</span>
-                  <span className="font-medium">{Math.min(cleaner.reliabilityScore + 1, 100)}%</span>
+              {metricsLoading ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Job completion rate</span>
-                  <span className="font-medium">100%</span>
+              ) : metrics ? (
+                <div className="space-y-2 sm:space-y-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">On-time arrivals</span>
+                    <span className="font-medium">{scoreBreakdown.punctuality.toFixed(0)}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Job completion rate</span>
+                    <span className="font-medium">
+                      {metrics.total_jobs_window > 0 
+                        ? ((metrics.completion_ok_jobs / metrics.total_jobs_window) * 100).toFixed(0) 
+                        : 100}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Photo compliance</span>
+                    <span className="font-medium">{scoreBreakdown.photoCompliance.toFixed(0)}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Attendance rate</span>
+                    <span className="font-medium">{scoreBreakdown.attendance.toFixed(0)}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Average rating</span>
+                    <span className="font-medium flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-warning text-warning" />
+                      {scoreBreakdown.rating > 0 ? scoreBreakdown.rating.toFixed(1) : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t">
+                    <span className="text-muted-foreground">Total jobs evaluated</span>
+                    <span className="font-medium">{metrics.total_jobs_window}</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Client approval rate</span>
-                  <span className="font-medium">{cleaner.reliabilityScore}%</span>
+              ) : (
+                <div className="space-y-2 sm:space-y-3 text-sm">
+                  <p className="text-muted-foreground text-center py-2">
+                    No job history yet. Book this cleaner to help build their track record!
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Overall reliability</span>
+                    <span className="font-medium text-success">{cleaner.reliabilityScore}%</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Response rate</span>
-                  <span className="font-medium">{Math.max(cleaner.reliabilityScore - 2, 90)}%</span>
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
