@@ -11,6 +11,7 @@ import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useRecurringBookings } from "@/hooks/useRecurringBookings";
 import { format } from "date-fns";
+import { InviteFriendsCTA } from "@/components/referral";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -68,6 +69,9 @@ export default function Dashboard() {
               </Link>
             </Button>
           </div>
+
+          {/* Referral CTA */}
+          <InviteFriendsCTA className="mb-6" />
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-6">

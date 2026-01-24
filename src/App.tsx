@@ -64,6 +64,7 @@ import CleaningScope from "./pages/CleaningScope";
 import Pricing from "./pages/Pricing";
 import TrustSafetyDashboard from "./pages/admin/TrustSafetyDashboard";
 import AboutUs from "./pages/AboutUs";
+import Referral from "./pages/Referral";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
@@ -202,6 +203,11 @@ const App = () => (
                     <Route path="/reschedule-requests" element={
                       <RequireClient>
                         <RescheduleRequests />
+                      </RequireClient>
+                    } />
+                    <Route path="/referral" element={
+                      <RequireClient>
+                        <Referral />
                       </RequireClient>
                     } />
                     <Route path="/favorites" element={

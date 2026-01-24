@@ -7,10 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  Gift, Users, Clock, CheckCircle, DollarSign, Copy, Mail, MessageSquare, 
+  Gift, Users, Clock, CheckCircle, DollarSign, Copy, 
   TrendingUp, Sparkles, Star, Share2, Check, Info 
 } from "lucide-react";
 import { useReferrals } from "@/hooks/useReferrals";
+import { ShareButtons } from "@/components/referral";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
@@ -44,35 +45,6 @@ export default function CleanerReferral() {
     setCopied('link');
     toast.success("Referral link copied!");
     setTimeout(() => setCopied(null), 2000);
-  };
-
-  const shareViaEmail = () => {
-    const subject = encodeURIComponent("Join PureTask and get $500!");
-    const body = encodeURIComponent(
-      `Hey! I've been using PureTask for cleaning services and it's been great. Use my referral link to sign up and we'll both get $500!\n\n${referralLink}`
-    );
-    window.open(`mailto:?subject=${subject}&body=${body}`);
-  };
-
-  const shareViaSMS = () => {
-    const text = encodeURIComponent(
-      `Join PureTask using my referral link and we'll both get $500! ${referralLink}`
-    );
-    window.open(`sms:?body=${text}`);
-  };
-
-  const shareNative = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Join PureTask',
-          text: `Use my referral code to get $${referralCode?.referee_credits || 500}!`,
-          url: referralLink,
-        });
-      } catch (err) {
-        // User cancelled or share failed
-      }
-    }
   };
 
   return (
@@ -240,22 +212,11 @@ export default function CleanerReferral() {
               </div>
 
               {/* Share Buttons */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <Button variant="outline" className="gap-2" onClick={shareViaEmail}>
-                  <Mail className="h-4 w-4" />
-                  Email
-                </Button>
-                <Button variant="outline" className="gap-2" onClick={shareViaSMS}>
-                  <MessageSquare className="h-4 w-4" />
-                  SMS
-                </Button>
-                {typeof navigator.share === 'function' && (
-                  <Button variant="outline" className="gap-2" onClick={shareNative}>
-                    <Share2 className="h-4 w-4" />
-                    Share
-                  </Button>
-                )}
-              </div>
+              <ShareButtons 
+                referralLink={referralLink}
+                referralCode={referralCode?.code || ''}
+                rewardAmount={referralCode?.reward_credits || 500}
+              />
             </CardContent>
           </Card>
         </motion.div>

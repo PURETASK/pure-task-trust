@@ -6,12 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { User, Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { User, Briefcase, Mail, Lock, ArrowRight, Loader2, Gift, Sparkles } from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useReferrals } from "@/hooks/useReferrals";
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
@@ -25,6 +27,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
+  const { applyReferral } = useReferrals();
 
   // Redirect authenticated users to their dashboard
   useEffect(() => {
@@ -61,6 +64,18 @@ export default function AuthPage() {
             variant: "destructive",
           });
         } else {
+          // Apply referral code if present
+          if (referralCode) {
+            try {
+              const { data: { user: newUser } } = await supabase.auth.getUser();
+              if (newUser) {
+                applyReferral({ code: referralCode, refereeId: newUser.id, role });
+              }
+            } catch (err) {
+              console.error('Failed to apply referral code:', err);
+            }
+          }
+          
           toast({
             title: "Account created!",
             description: role === "client" 
@@ -172,6 +187,29 @@ export default function AuthPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
+              {/* Referral Banner */}
+              {referralCode && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6"
+                >
+                  <Card className="border-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                    <CardContent className="p-4 flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                        <Gift className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-semibold flex items-center gap-2">
+                          You've been referred! <Sparkles className="h-4 w-4" />
+                        </p>
+                        <p className="text-sm text-white/80">Complete signup to claim your $500 credit</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+              
               <div className="text-center mb-6 sm:mb-8">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Join PureTask</h1>
                 <p className="text-sm sm:text-base text-muted-foreground">Choose how you'd like to use PureTask</p>
