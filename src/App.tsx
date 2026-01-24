@@ -94,8 +94,8 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <ExitIntentPopup />
             <BrowserRouter>
+            <ExitIntentPopup />
             <Routes>
               {/* Auth pages - no layout */}
               <Route path="/auth" element={<Auth />} />
