@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { MobileFooter } from "@/components/layout/MobileFooter";
+import { Footer } from "@/components/layout/Footer";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -42,21 +44,21 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className="min-h-dvh flex w-full bg-background">
         <AppSidebar />
         
-        <div className="flex-1 flex flex-col min-h-screen">
+        <div className="flex-1 flex flex-col min-h-dvh">
           {/* Header */}
           <header className="sticky top-0 z-40 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-full items-center justify-between px-3 sm:px-4">
               <div className="flex items-center gap-1.5 sm:gap-3">
-                <SidebarTrigger className="h-8 w-8" />
+                <SidebarTrigger className="h-9 w-9 touch-target" />
                 
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => navigate(-1)}
-                  className="h-8 w-8 hidden sm:flex"
+                  className="h-9 w-9 hidden sm:flex"
                   aria-label="Go back"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -66,7 +68,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                   variant="ghost" 
                   size="icon" 
                   asChild
-                  className="h-8 w-8 hidden sm:flex"
+                  className="h-9 w-9 hidden sm:flex"
                   aria-label="Go home"
                 >
                   <Link to={getHomePath()}>
@@ -87,7 +89,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
-                    <Button variant="ghost" size="icon" asChild className="h-8 w-8">
+                    <Button variant="ghost" size="icon" asChild className="h-9 w-9 touch-target hidden sm:flex">
                       <Link to="/settings/notifications">
                         <Bell className="h-4 w-4" />
                       </Link>
@@ -95,7 +97,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2">
+                        <Button variant="ghost" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 h-9 touch-target">
                           <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                             <AvatarImage src={user.avatar} />
                             <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm">
@@ -162,10 +164,10 @@ export function MainLayout({ children }: MainLayoutProps) {
                   </>
                 ) : (
                   <>
-                    <Button variant="ghost" size="sm" asChild>
+                    <Button variant="ghost" size="sm" asChild className="h-9 touch-target hidden sm:flex">
                       <Link to="/auth">Sign In</Link>
                     </Button>
-                    <Button size="sm" asChild>
+                    <Button size="sm" asChild className="h-9 touch-target">
                       <Link to="/book">Get Started</Link>
                     </Button>
                   </>
@@ -174,12 +176,21 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
           </header>
 
-          {/* Main Content */}
-          <main className="flex-1">
+          {/* Main Content - add bottom padding on mobile for bottom nav */}
+          <main className="flex-1 pb-20 md:pb-0">
             {children}
           </main>
+
+          {/* Footer - full on desktop, minimal on mobile */}
+          <div className="hidden md:block">
+            <Footer />
+          </div>
+          <MobileFooter />
         </div>
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </SidebarProvider>
   );
 }
