@@ -81,6 +81,8 @@ import AdminDisputes from "./pages/admin/AdminDisputes";
 import AdminClientRisk from "./pages/admin/AdminClientRisk";
 import AdminTrustSafetyReports from "./pages/admin/AdminTrustSafetyReports";
 import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
+import AdminConversionDashboard from "./pages/admin/AdminConversionDashboard";
+import { ExitIntentPopup } from "@/components/conversion";
 
 const queryClient = new QueryClient();
 
@@ -92,6 +94,7 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
+            <ExitIntentPopup />
             <BrowserRouter>
             <Routes>
               {/* Auth pages - no layout */}
@@ -148,6 +151,7 @@ const App = () => (
                     <Route path="/admin/client-risk" element={<RequireAuth allowedRoles={['admin']}><AdminClientRisk /></RequireAuth>} />
                     <Route path="/admin/trust-safety-reports" element={<RequireAuth allowedRoles={['admin']}><AdminTrustSafetyReports /></RequireAuth>} />
                     <Route path="/admin/id-verifications" element={<RequireAuth allowedRoles={['admin']}><AdminIDVerifications /></RequireAuth>} />
+                    <Route path="/admin/conversions" element={<RequireAuth allowedRoles={['admin']}><AdminConversionDashboard /></RequireAuth>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
