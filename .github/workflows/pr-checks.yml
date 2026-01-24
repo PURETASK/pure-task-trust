@@ -1,0 +1,114 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for console.log statements
+        run: |
+          # Find console.log in source files (excluding test files)
+          LOGS=$(grep -rn "console\.log" src/ --include="*.ts" --include="*.tsx" | grep -v "\.test\." | grep -v "\.spec\." || true)
+          
+          if [ -n "$LOGS" ]; then
+            echo "::warning::Found console.log statements in source code:"
+            echo "$LOGS"
+            echo ""
+            echo "Consider using proper logging or removing debug statements."
+          fi
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          TODOS=$(grep -rn "TODO\|FIXME\|XXX\|HACK" src/ --include="*.ts" --include="*.tsx" || true)
+          
+          if [ -n "$TODOS" ]; then
+            COUNT=$(echo "$TODOS" | wc -l)
+            echo "Found $COUNT TODO/FIXME comments:"
+            echo "$TODOS" | head -20
+            
+            if [ "$COUNT" -gt 50 ]; then
+              echo "::warning::High number of TODO comments ($COUNT). Consider addressing some."
+            fi
+          fi
+
+      - name: Check TypeScript strict mode compliance
+        run: npx tsc --noEmit --strict 2>&1 | head -50 || true
+        continue-on-error: true
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Run affected tests
+        run: |
+          # Get changed files
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep -E '\.(ts|tsx)$' || true)
+          
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Changed TypeScript files:"
+            echo "$CHANGED_FILES"
+            
+            # Run tests
+            npm run test -- --run --reporter=verbose
+          else
+            echo "No TypeScript files changed, skipping tests."
+          fi
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+
+  size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and measure
+        run: |
+          npm run build
+          
+          # Measure bundle sizes
+          echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          
+          for file in dist/assets/*.js; do
+            SIZE=$(du -h "$file" | cut -f1)
+            NAME=$(basename "$file")
+            echo "| $NAME | $SIZE |" >> $GITHUB_STEP_SUMMARY
+          done
+          
+          TOTAL=$(du -sh dist/ | cut -f1)
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Total build size: $TOTAL**" >> $GITHUB_STEP_SUMMARY
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
