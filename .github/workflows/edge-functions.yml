@@ -1,0 +1,65 @@
+name: Edge Function Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+  workflow_dispatch: {}
+
+jobs:
+  test-edge-functions:
+    name: Test Edge Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/deno
+          key: deno-${{ hashFiles('supabase/functions/**/deno.json', 'supabase/functions/**/deno.lock') }}
+          restore-keys: |
+            deno-
+
+      - name: Run Edge Function Tests
+        run: |
+          cd supabase/functions
+          
+          # Find all test files and run them
+          for test_file in $(find . -name "*.test.ts" -o -name "*_test.ts"); do
+            echo "Running tests in $test_file"
+            deno test --allow-net --allow-env --allow-read "$test_file" || exit 1
+          done
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+
+      - name: Lint Edge Functions
+        run: |
+          cd supabase/functions
+          deno lint
+        continue-on-error: true
+
+      - name: Type Check Edge Functions
+        run: |
+          cd supabase/functions
+          
+          # Check each function's index.ts
+          for func_dir in */; do
+            if [ -f "${func_dir}index.ts" ]; then
+              echo "Type checking ${func_dir}index.ts"
+              deno check "${func_dir}index.ts" || true
+            fi
+          done
+        continue-on-error: true
