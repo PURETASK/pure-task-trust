@@ -2436,6 +2436,45 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_testimonials: {
+        Row: {
+          author_location: string | null
+          author_name: string
+          author_role: string | null
+          avatar_url: string | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          quote: string
+          rating: number | null
+        }
+        Insert: {
+          author_location?: string | null
+          author_name: string
+          author_role?: string | null
+          avatar_url?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          quote: string
+          rating?: number | null
+        }
+        Update: {
+          author_location?: string | null
+          author_name?: string
+          author_role?: string | null
+          avatar_url?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          quote?: string
+          rating?: number | null
+        }
+        Relationships: []
+      }
       flexibility_decline_events: {
         Row: {
           cleaner_id: string

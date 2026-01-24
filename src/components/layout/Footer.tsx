@@ -15,6 +15,7 @@ export function Footer() {
         { name: "About Us", path: "/about" },
         { name: "How It Works", path: "/help" },
         { name: "Pricing", path: "/pricing" },
+        { name: "Customer Reviews", path: "/reviews" },
         { name: "Cleaning Scope", path: "/cleaning-scope" },
         { name: "Reliability Score", path: "/reliability-score" },
       ]
