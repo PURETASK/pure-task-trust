@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Info, Sparkles, Home as HomeIcon, Key, Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 const CLEANING_DUTIES = {
   basic: {
@@ -196,6 +197,12 @@ export default function CleaningScope() {
 
   return (
     <main className="py-12">
+      <SEO 
+        title="What's Included in Our Cleaning Services"
+        description="Detailed guide to cleaning service scope: Basic, Deep, Move-Out, and Airbnb Turnover cleaning. Know exactly what tasks are included."
+        url="/cleaning-scope"
+        keywords="cleaning service scope, what's included in cleaning, deep cleaning tasks, move out cleaning checklist, airbnb turnover cleaning"
+      />
       {/* Hero */}
       <section className="py-16 md:py-20 bg-gradient-to-b from-secondary/50 to-background">
         <div className="container">

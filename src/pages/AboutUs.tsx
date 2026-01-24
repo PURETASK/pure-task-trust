@@ -8,10 +8,18 @@ import {
   CheckCircle, Star, Camera, MapPin, Award, Zap, ArrowRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO, OrganizationSchema } from '@/components/seo';
 
 export default function AboutUs() {
   return (
     <main className="bg-background">
+      <SEO 
+        title="About PureTask - Our Mission"
+        description="We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. Learn about our trust-first approach to cleaning services."
+        url="/about"
+        keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service, cleaning service mission"
+      />
+      <OrganizationSchema />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">

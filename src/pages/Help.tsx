@@ -37,6 +37,7 @@ import {
 import { useCreateTicket, useSupportTickets } from "@/hooks/useSupportTickets";
 import { FAQSection } from "@/components/faq/FAQSection";
 import { format } from "date-fns";
+import { SEO, FAQSchema } from "@/components/seo";
 
 const issueTypes = [
   { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-destructive" },
@@ -94,6 +95,18 @@ export default function Help() {
 
   return (
     <main className="flex-1 py-4 sm:py-8">
+      <SEO 
+        title="Help & Support Center"
+        description="Get help with PureTask cleaning services. Submit support tickets, view FAQs, and contact our team for assistance."
+        url="/help"
+        keywords="puretask support, cleaning service help, contact support, faq cleaning service"
+      />
+      <FAQSchema faqs={[
+        { question: "How do I book a cleaning?", answer: "Browse verified cleaners on our Discover page, select one, and book your preferred date and time." },
+        { question: "How are cleaners verified?", answer: "All cleaners undergo comprehensive background checks and identity verification before joining PureTask." },
+        { question: "What is GPS verification?", answer: "Cleaners check in and out using GPS, so you know exactly when they arrived and left." },
+        { question: "How does photo documentation work?", answer: "Cleaners take before and after photos of their work, which you can review in your dashboard." },
+      ]} />
       <div className="container px-4 sm:px-6 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -22,6 +22,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
+import { SEO } from "@/components/seo";
+
 
 export default function Discover() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,6 +94,12 @@ export default function Discover() {
 
   return (
     <main className="flex-1 py-4 sm:py-8">
+      <SEO 
+        title="Find Verified Cleaners Near You"
+        description="Browse background-checked, verified cleaning professionals in your area. Filter by rating, availability, and price. Book with confidence."
+        url="/discover"
+        keywords="find cleaners, verified cleaners near me, book cleaning service, background checked cleaners, professional house cleaners"
+      />
       <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

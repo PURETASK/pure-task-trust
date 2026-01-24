@@ -8,6 +8,7 @@ import {
   Home, Calendar, Award, Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 const safetyFeatures = [
   {
@@ -48,6 +49,12 @@ const testimonials = [
 export default function ForRetirees() {
   return (
     <main className="pt-8">
+      <SEO 
+        title="Trusted Cleaning for Seniors & Retirees"
+        description="Reliable, respectful cleaning services for seniors. Background-checked cleaners, consistent scheduling, and easy communication for peace of mind."
+        url="/for-retirees"
+        keywords="senior cleaning services, cleaning for retirees, elderly cleaning service, trusted house cleaners, senior home cleaning"
+      />
       {/* Hero */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-pt-purple/10 to-background">
         <div className="container">

@@ -5,10 +5,17 @@ import {
   Star, XCircle, AlertTriangle, DollarSign, Zap, Shield, Info
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 export default function ReliabilityScoreExplained() {
   return (
     <main className="container py-12">
+      <SEO 
+        title="Reliability Score Explained"
+        description="Learn how PureTask calculates cleaner reliability scores, tier system benefits, and how cleaners can improve their ratings for more bookings."
+        url="/reliability-score"
+        keywords="cleaner reliability score, cleaning service rating, how to improve cleaner score, cleaning service tiers"
+      />
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

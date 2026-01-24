@@ -9,12 +9,24 @@ import {
   CheckCircle, Award, Shield, Star, Zap, Clock, Camera, Info,
   TrendingUp, DollarSign, Users, Sparkles, Target
 } from 'lucide-react';
+import { SEO, ServiceSchema } from '@/components/seo';
 
 export default function Pricing() {
   const [userType, setUserType] = useState('client');
 
   return (
     <main className="py-12">
+      <SEO 
+        title="Transparent Cleaning Prices"
+        description="No hidden fees. Cleaner rates from $15-150/hour based on their reliability tier. Simple 15% platform fee. Know exactly what you'll pay."
+        url="/pricing"
+        keywords="cleaning prices, house cleaning cost, cleaning service rates, transparent pricing, cleaning service fees"
+      />
+      <ServiceSchema 
+        name="House Cleaning Services"
+        description="Professional cleaning services with verified, background-checked cleaners"
+        price="15-150"
+      />
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-16">
         <div className="max-w-6xl mx-auto px-4 text-center">

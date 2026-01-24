@@ -8,6 +8,7 @@ import {
   Calendar, TrendingUp, Coffee, Laptop
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 const painPoints = [
   'Spending weekends cleaning instead of relaxing',
@@ -51,6 +52,12 @@ const features = [
 export default function ForProfessionals() {
   return (
     <main className="pt-8">
+      <SEO 
+        title="Cleaning Services for Busy Professionals"
+        description="Reclaim your weekends with verified, reliable cleaning professionals. Instant booking, GPS check-ins, and photo documentation for peace of mind."
+        url="/for-professionals"
+        keywords="professional cleaning, busy professional cleaning, verified cleaners, reliable cleaning service, house cleaning for professionals"
+      />
       {/* Hero */}
         <section className="py-20 md:py-28 bg-gradient-to-b from-pt-cyan/10 to-background">
           <div className="container">

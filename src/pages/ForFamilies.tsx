@@ -8,6 +8,7 @@ import {
   Home, Sparkles, Award, Clock, AlertTriangle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 const safetyFeatures = [
   {
@@ -44,6 +45,12 @@ const benefits = [
 export default function ForFamilies() {
   return (
     <main className="pt-8">
+      <SEO 
+        title="Safe Cleaning for Families with Kids"
+        description="Background-checked cleaners who understand families with kids and pets. Child-safe cleaning products, GPS verification, and photo documentation."
+        url="/for-families"
+        keywords="family cleaning, child safe cleaning, pet safe cleaning, background checked cleaners, family friendly cleaners"
+      />
       {/* Hero */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-pt-green/10 to-background">
         <div className="container">

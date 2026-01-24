@@ -8,6 +8,7 @@ import {
   Calendar, DollarSign, Award, TrendingUp, Shield
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 const features = [
   { icon: Clock, title: 'Same-Day Turnovers', description: 'Guest checking out at 11am, next one at 3pm? We will have your place spotless in between.' },
@@ -28,6 +29,12 @@ const stats = [
 export default function ForAirbnbHosts() {
   return (
     <main className="pt-8">
+      <SEO 
+        title="Airbnb Turnover Cleaning Services"
+        description="Fast, reliable turnover cleaning for Airbnb and short-term rental hosts. Same-day service, photo documentation, and verified cleaners to protect your 5-star rating."
+        url="/for-airbnb-hosts"
+        keywords="airbnb cleaning, turnover cleaning, vacation rental cleaning, short term rental cleaning, airbnb turnover service"
+      />
         {/* Hero */}
         <section className="py-20 md:py-28 bg-gradient-to-b from-pt-amber/10 to-background">
           <div className="container">
