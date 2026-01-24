@@ -74,6 +74,7 @@ export function Footer() {
       title: "Admin",
       links: [
         { name: "Analytics Dashboard", path: "/admin/analytics" },
+        { name: "Conversion Dashboard", path: "/admin/conversions" },
         { name: "Bookings Console", path: "/admin/bookings" },
         { name: "Client Jobs", path: "/admin/client-jobs" },
         { name: "Pricing Management", path: "/admin/pricing" },
