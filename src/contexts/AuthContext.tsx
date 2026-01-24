@@ -41,6 +41,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setTimeout(() => {
             fetchUserProfile(currentSession.user);
           }, 0);
+          
+          // Send welcome email for new signups (SIGNED_IN with new user)
+          if (event === 'SIGNED_IN') {
+            // Check if user was just created (within last minute)
+            const createdAt = new Date(currentSession.user.created_at);
+            const now = new Date();
+            const isNewUser = (now.getTime() - createdAt.getTime()) < 60000; // Within 1 minute
+            
+            if (isNewUser) {
+              const userRole = currentSession.user.user_metadata?.role as UserRole;
+              if (userRole) {
+                sendWelcomeEmail(currentSession.user.id, userRole, currentSession.user.email);
+              }
+            }
+          }
         } else {
           setUser(null);
         }
@@ -60,6 +75,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const sendWelcomeEmail = async (userId: string, role: UserRole, email?: string) => {
+    try {
+      // Fire and forget - don't block auth flow
+      supabase.functions.invoke('send-welcome-email', {
+        body: { userId, role, email },
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Failed to send welcome email:', error);
+        } else {
+          console.log('Welcome email sent successfully');
+        }
+      });
+    } catch (error) {
+      console.error('Error triggering welcome email:', error);
+    }
+  };
 
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {

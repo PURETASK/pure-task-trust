@@ -23,3 +23,18 @@ verify_jwt = false
 
 [functions.verify-otp]
 verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.send-booking-reminders]
+verify_jwt = false
+
+[functions.send-review-nudge]
+verify_jwt = false
+
+[functions.send-reengagement-emails]
+verify_jwt = false
+
+[functions.send-onboarding-reminder]
+verify_jwt = false
