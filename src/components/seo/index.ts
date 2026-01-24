@@ -6,3 +6,4 @@ export {
   FAQSchema, 
   ServiceSchema 
 } from './JsonLd';
+export { AggregateRatingSchema } from './AggregateRatingSchema';

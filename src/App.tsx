@@ -65,6 +65,7 @@ import Pricing from "./pages/Pricing";
 import TrustSafetyDashboard from "./pages/admin/TrustSafetyDashboard";
 import AboutUs from "./pages/AboutUs";
 import Referral from "./pages/Referral";
+import Reviews from "./pages/Reviews";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
@@ -128,6 +129,7 @@ const App = () => (
                     <Route path="/for-professionals" element={<ForProfessionals />} />
                     <Route path="/cleaning-scope" element={<CleaningScope />} />
                     <Route path="/about" element={<AboutUs />} />
+                    <Route path="/reviews" element={<Reviews />} />
                     
                     {/* Admin routes - protected by RequireAuth with admin role */}
                     <Route path="/admin/analytics" element={<RequireAuth allowedRoles={['admin']}><AdminAnalyticsDashboard /></RequireAuth>} />
