@@ -1,0 +1,37 @@
+{
+  "name": "PureTask - Trusted Cleaning Services",
+  "short_name": "PureTask",
+  "description": "Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0078FF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Book Cleaning",
+      "url": "/book",
+      "description": "Book a new cleaning service"
+    },
+    {
+      "name": "My Dashboard",
+      "url": "/dashboard",
+      "description": "View your bookings and manage account"
+    }
+  ]
+}
