@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   isSameDayBooking,
@@ -8,7 +9,7 @@ import {
   getSameDayRestrictionMessage,
   validateSameDayBooking,
   SAME_DAY_CONFIG,
-} from '../same-day-booking';
+} from '@/lib/same-day-booking';
 
 describe('same-day-booking utilities', () => {
   describe('SAME_DAY_CONFIG', () => {

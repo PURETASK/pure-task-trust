@@ -1,5 +1,6 @@
+/// <reference types="vitest" />
 import { describe, it, expect } from 'vitest';
-import { DEFAULT_PRICING_RULES, type PricingRule } from '../pricing-rules';
+import { DEFAULT_PRICING_RULES, type PricingRule } from '@/lib/pricing-rules';
 
 describe('pricing-rules utilities', () => {
   describe('DEFAULT_PRICING_RULES structure', () => {

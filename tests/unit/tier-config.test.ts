@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { describe, it, expect } from 'vitest';
 import {
   getTierFromScore,
@@ -10,7 +11,7 @@ import {
   TIER_CONFIGS,
   ADDITIONAL_SERVICE_LABELS,
   type CleanerTier,
-} from '../tier-config';
+} from '@/lib/tier-config';
 
 describe('tier-config utilities', () => {
   describe('TIER_CONFIGS structure', () => {
