@@ -6,6 +6,7 @@ import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
 import { TierBadge } from "@/components/gamification/TierBadge";
+import { InviteFriendsCTA } from "@/components/referral";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
@@ -117,6 +118,9 @@ export default function CleanerDashboard() {
             <BoostCard />
           </div>
         </section>
+
+        {/* Referral CTA */}
+        <InviteFriendsCTA linkTo="/cleaner/referral" />
 
         {/* Quick Actions */}
         <section>
