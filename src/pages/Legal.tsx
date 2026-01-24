@@ -9,6 +9,7 @@ import {
   ArrowRight, Download, Mail
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
 
 export default function Legal() {
   const [activeTab, setActiveTab] = useState('privacy');
@@ -68,6 +69,12 @@ export default function Legal() {
 
   return (
     <main className="container py-8">
+      <SEO 
+        title="Terms of Service & Privacy Policy"
+        description="PureTask legal documents: Privacy Policy, Terms of Service, Photo Consent Policy, Cancellation Policy, and Damage Claims process."
+        url="/legal"
+        keywords="privacy policy, terms of service, cleaning service terms, photo consent, cancellation policy"
+      />
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

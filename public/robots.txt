@@ -1,14 +1,32 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# PureTask Robots.txt
 
 User-agent: *
 Allow: /
+
+# Disallow private/authenticated areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /wallet
+Disallow: /messages
+Disallow: /properties
+Disallow: /favorites
+Disallow: /booking-status
+Disallow: /job-approval
+Disallow: /job-in-progress
+Disallow: /reschedule-requests
+Disallow: /notification-settings
+
+# Disallow cleaner portal
+Disallow: /cleaner/
+
+# Disallow admin area
+Disallow: /admin/
+
+# Disallow auth pages
+Disallow: /auth
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /role-selection
+
+# Sitemap
+Sitemap: https://pure-task-trust.lovable.app/sitemap.xml
