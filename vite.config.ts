@@ -19,6 +19,8 @@ export default defineConfig(({ mode }) => ({
       manifest: false, // Use external manifest.json
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        // Increase limit to 3MB to handle large bundle
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
