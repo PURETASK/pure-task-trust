@@ -83,6 +83,7 @@ import AdminTrustSafetyReports from "./pages/admin/AdminTrustSafetyReports";
 import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
 import AdminConversionDashboard from "./pages/admin/AdminConversionDashboard";
 import { ExitIntentPopup } from "@/components/conversion";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+            <ScrollToTop />
             <ExitIntentPopup />
             <Routes>
               {/* Auth pages - no layout */}
