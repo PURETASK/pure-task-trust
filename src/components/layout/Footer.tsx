@@ -1,9 +1,20 @@
 import { Link } from "react-router-dom";
 import { 
-  Sparkles, Shield, Users, Home, Calendar, DollarSign, 
-  MessageSquare, Settings, Heart, MapPin, Award, HelpCircle,
-  FileText, Scale, TrendingUp, Briefcase, Building2, UserPlus
+  Sparkles, Shield, MapPin, Award
 } from "lucide-react";
+
+// Custom Link component that scrolls to top
+function FooterLink({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) {
+  const handleClick = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  };
+  
+  return (
+    <Link to={to} onClick={handleClick} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -31,6 +42,7 @@ export function Footer() {
         { name: "Messages", path: "/messages" },
         { name: "Favorite Cleaners", path: "/favorites" },
         { name: "Reschedule Requests", path: "/reschedule-requests" },
+        { name: "Referral Program", path: "/referral" },
       ]
     },
     {
@@ -59,6 +71,7 @@ export function Footer() {
         { name: "Reliability Score", path: "/cleaner/reliability" },
         { name: "Cancellation Policy", path: "/cleaner/cancellation-policy" },
         { name: "Resources", path: "/cleaner/resources" },
+        { name: "AI Assistant", path: "/cleaner/ai-assistant" },
       ]
     },
     {
@@ -73,13 +86,23 @@ export function Footer() {
     {
       title: "Admin",
       links: [
+        { name: "CEO Dashboard", path: "/admin/ceo" },
         { name: "Analytics Dashboard", path: "/admin/analytics" },
+        { name: "Operations", path: "/admin/operations" },
+        { name: "Finance", path: "/admin/finance" },
+        { name: "Growth", path: "/admin/growth" },
+        { name: "Performance", path: "/admin/performance" },
         { name: "Conversion Dashboard", path: "/admin/conversions" },
         { name: "Bookings Console", path: "/admin/bookings" },
         { name: "Client Jobs", path: "/admin/client-jobs" },
         { name: "Pricing Management", path: "/admin/pricing" },
         { name: "Pricing Rules", path: "/admin/pricing-rules" },
         { name: "Trust & Safety", path: "/admin/trust-safety" },
+        { name: "Trust Reports", path: "/admin/trust-safety-reports" },
+        { name: "Fraud Alerts", path: "/admin/fraud-alerts" },
+        { name: "Disputes", path: "/admin/disputes" },
+        { name: "Client Risk", path: "/admin/client-risk" },
+        { name: "ID Verifications", path: "/admin/id-verifications" },
       ]
     },
     {
@@ -88,6 +111,7 @@ export function Footer() {
         { name: "Privacy Policy", path: "/legal" },
         { name: "Terms of Service", path: "/legal" },
         { name: "Legal Center", path: "/legal" },
+        { name: "Cancellation Policy", path: "/cancellationpolicy" },
         { name: "Help Center", path: "/help" },
         { name: "Notification Settings", path: "/settings/notifications" },
       ]
@@ -95,10 +119,10 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-border bg-muted/30">
+    <footer className="border-t border-border bg-muted/30 hidden md:block">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 mb-8 sm:mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h4 className="font-semibold text-foreground mb-3 sm:mb-4 text-xs sm:text-sm">
@@ -107,12 +131,12 @@ export function Footer() {
               <ul className="space-y-1.5 sm:space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link 
+                    <FooterLink 
                       to={link.path} 
                       className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
                       {link.name}
-                    </Link>
+                    </FooterLink>
                   </li>
                 ))}
               </ul>
@@ -125,12 +149,12 @@ export function Footer() {
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8">
             {/* Logo & Description */}
             <div className="max-w-md">
-              <Link to="/" className="flex items-center gap-2 mb-2 sm:mb-3">
+              <FooterLink to="/" className="flex items-center gap-2 mb-2 sm:mb-3">
                 <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary flex items-center justify-center">
                   <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
                 </div>
                 <span className="font-bold text-lg sm:text-xl text-foreground">PureTask</span>
-              </Link>
+              </FooterLink>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Trust-first cleaning marketplace. GPS-verified check-ins, photo proof, 
                 and pay only when you're happy. Connecting quality cleaners with happy homes.
@@ -161,18 +185,18 @@ export function Footer() {
             © {currentYear} PureTask. All rights reserved.
           </p>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <FooterLink to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Privacy
-            </Link>
-            <Link to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </FooterLink>
+            <FooterLink to="/legal" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Terms
-            </Link>
-            <Link to="/help" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </FooterLink>
+            <FooterLink to="/help" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Support
-            </Link>
-            <Link to="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </FooterLink>
+            <FooterLink to="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               About
-            </Link>
+            </FooterLink>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
             Built with trust in mind ✨
