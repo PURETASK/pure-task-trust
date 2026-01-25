@@ -38,3 +38,15 @@ verify_jwt = false
 
 [functions.send-onboarding-reminder]
 verify_jwt = false
+
+[functions.stripe-connect-onboarding]
+verify_jwt = false
+
+[functions.stripe-connect-status]
+verify_jwt = false
+
+[functions.process-instant-payout]
+verify_jwt = false
+
+[functions.process-weekly-payouts]
+verify_jwt = false

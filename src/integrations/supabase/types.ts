@@ -1414,6 +1414,7 @@ export type Database = {
           reliability_score: number
           stripe_account_id: string | null
           stripe_connect_id: string | null
+          stripe_payouts_enabled: boolean | null
           tier: string
           travel_radius_km: number | null
           updated_at: string
@@ -1453,6 +1454,7 @@ export type Database = {
           reliability_score?: number
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
+          stripe_payouts_enabled?: boolean | null
           tier?: string
           travel_radius_km?: number | null
           updated_at?: string
@@ -1492,6 +1494,7 @@ export type Database = {
           reliability_score?: number
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
+          stripe_payouts_enabled?: boolean | null
           tier?: string
           travel_radius_km?: number | null
           updated_at?: string
@@ -3970,12 +3973,15 @@ export type Database = {
           created_at: string
           decided_at: string | null
           decided_by: string | null
+          fee_credits: number | null
           id: string
           metadata: Json | null
           payout_id: string | null
+          payout_type: string | null
           rejection_reason: string | null
           requested_at: string
           status: string
+          stripe_transfer_id: string | null
           updated_at: string
         }
         Insert: {
@@ -3985,12 +3991,15 @@ export type Database = {
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
+          fee_credits?: number | null
           id?: string
           metadata?: Json | null
           payout_id?: string | null
+          payout_type?: string | null
           rejection_reason?: string | null
           requested_at?: string
           status?: string
+          stripe_transfer_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -4000,12 +4009,15 @@ export type Database = {
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
+          fee_credits?: number | null
           id?: string
           metadata?: Json | null
           payout_id?: string | null
+          payout_type?: string | null
           rejection_reason?: string | null
           requested_at?: string
           status?: string
+          stripe_transfer_id?: string | null
           updated_at?: string
         }
         Relationships: [

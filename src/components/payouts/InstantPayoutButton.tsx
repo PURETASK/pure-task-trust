@@ -19,6 +19,7 @@ interface InstantPayoutButtonProps {
   onRequestPayout: () => Promise<void>;
   minPayout?: number;
   feePercentage?: number;
+  disabled?: boolean;
 }
 
 export default function InstantPayoutButton({
@@ -26,6 +27,7 @@ export default function InstantPayoutButton({
   onRequestPayout,
   minPayout = 10,
   feePercentage = 5,
+  disabled = false,
 }: InstantPayoutButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -52,12 +54,12 @@ export default function InstantPayoutButton({
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="bg-amber-500 hover:bg-amber-600 text-white gap-2"
-          disabled={!canPayout}
+          className="bg-warning hover:bg-warning/90 text-warning-foreground gap-2"
+          disabled={!canPayout || disabled}
         >
           <Zap className="h-4 w-4" />
           Instant Payout
-          <Badge variant="secondary" className="ml-1 bg-amber-600/20 text-amber-100">
+          <Badge variant="secondary" className="ml-1 bg-warning-foreground/20 text-warning-foreground">
             {feePercentage}% fee
           </Badge>
         </Button>

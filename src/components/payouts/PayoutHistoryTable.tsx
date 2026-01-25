@@ -14,12 +14,12 @@ import { Package, Zap, Calendar, CheckCircle, Clock, XCircle } from 'lucide-reac
 interface Payout {
   id: string;
   amount_credits: number;
-  amount_usd: number;
+  amount_cents?: number;
   status: string;
   payout_type?: string;
-  fee?: number;
+  fee_credits?: number;
   requested_at: string;
-  processed_at: string | null;
+  created_at?: string;
 }
 
 interface PayoutHistoryTableProps {
@@ -111,8 +111,9 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
       </TableHeader>
       <TableBody>
         {payouts.map((payout) => {
-          const fee = payout.fee || 0;
-          const net = payout.amount_usd - fee;
+          const fee = payout.fee_credits || 0;
+          const grossAmount = payout.amount_credits;
+          const net = grossAmount - fee;
           
           return (
             <TableRow key={payout.id}>
@@ -125,7 +126,7 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
                   <span className="capitalize">{payout.payout_type || 'Weekly'}</span>
                 </div>
               </TableCell>
-              <TableCell>${payout.amount_usd.toFixed(2)}</TableCell>
+              <TableCell>${grossAmount.toFixed(2)}</TableCell>
               <TableCell className="text-muted-foreground">
                 {fee > 0 ? `-$${fee.toFixed(2)}` : '-'}
               </TableCell>
