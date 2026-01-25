@@ -50,3 +50,90 @@ verify_jwt = false
 
 [functions.process-weekly-payouts]
 verify_jwt = false
+
+[functions.generate-subscription-jobs]
+verify_jwt = false
+
+[functions.expire-stale-job-offers]
+verify_jwt = false
+
+[functions.auto-complete-jobs]
+verify_jwt = false
+
+[functions.expire-pending-bookings]
+verify_jwt = false
+
+[functions.auto-cancel-no-shows]
+verify_jwt = false
+
+[functions.recalculate-reliability-scores]
+verify_jwt = false
+
+[functions.evaluate-tier-promotions]
+verify_jwt = false
+
+[functions.check-background-expiry]
+verify_jwt = false
+
+[functions.flag-suspicious-activity]
+verify_jwt = false
+
+[functions.verify-stripe-connect-health]
+verify_jwt = false
+
+[functions.process-referral-payouts]
+verify_jwt = false
+
+[functions.release-held-credits]
+verify_jwt = false
+
+[functions.expire-promo-credits]
+verify_jwt = false
+
+[functions.process-cancellation-fees]
+verify_jwt = false
+
+[functions.update-cleaner-streaks]
+verify_jwt = false
+
+[functions.send-milestone-celebrations]
+verify_jwt = false
+
+[functions.send-job-confirmation-reminder]
+verify_jwt = false
+
+[functions.send-availability-update-reminder]
+verify_jwt = false
+
+[functions.send-welcome-drip-day3]
+verify_jwt = false
+
+[functions.send-welcome-drip-day7]
+verify_jwt = false
+
+[functions.send-birthday-greetings]
+verify_jwt = false
+
+[functions.send-low-balance-alerts]
+verify_jwt = false
+
+[functions.daily-analytics-rollup]
+verify_jwt = false
+
+[functions.cleanup-stale-data]
+verify_jwt = false
+
+[functions.generate-weekly-admin-report]
+verify_jwt = false
+
+[functions.refresh-platform-stats]
+verify_jwt = false
+
+[functions.send-schedule-gap-alerts]
+verify_jwt = false
+
+[functions.auto-assign-unmatched-jobs]
+verify_jwt = false
+
+[functions.sync-calendar-events]
+verify_jwt = false
