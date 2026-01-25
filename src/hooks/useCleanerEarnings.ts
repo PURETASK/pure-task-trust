@@ -27,12 +27,13 @@ export interface CleanerPayout {
   id: string;
   cleaner_id: string;
   amount_credits: number;
-  amount_usd: number;
+  amount_cents?: number;
   status: string;
-  stripe_transfer_id: string | null;
+  payout_type?: string;
+  fee_credits?: number;
+  stripe_transfer_id?: string | null;
   requested_at: string;
-  processed_at: string | null;
-  notes: string | null;
+  created_at?: string;
 }
 
 export interface CleanerStats {
@@ -72,20 +73,56 @@ export function useCleanerEarnings() {
     enabled: !!profile?.id,
   });
 
-  // Calculate stats from earnings data
+  // Fetch payout history
+  const payoutsQuery = useQuery({
+    queryKey: ['cleaner-payouts', profile?.id],
+    queryFn: async () => {
+      if (!profile?.id) return [];
+
+      const { data, error } = await supabase
+        .from('payout_requests')
+        .select('*')
+        .eq('cleaner_id', profile.id)
+        .order('requested_at', { ascending: false });
+
+      if (error) throw error;
+      return data as CleanerPayout[];
+    },
+    enabled: !!profile?.id,
+  });
+
+  // Calculate stats from earnings and payouts
+  const pendingPayouts = payoutsQuery.data?.filter(p => 
+    p.status === 'pending' || p.status === 'processing'
+  ) || [];
+  
+  const completedPayouts = payoutsQuery.data?.filter(p => 
+    p.status === 'completed' || p.status === 'paid'
+  ) || [];
+
+  // Calculate amount_usd from amount_credits (1:1 ratio)
+  const getPayoutAmount = (p: CleanerPayout) => p.amount_credits || 0;
+
   const stats: CleanerStats = {
     totalEarned: earningsQuery.data?.reduce((sum, e) => sum + e.net_credits, 0) || 0,
     availableBalance: earningsQuery.data
       ?.filter(e => !e.payout_id)
       .reduce((sum, e) => sum + e.net_credits, 0) || 0,
-    pendingPayout: 0,
-    paidOut: 0,
+    pendingPayout: pendingPayouts.reduce((sum, p) => sum + getPayoutAmount(p), 0),
+    paidOut: completedPayouts.reduce((sum, p) => sum + getPayoutAmount(p), 0),
+  };
+
+  const refetchPayouts = () => {
+    queryClient.invalidateQueries({ queryKey: ['cleaner-payouts', profile?.id] });
+    queryClient.invalidateQueries({ queryKey: ['cleaner-earnings', profile?.id] });
   };
 
   return {
     earnings: earningsQuery.data || [],
-    isLoadingEarnings: earningsQuery.isLoading,
+    payouts: payoutsQuery.data || [],
+    isLoadingEarnings: earningsQuery.isLoading || payoutsQuery.isLoading,
     stats,
+    refetchPayouts,
   };
 }
 

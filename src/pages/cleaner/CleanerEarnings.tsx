@@ -2,18 +2,21 @@ import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Info } from "lucide-react";
+import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check } from "lucide-react";
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { format } from "date-fns";
 import InstantPayoutButton from "@/components/payouts/InstantPayoutButton";
 import PayoutHistoryTable from "@/components/payouts/PayoutHistoryTable";
 import EarningsBreakdown from "@/components/payouts/EarningsBreakdown";
+import BankAccountStatus from "@/components/payouts/BankAccountStatus";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function CleanerEarnings() {
-  const { earnings, isLoadingEarnings, stats } = useCleanerEarnings();
-  const [message, setMessage] = useState('');
+  const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
+  const [payoutsEnabled, setPayoutsEnabled] = useState(false);
+  const [isProcessingPayout, setIsProcessingPayout] = useState(false);
 
   // Calculate next Friday for payout
   const getNextFriday = () => {
@@ -26,13 +29,25 @@ export default function CleanerEarnings() {
   };
 
   const handleInstantPayout = async () => {
-    // This would integrate with your payout system
-    // For now, just show a message
-    setMessage('Instant payout feature coming soon!');
+    setIsProcessingPayout(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('process-instant-payout');
+      
+      if (error) throw error;
+      
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+      
+      toast.success(`Payout of $${data.amount?.toFixed(2)} processed successfully!`);
+      refetchPayouts?.();
+    } catch (error: any) {
+      console.error('Payout error:', error);
+      throw error; // Re-throw to let the button handle the error state
+    } finally {
+      setIsProcessingPayout(false);
+    }
   };
-
-  // Mock payouts data - replace with actual data from your backend
-  const payouts: any[] = [];
 
   return (
     <CleanerLayout>
@@ -43,12 +58,8 @@ export default function CleanerEarnings() {
           <p className="text-muted-foreground mt-1">Track your income and request payouts</p>
         </div>
 
-        {message && (
-          <Alert>
-            <Info className="h-4 w-4" />
-            <AlertDescription>{message}</AlertDescription>
-          </Alert>
-        )}
+        {/* Bank Account Status */}
+        <BankAccountStatus onStatusChange={setPayoutsEnabled} />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -62,8 +73,8 @@ export default function CleanerEarnings() {
             <>
               <Card className="border-border/50">
                 <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3">
-                    <TrendingUp className="h-5 w-5 text-emerald-500" />
+                  <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center mb-3">
+                    <TrendingUp className="h-5 w-5 text-success" />
                   </div>
                   <div className="text-sm text-muted-foreground">Total Earned</div>
                   <div className="text-2xl font-bold">${stats.totalEarned.toFixed(2)}</div>
@@ -80,8 +91,8 @@ export default function CleanerEarnings() {
               </Card>
               <Card className="border-border/50">
                 <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-3">
-                    <Clock className="h-5 w-5 text-amber-500" />
+                  <div className="h-10 w-10 rounded-xl bg-warning/10 flex items-center justify-center mb-3">
+                    <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div className="text-sm text-muted-foreground">Pending</div>
                   <div className="text-2xl font-bold">${stats.pendingPayout.toFixed(2)}</div>
@@ -89,8 +100,8 @@ export default function CleanerEarnings() {
               </Card>
               <Card className="border-border/50">
                 <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
-                    <CheckCircle className="h-5 w-5 text-cyan-500" />
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                    <CheckCircle className="h-5 w-5 text-primary" />
                   </div>
                   <div className="text-sm text-muted-foreground">Paid Out</div>
                   <div className="text-2xl font-bold">${stats.paidOut.toFixed(2)}</div>
@@ -109,22 +120,28 @@ export default function CleanerEarnings() {
                 <DollarSign className="h-8 w-8 text-muted-foreground/30" />
               </div>
               <div className="text-3xl font-bold mb-4">${stats.availableBalance.toFixed(2)}</div>
-              <p className="text-sm text-muted-foreground mb-4">Minimum $10 required for payout</p>
+              <p className="text-sm text-muted-foreground mb-4">Minimum $10 required for instant payout</p>
               
               <InstantPayoutButton
                 availableBalance={stats.availableBalance}
                 onRequestPayout={handleInstantPayout}
                 minPayout={10}
                 feePercentage={5}
+                disabled={!payoutsEnabled}
               />
+              {!payoutsEnabled && stats.availableBalance >= 10 && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Connect your bank account above to enable payouts
+                </p>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200 dark:border-cyan-800">
+          <Card className="bg-primary/5 border-primary/20">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-cyan-500" />
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <h3 className="font-semibold">Weekly Payout</h3>
