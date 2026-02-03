@@ -6,15 +6,15 @@ import heroImage from "@/assets/hero-cleaning.jpg";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-14 sm:pt-16 overflow-hidden">
+    <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-14 sm:pt-16 overflow-hidden w-full">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img src={heroImage} alt="Clean, modern home interior" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/98 via-white/90 to-white/60 sm:from-white/95 sm:via-white/80 sm:to-white/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/98 via-white/95 to-white/85 sm:from-white/95 sm:via-white/80 sm:to-white/40" />
       </div>
 
-      <div className="container relative z-10 py-8 sm:py-20 px-4 sm:px-6">
-        <div className="max-w-2xl">
+      <div className="w-full relative z-10 py-8 sm:py-20 px-4 sm:px-6 box-border">
+        <div className="max-w-full sm:max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

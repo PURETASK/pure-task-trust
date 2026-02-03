@@ -44,10 +44,10 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-dvh flex w-full bg-background overflow-x-hidden">
+      <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-hidden">
         <AppSidebar />
         
-        <div className="flex-1 flex flex-col min-h-dvh">
+        <div className="flex-1 flex flex-col min-h-dvh min-w-0">
           {/* Header */}
           <header className="sticky top-0 z-40 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-full items-center justify-between px-3 sm:px-4">
