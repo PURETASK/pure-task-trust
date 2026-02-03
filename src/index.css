@@ -142,6 +142,7 @@
     scroll-behavior: smooth;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
@@ -150,6 +151,9 @@
     overscroll-behavior-y: contain;
     /* Dynamic viewport height for mobile keyboards */
     min-height: 100dvh;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4, h5, h6 {

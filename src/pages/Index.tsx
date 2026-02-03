@@ -12,7 +12,7 @@ import { TestimonialsCarousel } from "@/components/social-proof";
 
 const Index = () => {
   return (
-    <main>
+    <main className="overflow-x-hidden">
       <SEO 
         url="/"
         keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners"
