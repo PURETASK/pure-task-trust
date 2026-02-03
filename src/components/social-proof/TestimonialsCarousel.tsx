@@ -63,8 +63,8 @@ export function TestimonialsCarousel() {
   if (!testimonials?.length) return null;
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30 overflow-hidden">
-      <div className="container px-4 sm:px-6">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30 overflow-x-hidden">
+      <div className="container px-4 sm:px-6 overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

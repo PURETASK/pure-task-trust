@@ -44,7 +44,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-dvh flex w-full bg-background">
+      <div className="min-h-dvh flex w-full bg-background overflow-x-hidden">
         <AppSidebar />
         
         <div className="flex-1 flex flex-col min-h-dvh">
@@ -177,7 +177,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </header>
 
           {/* Main Content - add bottom padding on mobile for bottom nav */}
-          <main className="flex-1 pb-20 md:pb-0">
+          <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden">
             {children}
           </main>
 
