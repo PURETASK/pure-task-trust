@@ -182,11 +182,16 @@ const App = () => (
                         <JobInProgress />
                       </RequireClient>
                     } />
-                    <Route path="/job/:id/approve" element={
-                      <RequireClient>
-                        <JobApproval />
-                      </RequireClient>
-                    } />
+                     <Route path="/job/:id/approve" element={
+                       <RequireClient>
+                         <JobApproval />
+                       </RequireClient>
+                     } />
+                     <Route path="/job-approval/:id" element={
+                       <RequireClient>
+                         <JobApproval />
+                       </RequireClient>
+                     } />
                     <Route path="/wallet" element={
                       <RequireClient>
                         <Wallet />

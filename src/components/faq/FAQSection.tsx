@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Input } from '@/components/ui/input';
+import { Search, X } from 'lucide-react';
 
 const faqData = [
   {
@@ -22,8 +25,8 @@ const faqData = [
         a: 'You can book up to 3 months in advance. We recommend booking at least 2-3 days ahead to ensure your preferred cleaner is available.',
       },
       {
-        q: 'What if my cleaner doesn\'t show up?',
-        a: 'If your cleaner fails to arrive, you\'ll receive a full refund plus bonus credits ($50). We take no-shows very seriously and may suspend cleaners who repeatedly miss appointments.',
+        q: "What if my cleaner doesn't show up?",
+        a: "If your cleaner fails to arrive, you'll receive a full refund plus bonus credits ($50). We take no-shows very seriously and may suspend cleaners who repeatedly miss appointments.",
       },
     ],
   },
@@ -40,7 +43,7 @@ const faqData = [
       },
       {
         q: 'How do credit holds work?',
-        a: 'When you book, we place a hold on your credits (not a charge). After the job, you approve the final amount based on actual time worked, and only then are credits deducted.',
+        a: "When you book, we place a hold on your credits (not a charge). After the job, you approve the final amount based on actual time worked, and only then are credits deducted.",
       },
       {
         q: 'Can I get a refund on purchased credits?',
@@ -60,8 +63,8 @@ const faqData = [
         a: 'Absolutely! Save cleaners to your Favorites and book directly with them. You can also view cleaner profiles before booking to find the right fit.',
       },
       {
-        q: 'What if I\'m not satisfied with the cleaning?',
-        a: 'Report any issues within 24 hours of job completion through the app. We\'ll investigate and may offer a partial or full credit refund depending on the situation.',
+        q: "What if I'm not satisfied with the cleaning?",
+        a: "Report any issues within 24 hours of job completion through the app. We'll investigate and may offer a partial or full credit refund depending on the situation.",
       },
       {
         q: 'What supplies do cleaners bring?',
@@ -89,25 +92,67 @@ const faqData = [
 ];
 
 export function FAQSection() {
+  const [search, setSearch] = useState('');
+
+  const filtered = faqData
+    .map((cat) => ({
+      ...cat,
+      questions: cat.questions.filter(
+        (q) =>
+          q.q.toLowerCase().includes(search.toLowerCase()) ||
+          q.a.toLowerCase().includes(search.toLowerCase())
+      ),
+    }))
+    .filter((cat) => cat.questions.length > 0);
+
   return (
-    <div className="space-y-8">
-      {faqData.map((category) => (
-        <div key={category.category}>
-          <h3 className="text-lg font-semibold mb-4">{category.category}</h3>
-          <Accordion type="single" collapsible className="w-full">
-            {category.questions.map((faq, index) => (
-              <AccordionItem key={index} value={`${category.category}-${index}`}>
-                <AccordionTrigger className="text-left">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+    <div className="space-y-6">
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search questions..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9 pr-9"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="text-center py-10 text-muted-foreground">
+          <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
+          <p className="font-medium">No results for "{search}"</p>
+          <p className="text-sm mt-1">Try different keywords</p>
         </div>
-      ))}
+      ) : (
+        filtered.map((category) => (
+          <div key={category.category}>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              {category.category}
+            </h3>
+            <Accordion type="single" collapsible className="w-full">
+              {category.questions.map((faq, index) => (
+                <AccordionItem key={index} value={`${category.category}-${index}`}>
+                  <AccordionTrigger className="text-left text-sm sm:text-base">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        ))
+      )}
     </div>
   );
 }

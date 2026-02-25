@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
+import { PageTransition } from "@/components/layout/PageTransition";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -178,7 +179,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 
           {/* Main Content - add bottom padding on mobile for bottom nav */}
           <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
 
           {/* Footer - full on desktop, minimal on mobile */}
