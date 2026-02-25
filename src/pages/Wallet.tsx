@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, CheckCircle } from "lucide-react";
+import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, Search, X } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
 import { format } from 'date-fns';
@@ -28,6 +30,8 @@ const reasonLabels: Record<string, string> = {
 export default function Wallet() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const [txSearch, setTxSearch] = useState('');
+  const [txTypeFilter, setTxTypeFilter] = useState('all');
   const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing, refetch } = useWallet();
   const { toast } = useToast();
 
@@ -57,6 +61,16 @@ export default function Wallet() {
       setSearchParams({});
     }
   }, [searchParams, toast, setSearchParams, refetch]);
+
+  const filteredLedger = ledger.filter((entry) => {
+    const label = (reasonLabels[entry.reason] || entry.reason).toLowerCase();
+    const matchesSearch = txSearch === '' || label.includes(txSearch.toLowerCase());
+    const matchesType =
+      txTypeFilter === 'all' ||
+      (txTypeFilter === 'credit' && entry.delta_credits > 0) ||
+      (txTypeFilter === 'debit' && entry.delta_credits < 0);
+    return matchesSearch && matchesType;
+  });
 
   return (
     <main className="flex-1 py-4 sm:py-8">
@@ -116,8 +130,35 @@ export default function Wallet() {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle className="text-lg">Transaction History</CardTitle>
+              {/* Filter controls */}
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search transactions..."
+                    value={txSearch}
+                    onChange={(e) => setTxSearch(e.target.value)}
+                    className="pl-8 pr-8 h-8 text-sm"
+                  />
+                  {txSearch && (
+                    <button onClick={() => setTxSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+                <Select value={txTypeFilter} onValueChange={setTxTypeFilter}>
+                  <SelectTrigger className="h-8 text-sm w-full sm:w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="credit">Credits in</SelectItem>
+                    <SelectItem value="debit">Credits out</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </CardHeader>
             <CardContent>
               {isLoadingLedger ? (
@@ -133,19 +174,28 @@ export default function Wallet() {
                     </div>
                   ))}
                 </div>
-              ) : ledger.length === 0 ? (
+              ) : filteredLedger.length === 0 ? (
                 <div className="py-8 text-center text-muted-foreground">
                   <WalletIcon className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p>No transactions yet</p>
-                  <p className="text-sm mt-1">Buy some credits to get started!</p>
+                  {ledger.length === 0 ? (
+                    <>
+                      <p>No transactions yet</p>
+                      <p className="text-sm mt-1">Buy some credits to get started!</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>No matching transactions</p>
+                      <p className="text-sm mt-1">Try adjusting your filters</p>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {ledger.map((entry) => {
+                  {filteredLedger.map((entry) => {
                     const isPositive = entry.delta_credits > 0;
                     const isPayment = entry.reason === 'job_payment';
                     const isRefund = entry.reason === 'refund' || entry.reason === 'dispute_refund';
-                    
+
                     return (
                       <div
                         key={entry.id}
@@ -168,17 +218,17 @@ export default function Wallet() {
                           )}
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium">
+                          <p className="font-medium text-sm">
                             {reasonLabels[entry.reason] || entry.reason}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs text-muted-foreground">
                             {format(new Date(entry.created_at), 'MMM d, yyyy')}
                           </p>
                         </div>
                         <div className="text-right">
                           <p
                             className={cn(
-                              "font-semibold",
+                              "font-semibold text-sm",
                               isPositive && "text-success"
                             )}
                           >
@@ -193,7 +243,7 @@ export default function Wallet() {
             </CardContent>
           </Card>
 
-          <p className="text-sm text-muted-foreground text-center mt-6">
+          <p className="text-xs text-muted-foreground text-center mt-6">
             Credits cannot be refunded to cash. They can only be used for bookings.
           </p>
         </motion.div>

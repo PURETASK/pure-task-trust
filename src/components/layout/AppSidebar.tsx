@@ -42,6 +42,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Client navigation items
 const clientNavItems = [
@@ -182,44 +188,68 @@ export function AppSidebar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <Sidebar
-      className={`${collapsed ? "w-14" : "w-64"} transition-all duration-300 border-r border-border bg-background`}
-      collapsible="icon"
-    >
-      <SidebarContent className="pt-2">
-        {navGroups.map((group) => (
-          <SidebarGroup key={group.group}>
-            {!collapsed && (
-              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1">
-                {group.group}
-              </SidebarGroupLabel>
-            )}
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild>
-                      <NavLink
-                        to={item.url}
-                        end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          isActive(item.url)
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                        }`}
-                        activeClassName="bg-primary/10 text-primary"
-                      >
-                        <item.icon className="h-4 w-4 flex-shrink-0" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-    </Sidebar>
+    <TooltipProvider delayDuration={0}>
+      <Sidebar
+        className={`${collapsed ? "w-14" : "w-64"} transition-all duration-300 border-r border-border bg-background`}
+        collapsible="icon"
+      >
+        <SidebarContent className="pt-2">
+          {navGroups.map((group) => (
+            <SidebarGroup key={group.group}>
+              {!collapsed && (
+                <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1">
+                  {group.group}
+                </SidebarGroupLabel>
+              )}
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton asChild>
+                        {collapsed ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <NavLink
+                                to={item.url}
+                                end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                                className={`flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  isActive(item.url)
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                }`}
+                                activeClassName="bg-primary/10 text-primary"
+                              >
+                                <item.icon className="h-4 w-4 flex-shrink-0" />
+                              </NavLink>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                              {item.title}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <NavLink
+                            to={item.url}
+                            end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              isActive(item.url)
+                                ? "bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                            }`}
+                            activeClassName="bg-primary/10 text-primary"
+                          >
+                            <item.icon className="h-4 w-4 flex-shrink-0" />
+                            <span>{item.title}</span>
+                          </NavLink>
+                        )}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </SidebarContent>
+      </Sidebar>
+    </TooltipProvider>
   );
 }

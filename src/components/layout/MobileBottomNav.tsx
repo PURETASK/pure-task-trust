@@ -55,8 +55,9 @@ export function MobileBottomNav() {
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path || 
-            (item.path !== '/' && location.pathname.startsWith(item.path));
+          // Exact match OR path starts with item path only for nested routes (not "/" and not cross-role prefixes)
+          const isActive = location.pathname === item.path ||
+            (item.path.length > 1 && item.path !== '/discover' && location.pathname.startsWith(item.path + '/'));
           
           return (
             <Link

@@ -192,17 +192,39 @@ export default function Book() {
               </Card>
             )}
 
-            {/* Progress */}
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-              {[1, 2, 3, 4, 5, 6].map((s) => (
-                <div
-                  key={s}
-                  className={`h-1.5 sm:h-2 w-6 sm:w-8 rounded-full transition-colors ${
-                    s <= step ? "bg-primary" : "bg-border"
-                  }`}
-                />
-              ))}
-            </div>
+            {/* Progress Stepper */}
+            {(() => {
+              const steps = ["Type", "Hours", "Add-ons", "Schedule", "Address", "Confirm"];
+              return (
+                <div className="mb-6 sm:mb-8">
+                  <div className="flex items-center gap-1 mb-2">
+                    {steps.map((label, i) => {
+                      const s = i + 1;
+                      return (
+                        <div key={s} className="flex items-center flex-1 last:flex-none">
+                          <div className="flex flex-col items-center gap-1">
+                            <div className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                              s < step ? "bg-primary scale-100" :
+                              s === step ? "bg-primary ring-2 ring-primary/30 scale-125" :
+                              "bg-border"
+                            }`} />
+                            <span className={`text-[9px] sm:text-[10px] font-medium hidden xs:block transition-colors ${
+                              s <= step ? "text-primary" : "text-muted-foreground"
+                            }`}>{label}</span>
+                          </div>
+                          {i < steps.length - 1 && (
+                            <div className={`h-0.5 flex-1 mx-1 rounded-full transition-colors duration-300 ${
+                              s < step ? "bg-primary" : "bg-border"
+                            }`} />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">Step {step} of {steps.length}</p>
+                </div>
+              );
+            })()}
 
             <AnimatePresence mode="wait">
               {/* Step 1: Cleaning Type */}
