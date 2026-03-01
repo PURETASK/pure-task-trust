@@ -238,11 +238,6 @@ const App = () => (
                         <ClientProfileEdit />
                       </RequireClient>
                     } />
-                    <Route path="/notification-settings" element={
-                      <RequireAuth>
-                        <NotificationSettings />
-                      </RequireAuth>
-                    } />
                     
                     {/* Cleaner routes */}
                     <Route path="/cleaner/dashboard" element={

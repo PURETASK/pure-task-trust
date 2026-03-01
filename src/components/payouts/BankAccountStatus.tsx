@@ -107,16 +107,16 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
   // Not connected
   if (!status?.connected) {
     return (
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+      <Card className="border-destructive/30 bg-destructive/5">
         <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <Building2 className="h-5 w-5 text-amber-600 mt-0.5" />
+              <Building2 className="h-5 w-5 text-destructive mt-0.5" />
               <div>
-                <p className="font-medium text-amber-800 dark:text-amber-200">
+                <p className="font-medium text-foreground">
                   Connect your bank account
                 </p>
-                <p className="text-sm text-amber-600 dark:text-amber-400">
+                <p className="text-sm text-muted-foreground">
                   Link your bank account to receive payouts for completed jobs
                 </p>
               </div>
@@ -124,7 +124,8 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
             <Button 
               onClick={handleConnect}
               disabled={isConnecting}
-              className="bg-amber-600 hover:bg-amber-700 text-white shrink-0"
+              variant="destructive"
+              className="shrink-0"
             >
               {isConnecting ? (
                 <>
@@ -151,25 +152,25 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
       (status.requirements?.past_due?.length ?? 0) > 0;
 
     return (
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
+      <Card className="border-primary/20 bg-primary/5">
         <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               {hasPendingRequirements ? (
-                <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
               ) : (
-                <Clock className="h-5 w-5 text-blue-600 mt-0.5" />
+                <Clock className="h-5 w-5 text-primary mt-0.5" />
               )}
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-blue-800 dark:text-blue-200">
+                  <p className="font-medium text-foreground">
                     {hasPendingRequirements ? 'Action Required' : 'Verification In Progress'}
                   </p>
-                  <Badge variant="outline" className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+                  <Badge variant="outline" className="text-xs">
                     Pending
                   </Badge>
                 </div>
-                <p className="text-sm text-blue-600 dark:text-blue-400">
+                <p className="text-sm text-muted-foreground">
                   {hasPendingRequirements 
                     ? 'Additional information is needed to complete verification'
                     : 'Your bank account is being verified. This usually takes 1-2 business days.'
@@ -182,7 +183,7 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
                 onClick={handleConnect}
                 disabled={isConnecting}
                 variant="outline"
-                className="border-blue-300 text-blue-700 hover:bg-blue-100 shrink-0"
+                className="shrink-0"
               >
                 {isConnecting ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
