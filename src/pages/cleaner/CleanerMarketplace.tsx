@@ -79,7 +79,7 @@ export default function CleanerMarketplace() {
                         <Badge variant="secondary">New</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-3">
-                        {job.client?.first_name} {job.client?.last_name}
+                        Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">

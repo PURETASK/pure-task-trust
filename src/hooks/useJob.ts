@@ -205,7 +205,22 @@ export function useJobActions(jobId: string) {
 
       // 3. Create cleaner earnings record if cleaner exists
       if (job.cleaner_id) {
-        const platformFee = Math.round(creditsCharged * 0.15);
+        // Get cleaner tier to apply correct platform fee
+        const { data: cleanerProfile } = await supabase
+          .from('cleaner_profiles')
+          .select('tier')
+          .eq('id', job.cleaner_id)
+          .maybeSingle();
+        
+        // Tier-based platform fee: Bronze 20%, Silver 18%, Gold 16%, Platinum 15%
+        const tierFeeMap: Record<string, number> = {
+          platinum: 0.15,
+          gold: 0.16,
+          silver: 0.18,
+          bronze: 0.20,
+        };
+        const feeRate = tierFeeMap[cleanerProfile?.tier || 'bronze'] ?? 0.20;
+        const platformFee = Math.round(creditsCharged * feeRate);
         const netCredits = creditsCharged - platformFee;
 
         await supabase.from('cleaner_earnings').insert({

@@ -73,8 +73,8 @@ export default function CleanerDashboard() {
                 icon={Clock}
                 value={stats.hoursThisWeek}
                 label="Hours This Week"
-                iconColor="text-violet-500"
-                iconBgColor="bg-violet-500/10"
+                iconColor="text-secondary-foreground"
+                iconBgColor="bg-secondary"
               />
               <StatCard
                 icon={DollarSign}
@@ -87,8 +87,8 @@ export default function CleanerDashboard() {
                 icon={MessageSquare}
                 value={stats.unreadMessages}
                 label="Unread Messages"
-                iconColor="text-amber-500"
-                iconBgColor="bg-amber-100"
+                iconColor="text-foreground"
+                iconBgColor="bg-muted"
               />
             </>
           )}
@@ -168,8 +168,8 @@ export default function CleanerDashboard() {
               title="My Active Jobs"
               description="Manage accepted bookings"
               href="/cleaner/jobs"
-              iconColor="text-violet-500"
-              iconBgColor="bg-violet-500/10"
+              iconColor="text-secondary-foreground"
+              iconBgColor="bg-secondary"
             />
             <FeatureCard
               icon={Calendar}
@@ -239,7 +239,7 @@ export default function CleanerDashboard() {
               icon={Package}
               title="Materials List"
               description="Recommended cleaning supplies"
-              href="/cleaner/materials"
+              href="/cleaner/resources"
               iconColor="text-cyan-500"
               iconBgColor="bg-cyan-500/10"
             />

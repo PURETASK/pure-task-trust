@@ -36,7 +36,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, currentSession) => {
         setSession(currentSession);
         
-        if (currentSession?.user) {
+      if (currentSession?.user) {
+          // Handle Google OAuth role persistence for new users
+          if (event === 'SIGNED_IN') {
+            const pendingRole = localStorage.getItem('pendingOAuthRole') as UserRole | null;
+            if (pendingRole) {
+              // Check if role already exists in DB
+              const { data: existingRole } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', currentSession.user.id)
+                .maybeSingle();
+              
+              if (!existingRole) {
+                await supabase.from('user_roles').insert({
+                  user_id: currentSession.user.id,
+                  role: pendingRole,
+                });
+                // Also create appropriate profile
+                if (pendingRole === 'cleaner') {
+                  await supabase.from('cleaner_profiles').upsert(
+                    { user_id: currentSession.user.id, first_name: currentSession.user.user_metadata?.full_name },
+                    { onConflict: 'user_id' }
+                  );
+                } else {
+                  await supabase.from('client_profiles').upsert(
+                    { user_id: currentSession.user.id, first_name: currentSession.user.user_metadata?.full_name },
+                    { onConflict: 'user_id' }
+                  );
+                  await supabase.from('credit_accounts').upsert(
+                    { user_id: currentSession.user.id },
+                    { onConflict: 'user_id' }
+                  );
+                }
+              }
+              localStorage.removeItem('pendingOAuthRole');
+            }
+          }
+
           // Defer profile fetch to avoid blocking
           setTimeout(() => {
             fetchUserProfile(currentSession.user);
