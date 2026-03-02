@@ -21,8 +21,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Get cleaners with active calendar connections
     const { data: connections, error: connError } = await supabase
       .from("calendar_connections")
-      .select("id, cleaner_id, provider, access_token, refresh_token, token_expires_at, last_synced_at")
-      .eq("is_active", true);
+      .select("id, user_id, provider, access_token, refresh_token, token_expires_at, last_synced_at")
+      .eq("sync_enabled", true);
 
     if (connError) {
       console.error("Failed to fetch calendar connections:", connError);
@@ -45,29 +45,30 @@ const handler = async (req: Request): Promise<Response> => {
         // Check if token needs refresh
         const tokenExpiry = conn.token_expires_at ? new Date(conn.token_expires_at) : null;
         if (tokenExpiry && tokenExpiry < new Date()) {
-          // Token expired - mark connection as needing reauth
+          // Token expired - mark connection as needing refresh by clearing access token
           await supabase
             .from("calendar_connections")
-            .update({ needs_reauth: true })
+            .update({ sync_enabled: false })
             .eq("id", conn.id);
           
-          // Notify cleaner
-          const { data: cleaner } = await supabase
-            .from("cleaner_profiles")
-            .select("user_id")
-            .eq("id", conn.cleaner_id)
-            .single();
-
-          if (cleaner?.user_id) {
-            await supabase.from("notifications").insert({
-              user_id: cleaner.user_id,
-              title: "Calendar Sync Expired",
-              message: "Please reconnect your calendar to continue syncing jobs.",
-              type: "calendar_reauth_needed",
-            });
-          }
+          // Notify user
+          await supabase.from("notifications").insert({
+            user_id: conn.user_id,
+            title: "Calendar Sync Expired",
+            message: "Please reconnect your calendar to continue syncing jobs.",
+            type: "calendar_reauth_needed",
+          });
           continue;
         }
+
+        // Get the cleaner profile for this user
+        const { data: cleanerProfile } = await supabase
+          .from("cleaner_profiles")
+          .select("id")
+          .eq("user_id", conn.user_id)
+          .maybeSingle();
+
+        if (!cleanerProfile) continue;
 
         // Get upcoming jobs for this cleaner
         const now = new Date();
@@ -75,12 +76,11 @@ const handler = async (req: Request): Promise<Response> => {
 
         const { data: jobs } = await supabase
           .from("jobs")
-          .select("id, scheduled_date, scheduled_time, calendar_event_id, property_id")
-          .eq("cleaner_id", conn.cleaner_id)
+          .select("id, scheduled_start_at, property_id")
+          .eq("cleaner_id", cleanerProfile.id)
           .in("status", ["scheduled", "confirmed"])
-          .gte("scheduled_date", now.toISOString().split("T")[0])
-          .lte("scheduled_date", twoWeeksFromNow.toISOString().split("T")[0])
-          .is("calendar_event_id", null);
+          .gte("scheduled_start_at", now.toISOString())
+          .lte("scheduled_start_at", twoWeeksFromNow.toISOString());
 
         // For each job without a calendar event, create one
         for (const job of jobs || []) {
@@ -95,16 +95,19 @@ const handler = async (req: Request): Promise<Response> => {
             ? `${property.address_line1}, ${property.city}`
             : "Address pending";
 
-          // In a real implementation, we would call Google Calendar/Outlook API here
-          // For now, we just mark the job as synced with a placeholder event ID
-          const eventId = `puretask_${job.id}`;
+          // Record in calendar_events table
+          const externalEventId = `puretask_${job.id}`;
 
-          await supabase
-            .from("jobs")
-            .update({ calendar_event_id: eventId })
-            .eq("id", job.id);
+          const { error: eventError } = await supabase
+            .from("calendar_events")
+            .upsert({
+              connection_id: conn.id,
+              job_id: job.id,
+              external_event_id: externalEventId,
+              event_type: "job",
+            }, { onConflict: "external_event_id" });
 
-          results.eventsCreated++;
+          if (!eventError) results.eventsCreated++;
         }
 
         // Update last synced

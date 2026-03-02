@@ -26,9 +26,10 @@ const handler = async (req: Request): Promise<Response> => {
     // Get scheduled jobs for today that should have started
     const { data: jobs, error: jobsError } = await supabase
       .from("jobs")
-      .select("id, cleaner_id, client_id, scheduled_time, total_credits")
-      .eq("scheduled_date", todayStr)
-      .eq("status", "scheduled");
+      .select("id, cleaner_id, client_id, scheduled_start_at, escrow_credits_reserved")
+      .eq("status", "confirmed")
+      .gte("scheduled_start_at", `${todayStr}T00:00:00Z`)
+      .lte("scheduled_start_at", `${todayStr}T23:59:59Z`);
 
     if (jobsError) {
       console.error("Failed to fetch jobs:", jobsError);
@@ -46,12 +47,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     for (const job of jobs || []) {
       try {
-        if (!job.scheduled_time) continue;
+        if (!job.scheduled_start_at) continue;
 
-        // Parse scheduled time
-        const [hours, minutes] = job.scheduled_time.split(":").map(Number);
-        const scheduledDateTime = new Date(todayStr);
-        scheduledDateTime.setHours(hours, minutes, 0, 0);
+        const scheduledDateTime = new Date(job.scheduled_start_at);
 
         // Check if 30 minutes have passed since scheduled time
         if (scheduledDateTime > cutoffTime) continue;
@@ -71,7 +69,6 @@ const handler = async (req: Request): Promise<Response> => {
           .from("jobs")
           .update({
             status: "no_show",
-            cancellation_reason: "Cleaner did not check in within 30 minutes of scheduled time",
             cancelled_at: new Date().toISOString(),
           })
           .eq("id", job.id);
@@ -84,8 +81,9 @@ const handler = async (req: Request): Promise<Response> => {
         // Log status change
         await supabase.from("job_status_history").insert({
           job_id: job.id,
-          status: "no_show",
-          notes: "Auto-cancelled: cleaner no-show",
+          to_status: "no_show",
+          reason: "Auto-cancelled: cleaner no-show",
+          changed_by_type: "system",
         });
 
         // Penalize cleaner reliability score
@@ -117,8 +115,8 @@ const handler = async (req: Request): Promise<Response> => {
           }
         }
 
-        // Refund client
-        if (job.client_id && job.total_credits) {
+        // Refund client credits (release escrow)
+        if (job.client_id && job.escrow_credits_reserved) {
           const { data: clientProfile } = await supabase
             .from("client_profiles")
             .select("user_id")
@@ -126,27 +124,38 @@ const handler = async (req: Request): Promise<Response> => {
             .single();
 
           if (clientProfile?.user_id) {
-            await supabase.rpc("add_user_credits", {
-              p_user_id: clientProfile.user_id,
-              p_amount: job.total_credits,
-            });
+            // Return held credits to available balance
+            const { data: account } = await supabase
+              .from("credit_accounts")
+              .select("current_balance, held_balance")
+              .eq("user_id", clientProfile.user_id)
+              .single();
 
-            await supabase.from("credit_transactions").insert({
+            if (account) {
+              await supabase
+                .from("credit_accounts")
+                .update({
+                  current_balance: account.current_balance + job.escrow_credits_reserved,
+                  held_balance: Math.max(0, account.held_balance - job.escrow_credits_reserved),
+                })
+                .eq("user_id", clientProfile.user_id);
+            }
+
+            await supabase.from("credit_ledger").insert({
               user_id: clientProfile.user_id,
-              amount: job.total_credits,
-              type: "refund",
-              description: `Refund for cleaner no-show on job #${job.id.slice(0, 8)}`,
-              reference_id: job.id,
+              delta_credits: job.escrow_credits_reserved,
+              reason: `Refund for cleaner no-show on job #${job.id.slice(0, 8)}`,
+              job_id: job.id,
             });
 
-            results.creditsRefunded += job.total_credits;
+            results.creditsRefunded += job.escrow_credits_reserved;
 
             await supabase.from("notifications").insert({
               user_id: clientProfile.user_id,
               title: "Cleaner No-Show",
-              message: `Your cleaner didn't show up. ${job.total_credits} credits have been refunded.`,
+              message: `Your cleaner didn't show up. ${job.escrow_credits_reserved} credits have been refunded.`,
               type: "no_show_refund",
-              data: { job_id: job.id, credits_refunded: job.total_credits },
+              data: { job_id: job.id, credits_refunded: job.escrow_credits_reserved },
             });
           }
         }
