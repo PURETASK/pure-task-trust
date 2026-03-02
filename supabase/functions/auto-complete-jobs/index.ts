@@ -24,9 +24,9 @@ const handler = async (req: Request): Promise<Response> => {
     // Get jobs that should be auto-completed
     const { data: jobs, error: jobsError } = await supabase
       .from("jobs")
-      .select("id, cleaner_id, client_id, total_credits")
-      .eq("status", "checked_out")
-      .lt("checkout_time", cutoffTime);
+      .select("id, cleaner_id, client_id, escrow_credits_reserved, estimated_hours, actual_hours")
+      .eq("status", "in_progress")
+      .lt("check_out_at", cutoffTime);
 
     if (jobsError) {
       console.error("Failed to fetch jobs:", jobsError);
@@ -65,8 +65,7 @@ const handler = async (req: Request): Promise<Response> => {
           .from("jobs")
           .update({
             status: "completed",
-            completed_at: new Date().toISOString(),
-            auto_completed: true,
+            actual_end_at: new Date().toISOString(),
           })
           .eq("id", job.id);
 
@@ -78,17 +77,23 @@ const handler = async (req: Request): Promise<Response> => {
         // Log status change
         await supabase.from("job_status_history").insert({
           job_id: job.id,
-          status: "completed",
-          notes: "Auto-completed after 24h with no dispute",
+          to_status: "completed",
+          reason: "Auto-completed after 24h with no dispute",
+          changed_by_type: "system",
         });
 
         // Release credits to cleaner
-        if (job.cleaner_id && job.total_credits) {
+        if (job.cleaner_id && job.escrow_credits_reserved) {
+          const hoursWorked = job.actual_hours || job.estimated_hours || 0;
+          const hourlyRate = job.escrow_credits_reserved / (job.estimated_hours || 1);
+          const grossCredits = Math.round(hoursWorked * hourlyRate);
+          const platformFee = Math.round(grossCredits * 0.20); // default bronze fee
           await supabase.from("cleaner_earnings").insert({
             cleaner_id: job.cleaner_id,
             job_id: job.id,
-            amount_credits: job.total_credits,
-            status: "pending",
+            gross_credits: grossCredits,
+            platform_fee_credits: platformFee,
+            net_credits: grossCredits - platformFee,
           });
         }
 
