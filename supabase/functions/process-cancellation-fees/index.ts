@@ -18,13 +18,20 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Starting cancellation fee processing...");
 
-    // Jobs cancelled less than 24h before scheduled time
+    // Get already-processed job IDs from cancellation_events to avoid double processing
+    const { data: processedJobIds } = await supabase
+      .from("cancellation_events")
+      .select("job_id");
+
+    const alreadyProcessed = new Set((processedJobIds || []).map((r: { job_id: string }) => r.job_id));
+
+    // Get recently cancelled jobs
     const { data: cancellations, error: fetchError } = await supabase
       .from("jobs")
-      .select("id, client_id, cleaner_id, total_credits, scheduled_date, scheduled_time, cancelled_at, cancellation_fee_applied")
+      .select("id, client_id, cleaner_id, escrow_credits_reserved, scheduled_start_at, cancelled_at")
       .eq("status", "cancelled")
-      .eq("cancellation_fee_applied", false)
-      .not("cancelled_at", "is", null);
+      .not("cancelled_at", "is", null)
+      .gte("cancelled_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
     if (fetchError) {
       console.error("Failed to fetch cancellations:", fetchError);
@@ -45,39 +52,34 @@ const handler = async (req: Request): Promise<Response> => {
 
     for (const job of cancellations || []) {
       try {
-        if (!job.scheduled_date || !job.cancelled_at) {
+        // Skip already-processed jobs
+        if (alreadyProcessed.has(job.id)) {
+          continue;
+        }
+
+        if (!job.scheduled_start_at || !job.cancelled_at) {
           results.noFee++;
           continue;
         }
 
-        // Parse scheduled datetime
-        const scheduledDateTime = new Date(`${job.scheduled_date}T${job.scheduled_time || "00:00"}:00`);
+        const scheduledDateTime = new Date(job.scheduled_start_at);
         const cancelledAt = new Date(job.cancelled_at);
         const hoursBeforeJob = (scheduledDateTime.getTime() - cancelledAt.getTime()) / (1000 * 60 * 60);
 
-        // Apply fee if cancelled less than 24h before
+        // No fee if cancelled 24h+ before
         if (hoursBeforeJob >= 24) {
-          // Mark as processed but no fee
-          await supabase
-            .from("jobs")
-            .update({ cancellation_fee_applied: true })
-            .eq("id", job.id);
           results.noFee++;
           continue;
         }
 
-        // Calculate fee (50% of job cost if <24h, 100% if <6h)
+        // Calculate fee (50% if <24h, 100% if <6h)
         let feePercent = 0.5;
         if (hoursBeforeJob < 6) {
           feePercent = 1.0;
         }
 
-        const fee = Math.round((job.total_credits || 0) * feePercent);
+        const fee = Math.round((job.escrow_credits_reserved || 0) * feePercent);
         if (fee === 0) {
-          await supabase
-            .from("jobs")
-            .update({ cancellation_fee_applied: true })
-            .eq("id", job.id);
           results.noFee++;
           continue;
         }
@@ -90,42 +92,62 @@ const handler = async (req: Request): Promise<Response> => {
           .single();
 
         if (!clientProfile?.user_id) {
-          await supabase
-            .from("jobs")
-            .update({ cancellation_fee_applied: true })
-            .eq("id", job.id);
           results.errors.push(`No client found for job ${job.id}`);
           continue;
         }
 
-        // Deduct fee from client
-        await supabase.rpc("deduct_user_credits", {
-          p_user_id: clientProfile.user_id,
-          p_amount: fee,
+        // Deduct fee from client credit account
+        const { data: creditAccount } = await supabase
+          .from("credit_accounts")
+          .select("id, current_balance")
+          .eq("user_id", clientProfile.user_id)
+          .single();
+
+        if (creditAccount) {
+          await supabase
+            .from("credit_accounts")
+            .update({ current_balance: Math.max(0, (creditAccount.current_balance || 0) - fee) })
+            .eq("id", creditAccount.id);
+
+          await supabase.from("credit_ledger").insert({
+            user_id: clientProfile.user_id,
+            amount: -fee,
+            type: "cancellation_fee",
+            description: `Late cancellation fee (${Math.round(feePercent * 100)}%) for job #${job.id.slice(0, 8)}`,
+            reference_id: job.id,
+          });
+        }
+
+        // Record in cancellation_events to mark as processed
+        await supabase.from("cancellation_events").insert({
+          job_id: job.id,
+          client_id: job.client_id,
+          cleaner_id: job.cleaner_id,
+          cancelled_by: "client",
+          fee_credits: fee,
+          fee_pct: feePercent * 100,
+          refund_credits: (job.escrow_credits_reserved || 0) - fee,
+          cleaner_comp_credits: job.cleaner_id ? Math.round(fee * 0.7) : 0,
+          platform_comp_credits: job.cleaner_id ? Math.round(fee * 0.3) : fee,
+          hours_before_start: hoursBeforeJob,
+          t_cancel: cancelledAt.toISOString(),
+          grace_used: false,
+          is_emergency: false,
+          after_reschedule_declined: false,
         });
 
-        // Log the fee
-        await supabase.from("credit_transactions").insert({
-          user_id: clientProfile.user_id,
-          amount: -fee,
-          type: "cancellation_fee",
-          description: `Late cancellation fee (${Math.round(feePercent * 100)}%) for job #${job.id.slice(0, 8)}`,
-          reference_id: job.id,
-        });
-
-        // Credit cleaner if assigned (partial compensation)
+        // Credit cleaner if assigned (70% compensation)
         if (job.cleaner_id) {
-          const cleanerCompensation = Math.round(fee * 0.7); // 70% goes to cleaner
+          const cleanerCompensation = Math.round(fee * 0.7);
           if (cleanerCompensation > 0) {
             await supabase.from("cleaner_earnings").insert({
               cleaner_id: job.cleaner_id,
               job_id: job.id,
-              amount_credits: cleanerCompensation,
-              status: "pending",
-              type: "cancellation_compensation",
+              gross_credits: cleanerCompensation,
+              platform_fee_credits: 0,
+              net_credits: cleanerCompensation,
             });
 
-            // Notify cleaner
             const { data: cleanerProfile } = await supabase
               .from("cleaner_profiles")
               .select("user_id")
@@ -143,15 +165,6 @@ const handler = async (req: Request): Promise<Response> => {
             }
           }
         }
-
-        // Mark as processed
-        await supabase
-          .from("jobs")
-          .update({ 
-            cancellation_fee_applied: true,
-            cancellation_fee: fee,
-          })
-          .eq("id", job.id);
 
         // Notify client
         await supabase.from("notifications").insert({

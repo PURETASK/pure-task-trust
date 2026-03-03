@@ -50,10 +50,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     for (const cleaner of (cleaners || []) as CleanerData[]) {
       try {
-        // Get completed jobs in last 90 days
+        // Get jobs in last 90 days using correct column
         const { data: jobs, error: jobsError } = await supabase
           .from("jobs")
-          .select("id, status, completed_at, scheduled_date, scheduled_time")
+          .select("id, status, scheduled_start_at")
           .eq("cleaner_id", cleaner.id)
           .gte("created_at", last90Days);
 
@@ -96,15 +96,17 @@ const handler = async (req: Request): Promise<Response> => {
         const completionRate = totalJobs > 0 ? (completedJobs / totalJobs) * 100 : 50;
         const noShowPenalty = noShows * 5;
         const cancellationPenalty = cancellations * 2;
-        const ratingBonus = (avgRating - 3) * 5; // +10 for 5 stars, 0 for 3 stars, -10 for 1 star
-        const onTimeRate = checkins?.length ? Math.min(100, (checkins.length / completedJobs) * 100) : 50;
+        const ratingBonus = (avgRating - 3) * 5;
+        const onTimeRate = checkins?.length && completedJobs > 0 
+          ? Math.min(100, (checkins.length / completedJobs) * 100) 
+          : 50;
 
         // Calculate final score
         let newScore = Math.round(
           (completionRate * 0.4) +
           (onTimeRate * 0.3) +
           (ratingBonus * 0.2) +
-          (20 - noShowPenalty - cancellationPenalty) // Base 20 points minus penalties
+          (20 - noShowPenalty - cancellationPenalty)
         );
 
         // Clamp between 0 and 100
@@ -113,26 +115,19 @@ const handler = async (req: Request): Promise<Response> => {
         const oldScore = cleaner.reliability_score || 50;
 
         if (Math.abs(newScore - oldScore) >= 1) {
-          // Update the score
+          // Update the score in cleaner_profiles
           await supabase
             .from("cleaner_profiles")
             .update({ reliability_score: newScore })
             .eq("id", cleaner.id);
 
-          // Log the change
-          await supabase.from("cleaner_reliability_scores").insert({
+          // Upsert into cleaner_reliability_scores with correct columns
+          await supabase.from("cleaner_reliability_scores").upsert({
             cleaner_id: cleaner.id,
-            score: newScore,
-            calculated_at: new Date().toISOString(),
-            metrics: {
-              total_jobs: totalJobs,
-              completed_jobs: completedJobs,
-              no_shows: noShows,
-              cancellations: cancellations,
-              avg_rating: avgRating,
-              on_time_rate: onTimeRate,
-            },
-          });
+            current_score: newScore,
+            last_recalculated_at: new Date().toISOString(),
+            total_events: totalJobs,
+          }, { onConflict: "cleaner_id" });
 
           results.updated++;
         } else {

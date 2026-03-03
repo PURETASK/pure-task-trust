@@ -171,9 +171,8 @@ serve(async (req) => {
         await supabaseAdmin.from("notifications").insert({
           user_id: cleaner.user_id,
           title: "Weekly Payout Sent",
-          body: `Your weekly payout of $${totalAvailable.toFixed(2)} has been sent to your bank account.`,
+          message: `Your weekly payout of $${totalAvailable.toFixed(2)} has been sent to your bank account.`,
           type: "payout",
-          read: false,
         });
 
       } catch (cleanerError) {
