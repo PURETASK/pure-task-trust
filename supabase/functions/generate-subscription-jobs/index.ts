@@ -60,17 +60,20 @@ const handler = async (req: Request): Promise<Response> => {
 
     for (const sub of (subscriptions || []) as Subscription[]) {
       try {
-        // Create the job
+        // Build scheduled_start_at from next_job_date + preferred_time
+        const timeStr = sub.preferred_time || "09:00";
+        const scheduledStartAt = `${sub.next_job_date}T${timeStr}:00`;
+
+        // Create the job with correct column names
         const { data: job, error: jobError } = await supabase
           .from("jobs")
           .insert({
             client_id: sub.client_id,
             cleaner_id: sub.cleaner_id,
             property_id: sub.property_id,
-            scheduled_date: sub.next_job_date,
-            scheduled_time: sub.preferred_time,
-            status: sub.cleaner_id ? "scheduled" : "pending",
-            total_credits: sub.credits_per_job,
+            scheduled_start_at: scheduledStartAt,
+            status: sub.cleaner_id ? "confirmed" : "pending",
+            escrow_credits_reserved: sub.credits_per_job,
             subscription_id: sub.id,
             notes: `Recurring ${sub.frequency} cleaning`,
           })
@@ -85,7 +88,7 @@ const handler = async (req: Request): Promise<Response> => {
         results.jobsCreated++;
 
         // Calculate next job date based on frequency
-        let nextDate = new Date(sub.next_job_date!);
+        const nextDate = new Date(sub.next_job_date!);
         switch (sub.frequency) {
           case "weekly":
             nextDate.setDate(nextDate.getDate() + 7);
@@ -108,11 +111,12 @@ const handler = async (req: Request): Promise<Response> => {
 
         results.subscriptionsProcessed++;
 
-        // Log the job creation
+        // Log the job creation with correct column names
         await supabase.from("job_status_history").insert({
           job_id: job.id,
-          status: job.status,
-          notes: `Auto-generated from subscription ${sub.id}`,
+          to_status: job.status,
+          reason: `Auto-generated from subscription ${sub.id}`,
+          changed_by_type: "system",
         });
 
       } catch (err: unknown) {
