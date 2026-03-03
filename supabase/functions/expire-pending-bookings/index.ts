@@ -23,7 +23,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { data: expiredBookings, error: fetchError } = await supabase
       .from("jobs")
-      .select("id, client_id, total_credits")
+      .select("id, client_id, escrow_credits_reserved")
       .eq("status", "pending")
       .lt("created_at", cutoffTime);
 
@@ -50,7 +50,6 @@ const handler = async (req: Request): Promise<Response> => {
           .from("jobs")
           .update({
             status: "cancelled",
-            cancellation_reason: "Expired - no cleaner accepted within 48 hours",
             cancelled_at: new Date().toISOString(),
           })
           .eq("id", booking.id);
@@ -63,12 +62,15 @@ const handler = async (req: Request): Promise<Response> => {
         // Log status change
         await supabase.from("job_status_history").insert({
           job_id: booking.id,
-          status: "cancelled",
-          notes: "Auto-expired after 48h without cleaner acceptance",
+          to_status: "cancelled",
+          reason: "Auto-expired after 48h without cleaner acceptance",
+          changed_by_type: "system",
         });
 
+        const creditsToRefund = booking.escrow_credits_reserved || 0;
+
         // Refund credits to client
-        if (booking.client_id && booking.total_credits) {
+        if (booking.client_id && creditsToRefund > 0) {
           const { data: clientProfile } = await supabase
             .from("client_profiles")
             .select("user_id")
@@ -76,31 +78,43 @@ const handler = async (req: Request): Promise<Response> => {
             .single();
 
           if (clientProfile?.user_id) {
-            // Add credits back
-            await supabase.rpc("add_user_credits", {
-              p_user_id: clientProfile.user_id,
-              p_amount: booking.total_credits,
-            });
+            // Get credit account
+            const { data: creditAccount } = await supabase
+              .from("credit_accounts")
+              .select("id, current_balance, held_balance")
+              .eq("user_id", clientProfile.user_id)
+              .single();
 
-            // Log the refund
-            await supabase.from("credit_transactions").insert({
-              user_id: clientProfile.user_id,
-              amount: booking.total_credits,
-              type: "refund",
-              description: `Refund for expired booking #${booking.id.slice(0, 8)}`,
-              reference_id: booking.id,
-            });
+            if (creditAccount) {
+              // Release held credits back to available balance
+              await supabase
+                .from("credit_accounts")
+                .update({
+                  current_balance: (creditAccount.current_balance || 0) + creditsToRefund,
+                  held_balance: Math.max(0, (creditAccount.held_balance || 0) - creditsToRefund),
+                })
+                .eq("id", creditAccount.id);
 
-            results.creditsRefunded += booking.total_credits;
+              // Log refund in ledger
+              await supabase.from("credit_ledger").insert({
+                user_id: clientProfile.user_id,
+                amount: creditsToRefund,
+                type: "refund",
+                description: `Refund for expired booking #${booking.id.slice(0, 8)}`,
+                reference_id: booking.id,
+              });
 
-            // Notify client
-            await supabase.from("notifications").insert({
-              user_id: clientProfile.user_id,
-              title: "Booking Expired",
-              message: `Your booking expired as no cleaner was available. ${booking.total_credits} credits have been refunded.`,
-              type: "booking_expired",
-              data: { job_id: booking.id, credits_refunded: booking.total_credits },
-            });
+              results.creditsRefunded += creditsToRefund;
+
+              // Notify client
+              await supabase.from("notifications").insert({
+                user_id: clientProfile.user_id,
+                title: "Booking Expired",
+                message: `Your booking expired as no cleaner was available. ${creditsToRefund} credits have been refunded.`,
+                type: "booking_expired",
+                data: { job_id: booking.id, credits_refunded: creditsToRefund },
+              });
+            }
           }
         }
 

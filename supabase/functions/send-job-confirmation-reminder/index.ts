@@ -18,16 +18,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Starting job confirmation reminders...");
 
-    // Pending job offers older than 2 hours
+    // Pending job offers older than 2 hours that haven't expired
     const cutoffTime = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-    const recentCutoff = new Date(Date.now() - 30 * 60 * 1000).toISOString(); // Don't remind too soon
 
     const { data: pendingOffers, error: offersError } = await supabase
       .from("job_offers")
-      .select("id, job_id, cleaner_id, created_at, reminder_sent_at")
+      .select("id, job_id, cleaner_id, created_at, expires_at")
       .eq("status", "pending")
       .lt("created_at", cutoffTime)
-      .or(`reminder_sent_at.is.null,reminder_sent_at.lt.${recentCutoff}`);
+      .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`);
 
     if (offersError) {
       console.error("Failed to fetch offers:", offersError);
@@ -57,25 +56,42 @@ const handler = async (req: Request): Promise<Response> => {
 
         if (!cleaner?.user_id) continue;
 
-        // Get profile
+        // Get profile for email
         const { data: profile } = await supabase
           .from("profiles")
           .select("email")
           .eq("id", cleaner.user_id)
           .single();
 
-        // Get job details
+        // Get job details using correct column names
         const { data: job } = await supabase
           .from("jobs")
-          .select("scheduled_date, scheduled_time, total_credits")
+          .select("scheduled_start_at, escrow_credits_reserved")
           .eq("id", offer.job_id)
           .single();
+
+        const scheduledDate = job?.scheduled_start_at
+          ? new Date(job.scheduled_start_at).toLocaleDateString()
+          : "an upcoming date";
+
+        // Check if we already sent a reminder recently (last 4 hours) via notifications
+        const recentCutoff = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+        const { data: recentReminder } = await supabase
+          .from("notifications")
+          .select("id")
+          .eq("user_id", cleaner.user_id)
+          .eq("type", "offer_reminder")
+          .eq("data->>job_id", offer.job_id)
+          .gt("created_at", recentCutoff)
+          .maybeSingle();
+
+        if (recentReminder) continue; // Already reminded recently
 
         // Send notification
         await supabase.from("notifications").insert({
           user_id: cleaner.user_id,
           title: "Job Offer Awaiting Response",
-          message: `You have a pending job offer for ${job?.scheduled_date}. Respond soon before it expires!`,
+          message: `You have a pending job offer for ${scheduledDate}. Respond soon before it expires!`,
           type: "offer_reminder",
           data: { job_id: offer.job_id, offer_id: offer.id },
         });
@@ -88,19 +104,12 @@ const handler = async (req: Request): Promise<Response> => {
               template: "job_offer_reminder",
               data: {
                 name: cleaner.first_name,
-                date: job?.scheduled_date,
-                time: job?.scheduled_time,
-                credits: job?.total_credits,
+                date: scheduledDate,
+                credits: job?.escrow_credits_reserved,
               },
             },
           });
         }
-
-        // Mark reminder sent
-        await supabase
-          .from("job_offers")
-          .update({ reminder_sent_at: new Date().toISOString() })
-          .eq("id", offer.id);
 
         results.remindersSent++;
       } catch (err: unknown) {
