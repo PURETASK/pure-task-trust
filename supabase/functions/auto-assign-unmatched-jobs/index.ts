@@ -24,11 +24,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { data: unmatchedJobs, error: jobsError } = await supabase
       .from("jobs")
-      .select("id, property_id, scheduled_date, scheduled_time, total_credits")
+      .select("id, property_id, scheduled_start_at, escrow_credits_reserved")
       .eq("status", "pending")
       .is("cleaner_id", null)
       .lt("created_at", cutoffTime)
-      .gte("scheduled_date", tomorrow); // Only future jobs
+      .gte("scheduled_start_at", tomorrow); // Only future jobs
 
     if (jobsError) {
       console.error("Failed to fetch jobs:", jobsError);
@@ -84,12 +84,14 @@ const handler = async (req: Request): Promise<Response> => {
 
         let assigned = false;
         for (const cleaner of availableCleaners || []) {
-          // Check for conflicting jobs
+          // Check for conflicting jobs on the same day
+          const jobDate = job.scheduled_start_at?.split("T")[0];
           const { data: conflictingJobs } = await supabase
             .from("jobs")
             .select("id")
             .eq("cleaner_id", cleaner.id)
-            .eq("scheduled_date", job.scheduled_date)
+            .gte("scheduled_start_at", jobDate + "T00:00:00Z")
+            .lte("scheduled_start_at", jobDate + "T23:59:59Z")
             .in("status", ["scheduled", "confirmed"])
             .limit(1);
 
@@ -108,7 +110,7 @@ const handler = async (req: Request): Promise<Response> => {
             await supabase.from("notifications").insert({
               user_id: cleaner.user_id,
               title: "New Job Available",
-              message: `A job for ${job.scheduled_date} has been offered to you. Accept before it's gone!`,
+              message: `A job for ${job.scheduled_start_at ? new Date(job.scheduled_start_at).toLocaleDateString() : "an upcoming date"} has been offered to you. Accept before it's gone!`,
               type: "job_offer",
               data: { job_id: job.id },
             });
