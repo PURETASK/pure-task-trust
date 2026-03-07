@@ -18,16 +18,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Starting welcome drip day 3...");
 
-    // Users who signed up 3 days ago
+    // Users who signed up 3 days ago (between 4 and 3 days ago window)
     const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
     const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000);
 
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("id, email, full_name, welcome_drip_day3_sent")
+      .select("id, email, full_name")
       .gte("created_at", fourDaysAgo.toISOString())
-      .lt("created_at", threeDaysAgo.toISOString())
-      .is("welcome_drip_day3_sent", null);
+      .lt("created_at", threeDaysAgo.toISOString());
 
     if (profilesError) {
       console.error("Failed to fetch profiles:", profilesError);
@@ -41,6 +40,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const results = {
       emailsSent: 0,
+      skipped: 0,
       errors: [] as string[],
     };
 
@@ -48,12 +48,25 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         if (!profile.email) continue;
 
+        // Check if we've already sent this drip email using notifications table as dedup
+        const { data: existingNotif } = await supabase
+          .from("notifications")
+          .select("id")
+          .eq("user_id", profile.id)
+          .eq("type", "welcome_drip_day3")
+          .maybeSingle();
+
+        if (existingNotif) {
+          results.skipped++;
+          continue;
+        }
+
         // Get user role
         const { data: roleData } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", profile.id)
-          .single();
+          .maybeSingle();
 
         const role = roleData?.role || "client";
 
@@ -69,11 +82,16 @@ const handler = async (req: Request): Promise<Response> => {
           },
         });
 
-        // Mark as sent
+        // Record in notifications to prevent re-sending
         await supabase
-          .from("profiles")
-          .update({ welcome_drip_day3_sent: new Date().toISOString() })
-          .eq("id", profile.id);
+          .from("notifications")
+          .insert({
+            user_id: profile.id,
+            type: "welcome_drip_day3",
+            title: "Welcome Day 3 Drip",
+            message: "Welcome drip day 3 email sent",
+            is_read: true,
+          });
 
         results.emailsSent++;
       } catch (err: unknown) {

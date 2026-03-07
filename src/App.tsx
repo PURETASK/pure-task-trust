@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { RequireAuth, RequireClient, RequireCleaner } from "@/components/auth/RequireAuth";
+import { RequireAuth, RequireClient, RequireCleaner, RequireAdmin } from "@/components/auth/RequireAuth";
 import { MainLayout } from "@/components/layout/MainLayout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -136,24 +136,24 @@ const App = () => (
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/reviews" element={<Reviews />} />
                     
-                    {/* Admin routes - protected by RequireAuth with admin role */}
-                    <Route path="/admin/analytics" element={<RequireAuth allowedRoles={['admin']}><AdminAnalyticsDashboard /></RequireAuth>} />
-                    <Route path="/admin/trust-safety" element={<RequireAuth allowedRoles={['admin']}><TrustSafetyDashboard /></RequireAuth>} />
-                    <Route path="/admin/bookings" element={<RequireAuth allowedRoles={['admin']}><AdminBookingsConsole /></RequireAuth>} />
-                    <Route path="/admin/client-jobs" element={<RequireAuth allowedRoles={['admin']}><AdminClientJobs /></RequireAuth>} />
-                    <Route path="/admin/pricing-rules" element={<RequireAuth allowedRoles={['admin']}><AdminPricingRules /></RequireAuth>} />
-                    <Route path="/admin/pricing" element={<RequireAuth allowedRoles={['admin']}><AdminPricingManagement /></RequireAuth>} />
-                    <Route path="/admin/ceo" element={<RequireAuth allowedRoles={['admin']}><AdminCEODashboard /></RequireAuth>} />
-                    <Route path="/admin/operations" element={<RequireAuth allowedRoles={['admin']}><AdminOperationsDashboard /></RequireAuth>} />
-                    <Route path="/admin/finance" element={<RequireAuth allowedRoles={['admin']}><AdminFinanceDashboard /></RequireAuth>} />
-                    <Route path="/admin/growth" element={<RequireAuth allowedRoles={['admin']}><AdminGrowthDashboard /></RequireAuth>} />
-                    <Route path="/admin/performance" element={<RequireAuth allowedRoles={['admin']}><AdminPerformanceMetrics /></RequireAuth>} />
-                    <Route path="/admin/fraud-alerts" element={<RequireAuth allowedRoles={['admin']}><AdminFraudAlerts /></RequireAuth>} />
-                    <Route path="/admin/disputes" element={<RequireAuth allowedRoles={['admin']}><AdminDisputes /></RequireAuth>} />
-                    <Route path="/admin/client-risk" element={<RequireAuth allowedRoles={['admin']}><AdminClientRisk /></RequireAuth>} />
-                    <Route path="/admin/trust-safety-reports" element={<RequireAuth allowedRoles={['admin']}><AdminTrustSafetyReports /></RequireAuth>} />
-                    <Route path="/admin/id-verifications" element={<RequireAuth allowedRoles={['admin']}><AdminIDVerifications /></RequireAuth>} />
-                    <Route path="/admin/conversions" element={<RequireAuth allowedRoles={['admin']}><AdminConversionDashboard /></RequireAuth>} />
+                    {/* Admin routes - protected by RequireAdmin (server-side role check) */}
+                    <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
+                    <Route path="/admin/trust-safety" element={<RequireAdmin><TrustSafetyDashboard /></RequireAdmin>} />
+                    <Route path="/admin/bookings" element={<RequireAdmin><AdminBookingsConsole /></RequireAdmin>} />
+                    <Route path="/admin/client-jobs" element={<RequireAdmin><AdminClientJobs /></RequireAdmin>} />
+                    <Route path="/admin/pricing-rules" element={<RequireAdmin><AdminPricingRules /></RequireAdmin>} />
+                    <Route path="/admin/pricing" element={<RequireAdmin><AdminPricingManagement /></RequireAdmin>} />
+                    <Route path="/admin/ceo" element={<RequireAdmin><AdminCEODashboard /></RequireAdmin>} />
+                    <Route path="/admin/operations" element={<RequireAdmin><AdminOperationsDashboard /></RequireAdmin>} />
+                    <Route path="/admin/finance" element={<RequireAdmin><AdminFinanceDashboard /></RequireAdmin>} />
+                    <Route path="/admin/growth" element={<RequireAdmin><AdminGrowthDashboard /></RequireAdmin>} />
+                    <Route path="/admin/performance" element={<RequireAdmin><AdminPerformanceMetrics /></RequireAdmin>} />
+                    <Route path="/admin/fraud-alerts" element={<RequireAdmin><AdminFraudAlerts /></RequireAdmin>} />
+                    <Route path="/admin/disputes" element={<RequireAdmin><AdminDisputes /></RequireAdmin>} />
+                    <Route path="/admin/client-risk" element={<RequireAdmin><AdminClientRisk /></RequireAdmin>} />
+                    <Route path="/admin/trust-safety-reports" element={<RequireAdmin><AdminTrustSafetyReports /></RequireAdmin>} />
+                    <Route path="/admin/id-verifications" element={<RequireAdmin><AdminIDVerifications /></RequireAdmin>} />
+                    <Route path="/admin/conversions" element={<RequireAdmin><AdminConversionDashboard /></RequireAdmin>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={

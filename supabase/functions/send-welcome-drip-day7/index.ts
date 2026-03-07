@@ -18,16 +18,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Starting welcome drip day 7...");
 
-    // Users who signed up 7 days ago
+    // Users who signed up 7 days ago (between 8 and 7 days ago window)
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000);
 
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("id, email, full_name, welcome_drip_day7_sent")
+      .select("id, email, full_name")
       .gte("created_at", eightDaysAgo.toISOString())
-      .lt("created_at", sevenDaysAgo.toISOString())
-      .is("welcome_drip_day7_sent", null);
+      .lt("created_at", sevenDaysAgo.toISOString());
 
     if (profilesError) {
       console.error("Failed to fetch profiles:", profilesError);
@@ -41,6 +40,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const results = {
       emailsSent: 0,
+      skipped: 0,
       errors: [] as string[],
     };
 
@@ -48,31 +48,58 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         if (!profile.email) continue;
 
+        // Check if we've already sent this drip email using notifications table as dedup
+        const { data: existingNotif } = await supabase
+          .from("notifications")
+          .select("id")
+          .eq("user_id", profile.id)
+          .eq("type", "welcome_drip_day7")
+          .maybeSingle();
+
+        if (existingNotif) {
+          results.skipped++;
+          continue;
+        }
+
         // Get user role
         const { data: roleData } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", profile.id)
-          .single();
+          .maybeSingle();
 
         const role = roleData?.role || "client";
 
-        // Check activity
+        // Check activity - use profile IDs not auth IDs for jobs table
         let hasActivity = false;
         if (role === "client") {
-          const { data: jobs } = await supabase
-            .from("jobs")
+          const { data: clientProfile } = await supabase
+            .from("client_profiles")
             .select("id")
-            .eq("client_id", profile.id)
-            .limit(1);
-          hasActivity = (jobs?.length || 0) > 0;
-        } else {
-          const { data: jobs } = await supabase
-            .from("jobs")
+            .eq("user_id", profile.id)
+            .maybeSingle();
+          if (clientProfile) {
+            const { data: jobs } = await supabase
+              .from("jobs")
+              .select("id")
+              .eq("client_id", clientProfile.id)
+              .limit(1);
+            hasActivity = (jobs?.length || 0) > 0;
+          }
+        } else if (role === "cleaner") {
+          const { data: cleanerProfile } = await supabase
+            .from("cleaner_profiles")
             .select("id")
-            .eq("cleaner_id", profile.id)
-            .limit(1);
-          hasActivity = (jobs?.length || 0) > 0;
+            .eq("user_id", profile.id)
+            .maybeSingle();
+          if (cleanerProfile) {
+            const { data: jobs } = await supabase
+              .from("jobs")
+              .select("id")
+              .eq("cleaner_id", cleanerProfile.id)
+              .limit(1);
+            hasActivity = (jobs?.length || 0) > 0;
+          }
         }
 
         // Send appropriate drip email
@@ -88,11 +115,16 @@ const handler = async (req: Request): Promise<Response> => {
           },
         });
 
-        // Mark as sent
+        // Record in notifications to prevent re-sending
         await supabase
-          .from("profiles")
-          .update({ welcome_drip_day7_sent: new Date().toISOString() })
-          .eq("id", profile.id);
+          .from("notifications")
+          .insert({
+            user_id: profile.id,
+            type: "welcome_drip_day7",
+            title: "Welcome Day 7 Drip",
+            message: "Welcome drip day 7 email sent",
+            is_read: true,
+          });
 
         results.emailsSent++;
       } catch (err: unknown) {
