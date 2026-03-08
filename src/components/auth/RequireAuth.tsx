@@ -62,7 +62,7 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   // Check role if specified
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     // Redirect to appropriate dashboard based on role
-    const redirectPath = user.role === 'cleaner' ? '/cleaner/dashboard' : '/dashboard';
+    const redirectPath = user.role === 'cleaner' ? '/cleaner/dashboard' : user.role === 'admin' ? '/admin/hub' : '/dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 

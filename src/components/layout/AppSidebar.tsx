@@ -128,6 +128,7 @@ const adminNavItems = [
   {
     group: "Analytics",
     items: [
+      { title: "Admin Hub", url: "/admin/hub", icon: LayoutDashboard },
       { title: "Analytics Hub", url: "/admin/analytics", icon: BarChart3 },
       { title: "CEO Dashboard", url: "/admin/ceo", icon: TrendingUp },
       { title: "Operations", url: "/admin/operations", icon: Activity },
@@ -196,6 +197,9 @@ export function AppSidebar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const isEnd = (url: string) =>
+    url === "/" || url === "/dashboard" || url === "/cleaner/dashboard" || url === "/admin/hub";
+
   return (
     <TooltipProvider delayDuration={0}>
       <Sidebar
@@ -220,7 +224,7 @@ export function AppSidebar() {
                             <TooltipTrigger asChild>
                               <NavLink
                                 to={item.url}
-                                end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                                end={isEnd(item.url)}
                                 className={`flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                                   isActive(item.url)
                                     ? "bg-primary/10 text-primary"
@@ -238,7 +242,7 @@ export function AppSidebar() {
                         ) : (
                           <NavLink
                             to={item.url}
-                            end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                            end={isEnd(item.url)}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                               isActive(item.url)
                                 ? "bg-primary/10 text-primary"

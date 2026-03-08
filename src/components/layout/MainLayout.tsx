@@ -18,10 +18,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Home, ArrowLeft } from "lucide-react";
+import { LogOut, Settings, HelpCircle, Home, ArrowLeft, Wallet } from "lucide-react";
+import { useWallet } from "@/hooks/useWallet";
 
 interface MainLayoutProps {
   children: ReactNode;
+}
+
+// Inner component so useWallet hook only runs inside the provider tree
+function CreditChip() {
+  const { account } = useWallet();
+  if (account === null || account === undefined) return null;
+  return (
+    <Link to="/wallet" className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+      <Wallet className="h-3.5 w-3.5 text-primary" />
+      <span className="text-xs font-semibold text-primary">{account.current_balance} cr</span>
+    </Link>
+  );
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
@@ -40,7 +53,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const getHomePath = () => {
     if (!isAuthenticated) return "/";
     if (user?.role === "cleaner") return "/cleaner/dashboard";
-    if (user?.role === "admin") return "/admin/analytics";
+    if (user?.role === "admin") return "/admin/hub";
     return "/dashboard";
   };
 
@@ -91,6 +104,9 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
+                    {/* Live credit balance chip for clients */}
+                    {user.role === "client" && <CreditChip />}
+
                     {/* NotificationBell with live unread count */}
                     <div className="hidden sm:flex">
                       <NotificationBell />

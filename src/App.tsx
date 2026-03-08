@@ -88,6 +88,7 @@ import AdminCohortAnalysis from "./pages/admin/AdminCohortAnalysis";
 import AdminBulkComms from "./pages/admin/AdminBulkComms";
 import AdminPlatformConfig from "./pages/admin/AdminPlatformConfig";
 import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AdminHub from "./pages/admin/AdminHub";
 import CleanerSettings from "./pages/cleaner/CleanerSettings";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
@@ -167,6 +168,7 @@ const App = () => (
                      <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
                      <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                      <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
+                     <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
