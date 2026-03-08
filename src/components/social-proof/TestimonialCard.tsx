@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Star, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,7 +13,7 @@ interface TestimonialCardProps {
   variant?: "default" | "compact";
 }
 
-export function TestimonialCard({
+export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(function TestimonialCard({
   authorName,
   authorRole,
   authorLocation,
