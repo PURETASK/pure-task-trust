@@ -11,13 +11,14 @@ import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Bell, Home, ArrowLeft } from "lucide-react";
+14:   DropdownMenu,
+15:   DropdownMenuContent,
+16:   DropdownMenuItem,
+17:   DropdownMenuSeparator,
+18:   DropdownMenuTrigger,
+19: } from "@/components/ui/dropdown-menu";
+20: import { NotificationBell } from "@/components/layout/NotificationBell";
+21: import { LogOut, Settings, HelpCircle, Home, ArrowLeft } from "lucide-react";
 
 interface MainLayoutProps {
   children: ReactNode;
