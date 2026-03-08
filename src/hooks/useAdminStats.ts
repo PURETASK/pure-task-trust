@@ -125,13 +125,13 @@ export function useAdminFinanceStats() {
       const [earningsThis, payoutsAll, ledgerThis, creditAccounts] = await Promise.all([
         supabase.from('cleaner_earnings').select('net_credits, platform_fee_credits, gross_credits').gte('created_at', thisMonthStart),
         supabase.from('payout_requests').select('amount_credits, status, requested_at, fee_credits').order('requested_at', { ascending: false }).limit(50),
-        supabase.from('credit_ledger').select('amount, tx_type, created_at').gte('created_at', thisMonthStart).limit(500),
+        supabase.from('credit_ledger').select('delta_credits, reason, created_at').gte('created_at', thisMonthStart).limit(500),
         supabase.from('credit_accounts').select('current_balance').limit(1000),
       ]);
 
       const revenueThis = earningsThis.data?.reduce((s, e) => s + (e.platform_fee_credits || 0), 0) || 0;
       const totalPayoutsThis = earningsThis.data?.reduce((s, e) => s + (e.net_credits || 0), 0) || 0;
-      const refundsThis = ledgerThis.data?.filter(l => l.tx_type === 'refund').reduce((s, l) => s + Math.abs(l.amount || 0), 0) || 0;
+      const refundsThis = ledgerThis.data?.filter(l => l.reason === 'refund').reduce((s, l) => s + Math.abs(l.delta_credits || 0), 0) || 0;
 
       // 6-month trend
       const monthlyTrend = [];
