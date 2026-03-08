@@ -106,6 +106,14 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
+                    {/* Admin: Command Palette + Alerts Badge */}
+                    {user.role === "admin" && (
+                      <div className="hidden md:flex items-center gap-1">
+                        <AdminCommandPalette />
+                        <AdminAlertsBadge />
+                      </div>
+                    )}
+
                     {/* Live credit balance chip for clients */}
                     {user.role === "client" && <CreditChip />}
 
