@@ -8,6 +8,8 @@ import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
 import { TierBadge } from "@/components/gamification/TierBadge";
 import { InviteFriendsCTA } from "@/components/referral";
+import { TierProgressMap } from "@/components/cleaner/TierProgressMap";
+import { ProfileCompletion } from "@/components/cleaner/ProfileCompletion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
@@ -18,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { format, differenceInMinutes, isToday } from "date-fns";
+import type { CleanerTier } from "@/lib/tier-config";
 import { 
   Briefcase, 
   Clock, 
