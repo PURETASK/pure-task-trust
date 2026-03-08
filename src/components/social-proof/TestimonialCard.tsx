@@ -13,15 +13,11 @@ interface TestimonialCardProps {
   variant?: "default" | "compact";
 }
 
-export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(function TestimonialCard({
-  authorName,
-  authorRole,
-  authorLocation,
-  quote,
-  rating,
-  avatarUrl,
-  variant = "default",
-}: TestimonialCardProps) {
+export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
+  function TestimonialCard(
+    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default" }: TestimonialCardProps,
+    ref
+  ) {
   const initials = authorName
     .split(" ")
     .map((n) => n[0])
