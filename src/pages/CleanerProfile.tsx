@@ -7,15 +7,37 @@ import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
 import { useReliabilityScore } from "@/hooks/useReliabilityScore";
 import { useCleanerReviews } from "@/hooks/useReviews";
+import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const { data: cleaner, isLoading, error } = useCleaner(id || '');
   const { metrics, scoreBreakdown, isLoading: metricsLoading, error: metricsError } = useReliabilityScore(id);
   const { data: reviews, isLoading: reviewsLoading } = useCleanerReviews(id || '');
+  const { data: favorites } = useFavorites();
+  const { toggleFavorite, isToggling } = useFavoriteActions();
+
+  const isFavorite = favorites?.some(f => f.cleaner_id === id) ?? false;
+
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'Please sign in to save favorites.', variant: 'destructive' });
+      return;
+    }
+    try {
+      await toggleFavorite({ cleanerId: id!, isFavorite });
+      toast({ title: isFavorite ? 'Removed from favorites' : 'Added to favorites' });
+    } catch {
+      toast({ title: 'Error', description: 'Failed to update favorites.', variant: 'destructive' });
+    }
+  };
 
   // Fetch cleaner's profile photo from storage
   const { data: profilePhotoUrl } = useQuery({
@@ -142,8 +164,14 @@ export default function CleanerProfile() {
                         </span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
-                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0"
+                      onClick={handleToggleFavorite}
+                      disabled={isToggling}
+                    >
+                      <Heart className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors ${isFavorite ? 'fill-destructive text-destructive' : ''}`} />
                     </Button>
                   </div>
 

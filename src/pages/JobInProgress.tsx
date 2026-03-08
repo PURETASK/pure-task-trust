@@ -165,7 +165,7 @@ export default function JobInProgress() {
                   </p>
                 </div>
                 <Button variant="outline" size="icon" asChild>
-                  <Link to="/messages">
+                  <Link to={`/messages?job=${id}`}>
                     <MessageCircle className="h-4 w-4" />
                   </Link>
                 </Button>

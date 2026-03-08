@@ -90,7 +90,7 @@ export default function CleanerSchedule() {
       case 'confirmed':
         return <Badge variant="default">Confirmed</Badge>;
       case 'in_progress':
-        return <Badge className="bg-blue-500">In Progress</Badge>;
+        return <Badge className="bg-primary/80 text-primary-foreground">In Progress</Badge>;
       case 'completed':
         return <Badge variant="success">Completed</Badge>;
       default:
@@ -220,7 +220,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {pendingJobs.map((job) => (
-                  <Card key={job.id}>
+                  <Card key={job.id} className="hover:shadow-elevated transition-all">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -229,20 +229,25 @@ export default function CleanerSchedule() {
                              job.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {job.client?.first_name} {job.client?.last_name}
+                            Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                           </p>
                         </div>
                         {getStatusBadge(job.status)}
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {job.estimated_hours || 2}h
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {job.estimated_hours || 2}h
+                          </span>
+                        </div>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -263,7 +268,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {acceptedJobs.map((job) => (
-                  <Card key={job.id}>
+                  <Card key={job.id} className="hover:shadow-elevated transition-all">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -272,20 +277,25 @@ export default function CleanerSchedule() {
                              job.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {job.client?.first_name} {job.client?.last_name}
+                            Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                           </p>
                         </div>
                         {getStatusBadge(job.status)}
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {job.estimated_hours || 2}h
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {job.estimated_hours || 2}h
+                          </span>
+                        </div>
+                        <Button variant="default" size="sm" asChild>
+                          <Link to={`/cleaner/jobs/${job.id}`}>Start Job</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
