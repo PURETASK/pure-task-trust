@@ -236,7 +236,7 @@ export default function AdminUsersPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => openInspector(cleaner.user_id)}
+                      onClick={() => openInspector(cleaner.user_id, "cleaner")}
                     >
                       <Eye className="h-3.5 w-3.5 mr-1.5" />
                       Inspect
