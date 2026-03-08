@@ -24,11 +24,11 @@ export default function CleanerJobs() {
       case 'confirmed':
         return <Badge variant="default">Confirmed</Badge>;
       case 'on_way':
-        return <Badge className="bg-blue-500">On the Way</Badge>;
+        return <Badge className="bg-[hsl(210,100%,56%)]">On the Way</Badge>;
       case 'arrived':
-        return <Badge className="bg-indigo-500">Arrived</Badge>;
+        return <Badge className="bg-[hsl(243,75%,59%)]">Arrived</Badge>;
       case 'in_progress':
-        return <Badge className="bg-violet-500">In Progress</Badge>;
+        return <Badge className="bg-[hsl(262,83%,58%)]">In Progress</Badge>;
       case 'completed':
         return <Badge variant="success">Completed</Badge>;
       default:
@@ -111,8 +111,10 @@ export default function CleanerJobs() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon">
-              <MessageCircle className="h-4 w-4" />
+            <Button variant="outline" size="icon" asChild>
+              <Link to={`/cleaner/messages?job=${job.id}`}>
+                <MessageCircle className="h-4 w-4" />
+              </Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
               <Link to={`/cleaner/jobs/${job.id}`}>View Details</Link>

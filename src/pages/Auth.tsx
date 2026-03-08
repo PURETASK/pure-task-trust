@@ -6,9 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { User, Briefcase, Mail, Lock, ArrowRight, Loader2, Gift, Sparkles } from "lucide-react";
+import { User, Briefcase, Mail, Lock, ArrowRight, Loader2, Gift, Sparkles, CheckCircle } from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
@@ -24,6 +23,8 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [signupComplete, setSignupComplete] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
@@ -39,30 +40,19 @@ export default function AuthPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     setIsSubmitting(true);
     
     try {
       if (isSignUp) {
-        // For signup, we need a role
         if (!role) {
-          toast({
-            title: "Error",
-            description: "Please select a role first",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
+          toast({ title: "Error", description: "Please select a role first", variant: "destructive" });
           return;
         }
         
         const result = await signup(email, password, role, fullName);
         
         if (result.error) {
-          toast({
-            title: "Error",
-            description: result.error,
-            variant: "destructive",
-          });
+          toast({ title: "Error", description: result.error, variant: "destructive" });
         } else {
           // Apply referral code if present
           if (referralCode) {
@@ -76,37 +66,19 @@ export default function AuthPage() {
             }
           }
           
-          toast({
-            title: "Account created!",
-            description: role === "client" 
-              ? "Redirecting to your dashboard..." 
-              : "Redirecting to cleaner portal...",
-          });
-          
-          // For new signups, redirect based on selected role
-          setTimeout(() => {
-            navigate(role === "cleaner" ? "/cleaner/dashboard" : "/dashboard");
-          }, 500);
+          // Show email confirmation screen instead of redirecting
+          setSignupEmail(email);
+          setSignupComplete(true);
         }
       } else {
-        // For login, authenticate first then check their stored role
         const result = await login(email, password);
         
         if (result.error) {
-          toast({
-            title: "Error",
-            description: result.error,
-            variant: "destructive",
-          });
+          toast({ title: "Error", description: result.error, variant: "destructive" });
         } else {
-          toast({
-            title: "Welcome back!",
-            description: "Redirecting to your dashboard...",
-          });
+          toast({ title: "Welcome back!", description: "Redirecting to your dashboard..." });
           
-          // Fetch the user's role from the database to redirect correctly
           const { data: { user: authUser } } = await supabase.auth.getUser();
-          
           if (authUser) {
             const { data: roleData } = await supabase
               .from('user_roles')
@@ -115,7 +87,6 @@ export default function AuthPage() {
               .maybeSingle();
             
             const userRole = roleData?.role || 'client';
-            
             setTimeout(() => {
               navigate(userRole === "cleaner" ? "/cleaner/dashboard" : "/dashboard");
             }, 500);
@@ -128,8 +99,6 @@ export default function AuthPage() {
   };
 
   const handleGoogleLogin = async () => {
-    // For sign-in, we don't require role selection (user already has a role)
-    // For sign-up, we need a role selected
     if (isSignUp && !role) {
       toast({
         title: "Select a role",
@@ -140,32 +109,18 @@ export default function AuthPage() {
     }
     
     setIsSubmitting(true);
-    
     try {
-      // Pass undefined for sign-in (existing users), role for sign-up (new users)
       const result = await loginWithGoogle(isSignUp ? role : undefined);
-      
       if (result.error) {
-        toast({
-          title: "Google Sign-In Failed",
-          description: result.error,
-          variant: "destructive",
-        });
+        toast({ title: "Google Sign-In Failed", description: result.error, variant: "destructive" });
       }
-      // If successful, the page will redirect to Google
     } catch (error: any) {
-      console.error('Google login handler error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to initiate Google Sign-In. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to initiate Google Sign-In. Please try again.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Show loading while checking auth state
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -174,8 +129,72 @@ export default function AuthPage() {
     );
   }
 
-  // For sign-in, we don't need role selection first
-  // For sign-up, we need to know the role
+  // Email confirmation screen shown after signup
+  if (signupComplete) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center py-8 sm:py-20 pt-20 sm:pt-32 px-4">
+          <div className="container max-w-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="text-center"
+            >
+              <div className="h-20 w-20 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-10 w-10 text-success" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-3">Check your email</h1>
+              <p className="text-muted-foreground mb-2">
+                We've sent a confirmation link to:
+              </p>
+              <p className="font-semibold text-foreground mb-6">{signupEmail}</p>
+              <Card className="mb-6 text-left">
+                <CardContent className="p-5 space-y-3">
+                  <p className="text-sm font-medium">Next steps:</p>
+                  <ol className="space-y-2 text-sm text-muted-foreground list-none">
+                    <li className="flex items-start gap-2">
+                      <span className="h-5 w-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold">1</span>
+                      Open the email from PureTask
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="h-5 w-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold">2</span>
+                      Click the "Confirm your email" link
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="h-5 w-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold">3</span>
+                      {role === 'cleaner' 
+                        ? "Complete your cleaner profile setup"
+                        : "Start booking your first cleaning"}
+                    </li>
+                  </ol>
+                </CardContent>
+              </Card>
+              <p className="text-xs text-muted-foreground mb-4">
+                Didn't receive it? Check your spam folder or{' '}
+                <button
+                  onClick={() => setSignupComplete(false)}
+                  className="text-primary hover:underline"
+                >
+                  try again
+                </button>
+              </p>
+              <Button variant="outline" className="w-full" onClick={() => {
+                setIsSignUp(false);
+                setSignupComplete(false);
+              }}>
+                Back to Sign In
+              </Button>
+            </motion.div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Role selection screen (for sign up)
   if (isSignUp && !role) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -187,14 +206,9 @@ export default function AuthPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Referral Banner */}
               {referralCode && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6"
-                >
-                  <Card className="border-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+                  <Card className="border-0 bg-gradient-to-r from-[hsl(330,82%,60%)] to-[hsl(270,60%,55%)] text-white">
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                         <Gift className="h-5 w-5" />
@@ -251,10 +265,7 @@ export default function AuthPage() {
 
               <p className="text-center text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6">
                 Already have an account?{" "}
-                <button 
-                  onClick={() => setIsSignUp(false)} 
-                  className="text-primary hover:underline"
-                >
+                <button onClick={() => setIsSignUp(false)} className="text-primary hover:underline">
                   Sign in
                 </button>
               </p>
@@ -302,7 +313,7 @@ export default function AuthPage() {
               <CardContent>
                 <Tabs value={isSignUp ? "signup" : "signin"} onValueChange={(v) => {
                   setIsSignUp(v === "signup");
-                  if (v === "signup") setRole(null); // Reset role when switching to signup
+                  if (v === "signup") setRole(null);
                 }}>
                   <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -344,30 +355,30 @@ export default function AuthPage() {
                         </div>
                       </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="password">Password</Label>
-                          <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input 
-                              id="password" 
-                              type="password" 
-                              placeholder="••••••••"
-                              className="pl-10"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                              required
-                              minLength={8}
-                            />
-                          </div>
-                          {isSignUp && password.length > 0 && password.length < 8 && (
-                            <p className="text-xs text-destructive">Password must be at least 8 characters</p>
-                          )}
-                          {isSignUp && password.length >= 8 && (
-                            <p className="text-xs text-success">
-                              {password.length >= 12 ? '✓ Strong password' : '✓ Password meets requirements'}
-                            </p>
-                          )}
+                      <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            id="password" 
+                            type="password" 
+                            placeholder="••••••••"
+                            className="pl-10"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            minLength={8}
+                          />
                         </div>
+                        {isSignUp && password.length > 0 && password.length < 8 && (
+                          <p className="text-xs text-destructive">Password must be at least 8 characters</p>
+                        )}
+                        {isSignUp && password.length >= 8 && (
+                          <p className="text-xs text-success">
+                            {password.length >= 12 ? '✓ Strong password' : '✓ Password meets requirements'}
+                          </p>
+                        )}
+                      </div>
 
                       <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                         {isSubmitting ? (
@@ -382,10 +393,7 @@ export default function AuthPage() {
                       
                       {!isSignUp && (
                         <div className="text-center">
-                          <Link 
-                            to="/forgot-password" 
-                            className="text-sm text-muted-foreground hover:text-primary"
-                          >
+                          <Link to="/forgot-password" className="text-sm text-muted-foreground hover:text-primary">
                             Forgot your password?
                           </Link>
                         </div>
@@ -414,26 +422,23 @@ export default function AuthPage() {
                     <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                   ) : (
                     <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
-                      <path
-                        fill="#4285F4"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                      />
-                      <path
-                        fill="#EA4335"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      />
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
                   )}
                   Continue with Google
                 </Button>
+
+                {!isSignUp && (
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    Don't have an account?{" "}
+                    <button onClick={() => { setIsSignUp(true); setRole(null); }} className="text-primary hover:underline">
+                      Sign up
+                    </button>
+                  </p>
+                )}
               </CardContent>
             </Card>
           </motion.div>

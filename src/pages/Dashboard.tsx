@@ -375,8 +375,8 @@ export default function Dashboard() {
                       <Card className="hover:shadow-elevated transition-all">
                         <CardContent className="p-6">
                           <div className="flex flex-col md:flex-row md:items-center gap-4">
-                            <div className="h-14 w-14 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                              <Repeat className="h-6 w-6 text-violet-500" />
+                            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                              <Repeat className="h-6 w-6 text-primary" />
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
@@ -397,8 +397,8 @@ export default function Dashboard() {
                               )}
                             </div>
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm">
-                                Manage
+                              <Button variant="outline" size="sm" asChild>
+                                <Link to="/book">Manage</Link>
                               </Button>
                             </div>
                           </div>
