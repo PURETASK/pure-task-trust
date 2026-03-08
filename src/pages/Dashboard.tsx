@@ -6,13 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin, TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useRecurringBookings } from "@/hooks/useRecurringBookings";
 import { format, isToday } from "date-fns";
 import { InviteFriendsCTA } from "@/components/referral";
+import { LoyaltyTracker } from "@/components/loyalty/LoyaltyTracker";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -115,6 +116,65 @@ export default function Dashboard() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* C-10: Loyalty Rewards Tracker */}
+          <div className="mb-6">
+            <LoyaltyTracker />
+          </div>
+
+          {/* C-01: Smart Rebooking Suggestions */}
+          {(() => {
+            const pastWithCleaner = jobs?.filter(j =>
+              j.status === 'completed' && j.cleaner_id && j.cleaner
+            ) ?? [];
+            // Deduplicate by cleaner_id, keep most recent
+            const seen = new Set<string>();
+            const suggestions = pastWithCleaner.filter(j => {
+              if (!j.cleaner_id || seen.has(j.cleaner_id)) return false;
+              seen.add(j.cleaner_id);
+              return true;
+            }).slice(0, 3);
+            if (suggestions.length === 0) return null;
+            return (
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                  <h2 className="text-sm font-semibold">Book Again</h2>
+                  <span className="text-xs text-muted-foreground ml-1">Your recent cleaners</span>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+                  {suggestions.map(job => {
+                    const cleanerName = `${job.cleaner?.first_name || ''} ${job.cleaner?.last_name || ''}`.trim() || 'Cleaner';
+                    return (
+                      <Link key={job.id} to={`/book?cleaner=${job.cleaner_id}&type=${job.cleaning_type}`} className="flex-shrink-0">
+                        <Card className="w-44 hover:shadow-elevated hover:border-primary/40 transition-all cursor-pointer">
+                          <CardContent className="p-3">
+                            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary mb-2">
+                              {cleanerName.charAt(0)}
+                            </div>
+                            <p className="font-medium text-xs truncate">{cleanerName}</p>
+                            {job.cleaner?.avg_rating && (
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                                <Star className="h-2.5 w-2.5 fill-warning text-warning" />
+                                {job.cleaner.avg_rating.toFixed(1)}
+                              </div>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-0.5 capitalize">
+                              {(job.cleaning_type || '').replace('_', ' ')} Clean
+                            </p>
+                            <Button size="sm" className="w-full mt-2 h-7 text-xs">
+                              <RotateCcw className="h-3 w-3 mr-1" />
+                              Book Again
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Referral CTA */}
           <InviteFriendsCTA className="mb-6" />

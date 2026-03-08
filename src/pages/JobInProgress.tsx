@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Clock, MessageCircle, Navigation, Loader2, RefreshCw, Bell, AlertCircle } from "lucide-react";
+import { Check, Clock, MessageCircle, Navigation, Loader2, RefreshCw, Bell, AlertCircle, MapPin } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const timelineSteps = [
   { id: "accepted", label: "Accepted", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed', 'pending_approval'] },

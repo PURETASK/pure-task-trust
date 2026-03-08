@@ -1,12 +1,22 @@
 import { motion } from "framer-motion";
-import { Bell, Check, CheckCheck, ExternalLink, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Bell, Check, CheckCheck, ExternalLink, Loader2, BookOpen, Wallet, MessageSquare, Tag } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useInAppNotifications } from "@/hooks/useInAppNotifications";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
+
+const TYPE_FILTERS = [
+  { value: "all", label: "All" },
+  { value: "booking", label: "Bookings", icon: BookOpen },
+  { value: "payment", label: "Wallet", icon: Wallet },
+  { value: "message", label: "Messages", icon: MessageSquare },
+  { value: "referral", label: "Promos", icon: Tag },
+];
 
 const typeIcons: Record<string, string> = {
   booking: "📅",
@@ -19,6 +29,7 @@ const typeIcons: Record<string, string> = {
   system: "🔔",
   reminder: "⏰",
   payout: "💰",
+  message: "💬",
 };
 
 const typeBg: Record<string, string> = {
@@ -30,10 +41,30 @@ const typeBg: Record<string, string> = {
   dispute: "bg-destructive/10 text-destructive",
   referral: "bg-pink-500/10 text-pink-600",
   payout: "bg-emerald-500/10 text-emerald-600",
+  message: "bg-blue-400/10 text-blue-500",
+};
+
+// Map filter tab value to notification types
+const FILTER_TYPE_MAP: Record<string, string[]> = {
+  booking: ["booking", "job_started", "job_completed", "review", "reminder"],
+  payment: ["payment", "payout", "dispute"],
+  message: ["message"],
+  referral: ["referral", "promo", "system"],
 };
 
 export default function Notifications() {
   const { notifications, isLoading, unreadCount, markRead, markAllRead } = useInAppNotifications();
+  const [filter, setFilter] = useState("all");
+  const navigate = useNavigate();
+
+  const filtered = filter === "all"
+    ? notifications
+    : notifications.filter((n) => (FILTER_TYPE_MAP[filter] ?? []).includes(n.type));
+
+  const handleNotificationClick = (n: typeof notifications[0]) => {
+    if (!n.is_read) markRead(n.id);
+    if (n.link_url) navigate(n.link_url);
+  };
 
   return (
     <main className="flex-1 py-6">
@@ -44,7 +75,7 @@ export default function Notifications() {
           transition={{ duration: 0.4 }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-5">
             <div>
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 <Bell className="h-6 w-6 text-primary" />
@@ -63,6 +94,29 @@ export default function Notifications() {
             )}
           </div>
 
+          {/* Type filter tabs */}
+          <div className="overflow-x-auto -mx-4 px-4 mb-5">
+            <div className="flex gap-2 w-max">
+              {TYPE_FILTERS.map((f) => (
+                <button
+                  key={f.value}
+                  onClick={() => setFilter(f.value)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                    filter === f.value
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {f.icon && <f.icon className="h-3.5 w-3.5" />}
+                  {f.label}
+                  {f.value === "all" && unreadCount > 0 && (
+                    <span className="ml-1 text-xs opacity-80">({unreadCount})</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Notification List */}
           {isLoading ? (
             <div className="space-y-3">
@@ -70,17 +124,23 @@ export default function Notifications() {
                 <Skeleton key={i} className="h-20 rounded-xl" />
               ))}
             </div>
-          ) : notifications.length === 0 ? (
+          ) : filtered.length === 0 ? (
             <Card>
               <CardContent className="py-16 text-center">
                 <Bell className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-40" />
-                <h3 className="font-semibold mb-1">No notifications yet</h3>
-                <p className="text-sm text-muted-foreground">We'll notify you about bookings, payments, and more</p>
+                <h3 className="font-semibold mb-1">
+                  {filter === "all" ? "No notifications yet" : `No ${filter} notifications`}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {filter === "all"
+                    ? "We'll notify you about bookings, payments, and more"
+                    : "Nothing here yet — check back later"}
+                </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-2">
-              {notifications.map((n, i) => (
+              {filtered.map((n, i) => (
                 <motion.div
                   key={n.id}
                   initial={{ opacity: 0, x: -10 }}
@@ -93,9 +153,7 @@ export default function Notifications() {
                         ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
                         : "bg-card border-border/60 hover:bg-muted/50"
                     }`}
-                    onClick={() => {
-                      if (!n.is_read) markRead(n.id);
-                    }}
+                    onClick={() => handleNotificationClick(n)}
                   >
                     {/* Unread dot */}
                     {!n.is_read && (

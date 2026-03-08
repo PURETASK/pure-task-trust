@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, Search, X } from "lucide-react";
+import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, Search, X, Zap, ChevronDown, ChevronUp } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
 import { format } from 'date-fns';
@@ -32,6 +34,10 @@ export default function Wallet() {
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [txSearch, setTxSearch] = useState('');
   const [txTypeFilter, setTxTypeFilter] = useState('all');
+  const [showAutoTopUp, setShowAutoTopUp] = useState(false);
+  const [autoTopUpEnabled, setAutoTopUpEnabled] = useState(false);
+  const [topUpThreshold, setTopUpThreshold] = useState('20');
+  const [topUpAmount, setTopUpAmount] = useState('50');
   const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing, refetch } = useWallet();
   const { toast } = useToast();
 
@@ -114,7 +120,7 @@ export default function Wallet() {
             </Card>
           </div>
 
-          <Card className="mb-6 sm:mb-8">
+          <Card className="mb-4 sm:mb-6">
             <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
@@ -126,6 +132,75 @@ export default function Wallet() {
                   Buy Credits
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* C-04: Auto Top-Up */}
+          <Card className="mb-6 sm:mb-8 border-primary/20">
+            <CardContent className="p-4 sm:p-5">
+              <button
+                className="w-full flex items-center justify-between"
+                onClick={() => setShowAutoTopUp(v => !v)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Zap className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-sm">Auto Top-Up</p>
+                    <p className="text-xs text-muted-foreground">
+                      {autoTopUpEnabled ? `Tops up when balance below ${topUpThreshold} credits` : 'Keep wallet funded automatically'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {autoTopUpEnabled && <Badge variant="success" className="text-xs">On</Badge>}
+                  {showAutoTopUp ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                </div>
+              </button>
+              {showAutoTopUp && (
+                <div className="mt-4 pt-4 border-t space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="auto-topup-toggle" className="text-sm font-medium">Enable auto top-up</Label>
+                    <Switch id="auto-topup-toggle" checked={autoTopUpEnabled} onCheckedChange={setAutoTopUpEnabled} />
+                  </div>
+                  {autoTopUpEnabled && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Top up when below</Label>
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            value={topUpThreshold}
+                            onChange={e => setTopUpThreshold(e.target.value)}
+                            className="pr-14 text-sm h-9"
+                            min="5"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">credits</span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Add this amount</Label>
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            value={topUpAmount}
+                            onChange={e => setTopUpAmount(e.target.value)}
+                            className="pr-14 text-sm h-9"
+                            min="10"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">credits</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {autoTopUpEnabled && (
+                    <p className="text-xs text-muted-foreground">
+                      When your balance drops below <strong>{topUpThreshold}</strong> credits, we'll automatically top up <strong>{topUpAmount}</strong> credits.
+                    </p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 

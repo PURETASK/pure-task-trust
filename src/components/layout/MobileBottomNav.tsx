@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, Search, Calendar, MessageSquare, User, Briefcase, DollarSign, LogIn, Tag } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { useMessageThreads } from "@/hooks/useMessages";
 
 interface NavItem {
   icon: React.ElementType;
@@ -35,6 +36,8 @@ const unauthenticatedNavItems: NavItem[] = [
 export function MobileBottomNav() {
   const location = useLocation();
   const { user } = useAuth();
+  const threadsQuery = useMessageThreads();
+  const unreadCount = threadsQuery.data?.reduce((sum, t) => sum + (t.unreadCount || 0), 0) ?? 0;
 
   // Determine which nav items to show based on auth state and role
   const userRole = user?.role;
@@ -50,14 +53,16 @@ export function MobileBottomNav() {
     return null;
   }
 
+  const messagesPath = userRole === 'cleaner' ? '/cleaner/messages' : '/messages';
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-lg border-t border-border pb-safe">
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
-          // Exact match OR path starts with item path only for nested routes (not "/" and not cross-role prefixes)
           const isActive = location.pathname === item.path ||
             (item.path.length > 1 && item.path !== '/discover' && location.pathname.startsWith(item.path + '/'));
+          const isMessages = item.path === messagesPath;
           
           return (
             <Link
@@ -71,7 +76,14 @@ export function MobileBottomNav() {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
+              <div className="relative">
+                <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
+                {isMessages && unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 h-4 min-w-4 px-1 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </div>
               <span className={cn(
                 "text-[10px] font-medium",
                 isActive && "font-semibold"
