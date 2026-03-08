@@ -215,6 +215,24 @@ export default function CleanerDashboard() {
           <TierBadge />
         </div>
 
+        {/* Profile Completion Nudge */}
+        {profile && (
+          <ProfileCompletion
+            profile={profile}
+            hasServiceAreas={false}
+            hasAvailability={false}
+          />
+        )}
+
+        {/* Tier Progress Map */}
+        {profile && (
+          <TierProgressMap
+            currentTier={(profile.tier as CleanerTier) || 'bronze'}
+            reliabilityScore={profile.reliability_score || 0}
+            jobsCompleted={profile.jobs_completed || 0}
+          />
+        )}
+
         {/* Tip of the Day */}
         <TipCard tier={tier} score={profile?.reliability_score || 0} />
 
