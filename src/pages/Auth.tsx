@@ -208,7 +208,7 @@ export default function AuthPage() {
             >
               {referralCode && (
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-                  <Card className="border-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                  <Card className="border-0 bg-gradient-to-r from-[hsl(330,82%,60%)] to-[hsl(270,60%,55%)] text-white">
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                         <Gift className="h-5 w-5" />

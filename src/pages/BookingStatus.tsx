@@ -6,7 +6,6 @@ import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2, AlertT
 import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
-import { useCancellationDialog } from "@/hooks/useJob";
 
 function getStatusDisplay(status: string) {
   switch (status) {
