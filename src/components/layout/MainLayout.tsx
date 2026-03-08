@@ -140,7 +140,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                         
                         <DropdownMenuItem asChild>
                           <Link to="/notifications" className="flex items-center gap-2 cursor-pointer">
-                            <NotificationBell />
+                            <HelpCircle className="h-4 w-4" />
                             Notifications
                           </Link>
                         </DropdownMenuItem>
