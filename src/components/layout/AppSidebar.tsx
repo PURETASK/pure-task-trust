@@ -6,10 +6,9 @@ import {
   Users, User, Star, MapPin, Briefcase, TrendingUp, Shield, Settings,
   Heart, CalendarClock, Award, Link2, CheckCircle, BarChart3, Building,
   CreditCard, AlertTriangle, FileText, Activity, PieChart, Scale,
-  Sparkles, Home, Tag, HelpCircle, Zap, Target, Bot, BookOpen,
-  Bell, Clock, BarChart2, Globe, UserCheck, Layers, ChevronRight,
-  ShoppingCart, RefreshCw, Flag, ClipboardList, Repeat, ReceiptText,
-  BadgeCheck, Handshake, GanttChart, Lightbulb, LucideIcon
+  Sparkles, Home, Tag, HelpCircle, Target, Bot, BookOpen,
+  Bell, BarChart2, Globe, UserCheck, Layers, ChevronRight,
+  RefreshCw, ShieldAlert, LucideIcon, Clipboard, ShieldCheck, RefreshCcw, AlertOctagon
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -60,9 +59,9 @@ const guestNavGroups: NavGroup[] = [
   {
     group: "Resources",
     items: [
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
+      { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
-      { title: "Reliability Score", url: "/reliability-score", icon: BadgeCheck },
+      { title: "Reliability Score", url: "/reliability-score", icon: ShieldCheck },
     ]
   },
   {
@@ -88,7 +87,7 @@ const clientNavGroups: NavGroup[] = [
     group: "My Bookings",
     items: [
       { title: "Properties", url: "/properties", icon: Building },
-      { title: "Recurring Plans", url: "/recurring-plans", icon: Repeat },
+      { title: "Recurring Plans", url: "/recurring-plans", icon: RefreshCcw },
       { title: "Reschedule Requests", url: "/reschedule-requests", icon: CalendarClock },
       { title: "Favorite Cleaners", url: "/favorites", icon: Heart },
       { title: "Reviews", url: "/reviews", icon: Star },
@@ -109,7 +108,7 @@ const clientNavGroups: NavGroup[] = [
     group: "Help",
     items: [
       { title: "Help & Support", url: "/help", icon: HelpCircle },
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
+      { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
       { title: "Legal Center", url: "/legal", icon: Scale },
     ]
@@ -199,7 +198,7 @@ const adminNavGroups: NavGroup[] = [
       { title: "Trust & Safety", url: "/admin/trust-safety", icon: Shield },
       { title: "Fraud Alerts", url: "/admin/fraud-alerts", icon: AlertTriangle, badge: "Live" },
       { title: "Disputes", url: "/admin/disputes", icon: FileText },
-      { title: "Client Risk", url: "/admin/client-risk", icon: Flag },
+      { title: "Client Risk", url: "/admin/client-risk", icon: AlertOctagon },
       { title: "ID Verifications", url: "/admin/id-verifications", icon: UserCheck },
       { title: "Safety Reports", url: "/admin/trust-safety-reports", icon: PieChart },
     ]

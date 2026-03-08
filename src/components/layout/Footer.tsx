@@ -374,7 +374,9 @@ function AdminFooter() {
               {[
                 { name: "Users", path: "/admin/users" },
                 { name: "Bookings Console", path: "/admin/bookings" },
+                { name: "Client Jobs", path: "/admin/client-jobs" },
                 { name: "Pricing Rules", path: "/admin/pricing-rules" },
+                { name: "Pricing Management", path: "/admin/pricing" },
                 { name: "Bulk Comms", path: "/admin/bulk-comms" },
                 { name: "Platform Config", path: "/admin/platform-config" },
               ].map(l => (
