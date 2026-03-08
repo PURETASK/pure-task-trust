@@ -3,13 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import {
-  TrendingUp, DollarSign, Users, Calendar, ArrowUpRight, ArrowDownRight,
-  BarChart3, Activity, RefreshCw, ChevronRight, Zap, Shield, Award, Target
-} from "lucide-react";
+import { TrendingUp, DollarSign, Users, Calendar, ArrowUpRight, ArrowDownRight, BarChart3, Activity, RefreshCw, ChevronRight, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, AreaChart, Area, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, AreaChart, Area } from "recharts";
 import { useAdminCEOStats } from "@/hooks/useAdminStats";
 import { RevenueTicker } from "@/components/admin/RevenueTicker";
 import adminHeroImg from "@/assets/admin-hero.jpg";
@@ -22,49 +19,10 @@ const chartConfig = {
 };
 
 const KPI_CONFIG = [
-  {
-    key: "gmv",
-    label: "Total GMV (30d)",
-    icon: DollarSign,
-    format: (v: number) => `${v.toLocaleString()} cr`,
-    changeKey: "gmvChange",
-    gradient: "from-primary/10 to-primary/5",
-    border: "border-primary/25",
-    iconBg: "bg-primary/15",
-    iconColor: "text-primary",
-  },
-  {
-    key: "revenue",
-    label: "Platform Revenue",
-    icon: TrendingUp,
-    format: (v: number) => `${v.toLocaleString()} cr`,
-    changeKey: "revenueChange",
-    gradient: "from-success/10 to-success/5",
-    border: "border-success/25",
-    iconBg: "bg-success/15",
-    iconColor: "text-success",
-  },
-  {
-    key: "users",
-    label: "Total Users",
-    icon: Users,
-    format: (v: number) => v.toLocaleString(),
-    gradient: "from-[hsl(var(--pt-purple)/0.1)] to-[hsl(var(--pt-purple)/0.05)]",
-    border: "border-[hsl(var(--pt-purple)/0.25)]",
-    iconBg: "bg-[hsl(var(--pt-purple)/0.15)]",
-    iconColor: "text-[hsl(var(--pt-purple))]",
-  },
-  {
-    key: "bookings",
-    label: "Monthly Bookings",
-    icon: Calendar,
-    format: (v: number) => v.toString(),
-    changeKey: "bookingsChange",
-    gradient: "from-warning/10 to-warning/5",
-    border: "border-warning/25",
-    iconBg: "bg-warning/15",
-    iconColor: "text-warning",
-  },
+  { key: "gmv", label: "Total GMV (30d)", icon: DollarSign, format: (v: number) => `${v.toLocaleString()} cr`, changeKey: "gmvChange", iconBg: "bg-primary/10", iconColor: "text-primary", border: "border-primary/20" },
+  { key: "revenue", label: "Platform Revenue", icon: TrendingUp, format: (v: number) => `${v.toLocaleString()} cr`, changeKey: "revenueChange", iconBg: "bg-success/10", iconColor: "text-success", border: "border-success/20" },
+  { key: "users", label: "Total Users", icon: Users, format: (v: number) => v.toLocaleString(), iconBg: "bg-[hsl(var(--pt-purple)/0.1)]", iconColor: "text-[hsl(var(--pt-purple))]", border: "border-[hsl(var(--pt-purple)/0.2)]" },
+  { key: "bookings", label: "Monthly Bookings", icon: Calendar, format: (v: number) => v.toString(), changeKey: "bookingsChange", iconBg: "bg-warning/10", iconColor: "text-warning", border: "border-warning/20" },
 ];
 
 const AdminCEODashboard = () => {
@@ -88,42 +46,32 @@ const AdminCEODashboard = () => {
 
   return (
     <main className="flex-1 bg-background">
-      {/* ── DARK HERO ───────────────────────────────────────────────────── */}
+      {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(220,20%,6%)] to-[hsl(210,30%,10%)] text-white">
         <div className="absolute inset-0">
           <img src={adminHeroImg} alt="" className="w-full h-full object-cover opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220,20%,6%)/90] to-transparent" />
         </div>
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-          backgroundSize: "32px 32px"
-        }} />
-
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
         <div className="relative container px-4 sm:px-6 py-10 sm:py-14">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-2">
-              <Link to="/admin/hub" className="text-white/50 hover:text-white/80 text-sm transition-colors">
-                Admin Hub
-              </Link>
+              <Link to="/admin/hub" className="text-white/50 hover:text-white/80 text-sm transition-colors">Admin Hub</Link>
               <ChevronRight className="h-3.5 w-3.5 text-white/30" />
               <span className="text-white/80 text-sm">CEO Dashboard</span>
             </div>
-
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
                 <h1 className="text-4xl sm:text-5xl font-black text-white mb-2">CEO Dashboard</h1>
                 <p className="text-white/60 text-lg">Live business metrics — GMV, revenue and growth KPIs.</p>
                 <div className="flex items-center gap-2 mt-3">
                   <Badge className="bg-success/20 text-success border-success/30">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success mr-1.5 animate-pulse" />
-                    Live Data
+                    <span className="h-1.5 w-1.5 rounded-full bg-success mr-1.5 animate-pulse" />Live Data
                   </Badge>
                 </div>
               </div>
-              <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}
-                className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white rounded-xl">
-                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
-                Refresh
+              <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading} className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white rounded-xl">
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />Refresh
               </Button>
             </div>
           </motion.div>
@@ -131,15 +79,11 @@ const AdminCEODashboard = () => {
       </div>
 
       <div className="container px-4 sm:px-6 py-8 space-y-8">
-
-        {/* Revenue ticker */}
         <RevenueTicker />
 
         {/* KPI Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <Skeleton key={i} className="h-36 rounded-2xl" />)}
-          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[1,2,3,4].map(i => <Skeleton key={i} className="h-36 rounded-2xl" />)}</div>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {KPI_CONFIG.map((kpi, i) => {
@@ -147,7 +91,7 @@ const AdminCEODashboard = () => {
               const change = getChangeValue(kpi.changeKey);
               return (
                 <motion.div key={kpi.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} whileHover={{ y: -3 }}>
-                  <Card className={`border ${kpi.border} bg-gradient-to-br ${kpi.gradient} hover:shadow-elevated transition-all`}>
+                  <Card className={`border ${kpi.border} hover:shadow-elevated transition-all`}>
                     <CardContent className="p-5 sm:p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className={`h-11 w-11 rounded-2xl ${kpi.iconBg} flex items-center justify-center`}>
@@ -175,12 +119,9 @@ const AdminCEODashboard = () => {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="border-border/50">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <BarChart3 className="h-5 w-5 text-primary" />
-                Revenue Trend (6 Months)
-              </CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base"><BarChart3 className="h-5 w-5 text-primary" />Revenue Trend (6 Months)</CardTitle>
               <CardDescription>Monthly platform fee revenue in credits</CardDescription>
             </CardHeader>
             <CardContent>
@@ -204,12 +145,9 @@ const AdminCEODashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Activity className="h-5 w-5 text-success" />
-                Weekly User Growth
-              </CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base"><Activity className="h-5 w-5 text-success" />Weekly User Growth</CardTitle>
               <CardDescription>New clients and cleaners per week</CardDescription>
             </CardHeader>
             <CardContent>
@@ -229,27 +167,24 @@ const AdminCEODashboard = () => {
           </Card>
         </div>
 
-        {/* Health Indicators */}
-        <Card className="border-border/50">
+        {/* Health Snapshot */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-primary" />
-              Business Health Snapshot
-            </CardTitle>
+            <CardTitle className="flex items-center gap-2 text-base"><Target className="h-5 w-5 text-primary" />Business Health Snapshot</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? <Skeleton className="h-24" /> : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: "Bookings (30d)", value: data?.bookingsThis || 0, sub: `vs ${data?.bookingsLast || 0} last mo`, subColor: "text-muted-foreground" },
-                  { label: "New Users", value: data?.newUsersThis || 0, sub: "This month", subColor: "text-success" },
-                  { label: "Revenue (30d)", value: `${data?.revenueThis || 0} cr`, sub: "Platform fees", subColor: "text-muted-foreground" },
-                  { label: "All-Time Users", value: data?.totalUsers || 0, sub: "Total registered", subColor: "text-success" },
+                  { label: "Bookings (30d)", value: data?.bookingsThis || 0, sub: `vs ${data?.bookingsLast || 0} last mo` },
+                  { label: "New Users", value: data?.newUsersThis || 0, sub: "This month" },
+                  { label: "Revenue (30d)", value: `${data?.revenueThis || 0} cr`, sub: "Platform fees" },
+                  { label: "All-Time Users", value: data?.totalUsers || 0, sub: "Total registered" },
                 ].map(item => (
-                  <div key={item.label} className="text-center p-5 bg-muted/40 rounded-2xl border border-border/30">
+                  <div key={item.label} className="text-center p-4 bg-muted/40 rounded-2xl border border-border/30">
                     <p className="text-xs text-muted-foreground mb-1 font-medium">{item.label}</p>
-                    <p className="text-2xl font-black text-foreground">{item.value}</p>
-                    <p className={`text-xs mt-1 ${item.subColor}`}>{item.sub}</p>
+                    <p className="text-2xl font-black">{item.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{item.sub}</p>
                   </div>
                 ))}
               </div>
@@ -262,7 +197,7 @@ const AdminCEODashboard = () => {
             <Link to="/admin/hub"><ChevronRight className="h-4 w-4 mr-2 rotate-180" />Back to Hub</Link>
           </Button>
           <Button asChild className="rounded-xl">
-            <Link to="/admin/analytics">View Full Analytics <ChevronRight className="h-4 w-4 ml-2" /></Link>
+            <Link to="/admin/analytics">Full Analytics <ChevronRight className="h-4 w-4 ml-2" /></Link>
           </Button>
         </div>
       </div>

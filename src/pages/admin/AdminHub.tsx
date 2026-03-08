@@ -12,7 +12,7 @@ import {
   Shield, AlertTriangle, FileText, CheckCircle, MapPin,
   Calendar, Briefcase, CreditCard, MessageSquare, Settings, Flag,
   Zap, ArrowUpRight, ArrowDownRight, RefreshCw, ChevronRight, Terminal,
-  Globe, Lock, Eye, Database, Bell, Award, Target, Package
+  Award, Target, Package
 } from "lucide-react";
 
 interface DashSection {
@@ -30,7 +30,7 @@ const SECTIONS: DashSection[] = [
     emoji: "📊",
     accent: "border-primary/20",
     accentText: "text-primary",
-    accentBg: "bg-primary/8",
+    accentBg: "bg-primary/5",
     items: [
       { icon: TrendingUp, title: "CEO Dashboard", desc: "GMV, revenue & growth KPIs", href: "/admin/ceo", badge: "Live" },
       { icon: BarChart3, title: "Analytics Hub", desc: "Platform-wide overview", href: "/admin/analytics" },
@@ -48,7 +48,7 @@ const SECTIONS: DashSection[] = [
     emoji: "🛡️",
     accent: "border-destructive/20",
     accentText: "text-destructive",
-    accentBg: "bg-destructive/8",
+    accentBg: "bg-destructive/5",
     items: [
       { icon: Shield, title: "Trust & Safety", desc: "Priority triage queue", href: "/admin/trust-safety", badge: "Priority" },
       { icon: AlertTriangle, title: "Fraud Alerts", desc: "Suspicious activity flags", href: "/admin/fraud-alerts" },
@@ -63,7 +63,7 @@ const SECTIONS: DashSection[] = [
     emoji: "⚙️",
     accent: "border-success/20",
     accentText: "text-success",
-    accentBg: "bg-success/8",
+    accentBg: "bg-success/5",
     items: [
       { icon: Users, title: "Users", desc: "Clients, cleaners & admins", href: "/admin/users" },
       { icon: Calendar, title: "Bookings Console", desc: "All jobs & booking status", href: "/admin/bookings" },
@@ -103,18 +103,13 @@ export default function AdminHub() {
 
   return (
     <main className="flex-1 bg-background min-h-screen">
-      {/* ── EPIC HEADER ─────────────────────────────────────────────────── */}
+      {/* Epic Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(220,20%,6%)] to-[hsl(210,30%,12%)] text-white">
         <div className="absolute inset-0">
           <img src={adminHeroImg} alt="" className="w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,20%,6%)/95] via-[hsl(220,20%,6%)/80] to-transparent" />
         </div>
-
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-          backgroundSize: "40px 40px"
-        }} />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
 
         <div className="relative container px-4 sm:px-6 py-10 sm:py-14">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -129,29 +124,22 @@ export default function AdminHub() {
                     <h1 className="text-3xl sm:text-4xl font-black text-white">Admin Command Center</h1>
                   </div>
                 </div>
-                <p className="text-white/60 text-base max-w-xl">
-                  Full platform control — analytics, trust & safety, user management, and live configuration.
-                </p>
+                <p className="text-white/60 text-base max-w-xl">Full platform control — analytics, trust & safety, user management, and live configuration.</p>
                 <div className="flex items-center gap-2 mt-3 flex-wrap">
                   <Badge className="bg-success/20 text-success border-success/30">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success mr-1.5 animate-pulse" />
-                    System Operational
+                    <span className="h-1.5 w-1.5 rounded-full bg-success mr-1.5 animate-pulse" />System Operational
                   </Badge>
                   <Badge className="bg-white/10 text-white/80 border-white/20">
                     <Terminal className="h-3 w-3 mr-1" /> Press ⌘K for commands
                   </Badge>
                 </div>
               </div>
-
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}
-                  className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white rounded-xl">
+                <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading} className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white rounded-xl">
                   <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} /> Refresh
                 </Button>
                 <Button asChild size="sm" className="bg-white text-[hsl(220,20%,6%)] hover:bg-white/90 rounded-xl font-bold">
-                  <Link to="/admin/ceo">
-                    <TrendingUp className="h-4 w-4 mr-2" /> CEO View
-                  </Link>
+                  <Link to="/admin/ceo"><TrendingUp className="h-4 w-4 mr-2" /> CEO View</Link>
                 </Button>
               </div>
             </div>
@@ -160,8 +148,6 @@ export default function AdminHub() {
       </div>
 
       <div className="container px-4 sm:px-6 py-8 space-y-10">
-
-        {/* Revenue Ticker */}
         <RevenueTicker />
 
         {/* KPI Grid */}
@@ -172,11 +158,8 @@ export default function AdminHub() {
               Full Analytics <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
-
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1,2,3,4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
-            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{[1,2,3,4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}</div>
           ) : stats && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatKPI icon={DollarSign} label="GMV This Month" value={`${stats.gmvThis.toLocaleString()} cr`} change={stats.gmvChange} color="border-primary/20" />
@@ -189,27 +172,17 @@ export default function AdminHub() {
 
         {/* Dashboard Sections */}
         {SECTIONS.map((section, si) => (
-          <motion.section
-            key={section.title}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ delay: si * 0.06 }}
-          >
+          <motion.section key={section.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: si * 0.06 }}>
             <div className="flex items-center gap-2 mb-5">
               <span className="text-xl">{section.emoji}</span>
               <h2 className="text-xl font-bold">{section.title}</h2>
               <div className={`h-1 w-8 rounded-full ${section.accentText.replace("text-", "bg-")} opacity-60`} />
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {section.items.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ delay: i * 0.04 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                  >
+                  <motion.div key={item.href} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }} whileHover={{ y: -2, scale: 1.01 }}>
                     <Link to={item.href}>
                       <Card className={`border ${section.accent} ${section.accentBg} hover:shadow-elevated hover:border-opacity-60 transition-all duration-200 h-full`}>
                         <CardContent className="p-4 flex items-center gap-3">
@@ -236,7 +209,7 @@ export default function AdminHub() {
           </motion.section>
         ))}
 
-        {/* Quick Admin Links footer */}
+        {/* Quick Access footer */}
         <Card className="border-border/40 bg-muted/20">
           <CardContent className="p-6">
             <h3 className="font-bold mb-4 flex items-center gap-2">
