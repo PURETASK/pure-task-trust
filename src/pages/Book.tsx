@@ -168,7 +168,14 @@ export default function Book() {
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
       
-      // Success - navigation is handled in the hook
+      // C2: Show inline confirmation screen instead of just a toast
+      setConfirmedJob({
+        id: (job as any)?.id || '',
+        type: selectedType || 'basic',
+        date: getScheduledDateTime(),
+        address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
+        credits: totalCredits,
+      });
       toast({ title: "Booking confirmed!", description: "Your credits have been held." });
     } catch (error: any) {
       console.error('Booking error:', error);
