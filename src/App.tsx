@@ -225,11 +225,16 @@ const App = () => (
                         <RescheduleRequests />
                       </RequireClient>
                     } />
-                    <Route path="/referral" element={
-                      <RequireClient>
-                        <Referral />
-                      </RequireClient>
-                    } />
+                     <Route path="/referral" element={
+                       <RequireClient>
+                         <Referral />
+                       </RequireClient>
+                     } />
+                     <Route path="/recurring-plans" element={
+                       <RequireClient>
+                         <RecurringPlans />
+                       </RequireClient>
+                     } />
                     <Route path="/favorites" element={
                       <RequireClient>
                         <FavoriteCleaners />
