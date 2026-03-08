@@ -142,23 +142,25 @@ export default function Book() {
     return dt.toISOString();
   };
 
-  const handleConfirm = async () => {
+  const [isDirectPaying, setIsDirectPaying] = useState(false);
+
+  const serviceCharge = Math.round(totalCredits * SERVICE_CHARGE_PCT);
+  const directPayTotal = totalCredits + serviceCharge;
+
+  const handleConfirmWithCredits = async () => {
     if (!selectedType) {
       toast({ title: "Please select a cleaning type", variant: "destructive" });
       return;
     }
-    
     if (!user) {
       toast({ title: "Please sign in to book", variant: "destructive" });
       navigate('/auth');
       return;
     }
-
     if (!hasEnoughCredits) {
       toast({ title: "Insufficient credits", description: "Please add more credits to your wallet", variant: "destructive" });
       return;
     }
-    
     try {
       const job = await createBooking({
         cleaningType: selectedType,
@@ -169,23 +171,59 @@ export default function Book() {
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
-      
-      // C2: Show inline confirmation screen instead of just a toast
       setConfirmedJob({
         id: (job as any)?.id || '',
         type: selectedType || 'basic',
         date: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
         credits: totalCredits,
+        paymentMode: 'credits',
       });
       toast({ title: "Booking confirmed!", description: "Your credits have been held." });
     } catch (error: any) {
-      console.error('Booking error:', error);
       toast({ 
         title: "Booking failed", 
         description: error?.message || "Something went wrong. Please try again.",
         variant: "destructive" 
       });
+    }
+  };
+
+  const handlePayDirectly = async () => {
+    if (!selectedType || !user) return;
+    if (!cleanerId) {
+      toast({ title: "Please select a cleaner before booking", variant: "destructive" });
+      return;
+    }
+    setIsDirectPaying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-direct-payment', {
+        body: {
+          baseCredits: totalCredits,
+          hours,
+          cleaningType: selectedType,
+          addOns: selectedAddOns,
+          rushFee,
+          cleanerId: cleanerId || null,
+          scheduledDate: getScheduledDateTime(),
+          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null,
+          notes: null,
+        },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        toast({
+          title: "Redirecting to checkout",
+          description: `Total: $${data.totalAmount} (includes $${data.serviceCharge} service charge). Complete payment in the new tab.`,
+        });
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error: any) {
+      toast({ title: "Payment failed", description: error.message || "Could not start checkout", variant: "destructive" });
+    } finally {
+      setIsDirectPaying(false);
     }
   };
 
