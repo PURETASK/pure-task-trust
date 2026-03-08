@@ -155,9 +155,13 @@ export default function CleanerJobDetail() {
   const canCheckoutNow = job.status === "in_progress" && !hasCheckedOut;
   const isCompleted = job.status === "completed";
 
+  // Client data for brief card
+  const jobWithAddress = job as any;
+  const clientPrefs = jobWithAddress.client?.preferences_json ?? null;
+
   return (
     <CleanerLayout>
-      <div className="space-y-5 max-w-2xl">
+      <div className="space-y-5 max-w-2xl relative">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate("/cleaner/jobs")}>
@@ -173,6 +177,16 @@ export default function CleanerJobDetail() {
           </div>
           {getStatusBadge(job.status)}
         </div>
+
+        {/* Client Brief Card — shows for confirmed/in_progress */}
+        {(job.status === 'confirmed' || job.status === 'in_progress') && (
+          <ClientBriefCard
+            notes={jobWithAddress.notes || jobWithAddress.address_notes}
+            clientFirstName={job.client?.first_name}
+            cleaningType={job.cleaning_type}
+            preferences={clientPrefs}
+          />
+        )}
 
         {/* Progress Steps */}
         <Card>
