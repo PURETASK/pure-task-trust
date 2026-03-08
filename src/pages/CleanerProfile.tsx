@@ -164,8 +164,14 @@ export default function CleanerProfile() {
                         </span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
-                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0"
+                      onClick={handleToggleFavorite}
+                      disabled={isToggling}
+                    >
+                      <Heart className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors ${isFavorite ? 'fill-destructive text-destructive' : ''}`} />
                     </Button>
                   </div>
 
