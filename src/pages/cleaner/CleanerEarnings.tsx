@@ -6,12 +6,13 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Target, Zap } from "lucide-react";
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
-import { useCleanerJobs } from "@/hooks/useCleanerProfile";
+import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { format, addDays, startOfWeek } from "date-fns";
 import InstantPayoutButton from "@/components/payouts/InstantPayoutButton";
 import PayoutHistoryTable from "@/components/payouts/PayoutHistoryTable";
 import EarningsBreakdown from "@/components/payouts/EarningsBreakdown";
 import BankAccountStatus from "@/components/payouts/BankAccountStatus";
+import { EarningsGoalPlanner } from "@/components/cleaner/EarningsGoalPlanner";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ const WEEKLY_HOURS_GOAL = 20; // default weekly hours target
 export default function CleanerEarnings() {
   const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
   const { jobs } = useCleanerJobs();
+  const { profile } = useCleanerProfile();
   const [payoutsEnabled, setPayoutsEnabled] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
 
@@ -74,6 +76,15 @@ export default function CleanerEarnings() {
           <h1 className="text-3xl font-bold">Earnings & Payouts</h1>
           <p className="text-muted-foreground mt-1">Track your income and request payouts</p>
         </div>
+
+        {/* Earnings Goal Planner */}
+        {profile?.id && (
+          <EarningsGoalPlanner
+            cleanerId={profile.id}
+            currentGoal={(profile as any).monthly_earnings_goal ?? null}
+            earnings={earnings}
+          />
+        )}
 
         {/* Bank Account Status */}
         <BankAccountStatus onStatusChange={setPayoutsEnabled} />

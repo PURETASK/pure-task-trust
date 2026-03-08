@@ -12,13 +12,16 @@ import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { PhotoRequirements, useJobPhotoValidation } from "@/components/job/PhotoRequirements";
+import { ClientBriefCard } from "@/components/cleaner/ClientBriefCard";
+import { JobSupportChat } from "@/components/cleaner/JobSupportChat";
+import { ClientRatingForm } from "@/components/cleaner/ClientRatingForm";
 import { supabase } from "@/integrations/supabase/client";
 import { format, differenceInMinutes } from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
   MapPin, Clock, Calendar, Camera, CheckCircle, Play, ArrowLeft,
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
-  Star, DollarSign, Navigation
+  Star, DollarSign, Navigation, HelpCircle
 } from "lucide-react";
 
 export default function CleanerJobDetail() {
@@ -35,6 +38,8 @@ export default function CleanerJobDetail() {
   const fileInputRef = useState<HTMLInputElement | null>(null);
   const [fileEl, setFileEl] = useState<HTMLInputElement | null>(null);
   const [elapsedMin, setElapsedMin] = useState(0);
+  const [supportOpen, setSupportOpen] = useState(false);
+  const [ratingOpen, setRatingOpen] = useState(false);
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
@@ -150,9 +155,13 @@ export default function CleanerJobDetail() {
   const canCheckoutNow = job.status === "in_progress" && !hasCheckedOut;
   const isCompleted = job.status === "completed";
 
+  // Client data for brief card
+  const jobWithAddress = job as any;
+  const clientPrefs = jobWithAddress.client?.preferences_json ?? null;
+
   return (
     <CleanerLayout>
-      <div className="space-y-5 max-w-2xl">
+      <div className="space-y-5 max-w-2xl relative">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate("/cleaner/jobs")}>
@@ -168,6 +177,16 @@ export default function CleanerJobDetail() {
           </div>
           {getStatusBadge(job.status)}
         </div>
+
+        {/* Client Brief Card — shows for confirmed/in_progress */}
+        {(job.status === 'confirmed' || job.status === 'in_progress') && (
+          <ClientBriefCard
+            notes={jobWithAddress.notes || jobWithAddress.address_notes}
+            clientFirstName={job.client?.first_name}
+            cleaningType={job.cleaning_type}
+            preferences={clientPrefs}
+          />
+        )}
 
         {/* Progress Steps */}
         <Card>
@@ -458,10 +477,47 @@ export default function CleanerJobDetail() {
                   ))}
                 </div>
               )}
+              {profile?.id && job.client_id && (
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
+                  <Star className="h-4 w-4" /> Rate this client
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}
+
+        {/* Floating Help Button */}
+        {!isCompleted && (
+          <div className="fixed bottom-24 right-4 z-50 md:absolute md:bottom-0 md:right-0">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-12 w-12 rounded-full shadow-lg border-2"
+              onClick={() => setSupportOpen(true)}
+              title="Need help?"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
       </div>
+
+      {/* Support Chat Sheet */}
+      {jobId && (
+        <JobSupportChat open={supportOpen} onOpenChange={setSupportOpen} jobId={jobId} />
+      )}
+
+      {/* Client Rating Dialog — shows after completion */}
+      {isCompleted && profile?.id && job.client_id && (
+        <ClientRatingForm
+          open={ratingOpen}
+          onOpenChange={setRatingOpen}
+          jobId={jobId!}
+          cleanerId={profile.id}
+          clientId={job.client_id}
+          clientFirstName={job.client?.first_name}
+        />
+      )}
     </CleanerLayout>
   );
 }

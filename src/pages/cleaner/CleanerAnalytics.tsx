@@ -253,8 +253,30 @@ export default function CleanerAnalytics() {
         {/* Tips Card */}
         <Card className="bg-primary/5 border-primary/20">
           <CardContent className="p-6">
-            <h3 className="font-semibold mb-2">💡 Tips to Improve</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className="font-semibold mb-2 flex items-center gap-2">
+              📊 Last Week Summary
+              {trendPct !== null && (
+                <Badge variant={trendPct >= 0 ? "success" : "destructive"} className="text-xs ml-auto">
+                  {trendPct >= 0 ? "+" : ""}{trendPct}% vs prior week
+                </Badge>
+              )}
+            </h3>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold">{weeklyChartData[weeklyChartData.length - 1]?.earnings > 0 ? `$${weeklyChartData[weeklyChartData.length - 1].earnings}` : "$0"}</p>
+                <p className="text-xs text-muted-foreground">Earned</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold">{stats.jobsThisWeek}</p>
+                <p className="text-xs text-muted-foreground">Jobs Done</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold">{stats.avgRating?.toFixed(1) || "—"}</p>
+                <p className="text-xs text-muted-foreground">Avg Rating</p>
+              </div>
+            </div>
+            <h4 className="font-medium text-sm mb-2">💡 Tips to Improve</h4>
+            <ul className="space-y-1.5 text-sm text-muted-foreground">
               <li>• Respond to job requests within 15 minutes for higher acceptance</li>
               <li>• Keep your availability calendar up to date</li>
               <li>• Always upload before/after photos for better reviews</li>

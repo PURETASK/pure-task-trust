@@ -1516,6 +1516,7 @@ export type Database = {
           low_flexibility_badge: boolean
           max_jobs_per_day: number | null
           minimum_payout_cents: number | null
+          monthly_earnings_goal: number | null
           moveout_addon_cph: number | null
           onboarding_completed_at: string | null
           onboarding_current_step: string | null
@@ -1556,6 +1557,7 @@ export type Database = {
           low_flexibility_badge?: boolean
           max_jobs_per_day?: number | null
           minimum_payout_cents?: number | null
+          monthly_earnings_goal?: number | null
           moveout_addon_cph?: number | null
           onboarding_completed_at?: string | null
           onboarding_current_step?: string | null
@@ -1596,6 +1598,7 @@ export type Database = {
           low_flexibility_badge?: boolean
           max_jobs_per_day?: number | null
           minimum_payout_cents?: number | null
+          monthly_earnings_goal?: number | null
           moveout_addon_cph?: number | null
           onboarding_completed_at?: string | null
           onboarding_current_step?: string | null
@@ -2129,6 +2132,7 @@ export type Database = {
           grace_cancellations_used: number | null
           id: string
           last_name: string | null
+          preferences_json: Json | null
           push_token: string | null
           stripe_customer_id: string | null
           updated_at: string
@@ -2142,6 +2146,7 @@ export type Database = {
           grace_cancellations_used?: number | null
           id?: string
           last_name?: string | null
+          preferences_json?: Json | null
           push_token?: string | null
           stripe_customer_id?: string | null
           updated_at?: string
@@ -2155,12 +2160,78 @@ export type Database = {
           grace_cancellations_used?: number | null
           id?: string
           last_name?: string | null
+          preferences_json?: Json | null
           push_token?: string | null
           stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: []
+      }
+      client_ratings: {
+        Row: {
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          description_accuracy: number | null
+          id: string
+          job_id: string
+          notes: string | null
+          rating: number
+          would_rebook: boolean | null
+        }
+        Insert: {
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          description_accuracy?: number | null
+          id?: string
+          job_id: string
+          notes?: string | null
+          rating: number
+          would_rebook?: boolean | null
+        }
+        Update: {
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          description_accuracy?: number | null
+          id?: string
+          job_id?: string
+          notes?: string | null
+          rating?: number
+          would_rebook?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_ratings_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_ratings_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_ratings_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_ratings_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       client_risk_events: {
         Row: {

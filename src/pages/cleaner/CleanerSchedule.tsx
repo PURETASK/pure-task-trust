@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase } from "lucide-react";
-import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay } from "date-fns";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap } from "lucide-react";
+import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 
@@ -72,6 +72,25 @@ export default function CleanerSchedule() {
   const dailyGross = selectedDateJobs.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
   const dailyNet = getNet(dailyGross);
   const dailyHours = selectedDateJobs.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
+
+  // ── Gap detection ─────────────────────────────────────────────────────────
+  // Find ≥2 hour gaps between consecutive accepted jobs on selected date
+  const gaps = useMemo(() => {
+    const sorted = [...acceptedJobs]
+      .filter(j => j.scheduled_start_at)
+      .sort((a, b) => new Date(a.scheduled_start_at!).getTime() - new Date(b.scheduled_start_at!).getTime());
+    const result: Array<{ gapStart: Date; gapEnd: Date; gapHours: number }> = [];
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const jobEnd = new Date(sorted[i].scheduled_start_at!);
+      jobEnd.setHours(jobEnd.getHours() + (sorted[i].estimated_hours || 2));
+      const nextStart = new Date(sorted[i + 1].scheduled_start_at!);
+      const gapHours = differenceInHours(nextStart, jobEnd);
+      if (gapHours >= 2) {
+        result.push({ gapStart: jobEnd, gapEnd: nextStart, gapHours });
+      }
+    }
+    return result;
+  }, [acceptedJobs]);
 
   const twoWeeksDays = generateTwoWeeksCalendar();
   const monthDays = generateMonthCalendar();
@@ -333,6 +352,39 @@ export default function CleanerSchedule() {
             )}
           </div>
         </div>
+
+        {/* Schedule Gap Filler */}
+        {gaps.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="font-semibold flex items-center gap-2 text-primary">
+              <Zap className="h-4 w-4" />
+              Free Time Gaps — Fill Your Schedule
+            </h3>
+            {gaps.map((gap, i) => (
+              <Card key={i} className="border-primary/30 bg-primary/5">
+                <CardContent className="p-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">
+                        {gap.gapHours}h gap — {format(gap.gapStart, "h:mm a")} to {format(gap.gapEnd, "h:mm a")}
+                      </p>
+                      <p className="text-xs text-muted-foreground">You could fit a job in this window</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" className="gap-1.5 flex-shrink-0" asChild>
+                    <Link to="/cleaner/marketplace">
+                      <Search className="h-3.5 w-3.5" />
+                      Find Jobs
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </CleanerLayout>
   );
