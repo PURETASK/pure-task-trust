@@ -190,7 +190,7 @@ export function Header() {
                     </>
                   )}
                   <DropdownMenuItem asChild>
-                    <Link to="/notification-settings" className="flex items-center gap-2 cursor-pointer">
+                    <Link to="/settings/notifications" className="flex items-center gap-2 cursor-pointer">
                       <Settings className="h-4 w-4" />
                       Notifications
                     </Link>

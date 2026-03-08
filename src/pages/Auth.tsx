@@ -344,22 +344,30 @@ export default function AuthPage() {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input 
-                            id="password" 
-                            type="password" 
-                            placeholder="••••••••"
-                            className="pl-10"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            minLength={6}
-                          />
+                        <div className="space-y-2">
+                          <Label htmlFor="password">Password</Label>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                              id="password" 
+                              type="password" 
+                              placeholder="••••••••"
+                              className="pl-10"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              required
+                              minLength={8}
+                            />
+                          </div>
+                          {isSignUp && password.length > 0 && password.length < 8 && (
+                            <p className="text-xs text-destructive">Password must be at least 8 characters</p>
+                          )}
+                          {isSignUp && password.length >= 8 && (
+                            <p className="text-xs text-success">
+                              {password.length >= 12 ? '✓ Strong password' : '✓ Password meets requirements'}
+                            </p>
+                          )}
                         </div>
-                      </div>
 
                       <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                         {isSubmitting ? (
