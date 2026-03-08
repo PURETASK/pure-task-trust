@@ -22,6 +22,7 @@ const WEEKLY_HOURS_GOAL = 20; // default weekly hours target
 export default function CleanerEarnings() {
   const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
   const { jobs } = useCleanerJobs();
+  const { profile } = useCleanerProfile();
   const [payoutsEnabled, setPayoutsEnabled] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
 
