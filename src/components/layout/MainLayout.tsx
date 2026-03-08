@@ -10,6 +10,7 @@ import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Bell, Home, ArrowLeft } from "lucide-react";
+import { LogOut, Settings, HelpCircle, Home, ArrowLeft } from "lucide-react";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -90,11 +91,10 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
-                    <Button variant="ghost" size="icon" asChild className="h-9 w-9 touch-target hidden sm:flex">
-                      <Link to="/settings/notifications">
-                        <Bell className="h-4 w-4" />
-                      </Link>
-                    </Button>
+                    {/* NotificationBell with live unread count */}
+                    <div className="hidden sm:flex">
+                      <NotificationBell />
+                    </div>
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -131,16 +131,16 @@ export function MainLayout({ children }: MainLayoutProps) {
                         
                         {user.role === "cleaner" && (
                           <DropdownMenuItem asChild>
-                            <Link to="/cleaner/profile" className="flex items-center gap-2 cursor-pointer">
+                            <Link to="/cleaner/settings" className="flex items-center gap-2 cursor-pointer">
                               <Settings className="h-4 w-4" />
-                              Profile Settings
+                              Settings
                             </Link>
                           </DropdownMenuItem>
                         )}
                         
                         <DropdownMenuItem asChild>
-                          <Link to="/settings/notifications" className="flex items-center gap-2 cursor-pointer">
-                            <Bell className="h-4 w-4" />
+                          <Link to="/notifications" className="flex items-center gap-2 cursor-pointer">
+                            <HelpCircle className="h-4 w-4" />
                             Notifications
                           </Link>
                         </DropdownMenuItem>
@@ -177,14 +177,14 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
           </header>
 
-          {/* Main Content - add bottom padding on mobile for bottom nav */}
+          {/* Main Content */}
           <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden">
             <PageTransition>
               {children}
             </PageTransition>
           </main>
 
-          {/* Footer - full on desktop, minimal on mobile */}
+          {/* Footer */}
           <div className="hidden md:block">
             <Footer />
           </div>

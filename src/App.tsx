@@ -87,6 +87,8 @@ import AdminGeoInsights from "./pages/admin/AdminGeoInsights";
 import AdminCohortAnalysis from "./pages/admin/AdminCohortAnalysis";
 import AdminBulkComms from "./pages/admin/AdminBulkComms";
 import AdminPlatformConfig from "./pages/admin/AdminPlatformConfig";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import CleanerSettings from "./pages/cleaner/CleanerSettings";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import Notifications from "./pages/Notifications";
@@ -164,6 +166,7 @@ const App = () => (
                      <Route path="/admin/cohort-analysis" element={<RequireAdmin><AdminCohortAnalysis /></RequireAdmin>} />
                      <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
                      <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
+                     <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
@@ -358,6 +361,11 @@ const App = () => (
                     <Route path="/cleaner/ai-assistant" element={
                       <RequireCleaner>
                         <CleanerAIAssistant />
+                      </RequireCleaner>
+                    } />
+                    <Route path="/cleaner/settings" element={
+                      <RequireCleaner>
+                        <CleanerSettings />
                       </RequireCleaner>
                     } />
                     
