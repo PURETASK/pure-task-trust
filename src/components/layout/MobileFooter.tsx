@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
+import { forwardRef } from "react";
 
-// Custom Link component that scrolls to top
-function FooterLink({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) {
-  const handleClick = () => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  };
-  
-  return (
-    <Link to={to} onClick={handleClick} className={className}>
-      {children}
-    </Link>
-  );
-}
+// Forward ref to fix React warning about function components being given refs
+const FooterLink = forwardRef<HTMLAnchorElement, { to: string; children: React.ReactNode; className?: string }>(
+  ({ to, children, className }, ref) => {
+    const handleClick = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    };
+    return (
+      <Link to={to} onClick={handleClick} className={className} ref={ref}>
+        {children}
+      </Link>
+    );
+  }
+);
+FooterLink.displayName = "FooterLink";
 
 export function MobileFooter() {
   const currentYear = new Date().getFullYear();

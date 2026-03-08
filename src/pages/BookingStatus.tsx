@@ -2,10 +2,33 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2 } from "lucide-react";
+import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2, AlertTriangle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
+import { useCancellationDialog } from "@/hooks/useJob";
+
+function getStatusDisplay(status: string) {
+  switch (status) {
+    case 'created':
+    case 'pending':
+      return { status: 'pending', label: 'Finding Cleaner', description: "We're matching you with the perfect cleaner" };
+    case 'confirmed':
+      return { status: 'accepted', label: 'Confirmed', description: "Your cleaner has accepted the job" };
+    case 'in_progress':
+      return { status: 'active', label: 'In Progress', description: "Cleaning is underway" };
+    case 'completed':
+      return { status: 'completed', label: 'Completed', description: "Job completed successfully" };
+    case 'cancelled':
+      return { status: 'declined', label: 'Cancelled', description: "This booking was cancelled" };
+    case 'disputed':
+      return { status: 'disputed', label: 'Under Review', description: "Issue is being reviewed" };
+    case 'no_show':
+      return { status: 'declined', label: 'No Show', description: "Cleaner did not arrive" };
+    default:
+      return { status: 'pending', label: 'Processing', description: "Processing your booking" };
+  }
+}
 
 export default function BookingStatus() {
   const { id } = useParams<{ id: string }>();
@@ -33,33 +56,18 @@ export default function BookingStatus() {
     );
   }
 
-  const getStatusDisplay = () => {
-    switch (job.status) {
-      case 'created':
-      case 'pending':
-        return { status: 'pending', label: 'Finding Cleaner', description: "We're matching you with the perfect cleaner" };
-      case 'confirmed':
-        return { status: 'accepted', label: 'Confirmed', description: "Your cleaner has accepted the job" };
-      case 'in_progress':
-        return { status: 'active', label: 'In Progress', description: "Cleaning is underway" };
-      case 'completed':
-        return { status: 'completed', label: 'Completed', description: "Job completed successfully" };
-      case 'cancelled':
-        return { status: 'declined', label: 'Cancelled', description: "This booking was cancelled" };
-      case 'disputed':
-        return { status: 'disputed', label: 'Under Review', description: "Issue is being reviewed" };
-      case 'no_show':
-        return { status: 'declined', label: 'No Show', description: "Cleaner did not arrive" };
-      default:
-        return { status: 'pending', label: 'Processing', description: "Processing your booking" };
-    }
-  };
-
-  const statusDisplay = getStatusDisplay();
+  const statusDisplay = getStatusDisplay(job.status);
   const cleanerName = job.cleaner ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Assigned Cleaner' : 'Finding cleaner...';
   const cleanerRating = job.cleaner?.avg_rating?.toFixed(1) || 'New';
   const formattedDate = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d, yyyy') : 'To be scheduled';
   const formattedTime = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD';
+
+  // Derive address display from job data
+  const addressLine = (job as any).address_line1 
+    ? `${(job as any).address_line1}${(job as any).address_city ? ', ' + (job as any).address_city : ''}`
+    : (job as any).service_address || null;
+
+  const canCancel = ['created', 'pending', 'confirmed'].includes(job.status);
 
   return (
     <main className="flex-1 py-8">
@@ -128,7 +136,12 @@ export default function BookingStatus() {
                     </div>
                   )}
                 </div>
-                <Badge variant={statusDisplay.status === "pending" ? "pending" : statusDisplay.status === "accepted" || statusDisplay.status === "completed" ? "success" : statusDisplay.status === "active" ? "active" : "destructive"}>
+                <Badge variant={
+                  statusDisplay.status === "pending" ? "pending" 
+                  : statusDisplay.status === "accepted" || statusDisplay.status === "completed" ? "success" 
+                  : statusDisplay.status === "active" ? "active" 
+                  : "destructive"
+                }>
                   {statusDisplay.label}
                 </Badge>
               </div>
@@ -143,7 +156,9 @@ export default function BookingStatus() {
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-muted-foreground" />
-                  <p className="text-muted-foreground">Address on file</p>
+                  <p className="text-sm text-muted-foreground">
+                    {addressLine || 'Address on file'}
+                  </p>
                 </div>
               </div>
 
@@ -157,20 +172,56 @@ export default function BookingStatus() {
           {statusDisplay.status === "pending" && (
             <div className="space-y-3">
               <p className="text-center text-sm text-muted-foreground">We'll notify you when a cleaner accepts your booking</p>
-              <Button variant="ghost" className="w-full" asChild><Link to="/dashboard">Back to Dashboard</Link></Button>
+              {canCancel && (
+                <Button variant="outline" className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5" asChild>
+                  <Link to={`/booking/${id}?cancel=1`}>
+                    <AlertTriangle className="h-4 w-4" />
+                    Cancel Booking
+                  </Link>
+                </Button>
+              )}
+              <Button variant="ghost" className="w-full" asChild>
+                <Link to="/dashboard">Back to Dashboard</Link>
+              </Button>
             </div>
           )}
           {statusDisplay.status === "accepted" && (
             <div className="space-y-3">
-              <Button className="w-full" asChild><Link to={`/job/${id}`}>View Job Details</Link></Button>
-              <Button variant="outline" className="w-full gap-2"><MessageCircle className="h-4 w-4" />Message Cleaner</Button>
+              <Button className="w-full" asChild>
+                <Link to={`/job/${id}`}>View Job Details</Link>
+              </Button>
+              <Button variant="outline" className="w-full gap-2" asChild>
+                <Link to={`/messages?job=${id}`}>
+                  <MessageCircle className="h-4 w-4" />
+                  Message Cleaner
+                </Link>
+              </Button>
+              {canCancel && (
+                <Button variant="ghost" className="w-full text-destructive hover:text-destructive hover:bg-destructive/5" asChild>
+                  <Link to={`/booking/${id}?cancel=1`}>Cancel Booking</Link>
+                </Button>
+              )}
             </div>
           )}
           {statusDisplay.status === "active" && (
-            <div className="space-y-3"><Button className="w-full" asChild><Link to={`/job/${id}`}>Track Progress</Link></Button></div>
+            <div className="space-y-3">
+              <Button className="w-full" asChild>
+                <Link to={`/job/${id}`}>Track Progress</Link>
+              </Button>
+              <Button variant="outline" className="w-full gap-2" asChild>
+                <Link to={`/messages?job=${id}`}>
+                  <MessageCircle className="h-4 w-4" />
+                  Message Cleaner
+                </Link>
+              </Button>
+            </div>
           )}
           {statusDisplay.status === "completed" && (
-            <div className="space-y-3"><Button className="w-full" asChild><Link to={`/job/${id}/approve`}>Review & Approve</Link></Button></div>
+            <div className="space-y-3">
+              <Button className="w-full" asChild>
+                <Link to={`/job/${id}/approve`}>Review & Approve</Link>
+              </Button>
+            </div>
           )}
           {(statusDisplay.status === "declined" || statusDisplay.status === "disputed") && (
             <div className="space-y-3">
