@@ -643,10 +643,10 @@ export default function Book() {
                         <div className="border-t border-border pt-4">
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground flex items-center gap-2">
-                              <Zap className="h-4 w-4 text-amber-500" />
+                              <Zap className="h-4 w-4 text-warning" />
                               Same-Day Rush Fee
                             </span>
-                            <span className="text-amber-600 font-medium">+{rushFee} credits</span>
+                            <span className="text-warning font-medium">+{rushFee} credits</span>
                           </div>
                         </div>
                       )}
