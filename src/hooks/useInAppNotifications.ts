@@ -62,7 +62,7 @@ export function useInAppNotifications() {
 
   const markRead = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_read: true })
         .eq("id", id);
@@ -76,7 +76,7 @@ export function useInAppNotifications() {
   const markAllRead = useMutation({
     mutationFn: async () => {
       if (!user?.id) throw new Error("Not authenticated");
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_read: true })
         .eq("user_id", user.id)
