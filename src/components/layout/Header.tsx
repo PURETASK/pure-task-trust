@@ -119,6 +119,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             {isAuthenticated && <NotificationBell />}
+            {isAuthenticated && user?.role === 'admin' && <AdminAlertsBadge />}
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
