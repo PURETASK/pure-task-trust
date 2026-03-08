@@ -198,7 +198,7 @@ const adminNavGroups: NavGroup[] = [
       { title: "Trust & Safety", url: "/admin/trust-safety", icon: Shield },
       { title: "Fraud Alerts", url: "/admin/fraud-alerts", icon: AlertTriangle, badge: "Live" },
       { title: "Disputes", url: "/admin/disputes", icon: FileText },
-      { title: "Client Risk", url: "/admin/client-risk", icon: Flag },
+      { title: "Client Risk", url: "/admin/client-risk", icon: AlertOctagon },
       { title: "ID Verifications", url: "/admin/id-verifications", icon: UserCheck },
       { title: "Safety Reports", url: "/admin/trust-safety-reports", icon: PieChart },
     ]
