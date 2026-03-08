@@ -21,8 +21,8 @@ export default function Dashboard() {
   const { removeFavorite, isRemoving } = useFavoriteActions();
 
   const upcomingJobs = jobs?.filter(j => ['created', 'pending', 'confirmed', 'in_progress'].includes(j.status)) || [];
-  const pendingApprovalJobs = jobs?.filter(j => j.status === 'completed' && !j.final_charge_credits) || [];
-  const pastJobs = jobs?.filter(j => j.status === 'completed' && j.final_charge_credits || j.status === 'cancelled') || [];
+  const pendingApprovalJobs = jobs?.filter(j => j.status === 'completed' && j.final_charge_credits == null) || [];
+  const pastJobs = jobs?.filter(j => (j.status === 'completed' && j.final_charge_credits != null) || j.status === 'cancelled') || [];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
