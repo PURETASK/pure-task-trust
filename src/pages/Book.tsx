@@ -660,7 +660,7 @@ export default function Book() {
                                 {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {selectedTime}
                               </span>
                               {isSameDay && (
-                                <Badge variant="outline" className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30 text-xs">
+                                <Badge variant="outline" className="bg-warning/20 text-warning border-warning/30 text-xs">
                                   Today
                                 </Badge>
                               )}
