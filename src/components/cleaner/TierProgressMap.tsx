@@ -20,11 +20,11 @@ const TIER_BENEFITS: Record<CleanerTier, string[]> = {
   platinum: ["15% platform fee (lowest)", "Top placement in search", "Dedicated account manager", "Rate up to $100/hr"],
 };
 
-const TIER_COLORS: Record<CleanerTier, string> = {
-  bronze: "text-orange-600 bg-orange-500/10 border-orange-500/30",
-  silver: "text-slate-500 bg-slate-500/10 border-slate-500/30",
-  gold: "text-yellow-500 bg-yellow-500/10 border-yellow-500/30",
-  platinum: "text-sky-500 bg-sky-500/10 border-sky-500/30",
+const TIER_RING_CLASSES: Record<CleanerTier, string> = {
+  bronze: "border-orange-500/50 bg-orange-500/10 text-orange-600",
+  silver: "border-slate-500/50 bg-slate-500/10 text-slate-500",
+  gold: "border-yellow-500/50 bg-yellow-500/10 text-yellow-500",
+  platinum: "border-sky-500/50 bg-sky-500/10 text-sky-500",
 };
 
 const TIER_EMOJIS: Record<CleanerTier, string> = {
@@ -58,7 +58,7 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Tier stepper */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           {TIER_ORDER.map((tier, idx) => {
             const isActive = tier === currentTier;
             const isUnlocked = idx <= currentTierIdx;
@@ -66,12 +66,12 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
               <div key={tier} className="flex items-center flex-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className={`flex flex-col items-center gap-1 flex-1 cursor-default`}>
+                    <div className="flex flex-col items-center gap-1 flex-1 cursor-default">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-2 transition-all ${
                         isActive
-                          ? "ring-2 ring-primary ring-offset-2 " + TIER_COLORS[tier]
+                          ? "ring-2 ring-primary ring-offset-2 " + TIER_RING_CLASSES[tier]
                           : isUnlocked
-                          ? TIER_COLORS[tier]
+                          ? TIER_RING_CLASSES[tier]
                           : "bg-muted border-border text-muted-foreground"
                       }`}>
                         {isUnlocked ? TIER_EMOJIS[tier] : <Lock className="h-4 w-4" />}
@@ -110,9 +110,9 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
             </p>
           </div>
         ) : (
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-sky-500/10 border border-sky-500/30">
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/30">
             <span className="text-xl">💎</span>
-            <p className="text-sm font-semibold text-sky-500">You've reached Platinum — the highest tier!</p>
+            <p className="text-sm font-semibold text-primary">You've reached Platinum — the highest tier!</p>
           </div>
         )}
 
