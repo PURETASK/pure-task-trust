@@ -4,16 +4,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Send, Calendar, Loader2, MessageCircle } from "lucide-react";
+import { Send, Calendar, Loader2, MessageCircle, ArrowLeft } from "lucide-react";
 import { useMessageThreads, useThreadMessages, useMessageActions, type MessageThread } from "@/hooks/useMessages";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function CleanerMessages() {
   const { data: threads, isLoading: threadsLoading } = useMessageThreads();
   const [selectedThread, setSelectedThread] = useState<MessageThread | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { role } = useUserProfile();
+  const mySenderType = role === 'cleaner' ? 'cleaner' : 'client';
 
   const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThread?.id || '');
   const { sendMessage, isSending, markAsRead } = useMessageActions(selectedThread?.id || '');

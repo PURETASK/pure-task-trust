@@ -265,7 +265,7 @@ export default function Dashboard() {
                             <div className="flex items-center gap-3">
                               {getStatusBadge(job.status)}
                               <Button variant="outline" size="sm" asChild>
-                                <Link to={`/job/${job.id}`}>View Details</Link>
+                                <Link to={`/booking/${job.id}`}>View Details</Link>
                               </Button>
                             </div>
                           </div>
