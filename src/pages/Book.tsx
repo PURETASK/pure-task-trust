@@ -78,6 +78,21 @@ export default function Book() {
   const { data: selectedCleaner } = useCleaner(cleanerId || '');
   const { data: savedAddresses } = useAddresses();
 
+  // Fetch cleaner's availability blocks for validation
+  const { data: availabilityBlocks } = useQuery({
+    queryKey: ['cleaner-availability-blocks', cleanerId],
+    queryFn: async () => {
+      if (!cleanerId) return [];
+      const { data } = await supabase
+        .from('availability_blocks')
+        .select('day_of_week, start_time, end_time, is_active')
+        .eq('cleaner_id', cleanerId)
+        .eq('is_active', true);
+      return data || [];
+    },
+    enabled: !!cleanerId,
+  });
+
   // Auto-select default or first address when addresses load
   useEffect(() => {
     if (savedAddresses && savedAddresses.length > 0 && !selectedAddress) {
