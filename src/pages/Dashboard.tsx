@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
