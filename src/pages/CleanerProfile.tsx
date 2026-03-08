@@ -7,9 +7,12 @@ import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
 import { useReliabilityScore } from "@/hooks/useReliabilityScore";
 import { useCleanerReviews } from "@/hooks/useReviews";
+import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
