@@ -57,7 +57,7 @@ export default function JobInProgress() {
   const cleanerName = job.cleaner ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Your Cleaner' : 'Finding cleaner...';
   const getCurrentStep = () => { for (let i = timelineSteps.length - 1; i >= 0; i--) { if (timelineSteps[i].statusMatch.includes(job.status)) return i; } return 0; };
   const currentStep = getCurrentStep();
-  const isCompleted = job.status === 'completed' || job.status === 'pending_approval';
+  const isCompleted = job.status === 'completed';
   const isInProgress = job.status === 'in_progress';
 
   const statusBadge = {
