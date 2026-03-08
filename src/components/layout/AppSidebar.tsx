@@ -7,8 +7,8 @@ import {
   Heart, CalendarClock, Award, Link2, CheckCircle, BarChart3, Building,
   CreditCard, AlertTriangle, FileText, Activity, PieChart, Scale,
   Sparkles, Home, Tag, HelpCircle, Target, Bot, BookOpen,
-  Bell, Clock, BarChart2, Globe, UserCheck, Layers, ChevronRight,
-  RefreshCw, ListChecks, ShieldAlert, LucideIcon
+  Bell, BarChart2, Globe, UserCheck, Layers, ChevronRight,
+  RefreshCw, ShieldAlert, LucideIcon, Clipboard, ShieldCheck, RefreshCcw, AlertOctagon
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
