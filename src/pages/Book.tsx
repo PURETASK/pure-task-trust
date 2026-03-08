@@ -211,6 +211,66 @@ export default function Book() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            {/* C2: Booking Confirmation Screen */}
+            {confirmedJob && (
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
+                <div className="h-20 w-20 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
+                  <Check className="h-10 w-10 text-success" />
+                </div>
+                <Badge variant="success" className="mb-3">Booking Confirmed! 🎉</Badge>
+                <h1 className="text-2xl font-bold mb-2">You're all set!</h1>
+                <p className="text-muted-foreground mb-8">Credits held — we're finding you the perfect cleaner.</p>
+                <Card className="text-left mb-6">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Sparkles className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold capitalize">{confirmedJob.type?.replace('_', ' ')} Clean</p>
+                        <p className="text-sm text-muted-foreground">Cleaning type</p>
+                      </div>
+                    </div>
+                    {confirmedJob.date && (
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Calendar className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">{new Date(confirmedJob.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                          <p className="text-sm text-muted-foreground">at {new Date(confirmedJob.date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                        </div>
+                      </div>
+                    )}
+                    {confirmedJob.address && (
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <MapPin className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">{confirmedJob.address}</p>
+                          <p className="text-sm text-muted-foreground">Service address</p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <CreditCard className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold">{confirmedJob.credits} credits held</p>
+                        <p className="text-sm text-muted-foreground">Released only after you approve the work</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="space-y-3">
+                  <Button className="w-full" asChild><Link to="/dashboard">View My Dashboard</Link></Button>
+                  <Button variant="outline" className="w-full" onClick={() => setConfirmedJob(null)}>Book Another Cleaning</Button>
+                </div>
+              </motion.div>
+            )}
+            {!confirmedJob && (<>
             {/* Selected Cleaner Banner */}
             {selectedCleaner && (
               <Card className="mb-4 sm:mb-6 bg-primary/5 border-primary/20">
