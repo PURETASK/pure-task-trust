@@ -90,7 +90,7 @@ export default function CleanerSchedule() {
       case 'confirmed':
         return <Badge variant="default">Confirmed</Badge>;
       case 'in_progress':
-        return <Badge className="bg-blue-500">In Progress</Badge>;
+        return <Badge className="bg-primary/80 text-primary-foreground">In Progress</Badge>;
       case 'completed':
         return <Badge variant="success">Completed</Badge>;
       default:
