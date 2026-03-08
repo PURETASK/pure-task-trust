@@ -34,6 +34,10 @@ export default function Wallet() {
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [txSearch, setTxSearch] = useState('');
   const [txTypeFilter, setTxTypeFilter] = useState('all');
+  const [showAutoTopUp, setShowAutoTopUp] = useState(false);
+  const [autoTopUpEnabled, setAutoTopUpEnabled] = useState(false);
+  const [topUpThreshold, setTopUpThreshold] = useState('20');
+  const [topUpAmount, setTopUpAmount] = useState('50');
   const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing, refetch } = useWallet();
   const { toast } = useToast();
 
