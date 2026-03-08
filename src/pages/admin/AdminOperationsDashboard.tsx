@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, XCircle, AlertTriangle, CheckCircle, Clock, TrendingDown, ArrowRight, RefreshCw } from "lucide-react";
+import { Calendar, XCircle, AlertTriangle, CheckCircle, Clock, TrendingDown, ArrowRight, RefreshCw, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -13,121 +13,85 @@ const chartConfig = {
   count: { label: "Count", color: "hsl(var(--primary))" },
 };
 
+const STATUS_PIE_COLORS = [
+  "hsl(var(--success))",
+  "hsl(var(--primary))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--destructive))",
+];
+
+const QUICK_LINKS = [
+  { label: 'Manage Bookings', href: '/admin/bookings', desc: 'Reschedule, reassign, cancel' },
+  { label: 'Review Disputes', href: '/admin/disputes', desc: 'Open dispute cases' },
+  { label: 'Fraud Alerts', href: '/admin/fraud-alerts', desc: 'Review flagged activity' },
+  { label: 'Client Risk', href: '/admin/client-risk', desc: 'View risk profiles' },
+  { label: 'Trust & Safety', href: '/admin/trust-safety', desc: 'Safety reports & ID checks' },
+  { label: 'ID Verifications', href: '/admin/id-verifications', desc: 'Review cleaner documents' },
+];
+
 const AdminOperationsDashboard = () => {
   const { data, isLoading, refetch } = useAdminOpsStats();
 
+  const KPI_CARDS = [
+    { label: 'Total Bookings', value: data?.totalBookings || 0, icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', border: 'border-success/25' },
+    { label: 'Cancel Rate', value: `${data?.cancelRate || 0}%`, icon: XCircle, color: 'text-destructive', bg: 'bg-destructive/10', border: 'border-destructive/25' },
+    { label: 'Open Disputes', value: data?.openDisputes || 0, icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/25' },
+    { label: 'In Progress', value: data?.bookingStatusData?.find(s => s.status === 'In Progress')?.count || 0, icon: Clock, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/25' },
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="mb-8 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-              <Link to="/admin/analytics" className="hover:text-primary">Analytics</Link>
-              <span>/</span>
-              <span>Operations Dashboard</span>
+              <Link to="/admin/analytics" className="hover:text-primary transition-colors">Analytics</Link>
+              <span>/</span><span>Operations Dashboard</span>
             </div>
-            <h1 className="text-3xl font-bold text-foreground">Operations Dashboard</h1>
+            <h1 className="text-3xl font-bold">Operations Dashboard</h1>
             <p className="text-muted-foreground mt-1">Live booking status, cancellations, and disputes</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />Refresh
           </Button>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* KPI Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)
-          ) : (
-            <>
-              <Card className="border-l-4 border-l-green-500">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total Bookings</p>
-                      <p className="text-2xl font-bold">{data?.totalBookings || 0}</p>
-                    </div>
+            Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32 rounded-2xl" />)
+          ) : KPI_CARDS.map(({ label, value, icon: Icon, color, bg, border }) => (
+            <motion.div key={label} whileHover={{ y: -2 }}>
+              <Card className={`border ${border} hover:shadow-elevated transition-all`}>
+                <CardContent className="p-5">
+                  <div className={`h-11 w-11 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
+                    <Icon className={`h-5 w-5 ${color}`} />
                   </div>
+                  <p className="text-2xl font-black">{value}</p>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
                 </CardContent>
               </Card>
-
-              <Card className="border-l-4 border-l-red-500">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                      <XCircle className="h-5 w-5 text-red-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Cancel Rate</p>
-                      <p className="text-2xl font-bold">{data?.cancelRate || 0}%</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-yellow-500">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Open Disputes</p>
-                      <p className="text-2xl font-bold">{data?.openDisputes || 0}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-blue-500">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">In Progress</p>
-                      <p className="text-2xl font-bold">
-                        {data?.bookingStatusData?.find(s => s.status === 'In Progress')?.count || 0}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
+            </motion.div>
+          ))}
         </div>
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card>
+          <Card className="border-border/60">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                Booking Status Distribution
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Calendar className="h-5 w-5 text-primary" />Booking Status Distribution
               </CardTitle>
               <CardDescription>Current status of all bookings</CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading ? <Skeleton className="h-[300px]" /> : (
-                <ChartContainer config={chartConfig} className="h-[300px]">
+              {isLoading ? <Skeleton className="h-[280px]" /> : (
+                <ChartContainer config={chartConfig} className="h-[280px]">
                   <PieChart>
-                    <Pie
-                      data={data?.bookingStatusData || []}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
-                      dataKey="count"
-                      label={({ status, count }) => `${status}: ${count}`}
-                    >
-                      {(data?.bookingStatusData || []).map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Pie data={data?.bookingStatusData || []} cx="50%" cy="50%" innerRadius={55} outerRadius={95}
+                      paddingAngle={3} dataKey="count" label={({ status, count }) => `${status}: ${count}`}>
+                      {(data?.bookingStatusData || []).map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={STATUS_PIE_COLORS[index % STATUS_PIE_COLORS.length]} />
                       ))}
                     </Pie>
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -137,23 +101,22 @@ const AdminOperationsDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-border/60">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingDown className="h-5 w-5 text-red-500" />
-                Cancellation Reasons
+              <CardTitle className="flex items-center gap-2 text-base">
+                <TrendingDown className="h-5 w-5 text-destructive" />Cancellation Reasons
               </CardTitle>
               <CardDescription>Breakdown of cancellation causes</CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading ? <Skeleton className="h-[300px]" /> : (
-                <ChartContainer config={chartConfig} className="h-[300px]">
+              {isLoading ? <Skeleton className="h-[280px]" /> : (
+                <ChartContainer config={chartConfig} className="h-[280px]">
                   <BarChart data={data?.cancellationData?.length ? data.cancellationData : [{ reason: 'No data', count: 0 }]} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="reason" type="category" width={140} tick={{ fontSize: 12 }} />
+                    <XAxis type="number" tick={{ fontSize: 11 }} />
+                    <YAxis dataKey="reason" type="category" width={140} tick={{ fontSize: 11 }} />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="count" fill="hsl(var(--destructive))" radius={4} />
+                    <Bar dataKey="count" fill="hsl(var(--destructive))" radius={[0, 6, 6, 0]} />
                   </BarChart>
                 </ChartContainer>
               )}
@@ -162,32 +125,22 @@ const AdminOperationsDashboard = () => {
         </div>
 
         {/* Quick Links */}
-        <Card>
+        <Card className="border-border/60">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              Operations Actions
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Activity className="h-5 w-5 text-primary" />Operations Actions
             </CardTitle>
             <CardDescription>Quick access to operational tools</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { label: 'Manage Bookings', href: '/admin/bookings', desc: 'Reschedule, reassign, cancel' },
-                { label: 'Review Disputes', href: '/admin/disputes', desc: `${data?.openDisputes || 0} open cases` },
-                { label: 'Fraud Alerts', href: '/admin/fraud-alerts', desc: 'Review flagged activity' },
-                { label: 'Client Risk', href: '/admin/client-risk', desc: 'View risk profiles' },
-                { label: 'Trust & Safety', href: '/admin/trust-safety', desc: 'Safety reports & ID checks' },
-                { label: 'ID Verifications', href: '/admin/id-verifications', desc: 'Review cleaner documents' },
-              ].map((action) => (
-                <Link key={action.href} to={action.href} className="group">
-                  <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-sm">{action.label}</p>
-                      <p className="text-xs text-muted-foreground">{action.desc}</p>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {QUICK_LINKS.map((action) => (
+                <Link key={action.href} to={action.href} className="group flex items-center justify-between p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-muted/40 transition-all">
+                  <div>
+                    <p className="font-medium text-sm">{action.label}</p>
+                    <p className="text-xs text-muted-foreground">{action.desc}</p>
                   </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </Link>
               ))}
             </div>
@@ -195,9 +148,7 @@ const AdminOperationsDashboard = () => {
         </Card>
 
         <div className="mt-8">
-          <Button variant="outline" asChild>
-            <Link to="/admin/analytics">← Back to Analytics</Link>
-          </Button>
+          <Button variant="outline" asChild><Link to="/admin/analytics">← Back to Analytics</Link></Button>
         </div>
       </motion.div>
     </div>

@@ -1,231 +1,186 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  AlertTriangle, 
-  Shield, 
-  Eye,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Filter,
-  Search
-} from "lucide-react";
+import { AlertTriangle, Shield, Eye, CheckCircle, XCircle, Clock, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFraudAlerts } from "@/hooks/useFraudAlerts";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { useState } from "react";
+import { toast } from "sonner";
+
+const SEV_STYLES: Record<string, string> = {
+  critical: 'bg-destructive text-destructive-foreground',
+  high: 'bg-warning/20 text-warning border border-warning/30',
+  medium: 'bg-primary/10 text-primary border border-primary/20',
+  low: 'bg-muted text-muted-foreground border border-border',
+};
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: 'bg-warning/10 text-warning border-warning/30',
+  investigating: 'bg-primary/10 text-primary border-primary/30',
+  resolved: 'bg-success/10 text-success border-success/30',
+  dismissed: 'bg-muted text-muted-foreground border-border',
+};
 
 const AdminFraudAlerts = () => {
+  const queryClient = useQueryClient();
   const { alerts, isLoading } = useFraudAlerts();
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "critical": return "bg-red-500";
-      case "high": return "bg-orange-500";
-      case "medium": return "bg-yellow-500";
-      case "low": return "bg-blue-500";
-      default: return "bg-gray-500";
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending": return <Badge variant="outline" className="border-yellow-500 text-yellow-600">Pending</Badge>;
-      case "investigating": return <Badge variant="outline" className="border-blue-500 text-blue-600">Investigating</Badge>;
-      case "resolved": return <Badge variant="outline" className="border-green-500 text-green-600">Resolved</Badge>;
-      case "dismissed": return <Badge variant="outline" className="border-gray-500 text-gray-600">Dismissed</Badge>;
-      default: return <Badge variant="outline">{status}</Badge>;
-    }
-  };
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [severityFilter, setSeverityFilter] = useState('all');
+  const [search, setSearch] = useState('');
 
   const pendingCount = alerts?.filter(a => a.status === 'pending').length || 0;
   const criticalCount = alerts?.filter(a => a.severity === 'critical' && a.status === 'pending').length || 0;
+  const investigatingCount = alerts?.filter(a => a.status === 'investigating').length || 0;
+  const resolvedCount = alerts?.filter(a => a.status === 'resolved').length || 0;
+
+  const filtered = (alerts || []).filter(a => {
+    const matchStatus = statusFilter === 'all' || a.status === statusFilter;
+    const matchSev = severityFilter === 'all' || a.severity === severityFilter;
+    const matchSearch = !search || (a.alert_type + ' ' + a.description).toLowerCase().includes(search.toLowerCase());
+    return matchStatus && matchSev && matchSearch;
+  });
+
+  const handleResolve = async (id: string) => {
+    await supabase.from('fraud_alerts').update({ status: 'resolved' }).eq('id', id);
+    toast.success('Alert resolved');
+    queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+  };
+
+  const handleDismiss = async (id: string) => {
+    await supabase.from('fraud_alerts').update({ status: 'dismissed' }).eq('id', id);
+    toast.success('Alert dismissed');
+    queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+  };
+
+  const STAT_CARDS = [
+    { label: 'Pending', value: pendingCount, icon: Clock, color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/25' },
+    { label: 'Critical', value: criticalCount, icon: AlertTriangle, color: 'text-destructive', bg: 'bg-destructive/10', border: 'border-destructive/25' },
+    { label: 'Investigating', value: investigatingCount, icon: Eye, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/25' },
+    { label: 'Resolved (all)', value: resolvedCount, icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', border: 'border-success/25' },
+  ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-              <Link to="/admin/trust-safety" className="hover:text-primary">Trust & Safety</Link>
-              <span>/</span>
-              <span>Fraud Alerts</span>
-            </div>
-            <h1 className="text-3xl font-bold text-foreground">Fraud Alerts</h1>
-            <p className="text-muted-foreground mt-1">
-              Monitor and respond to fraud detection alerts
-            </p>
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="mb-8">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+            <Link to="/admin/trust-safety" className="hover:text-primary transition-colors">Trust & Safety</Link>
+            <span>/</span><span>Fraud Alerts</span>
           </div>
+          <h1 className="text-3xl font-bold">Fraud Alerts</h1>
+          <p className="text-muted-foreground mt-1">Monitor and respond to fraud detection alerts</p>
+        </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <Card className="border-l-4 border-l-yellow-500">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-yellow-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Pending</p>
-                    <p className="text-2xl font-bold">{pendingCount}</p>
-                  </div>
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {STAT_CARDS.map(({ label, value, icon: Icon, color, bg, border }) => (
+            <Card key={label} className={`border ${border} hover:shadow-elevated transition-all`}>
+              <CardContent className="p-5">
+                <div className={`h-11 w-11 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
+                  <Icon className={`h-5 w-5 ${color}`} />
                 </div>
+                <p className="text-2xl font-black">{value}</p>
+                <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
               </CardContent>
             </Card>
+          ))}
+        </div>
 
-            <Card className="border-l-4 border-l-red-500">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Critical</p>
-                    <p className="text-2xl font-bold">{criticalCount}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-l-4 border-l-blue-500">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <Eye className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Investigating</p>
-                    <p className="text-2xl font-bold">{alerts?.filter(a => a.status === 'investigating').length || 0}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-l-4 border-l-green-500">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Resolved (30d)</p>
-                    <p className="text-2xl font-bold">{alerts?.filter(a => a.status === 'resolved').length || 0}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Filters */}
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search alerts..." className="pl-10" />
-                </div>
-                <Select defaultValue="all">
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="investigating">Investigating</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                    <SelectItem value="dismissed">Dismissed</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select defaultValue="all">
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Severity" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Severity</SelectItem>
-                    <SelectItem value="critical">Critical</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                  </SelectContent>
-                </Select>
+        {/* Filters */}
+        <Card className="mb-6 border-border/60">
+          <CardContent className="p-4">
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search alerts..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
               </div>
-            </CardContent>
-          </Card>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="investigating">Investigating</SelectItem>
+                  <SelectItem value="resolved">Resolved</SelectItem>
+                  <SelectItem value="dismissed">Dismissed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={severityFilter} onValueChange={setSeverityFilter}>
+                <SelectTrigger className="w-full md:w-[160px]"><SelectValue placeholder="Severity" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Severity</SelectItem>
+                  <SelectItem value="critical">Critical</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Alerts List */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-primary" />
-                All Fraud Alerts
-              </CardTitle>
-              <CardDescription>Click on an alert to view details and take action</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="text-center py-8 text-muted-foreground">Loading alerts...</div>
-              ) : alerts && alerts.length > 0 ? (
-                <div className="space-y-4">
-                  {alerts.map((alert) => (
-                    <div key={alert.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        <div className={`h-3 w-3 rounded-full ${getSeverityColor(alert.severity)}`} />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium text-foreground">{alert.alert_type}</p>
-                            {getStatusBadge(alert.status)}
-                          </div>
-                          <p className="text-sm text-muted-foreground">{alert.description}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {format(new Date(alert.created_at), 'MMM d, yyyy h:mm a')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
-                        </Button>
-                        {alert.status === 'pending' && (
-                          <>
-                            <Button variant="default" size="sm">
-                              <CheckCircle className="h-4 w-4 mr-1" />
-                              Resolve
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <XCircle className="h-4 w-4 mr-1" />
-                              Dismiss
-                            </Button>
-                          </>
-                        )}
-                      </div>
+        {/* Alerts List */}
+        <Card className="border-border/60">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Shield className="h-5 w-5 text-primary" />All Fraud Alerts ({filtered.length})
+            </CardTitle>
+            <CardDescription>Click on an alert to view details and take action</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 rounded-xl bg-muted animate-pulse" />)}</div>
+            ) : filtered.length > 0 ? (
+              <div className="space-y-3">
+                {filtered.map((alert) => (
+                  <motion.div key={alert.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-4 p-4 rounded-xl border border-border/60 hover:border-primary/30 hover:bg-muted/30 transition-all">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <span className={`inline-flex h-2.5 w-2.5 rounded-full ${SEV_STYLES[alert.severity]?.includes('bg-destructive text-destructive-foreground') ? 'bg-destructive' : alert.severity === 'high' ? 'bg-warning' : 'bg-primary'}`} />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No fraud alerts at this time</p>
-                  <p className="text-sm text-muted-foreground">The system is actively monitoring for suspicious activity</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <p className="font-semibold text-sm">{alert.alert_type}</p>
+                        <Badge variant="outline" className={`text-xs ${STATUS_STYLES[alert.status] || ''}`}>{alert.status}</Badge>
+                        <Badge className={`text-xs px-2 py-0 ${SEV_STYLES[alert.severity] || ''}`}>{alert.severity}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{alert.description}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{format(new Date(alert.created_at), 'MMM d, yyyy h:mm a')}</p>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {alert.status === 'pending' && (
+                        <>
+                          <Button size="sm" onClick={() => handleResolve(alert.id)}>
+                            <CheckCircle className="h-3.5 w-3.5 mr-1" />Resolve
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => handleDismiss(alert.id)}>
+                            <XCircle className="h-3.5 w-3.5 mr-1" />Dismiss
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Shield className="h-12 w-12 mx-auto text-success/40 mb-3" />
+                <p className="font-medium text-muted-foreground">No fraud alerts</p>
+                <p className="text-sm text-muted-foreground">The system is actively monitoring for suspicious activity</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-          {/* Back Button */}
-          <div className="mt-8">
-            <Button variant="outline" asChild>
-              <Link to="/admin/trust-safety">← Back to Trust & Safety</Link>
-            </Button>
-          </div>
-        </motion.div>
+        <div className="mt-8">
+          <Button variant="outline" asChild><Link to="/admin/trust-safety">← Back to Trust & Safety</Link></Button>
+        </div>
+      </motion.div>
     </div>
   );
 };
