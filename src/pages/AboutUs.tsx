@@ -1,234 +1,164 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { SEO, OrganizationSchema } from "@/components/seo";
+import heroLandingImg from "@/assets/hero-landing.jpg";
+import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
+import clientHeroImg from "@/assets/client-hero.jpg";
 import {
-  Sparkles, Shield, Users, TrendingUp, Heart, Target,
-  CheckCircle, Star, Camera, MapPin, Award, Zap, ArrowRight
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { SEO, OrganizationSchema } from '@/components/seo';
+  Sparkles, Shield, Users, TrendingUp, Heart, Target, CheckCircle,
+  Star, Camera, MapPin, Award, Zap, ArrowRight, Quote, Globe
+} from "lucide-react";
+
+const STATS = [
+  { value: "10K+", label: "Happy Clients", icon: Users },
+  { value: "2,400+", label: "Verified Cleaners", icon: Award },
+  { value: "4.9★", label: "Avg Rating", icon: Star },
+  { value: "50+", label: "Cities Served", icon: MapPin },
+];
+
+const VALUES = [
+  { icon: Shield, title: "Integrity", desc: "We do what we say, every time. No exceptions.", gradient: "from-primary/10 to-primary/5", iconColor: "text-primary" },
+  { icon: Users, title: "Community", desc: "We lift up our cleaners and empower our clients.", gradient: "from-success/10 to-success/5", iconColor: "text-success" },
+  { icon: TrendingUp, title: "Growth", desc: "We help cleaners build sustainable, thriving careers.", gradient: "from-warning/10 to-warning/5", iconColor: "text-warning" },
+  { icon: Sparkles, title: "Excellence", desc: "We never stop improving the platform experience.", gradient: "from-[hsl(var(--pt-purple)/0.1)] to-[hsl(var(--pt-purple)/0.05)]", iconColor: "text-[hsl(var(--pt-purple))]" },
+];
+
+const TIMELINE = [
+  { year: "2023", title: "The Problem", desc: "Our founders hired cleaners through random apps — unreliable, no accountability, no recourse." },
+  { year: "2023", title: "The Idea", desc: "What if every job had GPS check-ins, photo proof, and payment only released when you approve?" },
+  { year: "2024", title: "PureTask Launches", desc: "We built the trust-first cleaning marketplace — transparent pricing, verified cleaners, escrow payment." },
+  { year: "Now", title: "Growing Community", desc: "10K+ clients, 2,400+ cleaners, 4.9★ rating across 50+ cities. And we're just getting started." },
+];
 
 export default function AboutUs() {
   return (
-    <main className="bg-background">
-      <SEO 
+    <main className="bg-background overflow-x-hidden">
+      <SEO
         title="About PureTask - Our Mission"
-        description="We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. Learn about our trust-first approach to cleaning services."
+        description="We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. Trust-first cleaning services."
         url="/about"
-        keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service, cleaning service mission"
+        keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service"
       />
       <OrganizationSchema />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <Badge className="mb-4 bg-primary text-primary-foreground">
-              <Sparkles className="h-3 w-3 mr-1" />
-              Our Story
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden min-h-[70vh] flex items-center">
+        <div className="absolute inset-0">
+          <img src={heroLandingImg} alt="PureTask" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/97 via-background/85 to-background/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+        </div>
+        <div className="relative container px-4 sm:px-6 py-24">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-2xl">
+            <Badge className="mb-5 bg-primary/10 border-primary/20 text-primary">
+              <Sparkles className="h-3 w-3 mr-1" /> Our Story
             </Badge>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-              Cleaning Services,{' '}
-              <span className="text-primary">Rebuilt on Trust</span>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-5">
+              Cleaning, rebuilt on{" "}
+              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
+                trust.
+              </span>
             </h1>
-            
-            <p className="text-xl text-muted-foreground leading-relaxed font-poppins">
-              We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. 
-              Every homeowner deserves transparency, accountability, and peace of mind.
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
+              We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. Every homeowner deserves transparency, accountability, and peace of mind.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Our Mission */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge variant="outline" className="mb-4 bg-emerald-500/10 border-emerald-600/40 text-emerald-700 dark:text-emerald-300">
-              <Target className="h-3 w-3 mr-1" />
-              Our Mission
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Making home cleaning transparent, trustworthy, and stress-free
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Shield,
-                title: 'Trust First',
-                description: 'Every cleaner is background-checked, identity-verified, and rated by real clients.'
-              },
-              {
-                icon: Camera,
-                title: 'Photo Verification',
-                description: 'GPS check-ins and before/after photos ensure accountability on every job.'
-              },
-              {
-                icon: Heart,
-                title: 'Fair for Everyone',
-                description: 'Cleaners set their own rates and keep more of their earnings. Clients get transparent pricing.'
-              }
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full bg-emerald-500/5 border-emerald-600/30 rounded-xl hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-600/40 mb-4">
-                      <item.icon className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
+      {/* ── STATS ─────────────────────────────────────────────────────────── */}
+      <section className="py-16 bg-primary">
+        <div className="container px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {STATS.map((s, i) => (
+              <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
+                <s.icon className="h-6 w-6 text-primary-foreground/60 mx-auto mb-2" />
+                <p className="text-4xl font-black text-primary-foreground">{s.value}</p>
+                <p className="text-sm text-primary-foreground/70 mt-1">{s.label}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Why We're Different */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="secondary" className="mb-4 bg-warning/10 border-warning/30 text-warning-foreground">
-                <Zap className="h-3 w-3 mr-1" />
-                Why We're Different
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Built by people who've been on both sides
-              </h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                Our founders have hired cleaners and worked as cleaners. We understand the frustrations 
-                on both sides—and we built PureTask to solve them.
-              </p>
-              
-              <div className="space-y-4">
-                {[
-                  'No hidden fees or surprise charges',
-                  'Real-time job tracking and updates',
-                  'Dispute resolution that\'s fair for everyone',
-                  'Reliability scores based on actual performance',
-                  'Instant booking with verified professionals'
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-3"
-                  >
-                    <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                    <span className="text-foreground">{item}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+      {/* ── ORIGIN STORY ──────────────────────────────────────────────────── */}
+      <section className="py-24 bg-background">
+        <div className="container px-4 sm:px-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <Badge className="mb-4 bg-warning/10 border-warning/20 text-warning hover:bg-warning/10">Our Journey</Badge>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">How PureTask came to be</h2>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 gap-4"
-            >
-              {[
-                { icon: Users, value: '10,000+', label: 'Happy Clients' },
-                { icon: Award, value: '2,500+', label: 'Verified Cleaners' },
-                { icon: Star, value: '4.9', label: 'Average Rating' },
-                { icon: MapPin, value: '50+', label: 'Cities Served' }
-              ].map((stat, index) => (
-                <Card key={index} className="border-warning/30 bg-warning/5">
-                  <CardContent className="p-6 text-center">
-                    <stat.icon className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </motion.div>
+          <div className="max-w-3xl mx-auto">
+            {TIMELINE.map((item, i) => (
+              <motion.div
+                key={item.year}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }} whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="flex gap-6 mb-10 last:mb-0"
+              >
+                <div className="flex flex-col items-center">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-black text-primary text-sm flex-shrink-0">{item.year}</div>
+                  {i < TIMELINE.length - 1 && <div className="w-0.5 flex-1 bg-gradient-to-b from-primary/20 to-transparent mt-2" />}
+                </div>
+                <div className="pb-8">
+                  <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Our Values */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge variant="outline" className="mb-4 bg-purple-500/10 border-purple-600/40 text-purple-700 dark:text-purple-300">
-              <Heart className="h-3 w-3 mr-1" />
-              Our Values
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              The principles that guide everything we do
-            </h2>
+      {/* ── TWO SIDES ─────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-muted/30">
+        <div className="container px-4 sm:px-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Built for both sides of trust</h2>
+            <p className="text-xl text-muted-foreground">Whether you're booking or cleaning, we built PureTask for you.</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {[
               {
-                icon: Shield,
-                title: 'Integrity',
-                description: 'We do what we say, every time. No exceptions.'
+                img: clientHeroImg, badge: "For Clients", badgeCls: "bg-primary/15 text-primary border-primary/30",
+                title: "A home you can trust", cta: "Book a Clean", href: "/book",
+                points: ["Background-verified cleaners", "GPS check-in & photo proof", "Escrow: pay only when you approve", "Instant rebooking with favourites"],
+                iconColor: "text-primary", iconBg: "bg-primary/10"
               },
               {
-                icon: Users,
-                title: 'Community',
-                description: 'We lift up our cleaners and empower our clients.'
+                img: cleanerHeroImg, badge: "For Cleaners", badgeCls: "bg-success/15 text-success border-success/30",
+                title: "A career you control", cta: "Join as a Cleaner", href: "/auth?role=cleaner",
+                points: ["Set your own hourly rate", "Bronze → Platinum tier progression", "Weekly or instant Stripe payouts", "AI assistant & job support tools"],
+                iconColor: "text-success", iconBg: "bg-success/10"
               },
-              {
-                icon: TrendingUp,
-                title: 'Growth',
-                description: 'We help cleaners build sustainable careers.'
-              },
-              {
-                icon: Sparkles,
-                title: 'Excellence',
-                description: 'We never stop improving the experience.'
-              }
-            ].map((value, index) => (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full bg-purple-500/5 border-purple-600/30 hover:border-purple-500/50 transition-colors">
+            ].map((side, i) => (
+              <motion.div key={side.badge} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+                <Card className="overflow-hidden border-border/50 hover:shadow-elevated transition-all h-full">
+                  <div className="relative h-52 overflow-hidden">
+                    <img src={side.img} alt={side.badge} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+                    <Badge className={`absolute top-4 left-4 ${side.badgeCls}`}>{side.badge}</Badge>
+                  </div>
                   <CardContent className="p-6">
-                    <value.icon className="h-8 w-8 text-purple-600 dark:text-purple-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">{value.title}</h3>
-                    <p className="text-sm text-muted-foreground">{value.description}</p>
+                    <h3 className="text-2xl font-bold mb-4">{side.title}</h3>
+                    <div className="space-y-2.5 mb-6">
+                      {side.points.map((p, j) => (
+                        <div key={j} className="flex items-center gap-2.5 text-sm">
+                          <div className={`h-6 w-6 rounded-lg ${side.iconBg} flex items-center justify-center flex-shrink-0`}>
+                            <CheckCircle className={`h-3.5 w-3.5 ${side.iconColor}`} />
+                          </div>
+                          {p}
+                        </div>
+                      ))}
+                    </div>
+                    <Button asChild className="w-full rounded-xl">
+                      <Link to={side.href}>{side.cta} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -237,30 +167,49 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Ready to experience the difference?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of happy clients and verified cleaners on PureTask.
-            </p>
+      {/* ── VALUES ────────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-background">
+        <div className="container px-4 sm:px-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <Badge className="mb-4 bg-[hsl(var(--pt-purple)/0.1)] border-[hsl(var(--pt-purple)/0.3)] text-[hsl(var(--pt-purple))] hover:bg-[hsl(var(--pt-purple)/0.1)]">
+              <Heart className="h-3 w-3 mr-1" /> Our Values
+            </Badge>
+            <h2 className="text-4xl sm:text-5xl font-bold">What guides everything we do</h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {VALUES.map((v, i) => (
+              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                <Card className={`h-full bg-gradient-to-br ${v.gradient} border-border/50 hover:shadow-card transition-all`}>
+                  <CardContent className="p-6">
+                    <div className="h-12 w-12 rounded-2xl bg-background/80 flex items-center justify-center mb-4 shadow-soft">
+                      <v.icon className={`h-6 w-6 ${v.iconColor}`} />
+                    </div>
+                    <h3 className="text-lg font-bold mb-2">{v.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-gradient-to-br from-primary/8 via-background to-success/5">
+        <div className="container px-4 sm:px-6 text-center max-w-3xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="h-16 w-16 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <Globe className="h-8 w-8 text-primary" />
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-5">Ready to experience the difference?</h2>
+            <p className="text-xl text-muted-foreground mb-8">Join thousands of happy clients and verified cleaners on PureTask today.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link to="/discover">
-                  Find a Cleaner <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+              <Button size="lg" asChild className="h-14 px-10 rounded-2xl text-base">
+                <Link to="/discover">Find a Cleaner <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10" asChild>
-                <Link to="/auth?role=cleaner">
-                  Become a Cleaner
-                </Link>
+              <Button size="lg" variant="outline" asChild className="h-14 px-10 rounded-2xl text-base border-success/40 text-success hover:bg-success/10">
+                <Link to="/auth?role=cleaner">Become a Cleaner</Link>
               </Button>
             </div>
           </motion.div>
