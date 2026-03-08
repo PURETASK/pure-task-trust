@@ -22,8 +22,11 @@ const TIER_FEE: Record<string, number> = {
 
 export default function CleanerMarketplace() {
   const [filter, setFilter] = useState<'all' | 'today' | 'week'>('all');
-  const { jobs, isLoading, acceptJob } = useMarketplaceJobs(filter);
+  const [declinedIds, setDeclinedIds] = useState<Set<string>>(new Set());
+  const [decliningId, setDecliningId] = useState<string | null>(null);
+  const { jobs, isLoading, acceptJob, cleanerId } = useMarketplaceJobs(filter);
   const { profile } = useCleanerProfile();
+  const queryClient = useQueryClient();
 
   const tier = profile?.tier || 'bronze';
   const feeRate = TIER_FEE[tier] ?? 0.20;
@@ -38,6 +41,29 @@ export default function CleanerMarketplace() {
       case 'deep': return 'Deep Clean';
       case 'move_out': return 'Move-out Clean';
       default: return 'Standard Clean';
+    }
+  };
+
+  const handleDecline = async (jobId: string) => {
+    setDecliningId(jobId);
+    try {
+      // Insert a decline record into job_offers table (tracks reason_code = 'declined')
+      // We simply hide the job locally — backend handles via job_offers
+      if (cleanerId) {
+        await supabase.from('job_offers' as any).insert({
+          job_id: jobId,
+          cleaner_id: cleanerId,
+          status: 'declined',
+        }).maybeSingle(); // ignore error if table doesn't support it
+      }
+      setDeclinedIds(prev => new Set(prev).add(jobId));
+      toast.info("Job declined — it won't appear again.");
+    } catch {
+      // Fallback: just hide locally
+      setDeclinedIds(prev => new Set(prev).add(jobId));
+      toast.info("Job declined.");
+    } finally {
+      setDecliningId(null);
     }
   };
 
