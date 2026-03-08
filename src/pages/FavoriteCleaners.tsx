@@ -120,14 +120,10 @@ export default function FavoriteCleaners() {
                         {/* Cleaner Identity */}
                         <div className="flex-1 p-6">
                           <div className="flex items-start gap-4">
-                            <div className="relative flex-shrink-0">
-                              {favorite.cleaner?.profile_photo_url ? (
-                                <img src={favorite.cleaner.profile_photo_url} alt={name} className="h-16 w-16 rounded-2xl object-cover" />
-                              ) : (
-                                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-2xl font-bold text-primary">
-                                  {name.charAt(0)}
-                                </div>
-                              )}
+                    <div className="relative flex-shrink-0">
+                              <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-2xl font-bold text-primary">
+                                {name.charAt(0)}
+                              </div>
                               {tier === 'platinum' && (
                                 <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center">
                                   <Crown className="h-3 w-3 text-white" />
