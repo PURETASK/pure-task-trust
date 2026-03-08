@@ -15,6 +15,9 @@ export default function Messages() {
   const [selectedThread, setSelectedThread] = useState<MessageThread | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { role } = useUserProfile();
+  // The current user's sender_type so we know which side to align messages
+  const mySenderType = role === 'cleaner' ? 'cleaner' : 'client';
 
   const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThread?.id || '');
   const { sendMessage, isSending, markAsRead } = useMessageActions(selectedThread?.id || '');
