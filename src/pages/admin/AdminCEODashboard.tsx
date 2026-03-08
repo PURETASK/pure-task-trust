@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, AreaChart, Area } from "recharts";
 import { useAdminCEOStats } from "@/hooks/useAdminStats";
+import { RevenueTicker } from "@/components/admin/RevenueTicker";
 
 const chartConfig = {
   revenue: { label: "Revenue (credits)", color: "hsl(var(--primary))" },
