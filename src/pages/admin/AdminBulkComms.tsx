@@ -77,16 +77,16 @@ const AdminBulkComms = () => {
       if (!users || users.length === 0) { toast.error("No users matched your filters"); return; }
 
       if (channel === "in_app" || channel === "both") {
-        const notifications = users.map((u: any) => ({
+        const notificationRows = users.map((u: any) => ({
           user_id: u.user_id,
           type: "promo",
           title: subject,
           message: body,
-          read: false,
+          is_read: false,
         }));
-        // Insert in batches of 100 using RPC to bypass type issues
-        for (let i = 0; i < notifications.length; i += 100) {
-          await supabase.from("in_app_notifications" as any).insert(notifications.slice(i, i + 100));
+        // Insert in batches of 100
+        for (let i = 0; i < notificationRows.length; i += 100) {
+          await (supabase as any).from("notifications").insert(notificationRows.slice(i, i + 100));
         }
       }
 
