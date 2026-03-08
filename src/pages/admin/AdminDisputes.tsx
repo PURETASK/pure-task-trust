@@ -106,7 +106,7 @@ const AdminDisputes = () => {
       const { error } = await supabase
         .from('disputes')
         .update({
-          status,
+          status: status as 'open' | 'investigating' | 'resolved' | 'closed',
           admin_notes: notes || null,
         })
         .eq('id', disputeId);
