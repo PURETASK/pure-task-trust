@@ -132,6 +132,9 @@ const adminNavItems = [
       { title: "Finance", url: "/admin/finance", icon: DollarSign },
       { title: "Growth", url: "/admin/growth", icon: Users },
       { title: "Performance", url: "/admin/performance", icon: Star },
+      { title: "Conversions", url: "/admin/conversions", icon: PieChart },
+      { title: "Cohort Analysis", url: "/admin/cohort-analysis", icon: BarChart3 },
+      { title: "Geo Insights", url: "/admin/geo-insights", icon: MapPin },
     ]
   },
   {
@@ -141,16 +144,20 @@ const adminNavItems = [
       { title: "Fraud Alerts", url: "/admin/fraud-alerts", icon: AlertTriangle },
       { title: "Disputes", url: "/admin/disputes", icon: FileText },
       { title: "Client Risk", url: "/admin/client-risk", icon: Users },
+      { title: "ID Verifications", url: "/admin/id-verifications", icon: CheckCircle },
       { title: "Reports", url: "/admin/trust-safety-reports", icon: PieChart },
     ]
   },
   {
     group: "Management",
     items: [
+      { title: "Users", url: "/admin/users", icon: Users },
       { title: "Bookings", url: "/admin/bookings", icon: Calendar },
       { title: "Client Jobs", url: "/admin/client-jobs", icon: Briefcase },
       { title: "Pricing Rules", url: "/admin/pricing-rules", icon: CreditCard },
       { title: "Pricing Mgmt", url: "/admin/pricing", icon: DollarSign },
+      { title: "Bulk Comms", url: "/admin/bulk-comms", icon: MessageSquare },
+      { title: "Platform Config", url: "/admin/platform-config", icon: Settings },
     ]
   }
 ];
