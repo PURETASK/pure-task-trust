@@ -116,7 +116,7 @@ export default function CleanerMarketplace() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {jobs.map((job) => {
+            {jobs.filter(j => !declinedIds.has(j.id)).map((job) => {
               const gross = job.escrow_credits_reserved || 0;
               const net = getNetEarnings(gross);
               return (
@@ -170,23 +170,39 @@ export default function CleanerMarketplace() {
                             <span className="ml-1 line-through opacity-50">${gross}</span>
                           </p>
                         </div>
-                        <Button
-                          onClick={() => acceptJob.mutate(job.id)}
-                          disabled={acceptJob.isPending}
-                          className="gap-2"
-                        >
-                          {acceptJob.isPending ? (
-                            <>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDecline(job.id)}
+                            disabled={decliningId === job.id || acceptJob.isPending}
+                            className="gap-1.5 text-muted-foreground"
+                          >
+                            {decliningId === job.id ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              Accepting...
-                            </>
-                          ) : (
-                            <>
-                              <DollarSign className="h-4 w-4" />
-                              Accept Job
-                            </>
-                          )}
-                        </Button>
+                            ) : (
+                              <X className="h-4 w-4" />
+                            )}
+                            Decline
+                          </Button>
+                          <Button
+                            onClick={() => acceptJob.mutate(job.id)}
+                            disabled={acceptJob.isPending || decliningId === job.id}
+                            className="gap-2"
+                          >
+                            {acceptJob.isPending ? (
+                              <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Accepting...
+                              </>
+                            ) : (
+                              <>
+                                <DollarSign className="h-4 w-4" />
+                                Accept Job
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
