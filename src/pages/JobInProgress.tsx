@@ -11,11 +11,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const timelineSteps = [
-  { id: "accepted", label: "Confirmed", desc: "Cleaner accepted your booking", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed', 'pending_approval'] },
-  { id: "onway", label: "On the Way", desc: "Cleaner is heading to you", statusMatch: ['on_way', 'arrived', 'in_progress', 'completed', 'pending_approval'] },
-  { id: "checkedin", label: "Arrived & Checked In", desc: "GPS verified arrival", statusMatch: ['arrived', 'in_progress', 'completed', 'pending_approval'] },
-  { id: "inprogress", label: "Cleaning in Progress", desc: "Active service underway", statusMatch: ['in_progress', 'completed', 'pending_approval'] },
-  { id: "complete", label: "Job Complete", desc: "Ready for your review", statusMatch: ['completed', 'pending_approval'] },
+  { id: "accepted", label: "Confirmed", desc: "Cleaner accepted your booking", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed'] },
+  { id: "onway", label: "On the Way", desc: "Cleaner is heading to you", statusMatch: ['on_way', 'arrived', 'in_progress', 'completed'] },
+  { id: "checkedin", label: "Arrived & Checked In", desc: "GPS verified arrival", statusMatch: ['arrived', 'in_progress', 'completed'] },
+  { id: "inprogress", label: "Cleaning in Progress", desc: "Active service underway", statusMatch: ['in_progress', 'completed'] },
+  { id: "complete", label: "Job Complete", desc: "Ready for your review", statusMatch: ['completed'] },
 ];
 
 export default function JobInProgress() {
