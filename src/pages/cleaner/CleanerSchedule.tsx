@@ -352,6 +352,39 @@ export default function CleanerSchedule() {
             )}
           </div>
         </div>
+
+        {/* Schedule Gap Filler */}
+        {gaps.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="font-semibold flex items-center gap-2 text-primary">
+              <Zap className="h-4 w-4" />
+              Free Time Gaps — Fill Your Schedule
+            </h3>
+            {gaps.map((gap, i) => (
+              <Card key={i} className="border-primary/30 bg-primary/5">
+                <CardContent className="p-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">
+                        {gap.gapHours}h gap — {format(gap.gapStart, "h:mm a")} to {format(gap.gapEnd, "h:mm a")}
+                      </p>
+                      <p className="text-xs text-muted-foreground">You could fit a job in this window</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" className="gap-1.5 flex-shrink-0" asChild>
+                    <Link to="/cleaner/marketplace">
+                      <Search className="h-3.5 w-3.5" />
+                      Find Jobs
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </CleanerLayout>
   );
