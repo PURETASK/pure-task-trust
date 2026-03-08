@@ -87,7 +87,7 @@ const clientNavGroups: NavGroup[] = [
     group: "My Bookings",
     items: [
       { title: "Properties", url: "/properties", icon: Building },
-      { title: "Recurring Plans", url: "/recurring-plans", icon: Repeat },
+      { title: "Recurring Plans", url: "/recurring-plans", icon: RefreshCcw },
       { title: "Reschedule Requests", url: "/reschedule-requests", icon: CalendarClock },
       { title: "Favorite Cleaners", url: "/favorites", icon: Heart },
       { title: "Reviews", url: "/reviews", icon: Star },
