@@ -168,6 +168,7 @@ const App = () => (
                      <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
                      <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                      <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
+                     <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
