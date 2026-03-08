@@ -224,7 +224,7 @@ export function AppSidebar() {
                             <TooltipTrigger asChild>
                               <NavLink
                                 to={item.url}
-                                end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                                end={isEnd(item.url)}
                                 className={`flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                                   isActive(item.url)
                                     ? "bg-primary/10 text-primary"
@@ -242,7 +242,7 @@ export function AppSidebar() {
                         ) : (
                           <NavLink
                             to={item.url}
-                            end={item.url === "/" || item.url === "/dashboard" || item.url === "/cleaner/dashboard"}
+                            end={isEnd(item.url)}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                               isActive(item.url)
                                 ? "bg-primary/10 text-primary"
