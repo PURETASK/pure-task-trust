@@ -87,9 +87,9 @@ import AdminGeoInsights from "./pages/admin/AdminGeoInsights";
 import AdminCohortAnalysis from "./pages/admin/AdminCohortAnalysis";
 import AdminBulkComms from "./pages/admin/AdminBulkComms";
 import AdminPlatformConfig from "./pages/admin/AdminPlatformConfig";
-import { ExitIntentPopup } from "@/components/conversion";
-import { ScrollToTop } from "@/components/layout/ScrollToTop";
-import Notifications from "./pages/Notifications";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import CleanerSettings from "./pages/cleaner/CleanerSettings";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 const queryClient = new QueryClient();
 
