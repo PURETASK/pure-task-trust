@@ -8,6 +8,7 @@ import { Send, Calendar, Loader2, MessageCircle, ArrowLeft } from "lucide-react"
 import { useMessageThreads, useThreadMessages, useMessageActions, type MessageThread } from "@/hooks/useMessages";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function Messages() {
   const { data: threads, isLoading: threadsLoading } = useMessageThreads();

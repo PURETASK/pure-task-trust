@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Check, Clock, AlertTriangle, ArrowLeft, ArrowRight, Sparkles, Loader2, ImageOff } from "lucide-react";
+import { Check, Clock, AlertTriangle, ArrowLeft, ArrowRight, Sparkles, Loader2, ImageOff, Star } from "lucide-react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useJob, useJobActions } from "@/hooks/useJob";
 import { useJobPhotos } from "@/hooks/useJobPhotos";
+import { useJobReview, useCreateReview } from "@/hooks/useReviews";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,32 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
+function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onChange(star)}
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
+          className="p-0.5 transition-transform hover:scale-110"
+        >
+          <Star
+            className={`h-8 w-8 transition-colors ${
+              star <= (hovered || value)
+                ? "fill-warning text-warning"
+                : "text-muted-foreground"
+            }`}
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -25,17 +52,22 @@ export default function JobApproval() {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [issueOpen, setIssueOpen] = useState(false);
   const [issueDescription, setIssueDescription] = useState("");
-  
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [reviewText, setReviewText] = useState("");
+
   const { data: job, isLoading, error } = useJob(id || '');
   const { approveJob, isApproving, reportIssue, isReportingIssue } = useJobActions(id || '');
   const { data: jobPhotos, isLoading: loadingPhotos } = useJobPhotos(id || '');
+  const { data: existingReview } = useJobReview(id || '');
+  const createReview = useCreateReview();
 
-  // Filter photos by type (database column or URL fallback)
+  // Filter photos by type
   const allPhotos = jobPhotos || [];
-  const beforePhotos = allPhotos.filter(p => 
+  const beforePhotos = allPhotos.filter(p =>
     p.photo_type === 'before' || p.photo_url.includes('/before-')
   );
-  const afterPhotos = allPhotos.filter(p => 
+  const afterPhotos = allPhotos.filter(p =>
     p.photo_type === 'after' || p.photo_url.includes('/after-')
   );
   const hasPhotos = beforePhotos.length > 0 || afterPhotos.length > 0;
@@ -63,7 +95,7 @@ export default function JobApproval() {
     );
   }
 
-  const cleanerName = job.cleaner 
+  const cleanerName = job.cleaner
     ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Your Cleaner'
     : 'Cleaner';
 
@@ -80,7 +112,12 @@ export default function JobApproval() {
         title: "Payment released!",
         description: `${creditsCharged} credits released to ${cleanerName}`,
       });
-      navigate("/dashboard");
+      // Open review dialog after approval if not already reviewed
+      if (!existingReview) {
+        setReviewOpen(true);
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -88,6 +125,27 @@ export default function JobApproval() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleSubmitReview = async () => {
+    if (!job.cleaner_id) return;
+    try {
+      await createReview.mutateAsync({
+        jobId: id!,
+        cleanerId: job.cleaner_id,
+        rating,
+        reviewText: reviewText.trim() || undefined,
+      });
+      setReviewOpen(false);
+      navigate("/dashboard");
+    } catch {
+      // error toast handled in hook
+    }
+  };
+
+  const handleSkipReview = () => {
+    setReviewOpen(false);
+    navigate("/dashboard");
   };
 
   const handleReportIssue = async () => {
@@ -176,8 +234,7 @@ export default function JobApproval() {
                       <Badge variant="success" className="absolute top-3 right-3">After</Badge>
                     </div>
                   </div>
-                  
-                  {/* Photo Navigation */}
+
                   {maxPhotos > 1 && (
                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-full px-3 py-1.5">
                       <button
@@ -247,9 +304,9 @@ export default function JobApproval() {
           </Card>
 
           {/* Actions */}
-          <Button 
-            variant="success" 
-            size="lg" 
+          <Button
+            variant="success"
+            size="lg"
             className="w-full mb-3"
             onClick={handleApprove}
             disabled={isApproving}
@@ -292,8 +349,8 @@ export default function JobApproval() {
                   <Button variant="outline" className="flex-1" onClick={() => setIssueOpen(false)}>
                     Cancel
                   </Button>
-                  <Button 
-                    className="flex-1" 
+                  <Button
+                    className="flex-1"
                     onClick={handleReportIssue}
                     disabled={isReportingIssue}
                   >
@@ -304,6 +361,48 @@ export default function JobApproval() {
                       </>
                     ) : (
                       'Submit Report'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Post-approval review dialog */}
+          <Dialog open={reviewOpen} onOpenChange={(open) => { if (!open) handleSkipReview(); }}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="text-center text-xl">Rate your experience</DialogTitle>
+                <DialogDescription className="text-center">
+                  How did {cleanerName} do? Your feedback helps the whole community.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col items-center gap-5 py-2">
+                <StarRating value={rating} onChange={setRating} />
+                <div className="w-full">
+                  <Textarea
+                    placeholder="Tell others about your experience (optional)..."
+                    className="min-h-[90px] resize-none"
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                  />
+                </div>
+                <div className="flex gap-3 w-full">
+                  <Button variant="outline" className="flex-1" onClick={handleSkipReview}>
+                    Skip
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    onClick={handleSubmitReview}
+                    disabled={createReview.isPending || rating === 0}
+                  >
+                    {createReview.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Star className="h-4 w-4 mr-2" />
+                        Submit Review
+                      </>
                     )}
                   </Button>
                 </div>

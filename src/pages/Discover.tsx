@@ -40,6 +40,7 @@ export default function Discover() {
     searchQuery,
     onlyAvailable,
     minRating: minRating > 0 ? minRating : undefined,
+    maxRate: maxPrice < 100 ? maxPrice : undefined,
   });
 
   const { data: favorites } = useFavorites();
@@ -47,8 +48,16 @@ export default function Discover() {
 
   const favoriteCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
 
-  // Filter by max price on client side
-  const filteredCleaners = cleaners?.filter(c => c.hourlyRate <= maxPrice);
+  // Smart Match: sort by composite score (rating * 0.5 + reliabilityScore/100 * 0.5)
+  const filteredCleaners = cleaners
+    ? smartMatch
+      ? [...cleaners].sort((a, b) => {
+          const scoreA = ((a.avgRating || 0) / 5) * 0.5 + (a.reliabilityScore / 100) * 0.5;
+          const scoreB = ((b.avgRating || 0) / 5) * 0.5 + (b.reliabilityScore / 100) * 0.5;
+          return scoreB - scoreA;
+        })
+      : cleaners
+    : [];
 
   const getInitials = (name: string) => {
     const parts = name.split(' ').filter(Boolean);
