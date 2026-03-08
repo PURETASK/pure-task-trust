@@ -24,11 +24,11 @@ export default function CleanerJobs() {
       case 'confirmed':
         return <Badge variant="default">Confirmed</Badge>;
       case 'on_way':
-        return <Badge className="bg-[hsl(210,100%,56%)]">On the Way</Badge>;
+        return <Badge className="bg-primary text-primary-foreground">On the Way</Badge>;
       case 'arrived':
-        return <Badge className="bg-[hsl(243,75%,59%)]">Arrived</Badge>;
+        return <Badge className="bg-accent text-accent-foreground">Arrived</Badge>;
       case 'in_progress':
-        return <Badge className="bg-[hsl(262,83%,58%)]">In Progress</Badge>;
+        return <Badge className="bg-primary/80 text-primary-foreground">In Progress</Badge>;
       case 'completed':
         return <Badge variant="success">Completed</Badge>;
       default:
@@ -87,7 +87,7 @@ export default function CleanerJobs() {
               {getStatusBadge(job.status)}
             </div>
             <p className="text-sm text-muted-foreground mb-2">
-              {job.client?.first_name} {job.client?.last_name}
+              Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
             </p>
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">

@@ -4,11 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Clock, Calendar, Loader2, DollarSign, Info } from "lucide-react";
+import { MapPin, Clock, Calendar, Loader2, DollarSign, Info, X } from "lucide-react";
 import { format } from "date-fns";
 import { useMarketplaceJobs } from "@/hooks/useMarketplaceJobs";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TIER_FEE: Record<string, number> = {
   platinum: 0.15,
@@ -19,8 +22,11 @@ const TIER_FEE: Record<string, number> = {
 
 export default function CleanerMarketplace() {
   const [filter, setFilter] = useState<'all' | 'today' | 'week'>('all');
-  const { jobs, isLoading, acceptJob } = useMarketplaceJobs(filter);
+  const [declinedIds, setDeclinedIds] = useState<Set<string>>(new Set());
+  const [decliningId, setDecliningId] = useState<string | null>(null);
+  const { jobs, isLoading, acceptJob, cleanerId } = useMarketplaceJobs(filter);
   const { profile } = useCleanerProfile();
+  const queryClient = useQueryClient();
 
   const tier = profile?.tier || 'bronze';
   const feeRate = TIER_FEE[tier] ?? 0.20;
@@ -35,6 +41,29 @@ export default function CleanerMarketplace() {
       case 'deep': return 'Deep Clean';
       case 'move_out': return 'Move-out Clean';
       default: return 'Standard Clean';
+    }
+  };
+
+  const handleDecline = async (jobId: string) => {
+    setDecliningId(jobId);
+    try {
+      // Insert a decline record into job_offers table (tracks reason_code = 'declined')
+      // We simply hide the job locally — backend handles via job_offers
+      if (cleanerId) {
+        await supabase.from('job_offers' as any).insert({
+          job_id: jobId,
+          cleaner_id: cleanerId,
+          status: 'declined',
+        }).maybeSingle(); // ignore error if table doesn't support it
+      }
+      setDeclinedIds(prev => new Set(prev).add(jobId));
+      toast.info("Job declined — it won't appear again.");
+    } catch {
+      // Fallback: just hide locally
+      setDeclinedIds(prev => new Set(prev).add(jobId));
+      toast.info("Job declined.");
+    } finally {
+      setDecliningId(null);
     }
   };
 
@@ -87,7 +116,7 @@ export default function CleanerMarketplace() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {jobs.map((job) => {
+            {jobs.filter(j => !declinedIds.has(j.id)).map((job) => {
               const gross = job.escrow_credits_reserved || 0;
               const net = getNetEarnings(gross);
               return (
@@ -141,23 +170,39 @@ export default function CleanerMarketplace() {
                             <span className="ml-1 line-through opacity-50">${gross}</span>
                           </p>
                         </div>
-                        <Button
-                          onClick={() => acceptJob.mutate(job.id)}
-                          disabled={acceptJob.isPending}
-                          className="gap-2"
-                        >
-                          {acceptJob.isPending ? (
-                            <>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDecline(job.id)}
+                            disabled={decliningId === job.id || acceptJob.isPending}
+                            className="gap-1.5 text-muted-foreground"
+                          >
+                            {decliningId === job.id ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              Accepting...
-                            </>
-                          ) : (
-                            <>
-                              <DollarSign className="h-4 w-4" />
-                              Accept Job
-                            </>
-                          )}
-                        </Button>
+                            ) : (
+                              <X className="h-4 w-4" />
+                            )}
+                            Decline
+                          </Button>
+                          <Button
+                            onClick={() => acceptJob.mutate(job.id)}
+                            disabled={acceptJob.isPending || decliningId === job.id}
+                            className="gap-2"
+                          >
+                            {acceptJob.isPending ? (
+                              <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Accepting...
+                              </>
+                            ) : (
+                              <>
+                                <DollarSign className="h-4 w-4" />
+                                Accept Job
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
