@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
@@ -153,11 +153,21 @@ export default function Dashboard() {
                                   <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                                   {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
                                 </span>
-                                <span className="font-medium text-foreground">${job.escrow_credits_reserved || 0}</span>
+                                <span className="font-medium text-foreground">{job.escrow_credits_reserved || 0} credits</span>
                               </div>
-                              <Button variant="outline" size="sm" asChild className="text-xs sm:text-sm h-8">
-                                <Link to={`/booking/${job.id}`}>View</Link>
-                              </Button>
+                              <div className="flex items-center gap-2">
+                                {job.cleaner && (
+                                  <Button variant="ghost" size="sm" asChild className="text-xs sm:text-sm h-8">
+                                    <Link to={`/messages?job=${job.id}`}>
+                                      <MessageCircle className="h-3.5 w-3.5 mr-1" />
+                                      Message
+                                    </Link>
+                                  </Button>
+                                )}
+                                <Button variant="outline" size="sm" asChild className="text-xs sm:text-sm h-8">
+                                  <Link to={`/booking/${job.id}`}>View</Link>
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         </CardContent>
@@ -264,6 +274,14 @@ export default function Dashboard() {
                             </div>
                             <div className="flex items-center gap-3">
                               {getStatusBadge(job.status)}
+                              {job.status === 'completed' && (
+                                <Button variant="outline" size="sm" asChild>
+                                  <Link to={`/reviews?job=${job.id}`}>
+                                    <Star className="h-3.5 w-3.5 mr-1" />
+                                    Review
+                                  </Link>
+                                </Button>
+                              )}
                               <Button variant="outline" size="sm" asChild>
                                 <Link to={`/booking/${job.id}`}>View Details</Link>
                               </Button>
