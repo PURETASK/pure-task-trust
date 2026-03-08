@@ -6,10 +6,9 @@ import {
   Users, User, Star, MapPin, Briefcase, TrendingUp, Shield, Settings,
   Heart, CalendarClock, Award, Link2, CheckCircle, BarChart3, Building,
   CreditCard, AlertTriangle, FileText, Activity, PieChart, Scale,
-  Sparkles, Home, Tag, HelpCircle, Zap, Target, Bot, BookOpen,
+  Sparkles, Home, Tag, HelpCircle, Target, Bot, BookOpen,
   Bell, Clock, BarChart2, Globe, UserCheck, Layers, ChevronRight,
-  ShoppingCart, RefreshCw, Flag, ClipboardList, Repeat, ReceiptText,
-  BadgeCheck, Handshake, GanttChart, Lightbulb, LucideIcon
+  RefreshCw, ListChecks, ShieldAlert, LucideIcon
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
