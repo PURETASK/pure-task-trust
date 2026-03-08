@@ -8,12 +8,16 @@ import { Send, Calendar, Loader2, MessageCircle, ArrowLeft } from "lucide-react"
 import { useMessageThreads, useThreadMessages, useMessageActions, type MessageThread } from "@/hooks/useMessages";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function Messages() {
   const { data: threads, isLoading: threadsLoading } = useMessageThreads();
   const [selectedThread, setSelectedThread] = useState<MessageThread | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { role } = useUserProfile();
+  // The current user's sender_type so we know which side to align messages
+  const mySenderType = role === 'cleaner' ? 'cleaner' : 'client';
 
   const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThread?.id || '');
   const { sendMessage, isSending, markAsRead } = useMessageActions(selectedThread?.id || '');
@@ -171,31 +175,34 @@ export default function Messages() {
                             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                           </div>
                         ) : messages && messages.length > 0 ? (
-                          messages.map((msg) => (
-                            <div
-                              key={msg.id}
-                              className={`flex ${msg.sender_type === "client" ? "justify-end" : "justify-start"}`}
-                            >
+                          messages.map((msg) => {
+                            const isMine = msg.sender_type === mySenderType;
+                            return (
                               <div
-                                className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                                  msg.sender_type === "client"
-                                    ? "bg-primary text-primary-foreground rounded-br-none"
-                                    : "bg-secondary rounded-bl-none"
-                                }`}
+                                key={msg.id}
+                                className={`flex ${isMine ? "justify-end" : "justify-start"}`}
                               >
-                                <p className="text-sm">{msg.body}</p>
-                                <p
-                                  className={`text-xs mt-1 ${
-                                    msg.sender_type === "client"
-                                      ? "text-primary-foreground/70"
-                                      : "text-muted-foreground"
+                                <div
+                                  className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                                    isMine
+                                      ? "bg-primary text-primary-foreground rounded-br-none"
+                                      : "bg-secondary rounded-bl-none"
                                   }`}
                                 >
-                                  {format(new Date(msg.created_at), 'h:mm a')}
-                                </p>
+                                  <p className="text-sm">{msg.body}</p>
+                                  <p
+                                    className={`text-xs mt-1 ${
+                                      isMine
+                                        ? "text-primary-foreground/70"
+                                        : "text-muted-foreground"
+                                    }`}
+                                  >
+                                    {format(new Date(msg.created_at), 'h:mm a')}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          ))
+                            );
+                          })
                         ) : (
                           <div className="flex items-center justify-center h-full text-muted-foreground">
                             No messages yet. Start the conversation!

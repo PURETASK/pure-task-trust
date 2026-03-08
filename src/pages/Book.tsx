@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap } from "lucide-react";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff } from "lucide-react";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +16,7 @@ import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
 import { AddressVerification } from "@/components/booking/AddressVerification";
 import { Address, useAddresses } from "@/hooks/useAddresses";
-import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
+import { setHours as setDateHours, setMinutes as setDateMinutes, getDay } from "date-fns";
 import { 
   isSameDayBooking, 
   isCleaningTypeAllowedSameDay, 
@@ -24,6 +24,8 @@ import {
   validateSameDayBooking,
   SAME_DAY_CONFIG 
 } from "@/lib/same-day-booking";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const cleaningTypes = [
   {
@@ -76,6 +78,21 @@ export default function Book() {
   const { data: selectedCleaner } = useCleaner(cleanerId || '');
   const { data: savedAddresses } = useAddresses();
 
+  // Fetch cleaner's availability blocks for validation
+  const { data: availabilityBlocks } = useQuery({
+    queryKey: ['cleaner-availability-blocks', cleanerId],
+    queryFn: async () => {
+      if (!cleanerId) return [];
+      const { data } = await supabase
+        .from('availability_blocks')
+        .select('day_of_week, start_time, end_time, is_active')
+        .eq('cleaner_id', cleanerId)
+        .eq('is_active', true);
+      return data || [];
+    },
+    enabled: !!cleanerId,
+  });
+
   // Auto-select default or first address when addresses load
   useEffect(() => {
     if (savedAddresses && savedAddresses.length > 0 && !selectedAddress) {
@@ -99,6 +116,16 @@ export default function Book() {
 
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
+  
+  // Check if the selected date/time is blocked by the cleaner's availability
+  const isDateBlockedByCleaner = (() => {
+    if (!selectedDate || !cleanerId || !availabilityBlocks || availabilityBlocks.length === 0) return false;
+    // day_of_week: 0=Sun, 1=Mon … 6=Sat (same as getDay)
+    const dayOfWeek = getDay(selectedDate);
+    const hasBlockForDay = availabilityBlocks.some(b => b.day_of_week === dayOfWeek);
+    // If cleaner has blocks and none match this day, day is unavailable
+    return !hasBlockForDay;
+  })();
   
   // Check if selected cleaning type is allowed for same-day booking
   const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
@@ -448,6 +475,23 @@ export default function Book() {
                       </Card>
                     )}
 
+                    {/* Cleaner availability warning */}
+                    {cleanerId && selectedDate && isDateBlockedByCleaner && (
+                      <Card className="bg-warning/10 border-warning/30">
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <CalendarOff className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="font-medium text-sm">Cleaner Unavailable on This Day</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {selectedCleaner?.name || 'This cleaner'} doesn't work on {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}s. Please choose a different date.
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
                     <AddressSelector
                       selectedAddressId={selectedAddress?.id}
                       onSelect={setSelectedAddress}
@@ -469,7 +513,7 @@ export default function Book() {
                         className="flex-1" 
                         size="lg" 
                         onClick={() => setStep(5)}
-                        disabled={!canProceedToVerification || !isCleaningTypeAllowed}
+                        disabled={!canProceedToVerification || !isCleaningTypeAllowed || isDateBlockedByCleaner}
                       >
                         Continue
                         <ArrowRight className="ml-2 h-4 w-4" />

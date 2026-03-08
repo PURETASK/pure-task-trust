@@ -32,6 +32,15 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
     await onSubmit({ hourlyRate, travelRadius });
   };
 
+  // Determine tier and allowed range based on initial hourly rate
+  const getTierInfo = (rate: number) => {
+    if (rate >= 50) return { tier: 'Platinum', min: 50, max: 100, color: 'text-purple-500' };
+    if (rate >= 40) return { tier: 'Gold', min: 40, max: 65, color: 'text-yellow-500' };
+    if (rate >= 30) return { tier: 'Silver', min: 30, max: 50, color: 'text-slate-400' };
+    return { tier: 'Bronze', min: 20, max: 35, color: 'text-orange-500' };
+  };
+  const tierInfo = getTierInfo(hourlyRate);
+
   return (
     <Card className="border-0 shadow-none">
       <CardHeader className="text-center pb-2">
@@ -45,6 +54,26 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Tier explanation banner */}
+          <div className="rounded-lg border border-border bg-muted/40 p-3 text-sm space-y-1">
+            <p className="font-medium">💡 How rates work</p>
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              Your allowed rate range is tied to your <span className="font-medium">reliability tier</span>. As you complete more jobs and earn higher ratings, your tier increases — unlocking higher rate ceilings. New cleaners start at <span className="font-medium">Bronze ($20–$35/hr)</span>.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {[
+                { label: 'Bronze', range: '$20–35', color: 'bg-orange-100 text-orange-700' },
+                { label: 'Silver', range: '$30–50', color: 'bg-slate-100 text-slate-600' },
+                { label: 'Gold', range: '$40–65', color: 'bg-yellow-100 text-yellow-700' },
+                { label: 'Platinum', range: '$50–100', color: 'bg-purple-100 text-purple-700' },
+              ].map(t => (
+                <span key={t.label} className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${t.color}`}>
+                  {t.label}: {t.range}
+                </span>
+              ))}
+            </div>
+          </div>
+
           {/* Hourly Rate */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">

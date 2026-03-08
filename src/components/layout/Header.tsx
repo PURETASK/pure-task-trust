@@ -31,6 +31,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -118,6 +119,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             {isAuthenticated && <NotificationBell />}
+            {isAuthenticated && user?.role === 'admin' && <AdminAlertsBadge />}
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
