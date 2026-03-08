@@ -10,6 +10,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const timelineSteps = [
   { id: "accepted", label: "Accepted", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed', 'pending_approval'] },
