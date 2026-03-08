@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, AreaChart, Area } from "recharts";
 import { useAdminCEOStats } from "@/hooks/useAdminStats";
+import { RevenueTicker } from "@/components/admin/RevenueTicker";
 
 const chartConfig = {
   revenue: { label: "Revenue (credits)", color: "hsl(var(--primary))" },
@@ -50,6 +51,9 @@ const AdminCEODashboard = () => {
             Refresh
           </Button>
         </div>
+
+        {/* Live Revenue Ticker */}
+        <RevenueTicker />
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

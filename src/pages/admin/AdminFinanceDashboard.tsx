@@ -1,13 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DollarSign, TrendingUp, Wallet, RefreshCcw, ArrowDownRight, PiggyBank, CreditCard, RefreshCw } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { DollarSign, TrendingUp, Wallet, RefreshCcw, ArrowDownRight, PiggyBank, CreditCard, RefreshCw, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { useAdminFinanceStats } from "@/hooks/useAdminStats";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format, startOfMonth, subMonths } from "date-fns";
 
 const chartConfig = {
   revenue: { label: "Revenue (cr)", color: "hsl(var(--chart-1))" },
@@ -15,13 +18,59 @@ const chartConfig = {
   amount: { label: "Amount", color: "hsl(var(--primary))" },
 };
 
-// Tier fee breakdown (illustrative from known constants)
 const TIER_FEE_DATA = [
   { name: 'Platinum (15%)', value: 15, fill: 'hsl(210, 100%, 60%)' },
   { name: 'Gold (16%)', value: 16, fill: 'hsl(45, 100%, 55%)' },
   { name: 'Silver (18%)', value: 18, fill: 'hsl(220, 15%, 65%)' },
   { name: 'Bronze (20%)', value: 20, fill: 'hsl(25, 80%, 50%)' },
 ];
+
+function ReconciliationWidget() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["payout-reconciliation-latest"],
+    queryFn: async () => {
+      const now = new Date();
+      const monthStart = startOfMonth(now).toISOString();
+      const prevMonthStart = startOfMonth(subMonths(now, 1)).toISOString();
+
+      const [earnings, payouts] = await Promise.all([
+        supabase.from("cleaner_earnings").select("net_credits").gte("created_at", prevMonthStart).lt("created_at", monthStart),
+        supabase.from("payout_requests").select("amount_credits, status").gte("requested_at", prevMonthStart).lt("requested_at", monthStart).eq("status", "completed"),
+      ]);
+
+      const expected = (earnings.data || []).reduce((s, e) => s + (e.net_credits || 0), 0);
+      const actual = (payouts.data || []).reduce((s, p) => s + (p.amount_credits || 0), 0);
+      const discrepancy = Math.abs(expected - actual);
+      const isClean = discrepancy <= 1;
+
+      return { expected, actual, discrepancy, isClean, period: format(subMonths(now, 1), "MMMM yyyy") };
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+
+  if (isLoading) return <Skeleton className="h-24 rounded-xl" />;
+
+  return (
+    <div className={`p-4 rounded-xl border flex items-start gap-4 ${data?.isClean ? "border-success/30 bg-success/5" : "border-warning/30 bg-warning/5"}`}>
+      <div className={`h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 ${data?.isClean ? "bg-success/10" : "bg-warning/10"}`}>
+        {data?.isClean
+          ? <CheckCircle2 className="h-5 w-5 text-success" />
+          : <AlertTriangle className="h-5 w-5 text-warning" />}
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-sm">Last Reconciliation — {data?.period}</p>
+          <Badge variant={data?.isClean ? "default" : "secondary"} className="text-xs">
+            {data?.isClean ? "✅ Clean" : `⚠️ ${data?.discrepancy} cr discrepancy`}
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Expected: {(data?.expected || 0).toLocaleString()} cr · Actual paid: {(data?.actual || 0).toLocaleString()} cr
+        </p>
+      </div>
+    </div>
+  );
+}
 
 const AdminFinanceDashboard = () => {
   const { data, isLoading, refetch } = useAdminFinanceStats();
@@ -42,6 +91,11 @@ const AdminFinanceDashboard = () => {
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
+        </div>
+
+        {/* Reconciliation Widget */}
+        <div className="mb-6">
+          <ReconciliationWidget />
         </div>
 
         {/* Key Metrics */}
@@ -137,7 +191,6 @@ const AdminFinanceDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Revenue Breakdown Donut by Tier */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><PiggyBank className="h-5 w-5 text-primary" />Revenue Split by Tier</CardTitle>
@@ -146,27 +199,11 @@ const AdminFinanceDashboard = () => {
             <CardContent>
               <div className="h-[300px] flex items-center justify-center">
                 <PieChart width={260} height={260}>
-                  <Pie
-                    data={TIER_FEE_DATA}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={3}
-                    dataKey="value"
-                    label={({ name, value }) => `${value}%`}
-                  >
-                    {TIER_FEE_DATA.map((entry, i) => (
-                      <Cell key={i} fill={entry.fill} />
-                    ))}
+                  <Pie data={TIER_FEE_DATA} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value" label={({ value }) => `${value}%`}>
+                    {TIER_FEE_DATA.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
                   </Pie>
-                  <Legend
-                    formatter={(value) => <span className="text-xs text-foreground">{value}</span>}
-                  />
-                  <ChartTooltip
-                    formatter={(value) => [`${value}% fee`, 'Platform Rate']}
-                    contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }}
-                  />
+                  <Legend formatter={(value) => <span className="text-xs text-foreground">{value}</span>} />
+                  <ChartTooltip formatter={(value) => [`${value}% fee`, 'Platform Rate']} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
                 </PieChart>
               </div>
             </CardContent>

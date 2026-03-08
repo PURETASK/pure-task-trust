@@ -83,6 +83,10 @@ import AdminClientRisk from "./pages/admin/AdminClientRisk";
 import AdminTrustSafetyReports from "./pages/admin/AdminTrustSafetyReports";
 import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
 import AdminConversionDashboard from "./pages/admin/AdminConversionDashboard";
+import AdminGeoInsights from "./pages/admin/AdminGeoInsights";
+import AdminCohortAnalysis from "./pages/admin/AdminCohortAnalysis";
+import AdminBulkComms from "./pages/admin/AdminBulkComms";
+import AdminPlatformConfig from "./pages/admin/AdminPlatformConfig";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import Notifications from "./pages/Notifications";
@@ -155,7 +159,11 @@ const App = () => (
                     <Route path="/admin/client-risk" element={<RequireAdmin><AdminClientRisk /></RequireAdmin>} />
                     <Route path="/admin/trust-safety-reports" element={<RequireAdmin><AdminTrustSafetyReports /></RequireAdmin>} />
                     <Route path="/admin/id-verifications" element={<RequireAdmin><AdminIDVerifications /></RequireAdmin>} />
-                    <Route path="/admin/conversions" element={<RequireAdmin><AdminConversionDashboard /></RequireAdmin>} />
+                     <Route path="/admin/conversions" element={<RequireAdmin><AdminConversionDashboard /></RequireAdmin>} />
+                     <Route path="/admin/geo-insights" element={<RequireAdmin><AdminGeoInsights /></RequireAdmin>} />
+                     <Route path="/admin/cohort-analysis" element={<RequireAdmin><AdminCohortAnalysis /></RequireAdmin>} />
+                     <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
+                     <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                     
                     {/* Client routes */}
                     <Route path="/dashboard" element={
