@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff, Calendar, MapPin, CreditCard } from "lucide-react";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff, Calendar, MapPin, CreditCard, ExternalLink, Wallet } from "lucide-react";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,8 @@ import {
 } from "@/lib/same-day-booking";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const SERVICE_CHARGE_PCT = 0.15;
 
 const cleaningTypes = [
   {
@@ -64,7 +66,7 @@ export default function Book() {
   const cleanerId = searchParams.get('cleaner');
   
   const [step, setStep] = useState(1);
-  const [confirmedJob, setConfirmedJob] = useState<{ id: string; type: string; date?: string; address?: string; credits: number } | null>(null);
+  const [confirmedJob, setConfirmedJob] = useState<{ id: string; type: string; date?: string; address?: string; credits: number; paymentMode?: string } | null>(null);
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
@@ -140,23 +142,25 @@ export default function Book() {
     return dt.toISOString();
   };
 
-  const handleConfirm = async () => {
+  const [isDirectPaying, setIsDirectPaying] = useState(false);
+
+  const serviceCharge = Math.round(totalCredits * SERVICE_CHARGE_PCT);
+  const directPayTotal = totalCredits + serviceCharge;
+
+  const handleConfirmWithCredits = async () => {
     if (!selectedType) {
       toast({ title: "Please select a cleaning type", variant: "destructive" });
       return;
     }
-    
     if (!user) {
       toast({ title: "Please sign in to book", variant: "destructive" });
       navigate('/auth');
       return;
     }
-
     if (!hasEnoughCredits) {
       toast({ title: "Insufficient credits", description: "Please add more credits to your wallet", variant: "destructive" });
       return;
     }
-    
     try {
       const job = await createBooking({
         cleaningType: selectedType,
@@ -167,23 +171,59 @@ export default function Book() {
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
-      
-      // C2: Show inline confirmation screen instead of just a toast
       setConfirmedJob({
         id: (job as any)?.id || '',
         type: selectedType || 'basic',
         date: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
         credits: totalCredits,
+        paymentMode: 'credits',
       });
       toast({ title: "Booking confirmed!", description: "Your credits have been held." });
     } catch (error: any) {
-      console.error('Booking error:', error);
       toast({ 
         title: "Booking failed", 
         description: error?.message || "Something went wrong. Please try again.",
         variant: "destructive" 
       });
+    }
+  };
+
+  const handlePayDirectly = async () => {
+    if (!selectedType || !user) return;
+    if (!cleanerId) {
+      toast({ title: "Please select a cleaner before booking", variant: "destructive" });
+      return;
+    }
+    setIsDirectPaying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-direct-payment', {
+        body: {
+          baseCredits: totalCredits,
+          hours,
+          cleaningType: selectedType,
+          addOns: selectedAddOns,
+          rushFee,
+          cleanerId: cleanerId || null,
+          scheduledDate: getScheduledDateTime(),
+          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null,
+          notes: null,
+        },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        toast({
+          title: "Redirecting to checkout",
+          description: `Total: $${data.totalAmount} (includes $${data.serviceCharge} service charge). Complete payment in the new tab.`,
+        });
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error: any) {
+      toast({ title: "Payment failed", description: error.message || "Could not start checkout", variant: "destructive" });
+    } finally {
+      setIsDirectPaying(false);
     }
   };
 
@@ -710,64 +750,97 @@ export default function Book() {
                     </CardContent>
                   </Card>
 
-                  {/* Credit Balance Check */}
-                  {!isLoadingAccount && (
-                    <Card className={`mb-6 ${hasEnoughCredits ? 'bg-accent/30 border-accent' : 'bg-destructive/10 border-destructive/30'}`}>
+                  {/* Payment Path Selection */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-sm font-semibold text-foreground">Choose how to pay</p>
+
+                    {/* Path 1 — Use wallet credits */}
+                    <Card
+                      className={`border-2 transition-all ${hasEnoughCredits ? 'border-primary/40 bg-primary/5' : 'border-border opacity-60'}`}
+                    >
                       <CardContent className="p-4">
-                        <div className="flex gap-3">
-                          {hasEnoughCredits ? (
-                            <>
-                              <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                              <div>
-                                <p className="font-medium text-sm mb-1">Pay only for time worked</p>
-                                <p className="text-xs text-muted-foreground">
-                                  Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  Available balance: <span className="font-medium">${availableCredits}</span>
-                                </p>
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                              <div>
-                                <p className="font-medium text-sm mb-1 text-destructive">Insufficient balance</p>
-                                <p className="text-xs text-muted-foreground">
-                                  You have ${availableCredits} available but need ${totalCredits} for this booking.
-                                </p>
-                                <Button variant="link" className="p-0 h-auto text-xs mt-1" asChild>
-                                  <Link to="/wallet">Add credits to your wallet →</Link>
-                                </Button>
-                              </div>
-                            </>
-                          )}
+                        <div className="flex items-start gap-3">
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Wallet className="h-5 w-5 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-semibold text-sm">Pay with Wallet Credits</p>
+                              <span className="text-lg font-bold">${totalCredits}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              Credits held in escrow — released only after you approve the work.
+                            </p>
+                            {!isLoadingAccount && (
+                              <p className="text-xs mt-1">
+                                Balance: <span className={hasEnoughCredits ? 'text-primary font-medium' : 'text-destructive font-medium'}>${availableCredits} available</span>
+                                {!hasEnoughCredits && (
+                                  <Button variant="link" className="p-0 h-auto text-xs ml-2" asChild>
+                                    <Link to="/wallet">Top up →</Link>
+                                  </Button>
+                                )}
+                              </p>
+                            )}
+                          </div>
                         </div>
+                        <Button
+                          className="w-full mt-4"
+                          size="sm"
+                          onClick={handleConfirmWithCredits}
+                          disabled={isCreating || !hasEnoughCredits}
+                        >
+                          {isCreating ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating Booking...</>
+                          ) : (
+                            <><Check className="mr-2 h-4 w-4" />Confirm with Credits</>
+                          )}
+                        </Button>
                       </CardContent>
                     </Card>
-                  )}
 
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(5)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button 
-                      className="flex-1" 
-                      size="lg" 
-                      onClick={handleConfirm}
-                      disabled={isCreating || !hasEnoughCredits}
-                    >
-                      {isCreating ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating Booking...
-                        </>
-                      ) : (
-                        'Confirm Booking'
-                      )}
-                    </Button>
+                    {/* Path 2 — Pay directly with card (+15% service charge) */}
+                    <Card className="border-2 border-border hover:border-secondary transition-all">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="h-10 w-10 rounded-lg bg-secondary/40 flex items-center justify-center flex-shrink-0">
+                            <CreditCard className="h-5 w-5 text-foreground" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-semibold text-sm">Pay Now with Card</p>
+                              <div className="text-right">
+                                <span className="text-lg font-bold">${directPayTotal}</span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              No pre-purchase needed. Includes a <span className="font-medium">15% service charge</span> (${serviceCharge}).
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              Base ${totalCredits} + service charge ${serviceCharge} = <span className="font-medium">${directPayTotal} total</span>
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          className="w-full mt-4"
+                          size="sm"
+                          onClick={handlePayDirectly}
+                          disabled={isDirectPaying || isCreating}
+                        >
+                          {isDirectPaying ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Opening Checkout...</>
+                          ) : (
+                            <><ExternalLink className="mr-2 h-4 w-4" />Pay ${directPayTotal} with Stripe</>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
                   </div>
+
+                  <Button variant="ghost" size="sm" className="w-full" onClick={() => setStep(5)}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -2422,6 +2422,7 @@ export type Database = {
           id: string
           job_id: string | null
           reason: Database["public"]["Enums"]["credit_reason"]
+          stripe_session_id: string | null
           user_id: string
         }
         Insert: {
@@ -2430,6 +2431,7 @@ export type Database = {
           id?: string
           job_id?: string | null
           reason: Database["public"]["Enums"]["credit_reason"]
+          stripe_session_id?: string | null
           user_id: string
         }
         Update: {
@@ -2438,6 +2440,7 @@ export type Database = {
           id?: string
           job_id?: string | null
           reason?: Database["public"]["Enums"]["credit_reason"]
+          stripe_session_id?: string | null
           user_id?: string
         }
         Relationships: [
@@ -3498,6 +3501,7 @@ export type Database = {
           is_rush: boolean | null
           metadata: Json | null
           notes: string | null
+          payment_mode: string | null
           property_id: number | null
           refund_credits: number | null
           rush_fee_credits: number | null
@@ -3546,6 +3550,7 @@ export type Database = {
           is_rush?: boolean | null
           metadata?: Json | null
           notes?: string | null
+          payment_mode?: string | null
           property_id?: number | null
           refund_credits?: number | null
           rush_fee_credits?: number | null
@@ -3594,6 +3599,7 @@ export type Database = {
           is_rush?: boolean | null
           metadata?: Json | null
           notes?: string | null
+          payment_mode?: string | null
           property_id?: number | null
           refund_credits?: number | null
           rush_fee_credits?: number | null
