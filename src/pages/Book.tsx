@@ -64,6 +64,7 @@ export default function Book() {
   const cleanerId = searchParams.get('cleaner');
   
   const [step, setStep] = useState(1);
+  const [confirmedJob, setConfirmedJob] = useState<{ id: string; type: string; date?: string; address?: string; credits: number } | null>(null);
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
