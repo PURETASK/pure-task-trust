@@ -108,7 +108,7 @@ const clientNavGroups: NavGroup[] = [
     group: "Help",
     items: [
       { title: "Help & Support", url: "/help", icon: HelpCircle },
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
+      { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
       { title: "Legal Center", url: "/legal", icon: Scale },
     ]
