@@ -6,9 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase } from "lucide-react";
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
+import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+
+const TIER_FEE: Record<string, number> = {
+  platinum: 0.15,
+  gold: 0.16,
+  silver: 0.18,
+  bronze: 0.20,
+};
 
 export default function CleanerSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -16,13 +24,15 @@ export default function CleanerSchedule() {
   const [viewMode, setViewMode] = useState<"2weeks" | "month">("2weeks");
   
   const { jobs, isLoading } = useCleanerJobs();
+  const { profile } = useCleanerProfile();
+  const tier = profile?.tier || "bronze";
+  const feeRate = TIER_FEE[tier] ?? 0.20;
+  const getNet = (gross: number) => Math.round(gross * (1 - feeRate));
 
   const generateTwoWeeksCalendar = () => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 });
     const days = [];
-    for (let i = 0; i < 14; i++) {
-      days.push(addDays(start, i));
-    }
+    for (let i = 0; i < 14; i++) days.push(addDays(start, i));
     return days;
   };
 
@@ -30,16 +40,11 @@ export default function CleanerSchedule() {
     const start = startOfMonth(currentDate);
     const firstDayOfWeek = getDay(start);
     const daysInMonth = getDaysInMonth(currentDate);
-    const days = [];
-    
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      days.push(null);
-    }
-    
+    const days: (Date | null)[] = [];
+    for (let i = 0; i < firstDayOfWeek; i++) days.push(null);
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
     }
-    
     return days;
   };
 
@@ -51,32 +56,22 @@ export default function CleanerSchedule() {
     }
   };
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.toDateString() === today.toDateString();
-  };
+  const isToday = (date: Date) => date.toDateString() === new Date().toDateString();
+  const isSelected = (date: Date) => date.toDateString() === selectedDate.toDateString();
 
-  const isSelected = (date: Date) => {
-    return date.toDateString() === selectedDate.toDateString();
-  };
+  const getJobsForDate = (date: Date) =>
+    jobs.filter(job => job.scheduled_start_at && isSameDay(new Date(job.scheduled_start_at), date));
 
-  // Get jobs for a specific date
-  const getJobsForDate = (date: Date) => {
-    return jobs.filter(job => {
-      if (!job.scheduled_start_at) return false;
-      return isSameDay(new Date(job.scheduled_start_at), date);
-    });
-  };
+  const hasJobs = (date: Date) => getJobsForDate(date).length > 0;
 
-  // Check if date has jobs
-  const hasJobs = (date: Date) => {
-    return getJobsForDate(date).length > 0;
-  };
-
-  // Jobs for selected date
   const selectedDateJobs = useMemo(() => getJobsForDate(selectedDate), [selectedDate, jobs]);
   const pendingJobs = selectedDateJobs.filter(j => j.status === 'pending' || j.status === 'created');
   const acceptedJobs = selectedDateJobs.filter(j => j.status === 'confirmed' || j.status === 'in_progress');
+
+  // ── Daily earnings summary ───────────────────────────────────────────────
+  const dailyGross = selectedDateJobs.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
+  const dailyNet = getNet(dailyGross);
+  const dailyHours = selectedDateJobs.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
 
   const twoWeeksDays = generateTwoWeeksCalendar();
   const monthDays = generateMonthCalendar();
@@ -84,17 +79,11 @@ export default function CleanerSchedule() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending':
-      case 'created':
-        return <Badge variant="warning">Pending</Badge>;
-      case 'confirmed':
-        return <Badge variant="default">Confirmed</Badge>;
-      case 'in_progress':
-        return <Badge className="bg-primary/80 text-primary-foreground">In Progress</Badge>;
-      case 'completed':
-        return <Badge variant="success">Completed</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
+      case 'pending': case 'created': return <Badge variant="warning">Pending</Badge>;
+      case 'confirmed': return <Badge variant="default">Confirmed</Badge>;
+      case 'in_progress': return <Badge className="bg-primary/80 text-primary-foreground">In Progress</Badge>;
+      case 'completed': return <Badge variant="success">Completed</Badge>;
+      default: return <Badge variant="secondary">{status}</Badge>;
     }
   };
 
@@ -115,20 +104,35 @@ export default function CleanerSchedule() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-4">
             <CardTitle className="text-lg">Calendar</CardTitle>
-            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "2weeks" | "month")}>
-              <TabsList className="h-9">
-                <TabsTrigger value="2weeks" className="text-xs px-3">2 Weeks</TabsTrigger>
-                <TabsTrigger value="month" className="text-xs px-3">Month</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="flex items-center gap-2">
+              {viewMode === "month" && (
+                <>
+                  <Button variant="ghost" size="icon" onClick={() => navigateCalendar("prev")}>
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-medium min-w-24 text-center">{format(currentDate, "MMMM yyyy")}</span>
+                  <Button variant="ghost" size="icon" onClick={() => navigateCalendar("next")}>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
+              <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "2weeks" | "month")}>
+                <TabsList className="h-9">
+                  <TabsTrigger value="2weeks" className="text-xs px-3">2 Weeks</TabsTrigger>
+                  <TabsTrigger value="month" className="text-xs px-3">Month</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </CardHeader>
           <CardContent>
-            {viewMode === "month" && (
+            {viewMode === "2weeks" && (
               <div className="flex items-center justify-between mb-4">
                 <Button variant="ghost" size="icon" onClick={() => navigateCalendar("prev")}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <h3 className="text-lg font-semibold">{format(currentDate, "MMMM yyyy")}</h3>
+                <span className="text-sm text-muted-foreground">
+                  {format(twoWeeksDays[0], "MMM d")} – {format(twoWeeksDays[13], "MMM d, yyyy")}
+                </span>
                 <Button variant="ghost" size="icon" onClick={() => navigateCalendar("next")}>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -138,9 +142,7 @@ export default function CleanerSchedule() {
             {/* Week Day Headers */}
             <div className="grid grid-cols-7 gap-2 mb-2">
               {weekDays.map((day) => (
-                <div key={day} className="text-center text-sm text-muted-foreground py-2">
-                  {day}
-                </div>
+                <div key={day} className="text-center text-sm text-muted-foreground py-2">{day}</div>
               ))}
             </div>
 
@@ -151,8 +153,7 @@ export default function CleanerSchedule() {
                   <button
                     key={i}
                     onClick={() => setSelectedDate(date)}
-                    className={`
-                      aspect-square flex flex-col items-center justify-center rounded-lg border transition-all relative
+                    className={`aspect-square flex flex-col items-center justify-center rounded-lg border transition-all relative
                       ${isToday(date) ? "bg-primary text-primary-foreground" : "hover:bg-muted"}
                       ${isSelected(date) && !isToday(date) ? "border-primary" : "border-border"}
                     `}
@@ -172,8 +173,7 @@ export default function CleanerSchedule() {
                     {date ? (
                       <button
                         onClick={() => setSelectedDate(date)}
-                        className={`
-                          w-full h-full flex items-center justify-center rounded-lg border transition-all relative
+                        className={`w-full h-full flex items-center justify-center rounded-lg border transition-all relative
                           ${isToday(date) ? "bg-primary text-primary-foreground" : "hover:bg-muted"}
                           ${isSelected(date) && !isToday(date) ? "border-primary" : "border-border"}
                         `}
@@ -193,15 +193,31 @@ export default function CleanerSchedule() {
           </CardContent>
         </Card>
 
-        {/* Selected Date Info */}
+        {/* Selected Date Summary */}
         <Card>
           <CardContent className="p-5">
-            <h3 className="text-lg font-semibold mb-1">
-              {format(selectedDate, "EEEE, MMMM d")}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {pendingJobs.length} job request{pendingJobs.length !== 1 ? 's' : ''} • {acceptedJobs.length} accepted job{acceptedJobs.length !== 1 ? 's' : ''}
-            </p>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-0.5">
+                  {format(selectedDate, "EEEE, MMMM d")}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
+                </p>
+              </div>
+              {selectedDateJobs.length > 0 && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{dailyHours}h scheduled</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <DollarSign className="h-4 w-4 text-success" />
+                    <span className="font-semibold text-success">${dailyNet} projected earnings</span>
+                  </div>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -235,7 +251,7 @@ export default function CleanerSchedule() {
                         {getStatusBadge(job.status)}
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
@@ -244,6 +260,12 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
+                          {(job.escrow_credits_reserved || 0) > 0 && (
+                            <span className="flex items-center gap-1 text-success font-medium">
+                              <DollarSign className="h-3 w-3" />
+                              {getNet(job.escrow_credits_reserved || 0)}
+                            </span>
+                          )}
                         </div>
                         <Button variant="outline" size="sm" asChild>
                           <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
@@ -255,6 +277,7 @@ export default function CleanerSchedule() {
               </div>
             )}
           </div>
+
           <div>
             <h3 className="font-semibold mb-3">Accepted Jobs</h3>
             {isLoading ? (
@@ -283,7 +306,7 @@ export default function CleanerSchedule() {
                         {getStatusBadge(job.status)}
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
@@ -292,6 +315,12 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
+                          {(job.escrow_credits_reserved || 0) > 0 && (
+                            <span className="flex items-center gap-1 text-success font-medium">
+                              <DollarSign className="h-3 w-3" />
+                              {getNet(job.escrow_credits_reserved || 0)}
+                            </span>
+                          )}
                         </div>
                         <Button variant="default" size="sm" asChild>
                           <Link to={`/cleaner/jobs/${job.id}`}>Start Job</Link>
