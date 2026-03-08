@@ -117,6 +117,7 @@ export function Header() {
           {/* Desktop CTA / User Menu */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
+            {isAuthenticated && <NotificationBell />}
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
