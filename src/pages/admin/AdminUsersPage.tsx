@@ -17,6 +17,7 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUserRole, setSelectedUserRole] = useState<"client" | "cleaner" | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(false);
 
   const { data: clients, isLoading: loadingClients } = useQuery({
