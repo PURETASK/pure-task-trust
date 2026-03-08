@@ -18,7 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Home, ArrowLeft } from "lucide-react";
+import { LogOut, Settings, HelpCircle, Home, ArrowLeft, Wallet } from "lucide-react";
+import { useWallet } from "@/hooks/useWallet";
 
 interface MainLayoutProps {
   children: ReactNode;
