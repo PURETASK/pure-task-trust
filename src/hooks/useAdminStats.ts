@@ -103,7 +103,7 @@ export function useAdminOpsStats() {
       return {
         totalBookings: jobs.length,
         cancelRate: jobs.length > 0 ? Math.round((statusCounts['cancelled'] || 0) / jobs.length * 1000) / 10 : 0,
-        openDisputes: disputes.filter(d => d.status === 'open' || d.status === 'in_review').length,
+        openDisputes: disputes.filter(d => d.status === 'open' || d.status === 'investigating').length,
         bookingStatusData,
         cancellationData,
         recentJobs: jobs.slice(0, 10),
