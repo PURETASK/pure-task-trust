@@ -695,10 +695,10 @@ export default function Book() {
                             </div>
                           )}
                           {rushFee > 0 && (
-                            <div className="flex items-center justify-between text-amber-600">
-                              <span>Rush fee</span>
-                              <span>+${rushFee}</span>
-                            </div>
+                             <div className="flex items-center justify-between text-warning">
+                               <span>Rush fee</span>
+                               <span>+{rushFee} credits</span>
+                             </div>
                           )}
                         </div>
                       )}
