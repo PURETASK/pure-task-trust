@@ -96,6 +96,7 @@ const cleanerNavItems = [
       { title: "Earnings", url: "/cleaner/earnings", icon: DollarSign },
       { title: "Referrals", url: "/cleaner/referral", icon: Users },
       { title: "Analytics", url: "/cleaner/analytics", icon: TrendingUp },
+      { title: "AI Assistant", url: "/cleaner/ai-assistant", icon: Star },
     ]
   },
   {
@@ -103,6 +104,7 @@ const cleanerNavItems = [
     items: [
       { title: "My Profile", url: "/cleaner/profile/view", icon: User },
       { title: "Profile Settings", url: "/cleaner/profile", icon: Settings },
+      { title: "Settings", url: "/cleaner/settings", icon: Settings },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
       { title: "Service Areas", url: "/cleaner/service-areas", icon: MapPin },
       { title: "Team", url: "/cleaner/team", icon: Users },
