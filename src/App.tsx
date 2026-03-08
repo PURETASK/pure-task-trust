@@ -65,6 +65,7 @@ import Pricing from "./pages/Pricing";
 import TrustSafetyDashboard from "./pages/admin/TrustSafetyDashboard";
 import AboutUs from "./pages/AboutUs";
 import Referral from "./pages/Referral";
+import RecurringPlans from "./pages/RecurringPlans";
 import Reviews from "./pages/Reviews";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
