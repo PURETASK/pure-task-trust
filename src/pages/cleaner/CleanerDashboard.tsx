@@ -176,8 +176,8 @@ export default function CleanerDashboard() {
               title="Job Calendar"
               description="View all jobs on a calendar"
               href="/cleaner/schedule"
-              iconColor="text-blue-500"
-              iconBgColor="bg-blue-500/10"
+              iconColor="text-accent-foreground"
+              iconBgColor="bg-accent"
             />
             <FeatureCard
               icon={DollarSign}
@@ -192,72 +192,72 @@ export default function CleanerDashboard() {
               title="Analytics"
               description="Performance metrics and insights"
               href="/cleaner/analytics"
-              iconColor="text-rose-500"
-              iconBgColor="bg-rose-500/10"
+              iconColor="text-destructive"
+              iconBgColor="bg-destructive/10"
             />
             <FeatureCard
               icon={BookOpen}
               title="Resources & Education"
               description="Tips, discounts, and training"
               href="/cleaner/resources"
-              iconColor="text-pink-500"
-              iconBgColor="bg-pink-500/10"
+              iconColor="text-primary"
+              iconBgColor="bg-primary/5"
             />
             <FeatureCard
               icon={MessageSquare}
               title="Messages"
               description="Chat with clients"
               href="/cleaner/messages"
-              iconColor="text-indigo-500"
-              iconBgColor="bg-indigo-500/10"
+              iconColor="text-foreground"
+              iconBgColor="bg-muted"
             />
             <FeatureCard
               icon={Settings}
               title="Profile Settings"
               description="Update rates, availability, services"
               href="/cleaner/profile"
-              iconColor="text-slate-500"
-              iconBgColor="bg-slate-500/10"
+              iconColor="text-muted-foreground"
+              iconBgColor="bg-muted"
             />
             <FeatureCard
               icon={TrendingUp}
               title="Reliability Score"
               description="Learn how your score is calculated"
               href="/cleaner/reliability"
-              iconColor="text-emerald-500"
-              iconBgColor="bg-emerald-500/10"
+              iconColor="text-success"
+              iconBgColor="bg-success/10"
             />
             <FeatureCard
               icon={CalendarClock}
               title="Availability Settings"
               description="Set your working hours & time off"
               href="/cleaner/availability"
-              iconColor="text-orange-500"
-              iconBgColor="bg-orange-500/10"
+              iconColor="text-warning"
+              iconBgColor="bg-warning/10"
             />
             <FeatureCard
               icon={Package}
               title="Materials List"
               description="Recommended cleaning supplies"
               href="/cleaner/resources"
-              iconColor="text-cyan-500"
-              iconBgColor="bg-cyan-500/10"
+              iconColor="text-accent-foreground"
+              iconBgColor="bg-accent/50"
             />
             <FeatureCard
               icon={Gift}
               title="Referral Program"
               description="Earn credits by referring cleaners"
               href="/cleaner/referral"
-              iconColor="text-amber-500"
-              iconBgColor="bg-amber-500/10"
+              iconColor="text-warning"
+              iconBgColor="bg-warning/10"
             />
             <FeatureCard
               icon={Users}
               title="My Team"
               description="Manage your cleaning team"
               href="/cleaner/team"
-              iconColor="text-teal-500"
-              iconBgColor="bg-teal-500/10"
+              iconColor="text-primary"
+              iconBgColor="bg-primary/10"
             />
           </div>
         </section>
