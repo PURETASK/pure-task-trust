@@ -84,6 +84,7 @@ import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
 import AdminConversionDashboard from "./pages/admin/AdminConversionDashboard";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -203,11 +204,16 @@ const App = () => (
                       </RequireClient>
                     } />
                     <Route path="/help" element={<Help />} />
-                    <Route path="/settings/notifications" element={
-                      <RequireAuth>
-                        <NotificationSettings />
-                      </RequireAuth>
-                    } />
+                     <Route path="/settings/notifications" element={
+                       <RequireAuth>
+                         <NotificationSettings />
+                       </RequireAuth>
+                     } />
+                     <Route path="/notifications" element={
+                       <RequireAuth requireRole={false}>
+                         <Notifications />
+                       </RequireAuth>
+                     } />
                     <Route path="/properties" element={
                       <RequireClient>
                         <Properties />

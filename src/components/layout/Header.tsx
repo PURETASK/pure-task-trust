@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -116,6 +117,7 @@ export function Header() {
           {/* Desktop CTA / User Menu */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
+            {isAuthenticated && <NotificationBell />}
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
