@@ -24,14 +24,14 @@ export function useInAppNotifications() {
     queryKey: ["in-app-notifications", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("notifications")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      return data as InAppNotification[];
+      return (data || []) as InAppNotification[];
     },
     enabled: !!user?.id,
     refetchInterval: 30_000,
