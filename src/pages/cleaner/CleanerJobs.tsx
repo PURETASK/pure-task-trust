@@ -24,11 +24,11 @@ export default function CleanerJobs() {
       case 'confirmed':
         return <Badge variant="default">Confirmed</Badge>;
       case 'on_way':
-        return <Badge className="bg-blue-500">On the Way</Badge>;
+        return <Badge className="bg-[hsl(210,100%,56%)]">On the Way</Badge>;
       case 'arrived':
-        return <Badge className="bg-indigo-500">Arrived</Badge>;
+        return <Badge className="bg-[hsl(243,75%,59%)]">Arrived</Badge>;
       case 'in_progress':
-        return <Badge className="bg-violet-500">In Progress</Badge>;
+        return <Badge className="bg-[hsl(262,83%,58%)]">In Progress</Badge>;
       case 'completed':
         return <Badge variant="success">Completed</Badge>;
       default:
