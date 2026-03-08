@@ -6,13 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin } from "lucide-react";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin, TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useRecurringBookings } from "@/hooks/useRecurringBookings";
 import { format, isToday } from "date-fns";
 import { InviteFriendsCTA } from "@/components/referral";
+import { LoyaltyTracker } from "@/components/loyalty/LoyaltyTracker";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
