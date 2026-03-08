@@ -475,6 +475,23 @@ export default function Book() {
                       </Card>
                     )}
 
+                    {/* Cleaner availability warning */}
+                    {cleanerId && selectedDate && isDateBlockedByCleaner && (
+                      <Card className="bg-warning/10 border-warning/30">
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <CalendarOff className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="font-medium text-sm">Cleaner Unavailable on This Day</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {selectedCleaner?.name || 'This cleaner'} doesn't work on {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}s. Please choose a different date.
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
                     <AddressSelector
                       selectedAddressId={selectedAddress?.id}
                       onSelect={setSelectedAddress}
@@ -496,7 +513,7 @@ export default function Book() {
                         className="flex-1" 
                         size="lg" 
                         onClick={() => setStep(5)}
-                        disabled={!canProceedToVerification || !isCleaningTypeAllowed}
+                        disabled={!canProceedToVerification || !isCleaningTypeAllowed || isDateBlockedByCleaner}
                       >
                         Continue
                         <ArrowRight className="ml-2 h-4 w-4" />
