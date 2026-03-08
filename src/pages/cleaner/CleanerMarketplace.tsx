@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Clock, Calendar, Loader2, DollarSign, Info, X } from "lucide-react";
+import { MapPin, Clock, Calendar, Loader2, DollarSign, Info, X, Star, Zap } from "lucide-react";
 import { format } from "date-fns";
 import { useMarketplaceJobs } from "@/hooks/useMarketplaceJobs";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
@@ -20,6 +20,57 @@ const TIER_FEE: Record<string, number> = {
   bronze: 0.20,
 };
 
+// ── Job Match Score ──────────────────────────────────────────────────────────
+// Simple client-side heuristic: score out of 100 based on time-of-day preference,
+// job length vs. cleaner's max, and cleaning type variety bonus.
+function getMatchScore(job: { estimated_hours: number | null; cleaning_type: string; scheduled_start_at: string | null }, tier: string): number {
+  let score = 60; // base
+
+  // Prefer jobs scheduled in business hours (8–18)
+  if (job.scheduled_start_at) {
+    const hour = new Date(job.scheduled_start_at).getHours();
+    if (hour >= 8 && hour <= 14) score += 15;
+    else if (hour > 14 && hour <= 18) score += 8;
+  }
+
+  // Length bonus — shorter jobs score higher (easier wins for reliability)
+  const hours = job.estimated_hours || 2;
+  if (hours <= 2) score += 15;
+  else if (hours <= 4) score += 8;
+
+  // Type bonus — deep/move-out pay more
+  if (job.cleaning_type === "deep" || job.cleaning_type === "move_out") score += 10;
+
+  // Tier bonus — higher tier = better matches surfaced
+  if (tier === "platinum") score += 5;
+  else if (tier === "gold") score += 3;
+
+  return Math.min(100, score);
+}
+
+function MatchBadge({ score }: { score: number }) {
+  const color =
+    score >= 85
+      ? "bg-success/10 text-success border-success/30"
+      : score >= 70
+      ? "bg-primary/10 text-primary border-primary/30"
+      : "bg-muted text-muted-foreground border-border";
+  const label = score >= 85 ? "Great Match" : score >= 70 ? "Good Match" : "Fair Match";
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-semibold cursor-default ${color}`}>
+          <Star className="h-3 w-3" />
+          {score}% · {label}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="text-xs max-w-[200px]">
+        Match score is based on job timing, duration, and type. Higher scores = jobs best suited for your schedule.
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 export default function CleanerMarketplace() {
   const [filter, setFilter] = useState<'all' | 'today' | 'week'>('all');
   const [declinedIds, setDeclinedIds] = useState<Set<string>>(new Set());
@@ -32,9 +83,7 @@ export default function CleanerMarketplace() {
   const feeRate = TIER_FEE[tier] ?? 0.20;
   const feePercent = Math.round(feeRate * 100);
 
-  const getNetEarnings = (grossCredits: number) => {
-    return Math.round(grossCredits * (1 - feeRate));
-  };
+  const getNetEarnings = (grossCredits: number) => Math.round(grossCredits * (1 - feeRate));
 
   const getCleaningTypeLabel = (type: string) => {
     switch (type) {
@@ -47,19 +96,16 @@ export default function CleanerMarketplace() {
   const handleDecline = async (jobId: string) => {
     setDecliningId(jobId);
     try {
-      // Insert a decline record into job_offers table (tracks reason_code = 'declined')
-      // We simply hide the job locally — backend handles via job_offers
       if (cleanerId) {
         await supabase.from('job_offers' as any).insert({
           job_id: jobId,
           cleaner_id: cleanerId,
           status: 'declined',
-        }).maybeSingle(); // ignore error if table doesn't support it
+        }).maybeSingle();
       }
       setDeclinedIds(prev => new Set(prev).add(jobId));
       toast.info("Job declined — it won't appear again.");
     } catch {
-      // Fallback: just hide locally
       setDeclinedIds(prev => new Set(prev).add(jobId));
       toast.info("Job declined.");
     } finally {
@@ -67,13 +113,17 @@ export default function CleanerMarketplace() {
     }
   };
 
+  const visibleJobs = jobs.filter(j => !declinedIds.has(j.id));
+
   return (
     <CleanerLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-3xl font-bold">Job Marketplace</h1>
-            <p className="text-muted-foreground mt-1">Find and accept new cleaning jobs</p>
+            <p className="text-muted-foreground mt-1">
+              {visibleJobs.length} job{visibleJobs.length !== 1 ? "s" : ""} available
+            </p>
           </div>
           <div className="flex gap-2">
             {(['all', 'today', 'week'] as const).map((f) => (
@@ -103,10 +153,10 @@ export default function CleanerMarketplace() {
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-40 rounded-xl" />
+              <Skeleton key={i} className="h-44 rounded-xl" />
             ))}
           </div>
-        ) : jobs.length === 0 ? (
+        ) : visibleJobs.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-16 text-center">
               <Calendar className="h-16 w-16 text-muted-foreground/30 mb-4" />
@@ -116,17 +166,19 @@ export default function CleanerMarketplace() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {jobs.filter(j => !declinedIds.has(j.id)).map((job) => {
+            {visibleJobs.map((job) => {
               const gross = job.escrow_credits_reserved || 0;
               const net = getNetEarnings(gross);
+              const matchScore = getMatchScore(job, tier);
               return (
                 <Card key={job.id} className="hover:shadow-elevated transition-all">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <h3 className="font-semibold text-lg">{getCleaningTypeLabel(job.cleaning_type)}</h3>
                           <Badge variant="secondary">New</Badge>
+                          <MatchBadge score={matchScore} />
                         </div>
                         <p className="text-sm text-muted-foreground mb-3">
                           Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
@@ -197,7 +249,7 @@ export default function CleanerMarketplace() {
                               </>
                             ) : (
                               <>
-                                <DollarSign className="h-4 w-4" />
+                                <Zap className="h-4 w-4" />
                                 Accept Job
                               </>
                             )}

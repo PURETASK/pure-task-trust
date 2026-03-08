@@ -1,6 +1,7 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -8,11 +9,13 @@ import {
   Clock, 
   Calendar,
   DollarSign,
-  Users,
-  CheckCircle
+  CheckCircle,
+  ArrowUpRight
 } from "lucide-react";
 import { useCleanerStats, useCleanerEarnings } from "@/hooks/useCleanerProfile";
-import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
+import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartTooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { format, subWeeks, startOfWeek, endOfWeek, eachWeekOfInterval } from "date-fns";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 export default function CleanerAnalytics() {
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
@@ -35,6 +38,30 @@ export default function CleanerAnalytics() {
     ? Math.round((stats.completedJobs / stats.totalJobs) * 100)
     : 100;
 
+  // Build 8-week earnings bar chart data
+  const now = new Date();
+  const weeklyChartData = eachWeekOfInterval({
+    start: subWeeks(startOfWeek(now), 7),
+    end: now,
+  }).map(weekStart => {
+    const weekEnd = endOfWeek(weekStart);
+    const total = earnings
+      .filter(e => {
+        const d = new Date(e.created_at);
+        return d >= weekStart && d <= weekEnd;
+      })
+      .reduce((sum, e) => sum + e.net_credits, 0);
+    return {
+      week: format(weekStart, "MMM d"),
+      earnings: total,
+    };
+  });
+
+  // Trend: compare last 4 weeks vs previous 4 weeks
+  const last4 = weeklyChartData.slice(-4).reduce((s, w) => s + w.earnings, 0);
+  const prev4 = weeklyChartData.slice(-8, -4).reduce((s, w) => s + w.earnings, 0);
+  const trendPct = prev4 > 0 ? Math.round(((last4 - prev4) / prev4) * 100) : null;
+
   return (
     <CleanerLayout>
       <div className="space-y-6">
@@ -46,11 +73,7 @@ export default function CleanerAnalytics() {
         {/* Key Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {isLoadingStats ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <Skeleton key={i} className="h-28 rounded-xl" />
-              ))}
-            </>
+            <>{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-28 rounded-xl" />)}</>
           ) : (
             <>
               <Card>
@@ -92,6 +115,66 @@ export default function CleanerAnalytics() {
             </>
           )}
         </div>
+
+        {/* 8-Week Earnings Bar Chart */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <BarChart3 className="h-5 w-5" />
+              Weekly Earnings (Last 8 Weeks)
+            </CardTitle>
+            {trendPct !== null && (
+              <Badge
+                variant={trendPct >= 0 ? "success" : "destructive"}
+                className="gap-1 text-xs"
+              >
+                <ArrowUpRight className={`h-3 w-3 ${trendPct < 0 ? "rotate-180" : ""}`} />
+                {trendPct >= 0 ? "+" : ""}{trendPct}% vs prev 4 weeks
+              </Badge>
+            )}
+          </CardHeader>
+          <CardContent>
+            {isLoadingEarnings ? (
+              <Skeleton className="h-56" />
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={weeklyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border" />
+                  <XAxis
+                    dataKey="week"
+                    tick={{ fontSize: 11 }}
+                    tickLine={false}
+                    axisLine={false}
+                    className="fill-muted-foreground"
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `$${v}`}
+                    className="fill-muted-foreground"
+                  />
+                  <RechartTooltip
+                    formatter={(value: number) => [`$${value}`, "Earnings"]}
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "1px solid hsl(var(--border))",
+                      background: "hsl(var(--card))",
+                      color: "hsl(var(--card-foreground))",
+                      fontSize: "12px",
+                    }}
+                    cursor={{ fill: "hsl(var(--muted))" }}
+                  />
+                  <Bar
+                    dataKey="earnings"
+                    fill="hsl(var(--primary))"
+                    radius={[6, 6, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Performance Overview */}
         <div className="grid md:grid-cols-2 gap-6">

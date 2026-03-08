@@ -304,59 +304,65 @@ export default function CleanerJobDetail() {
           </Card>
         )}
 
-        {/* Photo Upload */}
+        {/* Photo Upload — Numbered Stepper */}
         {isInProgress && (
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Camera className="h-4 w-4" />
-                Job Photos
+                Photo Documentation
                 <Badge variant={canCheckout ? "success" : "warning"} className="ml-auto text-xs">
                   {beforeCount + afterCount} uploaded
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <PhotoRequirements beforeCount={beforeCount} afterCount={afterCount} />
-              
-              {!canCheckout && (
-                <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/30 rounded-lg text-sm">
-                  <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
-                  <span className="text-warning">Upload at least 1 before and 1 after photo to complete the job</span>
-                </div>
-              )}
-
-              {/* Photo type selector */}
-              <div className="grid grid-cols-2 gap-2">
-                {(['before', 'after'] as const).map((type) => (
+              {/* Numbered photo stepper */}
+              <div className="space-y-2">
+                {([
+                  { step: 1, type: 'before' as const, label: 'Before Photos', desc: 'Capture the space before you start cleaning', count: beforeCount, done: beforeCount >= 1, locked: false },
+                  { step: 2, type: 'after' as const, label: 'After Photos', desc: 'Show your completed work', count: afterCount, done: afterCount >= 1, locked: beforeCount === 0 },
+                ]).map(({ step, type, label, desc, count, done, locked }) => (
                   <button
                     key={type}
-                    onClick={() => setSelectedPhotoType(type)}
-                    className={`p-3 rounded-xl border-2 transition-all text-sm font-medium capitalize ${
-                      selectedPhotoType === type
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border text-muted-foreground hover:border-primary/40'
+                    onClick={() => { if (!locked) { setSelectedPhotoType(type); fileEl?.click(); } }}
+                    disabled={!!locked}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                      done
+                        ? 'border-success/40 bg-success/5'
+                        : selectedPhotoType === type && !locked
+                        ? 'border-primary bg-primary/5'
+                        : locked
+                        ? 'border-border bg-muted/30 opacity-50 cursor-not-allowed'
+                        : 'border-border hover:border-primary/40 hover:bg-muted/50'
                     }`}
                   >
-                    {type} ({type === 'before' ? beforeCount : afterCount})
+                    {/* Step number / checkmark */}
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
+                      done ? 'bg-success text-white' : locked ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'
+                    }`}>
+                      {done ? '✓' : step}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-sm">{label}</p>
+                        {count > 0 && (
+                          <Badge variant="secondary" className="text-xs">{count} uploaded</Badge>
+                        )}
+                        {locked && (
+                          <span className="text-xs text-muted-foreground">Upload before photos first</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{desc}</p>
+                    </div>
+                    {!done && !locked && (
+                      <Upload className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    )}
+                    {uploadPhoto.isPending && selectedPhotoType === type && (
+                      <Loader2 className="h-4 w-4 animate-spin text-primary flex-shrink-0" />
+                    )}
                   </button>
                 ))}
-              </div>
-
-              {/* Upload area */}
-              <div
-                onClick={() => fileEl?.click()}
-                className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-colors"
-              >
-                {uploadPhoto.isPending ? (
-                  <Loader2 className="h-8 w-8 mx-auto animate-spin text-primary" />
-                ) : (
-                  <>
-                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm font-medium">Tap to upload {selectedPhotoType} photo</p>
-                    <p className="text-xs text-muted-foreground mt-1">Camera or gallery</p>
-                  </>
-                )}
               </div>
 
               <input
@@ -368,6 +374,15 @@ export default function CleanerJobDetail() {
                 className="hidden"
               />
 
+              {!canCheckout && (beforeCount > 0 || afterCount > 0) && (
+                <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/30 rounded-lg text-sm">
+                  <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+                  <span className="text-warning">
+                    {beforeCount === 0 ? "Upload at least 1 before photo to continue." : "Upload at least 1 after photo to complete the job."}
+                  </span>
+                </div>
+              )}
+
               {/* Photos grid */}
               {photos.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
@@ -377,7 +392,7 @@ export default function CleanerJobDetail() {
                       <div key={photo.id} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                         <img src={photo.photo_url} alt="Job photo" className="w-full h-full object-cover" />
                         <Badge className={`absolute top-1 left-1 text-xs ${isBefore ? '' : 'bg-success'}`} variant={isBefore ? 'secondary' : 'success'}>
-                          {isBefore ? 'B' : 'A'}
+                          {isBefore ? 'Before' : 'After'}
                         </Badge>
                       </div>
                     );

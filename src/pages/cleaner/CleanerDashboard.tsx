@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
 import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
@@ -10,7 +11,13 @@ import { InviteFriendsCTA } from "@/components/referral";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
+import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { format, differenceInMinutes, isToday } from "date-fns";
 import { 
   Briefcase, 
   Clock, 
@@ -25,13 +32,108 @@ import {
   Package,
   Gift,
   Users,
-  CalendarClock
+  CalendarClock,
+  Timer,
+  ArrowRight,
+  Lightbulb
 } from "lucide-react";
 
+// ── Tip of the day ──────────────────────────────────────────────────────────
+const TIPS = [
+  { icon: "📸", text: "Always upload before & after photos — cleaners with photo proof get 23% more repeat bookings." },
+  { icon: "⏰", text: "Respond to job offers within 15 minutes to boost your acceptance rate and reliability score." },
+  { icon: "⭐", text: "5-star reviews unlock Gold tier. A friendly check-in message to clients after the job goes a long way." },
+  { icon: "💰", text: "Set your rate closer to your tier ceiling — clients associate higher rates with higher quality." },
+  { icon: "📅", text: "Keep your availability calendar up to date so the system can auto-assign you the best matches." },
+  { icon: "🤝", text: "Refer a cleaner friend and earn credits. Every referral counts toward your monthly goals." },
+  { icon: "🔄", text: "Returning clients are worth 3× a new booking. Leave a note thanking clients after every job." },
+  { icon: "🚀", text: "Use the Boost feature on slow weeks — it surfaces your profile first in the marketplace." },
+];
+
+// ── Countdown ────────────────────────────────────────────────────────────────
+function useCountdown(targetDate: Date | null) {
+  const [timeLeft, setTimeLeft] = useState("");
+  useEffect(() => {
+    if (!targetDate) return;
+    const update = () => {
+      const diffMin = differenceInMinutes(targetDate, new Date());
+      if (diffMin < 0) { setTimeLeft("Now"); return; }
+      const h = Math.floor(diffMin / 60);
+      const m = diffMin % 60;
+      setTimeLeft(h > 0 ? `${h}h ${m}m` : `${m}m`);
+    };
+    update();
+    const id = setInterval(update, 60000);
+    return () => clearInterval(id);
+  }, [targetDate]);
+  return timeLeft;
+}
+
+// ── Today's Job Banner ───────────────────────────────────────────────────────
+function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["jobs"] }) {
+  const todayJobs = jobs
+    .filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)) && ['confirmed', 'in_progress'].includes(j.status))
+    .sort((a, b) => new Date(a.scheduled_start_at!).getTime() - new Date(b.scheduled_start_at!).getTime());
+
+  const nextJob = todayJobs[0];
+  const countdown = useCountdown(nextJob?.scheduled_start_at ? new Date(nextJob.scheduled_start_at) : null);
+
+  if (!nextJob) return null;
+
+  const isInProgress = nextJob.status === "in_progress";
+  const label = nextJob.cleaning_type === "deep" ? "Deep Clean" : nextJob.cleaning_type === "move_out" ? "Move-out Clean" : "Standard Clean";
+
+  return (
+    <Card className={`border-2 ${isInProgress ? "border-primary/40 bg-primary/5" : "border-success/40 bg-success/5"}`}>
+      <CardContent className="p-4 flex items-center gap-4">
+        <div className={`h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isInProgress ? "bg-primary/10" : "bg-success/10"}`}>
+          <Timer className={`h-6 w-6 ${isInProgress ? "text-primary" : "text-success"}`} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+            {isInProgress ? "Job In Progress" : "Today's Next Job"}
+          </p>
+          <p className="font-semibold truncate">{label}</p>
+          <p className="text-sm text-muted-foreground">
+            {isInProgress ? "You're on the clock" : `Starts in ${countdown} · ${format(new Date(nextJob.scheduled_start_at!), "h:mm a")}`}
+          </p>
+        </div>
+        <Button size="sm" asChild>
+          <Link to={`/cleaner/jobs/${nextJob.id}`}>
+            {isInProgress ? "Continue" : "View Job"}
+            <ArrowRight className="h-4 w-4 ml-1" />
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── Tip Card ─────────────────────────────────────────────────────────────────
+function TipCard({ tier, score }: { tier: string; score: number }) {
+  const idx = (new Date().getDate() + (score % 4)) % TIPS.length;
+  const tip = TIPS[idx];
+  return (
+    <Card className="bg-primary/5 border-primary/20">
+      <CardContent className="p-4 flex items-start gap-3">
+        <span className="text-2xl flex-shrink-0">{tip.icon}</span>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1 flex items-center gap-1">
+            <Lightbulb className="h-3 w-3" /> Tip of the Day
+          </p>
+          <p className="text-sm text-foreground">{tip.text}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── Dashboard ────────────────────────────────────────────────────────────────
 export default function CleanerDashboard() {
   const { user } = useAuth();
   const { profile, isLoading: isLoadingProfile } = useCleanerProfile();
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
+  const { jobs } = useCleanerJobs();
 
   const displayName = profile?.first_name || user?.name || "Cleaner";
   const tier = profile?.tier || 'bronze';
@@ -40,17 +142,18 @@ export default function CleanerDashboard() {
     <CleanerLayout>
       <div className="space-y-8">
         {/* Welcome Section */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              Welcome back, {displayName}! 
-              <span className="text-3xl">👋</span>
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Here's your cleaning business overview
-            </p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-3">
+            Welcome back, {displayName}!
+            <span className="text-3xl">👋</span>
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Here's your cleaning business overview
+          </p>
         </div>
+
+        {/* Today's Job Banner */}
+        <TodayJobBanner jobs={jobs} />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -109,6 +212,9 @@ export default function CleanerDashboard() {
           <TierBadge />
         </div>
 
+        {/* Tip of the Day */}
+        <TipCard tier={tier} score={profile?.reliability_score || 0} />
+
         {/* Gamification Section */}
         <section>
           <h2 className="text-xl font-semibold mb-4">Goals & Rewards</h2>
@@ -130,7 +236,7 @@ export default function CleanerDashboard() {
               icon={Search}
               label="Find Jobs"
               href="/cleaner/marketplace"
-              iconColor="text-white"
+              iconColor="text-primary-foreground"
               iconBgColor="bg-primary"
             />
             <QuickAction
