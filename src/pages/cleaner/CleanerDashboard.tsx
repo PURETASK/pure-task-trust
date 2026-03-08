@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
 import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
-import { QuickAction, FeatureCard } from "@/components/cleaner/QuickActions";
 import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
@@ -18,42 +17,37 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { format, differenceInMinutes, isToday } from "date-fns";
 import type { CleanerTier } from "@/lib/tier-config";
-import { 
-  Briefcase, 
-  Clock, 
-  DollarSign, 
-  MessageSquare,
-  Search,
-  Calendar,
-  BarChart3,
-  BookOpen,
-  Settings,
-  TrendingUp,
-  Package,
-  Gift,
-  Users,
-  CalendarClock,
-  Timer,
-  ArrowRight,
-  Lightbulb
+import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
+import {
+  Briefcase, Clock, DollarSign, MessageSquare, Search, Calendar,
+  BarChart3, BookOpen, Settings, TrendingUp, Gift, Users, ArrowRight,
+  Lightbulb, Timer, Star, Zap, Shield, Camera, MapPin, Award,
+  ChevronRight, Phone, CheckCircle, Flame, Target
 } from "lucide-react";
 
-// ── Tip of the day ──────────────────────────────────────────────────────────
 const TIPS = [
-  { icon: "📸", text: "Always upload before & after photos — cleaners with photo proof get 23% more repeat bookings." },
-  { icon: "⏰", text: "Respond to job offers within 15 minutes to boost your acceptance rate and reliability score." },
-  { icon: "⭐", text: "5-star reviews unlock Gold tier. A friendly check-in message to clients after the job goes a long way." },
+  { icon: "📸", text: "Upload before & after photos — cleaners with photo proof get 23% more repeat bookings." },
+  { icon: "⏰", text: "Respond to job offers within 15 mins to boost your acceptance rate and reliability score." },
+  { icon: "⭐", text: "5-star reviews unlock Gold tier. A friendly check-in message after every job goes a long way." },
   { icon: "💰", text: "Set your rate closer to your tier ceiling — clients associate higher rates with higher quality." },
-  { icon: "📅", text: "Keep your availability calendar up to date so the system can auto-assign you the best matches." },
+  { icon: "📅", text: "Keep your availability calendar up to date so the system auto-assigns you the best matches." },
   { icon: "🤝", text: "Refer a cleaner friend and earn credits. Every referral counts toward your monthly goals." },
-  { icon: "🔄", text: "Returning clients are worth 3× a new booking. Leave a note thanking clients after every job." },
+  { icon: "🔄", text: "Returning clients are worth 3× a new booking. Leave a thank-you note after every job." },
   { icon: "🚀", text: "Use the Boost feature on slow weeks — it surfaces your profile first in the marketplace." },
 ];
 
-// ── Countdown ────────────────────────────────────────────────────────────────
+const TIER_COLORS: Record<string, { bg: string; text: string; border: string; gradient: string }> = {
+  bronze: { bg: "bg-amber-500/10", text: "text-amber-600", border: "border-amber-500/30", gradient: "from-amber-500/20 to-amber-600/5" },
+  silver: { bg: "bg-slate-400/10", text: "text-slate-500", border: "border-slate-400/30", gradient: "from-slate-400/20 to-slate-500/5" },
+  gold: { bg: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/30", gradient: "from-yellow-400/20 to-yellow-600/5" },
+  platinum: { bg: "bg-cyan-500/10", text: "text-cyan-600", border: "border-cyan-500/30", gradient: "from-cyan-400/20 to-cyan-600/5" },
+};
+
 function useCountdown(targetDate: Date | null) {
   const [timeLeft, setTimeLeft] = useState("");
   useEffect(() => {
@@ -72,323 +66,277 @@ function useCountdown(targetDate: Date | null) {
   return timeLeft;
 }
 
-// ── Today's Job Banner ───────────────────────────────────────────────────────
 function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["jobs"] }) {
   const todayJobs = jobs
-    .filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)) && ['confirmed', 'in_progress'].includes(j.status))
+    .filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)) && ["confirmed", "in_progress"].includes(j.status))
     .sort((a, b) => new Date(a.scheduled_start_at!).getTime() - new Date(b.scheduled_start_at!).getTime());
-
   const nextJob = todayJobs[0];
   const countdown = useCountdown(nextJob?.scheduled_start_at ? new Date(nextJob.scheduled_start_at) : null);
-
   if (!nextJob) return null;
-
   const isInProgress = nextJob.status === "in_progress";
-  const label = nextJob.cleaning_type === "deep" ? "Deep Clean" : nextJob.cleaning_type === "move_out" ? "Move-out Clean" : "Standard Clean";
-
   return (
-    <Card className={`border-2 ${isInProgress ? "border-primary/40 bg-primary/5" : "border-success/40 bg-success/5"}`}>
-      <CardContent className="p-4 flex items-center gap-4">
-        <div className={`h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isInProgress ? "bg-primary/10" : "bg-success/10"}`}>
-          <Timer className={`h-6 w-6 ${isInProgress ? "text-primary" : "text-success"}`} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-            {isInProgress ? "Job In Progress" : "Today's Next Job"}
-          </p>
-          <p className="font-semibold truncate">{label}</p>
-          <p className="text-sm text-muted-foreground">
-            {isInProgress ? "You're on the clock" : `Starts in ${countdown} · ${format(new Date(nextJob.scheduled_start_at!), "h:mm a")}`}
-          </p>
-        </div>
-        <Button size="sm" asChild>
-          <Link to={`/cleaner/jobs/${nextJob.id}`}>
-            {isInProgress ? "Continue" : "View Job"}
-            <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
+    <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
+      <Card className={`border-2 ${isInProgress ? "border-primary/40 bg-primary/5" : "border-success/40 bg-success/5"}`}>
+        <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+          <div className={`h-14 w-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${isInProgress ? "bg-primary/15" : "bg-success/15"}`}>
+            <Timer className={`h-7 w-7 ${isInProgress ? "text-primary animate-pulse" : "text-success"}`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-0.5">
+              {isInProgress ? "🟢 Job In Progress" : "📅 Today's Next Job"}
+            </p>
+            <p className="font-bold text-lg capitalize">
+              {nextJob.cleaning_type?.replace("_", " ") || "Standard"} Clean
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {isInProgress ? "You're on the clock — keep going!" : `Starts in ${countdown} · ${format(new Date(nextJob.scheduled_start_at!), "h:mm a")}`}
+            </p>
+          </div>
+          <Button size="sm" asChild className="flex-shrink-0 rounded-xl">
+            <Link to={`/cleaner/jobs/${nextJob.id}`}>
+              {isInProgress ? "Continue" : "View"} <ArrowRight className="h-4 w-4 ml-1" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 
-// ── Tip Card ─────────────────────────────────────────────────────────────────
-function TipCard({ tier, score }: { tier: string; score: number }) {
-  const idx = (new Date().getDate() + (score % 4)) % TIPS.length;
-  const tip = TIPS[idx];
-  return (
-    <Card className="bg-primary/5 border-primary/20">
-      <CardContent className="p-4 flex items-start gap-3">
-        <span className="text-2xl flex-shrink-0">{tip.icon}</span>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1 flex items-center gap-1">
-            <Lightbulb className="h-3 w-3" /> Tip of the Day
-          </p>
-          <p className="text-sm text-foreground">{tip.text}</p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+const FEATURE_SECTIONS = [
+  {
+    title: "💼 Jobs & Work",
+    color: "bg-primary/5 border-primary/15",
+    iconBg: "bg-primary/10",
+    iconColor: "text-primary",
+    items: [
+      { icon: Search, label: "Job Marketplace", desc: "Find new opportunities", href: "/cleaner/marketplace" },
+      { icon: Briefcase, label: "Active Jobs", desc: "Manage accepted jobs", href: "/cleaner/jobs" },
+      { icon: Calendar, label: "Schedule", desc: "Your job calendar", href: "/cleaner/schedule" },
+      { icon: MapPin, label: "Service Areas", desc: "Your coverage zones", href: "/cleaner/service-areas" },
+    ],
+  },
+  {
+    title: "💰 Money & Earnings",
+    color: "bg-success/5 border-success/15",
+    iconBg: "bg-success/10",
+    iconColor: "text-success",
+    items: [
+      { icon: DollarSign, label: "Earnings & Payouts", desc: "Track income, request payouts", href: "/cleaner/earnings" },
+      { icon: BarChart3, label: "Analytics", desc: "Your performance metrics", href: "/cleaner/analytics" },
+      { icon: Zap, label: "Instant Payout", desc: "Get paid now", href: "/cleaner/earnings" },
+      { icon: Target, label: "Goals & Rewards", desc: "Monthly earning goals", href: "/cleaner/dashboard" },
+    ],
+  },
+  {
+    title: "⭐ Profile & Trust",
+    color: "bg-warning/5 border-warning/15",
+    iconBg: "bg-warning/10",
+    iconColor: "text-warning",
+    items: [
+      { icon: Shield, label: "Verification", desc: "ID, background & badges", href: "/cleaner/verification" },
+      { icon: TrendingUp, label: "Reliability Score", desc: "How your score works", href: "/cleaner/reliability" },
+      { icon: Star, label: "Reviews", desc: "Your ratings & feedback", href: "/reviews" },
+      { icon: Award, label: "Tier Progress", desc: "Bronze → Platinum path", href: "/cleaner/dashboard" },
+    ],
+  },
+  {
+    title: "🛠️ Tools & Settings",
+    color: "bg-[hsl(var(--pt-purple)/0.05)] border-[hsl(var(--pt-purple)/0.15)]",
+    iconBg: "bg-[hsl(var(--pt-purple)/0.1)]",
+    iconColor: "text-[hsl(var(--pt-purple))]",
+    items: [
+      { icon: Clock, label: "Availability", desc: "Set working hours & time off", href: "/cleaner/availability" },
+      { icon: Settings, label: "Profile Settings", desc: "Rates, services & info", href: "/cleaner/profile" },
+      { icon: Users, label: "My Team", desc: "Manage team members", href: "/cleaner/team" },
+      { icon: MessageSquare, label: "Messages", desc: "Chat with clients", href: "/cleaner/messages" },
+    ],
+  },
+  {
+    title: "📚 Growth & Resources",
+    color: "bg-accent/5 border-accent/15",
+    iconBg: "bg-accent/10",
+    iconColor: "text-primary",
+    items: [
+      { icon: BookOpen, label: "Resources & Tips", desc: "Training & education", href: "/cleaner/resources" },
+      { icon: Gift, label: "Referral Program", desc: "Earn by referring cleaners", href: "/cleaner/referral" },
+      { icon: Flame, label: "AI Assistant", desc: "Job support & guidance", href: "/cleaner/ai-assistant" },
+      { icon: Camera, label: "Calendar Sync", desc: "Sync with your calendar", href: "/cleaner/calendar-sync" },
+    ],
+  },
+];
 
-// ── Dashboard ────────────────────────────────────────────────────────────────
 export default function CleanerDashboard() {
   const { user } = useAuth();
   const { profile, isLoading: isLoadingProfile } = useCleanerProfile();
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
   const { jobs } = useCleanerJobs();
 
-  const displayName = profile?.first_name || user?.name || "Cleaner";
-  const tier = profile?.tier || 'bronze';
+  const displayName = profile?.first_name || user?.name?.split(" ")[0] || "Cleaner";
+  const tier = (profile?.tier || "bronze") as CleanerTier;
+  const tierStyle = TIER_COLORS[tier] || TIER_COLORS.bronze;
+  const tipIdx = (new Date().getDate() + (profile?.reliability_score || 0) % 4) % TIPS.length;
+  const tip = TIPS[tipIdx];
 
   return (
-    <CleanerLayout>
-      <div className="space-y-8">
-        {/* Welcome Section */}
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            Welcome back, {displayName}!
-            <span className="text-3xl">👋</span>
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Here's your cleaning business overview
-          </p>
+    <main className="flex-1 bg-background min-h-screen">
+      {/* ── HERO HEADER ─────────────────────────────────────────────────── */}
+      <div className={`relative overflow-hidden bg-gradient-to-br ${tierStyle.gradient} border-b border-border/50`}>
+        <div className="absolute inset-0 opacity-[0.03]">
+          <img src={cleanerHeroImg} alt="" className="w-full h-full object-cover object-top" />
         </div>
+        <div className="relative container px-4 sm:px-6 py-8 sm:py-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`h-12 w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-black text-xl ${tierStyle.text}`}>
+                  {displayName.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
+                  <h1 className="text-2xl sm:text-3xl font-bold">
+                    Hey, <span className={tierStyle.text}>{displayName}!</span>
+                  </h1>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge className={`${tierStyle.bg} ${tierStyle.text} ${tierStyle.border} capitalize border font-semibold`}>
+                  <Award className="h-3 w-3 mr-1" />{tier} Tier
+                </Badge>
+                {profile?.reliability_score && (
+                  <Badge variant="outline" className="border-border/60">
+                    <Shield className="h-3 w-3 mr-1 text-success" />{profile.reliability_score}% Reliability
+                  </Badge>
+                )}
+              </div>
+            </motion.div>
 
-        {/* Today's Job Banner */}
-        <TodayJobBanner jobs={jobs} />
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {isLoadingStats ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <Skeleton key={i} className="h-24 rounded-xl" />
-              ))}
-            </>
-          ) : (
-            <>
-              <StatCard
-                icon={Briefcase}
-                value={stats.jobsThisWeek}
-                label="Jobs This Week"
-                iconColor="text-primary"
-                iconBgColor="bg-primary/10"
-              />
-              <StatCard
-                icon={Clock}
-                value={stats.hoursThisWeek}
-                label="Hours This Week"
-                iconColor="text-secondary-foreground"
-                iconBgColor="bg-secondary"
-              />
-              <StatCard
-                icon={DollarSign}
-                value={`$${stats.earnedThisWeek}`}
-                label="Earned This Week"
-                iconColor="text-success"
-                iconBgColor="bg-success/10"
-              />
-              <StatCard
-                icon={MessageSquare}
-                value={stats.unreadMessages}
-                label="Unread Messages"
-                iconColor="text-foreground"
-                iconBgColor="bg-muted"
-              />
-            </>
-          )}
+            <div className="flex gap-3 flex-wrap">
+              <Button asChild variant="outline" className="rounded-xl h-10">
+                <Link to="/cleaner/marketplace"><Search className="h-4 w-4 mr-2" />Find Jobs</Link>
+              </Button>
+              <Button asChild className="rounded-xl h-10">
+                <Link to="/cleaner/jobs"><Briefcase className="h-4 w-4 mr-2" />My Jobs</Link>
+              </Button>
+            </div>
+          </div>
         </div>
-
-        {/* Reliability Score & Tier Badge */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2">
-            {isLoadingProfile ? (
-              <Skeleton className="h-32 rounded-xl" />
-            ) : (
-              <ReliabilityScore 
-                score={profile?.reliability_score || 0} 
-                tier={tier} 
-              />
-            )}
-          </div>
-          <TierBadge />
-        </div>
-
-        {/* Profile Completion Nudge */}
-        {profile && (
-          <ProfileCompletion
-            profile={profile}
-            hasServiceAreas={false}
-            hasAvailability={false}
-          />
-        )}
-
-        {/* Tier Progress Map */}
-        {profile && (
-          <TierProgressMap
-            currentTier={(profile.tier as CleanerTier) || 'bronze'}
-            reliabilityScore={profile.reliability_score || 0}
-            jobsCompleted={profile.jobs_completed || 0}
-          />
-        )}
-
-        {/* Tip of the Day */}
-        <TipCard tier={tier} score={profile?.reliability_score || 0} />
-
-        {/* Gamification Section */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Goals & Rewards</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <GoalsCard />
-            <StreakCard />
-            <BoostCard />
-          </div>
-        </section>
-
-        {/* Referral CTA */}
-        <InviteFriendsCTA linkTo="/cleaner/referral" />
-
-        {/* Quick Actions */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickAction
-              icon={Search}
-              label="Find Jobs"
-              href="/cleaner/marketplace"
-              iconColor="text-primary-foreground"
-              iconBgColor="bg-primary"
-            />
-            <QuickAction
-              icon={Briefcase}
-              label="My Active Jobs"
-              href="/cleaner/jobs"
-            />
-            <QuickAction
-              icon={Calendar}
-              label="Job Calendar"
-              href="/cleaner/schedule"
-            />
-            <QuickAction
-              icon={DollarSign}
-              label="Earnings"
-              href="/cleaner/earnings"
-            />
-          </div>
-        </section>
-
-        {/* All Cleaner Features */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">All Cleaner Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FeatureCard
-              icon={Search}
-              title="Job Marketplace"
-              description="Find new cleaning opportunities"
-              href="/cleaner/marketplace"
-              iconColor="text-primary"
-              iconBgColor="bg-primary/10"
-            />
-            <FeatureCard
-              icon={Briefcase}
-              title="My Active Jobs"
-              description="Manage accepted bookings"
-              href="/cleaner/jobs"
-              iconColor="text-secondary-foreground"
-              iconBgColor="bg-secondary"
-            />
-            <FeatureCard
-              icon={Calendar}
-              title="Job Calendar"
-              description="View all jobs on a calendar"
-              href="/cleaner/schedule"
-              iconColor="text-accent-foreground"
-              iconBgColor="bg-accent"
-            />
-            <FeatureCard
-              icon={DollarSign}
-              title="Earnings & Payouts"
-              description="Track income and request payouts"
-              href="/cleaner/earnings"
-              iconColor="text-success"
-              iconBgColor="bg-success/10"
-            />
-            <FeatureCard
-              icon={BarChart3}
-              title="Analytics"
-              description="Performance metrics and insights"
-              href="/cleaner/analytics"
-              iconColor="text-destructive"
-              iconBgColor="bg-destructive/10"
-            />
-            <FeatureCard
-              icon={BookOpen}
-              title="Resources & Education"
-              description="Tips, discounts, and training"
-              href="/cleaner/resources"
-              iconColor="text-primary"
-              iconBgColor="bg-primary/5"
-            />
-            <FeatureCard
-              icon={MessageSquare}
-              title="Messages"
-              description="Chat with clients"
-              href="/cleaner/messages"
-              iconColor="text-foreground"
-              iconBgColor="bg-muted"
-            />
-            <FeatureCard
-              icon={Settings}
-              title="Profile Settings"
-              description="Update rates, availability, services"
-              href="/cleaner/profile"
-              iconColor="text-muted-foreground"
-              iconBgColor="bg-muted"
-            />
-            <FeatureCard
-              icon={TrendingUp}
-              title="Reliability Score"
-              description="Learn how your score is calculated"
-              href="/cleaner/reliability"
-              iconColor="text-success"
-              iconBgColor="bg-success/10"
-            />
-            <FeatureCard
-              icon={CalendarClock}
-              title="Availability Settings"
-              description="Set your working hours & time off"
-              href="/cleaner/availability"
-              iconColor="text-warning"
-              iconBgColor="bg-warning/10"
-            />
-            <FeatureCard
-              icon={Package}
-              title="Materials List"
-              description="Recommended cleaning supplies"
-              href="/cleaner/resources"
-              iconColor="text-accent-foreground"
-              iconBgColor="bg-accent/50"
-            />
-            <FeatureCard
-              icon={Gift}
-              title="Referral Program"
-              description="Earn credits by referring cleaners"
-              href="/cleaner/referral"
-              iconColor="text-warning"
-              iconBgColor="bg-warning/10"
-            />
-            <FeatureCard
-              icon={Users}
-              title="My Team"
-              description="Manage your cleaning team"
-              href="/cleaner/team"
-              iconColor="text-primary"
-              iconBgColor="bg-primary/10"
-            />
-          </div>
-        </section>
       </div>
-    </CleanerLayout>
+
+      <CleanerLayout>
+        <div className="space-y-8">
+
+          {/* Today's job */}
+          <TodayJobBanner jobs={jobs} />
+
+          {/* Stats Grid */}
+          <section>
+            <h2 className="text-lg font-bold mb-4 text-muted-foreground uppercase tracking-wide text-xs">This Week</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {isLoadingStats ? (
+                [1,2,3,4].map(i => <Skeleton key={i} className="h-24 rounded-2xl" />)
+              ) : (
+                <>
+                  <motion.div whileHover={{ y: -2 }}>
+                    <StatCard icon={Briefcase} value={stats.jobsThisWeek} label="Jobs This Week" iconColor="text-primary" iconBgColor="bg-primary/10" />
+                  </motion.div>
+                  <motion.div whileHover={{ y: -2 }}>
+                    <StatCard icon={Clock} value={`${stats.hoursThisWeek}h`} label="Hours Worked" iconColor="text-[hsl(var(--pt-purple))]" iconBgColor="bg-[hsl(var(--pt-purple)/0.1)]" />
+                  </motion.div>
+                  <motion.div whileHover={{ y: -2 }}>
+                    <StatCard icon={DollarSign} value={`$${stats.earnedThisWeek}`} label="Earned This Week" iconColor="text-success" iconBgColor="bg-success/10" />
+                  </motion.div>
+                  <motion.div whileHover={{ y: -2 }}>
+                    <StatCard icon={MessageSquare} value={stats.unreadMessages} label="Unread Messages" iconColor="text-warning" iconBgColor="bg-warning/10" />
+                  </motion.div>
+                </>
+              )}
+            </div>
+          </section>
+
+          {/* Reliability + Tier */}
+          <section>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2">
+                {isLoadingProfile ? <Skeleton className="h-36 rounded-2xl" /> : (
+                  <ReliabilityScore score={profile?.reliability_score || 0} tier={tier} />
+                )}
+              </div>
+              <TierBadge />
+            </div>
+          </section>
+
+          {/* Profile completion */}
+          {profile && (
+            <ProfileCompletion profile={profile} hasServiceAreas={false} hasAvailability={false} />
+          )}
+
+          {/* Tier Progress */}
+          {profile && (
+            <TierProgressMap
+              currentTier={tier}
+              reliabilityScore={profile.reliability_score || 0}
+              jobsCompleted={profile.jobs_completed || 0}
+            />
+          )}
+
+          {/* Tip of the day */}
+          <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <Card className="bg-gradient-to-r from-primary/5 to-[hsl(var(--pt-aqua)/0.05)] border-primary/20">
+              <CardContent className="p-5 flex items-start gap-4">
+                <span className="text-3xl flex-shrink-0">{tip.icon}</span>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-primary mb-1 flex items-center gap-1">
+                    <Lightbulb className="h-3.5 w-3.5" /> Tip of the Day
+                  </p>
+                  <p className="text-sm text-foreground leading-relaxed">{tip.text}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Gamification */}
+          <section>
+            <h2 className="text-xl font-bold mb-4">🎯 Goals & Rewards</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <GoalsCard />
+              <StreakCard />
+              <BoostCard />
+            </div>
+          </section>
+
+          {/* Referral */}
+          <InviteFriendsCTA linkTo="/cleaner/referral" />
+
+          {/* All Features by Category */}
+          {FEATURE_SECTIONS.map((section, si) => (
+            <motion.section
+              key={section.title}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ delay: si * 0.05 }}
+            >
+              <h2 className="text-xl font-bold mb-4">{section.title}</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {section.items.map((item, i) => (
+                  <motion.div key={item.label} whileHover={{ y: -3, scale: 1.01 }} transition={{ type: "spring", stiffness: 400 }}>
+                    <Link to={item.href}>
+                      <Card className={`border ${section.color} hover:shadow-elevated transition-all duration-200 cursor-pointer h-full`}>
+                        <CardContent className="p-4">
+                          <div className={`h-10 w-10 rounded-xl ${section.iconBg} flex items-center justify-center mb-3`}>
+                            <item.icon className={`h-5 w-5 ${section.iconColor}`} />
+                          </div>
+                          <p className="font-semibold text-sm leading-tight">{item.label}</p>
+                          <p className="text-xs text-muted-foreground mt-1 leading-snug">{item.desc}</p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.section>
+          ))}
+        </div>
+      </CleanerLayout>
+    </main>
   );
 }

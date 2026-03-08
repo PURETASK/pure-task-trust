@@ -1,138 +1,266 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { RevenueTicker } from "@/components/admin/RevenueTicker";
+import { useAdminCEOStats } from "@/hooks/useAdminStats";
+import adminHeroImg from "@/assets/admin-hero.jpg";
 import {
   BarChart3, TrendingUp, Activity, DollarSign, Users, Star, PieChart,
   Shield, AlertTriangle, FileText, CheckCircle, MapPin,
-  Calendar, Briefcase, CreditCard, MessageSquare, Settings, Flag
+  Calendar, Briefcase, CreditCard, MessageSquare, Settings, Flag,
+  Zap, ArrowUpRight, ArrowDownRight, RefreshCw, ChevronRight, Terminal,
+  Globe, Lock, Eye, Database, Bell, Award, Target, Package
 } from "lucide-react";
-import { useAdminCEOStats } from "@/hooks/useAdminStats";
 
-const SECTIONS = [
+interface DashSection {
+  title: string;
+  emoji: string;
+  accent: string;
+  accentText: string;
+  accentBg: string;
+  items: { title: string; desc: string; href: string; icon: any; badge?: string }[];
+}
+
+const SECTIONS: DashSection[] = [
   {
-    title: "Analytics",
-    color: "bg-primary/5 border-primary/20",
-    iconColor: "text-primary",
-    iconBg: "bg-primary/10",
+    title: "Analytics & Insights",
+    emoji: "📊",
+    accent: "border-primary/20",
+    accentText: "text-primary",
+    accentBg: "bg-primary/8",
     items: [
-      { title: "Analytics Hub", desc: "Platform-wide overview", href: "/admin/analytics", icon: BarChart3 },
-      { title: "CEO Dashboard", desc: "GMV, revenue & growth KPIs", href: "/admin/ceo", icon: TrendingUp },
-      { title: "Operations", desc: "Booking status & rates", href: "/admin/operations", icon: Activity },
-      { title: "Finance", desc: "Revenue, payouts & reconciliation", href: "/admin/finance", icon: DollarSign },
-      { title: "Growth", desc: "Acquisition & retention funnels", href: "/admin/growth", icon: Users },
-      { title: "Performance", desc: "Ratings & top cleaners", href: "/admin/performance", icon: Star },
-      { title: "Conversions", desc: "Funnel & A/B test results", href: "/admin/conversions", icon: PieChart },
-      { title: "Cohort Analysis", desc: "12-month retention & LTV", href: "/admin/cohort-analysis", icon: BarChart3 },
-      { title: "Geo Insights", desc: "Demand vs. supply heatmap", href: "/admin/geo-insights", icon: MapPin },
+      { icon: TrendingUp, title: "CEO Dashboard", desc: "GMV, revenue & growth KPIs", href: "/admin/ceo", badge: "Live" },
+      { icon: BarChart3, title: "Analytics Hub", desc: "Platform-wide overview", href: "/admin/analytics" },
+      { icon: Activity, title: "Operations", desc: "Booking status & rates", href: "/admin/operations" },
+      { icon: DollarSign, title: "Finance", desc: "Revenue, payouts & reconciliation", href: "/admin/finance" },
+      { icon: Users, title: "Growth", desc: "Acquisition & retention funnels", href: "/admin/growth" },
+      { icon: Star, title: "Performance", desc: "Ratings & top cleaners", href: "/admin/performance" },
+      { icon: PieChart, title: "Conversions", desc: "Funnel & A/B test results", href: "/admin/conversions" },
+      { icon: BarChart3, title: "Cohort Analysis", desc: "12-month retention & LTV", href: "/admin/cohort-analysis" },
+      { icon: MapPin, title: "Geo Insights", desc: "Demand vs. supply heatmap", href: "/admin/geo-insights" },
     ],
   },
   {
     title: "Trust & Safety",
-    color: "bg-destructive/5 border-destructive/20",
-    iconColor: "text-destructive",
-    iconBg: "bg-destructive/10",
+    emoji: "🛡️",
+    accent: "border-destructive/20",
+    accentText: "text-destructive",
+    accentBg: "bg-destructive/8",
     items: [
-      { title: "Trust & Safety", desc: "Priority triage queue", href: "/admin/trust-safety", icon: Shield },
-      { title: "Fraud Alerts", desc: "Suspicious activity flags", href: "/admin/fraud-alerts", icon: AlertTriangle },
-      { title: "Disputes", desc: "Open dispute cases", href: "/admin/disputes", icon: FileText },
-      { title: "Client Risk", desc: "Risk scoring by client", href: "/admin/client-risk", icon: Users },
-      { title: "ID Verifications", desc: "Pending & expired IDs", href: "/admin/id-verifications", icon: CheckCircle },
-      { title: "Safety Reports", desc: "Trust & safety incident log", href: "/admin/trust-safety-reports", icon: PieChart },
+      { icon: Shield, title: "Trust & Safety", desc: "Priority triage queue", href: "/admin/trust-safety", badge: "Priority" },
+      { icon: AlertTriangle, title: "Fraud Alerts", desc: "Suspicious activity flags", href: "/admin/fraud-alerts" },
+      { icon: FileText, title: "Disputes", desc: "Open dispute cases", href: "/admin/disputes" },
+      { icon: Users, title: "Client Risk", desc: "Risk scoring by client", href: "/admin/client-risk" },
+      { icon: CheckCircle, title: "ID Verifications", desc: "Pending & expired IDs", href: "/admin/id-verifications" },
+      { icon: Flag, title: "Safety Reports", desc: "Trust & safety incident log", href: "/admin/trust-safety-reports" },
     ],
   },
   {
-    title: "Management",
-    color: "bg-success/5 border-success/20",
-    iconColor: "text-success",
-    iconBg: "bg-success/10",
+    title: "Platform Management",
+    emoji: "⚙️",
+    accent: "border-success/20",
+    accentText: "text-success",
+    accentBg: "bg-success/8",
     items: [
-      { title: "Users", desc: "Clients, cleaners & admins", href: "/admin/users", icon: Users },
-      { title: "Bookings", desc: "All jobs & booking console", href: "/admin/bookings", icon: Calendar },
-      { title: "Client Jobs", desc: "Jobs by client view", href: "/admin/client-jobs", icon: Briefcase },
-      { title: "Pricing Rules", desc: "Dynamic pricing config", href: "/admin/pricing-rules", icon: CreditCard },
-      { title: "Pricing Management", desc: "Bundle offers & tiers", href: "/admin/pricing", icon: DollarSign },
-      { title: "Bulk Comms", desc: "Targeted notifications", href: "/admin/bulk-comms", icon: MessageSquare },
-      { title: "Platform Config", desc: "Live fees & feature flags", href: "/admin/platform-config", icon: Settings },
+      { icon: Users, title: "Users", desc: "Clients, cleaners & admins", href: "/admin/users" },
+      { icon: Calendar, title: "Bookings Console", desc: "All jobs & booking status", href: "/admin/bookings" },
+      { icon: Briefcase, title: "Client Jobs", desc: "Jobs by client view", href: "/admin/client-jobs" },
+      { icon: CreditCard, title: "Pricing Rules", desc: "Dynamic pricing config", href: "/admin/pricing-rules" },
+      { icon: Package, title: "Pricing Mgmt", desc: "Bundle offers & tiers", href: "/admin/pricing" },
+      { icon: MessageSquare, title: "Bulk Comms", desc: "Targeted notifications", href: "/admin/bulk-comms" },
+      { icon: Settings, title: "Platform Config", desc: "Live fees & feature flags", href: "/admin/platform-config" },
     ],
   },
 ];
 
+function StatKPI({ label, value, change, icon: Icon, color }: { label: string; value: string | number; change?: number; icon: any; color: string }) {
+  return (
+    <Card className={`border ${color} hover:shadow-elevated transition-all`}>
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <div className={`h-10 w-10 rounded-xl ${color.replace("border-", "bg-").replace("/20", "/10")} flex items-center justify-center`}>
+            <Icon className={`h-5 w-5 ${color.replace("border-", "text-").replace("/20", "")}`} />
+          </div>
+          {change !== undefined && (
+            <div className={`flex items-center text-xs font-semibold ${change >= 0 ? "text-success" : "text-destructive"}`}>
+              {change >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+              {Math.abs(change)}%
+            </div>
+          )}
+        </div>
+        <p className="text-2xl font-black">{value}</p>
+        <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function AdminHub() {
-  const { data: stats } = useAdminCEOStats();
+  const { data: stats, isLoading, refetch } = useAdminCEOStats();
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Shield className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Admin Command Center</h1>
-              <p className="text-muted-foreground">Full platform overview & management</p>
-            </div>
-          </div>
+    <main className="flex-1 bg-background min-h-screen">
+      {/* ── EPIC HEADER ─────────────────────────────────────────────────── */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(220,20%,6%)] to-[hsl(210,30%,12%)] text-white">
+        <div className="absolute inset-0">
+          <img src={adminHeroImg} alt="" className="w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,20%,6%)/95] via-[hsl(220,20%,6%)/80] to-transparent" />
         </div>
 
-        {/* Live Stats Bar */}
-        {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {[
-              { label: "GMV This Month", value: `${stats.gmvThis.toLocaleString()} cr`, icon: TrendingUp, color: "text-primary" },
-              { label: "Platform Revenue", value: `${stats.revenueThis.toLocaleString()} cr`, icon: DollarSign, color: "text-success" },
-              { label: "Bookings This Month", value: stats.bookingsThis, icon: Calendar, color: "text-blue-500" },
-              { label: "Total Users", value: stats.totalUsers.toLocaleString(), icon: Users, color: "text-warning" },
-            ].map((stat, i) => (
-              <Card key={i}>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className={`h-9 w-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0`}>
-                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+        {/* Animated grid lines */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+          backgroundSize: "40px 40px"
+        }} />
+
+        <div className="relative container px-4 sm:px-6 py-10 sm:py-14">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-12 w-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
+                    <Shield className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
-                    <p className="text-xl font-bold">{stat.value}</p>
+                    <p className="text-white/60 text-sm font-medium">PureTask</p>
+                    <h1 className="text-3xl sm:text-4xl font-black text-white">Admin Command Center</h1>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+                <p className="text-white/60 text-base max-w-xl">
+                  Full platform control — analytics, trust & safety, user management, and live configuration.
+                </p>
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <Badge className="bg-success/20 text-success border-success/30">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success mr-1.5 animate-pulse" />
+                    System Operational
+                  </Badge>
+                  <Badge className="bg-white/10 text-white/80 border-white/20">
+                    <Terminal className="h-3 w-3 mr-1" /> Press ⌘K for commands
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}
+                  className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white rounded-xl">
+                  <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} /> Refresh
+                </Button>
+                <Button asChild size="sm" className="bg-white text-[hsl(220,20%,6%)] hover:bg-white/90 rounded-xl font-bold">
+                  <Link to="/admin/ceo">
+                    <TrendingUp className="h-4 w-4 mr-2" /> CEO View
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="container px-4 sm:px-6 py-8 space-y-10">
+
+        {/* Revenue Ticker */}
+        <RevenueTicker />
+
+        {/* KPI Grid */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Live Metrics</h2>
+            <Link to="/admin/analytics" className="text-sm text-primary hover:underline flex items-center gap-1">
+              Full Analytics <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
-        )}
+
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
+            </div>
+          ) : stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatKPI icon={DollarSign} label="GMV This Month" value={`${stats.gmvThis.toLocaleString()} cr`} change={stats.gmvChange} color="border-primary/20" />
+              <StatKPI icon={TrendingUp} label="Platform Revenue" value={`${stats.revenueThis.toLocaleString()} cr`} change={stats.revenueChange} color="border-success/20" />
+              <StatKPI icon={Calendar} label="Bookings (30d)" value={stats.bookingsThis} change={stats.bookingsChange} color="border-warning/20" />
+              <StatKPI icon={Users} label="Total Users" value={stats.totalUsers.toLocaleString()} color="border-[hsl(var(--pt-purple)/0.2)]" />
+            </div>
+          )}
+        </section>
 
         {/* Dashboard Sections */}
-        <div className="space-y-8">
-          {SECTIONS.map((section) => (
-            <div key={section.title}>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <span className="h-1.5 w-5 rounded-full bg-primary inline-block" />
-                {section.title}
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {section.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link key={item.href} to={item.href}>
-                      <Card className={`border hover:shadow-md transition-all hover:border-primary/30 ${section.color}`}>
+        {SECTIONS.map((section, si) => (
+          <motion.section
+            key={section.title}
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ delay: si * 0.06 }}
+          >
+            <div className="flex items-center gap-2 mb-5">
+              <span className="text-xl">{section.emoji}</span>
+              <h2 className="text-xl font-bold">{section.title}</h2>
+              <div className={`h-1 w-8 rounded-full ${section.accentText.replace("text-", "bg-")} opacity-60`} />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {section.items.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ delay: i * 0.04 }}
+                    whileHover={{ y: -2, scale: 1.01 }}
+                  >
+                    <Link to={item.href}>
+                      <Card className={`border ${section.accent} ${section.accentBg} hover:shadow-elevated hover:border-opacity-60 transition-all duration-200 h-full`}>
                         <CardContent className="p-4 flex items-center gap-3">
-                          <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${section.iconBg}`}>
-                            <Icon className={`h-4 w-4 ${section.iconColor}`} />
+                          <div className={`h-10 w-10 rounded-xl ${section.accentBg} border ${section.accent} flex items-center justify-center flex-shrink-0`}>
+                            <Icon className={`h-5 w-5 ${section.accentText}`} />
                           </div>
-                          <div className="min-w-0">
-                            <p className="font-semibold text-sm">{item.title}</p>
-                            <p className="text-xs text-muted-foreground truncate">{item.desc}</p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold text-sm">{item.title}</p>
+                              {item.badge && (
+                                <Badge className="text-[10px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20">{item.badge}</Badge>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground truncate mt-0.5">{item.desc}</p>
                           </div>
+                          <ChevronRight className={`h-4 w-4 flex-shrink-0 ${section.accentText} opacity-40`} />
                         </CardContent>
                       </Card>
                     </Link>
-                  );
-                })}
-              </div>
+                  </motion.div>
+                );
+              })}
             </div>
-          ))}
-        </div>
-      </motion.div>
-    </div>
+          </motion.section>
+        ))}
+
+        {/* Quick Admin Links footer */}
+        <Card className="border-border/40 bg-muted/20">
+          <CardContent className="p-6">
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <Zap className="h-5 w-5 text-warning" /> Quick Access
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "Users", href: "/admin/users" },
+                { label: "Live Bookings", href: "/admin/bookings" },
+                { label: "Fraud Queue", href: "/admin/fraud-alerts" },
+                { label: "Disputes", href: "/admin/disputes" },
+                { label: "Pricing", href: "/admin/pricing-rules" },
+                { label: "Bulk SMS/Email", href: "/admin/bulk-comms" },
+                { label: "Platform Flags", href: "/admin/platform-config" },
+                { label: "ID Verifications", href: "/admin/id-verifications" },
+              ].map(l => (
+                <Button key={l.href} variant="outline" size="sm" asChild className="rounded-xl h-8 text-xs">
+                  <Link to={l.href}>{l.label}</Link>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }
