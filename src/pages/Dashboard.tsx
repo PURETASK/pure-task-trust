@@ -4,17 +4,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion } from "framer-motion";
-import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Calendar, Clock, Star, Heart, Repeat, Loader2, Trash2, Check, Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useClientJobs } from "@/hooks/useJob";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useRecurringBookings } from "@/hooks/useRecurringBookings";
-import { format } from "date-fns";
+import { format, isToday } from "date-fns";
 import { InviteFriendsCTA } from "@/components/referral";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const navigate = useNavigate();
   const { data: jobs, isLoading } = useClientJobs();
   const { data: favorites, isLoading: loadingFavorites } = useFavorites();
   const { data: recurring, isLoading: loadingRecurring } = useRecurringBookings();
@@ -23,6 +25,9 @@ export default function Dashboard() {
   const upcomingJobs = jobs?.filter(j => ['created', 'pending', 'confirmed', 'in_progress'].includes(j.status)) || [];
   const pendingApprovalJobs = jobs?.filter(j => j.status === 'completed' && j.final_charge_credits == null) || [];
   const pastJobs = jobs?.filter(j => (j.status === 'completed' && j.final_charge_credits != null) || j.status === 'cancelled') || [];
+
+  // Today's active jobs (C3: live status banner)
+  const todayJobs = upcomingJobs.filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)));
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -49,6 +54,15 @@ export default function Dashboard() {
     }
   };
 
+  const getStatusBannerContent = (status: string) => {
+    switch (status) {
+      case 'in_progress': return { label: '🧹 Cleaning in progress right now!', color: 'bg-primary/10 border-primary/30 text-primary' };
+      case 'on_way': return { label: '🚗 Your cleaner is on the way!', color: 'bg-warning/10 border-warning/30 text-warning' };
+      case 'confirmed': return { label: '✅ Booking confirmed for today', color: 'bg-success/10 border-success/30 text-success' };
+      default: return { label: '📅 You have a cleaning scheduled today', color: 'bg-accent border-border text-foreground' };
+    }
+  };
+
   return (
     <main className="flex-1 py-4 sm:py-8">
       <div className="container px-4 sm:px-6">
@@ -69,6 +83,38 @@ export default function Dashboard() {
               </Link>
             </Button>
           </div>
+
+          {/* C3: Today's Job Live Status Banner */}
+          <AnimatePresence>
+            {todayJobs.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mb-6"
+              >
+                {todayJobs.map(job => {
+                  const banner = getStatusBannerContent(job.status);
+                  return (
+                    <Link key={job.id} to={`/booking/${job.id}`}>
+                      <div className={`flex items-center justify-between px-4 py-3 rounded-xl border ${banner.color} cursor-pointer hover:opacity-90 transition-opacity`}>
+                        <div className="flex items-center gap-3">
+                          <Zap className="h-5 w-5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold text-sm">{banner.label}</p>
+                            <p className="text-xs opacity-80">
+                              {format(new Date(job.scheduled_start_at!), 'h:mm a')} · {job.cleaning_type?.replace('_', ' ')} Clean
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-xs font-medium opacity-80">View →</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Referral CTA */}
           <InviteFriendsCTA className="mb-6" />
@@ -181,9 +227,15 @@ export default function Dashboard() {
                     <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="font-semibold mb-2">No upcoming bookings</h3>
                     <p className="text-muted-foreground mb-4">Book your first cleaning to get started</p>
-                    <Button asChild>
-                      <Link to="/book">Book a Cleaning</Link>
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                      <Button asChild>
+                        <Link to="/book">Book a Cleaning</Link>
+                      </Button>
+                      {/* C10: Help CTA on empty state */}
+                      <Button variant="outline" asChild>
+                        <Link to="/help"><HelpCircle className="h-4 w-4 mr-2" />Get Help</Link>
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -227,7 +279,7 @@ export default function Dashboard() {
                                   <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                                   {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d') : 'TBD'}
                                 </span>
-                                <span className="font-medium text-foreground">${job.escrow_credits_reserved || 0}</span>
+                                <span className="font-medium text-foreground">{job.escrow_credits_reserved || 0} credits</span>
                               </div>
                               <Button variant="success" size="sm" asChild className="text-xs sm:text-sm h-8">
                                 <Link to={`/job-approval/${job.id}`}>
@@ -272,8 +324,18 @@ export default function Dashboard() {
                                 {job.cleaning_type?.replace('_', ' ')} Clean • {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d') : ''}
                               </p>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 flex-wrap">
                               {getStatusBadge(job.status)}
+                              {/* C1: Re-book in 1 tap */}
+                              {job.status === 'completed' && job.cleaner_id && (
+                                <Button size="sm" asChild>
+                                  <Link to={`/book?cleaner=${job.cleaner_id}`}>
+                                    <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+                                    Book Again
+                                  </Link>
+                                </Button>
+                              )}
+                              {/* Leave Review */}
                               {job.status === 'completed' && (
                                 <Button variant="outline" size="sm" asChild>
                                   <Link to={`/reviews?job=${job.id}`}>
@@ -282,8 +344,8 @@ export default function Dashboard() {
                                   </Link>
                                 </Button>
                               )}
-                              <Button variant="outline" size="sm" asChild>
-                                <Link to={`/booking/${job.id}`}>View Details</Link>
+                              <Button variant="ghost" size="sm" asChild>
+                                <Link to={`/booking/${job.id}`}>Details</Link>
                               </Button>
                             </div>
                           </div>
@@ -297,7 +359,11 @@ export default function Dashboard() {
                   <CardContent className="py-12 text-center">
                     <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="font-semibold mb-2">No past jobs yet</h3>
-                    <p className="text-muted-foreground">Your completed jobs will appear here</p>
+                    <p className="text-muted-foreground mb-4">Your completed jobs will appear here</p>
+                    {/* C10: Help CTA on empty state */}
+                    <Button variant="outline" asChild>
+                      <Link to="/help"><HelpCircle className="h-4 w-4 mr-2" />Get Help</Link>
+                    </Button>
                   </CardContent>
                 </Card>
               )}
@@ -338,7 +404,7 @@ export default function Dashboard() {
                                 <span>{fav.cleaner?.jobs_completed || 0} jobs</span>
                               </div>
                               <p className="text-sm text-muted-foreground mt-1">
-                                ${fav.cleaner?.hourly_rate_credits || 35}/hr
+                                {fav.cleaner?.hourly_rate_credits || 35} credits/hr
                               </p>
                             </div>
                             <Button
@@ -355,8 +421,11 @@ export default function Dashboard() {
                             <Button variant="outline" size="sm" className="flex-1" asChild>
                               <Link to={`/cleaner/${fav.cleaner_id}`}>View Profile</Link>
                             </Button>
+                            {/* C1: Book again from favorites */}
                             <Button size="sm" className="flex-1" asChild>
-                              <Link to={`/book?cleaner=${fav.cleaner_id}`}>Book</Link>
+                              <Link to={`/book?cleaner=${fav.cleaner_id}`}>
+                                Book
+                              </Link>
                             </Button>
                           </div>
                         </CardContent>
@@ -406,7 +475,7 @@ export default function Dashboard() {
                                 </Badge>
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                {getFrequencyLabel(sub.frequency)} • ${sub.credit_amount}
+                                {getFrequencyLabel(sub.frequency)} • {sub.credit_amount} credits
                               </p>
                               {sub.next_job_date && (
                                 <p className="text-sm text-muted-foreground">

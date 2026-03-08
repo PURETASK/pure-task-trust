@@ -15,7 +15,8 @@ import {
   DollarSign,
   Settings,
   Briefcase,
-  Users
+  Users,
+  CreditCard
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,12 +33,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
+import { useWallet } from "@/hooks/useWallet";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+
+  // C5: Credit balance chip — only for clients
+  const { account } = useWallet();
+  const availableCredits = user?.role === 'client' && account
+    ? (account.current_balance || 0) - (account.held_balance || 0)
+    : null;
 
   const handleLogout = async () => {
     await logout();
@@ -120,6 +128,18 @@ export function Header() {
             <ThemeToggle />
             {isAuthenticated && <NotificationBell />}
             {isAuthenticated && user?.role === 'admin' && <AdminAlertsBadge />}
+
+            {/* C5: Credit balance chip for clients */}
+            {isAuthenticated && user?.role === 'client' && availableCredits !== null && (
+              <Link to="/wallet">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/15 transition-colors cursor-pointer">
+                  <CreditCard className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-sm font-semibold text-primary">{availableCredits}</span>
+                  <span className="text-xs text-primary/70">credits</span>
+                </div>
+              </Link>
+            )}
+
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -181,6 +201,9 @@ export function Header() {
                         <Link to="/wallet" className="flex items-center gap-2 cursor-pointer">
                           <Wallet className="h-4 w-4" />
                           Wallet
+                          {availableCredits !== null && (
+                            <span className="ml-auto text-xs font-medium text-primary">{availableCredits} cr</span>
+                          )}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
@@ -197,32 +220,25 @@ export function Header() {
                       Notifications
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/help" className="flex items-center gap-2 cursor-pointer">
-                      <HelpCircle className="h-4 w-4" />
-                      Help & Support
-                    </Link>
-                  </DropdownMenuItem>
-                  
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={handleLogout}
+                  <DropdownMenuItem
                     className="text-destructive focus:text-destructive cursor-pointer"
+                    onClick={handleLogout}
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    Log out
+                    Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
-                <Button variant="ghost" asChild>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" asChild>
                   <Link to="/auth">Sign In</Link>
                 </Button>
-                <Button asChild>
-                  <Link to="/book">Get Started</Link>
+                <Button size="sm" asChild>
+                  <Link to="/auth?mode=signup">Get Started</Link>
                 </Button>
-              </>
+              </div>
             )}
           </div>
 
@@ -231,7 +247,7 @@ export function Header() {
             className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -243,29 +259,18 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-t border-border"
+            className="md:hidden border-t border-border bg-background overflow-hidden"
           >
-            <div className="container py-4 flex flex-col gap-2">
-              {/* User info on mobile */}
-              {isAuthenticated && user && (
-                <Link 
-                  to={user.role === "cleaner" ? "/cleaner/profile/view" : "/profile"}
-                  className="flex items-center gap-3 px-4 py-3 mb-2 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {getInitials(user.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{user.name}</p>
-                    <p className="text-xs text-primary font-medium capitalize">{user.role}</p>
+            <div className="container mx-auto px-4 py-4 space-y-1">
+              {/* C5: Mobile credit chip */}
+              {isAuthenticated && user?.role === 'client' && availableCredits !== null && (
+                <Link to="/wallet" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-3">
+                    <CreditCard className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-semibold text-primary">{availableCredits} credits available</span>
                   </div>
                 </Link>
               )}
-
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.to;
@@ -273,65 +278,37 @@ export function Header() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`
-                      flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg
-                      ${isActive ? "bg-primary/10 text-primary" : "hover:bg-secondary"}
-                    `}
                     onClick={() => setMobileMenuOpen(false)}
+                    className={`
+                      flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors
+                      ${isActive 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-foreground hover:bg-secondary"
+                      }
+                    `}
                   >
                     <Icon className="h-4 w-4" />
                     {item.label}
                   </Link>
                 );
               })}
-
-              {isAuthenticated && user?.role === "cleaner" && (
-                <Link
-                  to="/cleaner/profile"
-                  className="flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Settings className="h-4 w-4" />
-                  Profile Settings
-                </Link>
-              )}
-
-              <Link
-                to="/help"
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <HelpCircle className="h-4 w-4" />
-                Help & Support
-              </Link>
-
-              <hr className="my-2 border-border" />
-              
               {isAuthenticated ? (
-                <Button 
-                  variant="ghost" 
-                  className="justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
+                <button
+                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-destructive rounded-lg hover:bg-destructive/10 w-full transition-colors"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Log out
-                </Button>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
               ) : (
-                <>
-                  <Button variant="ghost" asChild className="justify-start">
-                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                      Sign In
-                    </Link>
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" size="sm" className="flex-1" asChild>
+                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
                   </Button>
-                  <Button asChild>
-                    <Link to="/book" onClick={() => setMobileMenuOpen(false)}>
-                      Get Started
-                    </Link>
+                  <Button size="sm" className="flex-1" asChild>
+                    <Link to="/auth?mode=signup" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
                   </Button>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
