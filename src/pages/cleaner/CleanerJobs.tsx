@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Clock, Calendar, MessageCircle, Play, Eye, ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { Link } from "react-router-dom";
