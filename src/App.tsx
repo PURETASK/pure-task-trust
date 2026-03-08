@@ -204,11 +204,16 @@ const App = () => (
                       </RequireClient>
                     } />
                     <Route path="/help" element={<Help />} />
-                    <Route path="/settings/notifications" element={
-                      <RequireAuth>
-                        <NotificationSettings />
-                      </RequireAuth>
-                    } />
+                     <Route path="/settings/notifications" element={
+                       <RequireAuth>
+                         <NotificationSettings />
+                       </RequireAuth>
+                     } />
+                     <Route path="/notifications" element={
+                       <RequireAuth requireRole={false}>
+                         <Notifications />
+                       </RequireAuth>
+                     } />
                     <Route path="/properties" element={
                       <RequireClient>
                         <Properties />
