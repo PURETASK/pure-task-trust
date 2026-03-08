@@ -480,7 +480,39 @@ export default function CleanerJobDetail() {
             </CardContent>
           </Card>
         )}
+
+        {/* Floating Help Button */}
+        {!isCompleted && (
+          <div className="fixed bottom-24 right-4 z-50 md:absolute md:bottom-0 md:right-0">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-12 w-12 rounded-full shadow-lg border-2"
+              onClick={() => setSupportOpen(true)}
+              title="Need help?"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
       </div>
+
+      {/* Support Chat Sheet */}
+      {jobId && (
+        <JobSupportChat open={supportOpen} onOpenChange={setSupportOpen} jobId={jobId} />
+      )}
+
+      {/* Client Rating Dialog — shows after completion */}
+      {isCompleted && profile?.id && job.client_id && (
+        <ClientRatingForm
+          open={ratingOpen}
+          onOpenChange={setRatingOpen}
+          jobId={jobId!}
+          cleanerId={profile.id}
+          clientId={job.client_id}
+          clientFirstName={job.client?.first_name}
+        />
+      )}
     </CleanerLayout>
   );
 }
