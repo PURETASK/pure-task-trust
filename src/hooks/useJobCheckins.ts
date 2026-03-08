@@ -144,10 +144,11 @@ export function useJobCheckins(jobId?: string) {
 
       if (error) throw error;
 
-      // Update job with check-in time
+      // Update job with check-in time AND transition status to in_progress
       await supabase
         .from('jobs')
         .update({
+          status: 'in_progress',
           check_in_at: new Date().toISOString(),
           check_in_lat: location.lat,
           check_in_lng: location.lng,
@@ -226,10 +227,11 @@ export function useJobCheckins(jobId?: string) {
 
       if (error) throw error;
 
-      // Update job with check-out time
+      // Update job with check-out time AND transition status to completed
       await supabase
         .from('jobs')
         .update({
+          status: 'completed',
           check_out_at: new Date().toISOString(),
           check_out_lat: location.lat,
           check_out_lng: location.lng,
