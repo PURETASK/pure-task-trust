@@ -385,6 +385,7 @@ export type Database = {
           completed_at: string | null
           created_at: string
           expires_at: string | null
+          expiry_warning_sent_at: string | null
           id: string
           metadata: Json | null
           provider: string
@@ -398,6 +399,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           expires_at?: string | null
+          expiry_warning_sent_at?: string | null
           id?: string
           metadata?: Json | null
           provider?: string
@@ -411,6 +413,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           expires_at?: string | null
+          expiry_warning_sent_at?: string | null
           id?: string
           metadata?: Json | null
           provider?: string
@@ -5270,6 +5273,7 @@ export type Database = {
           reliability_score: number | null
           tier: string | null
           travel_radius_km: number | null
+          updated_at: string | null
           user_id: string | null
         }
         Insert: {
@@ -5293,6 +5297,7 @@ export type Database = {
           reliability_score?: number | null
           tier?: string | null
           travel_radius_km?: number | null
+          updated_at?: string | null
           user_id?: string | null
         }
         Update: {
@@ -5316,6 +5321,7 @@ export type Database = {
           reliability_score?: number | null
           tier?: string | null
           travel_radius_km?: number | null
+          updated_at?: string | null
           user_id?: string | null
         }
         Relationships: []
