@@ -65,8 +65,9 @@ export default function AdminUsersPage() {
     filterBySearch(`${c.first_name || ""} ${c.last_name || ""}`)
   );
 
-  const openInspector = (userId: string) => {
+  const openInspector = (userId: string, role: "client" | "cleaner") => {
     setSelectedUserId(userId);
+    setSelectedUserRole(role);
     setInspectorOpen(true);
   };
 
