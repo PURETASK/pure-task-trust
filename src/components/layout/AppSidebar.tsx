@@ -197,6 +197,9 @@ export function AppSidebar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const isEnd = (url: string) =>
+    url === "/" || url === "/dashboard" || url === "/cleaner/dashboard" || url === "/admin/hub";
+
   return (
     <TooltipProvider delayDuration={0}>
       <Sidebar
