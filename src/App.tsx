@@ -363,6 +363,11 @@ const App = () => (
                         <CleanerAIAssistant />
                       </RequireCleaner>
                     } />
+                    <Route path="/cleaner/settings" element={
+                      <RequireCleaner>
+                        <CleanerSettings />
+                      </RequireCleaner>
+                    } />
                     
                     <Route path="*" element={<NotFound />} />
                   </Routes>
