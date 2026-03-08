@@ -128,6 +128,7 @@ const adminNavItems = [
   {
     group: "Analytics",
     items: [
+      { title: "Admin Hub", url: "/admin/hub", icon: LayoutDashboard },
       { title: "Analytics Hub", url: "/admin/analytics", icon: BarChart3 },
       { title: "CEO Dashboard", url: "/admin/ceo", icon: TrendingUp },
       { title: "Operations", url: "/admin/operations", icon: Activity },
