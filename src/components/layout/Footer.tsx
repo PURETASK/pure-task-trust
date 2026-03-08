@@ -1,13 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Sparkles, Shield, MapPin, Award, ArrowRight,
+  Sparkles, Shield, MapPin, Award,
   LayoutDashboard, Search, Wallet, MessageSquare, Calendar,
-  DollarSign, Heart, BookOpen, Star, Users, HelpCircle, Scale,
-  BarChart3, AlertTriangle, Settings, TrendingUp, Bot
+  DollarSign, Heart, Star, Users, HelpCircle,
+  BarChart3, Settings, TrendingUp, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 function FooterLink({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) {
   return (
