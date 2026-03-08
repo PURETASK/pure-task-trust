@@ -38,6 +38,8 @@ export default function CleanerJobDetail() {
   const fileInputRef = useState<HTMLInputElement | null>(null);
   const [fileEl, setFileEl] = useState<HTMLInputElement | null>(null);
   const [elapsedMin, setElapsedMin] = useState(0);
+  const [supportOpen, setSupportOpen] = useState(false);
+  const [ratingOpen, setRatingOpen] = useState(false);
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
