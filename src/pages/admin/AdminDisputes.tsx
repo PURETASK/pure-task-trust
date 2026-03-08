@@ -13,11 +13,11 @@ import { Separator } from '@/components/ui/separator';
 import { 
   MessageSquare, Clock, CheckCircle, XCircle, AlertCircle,
   Search, Eye, DollarSign, User, Calendar, RefreshCw, Loader2,
-  Shield, ArrowRight, FileText
+  Shield, FileText, Timer
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, differenceInHours } from 'date-fns';
 import { toast } from 'sonner';
 
 interface AdminDispute {
@@ -41,6 +41,25 @@ interface AdminDispute {
   };
 }
 
+function SLABadge({ createdAt, status }: { createdAt: string; status: string }) {
+  if (status === 'resolved' || status === 'dismissed' || status === 'closed') return null;
+  const hours = differenceInHours(new Date(), new Date(createdAt));
+  const urgency = hours >= 48 ? 'critical' : hours >= 24 ? 'high' : hours >= 8 ? 'medium' : 'low';
+  const label = hours >= 48 ? `${Math.floor(hours / 24)}d old` : hours >= 1 ? `${hours}h old` : '<1h old';
+  const styles = {
+    critical: 'bg-destructive/10 text-destructive border-destructive/30',
+    high: 'bg-orange-500/10 text-orange-600 border-orange-500/30',
+    medium: 'bg-warning/10 text-warning border-warning/30',
+    low: 'bg-muted text-muted-foreground border-border',
+  };
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${styles[urgency]}`}>
+      <Timer className="h-3 w-3" />
+      {label}
+    </span>
+  );
+}
+
 const AdminDisputes = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
@@ -56,16 +75,7 @@ const AdminDisputes = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('disputes')
-        .select(`
-          *,
-          job:jobs(
-            cleaning_type,
-            scheduled_start_at,
-            escrow_credits_reserved,
-            cleaner:cleaner_profiles(first_name, last_name),
-            client:client_profiles(first_name, last_name)
-          )
-        `)
+        .select(`*, job:jobs(cleaning_type, scheduled_start_at, escrow_credits_reserved, cleaner:cleaner_profiles(first_name, last_name), client:client_profiles(first_name, last_name))`)
         .order('created_at', { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -74,23 +84,15 @@ const AdminDisputes = () => {
   });
 
   const resolveDispute = useMutation({
-    mutationFn: async ({ disputeId, type, notes, refund }: {
-      disputeId: string;
-      type: string;
-      notes: string;
-      refund: number;
-    }) => {
-      const { error } = await supabase
-        .from('disputes')
-        .update({
-          status: 'resolved' as const,
-          resolution_type: type,
-          resolution_notes: notes,
-          refund_amount_credits: refund || null,
-          resolved_at: new Date().toISOString(),
-          admin_notes: adminNotes || null,
-        })
-        .eq('id', disputeId);
+    mutationFn: async ({ disputeId, type, notes, refund }: { disputeId: string; type: string; notes: string; refund: number }) => {
+      const { error } = await supabase.from('disputes').update({
+        status: 'resolved' as const,
+        resolution_type: type,
+        resolution_notes: notes,
+        refund_amount_credits: refund || null,
+        resolved_at: new Date().toISOString(),
+        admin_notes: adminNotes || null,
+      }).eq('id', disputeId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -103,13 +105,10 @@ const AdminDisputes = () => {
 
   const updateStatus = useMutation({
     mutationFn: async ({ disputeId, status, notes }: { disputeId: string; status: string; notes?: string }) => {
-      const { error } = await supabase
-        .from('disputes')
-        .update({
-          status: status as 'open' | 'investigating' | 'resolved' | 'closed',
-          admin_notes: notes || null,
-        })
-        .eq('id', disputeId);
+      const { error } = await supabase.from('disputes').update({
+        status: status as 'open' | 'investigating' | 'resolved' | 'closed',
+        admin_notes: notes || null,
+      }).eq('id', disputeId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -130,9 +129,11 @@ const AdminDisputes = () => {
   const openCount = disputes.filter(d => d.status === 'open').length;
   const investigatingCount = disputes.filter(d => d.status === 'investigating').length;
   const resolvedCount = disputes.filter(d => d.status === 'resolved').length;
-  const totalRefunds = disputes
-    .filter(d => d.refund_amount_credits)
-    .reduce((s, d) => s + (d.refund_amount_credits || 0), 0);
+  const urgentCount = disputes.filter(d => {
+    if (d.status === 'resolved' || d.status === 'dismissed') return false;
+    return differenceInHours(new Date(), new Date(d.created_at)) >= 24;
+  }).length;
+  const totalRefunds = disputes.filter(d => d.refund_amount_credits).reduce((s, d) => s + (d.refund_amount_credits || 0), 0);
 
   const getStatusBadge = (status: string) => {
     const map: Record<string, string> = {
@@ -142,45 +143,39 @@ const AdminDisputes = () => {
       escalated: 'bg-destructive/10 text-destructive border-destructive/30',
       dismissed: 'bg-muted text-muted-foreground border-border',
     };
-    return (
-      <Badge variant="outline" className={map[status] || ''}>
-        {status.replace('_', ' ')}
-      </Badge>
-    );
+    return <Badge variant="outline" className={map[status] || ''}>{status.replace('_', ' ')}</Badge>;
   };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <Link to="/admin/trust-safety" className="hover:text-primary">Trust & Safety</Link>
-              <span>/</span>
-              <span>Disputes</span>
+              <span>/</span><span>Disputes</span>
             </div>
             <h1 className="text-3xl font-bold">Disputes Management</h1>
             <p className="text-muted-foreground mt-1">Review, investigate, and resolve customer disputes</p>
           </div>
           <Button variant="outline" onClick={() => refetch()}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            <RefreshCw className="h-4 w-4 mr-2" />Refresh
           </Button>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           {[
             { label: 'Open', count: openCount, color: 'border-l-yellow-500', icon: AlertCircle, iconColor: 'text-yellow-600' },
             { label: 'Investigating', count: investigatingCount, color: 'border-l-blue-500', icon: Clock, iconColor: 'text-blue-600' },
             { label: 'Resolved', count: resolvedCount, color: 'border-l-success', icon: CheckCircle, iconColor: 'text-success' },
+            { label: '24h+ Urgent', count: urgentCount, color: 'border-l-destructive', icon: Timer, iconColor: 'text-destructive' },
             { label: 'Total Refunds', count: `${totalRefunds} cr`, color: 'border-l-purple-500', icon: DollarSign, iconColor: 'text-purple-600' },
           ].map(({ label, count, color, icon: Icon, iconColor }) => (
             <Card key={label} className={`border-l-4 ${color}`}>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className={`h-9 w-9 rounded-full bg-muted flex items-center justify-center`}>
+              <CardContent className="pt-5">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
                     <Icon className={`h-4 w-4 ${iconColor}`} />
                   </div>
                   <div>
@@ -199,12 +194,7 @@ const AdminDisputes = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by job ID or description..."
-                  className="pl-10"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+                <Input placeholder="Search by job ID or description..." className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full sm:w-[160px]">
@@ -234,9 +224,7 @@ const AdminDisputes = () => {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-              </div>
+              <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
             ) : filtered.length === 0 ? (
               <div className="text-center py-12">
                 <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-40" />
@@ -263,35 +251,24 @@ const AdminDisputes = () => {
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="font-mono text-xs text-muted-foreground">#{dispute.job_id.slice(0, 8)}</span>
                         {getStatusBadge(dispute.status)}
+                        <SLABadge createdAt={dispute.created_at} status={dispute.status} />
                         {dispute.refund_amount_credits && (
-                          <Badge variant="outline" className="text-xs">
-                            {dispute.refund_amount_credits} cr refund
-                          </Badge>
+                          <Badge variant="outline" className="text-xs">{dispute.refund_amount_credits} cr refund</Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2">{dispute.client_notes}</p>
                       <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                         {dispute.job?.client && (
-                          <span className="flex items-center gap-1">
-                            <User className="h-3 w-3" />
-                            {dispute.job.client.first_name} {dispute.job.client.last_name}
-                          </span>
+                          <span className="flex items-center gap-1"><User className="h-3 w-3" />{dispute.job.client.first_name} {dispute.job.client.last_name}</span>
                         )}
                         {dispute.job?.cleaner && (
-                          <span className="flex items-center gap-1">
-                            <Shield className="h-3 w-3" />
-                            {dispute.job.cleaner.first_name} {dispute.job.cleaner.last_name}
-                          </span>
+                          <span className="flex items-center gap-1"><Shield className="h-3 w-3" />{dispute.job.cleaner.first_name} {dispute.job.cleaner.last_name}</span>
                         )}
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {format(new Date(dispute.created_at), 'MMM d, yyyy')}
-                        </span>
+                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{format(new Date(dispute.created_at), 'MMM d, yyyy')}</span>
                       </div>
                     </div>
                     <Button variant="outline" size="sm" className="flex-shrink-0">
-                      <Eye className="h-3.5 w-3.5 mr-1" />
-                      Review
+                      <Eye className="h-3.5 w-3.5 mr-1" />Review
                     </Button>
                   </div>
                 ))}
@@ -300,11 +277,8 @@ const AdminDisputes = () => {
           </CardContent>
         </Card>
 
-        {/* Back */}
         <div className="mt-6">
-          <Button variant="outline" asChild>
-            <Link to="/admin/trust-safety">← Back to Trust & Safety</Link>
-          </Button>
+          <Button variant="outline" asChild><Link to="/admin/trust-safety">← Back to Trust & Safety</Link></Button>
         </div>
       </motion.div>
 
@@ -316,157 +290,83 @@ const AdminDisputes = () => {
               <Shield className="h-5 w-5 text-primary" />
               Dispute #{selectedDispute?.job_id.slice(0, 8)}
             </DialogTitle>
-            <DialogDescription>
-              Review the details and take action to resolve this dispute
-            </DialogDescription>
+            <DialogDescription>Review and take action</DialogDescription>
           </DialogHeader>
 
           {selectedDispute && (
             <div className="space-y-5 mt-2">
-              {/* Status + Quick Actions */}
               <div className="flex items-center justify-between">
-                {getStatusBadge(selectedDispute.status)}
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(selectedDispute.status)}
+                  <SLABadge createdAt={selectedDispute.created_at} status={selectedDispute.status} />
+                </div>
                 <div className="flex gap-2">
                   {selectedDispute.status === 'open' && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => updateStatus.mutate({ disputeId: selectedDispute.id, status: 'investigating', notes: adminNotes })}
-                      disabled={updateStatus.isPending}
-                    >
+                    <Button size="sm" variant="outline" onClick={() => updateStatus.mutate({ disputeId: selectedDispute.id, status: 'investigating', notes: adminNotes })} disabled={updateStatus.isPending}>
                       Start Investigation
                     </Button>
                   )}
                   {selectedDispute.status !== 'dismissed' && selectedDispute.status !== 'resolved' && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-muted-foreground"
-                      onClick={() => updateStatus.mutate({ disputeId: selectedDispute.id, status: 'dismissed' })}
-                      disabled={updateStatus.isPending}
-                    >
+                    <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => updateStatus.mutate({ disputeId: selectedDispute.id, status: 'dismissed' })} disabled={updateStatus.isPending}>
                       Dismiss
                     </Button>
                   )}
                 </div>
               </div>
 
-              {/* Job Info */}
               <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-muted/50">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Client</p>
-                  <p className="font-medium text-sm">
-                    {selectedDispute.job?.client?.first_name} {selectedDispute.job?.client?.last_name}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Cleaner</p>
-                  <p className="font-medium text-sm">
-                    {selectedDispute.job?.cleaner?.first_name} {selectedDispute.job?.cleaner?.last_name}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Job Type</p>
-                  <p className="font-medium text-sm capitalize">
-                    {selectedDispute.job?.cleaning_type?.replace('_', ' ')} Clean
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Credits in Escrow</p>
-                  <p className="font-medium text-sm text-warning">
-                    {selectedDispute.job?.escrow_credits_reserved || 0} credits
-                  </p>
-                </div>
+                <div><p className="text-xs text-muted-foreground mb-1">Client</p><p className="font-medium text-sm">{selectedDispute.job?.client?.first_name} {selectedDispute.job?.client?.last_name}</p></div>
+                <div><p className="text-xs text-muted-foreground mb-1">Cleaner</p><p className="font-medium text-sm">{selectedDispute.job?.cleaner?.first_name} {selectedDispute.job?.cleaner?.last_name}</p></div>
+                <div><p className="text-xs text-muted-foreground mb-1">Job Type</p><p className="font-medium text-sm capitalize">{selectedDispute.job?.cleaning_type?.replace('_', ' ')} Clean</p></div>
+                <div><p className="text-xs text-muted-foreground mb-1">Credits in Escrow</p><p className="font-medium text-sm text-warning">{selectedDispute.job?.escrow_credits_reserved || 0} credits</p></div>
               </div>
 
-              {/* Client Notes */}
               <div>
                 <Label className="text-sm font-medium mb-2 block">Client's Description</Label>
-                <div className="p-3 rounded-xl bg-muted/50 text-sm text-muted-foreground">
-                  {selectedDispute.client_notes || 'No description provided'}
-                </div>
+                <div className="p-3 rounded-xl bg-muted/50 text-sm text-muted-foreground">{selectedDispute.client_notes || 'No description provided'}</div>
               </div>
 
               <Separator />
 
-              {/* Admin Actions */}
               <div className="space-y-4">
-                <h4 className="font-semibold flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Resolution
-                </h4>
-
+                <h4 className="font-semibold flex items-center gap-2"><FileText className="h-4 w-4" />Resolution</h4>
                 <div className="space-y-2">
                   <Label>Resolution Type</Label>
                   <Select value={resolutionType} onValueChange={setResolutionType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select resolution..." />
-                    </SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select resolution..." /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="full_refund">Full Refund to Client</SelectItem>
                       <SelectItem value="partial_refund">Partial Refund</SelectItem>
                       <SelectItem value="no_refund">No Refund — Cleaner Paid</SelectItem>
-                      <SelectItem value="credit_bonus">Credit Bonus to Client</SelectItem>
-                      <SelectItem value="cleaner_warning">Cleaner Warning Issued</SelectItem>
-                      <SelectItem value="cleaner_suspended">Cleaner Suspended</SelectItem>
+                      <SelectItem value="goodwill_credit">Goodwill Credit</SelectItem>
+                      <SelectItem value="dismissed">Dismissed (No Action)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-
-                {(resolutionType === 'partial_refund' || resolutionType === 'full_refund' || resolutionType === 'credit_bonus') && (
+                {(resolutionType === 'partial_refund' || resolutionType === 'goodwill_credit') && (
                   <div className="space-y-2">
-                    <Label>Refund/Credit Amount</Label>
-                    <Input
-                      type="number"
-                      placeholder="Credits..."
-                      value={refundAmount}
-                      onChange={(e) => setRefundAmount(e.target.value)}
-                    />
+                    <Label>Refund Amount (credits)</Label>
+                    <Input type="number" placeholder="0" value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />
                   </div>
                 )}
-
+                <div className="space-y-2">
+                  <Label>Admin Notes</Label>
+                  <Textarea placeholder="Internal notes about this dispute..." value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={3} />
+                </div>
                 <div className="space-y-2">
                   <Label>Resolution Notes (visible to parties)</Label>
-                  <Textarea
-                    placeholder="Explain the decision..."
-                    value={resolutionNotes}
-                    onChange={(e) => setResolutionNotes(e.target.value)}
-                    rows={3}
-                  />
+                  <Textarea placeholder="Explain your decision..." value={resolutionNotes} onChange={(e) => setResolutionNotes(e.target.value)} rows={3} />
                 </div>
-
-                <div className="space-y-2">
-                  <Label>Internal Admin Notes (private)</Label>
-                  <Textarea
-                    placeholder="Internal notes..."
-                    value={adminNotes}
-                    onChange={(e) => setAdminNotes(e.target.value)}
-                    rows={2}
-                  />
-                </div>
-
-                <div className="flex gap-3">
+                {selectedDispute.status !== 'resolved' && (
                   <Button
-                    className="flex-1"
-                    onClick={() => resolveDispute.mutate({
-                      disputeId: selectedDispute.id,
-                      type: resolutionType,
-                      notes: resolutionNotes,
-                      refund: Number(refundAmount) || 0,
-                    })}
-                    disabled={resolveDispute.isPending || !resolutionType}
+                    onClick={() => resolveDispute.mutate({ disputeId: selectedDispute.id, type: resolutionType, notes: resolutionNotes, refund: Number(refundAmount) })}
+                    disabled={resolveDispute.isPending || !resolutionType || !resolutionNotes}
+                    className="w-full"
                   >
-                    {resolveDispute.isPending ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                    )}
-                    Resolve Dispute
+                    {resolveDispute.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    <CheckCircle className="h-4 w-4 mr-2" />Resolve Dispute
                   </Button>
-                  <Button variant="outline" onClick={() => setSelectedDispute(null)}>
-                    Cancel
-                  </Button>
-                </div>
+                )}
               </div>
             </div>
           )}
