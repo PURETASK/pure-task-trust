@@ -60,14 +60,14 @@ export default function JobInProgress() {
   const isCompleted = job.status === 'completed';
   const isInProgress = job.status === 'in_progress';
 
-  const statusBadge = {
+  const statusMap: Record<string, { label: string; color: string }> = {
     confirmed: { label: 'Confirmed', color: 'bg-primary text-primary-foreground' },
     on_way: { label: 'On the Way', color: 'bg-blue-500 text-white' },
     arrived: { label: 'Arrived', color: 'bg-accent text-accent-foreground' },
     in_progress: { label: 'In Progress 🧹', color: 'bg-success text-white' },
-    completed: { label: 'Complete', color: 'bg-success text-white' },
-    pending_approval: { label: 'Awaiting Approval', color: 'bg-warning text-white' },
-  }[job.status] || { label: job.status, color: 'bg-secondary' };
+    completed: { label: 'Complete ✅', color: 'bg-success text-white' },
+  };
+  const statusBadge = statusMap[job.status] || { label: job.status, color: 'bg-secondary' };
 
   return (
     <main className="flex-1 py-8">
