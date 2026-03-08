@@ -1,15 +1,18 @@
 import { ReactNode } from "react";
-import { CleanerHeader } from "./CleanerHeader";
 
 interface CleanerLayoutProps {
   children: ReactNode;
 }
 
+/**
+ * CleanerLayout is a lightweight content wrapper used inside cleaner pages.
+ * The global header/sidebar/footer is provided by MainLayout (App.tsx).
+ * This component just applies consistent container padding for cleaner pages.
+ */
 export function CleanerLayout({ children }: CleanerLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
-      <CleanerHeader />
-      <main className="container py-6">{children}</main>
+    <div className="container py-6 max-w-5xl">
+      {children}
     </div>
   );
 }

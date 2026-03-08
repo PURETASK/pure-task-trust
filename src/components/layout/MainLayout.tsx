@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,8 @@ import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
+import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +20,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, HelpCircle, Home, ArrowLeft, Wallet } from "lucide-react";
+import { LogOut, Settings, HelpCircle, Home, ArrowLeft, Wallet, Wifi, WifiOff, Loader2 } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
+import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -34,6 +40,58 @@ function CreditChip() {
       <Wallet className="h-3.5 w-3.5 text-primary" />
       <span className="text-xs font-semibold text-primary">{account.current_balance} cr</span>
     </Link>
+  );
+}
+
+// Availability toggle for cleaners — one-tap online/offline toggle
+function CleanerAvailabilityToggle() {
+  const { profile } = useCleanerProfile();
+  const queryClient = useQueryClient();
+  const [toggling, setToggling] = useState(false);
+
+  const isAvailable = profile?.is_available ?? false;
+
+  const handleToggle = async () => {
+    if (!profile?.id) return;
+    setToggling(true);
+    try {
+      const { error } = await supabase
+        .from("cleaner_profiles")
+        .update({ is_available: !isAvailable })
+        .eq("id", profile.id);
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+      toast.success(
+        !isAvailable
+          ? "You're now online — clients can book you!"
+          : "You're now offline — you won't receive new bookings."
+      );
+    } catch {
+      toast.error("Failed to update availability");
+    } finally {
+      setToggling(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleToggle}
+      disabled={toggling || !profile}
+      className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold transition-all ${
+        isAvailable
+          ? "bg-success/10 border-success/30 text-success hover:bg-success/20"
+          : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
+      }`}
+    >
+      {toggling ? (
+        <Loader2 className="h-3 w-3 animate-spin" />
+      ) : isAvailable ? (
+        <Wifi className="h-3 w-3" />
+      ) : (
+        <WifiOff className="h-3 w-3" />
+      )}
+      {isAvailable ? "Online" : "Offline"}
+    </button>
   );
 }
 
@@ -104,6 +162,17 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
+                    {/* Admin: Command Palette + Alerts Badge */}
+                    {user.role === "admin" && (
+                      <div className="hidden md:flex items-center gap-1">
+                        <AdminCommandPalette />
+                        <AdminAlertsBadge />
+                      </div>
+                    )}
+
+                    {/* Cleaner: Availability Toggle */}
+                    {user.role === "cleaner" && <CleanerAvailabilityToggle />}
+
                     {/* Live credit balance chip for clients */}
                     {user.role === "client" && <CreditChip />}
 
@@ -126,7 +195,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-56">
                         <Link 
-                          to={user.role === "cleaner" ? "/cleaner/profile/view" : "/profile"}
+                          to={user.role === "cleaner" ? "/cleaner/profile/view" : user.role === "admin" ? "/admin/hub" : "/profile"}
                           className="block px-2 py-1.5 hover:bg-accent rounded-sm transition-colors"
                         >
                           <div className="flex items-center gap-3">
