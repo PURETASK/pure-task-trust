@@ -117,6 +117,16 @@ export default function Book() {
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
   
+  // Check if the selected date/time is blocked by the cleaner's availability
+  const isDateBlockedByCleaner = (() => {
+    if (!selectedDate || !cleanerId || !availabilityBlocks || availabilityBlocks.length === 0) return false;
+    // day_of_week: 0=Sun, 1=Mon … 6=Sat (same as getDay)
+    const dayOfWeek = getDay(selectedDate);
+    const hasBlockForDay = availabilityBlocks.some(b => b.day_of_week === dayOfWeek);
+    // If cleaner has blocks and none match this day, day is unavailable
+    return !hasBlockForDay;
+  })();
+  
   // Check if selected cleaning type is allowed for same-day booking
   const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
 
