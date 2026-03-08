@@ -288,6 +288,7 @@ export default function AdminUsersPage() {
       {/* User Inspector Panel */}
       <UserInspectorPanel
         userId={selectedUserId}
+        userRole={selectedUserRole}
         open={inspectorOpen}
         onOpenChange={setInspectorOpen}
       />
