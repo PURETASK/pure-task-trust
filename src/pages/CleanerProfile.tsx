@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Star, Shield, MessageCircle, Heart, Loader2, AlertCircle } from "lucide-react";
+import { Star, Shield, MessageCircle, Heart, Loader2, AlertCircle, MapPin, Clock, Award, CheckCircle2, TrendingUp, Calendar, ChevronRight } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
 import { useReliabilityScore } from "@/hooks/useReliabilityScore";
@@ -14,314 +14,257 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
+const TIER_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
+  elite: { bg: "bg-amber-500/10", text: "text-amber-600", border: "border-amber-500/30", label: "Elite" },
+  gold: { bg: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/30", label: "Gold" },
+  silver: { bg: "bg-slate-400/10", text: "text-slate-500", border: "border-slate-400/30", label: "Silver" },
+  bronze: { bg: "bg-orange-600/10", text: "text-orange-600", border: "border-orange-500/30", label: "Bronze" },
+};
+
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { toast } = useToast();
   const { data: cleaner, isLoading, error } = useCleaner(id || '');
-  const { metrics, scoreBreakdown, isLoading: metricsLoading, error: metricsError } = useReliabilityScore(id);
+  const { metrics, scoreBreakdown, isLoading: metricsLoading } = useReliabilityScore(id);
   const { data: reviews, isLoading: reviewsLoading } = useCleanerReviews(id || '');
   const { data: favorites } = useFavorites();
   const { toggleFavorite, isToggling } = useFavoriteActions();
-
   const isFavorite = favorites?.some(f => f.cleaner_id === id) ?? false;
 
   const handleToggleFavorite = async () => {
-    if (!user) {
-      toast({ title: 'Sign in required', description: 'Please sign in to save favorites.', variant: 'destructive' });
-      return;
-    }
+    if (!user) { toast({ title: 'Sign in required', variant: 'destructive' }); return; }
     try {
       await toggleFavorite({ cleanerId: id!, isFavorite });
-      toast({ title: isFavorite ? 'Removed from favorites' : 'Added to favorites' });
-    } catch {
-      toast({ title: 'Error', description: 'Failed to update favorites.', variant: 'destructive' });
-    }
+      toast({ title: isFavorite ? 'Removed from favorites' : '❤️ Added to favorites' });
+    } catch { toast({ title: 'Error', variant: 'destructive' }); }
   };
 
-  // Fetch cleaner's profile photo from storage
   const { data: profilePhotoUrl } = useQuery({
     queryKey: ['cleaner-photo', cleaner?.userId],
     queryFn: async () => {
       if (!cleaner?.userId) return null;
-      
-      // Try to get the profile photo from storage
-      const { data } = await supabase
-        .storage
-        .from('profile-photos')
-        .getPublicUrl(`${cleaner.userId}/avatar`);
-      
-      // Check if the file exists by making a HEAD request
+      const { data } = await supabase.storage.from('profile-photos').getPublicUrl(`${cleaner.userId}/avatar`);
       try {
-        const response = await fetch(data.publicUrl, { method: 'HEAD' });
-        if (response.ok) {
-          return data.publicUrl;
-        }
-      } catch {
-        // File doesn't exist, return null
-      }
-      return null;
+        const r = await fetch(data.publicUrl, { method: 'HEAD' });
+        return r.ok ? data.publicUrl : null;
+      } catch { return null; }
     },
     enabled: !!cleaner?.userId,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10,
   });
 
-  // Generate initials-based avatar as fallback
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
+  const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
-  // Format review date safely
-  const formatReviewDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d, yyyy');
-    } catch {
-      return 'Recent';
-    }
-  };
+  if (isLoading) return (
+    <main className="flex-1 flex items-center justify-center py-12">
+      <div className="text-center"><Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" /><p className="text-muted-foreground text-sm">Loading profile...</p></div>
+    </main>
+  );
 
-  if (isLoading) {
-    return (
-      <main className="flex-1 flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </main>
-    );
-  }
+  if (error || !cleaner) return (
+    <main className="flex-1 flex items-center justify-center py-12">
+      <div className="text-center">
+        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h1 className="text-2xl font-bold mb-2">Profile not found</h1>
+        <Button asChild><Link to="/discover">Browse Cleaners</Link></Button>
+      </div>
+    </main>
+  );
 
-  if (error || !cleaner) {
-    return (
-      <main className="flex-1 flex items-center justify-center py-12">
-        <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Cleaner not found</h1>
-          <p className="text-muted-foreground mb-4">This cleaner profile doesn't exist or has been removed.</p>
-          <Button asChild>
-            <Link to="/discover">Browse Cleaners</Link>
-          </Button>
-        </div>
-      </main>
-    );
-  }
+  const tier = cleaner.tier as string || 'bronze';
+  const tierStyle = TIER_COLORS[tier] || TIER_COLORS.bronze;
+  const scorePercent = cleaner.reliabilityScore || 0;
+  const scoreColor = scorePercent >= 90 ? "text-success" : scorePercent >= 75 ? "text-primary" : "text-warning";
 
   return (
-    <main className="flex-1 py-4 sm:py-12">
-      <div className="container px-4 sm:px-6 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Profile Header */}
-          <Card className="mb-4 sm:mb-6 overflow-hidden">
+    <main className="flex-1 py-4 sm:py-8">
+      <div className="container px-4 sm:px-6 max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+
+          {/* Hero Profile Card */}
+          <Card className="mb-6 overflow-hidden shadow-xl">
+            {/* Banner */}
+            <div className="h-28 sm:h-36 bg-gradient-to-r from-primary via-primary/80 to-accent relative">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsl(var(--accent)/30)_0%,_transparent_60%)]" />
+              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+            </div>
+
             <CardContent className="p-0">
-              <div className="flex flex-col md:flex-row">
-                <div className="relative">
-                  {profilePhotoUrl ? (
-                    <img
-                      src={profilePhotoUrl}
-                      alt={cleaner.name}
-                      className="w-full md:w-64 h-48 sm:h-64 object-cover"
-                      onError={(e) => {
-                        // Fallback to initials on error
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null}
-                  <div className={`w-full md:w-64 h-48 sm:h-64 bg-secondary flex items-center justify-center ${profilePhotoUrl ? 'hidden' : ''}`}>
-                    <span className="text-4xl sm:text-6xl font-bold text-muted-foreground">
-                      {getInitials(cleaner.name)}
-                    </span>
-                  </div>
-                  {cleaner.verified && (
-                    <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                      <Badge variant="trust" className="gap-1">
-                        <Shield className="h-3 w-3" />
-                        Verified
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 p-4 sm:p-6">
-                  <div className="flex items-start justify-between mb-3 sm:mb-4">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{cleaner.name}</h1>
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-warning text-warning" />
-                          <span className="font-medium text-foreground">
-                            {cleaner.avgRating?.toFixed(1) || 'New'}
-                          </span>
-                          <span>({cleaner.jobsCompleted} jobs)</span>
-                        </div>
-                        <span className="text-success font-medium">
-                          {cleaner.reliabilityScore}% reliable
-                        </span>
+              <div className="relative px-4 sm:px-6 pb-6">
+                {/* Avatar */}
+                <div className="flex items-end justify-between -mt-14 sm:-mt-16 mb-4">
+                  <div className="relative">
+                    {profilePhotoUrl ? (
+                      <img src={profilePhotoUrl} alt={cleaner.name} className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl object-cover border-4 border-card shadow-lg" />
+                    ) : (
+                      <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-secondary border-4 border-card shadow-lg flex items-center justify-center">
+                        <span className="text-3xl sm:text-4xl font-bold text-muted-foreground">{getInitials(cleaner.name)}</span>
                       </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0"
-                      onClick={handleToggleFavorite}
-                      disabled={isToggling}
-                    >
-                      <Heart className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors ${isFavorite ? 'fill-destructive text-destructive' : ''}`} />
+                    )}
+                    {cleaner.verified && (
+                      <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-md">
+                        <Shield className="h-4 w-4 text-primary-foreground" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl" onClick={handleToggleFavorite} disabled={isToggling}>
+                      <Heart className={`h-5 w-5 transition-all ${isFavorite ? 'fill-destructive text-destructive scale-110' : ''}`} />
                     </Button>
-                  </div>
-
-                  <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
-                    {cleaner.bio || "Professional cleaner ready to make your space shine!"}
-                  </p>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
-                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-lg sm:text-2xl font-bold">{cleaner.jobsCompleted}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Jobs Done</p>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-lg sm:text-2xl font-bold">${cleaner.hourlyRate}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">/hour</p>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-lg sm:text-2xl font-bold">{"< 2hrs"}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Response</p>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 bg-secondary/50 rounded-xl">
-                      <p className="text-lg sm:text-2xl font-bold text-success">{cleaner.reliabilityScore}%</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Reliability</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-                    {cleaner.services.map((service) => (
-                      <Badge key={service} variant="secondary" className="text-xs">
-                        {service}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <Button className="flex-1" size="sm" asChild>
-                      <Link to={`/book?cleaner=${cleaner.id}`}>Book This Cleaner</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" className="gap-2" asChild>
-                      <Link to={`/messages?cleaner=${cleaner.id}`}>
-                        <MessageCircle className="h-4 w-4" />
-                        Message
+                    <Button asChild className="shadow-lg shadow-primary/20 gap-2">
+                      <Link to={`/book?cleaner=${cleaner.id}`}>
+                        <Calendar className="h-4 w-4" /> Book Now
                       </Link>
                     </Button>
                   </div>
+                </div>
+
+                {/* Name & Info */}
+                <div className="mb-5">
+                  <div className="flex items-center gap-3 flex-wrap mb-1">
+                    <h1 className="text-2xl sm:text-3xl font-bold">{cleaner.name}</h1>
+                    <Badge className={`${tierStyle.bg} ${tierStyle.text} ${tierStyle.border} border`}>
+                      <Award className="h-3 w-3 mr-1" />{tierStyle.label}
+                    </Badge>
+                    {cleaner.verified && <Badge variant="trust" className="gap-1"><Shield className="h-3 w-3" />Verified</Badge>}
+                  </div>
+                  {cleaner.bio && <p className="text-muted-foreground mt-2 text-sm sm:text-base leading-relaxed max-w-2xl">{cleaner.bio}</p>}
+                </div>
+
+                {/* Stats Row */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                  {[
+                    { label: "Jobs Done", value: cleaner.jobsCompleted, icon: CheckCircle2, color: "text-success" },
+                    { label: "Rating", value: cleaner.avgRating?.toFixed(1) || 'New', icon: Star, color: "text-warning" },
+                    { label: "Hourly Rate", value: `$${cleaner.hourlyRate}`, icon: TrendingUp, color: "text-primary" },
+                    { label: "Reliability", value: `${scorePercent}%`, icon: Shield, color: scoreColor },
+                  ].map(({ label, value, icon: Icon, color }) => (
+                    <div key={label} className="bg-muted/40 rounded-xl p-3 sm:p-4 text-center hover:bg-muted/60 transition-colors">
+                      <Icon className={`h-5 w-5 ${color} mx-auto mb-1.5`} />
+                      <p className="text-lg sm:text-xl font-bold">{value}</p>
+                      <p className="text-xs text-muted-foreground">{label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Service Tags */}
+                {cleaner.services.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {cleaner.services.map(s => (
+                      <Badge key={s} variant="secondary" className="rounded-lg">{s}</Badge>
+                    ))}
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button className="flex-1 gap-2 shadow-md shadow-primary/20" asChild>
+                    <Link to={`/book?cleaner=${cleaner.id}`}><Calendar className="h-4 w-4" />Book This Cleaner</Link>
+                  </Button>
+                  <Button variant="outline" className="sm:w-auto gap-2" asChild>
+                    <Link to={`/messages?cleaner=${cleaner.id}`}><MessageCircle className="h-4 w-4" />Send Message</Link>
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Reliability Score Explanation */}
-          <Card className="mb-4 sm:mb-6">
-            <CardContent className="p-4 sm:p-6">
-              <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
-                <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-trust" />
-                Reliability Score Breakdown
-              </h2>
-              {metricsLoading ? (
-                <div className="flex justify-center py-4">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : metrics ? (
-                <div className="space-y-2 sm:space-y-3 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">On-time arrivals</span>
-                    <span className="font-medium">{scoreBreakdown.punctuality.toFixed(0)}%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Job completion rate</span>
-                    <span className="font-medium">
-                      {metrics.total_jobs_window > 0 
-                        ? ((metrics.completion_ok_jobs / metrics.total_jobs_window) * 100).toFixed(0) 
-                        : 100}%
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Photo compliance</span>
-                    <span className="font-medium">{scoreBreakdown.photoCompliance.toFixed(0)}%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Attendance rate</span>
-                    <span className="font-medium">{scoreBreakdown.attendance.toFixed(0)}%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Average rating</span>
-                    <span className="font-medium flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-warning text-warning" />
-                      {scoreBreakdown.rating > 0 ? scoreBreakdown.rating.toFixed(1) : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between pt-2 border-t">
-                    <span className="text-muted-foreground">Total jobs evaluated</span>
-                    <span className="font-medium">{metrics.total_jobs_window}</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2 sm:space-y-3 text-sm">
-                  <p className="text-muted-foreground text-center py-2">
-                    No job history yet. Book this cleaner to help build their track record!
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Overall reliability</span>
-                    <span className="font-medium text-success">{cleaner.reliabilityScore}%</span>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Reviews */}
-          <Card>
-            <CardContent className="p-4 sm:p-6">
-              <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">
-                Reviews ({reviews?.length || 0})
-              </h2>
-              {reviewsLoading ? (
-                <div className="flex justify-center py-4">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : reviews && reviews.length > 0 ? (
-                <div className="space-y-4 sm:space-y-6">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="border-b border-border pb-4 sm:pb-6 last:border-0 last:pb-0">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-secondary flex items-center justify-center font-semibold text-sm">
-                            C
-                          </div>
-                          <div>
-                            <p className="font-medium text-sm sm:text-base">Client</p>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground">
-                              {formatReviewDate(review.created_at)}
-                            </p>
-                          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Reliability Score */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" />Reliability Breakdown
+                </h2>
+                <p className="text-sm text-muted-foreground mb-5">Based on last {metrics?.total_jobs_window || 0} jobs</p>
+                {metricsLoading ? (
+                  <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-8 bg-muted rounded animate-pulse" />)}</div>
+                ) : metrics ? (
+                  <div className="space-y-4">
+                    {[
+                      { label: "On-time Arrivals", value: scoreBreakdown.punctuality },
+                      { label: "Job Completion", value: metrics.total_jobs_window > 0 ? (metrics.completion_ok_jobs / metrics.total_jobs_window) * 100 : 100 },
+                      { label: "Photo Compliance", value: scoreBreakdown.photoCompliance },
+                      { label: "Attendance Rate", value: scoreBreakdown.attendance },
+                    ].map(({ label, value }) => (
+                      <div key={label}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-sm text-muted-foreground">{label}</span>
+                          <span className="text-sm font-semibold">{value.toFixed(0)}%</span>
                         </div>
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: review.rating }).map((_, i) => (
-                            <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-warning text-warning" />
-                          ))}
+                        <div className="h-2 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-primary transition-all duration-700"
+                            style={{ width: `${Math.min(100, value)}%` }}
+                          />
                         </div>
                       </div>
-                      {review.review_text && (
-                        <p className="text-sm text-muted-foreground">{review.review_text}</p>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-sm text-center py-4">No job history yet.</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Reviews */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold flex items-center gap-2">
+                    <Star className="h-5 w-5 text-warning" />Reviews
+                  </h2>
+                  <Badge variant="outline">{reviews?.length || 0} total</Badge>
                 </div>
-              ) : (
-                <p className="text-muted-foreground text-center py-4">No reviews yet</p>
-              )}
+                {reviewsLoading ? (
+                  <div className="space-y-4">{[1,2].map(i => <div key={i} className="h-20 bg-muted rounded-xl animate-pulse" />)}</div>
+                ) : reviews && reviews.length > 0 ? (
+                  <div className="space-y-4 max-h-80 overflow-y-auto pr-1">
+                    {reviews.map(review => (
+                      <div key={review.id} className="p-4 bg-muted/40 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">C</div>
+                            <div>
+                              <p className="text-sm font-medium">Verified Client</p>
+                              <p className="text-xs text-muted-foreground">{format(new Date(review.created_at), 'MMM d, yyyy')}</p>
+                            </div>
+                          </div>
+                          <div className="flex">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star key={i} className={`h-3.5 w-3.5 ${i < review.rating ? 'fill-warning text-warning' : 'text-muted-foreground/30'}`} />
+                            ))}
+                          </div>
+                        </div>
+                        {review.review_text && <p className="text-sm text-muted-foreground leading-relaxed">{review.review_text}</p>}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Star className="h-10 w-10 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-muted-foreground text-sm">No reviews yet</p>
+                    <p className="text-xs text-muted-foreground mt-1">Be the first to book and review!</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* CTA Footer */}
+          <Card className="mt-6 bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
+            <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="font-semibold text-lg">Ready to book {cleaner.name}?</h3>
+                <p className="text-sm text-muted-foreground">Starting at ${cleaner.hourlyRate}/hr · GPS verified · Background checked</p>
+              </div>
+              <div className="flex gap-3 w-full sm:w-auto">
+                <Button asChild className="flex-1 sm:flex-none shadow-lg shadow-primary/20">
+                  <Link to={`/book?cleaner=${cleaner.id}`}>Book Now <ChevronRight className="ml-1 h-4 w-4" /></Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>

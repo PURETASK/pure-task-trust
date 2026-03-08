@@ -4,490 +4,283 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
-  CheckCircle, Award, Shield, Star, Zap, Clock, Camera, Info,
-  TrendingUp, DollarSign, Users, Sparkles, Target
+  CheckCircle, Award, Shield, Star, Zap, Clock, Info,
+  TrendingUp, DollarSign, ArrowRight, Sparkles, Users
 } from 'lucide-react';
 import { SEO, ServiceSchema } from '@/components/seo';
+import { motion } from 'framer-motion';
+
+const TIERS = [
+  {
+    tier: 'Developing',
+    score: '0–59',
+    rate: '$15–35/hr',
+    earnRate: '80%',
+    popular: false,
+    colorBg: 'bg-muted/50',
+    colorBadge: 'border-border',
+    icon: Star,
+    features: ['ID verified & background checked', 'GPS tracking & photo proof', 'Building their reputation', 'Great value for basic cleans'],
+  },
+  {
+    tier: 'Semi Pro',
+    score: '60–74',
+    rate: '$35–45/hr',
+    earnRate: '82%',
+    popular: false,
+    colorBg: 'bg-success/5',
+    colorBadge: 'border-success/30 text-success',
+    icon: TrendingUp,
+    features: ['All Developing features', 'Proven reliability (60–74)', 'Priority scheduling available', 'Specialty services offered'],
+  },
+  {
+    tier: 'Pro',
+    score: '75–89',
+    rate: '$45–60/hr',
+    earnRate: '84%',
+    popular: true,
+    colorBg: 'bg-primary/5',
+    colorBadge: 'border-primary/40 text-primary',
+    icon: Sparkles,
+    features: ['All Semi Pro features', 'High reliability (75–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
+  },
+  {
+    tier: 'Elite',
+    score: '90–100',
+    rate: '$60–85/hr',
+    earnRate: '85%',
+    popular: false,
+    colorBg: 'bg-amber-500/5',
+    colorBadge: 'border-amber-500/40 text-amber-600',
+    icon: Award,
+    features: ['All Pro features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
+  },
+];
+
+const EXAMPLES = [
+  { title: 'Standard Clean', label: 'Semi Pro · 3h', total: 120, cleaner: 102, platform: 18 },
+  { title: 'Deep Clean', label: 'Pro · 4h', total: 220, cleaner: 187, platform: 33, popular: true },
+  { title: 'Move-Out', label: 'Elite · 5h', total: 380, cleaner: 323, platform: 57 },
+];
 
 export default function Pricing() {
   const [userType, setUserType] = useState('client');
 
   return (
-    <main className="py-12">
-      <SEO 
+    <main className="py-0">
+      <SEO
         title="Transparent Cleaning Prices"
-        description="No hidden fees. Cleaner rates from $15-150/hour based on their reliability tier. Simple 15% platform fee. Know exactly what you'll pay."
+        description="No hidden fees. Cleaner rates from $15–85/hour based on reliability tier. Know exactly what you pay."
         url="/pricing"
-        keywords="cleaning prices, house cleaning cost, cleaning service rates, transparent pricing, cleaning service fees"
       />
-      <ServiceSchema 
-        name="House Cleaning Services"
-        description="Professional cleaning services with verified, background-checked cleaners"
-        price="15-150"
-      />
+      <ServiceSchema name="House Cleaning Services" description="Professional cleaning with verified cleaners" price="15-85" />
+
       {/* Hero */}
-      <div className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Transparent, Fair Pricing
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            No hidden fees. Pay for quality service at rates you choose.
-          </p>
-          <div className="flex justify-center gap-8 mb-8">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">1 credit = $1</p>
-              <p className="text-muted-foreground">Simple conversion</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">15%</p>
-              <p className="text-muted-foreground">Platform fee</p>
-            </div>
-          </div>
-
-          <Tabs value={userType} onValueChange={setUserType} className="max-w-md mx-auto">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="client">
-                For Clients
-              </TabsTrigger>
-              <TabsTrigger value="cleaner">
-                For Cleaners
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl translate-x-1/3 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-accent/5 blur-3xl -translate-x-1/2 translate-y-1/2" />
         </div>
-      </div>
+        <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5 border-primary/30 text-primary">
+              <Shield className="h-3.5 w-3.5 mr-1.5" /> No Hidden Fees
+            </Badge>
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">
+              Transparent,<br /><span className="text-primary">Fair Pricing</span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-xl mx-auto mb-10">
+              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 mb-10">
+              {[
+                { value: "1 credit", label: "= $1 USD" },
+                { value: "15–20%", label: "Platform fee" },
+                { value: "100%", label: "Verified cleaners" },
+              ].map(({ value, label }) => (
+                <div key={label} className="text-center">
+                  <div className="text-2xl font-bold text-foreground">{value}</div>
+                  <div className="text-muted-foreground text-sm">{label}</div>
+                </div>
+              ))}
+            </div>
 
-      {/* Client Pricing */}
+            <Tabs value={userType} onValueChange={setUserType} className="max-w-sm mx-auto">
+              <TabsList className="grid w-full grid-cols-2 h-11">
+                <TabsTrigger value="client" className="gap-2"><Users className="h-4 w-4" />For Clients</TabsTrigger>
+                <TabsTrigger value="cleaner" className="gap-2"><DollarSign className="h-4 w-4" />For Cleaners</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Client View */}
       {userType === 'client' && (
-        <>
-          <div className="py-16 bg-background">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+          {/* Tier Cards */}
+          <section className="py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-foreground mb-2">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground">Higher reliability = Better service • All cleaners are verified</p>
+                <h2 className="text-3xl font-bold mb-3">Choose Your Cleaner Tier</h2>
+                <p className="text-muted-foreground">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
               </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {TIERS.map((tier, i) => (
+                  <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                    <Card className={`relative ${tier.colorBg} border-2 ${tier.popular ? 'border-primary shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
+                      {tier.popular && (
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                          <Badge className="bg-primary text-primary-foreground shadow-md">⭐ Most Popular</Badge>
+                        </div>
+                      )}
+                      <CardHeader className="pb-4 pt-6 text-center">
+                        <div className={`h-12 w-12 rounded-2xl bg-background border ${tier.colorBadge} flex items-center justify-center mx-auto mb-3`}>
+                          <tier.icon className="h-6 w-6" />
+                        </div>
+                        <CardTitle className="text-lg">{tier.tier}</CardTitle>
+                        <div className="text-3xl font-bold mt-2">{tier.rate}</div>
+                        <Badge variant="outline" className={`mt-1 text-xs ${tier.colorBadge}`}>Score: {tier.score}</Badge>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-2.5 mb-6">
+                          {tier.features.map(f => (
+                            <li key={f} className="flex items-start gap-2 text-sm">
+                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                        <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                          <Link to="/discover">Browse {tier.tier} <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-              {/* Tier Cards */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                {[
-                  {
-                    tier: 'Developing',
-                    score: '0-59',
-                    creditsRange: '15-35',
-                    usdRange: '$15-35',
-                    bgClass: 'bg-[hsl(var(--pt-cyan)/.08)] border-[hsl(var(--pt-cyan)/.4)]',
-                    description: 'Great for regular maintenance and budget-friendly options',
-                    features: [
-                      'ID verified & background checked',
-                      'GPS tracking & photo proof',
-                      'Standard cleaning supplies',
-                      'Building their reputation',
-                      'Often new to platform',
-                      'Great value for basic cleans'
-                    ]
-                  },
-                  {
-                    tier: 'Semi Pro',
-                    score: '60-74',
-                    creditsRange: '35-45',
-                    usdRange: '$35-45',
-                    bgClass: 'bg-[hsl(var(--pt-green)/.08)] border-[hsl(var(--pt-green)/.4)]',
-                    description: 'Consistent performers with proven track records',
-                    features: [
-                      'All Developing features',
-                      'Proven reliability (60-74 score)',
-                      'Quality cleaning products',
-                      'Priority scheduling available',
-                      'Specialty services offered',
-                      'Detailed work and communication'
-                    ]
-                  },
-                  {
-                    tier: 'Pro',
-                    score: '75-89',
-                    creditsRange: '45-60',
-                    usdRange: '$45-60',
-                    bgClass: 'bg-[hsl(var(--pt-purple)/.08)] border-[hsl(var(--pt-purple)/.4)]',
-                    popular: true,
-                    description: 'Experienced professionals - our most popular tier',
-                    features: [
-                      'All Semi Pro features',
-                      'High reliability score (75-89)',
-                      'Professional/eco-friendly products',
-                      'Same-day booking accepted',
-                      'Guaranteed on-time arrival',
-                      'Advanced cleaning techniques'
-                    ]
-                  },
-                  {
-                    tier: 'Elite',
-                    score: '90-100',
-                    creditsRange: '60-85',
-                    usdRange: '$60-85',
-                    bgClass: 'bg-[hsl(var(--pt-amber)/.08)] border-[hsl(var(--pt-amber)/.4)]',
-                    description: 'Top 10% of all cleaners - exceptional service',
-                    features: [
-                      'All Pro features',
-                      'Elite reliability (90-100)',
-                      'Premium professional products',
-                      'White-glove service',
-                      'Highest priority scheduling',
-                      'Expert certifications & training'
-                    ]
-                  }
-                ].map((plan, idx) => (
-                  <Card key={idx} className={`relative border-2 ${plan.bgClass} ${plan.popular ? 'ring-2 ring-primary shadow-lg' : ''}`}>
-                    {plan.popular && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className="bg-primary text-primary-foreground">
-                          Most Popular
-                        </Badge>
+          {/* Pricing Examples */}
+          <section className="py-16 bg-muted/30">
+            <div className="max-w-4xl mx-auto px-4">
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold mb-2">Example Bookings</h2>
+                <p className="text-muted-foreground">Real numbers, no surprises</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-5">
+                {EXAMPLES.map(({ title, label, total, cleaner, platform, popular }) => (
+                  <Card key={title} className={popular ? 'border-primary shadow-lg ring-1 ring-primary/20' : ''}>
+                    {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="bg-primary">Most Booked</Badge></div>}
+                    <CardContent className="p-6 relative">
+                      <h3 className="font-bold text-lg mb-1">{title}</h3>
+                      <p className="text-sm text-muted-foreground mb-5">{label}</p>
+                      <div className="space-y-2.5 mb-5">
+                        <div className="flex justify-between text-sm"><span className="text-muted-foreground">You pay</span><span className="font-semibold text-xl">${total}</span></div>
+                        <div className="flex justify-between text-sm"><span className="text-muted-foreground">Cleaner earns</span><span className="font-medium text-success">${cleaner}</span></div>
+                        <div className="flex justify-between text-sm border-t pt-2"><span className="text-muted-foreground">Platform fee</span><span className="font-medium">${platform}</span></div>
                       </div>
-                    )}
-                    <CardHeader className="text-center pb-4">
-                      <CardTitle className="flex items-center justify-center gap-2">
-                        <Award className="h-5 w-5 text-primary" />
-                        {plan.tier} Tier
-                      </CardTitle>
-                      <div className="mt-4">
-                        <p className="text-sm text-muted-foreground">Reliability Score: {plan.score}</p>
-                        <p className="text-3xl font-bold text-foreground mt-2">${plan.creditsRange}</p>
-                        <p className="text-muted-foreground">/hour</p>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-                      <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 mb-6">
-                        {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm">
-                            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                      <Button asChild className="w-full" variant={plan.popular ? 'default' : 'outline'}>
-                        <Link to="/discover">
-                          Browse {plan.tier} Cleaners
-                        </Link>
+                      <Button asChild variant="outline" className="w-full">
+                        <Link to="/book">Book Now</Link>
                       </Button>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+            </div>
+          </section>
 
-              {/* Add-Ons */}
-              <div className="mb-16">
-                <h3 className="text-2xl font-bold text-foreground text-center mb-8">Service Add-Ons</h3>
-                <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                  <Card>
-                    <CardContent className="pt-6 text-center">
-                      <div className="text-4xl mb-4">🏠</div>
-                      <h4 className="font-semibold text-foreground mb-2">Basic Cleaning</h4>
-                      <p className="text-sm text-muted-foreground mb-4">Standard maintenance and tidying</p>
-                      <Badge variant="secondary">Base Rate Only</Badge>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="pt-6 text-center">
-                      <div className="text-4xl mb-4">
-                        <Sparkles className="h-10 w-10 mx-auto text-primary" />
-                      </div>
-                      <h4 className="font-semibold text-foreground mb-2">Deep Clean</h4>
-                      <p className="text-sm text-muted-foreground mb-4">Baseboards, fans, inside appliances</p>
-                      <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">per hour extra</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="pt-6 text-center">
-                      <div className="text-4xl mb-4">📦</div>
-                      <h4 className="font-semibold text-foreground mb-2">Move-Out/In</h4>
-                      <p className="text-sm text-muted-foreground mb-4">Complete vacant property deep clean</p>
-                      <Badge className="bg-primary/10 text-primary">+$3-8/hr</Badge>
-                      <p className="text-xs text-muted-foreground mt-2">per hour extra</p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Alert className="max-w-4xl mx-auto mt-8">
-                  <Info className="h-4 w-4" />
-                  <AlertDescription>
-                    Add-on Pricing: Each cleaner sets their own add-on rate within the $3-8/hour range based on their experience and the extra work involved. Deep cleans and move-outs take significantly more time and effort than basic cleaning.
-                  </AlertDescription>
-                </Alert>
-              </div>
-
-              {/* Platform Fee */}
-              <div className="mb-16">
-                <Card className="max-w-4xl mx-auto bg-muted/50">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start gap-4">
-                      <Shield className="h-8 w-8 text-primary flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-lg mb-2">Platform Fee: 15%</h4>
-                        <p className="text-muted-foreground mb-4">
-                          Our 15% platform fee covers the costs and features that make PureTask the safest, most transparent cleaning marketplace:
-                        </p>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          {[
-                            'Identity & background verification',
-                            'GPS tracking & geolocation',
-                            'Before/after photo storage',
-                            'Secure escrow payment system',
-                            '24/7 customer support',
-                            'Dispute resolution services',
-                            'Platform maintenance & development',
-                            'Trust & safety monitoring'
-                          ].map((item, i) => (
-                            <div key={i} className="flex items-center gap-2 text-sm">
-                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                              {item}
-                            </div>
-                          ))}
-                        </div>
+          {/* Platform Fee Explainer */}
+          <section className="py-16 bg-background">
+            <div className="max-w-3xl mx-auto px-4">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardContent className="p-8">
+                  <div className="flex items-start gap-5">
+                    <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Shield className="h-7 w-7 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-3">What the 15% Platform Fee Covers</h3>
+                      <div className="grid sm:grid-cols-2 gap-2.5">
+                        {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
+                          <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />{item}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
+          </section>
+        </motion.div>
+      )}
 
-          {/* Example Pricing */}
-          <div className="py-16 bg-muted/30">
+      {/* Cleaner View */}
+      {userType === 'cleaner' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+          <section className="py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-foreground mb-2">Example Pricing</h2>
-                <p className="text-muted-foreground">See how it all works out</p>
+                <h2 className="text-3xl font-bold mb-3">Your Earning Potential</h2>
+                <p className="text-muted-foreground">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+                {TIERS.map((tier, i) => (
+                  <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                    <Card className={`${tier.colorBg} ${tier.popular ? 'border-primary border-2 shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
+                      <CardContent className="p-6 text-center">
+                        <div className={`h-10 w-10 rounded-xl border ${tier.colorBadge} bg-background flex items-center justify-center mx-auto mb-3`}>
+                          <tier.icon className="h-5 w-5" />
+                        </div>
+                        <h3 className="font-bold text-lg mb-1">{tier.tier} Tier</h3>
+                        <Badge variant="outline" className={`text-xs mb-3 ${tier.colorBadge}`}>Score {tier.score}</Badge>
+                        <div className="text-3xl font-bold mb-1">{tier.rate}</div>
+                        <p className="text-muted-foreground text-sm mb-4">per hour to client</p>
+                        <div className="p-3 bg-success/10 rounded-xl">
+                          <p className="text-success font-bold text-xl">{tier.earnRate}</p>
+                          <p className="text-xs text-muted-foreground">you keep</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Basic Clean Example</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Semi Pro cleaner</span>
-                        <span className="font-medium">$40/hr</span>
+              <Card className="bg-gradient-to-r from-success/5 to-primary/5 border-success/20">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Zap className="h-5 w-5 text-success" />Monthly Earnings Scenario</h3>
+                  <div className="grid sm:grid-cols-3 gap-6">
+                    {[
+                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Semi Pro ($40/hr)", earning: "$1,920/mo", keep: "82%" },
+                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Pro ($52/hr)", earning: "$4,056/mo", keep: "84%", popular: true },
+                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Elite ($72/hr)", earning: "$7,344/mo", keep: "85%" },
+                    ].map(({ label, hours, tier, earning, keep, popular }) => (
+                      <div key={label} className={`p-5 rounded-2xl border-2 text-center ${popular ? 'border-primary bg-primary/5' : 'border-border bg-background/80'}`}>
+                        {popular && <Badge className="mb-3 text-xs">Achievable Goal</Badge>}
+                        <p className="font-semibold mb-1">{label}</p>
+                        <p className="text-xs text-muted-foreground mb-3">{hours} · {tier}</p>
+                        <p className="text-3xl font-bold text-success mb-1">{earning}</p>
+                        <p className="text-xs text-muted-foreground">keeping {keep}</p>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">3 hours × $40</span>
-                        <span className="font-medium">120 credits</span>
-                      </div>
-                      <div className="border-t pt-3 flex justify-between">
-                        <span className="font-semibold">Total Cost</span>
-                        <span className="font-bold text-primary text-xl">$120</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">You pay $120 • Cleaner earns $102 • Platform: $18</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Deep Clean Example</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Pro cleaner base</span>
-                        <span className="font-medium">$50/hr</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Deep clean add-on</span>
-                        <span className="font-medium">+$5/hr</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">4 hours × $55</span>
-                        <span className="font-medium">220 credits</span>
-                      </div>
-                      <div className="border-t pt-3 flex justify-between">
-                        <span className="font-semibold">Total Cost</span>
-                        <span className="font-bold text-primary text-xl">$220</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">You pay $220 • Cleaner earns $187 • Platform: $33</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Move-Out Example</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Elite cleaner base</span>
-                        <span className="font-medium">$70/hr</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Move-out add-on</span>
-                        <span className="font-medium">+$6/hr</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">5 hours × $76</span>
-                        <span className="font-medium">380 credits</span>
-                      </div>
-                      <div className="border-t pt-3 flex justify-between">
-                        <span className="font-semibold">Total Cost</span>
-                        <span className="font-bold text-primary text-xl">$380</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">You pay $380 • Cleaner earns $323 • Platform: $57</p>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="text-center mt-12">
+                <h3 className="text-2xl font-bold mb-4">Ready to start earning?</h3>
+                <Button asChild size="lg" className="gap-2 shadow-lg shadow-primary/20">
+                  <Link to="/auth?mode=signup&role=cleaner">Join as Cleaner <ArrowRight className="h-4 w-4" /></Link>
+                </Button>
               </div>
             </div>
-          </div>
-        </>
+          </section>
+        </motion.div>
       )}
-
-      {/* Cleaner Earnings */}
-      {userType === 'cleaner' && (
-        <div className="py-16 bg-background">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-foreground mb-2">Your Earning Potential</h2>
-              <p className="text-muted-foreground">Keep 80-85% of every booking • Set your own rates</p>
-            </div>
-
-            {/* Tier Earnings */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {[
-                { tier: 'Developing', baseRange: '$15-35', earnRange: '$12-28/hr', score: '0-59', payout: '80%' },
-                { tier: 'Semi Pro', baseRange: '$35-45', earnRange: '$28-36/hr', score: '60-74', payout: '80%' },
-                { tier: 'Pro', baseRange: '$45-60', earnRange: '$36-48/hr', score: '75-89', payout: '80%', popular: true },
-                { tier: 'Elite', baseRange: '$60-85', earnRange: '$51-72/hr', score: '90-100', payout: '85%' }
-              ].map((tier, idx) => (
-                <Card key={idx} className={tier.popular ? 'ring-2 ring-primary' : ''}>
-                  <CardContent className="pt-6 text-center">
-                    {tier.popular && (
-                      <Badge className="mb-2 bg-primary text-primary-foreground">Most Cleaners</Badge>
-                    )}
-                    <h3 className="text-xl font-bold text-foreground mb-1">{tier.tier}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Score: {tier.score}</p>
-                    <div className="bg-primary/10 rounded-lg p-4 mb-4">
-                      <p className="text-3xl font-bold text-primary">{tier.earnRange}</p>
-                      <p className="text-sm text-muted-foreground">Your take-home</p>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Base rate: {tier.baseRange}/hr
-                    </p>
-                    <p className="text-sm font-medium text-primary mt-2">
-                      You keep {tier.payout}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* How to Increase Score */}
-            <Card className="mb-16">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  How to Increase Your Score & Earnings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <Clock className="h-6 w-6 text-primary" />
-                    </div>
-                    <h4 className="font-semibold mb-2">On-Time Arrivals</h4>
-                    <p className="text-sm text-muted-foreground">GPS check-in within 15 min of scheduled time</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <Camera className="h-6 w-6 text-primary" />
-                    </div>
-                    <h4 className="font-semibold mb-2">Photo Documentation</h4>
-                    <p className="text-sm text-muted-foreground">Before/after photos for every job</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <Star className="h-6 w-6 text-primary" />
-                    </div>
-                    <h4 className="font-semibold mb-2">5-Star Reviews</h4>
-                    <p className="text-sm text-muted-foreground">Consistently high client ratings</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <Target className="h-6 w-6 text-primary" />
-                    </div>
-                    <h4 className="font-semibold mb-2">Job Completion</h4>
-                    <p className="text-sm text-muted-foreground">Complete every accepted job</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Weekly Earnings Calculator */}
-            <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-primary" />
-                  Weekly Earnings Potential
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center p-6 bg-card rounded-xl">
-                    <p className="text-muted-foreground mb-2">Part-Time (15 hrs/week)</p>
-                    <p className="text-3xl font-bold text-foreground mb-1">$420-$720</p>
-                    <p className="text-sm text-muted-foreground">As a Pro cleaner</p>
-                  </div>
-                  <div className="text-center p-6 bg-card rounded-xl ring-2 ring-primary">
-                    <p className="text-muted-foreground mb-2">Full-Time (30 hrs/week)</p>
-                    <p className="text-3xl font-bold text-primary mb-1">$1,080-$1,440</p>
-                    <p className="text-sm text-muted-foreground">As a Pro cleaner</p>
-                  </div>
-                  <div className="text-center p-6 bg-card rounded-xl">
-                    <p className="text-muted-foreground mb-2">Elite (40 hrs/week)</p>
-                    <p className="text-3xl font-bold text-foreground mb-1">$2,040-$2,880</p>
-                    <p className="text-sm text-muted-foreground">As an Elite cleaner</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
-
-      {/* CTA */}
-      <div className="py-16 bg-gradient-to-r from-primary to-primary/80">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-primary-foreground mb-4">
-            {userType === 'client' ? 'Ready to Book?' : 'Ready to Earn?'}
-          </h2>
-          <p className="text-xl text-primary-foreground/90 mb-8">
-            {userType === 'client' 
-              ? 'Find verified, reliable cleaners in your area today.'
-              : 'Join thousands of cleaners earning on their own schedule.'}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild>
-              <Link to={userType === 'client' ? '/book' : '/auth'}>
-                {userType === 'client' ? 'Book a Cleaning' : 'Start Earning'}
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-white/40 text-white bg-white/10 hover:bg-white/20" asChild>
-              <Link to={userType === 'client' ? '/discover' : '/reliability-score'}>
-                {userType === 'client' ? 'Browse Cleaners' : 'Learn About Scoring'}
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
     </main>
   );
 }

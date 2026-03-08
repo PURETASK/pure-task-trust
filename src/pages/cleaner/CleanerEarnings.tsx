@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Target, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Target, Zap, ArrowUpRight, Banknote, PiggyBank, ChevronRight } from "lucide-react";
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { format, addDays, startOfWeek } from "date-fns";
@@ -16,8 +17,9 @@ import { EarningsGoalPlanner } from "@/components/cleaner/EarningsGoalPlanner";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
-const WEEKLY_HOURS_GOAL = 20; // default weekly hours target
+const WEEKLY_HOURS_GOAL = 20;
 
 export default function CleanerEarnings() {
   const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
@@ -26,7 +28,6 @@ export default function CleanerEarnings() {
   const [payoutsEnabled, setPayoutsEnabled] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
 
-  // ── Weekly forecast ──────────────────────────────────────────────────────
   const now = new Date();
   const weekStart = startOfWeek(now, { weekStartsOn: 1 });
   const weekEnd = addDays(weekStart, 6);
@@ -42,14 +43,12 @@ export default function CleanerEarnings() {
   const hoursProgress = Math.min(100, (forecastHours / WEEKLY_HOURS_GOAL) * 100);
   const hoursRemaining = Math.max(0, WEEKLY_HOURS_GOAL - forecastHours);
 
-  // ── Next Friday ──────────────────────────────────────────────────────────
   const getNextFriday = () => {
     const today = new Date();
-    const dayOfWeek = today.getDay();
-    const daysUntilFriday = (5 - dayOfWeek + 7) % 7 || 7;
+    const daysUntilFriday = (5 - today.getDay() + 7) % 7 || 7;
     const nextFriday = new Date(today);
     nextFriday.setDate(today.getDate() + daysUntilFriday);
-    return format(nextFriday, 'MMM d');
+    return format(nextFriday, 'EEEE, MMM d');
   };
 
   const handleInstantPayout = async () => {
@@ -58,10 +57,9 @@ export default function CleanerEarnings() {
       const { data, error } = await supabase.functions.invoke('process-instant-payout');
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      toast.success(`Payout of $${data.amount?.toFixed(2)} processed successfully!`);
+      toast.success(`Payout of $${data.amount?.toFixed(2)} processed!`);
       refetchPayouts?.();
     } catch (error: any) {
-      console.error('Payout error:', error);
       throw error;
     } finally {
       setIsProcessingPayout(false);
@@ -72,98 +70,84 @@ export default function CleanerEarnings() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Earnings & Payouts</h1>
-          <p className="text-muted-foreground mt-1">Track your income and request payouts</p>
-        </div>
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-success" />
+              </div>
+              Earnings & Payouts
+            </h1>
+            <p className="text-muted-foreground mt-1">Track your income, request payouts, and plan your goals</p>
+          </div>
+        </motion.div>
 
-        {/* Earnings Goal Planner */}
+        {/* Goal Planner */}
         {profile?.id && (
-          <EarningsGoalPlanner
-            cleanerId={profile.id}
-            currentGoal={(profile as any).monthly_earnings_goal ?? null}
-            earnings={earnings}
-          />
+          <EarningsGoalPlanner cleanerId={profile.id} currentGoal={(profile as any).monthly_earnings_goal ?? null} earnings={earnings} />
         )}
 
-        {/* Bank Account Status */}
+        {/* Bank Account */}
         <BankAccountStatus onStatusChange={setPayoutsEnabled} />
 
-        {/* Stats Grid */}
+        {/* Key Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {isLoadingEarnings ? (
-            <>{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-28 rounded-xl" />)}</>
+            <>{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}</>
           ) : (
             <>
-              <Card className="border-border/50">
-                <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center mb-3">
-                    <TrendingUp className="h-5 w-5 text-success" />
-                  </div>
-                  <div className="text-sm text-muted-foreground">Total Earned</div>
-                  <div className="text-2xl font-bold">${stats.totalEarned.toFixed(2)}</div>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50">
-                <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center mb-3">
-                    <DollarSign className="h-5 w-5 text-success" />
-                  </div>
-                  <div className="text-sm text-muted-foreground">Available</div>
-                  <div className="text-2xl font-bold">${stats.availableBalance.toFixed(2)}</div>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50">
-                <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-warning/10 flex items-center justify-center mb-3">
-                    <Clock className="h-5 w-5 text-warning" />
-                  </div>
-                  <div className="text-sm text-muted-foreground">Pending</div>
-                  <div className="text-2xl font-bold">${stats.pendingPayout.toFixed(2)}</div>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50">
-                <CardContent className="p-5">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="text-sm text-muted-foreground">Paid Out</div>
-                  <div className="text-2xl font-bold">${stats.paidOut.toFixed(2)}</div>
-                </CardContent>
-              </Card>
+              {[
+                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/10" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/10" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/10" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
+              ].map(({ label, value, icon: Icon, color, bg }, i) => (
+                <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-5">
+                      <div className={`h-10 w-10 rounded-xl ${bg} flex items-center justify-center mb-3`}>
+                        <Icon className={`h-5 w-5 ${color}`} />
+                      </div>
+                      <div className="text-sm text-muted-foreground">{label}</div>
+                      <div className="text-2xl font-bold">{value}</div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </>
           )}
         </div>
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Earnings Forecast */}
-          <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <p className="font-semibold">This Week's Forecast</p>
-                  <p className="text-xs text-muted-foreground">Based on confirmed jobs</p>
+                  <p className="text-xs text-muted-foreground">Based on your confirmed bookings</p>
                 </div>
               </div>
-              <div className="text-3xl font-bold mb-1">${forecastEarnings}</div>
-              <p className="text-sm text-muted-foreground mb-3">
-                {confirmedThisWeek.length} confirmed job{confirmedThisWeek.length !== 1 ? "s" : ""} · {forecastHours}h scheduled
+              <div className="text-4xl font-bold mb-2">${forecastEarnings}</div>
+              <p className="text-sm text-muted-foreground mb-1">
+                {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
               </p>
               {confirmedThisWeek.length === 0 && (
-                <p className="text-xs text-muted-foreground italic">Accept jobs from the marketplace to build your forecast.</p>
+                <p className="text-xs text-muted-foreground italic mt-2">Accept jobs from the marketplace to build your forecast.</p>
               )}
+              <Button variant="outline" size="sm" className="mt-4 gap-2" asChild>
+                <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
+              </Button>
             </CardContent>
           </Card>
 
-          {/* Weekly Hours Goal */}
           <Card>
-            <CardContent className="p-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
                   <Target className="h-5 w-5 text-success" />
                 </div>
                 <div>
@@ -171,33 +155,33 @@ export default function CleanerEarnings() {
                   <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h per week</p>
                 </div>
               </div>
-              <div className="flex items-end gap-1 mb-2">
-                <span className="text-3xl font-bold">{forecastHours}</span>
+              <div className="flex items-end gap-2 mb-3">
+                <span className="text-4xl font-bold">{forecastHours}</span>
                 <span className="text-muted-foreground mb-1">/ {WEEKLY_HOURS_GOAL}h</span>
-                {hoursProgress >= 100 && (
-                  <Badge variant="success" className="ml-2 mb-1 text-xs">Goal Met! 🎉</Badge>
-                )}
+                {hoursProgress >= 100 && <Badge variant="success" className="mb-1">Goal Met! 🎉</Badge>}
               </div>
-              <Progress value={hoursProgress} className="h-2 mb-2" />
+              <Progress value={hoursProgress} className="h-2.5 mb-3" />
               <p className="text-xs text-muted-foreground">
-                {hoursProgress >= 100
-                  ? "You've hit your weekly target — great work!"
-                  : `${hoursRemaining}h more to reach your weekly goal`}
+                {hoursProgress >= 100 ? "Excellent! You've hit your weekly target." : `${hoursRemaining}h more to reach your goal`}
               </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Pending Earnings & Weekly Payout */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card>
+        {/* Payout Options */}
+        <div className="grid md:grid-cols-2 gap-5">
+          <Card className="border-primary/20">
             <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Pending Earnings</h3>
-                <DollarSign className="h-8 w-8 text-muted-foreground/30" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Banknote className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Instant Payout</h3>
+                  <p className="text-sm text-muted-foreground">5% fee · Available now</p>
+                </div>
               </div>
               <div className="text-3xl font-bold mb-4">${stats.availableBalance.toFixed(2)}</div>
-              <p className="text-sm text-muted-foreground mb-4">Minimum $10 required for instant payout</p>
               <InstantPayoutButton
                 availableBalance={stats.availableBalance}
                 onRequestPayout={handleInstantPayout}
@@ -206,53 +190,50 @@ export default function CleanerEarnings() {
                 disabled={!payoutsEnabled}
               />
               {!payoutsEnabled && stats.availableBalance >= 10 && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  Connect your bank account above to enable payouts
-                </p>
+                <p className="text-xs text-muted-foreground mt-2">Connect your bank account to enable payouts</p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="bg-primary/5 border-primary/20">
+          <Card className="bg-success/5 border-success/20">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-primary" />
+                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
+                  <PiggyBank className="h-5 w-5 text-success" />
                 </div>
                 <div>
                   <h3 className="font-semibold">Weekly Payout</h3>
-                  <p className="text-sm text-muted-foreground">Free • Every Friday</p>
+                  <p className="text-sm text-muted-foreground">Free · Every Friday</p>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-2">Next payout on {getNextFriday()} (if ≥ $20):</p>
-              <div className="text-2xl font-bold text-success mb-4">
+              <p className="text-sm text-muted-foreground mb-1">Next payout: <strong>{getNextFriday()}</strong></p>
+              <div className="text-3xl font-bold text-success mb-4">
                 ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(2) : '0.00'}
               </div>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><Check className="h-3 w-3 text-success" /> No fees</span>
-                <span className="flex items-center gap-1"><Check className="h-3 w-3 text-success" /> Automatic</span>
-                <span className="flex items-center gap-1"><Check className="h-3 w-3 text-success" /> Every Friday</span>
+              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                {["No fees", "Automatic", "Min. $20"].map(t => (
+                  <span key={t} className="flex items-center gap-1.5 bg-success/10 px-2.5 py-1 rounded-full text-success font-medium">
+                    <Check className="h-3 w-3" />{t}
+                  </span>
+                ))}
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Earnings & Payouts Tabs */}
+        {/* History Tabs */}
         <Card>
           <Tabs defaultValue="earnings">
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
-              <TabsTrigger 
-                value="earnings" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-              >
-                Earnings
-              </TabsTrigger>
-              <TabsTrigger 
-                value="payouts" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-              >
-                Payouts
-              </TabsTrigger>
+              {["earnings", "payouts"].map(tab => (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3 capitalize"
+                >
+                  {tab}
+                </TabsTrigger>
+              ))}
             </TabsList>
             <TabsContent value="earnings">
               <CardContent>
