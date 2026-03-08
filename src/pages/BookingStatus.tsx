@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +7,10 @@ import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2, AlertT
 import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
+import { CancelAlternativesModal } from "@/components/booking/CancelAlternativesModal";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 function getStatusDisplay(status: string) {
   switch (status) {
@@ -32,6 +37,8 @@ function getStatusDisplay(status: string) {
 export default function BookingStatus() {
   const { id } = useParams<{ id: string }>();
   const { data: job, isLoading, error } = useJob(id || '');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const queryClient = useQueryClient();
 
   if (isLoading) {
     return (
@@ -61,12 +68,22 @@ export default function BookingStatus() {
   const formattedDate = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d, yyyy') : 'To be scheduled';
   const formattedTime = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD';
 
-  // Derive address display from job data
   const addressLine = (job as any).address_line1 
     ? `${(job as any).address_line1}${(job as any).address_city ? ', ' + (job as any).address_city : ''}`
     : (job as any).service_address || null;
 
   const canCancel = ['created', 'pending', 'confirmed'].includes(job.status);
+
+  const handleConfirmCancel = async () => {
+    try {
+      await supabase.from('jobs').update({ status: 'cancelled' }).eq('id', id!);
+      queryClient.invalidateQueries({ queryKey: ['job', id] });
+      queryClient.invalidateQueries({ queryKey: ['client-jobs'] });
+      toast.success('Booking cancelled');
+    } catch {
+      toast.error('Failed to cancel booking');
+    }
+  };
 
   return (
     <main className="flex-1 py-8">
@@ -172,11 +189,13 @@ export default function BookingStatus() {
             <div className="space-y-3">
               <p className="text-center text-sm text-muted-foreground">We'll notify you when a cleaner accepts your booking</p>
               {canCancel && (
-                <Button variant="outline" className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5" asChild>
-                  <Link to={`/booking/${id}?cancel=1`}>
-                    <AlertTriangle className="h-4 w-4" />
-                    Cancel Booking
-                  </Link>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
+                  onClick={() => setShowCancelModal(true)}
+                >
+                  <AlertTriangle className="h-4 w-4" />
+                  Cancel Booking
                 </Button>
               )}
               <Button variant="ghost" className="w-full" asChild>
@@ -204,8 +223,12 @@ export default function BookingStatus() {
                 </Button>
               )}
               {canCancel && (
-                <Button variant="ghost" className="w-full text-destructive hover:text-destructive hover:bg-destructive/5" asChild>
-                  <Link to={`/booking/${id}?cancel=1`}>Cancel Booking</Link>
+                <Button
+                  variant="ghost"
+                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/5"
+                  onClick={() => setShowCancelModal(true)}
+                >
+                  Cancel Booking
                 </Button>
               )}
             </div>
@@ -238,6 +261,16 @@ export default function BookingStatus() {
           )}
         </motion.div>
       </div>
+
+      {/* C-08: Cancel Alternatives Modal */}
+      <CancelAlternativesModal
+        open={showCancelModal}
+        onOpenChange={setShowCancelModal}
+        jobId={id!}
+        cleanerId={job.cleaner_id || null}
+        currentScheduledAt={job.scheduled_start_at || null}
+        onConfirmCancel={handleConfirmCancel}
+      />
     </main>
   );
 }
