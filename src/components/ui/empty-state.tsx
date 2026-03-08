@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { LucideIcon, FileText, Calendar, MessageCircle, Star, CreditCard } from 'lucide-react';
+import { LucideIcon, FileText, Calendar, MessageCircle, Star, CreditCard, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
@@ -9,8 +10,11 @@ interface EmptyStateProps {
   description?: string;
   action?: {
     label: string;
-    onClick: () => void;
+    onClick?: () => void;
+    href?: string;
   };
+  // C10: optional help link
+  helpLink?: boolean;
   className?: string;
   children?: ReactNode;
 }
@@ -20,6 +24,7 @@ export function EmptyState({
   title,
   description,
   action,
+  helpLink,
   className,
   children,
 }: EmptyStateProps) {
@@ -32,9 +37,24 @@ export function EmptyState({
       {description && (
         <p className="text-muted-foreground max-w-sm mb-6">{description}</p>
       )}
-      {action && (
-        <Button onClick={action.onClick}>{action.label}</Button>
-      )}
+      <div className="flex flex-col sm:flex-row gap-2 items-center">
+        {action && (
+          action.href ? (
+            <Button asChild><Link to={action.href}>{action.label}</Link></Button>
+          ) : (
+            <Button onClick={action.onClick}>{action.label}</Button>
+          )
+        )}
+        {/* C10: Help CTA */}
+        {helpLink && (
+          <Button variant="outline" asChild>
+            <Link to="/help">
+              <HelpCircle className="h-4 w-4 mr-2" />
+              Get Help
+            </Link>
+          </Button>
+        )}
+      </div>
       {children}
     </div>
   );
@@ -48,6 +68,7 @@ export function EmptyBookings({ onBook }: { onBook: () => void }) {
       title="No bookings yet"
       description="Book your first cleaning and experience the PureTask difference."
       action={{ label: "Book a Cleaning", onClick: onBook }}
+      helpLink
     />
   );
 }
@@ -58,6 +79,7 @@ export function EmptyMessages() {
       icon={MessageCircle}
       title="No messages"
       description="Your conversations with cleaners will appear here."
+      helpLink
     />
   );
 }

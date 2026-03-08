@@ -137,6 +137,31 @@ export default function Referral() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
+            {/* C8: Referral progress bar */}
+            {!isLoadingReferrals && (
+              <Card className="mb-4 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-semibold">Reward Progress</p>
+                    <p className="text-xs text-muted-foreground">{stats.completedReferrals}/3 friends joined</p>
+                  </div>
+                  <div className="w-full bg-secondary rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className="bg-primary h-2.5 rounded-full transition-all duration-700"
+                      style={{ width: `${Math.min(100, (stats.completedReferrals / 3) * 100)}%` }}
+                    />
+                  </div>
+                  {stats.completedReferrals < 3 && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {3 - stats.completedReferrals} more friend{3 - stats.completedReferrals !== 1 ? 's' : ''} needed to unlock your next reward 🎁
+                    </p>
+                  )}
+                  {stats.completedReferrals >= 3 && (
+                    <p className="text-xs text-success font-medium mt-2">🎉 Reward unlocked! Keep sharing for more credits.</p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
             <Card className="overflow-hidden">
               <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 p-6 border-b">
                 <div className="flex items-center gap-3">

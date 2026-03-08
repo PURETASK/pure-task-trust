@@ -196,6 +196,14 @@ export default function BookingStatus() {
                 </Link>
               </Button>
               {canCancel && (
+                <Button variant="outline" className="w-full gap-2 text-primary border-primary/30 hover:bg-primary/5" asChild>
+                  <Link to={`/help`}>
+                    <Calendar className="h-4 w-4" />
+                    Request Reschedule
+                  </Link>
+                </Button>
+              )}
+              {canCancel && (
                 <Button variant="ghost" className="w-full text-destructive hover:text-destructive hover:bg-destructive/5" asChild>
                   <Link to={`/booking/${id}?cancel=1`}>Cancel Booking</Link>
                 </Button>
