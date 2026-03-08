@@ -397,8 +397,8 @@ export default function Dashboard() {
                               )}
                             </div>
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm">
-                                Manage
+                              <Button variant="outline" size="sm" asChild>
+                                <Link to="/book">Manage</Link>
                               </Button>
                             </div>
                           </div>
