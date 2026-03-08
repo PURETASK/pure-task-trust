@@ -12,13 +12,16 @@ import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { PhotoRequirements, useJobPhotoValidation } from "@/components/job/PhotoRequirements";
+import { ClientBriefCard } from "@/components/cleaner/ClientBriefCard";
+import { JobSupportChat } from "@/components/cleaner/JobSupportChat";
+import { ClientRatingForm } from "@/components/cleaner/ClientRatingForm";
 import { supabase } from "@/integrations/supabase/client";
 import { format, differenceInMinutes } from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
   MapPin, Clock, Calendar, Camera, CheckCircle, Play, ArrowLeft,
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
-  Star, DollarSign, Navigation
+  Star, DollarSign, Navigation, HelpCircle
 } from "lucide-react";
 
 export default function CleanerJobDetail() {
