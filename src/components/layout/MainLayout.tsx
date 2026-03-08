@@ -104,6 +104,9 @@ export function MainLayout({ children }: MainLayoutProps) {
                 
                 {isAuthenticated && user ? (
                   <>
+                    {/* Live credit balance chip for clients */}
+                    {user.role === "client" && <CreditChip />}
+
                     {/* NotificationBell with live unread count */}
                     <div className="hidden sm:flex">
                       <NotificationBell />
