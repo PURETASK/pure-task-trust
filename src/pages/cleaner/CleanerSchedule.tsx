@@ -73,6 +73,25 @@ export default function CleanerSchedule() {
   const dailyNet = getNet(dailyGross);
   const dailyHours = selectedDateJobs.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
 
+  // ── Gap detection ─────────────────────────────────────────────────────────
+  // Find ≥2 hour gaps between consecutive accepted jobs on selected date
+  const gaps = useMemo(() => {
+    const sorted = [...acceptedJobs]
+      .filter(j => j.scheduled_start_at)
+      .sort((a, b) => new Date(a.scheduled_start_at!).getTime() - new Date(b.scheduled_start_at!).getTime());
+    const result: Array<{ gapStart: Date; gapEnd: Date; gapHours: number }> = [];
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const jobEnd = new Date(sorted[i].scheduled_start_at!);
+      jobEnd.setHours(jobEnd.getHours() + (sorted[i].estimated_hours || 2));
+      const nextStart = new Date(sorted[i + 1].scheduled_start_at!);
+      const gapHours = differenceInHours(nextStart, jobEnd);
+      if (gapHours >= 2) {
+        result.push({ gapStart: jobEnd, gapEnd: nextStart, gapHours });
+      }
+    }
+    return result;
+  }, [acceptedJobs]);
+
   const twoWeeksDays = generateTwoWeeksCalendar();
   const monthDays = generateMonthCalendar();
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
