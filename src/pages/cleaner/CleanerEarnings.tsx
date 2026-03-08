@@ -77,6 +77,15 @@ export default function CleanerEarnings() {
           <p className="text-muted-foreground mt-1">Track your income and request payouts</p>
         </div>
 
+        {/* Earnings Goal Planner */}
+        {profile?.id && (
+          <EarningsGoalPlanner
+            cleanerId={profile.id}
+            currentGoal={(profile as any).monthly_earnings_goal ?? null}
+            earnings={earnings}
+          />
+        )}
+
         {/* Bank Account Status */}
         <BankAccountStatus onStatusChange={setPayoutsEnabled} />
 
