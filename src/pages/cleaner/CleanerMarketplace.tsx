@@ -4,11 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Clock, Calendar, Loader2, DollarSign, Info } from "lucide-react";
+import { MapPin, Clock, Calendar, Loader2, DollarSign, Info, X } from "lucide-react";
 import { format } from "date-fns";
 import { useMarketplaceJobs } from "@/hooks/useMarketplaceJobs";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TIER_FEE: Record<string, number> = {
   platinum: 0.15,

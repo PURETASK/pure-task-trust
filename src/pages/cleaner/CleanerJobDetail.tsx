@@ -241,6 +241,24 @@ export default function CleanerJobDetail() {
               </div>
             </div>
 
+            {/* Service Address — shown once job is accepted */}
+            {(() => {
+              const addr = (job as any).address_line1
+                ? [(job as any).address_line1, (job as any).address_city, (job as any).address_state].filter(Boolean).join(', ')
+                : (job as any).address || null;
+              return addr ? (
+                <div className="pt-3 border-t border-border flex items-start gap-2.5">
+                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Service Address</p>
+                    <p className="font-medium text-sm">{addr}</p>
+                  </div>
+                </div>
+              ) : null;
+            })()}
+
             {isInProgress && job.check_in_at && (
               <div className="mt-3 pt-3 border-t border-border flex items-center gap-3 p-3 rounded-lg bg-primary/5">
                 <Timer className="h-4 w-4 text-primary" />

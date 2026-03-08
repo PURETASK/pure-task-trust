@@ -326,9 +326,9 @@ export default function JobApproval() {
 
           <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" className="w-full text-muted-foreground">
-                <AlertTriangle className="h-4 w-4 mr-2" />
-                Report an Issue
+              <Button variant="outline" className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5">
+                <AlertTriangle className="h-4 w-4" />
+                Dispute / Report Issue
               </Button>
             </DialogTrigger>
             <DialogContent>
