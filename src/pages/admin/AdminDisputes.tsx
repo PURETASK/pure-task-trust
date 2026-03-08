@@ -83,7 +83,7 @@ const AdminDisputes = () => {
       const { error } = await supabase
         .from('disputes')
         .update({
-          status: 'resolved',
+          status: 'resolved' as const,
           resolution_type: type,
           resolution_notes: notes,
           refund_amount_credits: refund || null,
