@@ -111,8 +111,10 @@ export default function CleanerJobs() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon">
-              <MessageCircle className="h-4 w-4" />
+            <Button variant="outline" size="icon" asChild>
+              <Link to={`/cleaner/messages?job=${job.id}`}>
+                <MessageCircle className="h-4 w-4" />
+              </Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
               <Link to={`/cleaner/jobs/${job.id}`}>View Details</Link>
