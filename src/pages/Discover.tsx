@@ -206,8 +206,8 @@ export default function Discover() {
                     <Card className="overflow-hidden hover:shadow-elevated hover:border-primary/30 transition-all duration-300 group h-full flex flex-col">
                       {/* Card header with gradient avatar */}
                       <div className="relative h-36 bg-gradient-to-br from-primary/20 via-primary/10 to-[hsl(var(--pt-aqua)/0.1)] flex items-center justify-center overflow-hidden">
-                        {cleaner.profilePhotoUrl ? (
-                          <img src={cleaner.profilePhotoUrl} alt={cleaner.name} className="w-full h-full object-cover" />
+                        {(cleaner as any).profilePhotoUrl ? (
+                          <img src={(cleaner as any).profilePhotoUrl} alt={cleaner.name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 border-2 border-primary/20 flex items-center justify-center">
                             <span className="text-3xl font-black text-primary">{getInitials(cleaner.name)}</span>
