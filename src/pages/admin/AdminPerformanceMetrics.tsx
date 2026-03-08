@@ -15,14 +15,14 @@ const chartConfig = {
   value: { label: "Score", color: "hsl(var(--chart-1))" },
 };
 
-const tierColor = (tier: string) => {
-  switch (tier) {
-    case 'platinum': return 'bg-blue-500';
-    case 'gold': return 'bg-yellow-500';
-    case 'silver': return 'bg-gray-400';
-    default: return 'bg-orange-700';
-  }
+const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  platinum: { bg: 'bg-blue-500/10', text: 'text-blue-600', label: 'Platinum' },
+  gold: { bg: 'bg-yellow-500/10', text: 'text-yellow-600', label: 'Gold' },
+  silver: { bg: 'bg-slate-400/10', text: 'text-slate-500', label: 'Silver' },
+  bronze: { bg: 'bg-orange-700/10', text: 'text-orange-700', label: 'Bronze' },
 };
+
+const rankBg = (i: number) => i === 0 ? 'bg-yellow-500' : i === 1 ? 'bg-slate-400' : i === 2 ? 'bg-orange-600' : 'bg-primary/60';
 
 const AdminPerformanceMetrics = () => {
   const { data, isLoading, refetch } = useAdminPerformanceStats();
@@ -34,8 +34,7 @@ const AdminPerformanceMetrics = () => {
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <Link to="/admin/analytics" className="hover:text-primary">Analytics</Link>
-              <span>/</span>
-              <span>Performance Metrics</span>
+              <span>/</span><span>Performance Metrics</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground">Performance Metrics</h1>
             <p className="text-muted-foreground mt-1">Live cleaner reliability scores, ratings, and quality metrics</p>
@@ -69,7 +68,6 @@ const AdminPerformanceMetrics = () => {
                   </div>
                 </CardContent>
               </Card>
-
               <Card className="border-t-4 border-t-purple-500">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -84,7 +82,6 @@ const AdminPerformanceMetrics = () => {
                   </div>
                 </CardContent>
               </Card>
-
               <Card className="border-t-4 border-t-green-500">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -99,7 +96,6 @@ const AdminPerformanceMetrics = () => {
                   </div>
                 </CardContent>
               </Card>
-
               <Card className="border-t-4 border-t-blue-500">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -122,11 +118,8 @@ const AdminPerformanceMetrics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                Rating Distribution
-              </CardTitle>
-              <CardDescription>Breakdown of all customer ratings (real data)</CardDescription>
+              <CardTitle className="flex items-center gap-2"><Star className="h-5 w-5 text-yellow-500" />Rating Distribution</CardTitle>
+              <CardDescription>Breakdown of all customer ratings</CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? <Skeleton className="h-[300px]" /> : (
@@ -145,10 +138,7 @@ const AdminPerformanceMetrics = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                Platform Quality Overview
-              </CardTitle>
+              <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-primary" />Platform Quality Overview</CardTitle>
               <CardDescription>Calculated from cleaner_metrics table</CardDescription>
             </CardHeader>
             <CardContent>
@@ -166,56 +156,67 @@ const AdminPerformanceMetrics = () => {
           </Card>
         </div>
 
-        {/* Top Cleaners */}
+        {/* Leaderboard */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Medal className="h-5 w-5 text-yellow-500" />
-              Top Performing Cleaners
+              Top 10 Cleaner Leaderboard
             </CardTitle>
-            <CardDescription>Highest rated cleaners (real data)</CardDescription>
+            <CardDescription>Ranked by average rating — real-time data</CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? <Skeleton className="h-64" /> : (
-              <div className="space-y-4">
+              <div className="space-y-2">
+                {/* Header row */}
+                <div className="grid grid-cols-12 text-xs text-muted-foreground px-4 pb-1">
+                  <span className="col-span-1">#</span>
+                  <span className="col-span-4">Cleaner</span>
+                  <span className="col-span-2 text-center">Tier</span>
+                  <span className="col-span-2 text-center">Jobs</span>
+                  <span className="col-span-1 text-center">Rating</span>
+                  <span className="col-span-2 text-right">Reliability</span>
+                </div>
                 {(data?.topPerformers || []).length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">No review data yet</p>
                 ) : (
-                  data?.topPerformers.map((cleaner, index) => (
-                    <div key={cleaner.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-white ${
-                          index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-600' : 'bg-primary'
-                        }`}>
-                          {index + 1}
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">{cleaner.name}</p>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span>{cleaner.jobs} jobs</span>
-                            <span>•</span>
-                            <Badge className={`${tierColor(cleaner.tier)} text-white text-xs capitalize`}>{cleaner.tier}</Badge>
+                  data?.topPerformers.map((cleaner, index) => {
+                    const ts = TIER_STYLES[cleaner.tier] || TIER_STYLES.bronze;
+                    return (
+                      <div key={cleaner.id} className={`grid grid-cols-12 items-center p-3 rounded-xl transition-colors ${index < 3 ? 'bg-primary/5 border border-primary/10' : 'bg-muted/40 hover:bg-muted'}`}>
+                        {/* Rank */}
+                        <div className="col-span-1">
+                          <div className={`h-7 w-7 rounded-full flex items-center justify-center font-bold text-white text-xs ${rankBg(index)}`}>
+                            {index + 1}
                           </div>
+                        </div>
+                        {/* Name */}
+                        <div className="col-span-4">
+                          <p className="font-semibold text-sm">{cleaner.name || 'Unknown'}</p>
+                        </div>
+                        {/* Tier */}
+                        <div className="col-span-2 text-center">
+                          <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${ts.bg} ${ts.text}`}>
+                            {ts.label}
+                          </span>
+                        </div>
+                        {/* Jobs */}
+                        <div className="col-span-2 text-center text-sm font-medium">{cleaner.jobs}</div>
+                        {/* Rating */}
+                        <div className="col-span-1 text-center">
+                          <div className="flex items-center justify-center gap-0.5">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-bold">{cleaner.rating.toFixed(1)}</span>
+                          </div>
+                        </div>
+                        {/* Reliability */}
+                        <div className="col-span-2 flex flex-col items-end gap-1">
+                          <span className="text-xs font-medium">{cleaner.reliability}%</span>
+                          <Progress value={cleaner.reliability} className="h-1.5 w-16" />
                         </div>
                       </div>
-                      <div className="flex items-center gap-6">
-                        <div className="text-right">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-bold">{cleaner.rating.toFixed(2)}</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">Rating</p>
-                        </div>
-                        <div className="w-24">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground">Reliability</span>
-                            <span className="text-xs font-medium">{cleaner.reliability}%</span>
-                          </div>
-                          <Progress value={cleaner.reliability} className="h-2" />
-                        </div>
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             )}
