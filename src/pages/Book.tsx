@@ -750,64 +750,97 @@ export default function Book() {
                     </CardContent>
                   </Card>
 
-                  {/* Credit Balance Check */}
-                  {!isLoadingAccount && (
-                    <Card className={`mb-6 ${hasEnoughCredits ? 'bg-accent/30 border-accent' : 'bg-destructive/10 border-destructive/30'}`}>
+                  {/* Payment Path Selection */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-sm font-semibold text-foreground">Choose how to pay</p>
+
+                    {/* Path 1 — Use wallet credits */}
+                    <Card
+                      className={`border-2 transition-all ${hasEnoughCredits ? 'border-primary/40 bg-primary/5' : 'border-border opacity-60'}`}
+                    >
                       <CardContent className="p-4">
-                        <div className="flex gap-3">
-                          {hasEnoughCredits ? (
-                            <>
-                              <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                              <div>
-                                <p className="font-medium text-sm mb-1">Pay only for time worked</p>
-                                <p className="text-xs text-muted-foreground">
-                                  Credits are held until you approve the work. Unused credits from shorter jobs are automatically refunded.
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  Available balance: <span className="font-medium">${availableCredits}</span>
-                                </p>
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                              <div>
-                                <p className="font-medium text-sm mb-1 text-destructive">Insufficient balance</p>
-                                <p className="text-xs text-muted-foreground">
-                                  You have ${availableCredits} available but need ${totalCredits} for this booking.
-                                </p>
-                                <Button variant="link" className="p-0 h-auto text-xs mt-1" asChild>
-                                  <Link to="/wallet">Add credits to your wallet →</Link>
-                                </Button>
-                              </div>
-                            </>
-                          )}
+                        <div className="flex items-start gap-3">
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Wallet className="h-5 w-5 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-semibold text-sm">Pay with Wallet Credits</p>
+                              <span className="text-lg font-bold">${totalCredits}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              Credits held in escrow — released only after you approve the work.
+                            </p>
+                            {!isLoadingAccount && (
+                              <p className="text-xs mt-1">
+                                Balance: <span className={hasEnoughCredits ? 'text-primary font-medium' : 'text-destructive font-medium'}>${availableCredits} available</span>
+                                {!hasEnoughCredits && (
+                                  <Button variant="link" className="p-0 h-auto text-xs ml-2" asChild>
+                                    <Link to="/wallet">Top up →</Link>
+                                  </Button>
+                                )}
+                              </p>
+                            )}
+                          </div>
                         </div>
+                        <Button
+                          className="w-full mt-4"
+                          size="sm"
+                          onClick={handleConfirmWithCredits}
+                          disabled={isCreating || !hasEnoughCredits}
+                        >
+                          {isCreating ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating Booking...</>
+                          ) : (
+                            <><Check className="mr-2 h-4 w-4" />Confirm with Credits</>
+                          )}
+                        </Button>
                       </CardContent>
                     </Card>
-                  )}
 
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(5)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button 
-                      className="flex-1" 
-                      size="lg" 
-                      onClick={handleConfirm}
-                      disabled={isCreating || !hasEnoughCredits}
-                    >
-                      {isCreating ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating Booking...
-                        </>
-                      ) : (
-                        'Confirm Booking'
-                      )}
-                    </Button>
+                    {/* Path 2 — Pay directly with card (+15% service charge) */}
+                    <Card className="border-2 border-border hover:border-secondary transition-all">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="h-10 w-10 rounded-lg bg-secondary/40 flex items-center justify-center flex-shrink-0">
+                            <CreditCard className="h-5 w-5 text-foreground" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-semibold text-sm">Pay Now with Card</p>
+                              <div className="text-right">
+                                <span className="text-lg font-bold">${directPayTotal}</span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              No pre-purchase needed. Includes a <span className="font-medium">15% service charge</span> (${serviceCharge}).
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              Base ${totalCredits} + service charge ${serviceCharge} = <span className="font-medium">${directPayTotal} total</span>
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          className="w-full mt-4"
+                          size="sm"
+                          onClick={handlePayDirectly}
+                          disabled={isDirectPaying || isCreating}
+                        >
+                          {isDirectPaying ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Opening Checkout...</>
+                          ) : (
+                            <><ExternalLink className="mr-2 h-4 w-4" />Pay ${directPayTotal} with Stripe</>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
                   </div>
+
+                  <Button variant="ghost" size="sm" className="w-full" onClick={() => setStep(5)}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>
