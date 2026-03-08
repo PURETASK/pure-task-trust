@@ -61,7 +61,7 @@ const guestNavGroups: NavGroup[] = [
     items: [
       { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
-      { title: "Reliability Score", url: "/reliability-score", icon: BadgeCheck },
+      { title: "Reliability Score", url: "/reliability-score", icon: ShieldCheck },
     ]
   },
   {
