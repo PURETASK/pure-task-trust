@@ -84,6 +84,7 @@ import AdminIDVerifications from "./pages/admin/AdminIDVerifications";
 import AdminConversionDashboard from "./pages/admin/AdminConversionDashboard";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
