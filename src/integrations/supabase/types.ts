@@ -370,6 +370,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "availability_blocks_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       background_checks: {
@@ -418,6 +425,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "background_checks_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -501,6 +515,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blackout_periods_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -719,6 +740,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cancellation_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cancellation_events_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -856,6 +884,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_additional_services_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_agreements: {
@@ -895,6 +930,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_agreements_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -953,6 +995,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_availability_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_boosts: {
@@ -1000,6 +1049,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_boosts_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_custom_services: {
@@ -1041,6 +1097,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_custom_services_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_earnings: {
@@ -1080,6 +1143,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_earnings_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1128,6 +1198,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cleaner_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cleaner_events_job_id_fkey"
             columns: ["job_id"]
             isOneToOne: false
@@ -1170,6 +1247,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: true
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_flex_profiles_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1217,6 +1301,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_goals_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1269,6 +1360,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_metrics_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_no_shows: {
@@ -1305,6 +1403,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_no_shows_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1375,6 +1480,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: true
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_preferences_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1542,6 +1654,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cleaner_reliability_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cleaner_reliability_events_job_id_fkey"
             columns: ["job_id"]
             isOneToOne: false
@@ -1578,6 +1697,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: true
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_reliability_scores_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: true
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1624,6 +1750,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_service_areas_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_teams: {
@@ -1663,6 +1796,13 @@ export type Database = {
             columns: ["owner_cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_teams_owner_cleaner_id_fkey"
+            columns: ["owner_cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1712,6 +1852,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_tier_history_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_time_off: {
@@ -1756,6 +1903,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cleaner_time_off_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cleaner_weekly_streaks: {
@@ -1786,6 +1940,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaner_weekly_streaks_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1893,6 +2054,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaning_subscriptions_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -2511,6 +2679,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "favorite_cleaners_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "favorite_cleaners_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -2613,6 +2788,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flexibility_decline_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -2747,6 +2929,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "id_verifications_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       inconvenience_logs: {
@@ -2789,6 +2978,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inconvenience_logs_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -2889,6 +3085,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_checkins_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -3013,6 +3216,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_offers_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -3334,6 +3544,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "jobs_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "jobs_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -3516,6 +3733,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "match_recommendations_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "match_recommendations_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -3568,6 +3792,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_threads_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -3957,6 +4188,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "payout_adjustments_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "payout_adjustments_payout_id_fkey"
             columns: ["payout_id"]
             isOneToOne: false
@@ -4029,6 +4267,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "payout_requests_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "payout_requests_payout_id_fkey"
             columns: ["payout_id"]
             isOneToOne: false
@@ -4089,6 +4334,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "payout_retry_queue_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "payout_retry_queue_payout_id_fkey"
             columns: ["payout_id"]
             isOneToOne: false
@@ -4137,6 +4389,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payouts_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -4211,6 +4470,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_compliance_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -4593,6 +4859,13 @@ export type Database = {
             referencedRelation: "cleaner_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reliability_history_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       reliability_snapshots: {
@@ -4632,6 +4905,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reliability_snapshots_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -4703,6 +4983,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reschedule_events_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -4782,6 +5069,13 @@ export type Database = {
             columns: ["cleaner_id"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -4878,10 +5172,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "team_members_cleaner_id_fkey"
+            columns: ["cleaner_id"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "team_members_invited_by_fkey"
             columns: ["invited_by"]
             isOneToOne: false
             referencedRelation: "cleaner_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "cleaner_public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -4940,7 +5248,78 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      cleaner_public_profiles: {
+        Row: {
+          avg_rating: number | null
+          base_rate_cph: number | null
+          bio: string | null
+          created_at: string | null
+          deep_addon_cph: number | null
+          first_name: string | null
+          hourly_rate_credits: number | null
+          id: string | null
+          is_available: boolean | null
+          jobs_completed: number | null
+          last_name: string | null
+          latitude: number | null
+          longitude: number | null
+          low_flexibility_badge: boolean | null
+          moveout_addon_cph: number | null
+          professional_headline: string | null
+          profile_photo_url: string | null
+          reliability_score: number | null
+          tier: string | null
+          travel_radius_km: number | null
+          user_id: string | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          base_rate_cph?: number | null
+          bio?: string | null
+          created_at?: string | null
+          deep_addon_cph?: number | null
+          first_name?: string | null
+          hourly_rate_credits?: number | null
+          id?: string | null
+          is_available?: boolean | null
+          jobs_completed?: number | null
+          last_name?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          low_flexibility_badge?: boolean | null
+          moveout_addon_cph?: number | null
+          professional_headline?: string | null
+          profile_photo_url?: string | null
+          reliability_score?: number | null
+          tier?: string | null
+          travel_radius_km?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          avg_rating?: number | null
+          base_rate_cph?: number | null
+          bio?: string | null
+          created_at?: string | null
+          deep_addon_cph?: number | null
+          first_name?: string | null
+          hourly_rate_credits?: number | null
+          id?: string | null
+          is_available?: boolean | null
+          jobs_completed?: number | null
+          last_name?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          low_flexibility_badge?: boolean | null
+          moveout_addon_cph?: number | null
+          professional_headline?: string | null
+          profile_photo_url?: string | null
+          reliability_score?: number | null
+          tier?: string | null
+          travel_radius_km?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleaner_has_job_with_client: {
