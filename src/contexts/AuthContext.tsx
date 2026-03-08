@@ -31,12 +31,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Check for existing session first, then set up listener
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      setSession(existingSession);
+      if (existingSession?.user) {
+        // Await profile fetch before clearing loading state
+        fetchUserProfile(existingSession.user).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
+      }
+    });
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         setSession(currentSession);
-        
-      if (currentSession?.user) {
+
+        if (currentSession?.user) {
           // Handle Google OAuth role persistence for new users
           if (event === 'SIGNED_IN') {
             const pendingRole = localStorage.getItem('pendingOAuthRole') as UserRole | null;
@@ -47,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .select('role')
                 .eq('user_id', currentSession.user.id)
                 .maybeSingle();
-              
+
               if (!existingRole) {
                 await supabase.from('user_roles').insert({
                   user_id: currentSession.user.id,
@@ -72,20 +83,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }
               localStorage.removeItem('pendingOAuthRole');
             }
-          }
 
-          // Defer profile fetch to avoid blocking
-          setTimeout(() => {
-            fetchUserProfile(currentSession.user);
-          }, 0);
-          
-          // Send welcome email for new signups (SIGNED_IN with new user)
-          if (event === 'SIGNED_IN') {
-            // Check if user was just created (within last minute)
+            // Send welcome email for new signups
             const createdAt = new Date(currentSession.user.created_at);
-            const now = new Date();
-            const isNewUser = (now.getTime() - createdAt.getTime()) < 60000; // Within 1 minute
-            
+            const isNewUser = (Date.now() - createdAt.getTime()) < 60000;
             if (isNewUser) {
               const userRole = currentSession.user.user_metadata?.role as UserRole;
               if (userRole) {
@@ -93,22 +94,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }
             }
           }
+
+          // Await profile fetch before clearing loading state to prevent auth flashes
+          await fetchUserProfile(currentSession.user);
         } else {
           setUser(null);
         }
-        
+
         setIsLoading(false);
       }
     );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
-      setSession(existingSession);
-      if (existingSession?.user) {
-        fetchUserProfile(existingSession.user);
-      }
-      setIsLoading(false);
-    });
 
     return () => subscription.unsubscribe();
   }, []);
