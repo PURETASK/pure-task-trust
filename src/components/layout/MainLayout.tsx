@@ -11,6 +11,8 @@ import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
+import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
 import {
   DropdownMenu,
   DropdownMenuContent,
