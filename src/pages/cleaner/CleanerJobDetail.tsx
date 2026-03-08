@@ -477,6 +477,11 @@ export default function CleanerJobDetail() {
                   ))}
                 </div>
               )}
+              {profile?.id && job.client_id && (
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
+                  <Star className="h-4 w-4" /> Rate this client
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}

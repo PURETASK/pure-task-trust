@@ -2,15 +2,34 @@ import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { ReliabilityDashboard } from "@/components/verification/ReliabilityDashboard";
 import { MilestoneTracker } from "@/components/reliability/MilestoneTracker";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { useReliabilityScore } from "@/hooks/useReliabilityScore";
+import { DisputeEventModal } from "@/components/cleaner/DisputeEventModal";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Info, ExternalLink } from "lucide-react";
+import { TrendingUp, Info, ExternalLink, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { useState } from "react";
+
+const EVENT_LABELS: Record<string, { label: string; positive: boolean }> = {
+  on_time: { label: "On Time", positive: true },
+  late: { label: "Late Arrival", positive: false },
+  no_show: { label: "No Show", positive: false },
+  cancellation: { label: "Cancellation", positive: false },
+  early_checkout: { label: "Early Checkout", positive: false },
+  positive_rating: { label: "5-Star Rating", positive: true },
+  negative_rating: { label: "Low Rating", positive: false },
+  photo_compliant: { label: "Photo Compliance", positive: true },
+  photo_missing: { label: "Missing Photos", positive: false },
+};
 
 export default function CleanerReliability() {
   const { profile, isLoading } = useCleanerProfile();
+  const { events, isLoading: eventsLoading } = useReliabilityScore(profile?.id);
+  const [disputeEvent, setDisputeEvent] = useState<typeof events extends (infer T)[] | undefined ? T : never | null>(null);
+  const [disputeOpen, setDisputeOpen] = useState(false);
 
   return (
     <CleanerLayout>
@@ -102,7 +121,73 @@ export default function CleanerReliability() {
             <MilestoneTracker />
           </div>
         </div>
+
+        {/* Recent Events Table */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Recent Reliability Events
+              <span className="text-xs text-muted-foreground font-normal ml-auto">Last 20 events</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {eventsLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map(i => <Skeleton key={i} className="h-12" />)}
+              </div>
+            ) : !events || events.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                No events yet — complete jobs to build your track record.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {events.slice(0, 20).map((event) => {
+                  const meta = EVENT_LABELS[event.event_type] || { label: event.event_type, positive: true };
+                  const isNeg = !meta.positive;
+                  return (
+                    <div key={event.id} className={`flex items-center justify-between p-3 rounded-xl border ${isNeg ? "border-destructive/20 bg-destructive/5" : "border-success/20 bg-success/5"}`}>
+                      <div className="flex items-center gap-3">
+                        {isNeg
+                          ? <AlertTriangle className="h-4 w-4 text-destructive flex-shrink-0" />
+                          : <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />}
+                        <div>
+                          <p className="text-sm font-medium">{meta.label}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(event.created_at), "MMM d, yyyy")}
+                            {event.job_id && ` · Job ${event.job_id.toString().slice(0, 8)}...`}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={isNeg ? "destructive" : "success"} className="text-xs">
+                          {isNeg ? "" : "+"}{event.weight} pts
+                        </Badge>
+                        {isNeg && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs"
+                            onClick={() => { setDisputeEvent(event as any); setDisputeOpen(true); }}
+                          >
+                            Dispute
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      <DisputeEventModal
+        open={disputeOpen}
+        onOpenChange={setDisputeOpen}
+        event={disputeEvent}
+      />
     </CleanerLayout>
   );
 }
