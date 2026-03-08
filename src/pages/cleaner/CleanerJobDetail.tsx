@@ -320,9 +320,9 @@ export default function CleanerJobDetail() {
               {/* Numbered photo stepper */}
               <div className="space-y-2">
                 {([
-                  { step: 1, type: 'before' as const, label: 'Before Photos', desc: 'Capture the space before you start cleaning', count: beforeCount, done: beforeCount >= 1 },
+                  { step: 1, type: 'before' as const, label: 'Before Photos', desc: 'Capture the space before you start cleaning', count: beforeCount, done: beforeCount >= 1, locked: false },
                   { step: 2, type: 'after' as const, label: 'After Photos', desc: 'Show your completed work', count: afterCount, done: afterCount >= 1, locked: beforeCount === 0 },
-                ] as const).map(({ step, type, label, desc, count, done, locked }) => (
+                ]).map(({ step, type, label, desc, count, done, locked }) => (
                   <button
                     key={type}
                     onClick={() => { if (!locked) { setSelectedPhotoType(type); fileEl?.click(); } }}
