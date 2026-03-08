@@ -229,7 +229,7 @@ export default function CleanerSchedule() {
                              job.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {job.client?.first_name} {job.client?.last_name}
+                            Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                           </p>
                         </div>
                         {getStatusBadge(job.status)}
