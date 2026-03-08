@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap } from "lucide-react";
+import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff } from "lucide-react";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +16,7 @@ import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
 import { AddressVerification } from "@/components/booking/AddressVerification";
 import { Address, useAddresses } from "@/hooks/useAddresses";
-import { setHours as setDateHours, setMinutes as setDateMinutes } from "date-fns";
+import { setHours as setDateHours, setMinutes as setDateMinutes, getDay } from "date-fns";
 import { 
   isSameDayBooking, 
   isCleaningTypeAllowedSameDay, 
@@ -24,6 +24,8 @@ import {
   validateSameDayBooking,
   SAME_DAY_CONFIG 
 } from "@/lib/same-day-booking";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const cleaningTypes = [
   {
