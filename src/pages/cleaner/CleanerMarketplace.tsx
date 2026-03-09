@@ -56,16 +56,16 @@ export default function CleanerMarketplace() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Job Marketplace</h1>
-            <p className="text-muted-foreground mt-1">{visibleJobs.length} job{visibleJobs.length !== 1 ? "s" : ""} available near you</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Job Marketplace</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">{visibleJobs.length} job{visibleJobs.length !== 1 ? "s" : ""} available near you</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Filter className="h-3.5 w-3.5 text-muted-foreground" />
             {(['all', 'today', 'week'] as const).map((f) => (
-              <Button key={f} variant={filter === f ? 'default' : 'outline'} size="sm" onClick={() => setFilter(f)} className="rounded-xl">
-                {f === 'all' ? 'All Jobs' : f === 'today' ? 'Today' : 'This Week'}
+              <Button key={f} variant={filter === f ? 'default' : 'outline'} size="sm" onClick={() => setFilter(f)} className="rounded-xl h-8 text-xs px-3">
+                {f === 'all' ? 'All' : f === 'today' ? 'Today' : 'This Week'}
               </Button>
             ))}
           </div>
