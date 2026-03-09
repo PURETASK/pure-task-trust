@@ -227,7 +227,7 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier (Bronze → Platinum) to reduce your platform fee.</p>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
                 {TIERS.map((tier, i) => (
