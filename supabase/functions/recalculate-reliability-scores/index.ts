@@ -11,7 +11,7 @@ const corsHeaders = {
  *
  * 5 weighted metrics based on real job data:
  *   1. Job Completion   35%  — completed / total assigned
- *   2. On-Time Check-In 25%  — checked_in_at <= scheduled_start_at + 15min
+ *   2. On-Time Check-In 25%  — checked_in_at within ±15min of scheduled_start_at
  *   3. Photo Compliance 20%  — jobs with before+after photos / completed jobs
  *   4. Client Rating    15%  — avg review rating / 5 stars
  *   5. No Cancellations  5%  — 1 - (cancellations / total) rate
@@ -22,6 +22,10 @@ const corsHeaders = {
  *   Lost dispute      -10 pts each
  *
  * Final score is clamped to [0, 100].
+ *
+ * ON-TIME WINDOW: A cleaner is considered on-time if they check in
+ * between (scheduled_start_at - 15 min) and (scheduled_start_at + 15 min).
+ * This allows early arrivals (up to 15 min before) and minor delays (up to 15 min after).
  */
 
 interface CleanerData {
@@ -40,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log("Starting reliability score recalculation (v2 – 5-metric formula)...");
+    console.log("Starting reliability score recalculation (v3 – ±15min on-time window)...");
 
     const { data: cleaners, error: cleanersError } = await supabase
       .from("cleaner_profiles")
@@ -65,6 +69,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const last90Days = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
     const LATE_CANCEL_WINDOW_HOURS = 24;
+    const ON_TIME_WINDOW_MS = 15 * 60 * 1000; // ±15 minutes in milliseconds
 
     for (const cleaner of (cleaners || []) as CleanerData[]) {
       try {
@@ -101,7 +106,9 @@ const handler = async (req: Request): Promise<Response> => {
           c => (c.hours_before_start ?? 999) < LATE_CANCEL_WINDOW_HOURS
         ).length || 0;
 
-        // ── 3. On-time check-ins (checked_in_at <= scheduled_start_at + 15min) ──
+        // ── 3. On-time check-ins (±15min window around scheduled_start_at) ─
+        // Cleaner is ON-TIME if: scheduled - 15min <= checked_in_at <= scheduled + 15min
+        // This means early arrivals (up to 15 min early) and minor delays (up to 15 min late) count as on-time
         let onTimeCheckIns = 0;
         if (completedJobs > 0 && jobs) {
           const jobMap = new Map(jobs.map(j => [j.id, j.scheduled_start_at]));
@@ -117,7 +124,10 @@ const handler = async (req: Request): Promise<Response> => {
             if (!scheduledAt || !ci.checked_in_at) continue;
             const scheduled = new Date(scheduledAt).getTime();
             const checkedIn = new Date(ci.checked_in_at).getTime();
-            if (checkedIn <= scheduled + 15 * 60 * 1000) onTimeCheckIns++;
+            // ±15 min window: must arrive no more than 15 min early AND no more than 15 min late
+            const isOnTime = checkedIn >= (scheduled - ON_TIME_WINDOW_MS) &&
+                             checkedIn <= (scheduled + ON_TIME_WINDOW_MS);
+            if (isOnTime) onTimeCheckIns++;
           }
         }
 
@@ -170,7 +180,7 @@ const handler = async (req: Request): Promise<Response> => {
           ? (completedJobs / totalJobs) * 100
           : 50;
 
-        // Metric 2: On-Time Check-In (25%)
+        // Metric 2: On-Time Check-In (25%) — uses ±15min window
         const onTimePct = completedJobs > 0
           ? Math.min(100, (onTimeCheckIns / completedJobs) * 100)
           : 50;
@@ -220,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
             total_events: totalJobs,
           }, { onConflict: "cleaner_id" });
 
-          // Update cleaner_metrics with latest photo compliance & dispute data
+          // Update cleaner_metrics with latest data
           await supabase.from("cleaner_metrics").upsert({
             cleaner_id: cleaner.id,
             total_jobs_window: totalJobs,
@@ -233,6 +243,22 @@ const handler = async (req: Request): Promise<Response> => {
             dispute_lost_jobs: lostDisputes,
             updated_at: new Date().toISOString(),
           }, { onConflict: "cleaner_id" });
+
+          // Log to reliability_history for the 90-day chart
+          await supabase.from("reliability_history").insert({
+            cleaner_id: cleaner.id,
+            old_score: oldScore,
+            new_score: newScore,
+            reason: "nightly_recalculation",
+            metadata: {
+              completionPct: Math.round(completionPct),
+              onTimePct: Math.round(onTimePct),
+              photoPct: Math.round(photoPct),
+              ratingPct: Math.round(ratingPct),
+              noCancelPct: Math.round(noCancelPct),
+              penalties,
+            },
+          });
 
           results.updated++;
         } else {
