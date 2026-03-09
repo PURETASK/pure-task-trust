@@ -164,13 +164,13 @@ export default function Pricing() {
           </section>
 
           {/* Pricing Examples */}
-          <section className="py-16 bg-muted/30">
+          <section className="py-10 sm:py-16 bg-muted/30">
             <div className="max-w-4xl mx-auto px-4">
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold mb-2">Example Bookings</h2>
-                <p className="text-muted-foreground">Real numbers, no surprises</p>
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Example Bookings</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Real numbers, no surprises</p>
               </div>
-              <div className="grid md:grid-cols-3 gap-5">
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {EXAMPLES.map(({ title, label, total, cleaner, platform, popular }) => (
                   <Card key={title} className={popular ? 'border-primary shadow-lg ring-1 ring-primary/20' : ''}>
                     {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="bg-primary">Most Booked</Badge></div>}
