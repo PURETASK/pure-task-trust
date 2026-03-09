@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
-import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
+import { ReliabilityScoreWidget } from "@/components/cleaner/ReliabilityScoreWidget";
 import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
