@@ -129,7 +129,7 @@ export default function CleanerEarnings() {
                   <p className="text-xs text-muted-foreground">Based on your confirmed bookings</p>
                 </div>
               </div>
-              <div className="text-4xl font-bold mb-2">${forecastEarnings}</div>
+              <div className="text-3xl sm:text-4xl font-bold mb-2">${forecastEarnings}</div>
               <p className="text-sm text-muted-foreground mb-1">
                 {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
               </p>
