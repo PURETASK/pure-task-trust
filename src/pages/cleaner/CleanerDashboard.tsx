@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
-import { ReliabilityScore } from "@/components/cleaner/ReliabilityScore";
+import { ReliabilityScoreWidget } from "@/components/cleaner/ReliabilityScoreWidget";
 import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
@@ -259,7 +259,7 @@ export default function CleanerDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2">
                 {isLoadingProfile ? <Skeleton className="h-36 rounded-2xl" /> : (
-                  <ReliabilityScore score={profile?.reliability_score || 0} tier={tier} />
+                  <ReliabilityScoreWidget />
                 )}
               </div>
               <TierBadge />
