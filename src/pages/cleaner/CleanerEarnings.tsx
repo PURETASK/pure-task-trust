@@ -89,7 +89,7 @@ export default function CleanerEarnings() {
         <BankAccountStatus onStatusChange={setPayoutsEnabled} />
 
         {/* Key Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
           {isLoadingEarnings ? (
             <>{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}</>
           ) : (
