@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
 import {
   Home, Clock, Camera, Star, Shield, Calendar, DollarSign,
-  CheckCircle, ArrowRight, RefreshCw, Zap, ChevronRight, MapPin
+  CheckCircle, ArrowRight, RefreshCw, ChevronRight
 } from 'lucide-react';
 
 const stats = [
@@ -16,48 +16,12 @@ const stats = [
 ];
 
 const features = [
-  {
-    icon: Clock,
-    tag: 'Speed',
-    title: 'Same-Day Turnovers',
-    description: 'Guest checking out at 11am, next arriving at 3pm? We\'ll have your place spotless in between — without breaking a sweat.',
-    accent: 'pt-amber',
-  },
-  {
-    icon: Camera,
-    tag: 'Documentation',
-    title: 'Photo Proof on Every Clean',
-    description: 'Timestamped before/after photos sent directly to you after every job. Verify your property from anywhere in the world.',
-    accent: 'primary',
-  },
-  {
-    icon: Star,
-    tag: 'Reviews',
-    title: 'Protect Your 5-Star Rating',
-    description: 'Consistent, high-quality cleans automatically support your Airbnb reviews. Never lose a star because of a messy handover.',
-    accent: 'pt-amber',
-  },
-  {
-    icon: Shield,
-    tag: 'Verified',
-    title: 'Background-Checked Cleaners',
-    description: 'Every cleaner on PureTask has passed identity verification and background checks. No exceptions. Ever.',
-    accent: 'pt-green',
-  },
-  {
-    icon: RefreshCw,
-    tag: 'Recurring',
-    title: 'Sync With Your Calendar',
-    description: 'Set up automatic cleans that match your booking calendar. Change in guest? We adapt instantly.',
-    accent: 'pt-cyan',
-  },
-  {
-    icon: DollarSign,
-    tag: 'Pricing',
-    title: 'Zero Hidden Fees',
-    description: 'Know exactly what you\'ll pay before confirming every booking. Transparent pricing, no surprises ever.',
-    accent: 'pt-purple',
-  },
+  { icon: Clock, tag: 'Speed', title: 'Same-Day Turnovers', description: 'Guest checking out at 11am, next arriving at 3pm? We\'ll have your place spotless in between — without breaking a sweat.', accent: 'pt-amber' },
+  { icon: Camera, tag: 'Documentation', title: 'Photo Proof on Every Clean', description: 'Timestamped before/after photos sent directly to you after every job. Verify your property from anywhere in the world.', accent: 'primary' },
+  { icon: Star, tag: 'Reviews', title: 'Protect Your 5-Star Rating', description: 'Consistent, high-quality cleans automatically support your Airbnb reviews. Never lose a star because of a messy handover.', accent: 'pt-amber' },
+  { icon: Shield, tag: 'Verified', title: 'Background-Checked Cleaners', description: 'Every cleaner on PureTask has passed identity verification and background checks. No exceptions. Ever.', accent: 'pt-green' },
+  { icon: RefreshCw, tag: 'Recurring', title: 'Sync With Your Calendar', description: 'Set up automatic cleans that match your booking calendar. Change in guest? We adapt instantly.', accent: 'pt-cyan' },
+  { icon: DollarSign, tag: 'Pricing', title: 'Zero Hidden Fees', description: 'Know exactly what you\'ll pay before confirming every booking. Transparent pricing, no surprises ever.', accent: 'pt-purple' },
 ];
 
 const steps = [
@@ -76,11 +40,6 @@ const trustItems = [
   'Amenity restocking add-ons for pro hosts',
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.09, duration: 0.55, ease: 'easeOut' } }),
-};
-
 export default function ForAirbnbHosts() {
   return (
     <main className="overflow-hidden">
@@ -93,60 +52,48 @@ export default function ForAirbnbHosts() {
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-16 pb-0 overflow-hidden">
-        {/* deep amber gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-amber)/0.18)] via-background to-[hsl(var(--pt-cyan)/0.06)]" />
-        {/* grid texture */}
         <div
           className="absolute inset-0 opacity-[0.035]"
           style={{ backgroundImage: 'linear-gradient(hsl(var(--pt-amber)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--pt-amber)) 1px, transparent 1px)', backgroundSize: '48px 48px' }}
         />
-        {/* large floating number accent */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[28vw] font-black text-[hsl(var(--pt-amber)/0.06)] leading-none select-none pointer-events-none hidden lg:block">
           5★
         </div>
 
         <div className="relative container py-16">
           <div className="max-w-3xl">
-            <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-              <Badge className="mb-6 px-4 py-2 rounded-full text-sm font-semibold bg-[hsl(var(--pt-amber)/0.12)] text-[hsl(var(--pt-amber))] border border-[hsl(var(--pt-amber)/0.3)] hover:bg-[hsl(var(--pt-amber)/0.2)]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <Badge className="mb-6 px-4 py-2 rounded-full text-sm font-semibold bg-[hsl(var(--pt-amber)/0.12)] text-[hsl(var(--pt-amber))] border border-[hsl(var(--pt-amber)/0.3)]">
                 <Home className="h-3.5 w-3.5 mr-2" />
                 For Airbnb & Short-Term Rental Hosts
               </Badge>
             </motion.div>
 
             <motion.h1
-              initial="hidden" animate="visible" variants={fadeUp} custom={1}
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
               className="text-[clamp(3rem,8vw,6rem)] font-black leading-[0.9] tracking-tight mb-6"
             >
               Turnovers<br />
-              <span
-                className="relative inline-block"
-                style={{ WebkitTextFillColor: 'transparent', WebkitTextStroke: '2px hsl(var(--pt-amber))', textStroke: '2px hsl(var(--pt-amber))' }}
-              >
-                Perfected.
-              </span>
+              <span className="text-[hsl(var(--pt-amber))]">Perfected.</span>
             </motion.h1>
 
             <motion.p
-              initial="hidden" animate="visible" variants={fadeUp} custom={2}
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
               className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
             >
               Photo-documented, same-day cleaning that protects your 5-star rating. Verified cleaners who know exactly what short-term rental hosts need.
             </motion.p>
 
-            <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-4">
-              <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg"
-                style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
-                <Link to="/book">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Book Turnover Cleaning
-                </Link>
+            <motion.div
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.27 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
+                <Link to="/book"><Calendar className="mr-2 h-5 w-5" />Book Turnover Cleaning</Link>
               </Button>
               <Button size="xl" variant="outline" asChild className="rounded-2xl font-semibold">
-                <Link to="/discover">
-                  Browse Cleaners
-                  <ChevronRight className="ml-1 h-5 w-5" />
-                </Link>
+                <Link to="/discover">Browse Cleaners<ChevronRight className="ml-1 h-5 w-5" /></Link>
               </Button>
             </motion.div>
           </div>
@@ -193,11 +140,10 @@ export default function ForAirbnbHosts() {
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
-                custom={i}
-                initial="hidden"
-                whileInView="visible"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                variants={fadeUp}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
                 className="bg-card p-8 group hover:bg-[hsl(var(--pt-amber)/0.04)] transition-colors duration-300 relative overflow-hidden"
               >
                 <div
@@ -240,18 +186,15 @@ export default function ForAirbnbHosts() {
           </motion.div>
 
           <div className="relative max-w-5xl mx-auto">
-            {/* connecting line */}
             <div className="hidden md:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-[hsl(var(--pt-amber)/0.4)] to-transparent" />
-
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {steps.map((step, i) => (
                 <motion.div
                   key={step.num}
-                  custom={i}
-                  initial="hidden"
-                  whileInView="visible"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  variants={fadeUp}
+                  transition={{ delay: i * 0.12, duration: 0.5 }}
                   className="text-center relative"
                 >
                   <div
@@ -260,12 +203,7 @@ export default function ForAirbnbHosts() {
                   >
                     <step.icon className="h-7 w-7" />
                   </div>
-                  <div
-                    className="text-xs font-black tracking-widest mb-2"
-                    style={{ color: 'hsl(var(--pt-amber))' }}
-                  >
-                    STEP {step.num}
-                  </div>
+                  <div className="text-xs font-black tracking-widest mb-2 text-[hsl(var(--pt-amber))]">STEP {step.num}</div>
                   <h3 className="font-bold text-base mb-2">{step.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
                 </motion.div>
@@ -279,22 +217,15 @@ export default function ForAirbnbHosts() {
       <section className="py-28">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-            {/* Left: big visual accent block */}
             <motion.div
               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="relative"
             >
               <div
                 className="rounded-3xl p-10 relative overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, hsl(var(--pt-amber)/0.2) 0%, hsl(var(--pt-amber)/0.05) 100%)' }}
               >
                 <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-[hsl(var(--pt-amber)/0.15)] blur-3xl" />
-                <div
-                  className="text-[10rem] font-black leading-none opacity-10 absolute -bottom-4 -right-4"
-                  style={{ color: 'hsl(var(--pt-amber))' }}
-                >
-                  ★
-                </div>
+                <div className="text-[10rem] font-black leading-none opacity-10 absolute -bottom-4 -right-4 text-[hsl(var(--pt-amber))]">★</div>
                 <div className="relative z-10">
                   <p className="text-sm font-bold uppercase tracking-widest text-[hsl(var(--pt-amber))] mb-4">What's Included</p>
                   <h3 className="text-3xl font-black mb-8">Every booking<br />comes with:</h3>
@@ -302,17 +233,13 @@ export default function ForAirbnbHosts() {
                     {trustItems.map((item, i) => (
                       <motion.li
                         key={item}
-                        custom={i}
-                        initial="hidden"
-                        whileInView="visible"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        variants={fadeUp}
+                        transition={{ delay: i * 0.07, duration: 0.4 }}
                         className="flex items-start gap-3"
                       >
-                        <div
-                          className="h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                          style={{ background: 'hsl(var(--pt-amber)/0.2)' }}
-                        >
+                        <div className="h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-[hsl(var(--pt-amber)/0.2)]">
                           <CheckCircle className="h-3.5 w-3.5 text-[hsl(var(--pt-amber))]" />
                         </div>
                         <span className="text-sm font-medium">{item}</span>
@@ -323,7 +250,6 @@ export default function ForAirbnbHosts() {
               </div>
             </motion.div>
 
-            {/* Right: narrative + CTA */}
             <motion.div
               initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               className="space-y-8"
@@ -337,7 +263,6 @@ export default function ForAirbnbHosts() {
                   PureTask was designed specifically for hosts managing multiple properties, tight turnover windows, and guests who expect hotel-quality cleanliness.
                 </p>
               </div>
-
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { n: '60s', t: 'Booking takes 60 seconds' },
@@ -345,19 +270,14 @@ export default function ForAirbnbHosts() {
                   { n: '100%', t: 'Photo proof every time' },
                   { n: '24/7', t: 'Support for host emergencies' },
                 ].map((item) => (
-                  <div
-                    key={item.t}
-                    className="rounded-2xl p-5 border border-[hsl(var(--pt-amber)/0.2)] bg-[hsl(var(--pt-amber)/0.04)]"
-                  >
+                  <div key={item.t} className="rounded-2xl p-5 border border-[hsl(var(--pt-amber)/0.2)] bg-[hsl(var(--pt-amber)/0.04)]">
                     <p className="text-3xl font-black text-[hsl(var(--pt-amber))] mb-1">{item.n}</p>
                     <p className="text-xs text-muted-foreground">{item.t}</p>
                   </div>
                 ))}
               </div>
-
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button size="lg" asChild className="rounded-2xl font-bold"
-                  style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
+                <Button size="lg" asChild className="rounded-2xl font-bold" style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
                   <Link to="/book">Book a Turnover Now</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="rounded-2xl">
@@ -393,8 +313,7 @@ export default function ForAirbnbHosts() {
                 Join thousands of Airbnb hosts who trust PureTask for every single turnover — documented, verified, and on time.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg"
-                  style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
+                <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
                   <Link to="/book">Book Your First Turnover</Link>
                 </Button>
                 <Button size="xl" variant="outline" asChild className="rounded-2xl">
