@@ -6,6 +6,24 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * RELIABILITY SCORE FORMULA (0–100)
+ *
+ * 5 weighted metrics based on real job data:
+ *   1. Job Completion   35%  — completed / total assigned
+ *   2. On-Time Check-In 25%  — checked_in_at <= scheduled_start_at + 15min
+ *   3. Photo Compliance 20%  — jobs with before+after photos / completed jobs
+ *   4. Client Rating    15%  — avg review rating / 5 stars
+ *   5. No Cancellations  5%  — 1 - (cancellations / total) rate
+ *
+ * Flat penalties applied after weighted sum:
+ *   No-show           -15 pts each
+ *   Late cancellation  -8 pts each (within 24h)
+ *   Lost dispute      -10 pts each
+ *
+ * Final score is clamped to [0, 100].
+ */
+
 interface CleanerData {
   id: string;
   user_id: string | null;
@@ -22,9 +40,8 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log("Starting reliability score recalculation...");
+    console.log("Starting reliability score recalculation (v2 – 5-metric formula)...");
 
-    // Get all cleaners with completed onboarding
     const { data: cleaners, error: cleanersError } = await supabase
       .from("cleaner_profiles")
       .select("id, user_id, reliability_score")
@@ -47,10 +64,11 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     const last90Days = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+    const LATE_CANCEL_WINDOW_HOURS = 24;
 
     for (const cleaner of (cleaners || []) as CleanerData[]) {
       try {
-        // Get jobs in last 90 days using correct column
+        // ── 1. Fetch jobs in the last 90 days ──────────────────────────────
         const { data: jobs, error: jobsError } = await supabase
           .from("jobs")
           .select("id, status, scheduled_start_at")
@@ -68,60 +86,133 @@ const handler = async (req: Request): Promise<Response> => {
           continue;
         }
 
-        // Calculate metrics
         const completedJobs = jobs?.filter(j => j.status === "completed").length || 0;
-        const noShows = jobs?.filter(j => j.status === "no_show").length || 0;
-        const cancellations = jobs?.filter(j => j.status === "cancelled").length || 0;
+        const noShowJobs   = jobs?.filter(j => j.status === "no_show").length   || 0;
 
-        // Get average rating
+        // ── 2. Cancellation data ───────────────────────────────────────────
+        const { data: cancellations } = await supabase
+          .from("cancellation_events")
+          .select("t_cancel, hours_before_start")
+          .eq("cleaner_id", cleaner.id)
+          .gte("created_at", last90Days);
+
+        const totalCancellations = cancellations?.length || 0;
+        const lateCancellations  = cancellations?.filter(
+          c => (c.hours_before_start ?? 999) < LATE_CANCEL_WINDOW_HOURS
+        ).length || 0;
+
+        // ── 3. On-time check-ins (checked_in_at <= scheduled_start_at + 15min) ──
+        let onTimeCheckIns = 0;
+        if (completedJobs > 0 && jobs) {
+          const jobMap = new Map(jobs.map(j => [j.id, j.scheduled_start_at]));
+          const { data: checkins } = await supabase
+            .from("job_checkins")
+            .select("job_id, checked_in_at")
+            .eq("cleaner_id", cleaner.id)
+            .eq("type", "check_in")
+            .gte("created_at", last90Days);
+
+          for (const ci of checkins || []) {
+            const scheduledAt = jobMap.get(ci.job_id);
+            if (!scheduledAt || !ci.checked_in_at) continue;
+            const scheduled = new Date(scheduledAt).getTime();
+            const checkedIn = new Date(ci.checked_in_at).getTime();
+            if (checkedIn <= scheduled + 15 * 60 * 1000) onTimeCheckIns++;
+          }
+        }
+
+        // ── 4. Photo compliance ────────────────────────────────────────────
+        let photoCompliantJobs = 0;
+        if (completedJobs > 0 && jobs) {
+          const completedIds = jobs
+            .filter(j => j.status === "completed")
+            .map(j => j.id);
+
+          for (const jobId of completedIds) {
+            const { data: photos } = await supabase
+              .from("job_photos")
+              .select("photo_type")
+              .eq("job_id", jobId);
+
+            const types = new Set(photos?.map(p => p.photo_type) || []);
+            if (types.has("before") && types.has("after")) photoCompliantJobs++;
+          }
+        }
+
+        // ── 5. Average client rating ───────────────────────────────────────
         const { data: reviews } = await supabase
           .from("reviews")
           .select("rating")
           .eq("cleaner_id", cleaner.id)
           .gte("created_at", last90Days);
 
-        const avgRating = reviews?.length 
-          ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
-          : 4.0;
+        const avgRating = reviews?.length
+          ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length
+          : 4.0; // default neutral rating for new cleaners
 
-        // Get on-time check-ins
-        const { data: checkins } = await supabase
-          .from("job_checkins")
-          .select("job_id, checked_in_at")
+        // ── 6. Lost disputes ───────────────────────────────────────────────
+        const { data: disputes } = await supabase
+          .from("disputes")
+          .select("id, resolution")
           .eq("cleaner_id", cleaner.id)
-          .eq("type", "check_in")
+          .eq("resolution", "client_favor")
           .gte("created_at", last90Days);
 
-        // Calculate score components
-        const completionRate = totalJobs > 0 ? (completedJobs / totalJobs) * 100 : 50;
-        const noShowPenalty = noShows * 5;
-        const cancellationPenalty = cancellations * 2;
-        const ratingBonus = (avgRating - 3) * 5;
-        const onTimeRate = checkins?.length && completedJobs > 0 
-          ? Math.min(100, (checkins.length / completedJobs) * 100) 
+        const lostDisputes = disputes?.length || 0;
+
+        // ── 7. Compute 5-metric weighted score ─────────────────────────────
+        //
+        // Each metric is expressed as a 0–100 percentage first,
+        // then multiplied by its weight to yield its point contribution.
+
+        // Metric 1: Job Completion (35%)
+        const completionPct = totalJobs > 0
+          ? (completedJobs / totalJobs) * 100
           : 50;
 
-        // Calculate final score
-        let newScore = Math.round(
-          (completionRate * 0.4) +
-          (onTimeRate * 0.3) +
-          (ratingBonus * 0.2) +
-          (20 - noShowPenalty - cancellationPenalty)
-        );
+        // Metric 2: On-Time Check-In (25%)
+        const onTimePct = completedJobs > 0
+          ? Math.min(100, (onTimeCheckIns / completedJobs) * 100)
+          : 50;
 
-        // Clamp between 0 and 100
+        // Metric 3: Photo Compliance (20%)
+        const photoPct = completedJobs > 0
+          ? Math.min(100, (photoCompliantJobs / completedJobs) * 100)
+          : 50;
+
+        // Metric 4: Client Rating (15%) — normalize 0-5 to 0-100
+        const ratingPct = Math.min(100, (avgRating / 5) * 100);
+
+        // Metric 5: No Cancellations (5%) — inverse cancellation rate
+        const noCancelPct = totalJobs > 0
+          ? Math.max(0, (1 - totalCancellations / totalJobs) * 100)
+          : 100;
+
+        const weightedScore =
+          (completionPct * 0.35) +
+          (onTimePct     * 0.25) +
+          (photoPct      * 0.20) +
+          (ratingPct     * 0.15) +
+          (noCancelPct   * 0.05);
+
+        // ── 8. Apply flat penalties ────────────────────────────────────────
+        const penalties =
+          (noShowJobs      * 15) +
+          (lateCancellations * 8) +
+          (lostDisputes    * 10);
+
+        let newScore = Math.round(weightedScore - penalties);
         newScore = Math.max(0, Math.min(100, newScore));
 
-        const oldScore = cleaner.reliability_score || 50;
+        const oldScore = cleaner.reliability_score ?? 50;
 
+        // ── 9. Persist if changed ──────────────────────────────────────────
         if (Math.abs(newScore - oldScore) >= 1) {
-          // Update the score in cleaner_profiles
           await supabase
             .from("cleaner_profiles")
             .update({ reliability_score: newScore })
             .eq("id", cleaner.id);
 
-          // Upsert into cleaner_reliability_scores with correct columns
           await supabase.from("cleaner_reliability_scores").upsert({
             cleaner_id: cleaner.id,
             current_score: newScore,
@@ -129,13 +220,27 @@ const handler = async (req: Request): Promise<Response> => {
             total_events: totalJobs,
           }, { onConflict: "cleaner_id" });
 
+          // Update cleaner_metrics with latest photo compliance & dispute data
+          await supabase.from("cleaner_metrics").upsert({
+            cleaner_id: cleaner.id,
+            total_jobs_window: totalJobs,
+            attended_jobs: completedJobs,
+            no_show_jobs: noShowJobs,
+            on_time_checkins: onTimeCheckIns,
+            photo_compliant_jobs: photoCompliantJobs,
+            ratings_count: reviews?.length || 0,
+            ratings_sum: reviews?.reduce((s, r) => s + (r.rating || 0), 0) || 0,
+            dispute_lost_jobs: lostDisputes,
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "cleaner_id" });
+
           results.updated++;
         } else {
           results.unchanged++;
         }
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : "Unknown error";
-        results.errors.push(`Error processing cleaner ${cleaner.id}: ${errorMessage}`);
+        const msg = err instanceof Error ? err.message : "Unknown error";
+        results.errors.push(`Error processing cleaner ${cleaner.id}: ${msg}`);
       }
     }
 
@@ -146,10 +251,10 @@ const handler = async (req: Request): Promise<Response> => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const msg = error instanceof Error ? error.message : "Unknown error";
     console.error("Error in recalculate-reliability-scores:", error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: msg }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

@@ -22,9 +22,9 @@ const SCORING_FACTORS = [
 ];
 
 const PENALTIES = [
-  { name: "No-Shows", pts: "-30", desc: "Missing a scheduled job without notice." },
-  { name: "Late Cancellations", pts: "-15", desc: "Canceling within 24 hours of job start." },
-  { name: "Disputes Lost", pts: "-20", desc: "Client disputes resolved against you." },
+  { name: "No-Shows", pts: "-15", desc: "Missing a scheduled job without notice — the most severe penalty." },
+  { name: "Late Cancellations", pts: "-8", desc: "Canceling within 24 hours of job start." },
+  { name: "Disputes Lost", pts: "-10", desc: "Client disputes resolved in the client's favor." },
 ];
 
 const QUICK_WINS = [

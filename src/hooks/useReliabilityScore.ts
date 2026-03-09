@@ -39,17 +39,18 @@ export interface CleanerMetrics {
   updated_at: string;
 }
 
-// Weight definitions for different event types
+// Weight definitions for different event types — aligned with 5-metric formula
+// Flat-penalty values match recalculate-reliability-scores edge function
 const EVENT_WEIGHTS: Record<ReliabilityEventType, number> = {
-  on_time: 2,
+  on_time: 3,
   late: -3,
-  no_show: -10,
-  cancellation: -5,
+  no_show: -15,
+  cancellation: -8,
   early_checkout: -2,
-  positive_rating: 2,
-  negative_rating: -4,
-  photo_compliant: 1,
-  photo_missing: -2,
+  positive_rating: 3,
+  negative_rating: -5,
+  photo_compliant: 2,
+  photo_missing: -3,
 };
 
 export function useReliabilityScore(cleanerId?: string) {
