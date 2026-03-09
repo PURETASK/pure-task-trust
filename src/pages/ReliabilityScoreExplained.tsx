@@ -7,24 +7,24 @@ import { SEO } from '@/components/seo';
 import React from 'react';
 
 const TIERS = [
-  { tier: "Bronze", range: "0–69", rate: "$80–100", color: "from-amber-700 to-amber-500", icon: "🥉", features: ["Standard marketplace access", "Basic job matching", "Standard support"] },
-  { tier: "Silver", range: "70–84", rate: "$100–130", color: "from-slate-500 to-slate-400", icon: "🥈", features: ["Improved visibility", "Priority job matching", "Full marketplace access"] },
-  { tier: "Gold", range: "85–94", rate: "$130–170", color: "from-yellow-600 to-yellow-400", icon: "🥇", features: ["Top search results", "Premium client matching", "Early notifications", "Lower platform fee (16%)"] },
-  { tier: "Platinum", range: "95–100", rate: "$170–220", color: "from-violet-600 to-violet-400", icon: "💎", features: ["VIP client access", "Exclusive job offers", "Maximum earnings", "Lowest platform fee (15%)"] },
+  { tier: "Bronze", range: "0–49", rate: "$20–35", color: "from-amber-700 to-amber-500", icon: "🥉", features: ["Standard marketplace access", "Basic job matching", "Standard support", "Platform fee: 20%"] },
+  { tier: "Silver", range: "50–69", rate: "$30–50", color: "from-slate-500 to-slate-400", icon: "🥈", features: ["Improved visibility", "Priority job matching", "Full marketplace access", "Platform fee: 18%"] },
+  { tier: "Gold", range: "70–89", rate: "$40–65", color: "from-yellow-600 to-yellow-400", icon: "🥇", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 17%"] },
+  { tier: "Platinum", range: "90–100", rate: "$50–100", color: "from-violet-600 to-violet-400", icon: "💎", features: ["VIP client access", "Exclusive job offers", "Maximum earnings", "Platform fee: 15%"] },
 ];
 
 const SCORING_FACTORS = [
-  { icon: CheckCircle, name: "Job Completion", points: 25, desc: "Complete jobs on time without issues.", color: "text-success", bg: "bg-success/10" },
-  { icon: Clock, name: "On-Time Check-ins", points: 20, desc: "GPS check-in within 15 mins of start time.", color: "text-blue-500", bg: "bg-blue-500/10" },
-  { icon: Camera, name: "Photo Documentation", points: 20, desc: "Submit clear before/after photos every job.", color: "text-violet-500", bg: "bg-violet-500/10" },
-  { icon: MessageSquare, name: "Communication", points: 15, desc: "Respond promptly and keep clients informed.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
-  { icon: Star, name: "Client Ratings", points: 20, desc: "Average rating from client reviews.", color: "text-amber-500", bg: "bg-amber-500/10" },
+  { icon: CheckCircle, name: "Job Completion", points: 35, desc: "Complete every assigned job. This is the single most important factor.", color: "text-success", bg: "bg-success/10" },
+  { icon: Clock, name: "On-Time Check-In", points: 25, desc: "GPS check-in within 15 minutes of the scheduled start time.", color: "text-blue-500", bg: "bg-blue-500/10" },
+  { icon: Camera, name: "Photo Compliance", points: 20, desc: "Upload both before AND after photos on every completed job.", color: "text-violet-500", bg: "bg-violet-500/10" },
+  { icon: Star, name: "Client Rating", points: 15, desc: "Average star rating from client reviews (0–5 stars).", color: "text-amber-500", bg: "bg-amber-500/10" },
+  { icon: CheckCircle, name: "No Cancellations", points: 5, desc: "Low cancellation rate — avoid canceling jobs you've accepted.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
 ];
 
 const PENALTIES = [
-  { name: "No-Shows", pts: "-30", desc: "Missing a scheduled job without notice." },
-  { name: "Late Cancellations", pts: "-15", desc: "Canceling within 24 hours of job start." },
-  { name: "Disputes Lost", pts: "-20", desc: "Client disputes resolved against you." },
+  { name: "No-Shows", pts: "-15", desc: "Missing a scheduled job without notice — the most severe penalty." },
+  { name: "Late Cancellations", pts: "-8", desc: "Canceling within 24 hours of job start." },
+  { name: "Disputes Lost", pts: "-10", desc: "Client disputes resolved in the client's favor." },
 ];
 
 const QUICK_WINS = [

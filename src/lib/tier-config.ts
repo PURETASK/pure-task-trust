@@ -1,5 +1,11 @@
 // Tier configuration for reliability score system
 // Defines price ranges, platform fees, and additional service pricing per tier
+//
+// Tier boundaries (unified with recalculate-reliability-scores edge function):
+//   Bronze   0 – 49
+//   Silver  50 – 69
+//   Gold    70 – 89
+//   Platinum 90 – 100
 
 export type CleanerTier = 'bronze' | 'silver' | 'gold' | 'platinum';
 

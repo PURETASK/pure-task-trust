@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Minus, Clock, Camera, Star, CheckCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Clock, Camera, Star, CheckCircle, XCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useReliabilityScore } from '@/hooks/useReliabilityScore';
@@ -33,12 +33,16 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
   };
 
   const getScoreLabel = (value: number) => {
-    if (value >= 95) return 'Excellent';
-    if (value >= 85) return 'Great';
-    if (value >= 70) return 'Good';
-    if (value >= 50) return 'Needs Improvement';
-    return 'At Risk';
+    if (value >= 90) return 'Platinum — Excellent';
+    if (value >= 70) return 'Gold — Great';
+    if (value >= 50) return 'Silver — Building Up';
+    return 'Bronze — Needs Work';
   };
+
+  // Metric 5: No-cancellations rate (inverse of no-show+cancel rate)
+  const noCancellationsPct = metrics && metrics.total_jobs_window > 0
+    ? Math.max(0, (1 - metrics.no_show_jobs / metrics.total_jobs_window) * 100)
+    : 100;
 
   return (
     <div className="space-y-4">
@@ -57,7 +61,7 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
                 {getScoreLabel(currentScore)}
               </p>
               <p className="text-sm text-muted-foreground">
-                Based on {score?.total_events || 0} events
+                Based on {score?.total_events || 0} jobs (last 90 days)
               </p>
             </div>
           </div>
@@ -65,36 +69,47 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
         </CardContent>
       </Card>
 
-      {/* Score breakdown */}
+      {/* Score breakdown — 5 weighted metrics */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg">Score Breakdown</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ScoreMetric 
-            icon={Clock} 
-            label="Punctuality" 
-            value={scoreBreakdown.punctuality}
-            description="On-time check-ins"
-          />
-          <ScoreMetric 
-            icon={CheckCircle} 
-            label="Attendance" 
+          <ScoreMetric
+            icon={CheckCircle}
+            label="Job Completion"
             value={scoreBreakdown.attendance}
-            description="Jobs attended"
+            weight={35}
+            description="Completed jobs vs total assigned"
           />
-          <ScoreMetric 
-            icon={Camera} 
-            label="Photo Compliance" 
+          <ScoreMetric
+            icon={Clock}
+            label="On-Time Check-In"
+            value={scoreBreakdown.punctuality}
+            weight={25}
+            description="GPS check-in ≤15 min of scheduled start"
+          />
+          <ScoreMetric
+            icon={Camera}
+            label="Photo Compliance"
             value={scoreBreakdown.photoCompliance}
-            description="Required photos submitted"
+            weight={20}
+            description="Before + after photos submitted"
           />
-          <ScoreMetric 
-            icon={Star} 
-            label="Average Rating" 
-            value={scoreBreakdown.rating * 20} // Convert 5-star to percentage
+          <ScoreMetric
+            icon={Star}
+            label="Client Rating"
+            value={scoreBreakdown.rating * 20}
+            weight={15}
             description={`${scoreBreakdown.rating.toFixed(1)} / 5 stars`}
             showPercentage={false}
+          />
+          <ScoreMetric
+            icon={XCircle}
+            label="No Cancellations"
+            value={noCancellationsPct}
+            weight={5}
+            description="Low cancellation & no-show rate"
           />
         </CardContent>
       </Card>
@@ -136,31 +151,28 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
   );
 }
 
-function ScoreMetric({ 
-  icon: Icon, 
-  label, 
-  value, 
+function ScoreMetric({
+  icon: Icon,
+  label,
+  value,
+  weight,
   description,
-  showPercentage = true 
-}: { 
+  showPercentage = true,
+}: {
   icon: typeof Clock;
   label: string;
   value: number;
+  weight: number;
   description: string;
   showPercentage?: boolean;
 }) {
-  const getColor = (val: number) => {
-    if (val >= 80) return 'bg-success';
-    if (val >= 60) return 'bg-warning';
-    return 'bg-destructive';
-  };
-
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium">{label}</span>
+          <span className="text-xs text-muted-foreground">({weight}%)</span>
         </div>
         <span className="text-sm text-muted-foreground">
           {showPercentage ? `${Math.round(value)}%` : description}
