@@ -222,13 +222,13 @@ export default function Pricing() {
       {/* Cleaner View */}
       {userType === 'cleaner' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <section className="py-20 bg-background">
+          <section className="py-10 sm:py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
                 {TIERS.map((tier, i) => (
                   <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card className={`${tier.colorBg} ${tier.popular ? 'border-primary border-2 shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
