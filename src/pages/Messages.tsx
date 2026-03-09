@@ -91,17 +91,17 @@ export default function Messages() {
           </div>
 
           {!filteredThreads || filteredThreads.length === 0 && !search ? (
-            <Card className="py-16">
+            <Card className="py-12 sm:py-16">
               <CardContent className="text-center">
-                <div className="h-20 w-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                  <MessageCircle className="h-10 w-10 text-primary" />
+                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto mb-4 sm:mb-5">
+                  <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">No conversations yet</h3>
-                <p className="text-muted-foreground max-w-sm mx-auto">Messages from your booked cleaners will appear here.</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">No conversations yet</h3>
+                <p className="text-muted-foreground text-sm max-w-sm mx-auto">Messages from your booked cleaners will appear here.</p>
               </CardContent>
             </Card>
           ) : (
-            <div className="flex flex-col md:grid md:grid-cols-5 gap-4 h-auto md:h-[680px]">
+            <div className="flex flex-col md:grid md:grid-cols-5 gap-3 sm:gap-4 h-auto md:h-[680px]">
               
               {/* Thread List */}
               <Card className={cn("md:col-span-2 overflow-hidden flex flex-col", selectedThread ? 'hidden md:flex' : 'flex')}>
