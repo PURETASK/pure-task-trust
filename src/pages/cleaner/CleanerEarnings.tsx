@@ -70,16 +70,14 @@ export default function CleanerEarnings() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
-                <DollarSign className="h-5 w-5 text-success" />
-              </div>
-              Earnings & Payouts
-            </h1>
-            <p className="text-muted-foreground mt-1">Track your income, request payouts, and plan your goals</p>
-          </div>
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
+            </div>
+            Earnings & Payouts
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">Track your income, request payouts, and plan your goals</p>
         </motion.div>
 
         {/* Goal Planner */}
