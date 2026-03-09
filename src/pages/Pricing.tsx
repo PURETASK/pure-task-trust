@@ -193,10 +193,10 @@ export default function Pricing() {
           </section>
 
           {/* Platform Fee Explainer */}
-          <section className="py-16 bg-background">
+          <section className="py-10 sm:py-16 bg-background">
             <div className="max-w-3xl mx-auto px-4">
               <Card className="border-primary/20 bg-primary/5">
-                <CardContent className="p-8">
+                <CardContent className="p-5 sm:p-8">
                   <div className="flex items-start gap-5">
                     <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Shield className="h-7 w-7 text-primary" />
