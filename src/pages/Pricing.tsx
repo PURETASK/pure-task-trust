@@ -120,13 +120,13 @@ export default function Pricing() {
       {userType === 'client' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           {/* Tier Cards */}
-          <section className="py-20 bg-background">
+          <section className="py-10 sm:py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-3">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {TIERS.map((tier, i) => (
                   <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card className={`relative ${tier.colorBg} border-2 ${tier.popular ? 'border-primary shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
