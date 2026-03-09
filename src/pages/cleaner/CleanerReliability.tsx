@@ -55,48 +55,48 @@ export default function CleanerReliability() {
       <div className="space-y-6">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${tierStyle.bg} p-8 text-white`}>
+          <div className={`relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br ${tierStyle.bg} p-5 sm:p-8 text-white`}>
             <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute -right-12 -bottom-12 text-9xl opacity-10">{tierStyle.icon}</div>
-            <div className="relative flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-4xl">{tierStyle.icon}</span>
-                  <h1 className="text-3xl font-bold capitalize">{tier} Tier</h1>
+            <div className="absolute -right-8 -bottom-8 sm:-right-12 sm:-bottom-12 text-7xl sm:text-9xl opacity-10 select-none">{tierStyle.icon}</div>
+            <div className="relative flex items-start sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+                  <span className="text-3xl sm:text-4xl flex-shrink-0">{tierStyle.icon}</span>
+                  <h1 className="text-2xl sm:text-3xl font-bold capitalize">{tier} Tier</h1>
                 </div>
-                <p className="text-white/80">Your reliability score and performance metrics</p>
+                <p className="text-white/80 text-sm sm:text-base">Your reliability score and performance metrics</p>
                 {nextTierPoints > 0 && (
-                  <p className="text-white/70 text-sm mt-1">
-                    <TrendingUp className="h-3.5 w-3.5 inline mr-1" />
+                  <p className="text-white/70 text-xs sm:text-sm mt-1">
+                    <TrendingUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 inline mr-1" />
                     {nextTierPoints} points to next tier
                   </p>
                 )}
               </div>
-              <div className="text-right">
-                <div className="text-6xl font-bold">{score}</div>
-                <div className="text-white/80 text-sm">/ 100 points</div>
+              <div className="text-right flex-shrink-0">
+                <div className="text-4xl sm:text-6xl font-bold">{score}</div>
+                <div className="text-white/80 text-xs sm:text-sm">/ 100 pts</div>
               </div>
             </div>
 
-            {/* Score bar — CORRECT tier boundaries: Bronze 0, Silver 50, Gold 70, Platinum 90 */}
-            <div className="relative mt-6">
-              <div className="h-3 rounded-full bg-white/20 overflow-hidden">
+            {/* Score bar */}
+            <div className="relative mt-4 sm:mt-6">
+              <div className="h-2 sm:h-3 rounded-full bg-white/20 overflow-hidden">
                 <div className="h-full rounded-full bg-white transition-all duration-1000" style={{ width: `${score}%` }} />
               </div>
-              <div className="flex justify-between text-xs text-white/60 mt-1">
-                <span>Bronze (0)</span>
-                <span>Silver (50)</span>
-                <span>Gold (70)</span>
-                <span>Platinum (90)</span>
+              <div className="flex justify-between text-[9px] sm:text-xs text-white/60 mt-1">
+                <span>0</span>
+                <span>50 Silver</span>
+                <span>70 Gold</span>
+                <span>90 Platinum</span>
               </div>
             </div>
 
             {/* Demotion warning */}
             {profile?.tier_demotion_warning_at && (
-              <div className="relative mt-4 flex items-center gap-2 bg-white/10 rounded-xl px-4 py-2.5">
-                <AlertTriangle className="h-4 w-4 text-yellow-300 flex-shrink-0" />
-                <p className="text-sm text-white/90">
-                  <span className="font-semibold">Tier at risk:</span> Your score has dropped. Improve within 3 days to keep your {tier.charAt(0).toUpperCase() + tier.slice(1)} status.
+              <div className="relative mt-3 sm:mt-4 flex items-start gap-2 bg-white/10 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5">
+                <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-300 flex-shrink-0 mt-0.5" />
+                <p className="text-xs sm:text-sm text-white/90">
+                  <span className="font-semibold">Tier at risk:</span> Improve within 3 days to keep your {tier.charAt(0).toUpperCase() + tier.slice(1)} status.
                 </p>
               </div>
             )}
@@ -105,23 +105,23 @@ export default function CleanerReliability() {
 
         {/* ── Stats ────────────────────────────────────────────────────── */}
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {[1,2,3,4].map(i => <Skeleton key={i} className="h-20 sm:h-24 rounded-2xl" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {[
-              { label: "Reliability Score", value: profile?.reliability_score || 0,               icon: TrendingUp,  color: "text-primary"       },
-              { label: "Jobs Completed",    value: profile?.jobs_completed || 0,                   icon: CheckCircle2, color: "text-success"       },
-              { label: "Avg Rating",        value: profile?.avg_rating?.toFixed(1) || "—",         icon: Star,        color: "text-amber-500"      },
-              { label: "Current Tier",      value: (profile?.tier || "bronze").charAt(0).toUpperCase() + (profile?.tier || "bronze").slice(1), icon: Award, color: tierStyle.text },
+              { label: "Score",         value: profile?.reliability_score || 0,               icon: TrendingUp,   color: "text-primary"  },
+              { label: "Jobs Done",     value: profile?.jobs_completed || 0,                   icon: CheckCircle2, color: "text-success"  },
+              { label: "Avg Rating",    value: profile?.avg_rating?.toFixed(1) || "—",         icon: Star,         color: "text-warning"  },
+              { label: "Tier",          value: (profile?.tier || "bronze").charAt(0).toUpperCase() + (profile?.tier || "bronze").slice(1), icon: Award, color: tierStyle.text },
             ].map((stat, i) => (
               <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                 <Card className="border-border/60 text-center">
-                  <CardContent className="p-4">
-                    <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <CardContent className="p-3 sm:p-4">
+                    <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-1.5 sm:mb-2 ${stat.color}`} />
+                    <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
                   </CardContent>
                 </Card>
               </motion.div>

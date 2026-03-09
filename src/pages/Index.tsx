@@ -58,25 +58,30 @@ export default function Index() {
       <AggregateRatingSchema />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-[100dvh] flex items-center overflow-hidden">
         <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
-          <img src={heroImg} alt="Pristine clean home" className="w-full h-full object-cover" />
+          <img
+            src={heroImg}
+            alt="Pristine clean home"
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
         </motion.div>
 
-        <div className="relative z-10 w-full px-4 sm:px-6 py-24 sm:py-32">
+        <div className="relative z-10 w-full px-4 sm:px-6 py-20 sm:py-32 pt-28 sm:pt-32">
           <div className="max-w-2xl">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-6 backdrop-blur-sm">
-                <Sparkles className="h-4 w-4" />
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold mb-5 sm:mb-6 backdrop-blur-sm">
+                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Pay Only When You're Happy
               </div>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6"
+              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6"
             >
               Cleaning you can{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
@@ -86,32 +91,32 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed"
+              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed"
             >
               Background-checked cleaners. GPS check-ins. Photo proof. Escrow payment — released only when you approve.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-3 mb-10"
+              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10"
             >
-              <Button size="lg" asChild className="text-base px-8 h-14 rounded-2xl shadow-elevated">
+              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-14 rounded-2xl border-border/60">
+              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl border-border/60 w-full xs:w-auto">
                 <Link to="/discover">Browse Cleaners</Link>
               </Button>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-4 text-sm"
+              className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm"
             >
               {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map(t => (
-                <div key={t} className="flex items-center gap-2 text-muted-foreground">
-                  <CheckCircle className="h-4 w-4 text-success" />
+                <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
+                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-success flex-shrink-0" />
                   {t}
                 </div>
               ))}
@@ -122,7 +127,7 @@ export default function Index() {
         {/* Scroll cue */}
         <motion.div
           style={{ opacity: heroOpacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground"
+          className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground hidden sm:flex"
           animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}
         >
           <span className="text-xs font-medium">Scroll to explore</span>
@@ -131,9 +136,9 @@ export default function Index() {
       </section>
 
       {/* ── STATS BAR ─────────────────────────────────────────────────────── */}
-      <section className="bg-primary py-10">
+      <section className="bg-primary py-8 sm:py-10">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {STATS.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -141,8 +146,8 @@ export default function Index() {
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="text-center"
               >
-                <p className="text-3xl sm:text-4xl font-bold text-primary-foreground">{s.value}</p>
-                <p className="text-sm text-primary-foreground/70 mt-1">{s.label}</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground">{s.value}</p>
+                <p className="text-xs sm:text-sm text-primary-foreground/70 mt-1">{s.label}</p>
               </motion.div>
             ))}
           </div>
@@ -150,20 +155,20 @@ export default function Index() {
       </section>
 
       {/* ── TRUST PILLARS ─────────────────────────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-16"
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Built on trust. Verified at every step.</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built on trust. Verified at every step.</h2>
+            <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               We designed every part of the platform to give you complete confidence.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {TRUST_PILLARS.map((p, i) => (
               <motion.div
                 key={p.title}
@@ -172,11 +177,11 @@ export default function Index() {
                 whileHover={{ y: -4 }}
               >
                 <Card className="h-full border-border/50 hover:border-primary/30 hover:shadow-elevated transition-all duration-300">
-                  <CardContent className="p-8">
-                    <div className={`h-14 w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-5`}>
-                      <p.icon className={`h-7 w-7 ${p.color}`} />
+                  <CardContent className="p-5 sm:p-8">
+                    <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}>
+                      <p.icon className={`h-6 w-6 sm:h-7 sm:w-7 ${p.color}`} />
                     </div>
-                    <h3 className="text-lg font-bold mb-2">{p.title}</h3>
+                    <h3 className="text-base sm:text-lg font-bold mb-2">{p.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{p.desc}</p>
                   </CardContent>
                 </Card>
@@ -187,17 +192,17 @@ export default function Index() {
       </section>
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-16"
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Book to clean in 4 steps</h2>
+            <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Book to clean in 4 steps</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {STEPS.map((s, i) => (
               <motion.div
                 key={s.step}
@@ -208,12 +213,12 @@ export default function Index() {
                 {i < STEPS.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
                 )}
-                <div className="text-6xl font-black text-primary/10 mb-3 leading-none">{s.step}</div>
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                  <s.icon className="h-6 w-6 text-primary" />
+                <div className="text-5xl sm:text-6xl font-black text-primary/10 mb-2 sm:mb-3 leading-none">{s.step}</div>
+                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
+                  <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">{s.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
+                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -221,30 +226,30 @@ export default function Index() {
       </section>
 
       {/* ── SPLIT SECTION: CLIENT + CLEANER ───────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-16"
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Built for two sides of trust</h2>
-            <p className="text-xl text-muted-foreground">Whether you're booking or cleaning, PureTask has you covered.</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built for two sides of trust</h2>
+            <p className="text-base sm:text-xl text-muted-foreground">Whether you're booking or cleaning, PureTask has you covered.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
             {/* Client card */}
             <motion.div
               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-3xl group"
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group"
             >
-              <img src={clientImg} alt="Happy clients" className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src={clientImg} alt="Happy clients" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <Badge className="mb-3 bg-primary/20 text-primary border-primary/30">For Clients</Badge>
-                <h3 className="text-2xl font-bold mb-2">Book with confidence</h3>
-                <p className="text-muted-foreground mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
-                <Button asChild className="rounded-xl">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+                <Badge className="mb-2 sm:mb-3 bg-primary/20 text-primary border-primary/30">For Clients</Badge>
+                <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
+                <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
+                <Button asChild className="rounded-xl h-10 sm:h-11">
                   <Link to="/auth?role=client">Get Started Free <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
@@ -254,15 +259,15 @@ export default function Index() {
             <motion.div
               initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-3xl group"
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group"
             >
-              <img src={cleanerImg} alt="Professional cleaner" className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src={cleanerImg} alt="Professional cleaner" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <Badge className="mb-3 bg-success/20 text-success border-success/30">For Cleaners</Badge>
-                <h3 className="text-2xl font-bold mb-2">Earn on your terms</h3>
-                <p className="text-muted-foreground mb-4 text-sm">Set your own schedule and rates. Get paid weekly or instantly. Grow your reputation.</p>
-                <Button asChild variant="outline" className="rounded-xl border-success/40 text-success hover:bg-success/10">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+                <Badge className="mb-2 sm:mb-3 bg-success/20 text-success border-success/30">For Cleaners</Badge>
+                <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Earn on your terms</h3>
+                <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Set your own schedule and rates. Get paid weekly or instantly. Grow your reputation.</p>
+                <Button asChild variant="outline" className="rounded-xl border-success/40 text-success hover:bg-success/10 h-10 sm:h-11">
                   <Link to="/auth?role=cleaner">Join as a Cleaner <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
@@ -272,17 +277,17 @@ export default function Index() {
       </section>
 
       {/* ── WHO IS IT FOR ─────────────────────────────────────────────────── */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-12"
+            viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Perfect for everyone</h2>
-            <p className="text-xl text-muted-foreground">No matter your lifestyle, we've built for you.</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Perfect for everyone</h2>
+            <p className="text-base sm:text-xl text-muted-foreground">No matter your lifestyle, we've built for you.</p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {AUDIENCE.map((a, i) => (
               <motion.div
                 key={a.label}
@@ -292,10 +297,10 @@ export default function Index() {
               >
                 <Link to={a.href}>
                   <Card className="text-center border-border/50 hover:border-primary/40 hover:shadow-elevated transition-all duration-300 cursor-pointer h-full">
-                    <CardContent className="p-8">
-                      <div className="text-5xl mb-4">{a.emoji}</div>
-                      <h3 className="font-bold text-lg mb-1">{a.label}</h3>
-                      <p className="text-sm text-muted-foreground">{a.desc}</p>
+                    <CardContent className="p-4 sm:p-8">
+                      <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{a.emoji}</div>
+                      <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">{a.label}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">{a.desc}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -306,48 +311,49 @@ export default function Index() {
       </section>
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-12"
+            viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
           >
-            <Badge className="mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
+            <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
               <Star className="h-3 w-3 mr-1" /> Real Reviews
             </Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold">What our community says</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">What our community says</h2>
           </motion.div>
           <TestimonialsCarousel />
         </div>
       </section>
 
       {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-16 sm:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-[hsl(var(--pt-aqua)/0.05)]" />
         <div className="container relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="h-16 w-16 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-              <Sparkles className="h-8 w-8 text-primary" />
-            </div>
-            <h2 className="text-4xl sm:text-6xl font-bold mb-6">
-              Ready for your first clean?
+            <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-4 sm:mb-6">
+              Your clean home is{" "}
+              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
+                one tap away.
+              </span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              Join thousands of happy clients. Book in under 60 seconds. No commitment.
+            <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+              Join thousands of clients who trust PureTask for reliable, verified cleaning — every single time.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="text-lg h-14 px-10 rounded-2xl shadow-elevated">
-                <Link to="/book">
-                  Book Your First Clean <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            <div className="flex flex-col xs:flex-row gap-3 justify-center">
+              <Button size="lg" asChild className="text-base px-6 sm:px-10 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
+                <Link to="/book">Book Your First Clean <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-lg h-14 px-10 rounded-2xl">
-                <Link to="/pricing">See Pricing</Link>
+              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl w-full xs:w-auto">
+                <Link to="/auth?role=cleaner">Earn as a Cleaner</Link>
               </Button>
             </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6">
+              No credit card required · Background-checked pros · Pay only when you're satisfied
+            </p>
           </motion.div>
         </div>
       </section>
