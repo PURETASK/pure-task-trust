@@ -143,18 +143,18 @@ export default function CleanerEarnings() {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
-                  <Target className="h-5 w-5 text-success" />
+                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
+                  <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
                 </div>
                 <div>
-                  <p className="font-semibold">Weekly Hours Goal</p>
+                  <p className="font-semibold text-sm sm:text-base">Weekly Hours Goal</p>
                   <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h per week</p>
                 </div>
               </div>
               <div className="flex items-end gap-2 mb-3">
-                <span className="text-4xl font-bold">{forecastHours}</span>
+                <span className="text-3xl sm:text-4xl font-bold">{forecastHours}</span>
                 <span className="text-muted-foreground mb-1">/ {WEEKLY_HOURS_GOAL}h</span>
                 {hoursProgress >= 100 && <Badge variant="success" className="mb-1">Goal Met! 🎉</Badge>}
               </div>
