@@ -13,55 +13,55 @@ import { motion } from 'framer-motion';
 
 const TIERS = [
   {
-    tier: 'Developing',
-    score: '0–59',
-    rate: '$15–35/hr',
+    tier: 'Bronze',
+    score: '0–49',
+    rate: '$20–35/hr',
     earnRate: '80%',
     popular: false,
     colorBg: 'bg-muted/50',
-    colorBadge: 'border-border',
+    colorBadge: 'border-amber-700/30 text-amber-700',
     icon: Star,
     features: ['ID verified & background checked', 'GPS tracking & photo proof', 'Building their reputation', 'Great value for basic cleans'],
   },
   {
-    tier: 'Semi Pro',
-    score: '60–74',
-    rate: '$35–45/hr',
+    tier: 'Silver',
+    score: '50–69',
+    rate: '$30–50/hr',
     earnRate: '82%',
     popular: false,
     colorBg: 'bg-success/5',
     colorBadge: 'border-success/30 text-success',
     icon: TrendingUp,
-    features: ['All Developing features', 'Proven reliability (60–74)', 'Priority scheduling available', 'Specialty services offered'],
+    features: ['All Bronze features', 'Proven reliability (50–69)', 'Priority scheduling available', 'Specialty services offered'],
   },
   {
-    tier: 'Pro',
-    score: '75–89',
-    rate: '$45–60/hr',
-    earnRate: '84%',
+    tier: 'Gold',
+    score: '70–89',
+    rate: '$40–65/hr',
+    earnRate: '83%',
     popular: true,
     colorBg: 'bg-primary/5',
     colorBadge: 'border-primary/40 text-primary',
     icon: Sparkles,
-    features: ['All Semi Pro features', 'High reliability (75–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
+    features: ['All Silver features', 'High reliability (70–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
   },
   {
-    tier: 'Elite',
+    tier: 'Platinum',
     score: '90–100',
-    rate: '$60–85/hr',
+    rate: '$50–100/hr',
     earnRate: '85%',
     popular: false,
     colorBg: 'bg-amber-500/5',
     colorBadge: 'border-amber-500/40 text-amber-600',
     icon: Award,
-    features: ['All Pro features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
+    features: ['All Gold features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
   },
 ];
 
 const EXAMPLES = [
-  { title: 'Standard Clean', label: 'Semi Pro · 3h', total: 120, cleaner: 102, platform: 18 },
-  { title: 'Deep Clean', label: 'Pro · 4h', total: 220, cleaner: 187, platform: 33, popular: true },
-  { title: 'Move-Out', label: 'Elite · 5h', total: 380, cleaner: 323, platform: 57 },
+  { title: 'Standard Clean', label: 'Silver · 3h', total: 115, cleaner: 94, platform: 21 },
+  { title: 'Deep Clean', label: 'Gold · 4h', total: 210, cleaner: 174, platform: 36, popular: true },
+  { title: 'Move-Out', label: 'Platinum · 5h', total: 375, cleaner: 319, platform: 56 },
 ];
 
 export default function Pricing() {
@@ -91,7 +91,7 @@ export default function Pricing() {
               Transparent,<br /><span className="text-primary">Fair Pricing</span>
             </h1>
             <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
-              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support.
+              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 80–85% of every booking.
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
               {[
@@ -201,8 +201,9 @@ export default function Pricing() {
                     <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Shield className="h-7 w-7 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-3">What the 15% Platform Fee Covers</h3>
+                  <div>
+                      <h3 className="text-xl font-bold mb-3">What the 15–20% Platform Fee Covers</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.</p>
                       <div className="grid sm:grid-cols-2 gap-2.5">
                         {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
                           <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -226,7 +227,7 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier (Bronze → Platinum) to reduce your platform fee.</p>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
                 {TIERS.map((tier, i) => (
@@ -255,9 +256,9 @@ export default function Pricing() {
                   <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Zap className="h-5 w-5 text-success" />Monthly Earnings Scenario</h3>
                   <div className="grid sm:grid-cols-3 gap-6">
                     {[
-                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Semi Pro ($40/hr)", earning: "$1,920/mo", keep: "82%" },
-                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Pro ($52/hr)", earning: "$4,056/mo", keep: "84%", popular: true },
-                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Elite ($72/hr)", earning: "$7,344/mo", keep: "85%" },
+                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Silver ($40/hr)", earning: "$1,872/mo", keep: "82%" },
+                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Gold ($52/hr)", earning: "$4,089/mo", keep: "83%", popular: true },
+                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Platinum ($75/hr)", earning: "$7,650/mo", keep: "85%" },
                     ].map(({ label, hours, tier, earning, keep, popular }) => (
                       <div key={label} className={`p-5 rounded-2xl border-2 text-center ${popular ? 'border-primary bg-primary/5' : 'border-border bg-background/80'}`}>
                         {popular && <Badge className="mb-3 text-xs">Achievable Goal</Badge>}

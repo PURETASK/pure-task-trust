@@ -7,10 +7,10 @@ import { SEO } from '@/components/seo';
 import React from 'react';
 
 const TIERS = [
-  { tier: "Bronze", range: "0–49", rate: "$20–35", color: "from-amber-700 to-amber-500", icon: "🥉", features: ["Standard marketplace access", "Basic job matching", "Standard support", "Platform fee: 20%"] },
-  { tier: "Silver", range: "50–69", rate: "$30–50", color: "from-slate-500 to-slate-400", icon: "🥈", features: ["Improved visibility", "Priority job matching", "Full marketplace access", "Platform fee: 18%"] },
-  { tier: "Gold", range: "70–89", rate: "$40–65", color: "from-yellow-600 to-yellow-400", icon: "🥇", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 17%"] },
-  { tier: "Platinum", range: "90–100", rate: "$50–100", color: "from-violet-600 to-violet-400", icon: "💎", features: ["VIP client access", "Exclusive job offers", "Maximum earnings", "Platform fee: 15%"] },
+  { tier: "Bronze", range: "0–49", rate: "$20–35/hr", color: "from-amber-700 to-amber-500", icon: "🥉", features: ["Standard marketplace access", "Basic job matching", "Standard support", "Platform fee: 20%"] },
+  { tier: "Silver", range: "50–69", rate: "$30–50/hr", color: "from-slate-500 to-slate-400", icon: "🥈", features: ["Improved visibility", "Priority job matching", "Full marketplace access", "Platform fee: 18%"] },
+  { tier: "Gold", range: "70–89", rate: "$40–65/hr", color: "from-yellow-600 to-yellow-400", icon: "🥇", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 17%"] },
+  { tier: "Platinum", range: "90–100", rate: "$50–100/hr", color: "from-violet-600 to-violet-400", icon: "💎", features: ["VIP client access", "Exclusive job offers", "Maximum earnings", "Platform fee: 15%"] },
 ];
 
 const SCORING_FACTORS = [
@@ -162,9 +162,9 @@ export default function ReliabilityScoreExplained() {
             <div className="bg-gradient-to-br from-primary via-primary/90 to-violet-600 p-10 text-center text-white">
               <Crown className="h-12 w-12 mx-auto mb-4 opacity-90" />
               <h2 className="text-3xl font-bold mb-3">Reach Platinum & Maximize Earnings</h2>
-              <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn 2x more, get first access to premium jobs, and pay the lowest platform fee (15%)</p>
+              <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn the highest rates ($50–100/hr), get first access to premium jobs, and pay the lowest platform fee (15%)</p>
               <div className="flex flex-wrap gap-4 justify-center">
-                {["Earn up to $220/hr", "First on marketplace", "VIP client access", "15% platform fee"].map((b) => (
+                {["Up to $100/hr", "First on marketplace", "VIP client access", "15% platform fee"].map((b) => (
                   <Badge key={b} className="bg-white/20 text-white border-white/30 text-sm px-4 py-1.5">{b}</Badge>
                 ))}
               </div>
