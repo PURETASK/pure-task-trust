@@ -105,23 +105,23 @@ export default function CleanerReliability() {
 
         {/* ── Stats ────────────────────────────────────────────────────── */}
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {[1,2,3,4].map(i => <Skeleton key={i} className="h-20 sm:h-24 rounded-2xl" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {[
-              { label: "Reliability Score", value: profile?.reliability_score || 0,               icon: TrendingUp,  color: "text-primary"       },
-              { label: "Jobs Completed",    value: profile?.jobs_completed || 0,                   icon: CheckCircle2, color: "text-success"       },
-              { label: "Avg Rating",        value: profile?.avg_rating?.toFixed(1) || "—",         icon: Star,        color: "text-amber-500"      },
-              { label: "Current Tier",      value: (profile?.tier || "bronze").charAt(0).toUpperCase() + (profile?.tier || "bronze").slice(1), icon: Award, color: tierStyle.text },
+              { label: "Score",         value: profile?.reliability_score || 0,               icon: TrendingUp,   color: "text-primary"  },
+              { label: "Jobs Done",     value: profile?.jobs_completed || 0,                   icon: CheckCircle2, color: "text-success"  },
+              { label: "Avg Rating",    value: profile?.avg_rating?.toFixed(1) || "—",         icon: Star,         color: "text-warning"  },
+              { label: "Tier",          value: (profile?.tier || "bronze").charAt(0).toUpperCase() + (profile?.tier || "bronze").slice(1), icon: Award, color: tierStyle.text },
             ].map((stat, i) => (
               <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                 <Card className="border-border/60 text-center">
-                  <CardContent className="p-4">
-                    <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <CardContent className="p-3 sm:p-4">
+                    <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-1.5 sm:mb-2 ${stat.color}`} />
+                    <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
                   </CardContent>
                 </Card>
               </motion.div>
