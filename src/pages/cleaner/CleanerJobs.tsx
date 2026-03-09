@@ -146,10 +146,10 @@ export default function CleanerJobs() {
         </div>
 
         <Tabs defaultValue="active">
-          <TabsList className="rounded-xl">
-            <TabsTrigger value="active">Active ({activeJobs.length})</TabsTrigger>
-            <TabsTrigger value="pending">Pending ({pendingJobs.length})</TabsTrigger>
-            <TabsTrigger value="completed">Completed ({completedJobs.length})</TabsTrigger>
+          <TabsList className="rounded-xl w-full sm:w-auto">
+            <TabsTrigger value="active" className="flex-1 sm:flex-none text-xs sm:text-sm">Active ({activeJobs.length})</TabsTrigger>
+            <TabsTrigger value="pending" className="flex-1 sm:flex-none text-xs sm:text-sm">Pending ({pendingJobs.length})</TabsTrigger>
+            <TabsTrigger value="completed" className="flex-1 sm:flex-none text-xs sm:text-sm">Done ({completedJobs.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="active" className="mt-6">

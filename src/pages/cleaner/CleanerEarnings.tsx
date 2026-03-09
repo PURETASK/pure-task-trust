@@ -194,7 +194,7 @@ export default function CleanerEarnings() {
           </Card>
 
           <Card className="bg-success/5 border-success/20">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
                   <PiggyBank className="h-5 w-5 text-success" />
