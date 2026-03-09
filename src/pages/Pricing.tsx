@@ -256,9 +256,9 @@ export default function Pricing() {
                   <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Zap className="h-5 w-5 text-success" />Monthly Earnings Scenario</h3>
                   <div className="grid sm:grid-cols-3 gap-6">
                     {[
-                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Semi Pro ($40/hr)", earning: "$1,920/mo", keep: "82%" },
-                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Pro ($52/hr)", earning: "$4,056/mo", keep: "84%", popular: true },
-                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Elite ($72/hr)", earning: "$7,344/mo", keep: "85%" },
+                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Silver ($40/hr)", earning: "$1,872/mo", keep: "82%" },
+                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Gold ($52/hr)", earning: "$4,089/mo", keep: "83%", popular: true },
+                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Platinum ($75/hr)", earning: "$7,650/mo", keep: "85%" },
                     ].map(({ label, hours, tier, earning, keep, popular }) => (
                       <div key={label} className={`p-5 rounded-2xl border-2 text-center ${popular ? 'border-primary bg-primary/5' : 'border-border bg-background/80'}`}>
                         {popular && <Badge className="mb-3 text-xs">Achievable Goal</Badge>}
