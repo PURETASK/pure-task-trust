@@ -80,19 +80,19 @@ export default function Wallet() {
   });
 
   return (
-    <main className="flex-1 py-6 sm:py-10">
+    <main className="flex-1 py-5 sm:py-10">
       <div className="container px-4 sm:px-6 max-w-3xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
 
           {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                <WalletIcon className="h-6 w-6 text-primary-foreground" />
+          <div className="mb-5 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight flex items-center gap-2 sm:gap-3">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 flex-shrink-0">
+                <WalletIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
               My Wallet
             </h1>
-            <p className="text-muted-foreground mt-2">Manage your credits and transactions</p>
+            <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Manage your credits and transactions</p>
           </div>
 
           {/* Balance Cards */}
