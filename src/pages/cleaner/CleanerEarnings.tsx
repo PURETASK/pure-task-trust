@@ -101,13 +101,13 @@ export default function CleanerEarnings() {
                 { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
               ].map(({ label, value, icon: Icon, color, bg }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-                  <Card className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
-                      <div className={`h-10 w-10 rounded-xl ${bg} flex items-center justify-center mb-3`}>
-                        <Icon className={`h-5 w-5 ${color}`} />
-                      </div>
-                      <div className="text-sm text-muted-foreground">{label}</div>
-                      <div className="text-2xl font-bold">{value}</div>
+                   <Card className="hover:shadow-md transition-shadow">
+                     <CardContent className="p-3.5 sm:p-5">
+                       <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${bg} flex items-center justify-center mb-2 sm:mb-3`}>
+                         <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${color}`} />
+                       </div>
+                       <div className="text-xs sm:text-sm text-muted-foreground">{label}</div>
+                       <div className="text-xl sm:text-2xl font-bold">{value}</div>
                     </CardContent>
                   </Card>
                 </motion.div>
