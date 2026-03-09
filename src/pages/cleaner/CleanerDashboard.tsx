@@ -259,7 +259,7 @@ export default function CleanerDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2">
                 {isLoadingProfile ? <Skeleton className="h-36 rounded-2xl" /> : (
-                  <ReliabilityScore score={profile?.reliability_score || 0} tier={tier} />
+                  <ReliabilityScoreWidget />
                 )}
               </div>
               <TierBadge />
