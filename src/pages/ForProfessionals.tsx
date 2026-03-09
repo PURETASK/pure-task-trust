@@ -1,180 +1,248 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
 import {
   Briefcase, Clock, Shield, Zap, CheckCircle, Calendar,
-  TrendingUp, Coffee, Laptop, ArrowRight, X
+  TrendingUp, Coffee, Laptop, ArrowRight, X, Bell, Camera
 } from 'lucide-react';
 
-const painPoints = [
-  'Spending precious weekends cleaning instead of relaxing',
-  'Wondering if your cleaner will actually show up',
-  'No time to vet or interview cleaners yourself',
-  'Stressed about leaving strangers in your home unsupervised',
-  'No way to track if the work was actually done properly',
+const timeBreakdown = [
+  { label: 'Cleaning', hours: 4, color: 'pt-red', current: true },
+  { label: 'Laundry', hours: 2, color: 'pt-amber', current: true },
+  { label: 'Errands', hours: 3, color: 'pt-orange', current: true },
+  { label: 'Work', hours: 40, color: 'pt-cyan', current: false },
+  { label: 'Family', hours: 20, color: 'pt-green', current: false },
 ];
-const solutions = [
-  'Reclaim your weekends and free time for what matters',
-  'GPS verified check-ins confirm every single visit',
-  'Pre-vetted, background-checked professionals only',
-  'Photo documentation so you know it\'s done right',
-  'Real-time notifications and before/after photos',
+
+const flipCards = [
+  {
+    front: { icon: X, label: 'The Problem', text: 'Spending 4+ hours every weekend cleaning when you should be recharging.', color: 'destructive' },
+    back: { icon: CheckCircle, label: 'The Solution', text: 'Reclaim your weekend completely. Verified cleaners handle it while you live your life.', color: 'pt-cyan' },
+  },
+  {
+    front: { icon: X, label: 'The Problem', text: 'No way to verify your cleaner actually showed up and did the job properly.', color: 'destructive' },
+    back: { icon: Camera, label: 'The Solution', text: 'GPS check-in + before/after photos land in your inbox when every job is done.', color: 'pt-cyan' },
+  },
+  {
+    front: { icon: X, label: 'The Problem', text: 'Unreliable cleaners who cancel last minute, leaving you in a lurch.', color: 'destructive' },
+    back: { icon: Shield, label: 'The Solution', text: 'Reliability scores and instant re-matching mean you\'re never left without a cleaner.', color: 'pt-green' },
+  },
+  {
+    front: { icon: X, label: 'The Problem', text: 'Stressed about leaving strangers unsupervised in your home.', color: 'destructive' },
+    back: { icon: Bell, label: 'The Solution', text: 'Real-time push notifications + live GPS tracking give you complete visibility.', color: 'pt-amber' },
+  },
 ];
 
 const features = [
-  { icon: Calendar, title: 'Flexible Scheduling', desc: 'Book recurring cleans that fit your work schedule. Reschedule anytime.', color: "bg-primary/10 text-primary" },
-  { icon: Clock, title: 'Time-Saving', desc: 'Get 4+ hours back every week. Focus on work, family, and what matters most.', color: "bg-[hsl(var(--pt-cyan)/0.1)] text-[hsl(var(--pt-cyan))]" },
-  { icon: Shield, title: 'Verified Cleaners', desc: 'Every cleaner is background-checked and verified before joining our platform.', color: "bg-success/10 text-success" },
-  { icon: Zap, title: 'Instant Booking', desc: 'Book in under a minute. No phone calls, no back-and-forth needed.', color: "bg-warning/10 text-warning" },
+  { icon: Calendar, title: 'Instant Booking', desc: 'Book in under 60 seconds. No phone calls, no scheduling back-and-forth.', accent: 'primary', stat: '60s' },
+  { icon: Clock, title: '4+ Hours Saved', desc: 'Get your weekends back. The average client saves 4 hours every single week.', accent: 'pt-cyan', stat: '4hrs' },
+  { icon: Shield, title: 'Fully Verified', desc: 'Background-checked, identity-verified professionals only. No exceptions.', accent: 'pt-green', stat: '100%' },
+  { icon: Bell, title: 'Real-Time Alerts', desc: 'Get notified the moment your cleaner arrives and when they\'re done.', accent: 'pt-amber', stat: 'Live' },
+];
+
+const perks = [
+  { icon: Coffee, text: 'More quality time with family and friends' },
+  { icon: Laptop, text: 'Focus on career growth and passion projects' },
+  { icon: TrendingUp, text: 'Actually enjoy your weekends, guilt-free' },
+  { icon: Zap, text: 'More energy from a consistently clean space' },
 ];
 
 export default function ForProfessionals() {
   return (
-    <main className="pt-8">
-      <SEO title="Cleaning Services for Busy Professionals" description="Reclaim your weekends with verified, reliable cleaning professionals. Instant booking, GPS check-ins, and photo documentation." url="/for-professionals" keywords="professional cleaning, busy professional, verified cleaners" />
+    <main className="overflow-hidden">
+      <SEO
+        title="Cleaning Services for Busy Professionals | PureTask"
+        description="Reclaim your weekends with verified, reliable cleaning professionals. Instant booking, GPS check-ins, and photo documentation."
+        url="/for-professionals"
+        keywords="professional cleaning, busy professional, verified cleaners"
+      />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden py-24 md:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-cyan)/0.1)] via-background to-background" />
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--pt-cyan)) 1.5px, transparent 0)", backgroundSize: "28px 28px" }} />
-        <div className="relative container">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
-            <Badge variant="outline" className="mb-6 border-[hsl(var(--pt-cyan)/0.4)] text-[hsl(var(--pt-cyan))] bg-[hsl(var(--pt-cyan)/0.05)] px-4 py-1.5">
-              <Briefcase className="h-3.5 w-3.5 mr-2" /> For Busy Professionals
-            </Badge>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-[0.95]">
-              More Time for<br />
-              <span className="text-[hsl(var(--pt-cyan))]">What Matters.</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              You work hard. Let verified, reliable cleaners handle your home so you can focus on your career, family, and actually enjoying your life.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" asChild className="bg-[hsl(var(--pt-cyan))] hover:bg-[hsl(var(--pt-cyan)/0.9)] text-white rounded-2xl h-14 px-8 text-base font-semibold">
-                <Link to="/book"><Zap className="mr-2 h-5 w-5" />Book Your First Cleaning</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="rounded-2xl h-14 px-8">
-                <Link to="/pricing">See Pricing <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-            </div>
-          </motion.div>
+      {/* ── HERO ─────────────────────────────────────── */}
+      <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-cyan)/0.14)] via-background to-[hsl(var(--primary)/0.06)]" />
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: 'linear-gradient(hsl(var(--pt-cyan)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--pt-cyan)) 1px, transparent 1px)', backgroundSize: '64px 64px' }}
+        />
+        {/* large accent text */}
+        <div className="absolute -right-4 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.04] leading-none select-none pointer-events-none hidden lg:block text-[hsl(var(--pt-cyan))]">
+          4hrs
         </div>
-      </section>
 
-      {/* Problem vs Solution */}
-      <section className="py-24 bg-muted/20 border-y border-border/50">
-        <div className="container">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">We Get It — Your Time is Precious</h2>
-          </motion.div>
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <Card className="h-full border-destructive/20">
-                <CardContent className="p-7">
-                  <h3 className="text-xl font-bold mb-5 flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-                      <X className="h-4 w-4 text-destructive" />
-                    </div>
-                    Your Current Reality
-                  </h3>
-                  <ul className="space-y-3">
-                    {painPoints.map((point, i) => (
-                      <li key={i} className="flex items-start gap-3 text-muted-foreground text-sm">
-                        <div className="h-5 w-5 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-destructive text-xs font-bold">✕</span>
-                        </div>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+        <div className="relative container py-16">
+          <div className="max-w-3xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <Badge className="mb-6 px-4 py-2 rounded-full text-sm font-semibold bg-[hsl(var(--pt-cyan)/0.12)] text-[hsl(var(--pt-cyan))] border border-[hsl(var(--pt-cyan)/0.3)]">
+                <Briefcase className="h-3.5 w-3.5 mr-2" />
+                For Busy Professionals
+              </Badge>
             </motion.div>
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <Card className="h-full border-[hsl(var(--pt-cyan)/0.3)] bg-[hsl(var(--pt-cyan)/0.03)]">
-                <CardContent className="p-7">
-                  <h3 className="text-xl font-bold mb-5 flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-[hsl(var(--pt-cyan)/0.15)] flex items-center justify-center">
-                      <CheckCircle className="h-4 w-4 text-[hsl(var(--pt-cyan))]" />
-                    </div>
-                    Life with PureTask
-                  </h3>
-                  <ul className="space-y-3">
-                    {solutions.map((solution, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm">
-                        <div className="h-5 w-5 rounded-full bg-[hsl(var(--pt-cyan)/0.15)] flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <CheckCircle className="h-3 w-3 text-[hsl(var(--pt-cyan))]" />
-                        </div>
-                        {solution}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
+              className="text-[clamp(2.8rem,7vw,5.5rem)] font-black leading-[0.92] tracking-tight mb-6"
+            >
+              Your time is<br />
+              worth more than<br />
+              <span className="text-[hsl(var(--pt-cyan))]">cleaning.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
+              className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
+            >
+              You work hard. Let verified, reliable cleaners handle your home so you can focus on your career, your family, and actually enjoying your life.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.27 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-cyan))', color: 'white' }}>
+                <Link to="/book"><Zap className="mr-2 h-5 w-5" />Book in 60 Seconds</Link>
+              </Button>
+              <Button size="xl" variant="outline" asChild className="rounded-2xl">
+                <Link to="/pricing">See Pricing<ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-24">
+      {/* ── FEATURE STAT CARDS ───────────────────────── */}
+      <section className="py-20">
         <div className="container">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Built for Your Busy Life</h2>
-          </motion.div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {features.map((feature, i) => (
-              <motion.div key={feature.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card className="h-full hover:shadow-elevated transition-all duration-200 text-center">
-                  <CardContent className="p-6">
-                    <div className={`h-12 w-12 rounded-2xl ${feature.color} flex items-center justify-center mx-auto mb-4`}>
-                      <feature.icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="font-bold text-base mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
-                  </CardContent>
-                </Card>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="rounded-3xl p-6 border border-border/60 bg-card hover:shadow-lg hover:border-[hsl(var(--pt-cyan)/0.3)] transition-all duration-300 group"
+              >
+                <div className="h-11 w-11 rounded-2xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}>
+                  <f.icon className="h-5 w-5" />
+                </div>
+                <p className="text-3xl font-black mb-1 group-hover:text-[hsl(var(--pt-cyan))] transition-colors" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
+                <p className="font-bold text-sm mb-1">{f.title}</p>
+                <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Time savings visual */}
-      <section className="py-24 bg-muted/20 border-y border-border/50">
+      {/* ── PROBLEM → SOLUTION CARDS ─────────────────── */}
+      <section className="py-28 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--pt-cyan)/0.04)] to-transparent" />
+        <div className="relative container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="mb-16"
+          >
+            <p className="text-[hsl(var(--pt-cyan))] font-bold text-sm tracking-widest uppercase mb-3">We Get It</p>
+            <h2 className="text-4xl md:text-6xl font-black leading-tight max-w-2xl">
+              Your current reality<br />
+              <span className="text-muted-foreground font-light italic">vs. life with PureTask.</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {flipCards.map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="grid grid-cols-2 rounded-3xl overflow-hidden border border-border/60"
+              >
+                {/* Problem side */}
+                <div className="p-6 bg-destructive/5 border-r border-border/60">
+                  <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
+                    <card.front.icon className="h-4 w-4 text-destructive" />
+                  </div>
+                  <p className="text-xs font-black uppercase tracking-widest text-destructive mb-3">{card.front.label}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{card.front.text}</p>
+                </div>
+                {/* Solution side */}
+                <div className="p-6 bg-[hsl(var(--pt-cyan)/0.04)]">
+                  <div className="h-9 w-9 rounded-xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${card.back.color})/0.15)`, color: `hsl(var(--${card.back.color}))` }}>
+                    <card.back.icon className="h-4 w-4" />
+                  </div>
+                  <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: `hsl(var(--${card.back.color}))` }}>{card.back.label}</p>
+                  <p className="text-sm leading-relaxed">{card.back.text}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TIME SAVINGS ─────────────────────────────── */}
+      <section className="py-28">
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-14 items-center max-w-5xl mx-auto">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <h2 className="text-4xl font-bold mb-5">
-                Get <span className="text-[hsl(var(--pt-cyan))]">4+ Hours</span> Back Every Week
+          <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              <p className="text-[hsl(var(--pt-cyan))] font-bold text-sm tracking-widest uppercase mb-4">The Time Math</p>
+              <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+                Get <span className="text-[hsl(var(--pt-cyan))]">4+ hours</span><br />
+                back every week.
               </h2>
-              <p className="text-muted-foreground mb-7 leading-relaxed">
-                The average person spends 4+ hours per week on housework. Imagine what you could do with that time back.
+              <p className="text-muted-foreground leading-relaxed text-lg mb-8">
+                The average professional spends 4-6 hours a week on housework. Imagine what you could do with that time back — every single week.
               </p>
               <ul className="space-y-4">
-                {[
-                  { icon: Coffee, text: "More quality time with family and friends" },
-                  { icon: Laptop, text: "Focus on career growth and side projects" },
-                  { icon: TrendingUp, text: "Actually enjoy your weekends guilt-free" },
-                ].map((item) => (
-                  <li key={item.text} className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-[hsl(var(--pt-cyan)/0.1)] flex items-center justify-center flex-shrink-0">
-                      <item.icon className="h-4 w-4 text-[hsl(var(--pt-cyan))]" />
+                {perks.map((perk, i) => (
+                  <motion.li
+                    key={perk.text}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="flex items-center gap-4"
+                  >
+                    <div className="h-10 w-10 rounded-2xl bg-[hsl(var(--pt-cyan)/0.1)] flex items-center justify-center flex-shrink-0">
+                      <perk.icon className="h-5 w-5 text-[hsl(var(--pt-cyan))]" />
                     </div>
-                    <span className="text-sm font-medium">{item.text}</span>
-                  </li>
+                    <span className="font-medium">{perk.text}</span>
+                  </motion.li>
                 ))}
               </ul>
             </motion.div>
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="text-center">
-              <div className="relative inline-block">
-                <div className="h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--pt-cyan)/0.2)] to-[hsl(var(--pt-cyan)/0.05)] border-4 border-[hsl(var(--pt-cyan)/0.3)] flex flex-col items-center justify-center mx-auto">
-                  <p className="text-6xl font-black text-[hsl(var(--pt-cyan))]">4+</p>
-                  <p className="text-base font-semibold mt-1">Hours Saved</p>
-                  <p className="text-sm text-muted-foreground">Every week</p>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              className="relative"
+            >
+              <div
+                className="rounded-3xl p-10 relative overflow-hidden text-center"
+                style={{ background: 'linear-gradient(135deg, hsl(var(--pt-cyan)/0.18) 0%, hsl(var(--primary)/0.08) 100%)' }}
+              >
+                <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-[hsl(var(--pt-cyan)/0.12)] blur-3xl" />
+                <div className="relative z-10">
+                  <p className="text-[12rem] font-black leading-none text-[hsl(var(--pt-cyan))] opacity-20 absolute top-0 left-0 right-0 pointer-events-none">4</p>
+                  <div className="relative pt-8">
+                    <p className="text-8xl font-black text-[hsl(var(--pt-cyan))] mb-2">4+</p>
+                    <p className="text-2xl font-bold mb-1">Hours Saved</p>
+                    <p className="text-muted-foreground mb-8">Every single week</p>
+                    <div className="grid grid-cols-3 gap-3 text-center">
+                      {[
+                        { n: '208+', t: 'hrs/year' },
+                        { n: '52', t: 'weekends freed' },
+                        { n: '∞', t: 'peace of mind' },
+                      ].map((item) => (
+                        <div key={item.t} className="rounded-2xl p-4 bg-card/60 border border-[hsl(var(--pt-cyan)/0.2)]">
+                          <p className="text-2xl font-black text-[hsl(var(--pt-cyan))]">{item.n}</p>
+                          <p className="text-xs text-muted-foreground">{item.t}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -182,24 +250,38 @@ export default function ForProfessionals() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── FINAL CTA ────────────────────────────────── */}
       <section className="py-24">
         <div className="container">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Card className="bg-gradient-to-br from-[hsl(var(--pt-cyan)/0.12)] to-[hsl(var(--pt-cyan)/0.04)] border-[hsl(var(--pt-cyan)/0.3)]">
-              <CardContent className="p-10 md:p-14 text-center">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Reclaim Your Time?</h2>
-                <p className="text-muted-foreground mb-8 max-w-xl mx-auto">Join thousands of professionals who've made the switch to reliable, verified home cleaning.</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" asChild className="bg-[hsl(var(--pt-cyan))] hover:bg-[hsl(var(--pt-cyan)/0.9)] text-white rounded-2xl h-12">
-                    <Link to="/book">Book Your First Cleaning</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild className="rounded-2xl h-12">
-                    <Link to="/pricing">See Pricing</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="rounded-3xl relative overflow-hidden text-center py-20 px-8"
+            style={{ background: 'linear-gradient(135deg, hsl(var(--pt-cyan)/0.2) 0%, hsl(var(--primary)/0.14) 50%, hsl(var(--pt-green)/0.1) 100%)' }}
+          >
+            <div
+              className="absolute inset-0 opacity-[0.04]"
+              style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--pt-cyan)) 1.5px, transparent 0)', backgroundSize: '24px 24px' }}
+            />
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <Badge className="mb-5 bg-[hsl(var(--pt-cyan)/0.15)] text-[hsl(var(--pt-cyan))] border border-[hsl(var(--pt-cyan)/0.3)] px-4 py-1.5">
+                Join 10,000+ professionals
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-5">
+                Ready to reclaim<br />
+                <span className="text-[hsl(var(--pt-cyan))]">your weekends?</span>
+              </h2>
+              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                Verified, reliable home cleaning that fits your schedule. Book in 60 seconds, cancel any time.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-cyan))', color: 'white' }}>
+                  <Link to="/book">Book Your First Cleaning</Link>
+                </Button>
+                <Button size="xl" variant="outline" asChild className="rounded-2xl">
+                  <Link to="/pricing">See Pricing</Link>
+                </Button>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
