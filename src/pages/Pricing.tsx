@@ -91,7 +91,7 @@ export default function Pricing() {
               Transparent,<br /><span className="text-primary">Fair Pricing</span>
             </h1>
             <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
-              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support.
+              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 80–85% of every booking.
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
               {[
