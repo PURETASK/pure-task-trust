@@ -162,9 +162,9 @@ export default function ReliabilityScoreExplained() {
             <div className="bg-gradient-to-br from-primary via-primary/90 to-violet-600 p-10 text-center text-white">
               <Crown className="h-12 w-12 mx-auto mb-4 opacity-90" />
               <h2 className="text-3xl font-bold mb-3">Reach Platinum & Maximize Earnings</h2>
-              <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn 2x more, get first access to premium jobs, and pay the lowest platform fee (15%)</p>
+              <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn the highest rates ($50–100/hr), get first access to premium jobs, and pay the lowest platform fee (15%)</p>
               <div className="flex flex-wrap gap-4 justify-center">
-                {["Earn up to $220/hr", "First on marketplace", "VIP client access", "15% platform fee"].map((b) => (
+                {["Up to $100/hr", "First on marketplace", "VIP client access", "15% platform fee"].map((b) => (
                   <Badge key={b} className="bg-white/20 text-white border-white/30 text-sm px-4 py-1.5">{b}</Badge>
                 ))}
               </div>
