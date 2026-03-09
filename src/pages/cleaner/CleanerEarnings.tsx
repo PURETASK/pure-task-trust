@@ -167,9 +167,9 @@ export default function CleanerEarnings() {
         </div>
 
         {/* Payout Options */}
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
           <Card className="border-primary/20">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Banknote className="h-5 w-5 text-primary" />
