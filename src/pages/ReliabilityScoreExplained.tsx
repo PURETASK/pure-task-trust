@@ -14,11 +14,11 @@ const TIERS = [
 ];
 
 const SCORING_FACTORS = [
-  { icon: CheckCircle, name: "Job Completion", points: 25, desc: "Complete jobs on time without issues.", color: "text-success", bg: "bg-success/10" },
-  { icon: Clock, name: "On-Time Check-ins", points: 20, desc: "GPS check-in within 15 mins of start time.", color: "text-blue-500", bg: "bg-blue-500/10" },
-  { icon: Camera, name: "Photo Documentation", points: 20, desc: "Submit clear before/after photos every job.", color: "text-violet-500", bg: "bg-violet-500/10" },
-  { icon: MessageSquare, name: "Communication", points: 15, desc: "Respond promptly and keep clients informed.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
-  { icon: Star, name: "Client Ratings", points: 20, desc: "Average rating from client reviews.", color: "text-amber-500", bg: "bg-amber-500/10" },
+  { icon: CheckCircle, name: "Job Completion", points: 35, desc: "Complete every assigned job. This is the single most important factor.", color: "text-success", bg: "bg-success/10" },
+  { icon: Clock, name: "On-Time Check-In", points: 25, desc: "GPS check-in within 15 minutes of the scheduled start time.", color: "text-blue-500", bg: "bg-blue-500/10" },
+  { icon: Camera, name: "Photo Compliance", points: 20, desc: "Upload both before AND after photos on every completed job.", color: "text-violet-500", bg: "bg-violet-500/10" },
+  { icon: Star, name: "Client Rating", points: 15, desc: "Average star rating from client reviews (0–5 stars).", color: "text-amber-500", bg: "bg-amber-500/10" },
+  { icon: CheckCircle, name: "No Cancellations", points: 5, desc: "Low cancellation rate — avoid canceling jobs you've accepted.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
 ];
 
 const PENALTIES = [
