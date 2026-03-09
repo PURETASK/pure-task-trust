@@ -162,7 +162,7 @@ export default function Messages() {
               </Card>
 
               {/* Chat Area */}
-              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[500px] md:min-h-0", !selectedThread && 'hidden md:flex')}>
+              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[420px] sm:min-h-[500px] md:min-h-0", !selectedThread && 'hidden md:flex')}>
                 {selectedThread ? (
                   <>
                     {/* Chat Header */}
