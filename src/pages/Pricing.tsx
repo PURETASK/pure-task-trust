@@ -201,8 +201,9 @@ export default function Pricing() {
                     <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Shield className="h-7 w-7 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-3">What the 15% Platform Fee Covers</h3>
+                  <div>
+                      <h3 className="text-xl font-bold mb-3">What the 15–20% Platform Fee Covers</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.</p>
                       <div className="grid sm:grid-cols-2 gap-2.5">
                         {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
                           <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
