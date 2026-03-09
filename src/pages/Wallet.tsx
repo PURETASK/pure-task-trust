@@ -80,62 +80,62 @@ export default function Wallet() {
   });
 
   return (
-    <main className="flex-1 py-6 sm:py-10">
+    <main className="flex-1 py-5 sm:py-10">
       <div className="container px-4 sm:px-6 max-w-3xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
 
           {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                <WalletIcon className="h-6 w-6 text-primary-foreground" />
+          <div className="mb-5 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight flex items-center gap-2 sm:gap-3">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30 flex-shrink-0">
+                <WalletIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
               My Wallet
             </h1>
-            <p className="text-muted-foreground mt-2">Manage your credits and transactions</p>
+            <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Manage your credits and transactions</p>
           </div>
 
           {/* Balance Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0 shadow-xl shadow-primary/20 col-span-1 sm:col-span-1">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0 shadow-xl shadow-primary/20">
                 <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-white/10 -translate-y-8 translate-x-8" />
-                <CardContent className="p-6 relative">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-primary-foreground/80 text-sm font-medium">Available</span>
-                    <WalletIcon className="h-5 w-5 text-primary-foreground/60" />
+                <CardContent className="p-3 sm:p-6 relative">
+                  <div className="flex items-center justify-between mb-1 sm:mb-3">
+                    <span className="text-primary-foreground/80 text-[10px] sm:text-sm font-medium">Available</span>
+                    <WalletIcon className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-primary-foreground/60" />
                   </div>
-                  {isLoadingAccount ? <Skeleton className="h-10 w-24 bg-primary-foreground/20" /> :
-                    <p className="text-4xl font-bold">${availableCredits}</p>}
-                  <p className="text-primary-foreground/70 text-xs mt-1">Ready to spend</p>
+                  {isLoadingAccount ? <Skeleton className="h-7 sm:h-10 w-16 sm:w-24 bg-primary-foreground/20" /> :
+                    <p className="text-xl sm:text-4xl font-bold">${availableCredits}</p>}
+                  <p className="text-primary-foreground/70 text-[9px] sm:text-xs mt-0.5 sm:mt-1">Ready to spend</p>
                 </CardContent>
               </Card>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
               <Card className="border-warning/30 bg-warning/5">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-muted-foreground text-sm font-medium">In Escrow</span>
-                    <Clock className="h-5 w-5 text-warning" />
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between mb-1 sm:mb-3">
+                    <span className="text-muted-foreground text-[10px] sm:text-sm font-medium">In Escrow</span>
+                    <Clock className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-warning" />
                   </div>
-                  {isLoadingAccount ? <Skeleton className="h-10 w-20" /> :
-                    <p className="text-4xl font-bold text-warning">${heldCredits}</p>}
-                  <p className="text-muted-foreground text-xs mt-1">Held for active jobs</p>
+                  {isLoadingAccount ? <Skeleton className="h-7 sm:h-10 w-16 sm:w-20" /> :
+                    <p className="text-xl sm:text-4xl font-bold text-warning">${heldCredits}</p>}
+                  <p className="text-muted-foreground text-[9px] sm:text-xs mt-0.5 sm:mt-1">Held for jobs</p>
                 </CardContent>
               </Card>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Card className="border-success/30 bg-success/5">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-muted-foreground text-sm font-medium">Total Balance</span>
-                    <TrendingUp className="h-5 w-5 text-success" />
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between mb-1 sm:mb-3">
+                    <span className="text-muted-foreground text-[10px] sm:text-sm font-medium">Total</span>
+                    <TrendingUp className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-success" />
                   </div>
-                  {isLoadingAccount ? <Skeleton className="h-10 w-20" /> :
-                    <p className="text-4xl font-bold text-success">${totalCredits}</p>}
-                  <p className="text-muted-foreground text-xs mt-1">Available + held</p>
+                  {isLoadingAccount ? <Skeleton className="h-7 sm:h-10 w-16 sm:w-20" /> :
+                    <p className="text-xl sm:text-4xl font-bold text-success">${totalCredits}</p>}
+                  <p className="text-muted-foreground text-[9px] sm:text-xs mt-0.5 sm:mt-1">Available + held</p>
                 </CardContent>
               </Card>
             </motion.div>

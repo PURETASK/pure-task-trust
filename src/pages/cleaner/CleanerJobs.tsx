@@ -121,19 +121,19 @@ export default function CleanerJobs() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">My Jobs</h1>
-            <p className="text-muted-foreground mt-1">Manage and track your bookings</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">My Jobs</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">Manage and track your bookings</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex gap-3 text-sm">
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/10 text-success font-medium"><CheckCircle className="h-3.5 w-3.5" />{completedJobs.length} done</span>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium"><Flame className="h-3.5 w-3.5" />{activeJobs.length} active</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex gap-2 text-xs sm:text-sm">
+              <span className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-success/10 text-success font-medium"><CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" />{completedJobs.length} done</span>
+              <span className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-primary/10 text-primary font-medium"><Flame className="h-3 w-3 sm:h-3.5 sm:w-3.5" />{activeJobs.length} active</span>
             </div>
             <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-              <SelectTrigger className="w-44 h-9 text-sm rounded-xl">
-                <ArrowUpDown className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+              <SelectTrigger className="w-36 sm:w-44 h-9 text-xs sm:text-sm rounded-xl">
+                <ArrowUpDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -146,10 +146,10 @@ export default function CleanerJobs() {
         </div>
 
         <Tabs defaultValue="active">
-          <TabsList className="rounded-xl">
-            <TabsTrigger value="active">Active ({activeJobs.length})</TabsTrigger>
-            <TabsTrigger value="pending">Pending ({pendingJobs.length})</TabsTrigger>
-            <TabsTrigger value="completed">Completed ({completedJobs.length})</TabsTrigger>
+          <TabsList className="rounded-xl w-full sm:w-auto">
+            <TabsTrigger value="active" className="flex-1 sm:flex-none text-xs sm:text-sm">Active ({activeJobs.length})</TabsTrigger>
+            <TabsTrigger value="pending" className="flex-1 sm:flex-none text-xs sm:text-sm">Pending ({pendingJobs.length})</TabsTrigger>
+            <TabsTrigger value="completed" className="flex-1 sm:flex-none text-xs sm:text-sm">Done ({completedJobs.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="active" className="mt-6">

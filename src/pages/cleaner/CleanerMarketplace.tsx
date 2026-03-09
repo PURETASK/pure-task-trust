@@ -56,16 +56,16 @@ export default function CleanerMarketplace() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Job Marketplace</h1>
-            <p className="text-muted-foreground mt-1">{visibleJobs.length} job{visibleJobs.length !== 1 ? "s" : ""} available near you</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Job Marketplace</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">{visibleJobs.length} job{visibleJobs.length !== 1 ? "s" : ""} available near you</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Filter className="h-3.5 w-3.5 text-muted-foreground" />
             {(['all', 'today', 'week'] as const).map((f) => (
-              <Button key={f} variant={filter === f ? 'default' : 'outline'} size="sm" onClick={() => setFilter(f)} className="rounded-xl">
-                {f === 'all' ? 'All Jobs' : f === 'today' ? 'Today' : 'This Week'}
+              <Button key={f} variant={filter === f ? 'default' : 'outline'} size="sm" onClick={() => setFilter(f)} className="rounded-xl h-8 text-xs px-3">
+                {f === 'all' ? 'All' : f === 'today' ? 'Today' : 'This Week'}
               </Button>
             ))}
           </div>
@@ -108,10 +108,10 @@ export default function CleanerMarketplace() {
                         <div className="flex items-stretch">
                           <div className={`w-1.5 flex-shrink-0 ${matchScore >= 85 ? 'bg-success' : matchScore >= 70 ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
                           <div className="flex-1 p-5">
-                            <div className="flex flex-col md:flex-row md:items-center gap-4">
+                               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                  <h3 className="font-bold text-lg">{getTypeLabel(job.cleaning_type)}</h3>
+                                  <h3 className="font-bold">{getTypeLabel(job.cleaning_type)}</h3>
                                   <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">New</Badge>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
@@ -123,30 +123,30 @@ export default function CleanerMarketplace() {
                                   </Tooltip>
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-3">Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}</p>
-                                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                                   <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d, yyyy') : 'Flexible'}</span>
                                   <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}</span>
                                   <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{job.estimated_hours || 2}h est.</span>
                                 </div>
                               </div>
 
-                              <div className="flex flex-col items-end gap-3">
-                                <div className="text-right">
-                                  <div className="flex items-center gap-1.5 justify-end">
-                                    <p className="text-3xl font-bold text-success">${net}</p>
+                              <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3">
+                                <div className="sm:text-right">
+                                  <div className="flex items-center gap-1.5">
+                                    <p className="text-2xl sm:text-3xl font-bold text-success">${net}</p>
                                     <Tooltip>
                                       <TooltipTrigger><Info className="h-3.5 w-3.5 text-muted-foreground" /></TooltipTrigger>
                                       <TooltipContent className="text-xs max-w-[180px]">Client pays ${gross} → {feePercent}% fee → you earn ${net}</TooltipContent>
                                     </Tooltip>
                                   </div>
-                                  <p className="text-xs text-muted-foreground">your earnings <span className="line-through opacity-50">${gross}</span></p>
+                                  <p className="text-xs text-muted-foreground">you earn <span className="line-through opacity-50">${gross}</span></p>
                                 </div>
                                 <div className="flex gap-2">
-                                  <Button variant="outline" size="sm" onClick={() => handleDecline(job.id)} disabled={decliningId === job.id || acceptJob.isPending} className="gap-1.5 text-muted-foreground">
+                                  <Button variant="outline" size="sm" onClick={() => handleDecline(job.id)} disabled={decliningId === job.id || acceptJob.isPending} className="gap-1.5 text-muted-foreground h-8 text-xs">
                                     {decliningId === job.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}Decline
                                   </Button>
-                                  <Button onClick={() => acceptJob.mutate(job.id)} disabled={acceptJob.isPending || decliningId === job.id} className="gap-2 bg-gradient-to-r from-success to-emerald-600 border-0">
-                                    {acceptJob.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}Accept Job
+                                  <Button onClick={() => acceptJob.mutate(job.id)} disabled={acceptJob.isPending || decliningId === job.id} className="gap-1.5 bg-gradient-to-r from-success to-emerald-600 border-0 h-8 text-xs sm:text-sm">
+                                    {acceptJob.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}Accept
                                   </Button>
                                 </div>
                               </div>

@@ -70,16 +70,14 @@ export default function CleanerEarnings() {
     <CleanerLayout>
       <div className="space-y-6">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
-                <DollarSign className="h-5 w-5 text-success" />
-              </div>
-              Earnings & Payouts
-            </h1>
-            <p className="text-muted-foreground mt-1">Track your income, request payouts, and plan your goals</p>
-          </div>
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
+            </div>
+            Earnings & Payouts
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">Track your income, request payouts, and plan your goals</p>
         </motion.div>
 
         {/* Goal Planner */}
@@ -91,7 +89,7 @@ export default function CleanerEarnings() {
         <BankAccountStatus onStatusChange={setPayoutsEnabled} />
 
         {/* Key Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
           {isLoadingEarnings ? (
             <>{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}</>
           ) : (
@@ -103,13 +101,13 @@ export default function CleanerEarnings() {
                 { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
               ].map(({ label, value, icon: Icon, color, bg }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-                  <Card className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
-                      <div className={`h-10 w-10 rounded-xl ${bg} flex items-center justify-center mb-3`}>
-                        <Icon className={`h-5 w-5 ${color}`} />
-                      </div>
-                      <div className="text-sm text-muted-foreground">{label}</div>
-                      <div className="text-2xl font-bold">{value}</div>
+                   <Card className="hover:shadow-md transition-shadow">
+                     <CardContent className="p-3.5 sm:p-5">
+                       <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${bg} flex items-center justify-center mb-2 sm:mb-3`}>
+                         <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${color}`} />
+                       </div>
+                       <div className="text-xs sm:text-sm text-muted-foreground">{label}</div>
+                       <div className="text-xl sm:text-2xl font-bold">{value}</div>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -119,9 +117,9 @@ export default function CleanerEarnings() {
         </div>
 
         {/* Forecast + Hours Goal */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
           <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-primary" />
@@ -131,7 +129,7 @@ export default function CleanerEarnings() {
                   <p className="text-xs text-muted-foreground">Based on your confirmed bookings</p>
                 </div>
               </div>
-              <div className="text-4xl font-bold mb-2">${forecastEarnings}</div>
+              <div className="text-3xl sm:text-4xl font-bold mb-2">${forecastEarnings}</div>
               <p className="text-sm text-muted-foreground mb-1">
                 {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
               </p>
@@ -145,18 +143,18 @@ export default function CleanerEarnings() {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
-                  <Target className="h-5 w-5 text-success" />
+                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
+                  <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
                 </div>
                 <div>
-                  <p className="font-semibold">Weekly Hours Goal</p>
+                  <p className="font-semibold text-sm sm:text-base">Weekly Hours Goal</p>
                   <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h per week</p>
                 </div>
               </div>
               <div className="flex items-end gap-2 mb-3">
-                <span className="text-4xl font-bold">{forecastHours}</span>
+                <span className="text-3xl sm:text-4xl font-bold">{forecastHours}</span>
                 <span className="text-muted-foreground mb-1">/ {WEEKLY_HOURS_GOAL}h</span>
                 {hoursProgress >= 100 && <Badge variant="success" className="mb-1">Goal Met! 🎉</Badge>}
               </div>
@@ -169,9 +167,9 @@ export default function CleanerEarnings() {
         </div>
 
         {/* Payout Options */}
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
           <Card className="border-primary/20">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Banknote className="h-5 w-5 text-primary" />
@@ -196,7 +194,7 @@ export default function CleanerEarnings() {
           </Card>
 
           <Card className="bg-success/5 border-success/20">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
                   <PiggyBank className="h-5 w-5 text-success" />

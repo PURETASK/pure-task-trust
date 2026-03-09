@@ -77,39 +77,39 @@ export default function Pricing() {
       <ServiceSchema name="House Cleaning Services" description="Professional cleaning with verified cleaners" price="15-85" />
 
       {/* Hero */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">
+      <section className="relative py-12 sm:py-20 bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl translate-x-1/3 -translate-y-1/2" />
           <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-accent/5 blur-3xl -translate-x-1/2 translate-y-1/2" />
         </div>
         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5 border-primary/30 text-primary">
-              <Shield className="h-3.5 w-3.5 mr-1.5" /> No Hidden Fees
+            <Badge variant="outline" className="mb-4 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-1.5 border-primary/30 text-primary">
+              <Shield className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 sm:mr-1.5" /> No Hidden Fees
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
               Transparent,<br /><span className="text-primary">Fair Pricing</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-xl mx-auto mb-10">
+            <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
               Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support.
             </p>
-            <div className="flex flex-wrap justify-center gap-6 mb-10">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
               {[
                 { value: "1 credit", label: "= $1 USD" },
                 { value: "15–20%", label: "Platform fee" },
                 { value: "100%", label: "Verified cleaners" },
               ].map(({ value, label }) => (
                 <div key={label} className="text-center">
-                  <div className="text-2xl font-bold text-foreground">{value}</div>
-                  <div className="text-muted-foreground text-sm">{label}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
+                  <div className="text-muted-foreground text-xs sm:text-sm">{label}</div>
                 </div>
               ))}
             </div>
 
             <Tabs value={userType} onValueChange={setUserType} className="max-w-sm mx-auto">
-              <TabsList className="grid w-full grid-cols-2 h-11">
-                <TabsTrigger value="client" className="gap-2"><Users className="h-4 w-4" />For Clients</TabsTrigger>
-                <TabsTrigger value="cleaner" className="gap-2"><DollarSign className="h-4 w-4" />For Cleaners</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 h-10 sm:h-11">
+                <TabsTrigger value="client" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Clients</TabsTrigger>
+                <TabsTrigger value="cleaner" className="gap-1.5 text-xs sm:text-sm"><DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Cleaners</TabsTrigger>
               </TabsList>
             </Tabs>
           </motion.div>
@@ -120,13 +120,13 @@ export default function Pricing() {
       {userType === 'client' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           {/* Tier Cards */}
-          <section className="py-20 bg-background">
+          <section className="py-10 sm:py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-3">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {TIERS.map((tier, i) => (
                   <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card className={`relative ${tier.colorBg} border-2 ${tier.popular ? 'border-primary shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
@@ -164,13 +164,13 @@ export default function Pricing() {
           </section>
 
           {/* Pricing Examples */}
-          <section className="py-16 bg-muted/30">
+          <section className="py-10 sm:py-16 bg-muted/30">
             <div className="max-w-4xl mx-auto px-4">
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold mb-2">Example Bookings</h2>
-                <p className="text-muted-foreground">Real numbers, no surprises</p>
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Example Bookings</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Real numbers, no surprises</p>
               </div>
-              <div className="grid md:grid-cols-3 gap-5">
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {EXAMPLES.map(({ title, label, total, cleaner, platform, popular }) => (
                   <Card key={title} className={popular ? 'border-primary shadow-lg ring-1 ring-primary/20' : ''}>
                     {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="bg-primary">Most Booked</Badge></div>}
@@ -193,10 +193,10 @@ export default function Pricing() {
           </section>
 
           {/* Platform Fee Explainer */}
-          <section className="py-16 bg-background">
+          <section className="py-10 sm:py-16 bg-background">
             <div className="max-w-3xl mx-auto px-4">
               <Card className="border-primary/20 bg-primary/5">
-                <CardContent className="p-8">
+                <CardContent className="p-5 sm:p-8">
                   <div className="flex items-start gap-5">
                     <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Shield className="h-7 w-7 text-primary" />
@@ -222,13 +222,13 @@ export default function Pricing() {
       {/* Cleaner View */}
       {userType === 'cleaner' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <section className="py-20 bg-background">
+          <section className="py-10 sm:py-20 bg-background">
             <div className="max-w-6xl mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier to reduce your fee.</p>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
                 {TIERS.map((tier, i) => (
                   <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card className={`${tier.colorBg} ${tier.popular ? 'border-primary border-2 shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
