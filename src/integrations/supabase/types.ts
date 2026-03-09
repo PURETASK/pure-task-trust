@@ -1321,6 +1321,7 @@ export type Database = {
           cleaner_id: string
           communication_ok_jobs: number
           completion_ok_jobs: number
+          dispute_lost_jobs: number
           no_show_jobs: number
           on_time_checkins: number
           photo_compliant_jobs: number
@@ -1334,6 +1335,7 @@ export type Database = {
           cleaner_id: string
           communication_ok_jobs?: number
           completion_ok_jobs?: number
+          dispute_lost_jobs?: number
           no_show_jobs?: number
           on_time_checkins?: number
           photo_compliant_jobs?: number
@@ -1347,6 +1349,7 @@ export type Database = {
           cleaner_id?: string
           communication_ok_jobs?: number
           completion_ok_jobs?: number
+          dispute_lost_jobs?: number
           no_show_jobs?: number
           on_time_checkins?: number
           photo_compliant_jobs?: number
@@ -1532,6 +1535,7 @@ export type Database = {
           stripe_connect_id: string | null
           stripe_payouts_enabled: boolean | null
           tier: string
+          tier_demotion_warning_at: string | null
           travel_radius_km: number | null
           updated_at: string
           user_id: string
@@ -1573,6 +1577,7 @@ export type Database = {
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
           tier?: string
+          tier_demotion_warning_at?: string | null
           travel_radius_km?: number | null
           updated_at?: string
           user_id: string
@@ -1614,6 +1619,7 @@ export type Database = {
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
           tier?: string
+          tier_demotion_warning_at?: string | null
           travel_radius_km?: number | null
           updated_at?: string
           user_id?: string
