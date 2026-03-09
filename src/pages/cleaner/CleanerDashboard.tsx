@@ -183,40 +183,40 @@ export default function CleanerDashboard() {
       {/* ── HERO HEADER ─────────────────────────────────────────────────── */}
       <div className={`relative overflow-hidden bg-gradient-to-br ${tierStyle.gradient} border-b border-border/50`}>
         <div className="absolute inset-0 opacity-[0.03]">
-          <img src={cleanerHeroImg} alt="" className="w-full h-full object-cover object-top" />
+          <img src={cleanerHeroImg} alt="" className="w-full h-full object-cover object-top" loading="lazy" />
         </div>
-        <div className="relative container px-4 sm:px-6 py-8 sm:py-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+        <div className="relative container px-4 sm:px-6 py-5 sm:py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-5">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`h-12 w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-black text-xl ${tierStyle.text}`}>
+              <div className="flex items-center gap-2.5 sm:gap-3 mb-2">
+                <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-black text-lg sm:text-xl ${tierStyle.text} flex-shrink-0`}>
                   {displayName.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
-                  <h1 className="text-2xl sm:text-3xl font-bold">
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium">Welcome back 👋</p>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
                     Hey, <span className={tierStyle.text}>{displayName}!</span>
                   </h1>
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge className={`${tierStyle.bg} ${tierStyle.text} ${tierStyle.border} capitalize border font-semibold`}>
+                <Badge className={`${tierStyle.bg} ${tierStyle.text} ${tierStyle.border} capitalize border font-semibold text-xs`}>
                   <Award className="h-3 w-3 mr-1" />{tier} Tier
                 </Badge>
                 {profile?.reliability_score && (
-                  <Badge variant="outline" className="border-border/60">
-                    <Shield className="h-3 w-3 mr-1 text-success" />{profile.reliability_score}% Reliability
+                  <Badge variant="outline" className="border-border/60 text-xs">
+                    <Shield className="h-3 w-3 mr-1 text-success" />{profile.reliability_score}% Reliable
                   </Badge>
                 )}
               </div>
             </motion.div>
 
-            <div className="flex gap-3 flex-wrap">
-              <Button asChild variant="outline" className="rounded-xl h-10">
-                <Link to="/cleaner/marketplace"><Search className="h-4 w-4 mr-2" />Find Jobs</Link>
+            <div className="flex gap-2 sm:gap-3">
+              <Button asChild variant="outline" className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none">
+                <Link to="/cleaner/marketplace"><Search className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />Find Jobs</Link>
               </Button>
-              <Button asChild className="rounded-xl h-10">
-                <Link to="/cleaner/jobs"><Briefcase className="h-4 w-4 mr-2" />My Jobs</Link>
+              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none">
+                <Link to="/cleaner/jobs"><Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />My Jobs</Link>
               </Button>
             </div>
           </div>
@@ -224,17 +224,17 @@ export default function CleanerDashboard() {
       </div>
 
       <CleanerLayout>
-        <div className="space-y-8">
+        <div className="space-y-5 sm:space-y-8">
 
           {/* Today's job */}
           <TodayJobBanner jobs={jobs} />
 
           {/* Stats Grid */}
           <section>
-            <h2 className="text-lg font-bold mb-4 text-muted-foreground uppercase tracking-wide text-xs">This Week</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <h2 className="text-[10px] sm:text-xs font-bold mb-3 sm:mb-4 text-muted-foreground uppercase tracking-wide">This Week</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
               {isLoadingStats ? (
-                [1,2,3,4].map(i => <Skeleton key={i} className="h-24 rounded-2xl" />)
+                [1,2,3,4].map(i => <Skeleton key={i} className="h-20 sm:h-24 rounded-2xl" />)
               ) : (
                 <>
                   <motion.div whileHover={{ y: -2 }}>
@@ -244,10 +244,10 @@ export default function CleanerDashboard() {
                     <StatCard icon={Clock} value={`${stats.hoursThisWeek}h`} label="Hours Worked" iconColor="text-[hsl(var(--pt-purple))]" iconBgColor="bg-[hsl(var(--pt-purple)/0.1)]" />
                   </motion.div>
                   <motion.div whileHover={{ y: -2 }}>
-                    <StatCard icon={DollarSign} value={`$${stats.earnedThisWeek}`} label="Earned This Week" iconColor="text-success" iconBgColor="bg-success/10" />
+                    <StatCard icon={DollarSign} value={`$${stats.earnedThisWeek}`} label="Earned" iconColor="text-success" iconBgColor="bg-success/10" />
                   </motion.div>
                   <motion.div whileHover={{ y: -2 }}>
-                    <StatCard icon={MessageSquare} value={stats.unreadMessages} label="Unread Messages" iconColor="text-warning" iconBgColor="bg-warning/10" />
+                    <StatCard icon={MessageSquare} value={stats.unreadMessages} label="Messages" iconColor="text-warning" iconBgColor="bg-warning/10" />
                   </motion.div>
                 </>
               )}
@@ -256,9 +256,9 @@ export default function CleanerDashboard() {
 
           {/* Reliability + Tier */}
           <section>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               <div className="md:col-span-2">
-                {isLoadingProfile ? <Skeleton className="h-36 rounded-2xl" /> : (
+                {isLoadingProfile ? <Skeleton className="h-32 sm:h-36 rounded-2xl" /> : (
                   <ReliabilityScoreWidget />
                 )}
               </div>
@@ -283,13 +283,13 @@ export default function CleanerDashboard() {
           {/* Tip of the day */}
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <Card className="bg-gradient-to-r from-primary/5 to-[hsl(var(--pt-aqua)/0.05)] border-primary/20">
-              <CardContent className="p-5 flex items-start gap-4">
-                <span className="text-3xl flex-shrink-0">{tip.icon}</span>
+              <CardContent className="p-3.5 sm:p-5 flex items-start gap-3 sm:gap-4">
+                <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-primary mb-1 flex items-center gap-1">
-                    <Lightbulb className="h-3.5 w-3.5" /> Tip of the Day
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-primary mb-1 flex items-center gap-1">
+                    <Lightbulb className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Tip of the Day
                   </p>
-                  <p className="text-sm text-foreground leading-relaxed">{tip.text}</p>
+                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{tip.text}</p>
                 </div>
               </CardContent>
             </Card>
@@ -297,8 +297,8 @@ export default function CleanerDashboard() {
 
           {/* Gamification */}
           <section>
-            <h2 className="text-xl font-bold mb-4">🎯 Goals & Rewards</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">🎯 Goals & Rewards</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <GoalsCard />
               <StreakCard />
               <BoostCard />
@@ -315,18 +315,18 @@ export default function CleanerDashboard() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: si * 0.05 }}
             >
-              <h2 className="text-xl font-bold mb-4">{section.title}</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <h2 className="text-base sm:text-xl font-bold mb-3 sm:mb-4">{section.title}</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
                 {section.items.map((item, i) => (
                   <motion.div key={item.label} whileHover={{ y: -3, scale: 1.01 }} transition={{ type: "spring", stiffness: 400 }}>
                     <Link to={item.href}>
                       <Card className={`border ${section.color} hover:shadow-elevated transition-all duration-200 cursor-pointer h-full`}>
-                        <CardContent className="p-4">
-                          <div className={`h-10 w-10 rounded-xl ${section.iconBg} flex items-center justify-center mb-3`}>
-                            <item.icon className={`h-5 w-5 ${section.iconColor}`} />
+                        <CardContent className="p-3 sm:p-4">
+                          <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${section.iconBg} flex items-center justify-center mb-2 sm:mb-3`}>
+                            <item.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${section.iconColor}`} />
                           </div>
-                          <p className="font-semibold text-sm leading-tight">{item.label}</p>
-                          <p className="text-xs text-muted-foreground mt-1 leading-snug">{item.desc}</p>
+                          <p className="font-semibold text-xs sm:text-sm leading-tight">{item.label}</p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-snug">{item.desc}</p>
                         </CardContent>
                       </Card>
                     </Link>
