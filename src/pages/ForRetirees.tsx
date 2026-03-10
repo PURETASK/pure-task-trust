@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroRetirees from '@/assets/hero-retirees.jpg';
 import {
   Heart, Shield, Phone, Star, ArrowRight, CheckCircle,
   UserCheck, MapPin, Camera, RefreshCw, Lock, Smile
@@ -50,10 +51,18 @@ export default function ForRetirees() {
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-purple)/0.14)] via-background to-[hsl(var(--pt-green)/0.06)]" />
-        {/* warm soft blobs */}
-        <div className="absolute top-1/3 right-1/3 w-[500px] h-[500px] rounded-full bg-[hsl(var(--pt-purple)/0.07)] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-[hsl(var(--pt-green)/0.08)] blur-3xl pointer-events-none" />
+        {/* Hero image with overlay */}
+        <div className="absolute inset-0">
+          <img
+            src={heroRetirees}
+            alt="Senior couple relaxing comfortably in their clean, welcoming home"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/25" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
+        </div>
+        {/* Purple tint overlay */}
+        <div className="absolute inset-0 bg-[hsl(var(--pt-purple)/0.07)] mix-blend-multiply pointer-events-none" />
 
         <div className="relative container py-16">
           <div className="max-w-3xl">

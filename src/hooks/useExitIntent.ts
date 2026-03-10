@@ -18,7 +18,7 @@ export function useExitIntent(options: ExitIntentOptions = {}) {
   const [showPopup, setShowPopup] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const isEnabled = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Check if popup was recently shown
   const wasRecentlyShown = useCallback(() => {

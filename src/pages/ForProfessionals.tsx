@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroProfessionals from '@/assets/hero-professionals.jpg';
 import {
   Briefcase, Clock, Shield, Zap, CheckCircle, Calendar,
   TrendingUp, Coffee, Laptop, ArrowRight, X, Bell, Camera
@@ -61,15 +62,18 @@ export default function ForProfessionals() {
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-cyan)/0.14)] via-background to-[hsl(var(--primary)/0.06)]" />
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: 'linear-gradient(hsl(var(--pt-cyan)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--pt-cyan)) 1px, transparent 1px)', backgroundSize: '64px 64px' }}
-        />
-        {/* large accent text */}
-        <div className="absolute -right-4 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.04] leading-none select-none pointer-events-none hidden lg:block text-[hsl(var(--pt-cyan))]">
-          4hrs
+        {/* Hero image with overlay */}
+        <div className="absolute inset-0">
+          <img
+            src={heroProfessionals}
+            alt="Modern clean office space for busy professionals"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/25" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
         </div>
+        {/* Cyan tint overlay */}
+        <div className="absolute inset-0 bg-[hsl(var(--pt-cyan)/0.06)] mix-blend-multiply pointer-events-none" />
 
         <div className="relative container py-16">
           <div className="max-w-3xl">

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroFamilies from '@/assets/hero-families.jpg';
 import {
   Heart, Shield, Users, Baby, CheckCircle, Star, Clock, ArrowRight, Leaf, Camera, MapPin, PhoneCall
 } from 'lucide-react';
@@ -44,10 +45,18 @@ export default function ForFamilies() {
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-green)/0.16)] via-background to-[hsl(var(--pt-cyan)/0.06)]" />
-        {/* organic blob shapes */}
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[hsl(var(--pt-green)/0.08)] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-[hsl(var(--pt-cyan)/0.1)] blur-2xl pointer-events-none" />
+        {/* Hero image with overlay */}
+        <div className="absolute inset-0">
+          <img
+            src={heroFamilies}
+            alt="Happy family in a clean, bright home"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
+        </div>
+        {/* Green tint overlay */}
+        <div className="absolute inset-0 bg-[hsl(var(--pt-green)/0.07)] mix-blend-multiply pointer-events-none" />
 
         <div className="relative container py-16">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
