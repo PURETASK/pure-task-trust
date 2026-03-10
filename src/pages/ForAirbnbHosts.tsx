@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroAirbnb from '@/assets/hero-airbnb.jpg';
 import {
   Home, Clock, Camera, Star, Shield, Calendar, DollarSign,
   CheckCircle, ArrowRight, RefreshCw, ChevronRight

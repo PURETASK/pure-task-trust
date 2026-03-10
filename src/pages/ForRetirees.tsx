@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroRetirees from '@/assets/hero-retirees.jpg';
 import {
   Heart, Shield, Phone, Star, ArrowRight, CheckCircle,
   UserCheck, MapPin, Camera, RefreshCw, Lock, Smile

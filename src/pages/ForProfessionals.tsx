@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroProfessionals from '@/assets/hero-professionals.jpg';
 import {
   Briefcase, Clock, Shield, Zap, CheckCircle, Calendar,
   TrendingUp, Coffee, Laptop, ArrowRight, X, Bell, Camera

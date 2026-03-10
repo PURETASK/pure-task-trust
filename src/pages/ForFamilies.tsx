@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import heroFamilies from '@/assets/hero-families.jpg';
 import {
   Heart, Shield, Users, Baby, CheckCircle, Star, Clock, ArrowRight, Leaf, Camera, MapPin, PhoneCall
 } from 'lucide-react';
