@@ -53,19 +53,23 @@ export default function ForAirbnbHosts() {
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-16 pb-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-amber)/0.18)] via-background to-[hsl(var(--pt-cyan)/0.06)]" />
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{ backgroundImage: 'linear-gradient(hsl(var(--pt-amber)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--pt-amber)) 1px, transparent 1px)', backgroundSize: '48px 48px' }}
-        />
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[28vw] font-black text-[hsl(var(--pt-amber)/0.06)] leading-none select-none pointer-events-none hidden lg:block">
-          5★
+        {/* Hero image with overlay */}
+        <div className="absolute inset-0">
+          <img
+            src={heroAirbnb}
+            alt="Beautifully clean modern Airbnb rental ready for guests"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
         </div>
+        {/* Amber accent tint */}
+        <div className="absolute inset-0 bg-[hsl(var(--pt-amber)/0.08)] mix-blend-multiply pointer-events-none" />
 
         <div className="relative container py-16">
           <div className="max-w-3xl">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <Badge className="mb-6 px-4 py-2 rounded-full text-sm font-semibold bg-[hsl(var(--pt-amber)/0.12)] text-[hsl(var(--pt-amber))] border border-[hsl(var(--pt-amber)/0.3)]">
+              <Badge className="mb-6 px-4 py-2 rounded-full text-sm font-semibold bg-[hsl(var(--pt-amber)/0.18)] text-[hsl(var(--pt-amber))] border border-[hsl(var(--pt-amber)/0.4)]">
                 <Home className="h-3.5 w-3.5 mr-2" />
                 For Airbnb & Short-Term Rental Hosts
               </Badge>
@@ -93,7 +97,7 @@ export default function ForAirbnbHosts() {
               <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-amber))', color: 'white' }}>
                 <Link to="/book"><Calendar className="mr-2 h-5 w-5" />Book Turnover Cleaning</Link>
               </Button>
-              <Button size="xl" variant="outline" asChild className="rounded-2xl font-semibold">
+              <Button size="xl" variant="outline" asChild className="rounded-2xl font-semibold backdrop-blur-sm">
                 <Link to="/discover">Browse Cleaners<ChevronRight className="ml-1 h-5 w-5" /></Link>
               </Button>
             </motion.div>
