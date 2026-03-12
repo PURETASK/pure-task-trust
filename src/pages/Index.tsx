@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SEO, OrganizationSchema, LocalBusinessSchema } from "@/components/seo";
 import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
 import { TestimonialsCarousel } from "@/components/social-proof";
+import { LiveActivityStrip } from "@/components/home/LiveActivityStrip";
 import heroImg from "@/assets/hero-landing.jpg";
 import cleanerImg from "@/assets/cleaner-hero.jpg";
 import clientImg from "@/assets/client-hero.jpg";
