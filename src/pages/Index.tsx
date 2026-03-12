@@ -111,6 +111,11 @@ export default function Index() {
               </Button>
             </motion.div>
 
+            {/* Live Activity Strip */}
+            <div className="mb-6 sm:mb-8">
+              <LiveActivityStrip />
+            </div>
+
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm"
