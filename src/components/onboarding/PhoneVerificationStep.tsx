@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Phone, Loader2, CheckCircle2, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PhoneVerificationStepProps {
   onComplete: () => void;
@@ -14,10 +13,10 @@ interface PhoneVerificationStepProps {
   isLoading?: boolean;
 }
 
-export function PhoneVerificationStep({ onComplete, onBack, isLoading }: PhoneVerificationStepProps) {
+export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationStepProps) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otpCode, setOtpCode] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp' | 'verified'>('phone');
+  const [subStep, setSubStep] = useState<'phone' | 'otp' | 'verified'>('phone');
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const { toast } = useToast();
@@ -36,229 +35,151 @@ export function PhoneVerificationStep({ onComplete, onBack, isLoading }: PhoneVe
     return `+${digits}`;
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneForDisplay(e.target.value);
-    setPhoneNumber(formatted);
-  };
-
   const handleSendOTP = async () => {
     const e164Phone = formatPhoneForE164(phoneNumber);
-
     if (e164Phone.length < 12) {
-      toast({
-        title: 'Invalid phone number',
-        description: 'Please enter a valid 10-digit phone number.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Invalid phone number', description: 'Please enter a valid 10-digit phone number.', variant: 'destructive' });
       return;
     }
-
     setIsSending(true);
-
     try {
-      const { error } = await supabase.functions.invoke('send-otp', {
-        body: { phone_number: e164Phone },
-      });
-
+      const { error } = await supabase.functions.invoke('send-otp', { body: { phone_number: e164Phone } });
       if (error) throw error;
-
-      toast({
-        title: 'Code sent!',
-        description: 'Check your phone for the verification code.',
-      });
-      setStep('otp');
+      toast({ title: 'Code sent!', description: 'Check your phone for the 6-digit code.' });
+      setSubStep('otp');
     } catch (error: any) {
-      console.error('Send OTP error:', error);
-      toast({
-        title: 'Failed to send code',
-        description: error.message || 'Please try again.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Failed to send code', description: error.message || 'Please try again.', variant: 'destructive' });
     } finally {
       setIsSending(false);
     }
   };
 
   const handleVerifyOTP = async () => {
-    if (otpCode.length !== 6) {
-      toast({
-        title: 'Invalid code',
-        description: 'Please enter the 6-digit code.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
+    if (otpCode.length !== 6) return;
     setIsVerifying(true);
     const e164Phone = formatPhoneForE164(phoneNumber);
-
     try {
-      const { error } = await supabase.functions.invoke('verify-otp', {
-        body: { phone_number: e164Phone, otp_code: otpCode },
-      });
-
+      const { error } = await supabase.functions.invoke('verify-otp', { body: { phone_number: e164Phone, otp_code: otpCode } });
       if (error) throw error;
-
-      toast({
-        title: 'Phone verified!',
-        description: 'Your phone number has been verified successfully.',
-      });
-      setStep('verified');
-      
-      // Small delay to show success state before proceeding
-      setTimeout(() => {
-        onComplete();
-      }, 1000);
+      setSubStep('verified');
+      setTimeout(() => onComplete(), 1200);
     } catch (error: any) {
-      console.error('Verify OTP error:', error);
-      toast({
-        title: 'Verification failed',
-        description: error.message || 'Invalid or expired code.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Verification failed', description: error.message || 'Invalid or expired code.', variant: 'destructive' });
     } finally {
       setIsVerifying(false);
     }
   };
 
-  if (step === 'verified') {
+  if (subStep === 'verified') {
     return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
-          <h3 className="font-semibold text-xl mb-2">Phone Verified!</h3>
-          <p className="text-muted-foreground">
-            Redirecting to the next step...
-          </p>
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center justify-center py-12 space-y-4"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+          className="h-20 w-20 rounded-full bg-success/10 flex items-center justify-center"
+        >
+          <CheckCircle2 className="h-10 w-10 text-success" />
+        </motion.div>
+        <h3 className="text-xl font-bold">Phone Verified!</h3>
+        <p className="text-muted-foreground text-sm">Moving to the next step…</p>
+      </motion.div>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Phone className="h-5 w-5 text-primary" />
-          Verify Your Phone
-        </CardTitle>
-        <CardDescription>
-          {step === 'phone'
-            ? 'We need to verify your phone number for account security and job notifications.'
-            : 'Enter the 6-digit code we sent to your phone.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {step === 'phone' ? (
-          <>
-            {/* Why phone verification matters */}
-            <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-              <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />
-              <div className="text-sm">
-                <p className="font-medium text-foreground">Why we need your phone</p>
-                <p className="text-muted-foreground mt-1">
-                  Clients and our support team may need to reach you about jobs. 
-                  A verified phone also helps protect your account.
-                </p>
-              </div>
-            </div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Verify your phone</h2>
+        <p className="text-muted-foreground mt-1">
+          {subStep === 'phone'
+            ? 'Clients and support may need to reach you about jobs.'
+            : `Enter the 6-digit code sent to ${phoneNumber}`}
+        </p>
+      </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="(555) 123-4567"
-                value={phoneNumber}
-                onChange={handlePhoneChange}
-                maxLength={14}
-              />
-              <p className="text-xs text-muted-foreground">US phone numbers only</p>
-            </div>
-
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={onBack}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={handleSendOTP}
-                disabled={isSending || phoneNumber.replace(/\D/g, '').length < 10}
-              >
-                {isSending ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  'Send Verification Code'
-                )}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="space-y-2">
-              <Label>Verification Code</Label>
-              <div className="flex justify-center">
-                <InputOTP
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(value) => setOtpCode(value)}
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </div>
-              <p className="text-xs text-center text-muted-foreground mt-2">
-                Sent to {phoneNumber}
+      <AnimatePresence mode="wait">
+        {subStep === 'phone' ? (
+          <motion.div key="phone-input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+            <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-xl border border-primary/10">
+              <ShieldCheck className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                A verified phone builds trust with clients and helps protect your account from fraud.
               </p>
             </div>
 
+            <div className="space-y-2">
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="tel"
+                  placeholder="(555) 123-4567"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(formatPhoneForDisplay(e.target.value))}
+                  maxLength={14}
+                  className="pl-9 h-12 rounded-xl text-base"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground pl-1">US phone numbers only</p>
+            </div>
+
             <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setStep('phone');
-                  setOtpCode('');
-                }}
-              >
-                Change Number
+              <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl px-5">
+                <ArrowLeft className="h-4 w-4" />
               </Button>
               <Button
-                className="flex-1"
+                className="flex-1 h-12 text-base font-semibold rounded-xl"
+                onClick={handleSendOTP}
+                disabled={isSending || phoneNumber.replace(/\D/g, '').length < 10}
+              >
+                {isSending ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Sending…</> : 'Send Code'}
+              </Button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div key="otp-input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+            <div className="flex flex-col items-center gap-4 py-4">
+              <p className="text-sm text-muted-foreground">Enter the 6-digit code</p>
+              <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+
+            <div className="flex gap-3">
+              <Button type="button" variant="outline" onClick={() => { setSubStep('phone'); setOtpCode(''); }} className="h-12 rounded-xl px-5">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                className="flex-1 h-12 text-base font-semibold rounded-xl"
                 onClick={handleVerifyOTP}
                 disabled={isVerifying || otpCode.length !== 6}
               >
-                {isVerifying ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  'Verify'
-                )}
+                {isVerifying ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Verifying…</> : 'Verify'}
               </Button>
             </div>
-
-            <Button
-              variant="link"
-              className="w-full text-muted-foreground"
-              onClick={handleSendOTP}
-              disabled={isSending}
-            >
-              {isSending ? 'Sending...' : 'Resend code'}
+            <Button variant="link" className="w-full text-muted-foreground text-sm" onClick={handleSendOTP} disabled={isSending}>
+              {isSending ? 'Resending…' : 'Resend code'}
             </Button>
-          </>
+          </motion.div>
         )}
-      </CardContent>
-    </Card>
+      </AnimatePresence>
+    </motion.div>
   );
 }
