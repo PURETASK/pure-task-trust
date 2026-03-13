@@ -1,22 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  CheckCircle2, Loader2, ArrowLeft, User, Phone, Camera, IdCard,
-  ShieldCheck, MapPin, Calendar, DollarSign, Rocket
-} from 'lucide-react';
+import { CheckCircle2, Loader2, ArrowLeft, User, Phone, Camera, IdCard, ShieldCheck, MapPin, Calendar, DollarSign, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface OnboardingReviewStepProps {
   profileData: {
-    firstName?: string | null;
-    lastName?: string | null;
-    bio?: string | null;
-    profilePhotoUrl?: string | null;
-    hourlyRate?: number | null;
-    travelRadius?: number | null;
-    phoneVerified?: boolean;
-    serviceAreasCount?: number;
-    availableDays?: number;
+    firstName?: string | null; lastName?: string | null; bio?: string | null;
+    profilePhotoUrl?: string | null; hourlyRate?: number | null; travelRadius?: number | null;
+    phoneVerified?: boolean; serviceAreasCount?: number; availableDays?: number;
   };
   onComplete: () => Promise<void>;
   onBack: () => void;
@@ -40,62 +31,38 @@ export function OnboardingReviewStep({ profileData, onComplete, onBack, isComple
   const initials = [firstName?.[0], lastName?.[0]].filter(Boolean).join('').toUpperCase() || 'U';
 
   const completedMap: Record<string, boolean> = {
-    info: !!firstName && !!lastName && !!bio,
-    phone: !!phoneVerified,
-    photo: !!profilePhotoUrl,
-    id: true,
-    bg: true,
-    areas: serviceAreasCount > 0,
-    avail: availableDays > 0,
-    rates: !!hourlyRate,
+    info: !!firstName && !!lastName && !!bio, phone: !!phoneVerified, photo: !!profilePhotoUrl,
+    id: true, bg: true, areas: serviceAreasCount > 0, avail: availableDays > 0, rates: !!hourlyRate,
   };
-
   const completedCount = Object.values(completedMap).filter(Boolean).length;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3 }} className="space-y-5">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">You're almost live!</h2>
-        <p className="text-muted-foreground mt-1">Review your profile before we activate you on the platform.</p>
+        <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">Step 10 of 10</p>
+        <h2 className="text-2xl font-bold text-white">You're almost live!</h2>
+        <p className="text-white/60 text-sm mt-1">Review your profile before we activate you on the platform.</p>
       </div>
 
-      {/* Profile card preview */}
-      <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-background border border-primary/20">
+      {/* Profile preview */}
+      <div className="p-4 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.12), rgba(74,222,128,0.03))', border: '1px solid rgba(74,222,128,0.25)' }}>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Avatar className="h-16 w-16 border-2 border-primary/30">
+            <Avatar className="h-16 w-16 border-2" style={{ borderColor: 'rgba(74,222,128,0.4)' }}>
               <AvatarImage src={profilePhotoUrl || undefined} alt={fullName} />
-              <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">{initials}</AvatarFallback>
+              <AvatarFallback className="text-xl font-bold" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>{initials}</AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-success flex items-center justify-center">
-              <CheckCircle2 className="h-3.5 w-3.5 text-success-foreground" />
+            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
+              <CheckCircle2 className="h-3 w-3 text-white" />
             </div>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg">{fullName}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-1">{bio || 'No bio yet'}</p>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {hourlyRate && (
-                <span className="text-xs bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
-                  ${hourlyRate}/hr
-                </span>
-              )}
-              {travelRadius && (
-                <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-                  {travelRadius}km radius
-                </span>
-              )}
-              {availableDays > 0 && (
-                <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-                  {availableDays}d/wk
-                </span>
-              )}
+            <h3 className="font-bold text-lg text-white">{fullName}</h3>
+            <p className="text-sm text-white/50 line-clamp-1">{bio || 'No bio yet'}</p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {hourlyRate && <span className="text-xs px-2 py-0.5 rounded-full font-semibold text-green-400" style={{ background: 'rgba(74,222,128,0.15)' }}>${hourlyRate}/hr</span>}
+              {travelRadius && <span className="text-xs px-2 py-0.5 rounded-full text-white/60" style={{ background: 'rgba(255,255,255,0.08)' }}>{travelRadius}km</span>}
+              {availableDays > 0 && <span className="text-xs px-2 py-0.5 rounded-full text-white/60" style={{ background: 'rgba(255,255,255,0.08)' }}>{availableDays}d/wk</span>}
             </div>
           </div>
         </div>
@@ -104,59 +71,35 @@ export function OnboardingReviewStep({ profileData, onComplete, onBack, isComple
       {/* Checklist */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold">Setup checklist</span>
-          <span className="text-xs text-muted-foreground font-medium">{completedCount}/{CHECKLIST.length} complete</span>
+          <span className="text-white/60 text-xs font-semibold uppercase tracking-wide">Setup checklist</span>
+          <span className="text-xs text-green-400 font-medium">{completedCount}/{CHECKLIST.length} complete</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {CHECKLIST.map(({ icon: Icon, label, key }, i) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className={`flex items-center gap-2 p-2.5 rounded-xl transition-colors ${completedMap[key] ? 'bg-success/5 border border-success/20' : 'bg-muted/40 border border-border'}`}
-            >
-              {completedMap[key]
-                ? <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />
-                : <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              }
-              <span className={`text-xs font-medium ${completedMap[key] ? 'text-foreground' : 'text-muted-foreground'}`}>{label}</span>
+            <motion.div key={key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+              style={{ background: completedMap[key] ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.04)', border: `1px solid ${completedMap[key] ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)'}` }}>
+              {completedMap[key] ? <CheckCircle2 className="h-4 w-4 text-green-400 flex-shrink-0" /> : <Icon className="h-4 w-4 text-white/30 flex-shrink-0" />}
+              <span className={`text-xs font-medium ${completedMap[key] ? 'text-white/80' : 'text-white/35'}`}>{label}</span>
             </motion.div>
           ))}
         </div>
       </div>
 
       {/* What's next */}
-      <div className="p-4 rounded-2xl bg-primary/5 border border-primary/15 space-y-2">
-        <p className="text-sm font-semibold">What happens after you activate</p>
-        <div className="space-y-1.5">
-          {[
-            'Background check initiated (3–5 days)',
-            'Job offers start appearing in your area',
-            'Accept jobs, complete them, get paid weekly',
-          ].map((step, i) => (
-            <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-              <span className="font-bold text-primary mt-0.5">{i + 1}.</span>
-              {step}
-            </div>
-          ))}
-        </div>
+      <div className="p-4 rounded-2xl space-y-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <p className="text-sm font-semibold text-white/80">What happens after you activate</p>
+        {['Background check initiated (3–5 days)', 'Job offers start appearing in your area', 'Accept jobs, complete them, get paid weekly'].map((step, i) => (
+          <div key={i} className="flex items-start gap-2 text-xs text-white/40">
+            <span className="font-bold text-green-400 mt-0.5">{i + 1}.</span>{step}
+          </div>
+        ))}
       </div>
 
       <div className="flex gap-3">
-        <Button type="button" variant="outline" onClick={onBack} disabled={isCompleting} className="h-12 rounded-xl px-5">
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          onClick={onComplete}
-          disabled={isCompleting}
-          className="flex-1 h-12 text-base font-semibold rounded-xl"
-        >
-          {isCompleting ? (
-            <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Activating…</>
-          ) : (
-            <><Rocket className="h-4 w-4 mr-2" /><span>Activate My Profile</span></>
-          )}
+        <Button type="button" variant="outline" onClick={onBack} disabled={isCompleting} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
+        <Button onClick={onComplete} disabled={isCompleting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0 text-base">
+          {isCompleting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Activating…</> : <><Rocket className="h-4 w-4 mr-2" />Activate My Profile</>}
         </Button>
       </div>
     </motion.div>

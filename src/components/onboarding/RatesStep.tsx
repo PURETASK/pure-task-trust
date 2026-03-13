@@ -5,7 +5,6 @@ import { Slider } from '@/components/ui/slider';
 import { ArrowLeft, ArrowRight, Loader2, MapPin, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { RatesData } from '@/hooks/useCleanerOnboarding';
-import { cn } from '@/lib/utils';
 
 interface RatesStepProps {
   initialData?: { hourlyRate?: number | null; travelRadius?: number | null };
@@ -15,10 +14,10 @@ interface RatesStepProps {
 }
 
 const TIERS = [
-  { id: 'bronze', label: 'Bronze', range: '$20–35', emoji: '🥉', min: 20, max: 35, desc: 'New cleaners start here' },
-  { id: 'silver', label: 'Silver', range: '$30–50', emoji: '🥈', min: 30, max: 50, desc: 'After 20 completed jobs' },
-  { id: 'gold', label: 'Gold', range: '$40–65', emoji: '🥇', min: 40, max: 65, desc: 'Reliability score ≥ 70' },
-  { id: 'platinum', label: 'Platinum', range: '$50–100', emoji: '💎', min: 50, max: 100, desc: 'Reliability score ≥ 90' },
+  { id: 'bronze', label: 'Bronze', range: '$20–35', emoji: '🥉', min: 20, max: 35 },
+  { id: 'silver', label: 'Silver', range: '$30–50', emoji: '🥈', min: 30, max: 50 },
+  { id: 'gold', label: 'Gold',   range: '$40–65', emoji: '🥇', min: 40, max: 65 },
+  { id: 'platinum', label: 'Platinum', range: '$50–100', emoji: '💎', min: 50, max: 100 },
 ];
 
 export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: RatesStepProps) {
@@ -26,122 +25,75 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
   const [travelRadius, setTravelRadius] = useState(initialData?.travelRadius || 15);
 
   useEffect(() => {
-    if (initialData) {
-      setHourlyRate(initialData.hourlyRate || 25);
-      setTravelRadius(initialData.travelRadius || 15);
-    }
+    if (initialData) { setHourlyRate(initialData.hourlyRate || 25); setTravelRadius(initialData.travelRadius || 15); }
   }, [initialData]);
 
-  // Estimated weekly earnings
-  const weekslyLow = Math.round(hourlyRate * 2 * 5);
+  const weeklyLow = Math.round(hourlyRate * 2 * 5);
   const weeklyHigh = Math.round(hourlyRate * 4 * 5);
+  const sliderClass = "[&_[role=slider]]:bg-green-400 [&_[role=slider]]:border-green-500 [&_.relative]:bg-white/20";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3 }} className="space-y-5">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Set your rates</h2>
-        <p className="text-muted-foreground mt-1">Higher reliability unlocks higher earning ceilings over time.</p>
+        <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">Step 9 of 10</p>
+        <h2 className="text-2xl font-bold text-white">Set your rates</h2>
+        <p className="text-white/60 text-sm mt-1">Higher reliability unlocks higher earning ceilings over time.</p>
       </div>
 
-      {/* Projected earnings card */}
-      <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+      {/* Earnings projection */}
+      <div className="p-4 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.12), rgba(74,222,128,0.04))', border: '1px solid rgba(74,222,128,0.25)' }}>
         <div className="flex items-center gap-2 mb-1">
-          <TrendingUp className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold text-primary">Estimated weekly earnings</span>
+          <TrendingUp className="h-4 w-4 text-green-400" />
+          <span className="text-green-400 text-xs font-semibold uppercase tracking-wide">Estimated weekly earnings</span>
         </div>
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold text-foreground">${weekslyLow}–${weeklyHigh}</span>
-          <span className="text-sm text-muted-foreground">/ week</span>
+          <span className="text-3xl font-black text-white">${weeklyLow}–${weeklyHigh}</span>
+          <span className="text-sm text-white/50">/ week</span>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">Based on 2–4 jobs/day at ${hourlyRate}/hr × 2 hr avg</p>
+        <p className="text-xs text-white/35 mt-0.5">Based on 2–4 jobs/day at ${hourlyRate}/hr × 2hr avg</p>
       </div>
 
       {/* Rate slider */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <Label className="font-semibold">Your hourly rate</Label>
-          <span className="text-3xl font-bold text-primary">${hourlyRate}</span>
+          <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Your hourly rate</Label>
+          <span className="text-3xl font-black text-green-400">${hourlyRate}</span>
         </div>
-        <Slider
-          value={[hourlyRate]}
-          onValueChange={(v) => setHourlyRate(v[0])}
-          min={20} max={100} step={1}
-          className="py-2"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>$20/hr</span>
-          <span>$100/hr</span>
-        </div>
+        <Slider value={[hourlyRate]} onValueChange={(v) => setHourlyRate(v[0])} min={20} max={100} step={1} className={`py-2 ${sliderClass}`} />
+        <div className="flex justify-between text-xs text-white/30"><span>$20/hr</span><span>$100/hr</span></div>
       </div>
 
-      {/* Tier roadmap */}
-      <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">Your earning tier roadmap</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {TIERS.map((tier) => {
-            const isActive = hourlyRate >= tier.min && hourlyRate <= tier.max;
-            return (
-              <div
-                key={tier.id}
-                className={cn(
-                  'p-3 rounded-xl border transition-all',
-                  isActive ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-muted/30'
-                )}
-              >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span>{tier.emoji}</span>
-                  <span className={cn('text-sm font-semibold', isActive ? 'text-primary' : 'text-foreground')}>{tier.label}</span>
-                  {isActive && <span className="text-[10px] font-bold text-primary ml-auto">YOU</span>}
-                </div>
-                <div className="text-xs font-bold">{tier.range}/hr</div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">{tier.desc}</div>
+      {/* Tier grid */}
+      <div className="grid grid-cols-2 gap-2">
+        {TIERS.map(tier => {
+          const active = hourlyRate >= tier.min && hourlyRate <= tier.max;
+          return (
+            <div key={tier.id} className="p-3 rounded-xl transition-all" style={{ background: active ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', border: `1px solid ${active ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.08)'}` }}>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span>{tier.emoji}</span>
+                <span className={`text-sm font-semibold ${active ? 'text-green-400' : 'text-white/60'}`}>{tier.label}</span>
+                {active && <span className="ml-auto text-[10px] font-black text-green-400 uppercase">You</span>}
               </div>
-            );
-          })}
-        </div>
+              <div className={`text-xs font-bold ${active ? 'text-white' : 'text-white/40'}`}>{tier.range}/hr</div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Travel radius */}
-      <div className="space-y-4 p-4 rounded-2xl bg-muted/40 border border-border">
+      <div className="p-4 rounded-2xl space-y-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className="flex items-center justify-between">
-          <Label className="flex items-center gap-2 font-medium">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            Travel radius
-          </Label>
-          <span className="text-xl font-bold text-foreground">{travelRadius} km</span>
+          <Label className="flex items-center gap-2 text-white/70 text-sm font-medium"><MapPin className="h-4 w-4" />Travel radius</Label>
+          <span className="text-xl font-black text-white">{travelRadius}<span className="text-sm font-normal text-white/50"> km</span></span>
         </div>
-        <Slider
-          value={[travelRadius]}
-          onValueChange={(v) => setTravelRadius(v[0])}
-          min={5} max={50} step={5}
-          className="py-1"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>5 km</span>
-          <span>50 km</span>
-        </div>
+        <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className={`py-1 ${sliderClass}`} />
+        <div className="flex justify-between text-xs text-white/30"><span>5 km</span><span>50 km</span></div>
       </div>
 
       <div className="flex gap-3">
-        <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting} className="h-12 rounded-xl px-5">
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          onClick={() => onSubmit({ hourlyRate, travelRadius })}
-          disabled={isSubmitting}
-          className="flex-1 h-12 text-base font-semibold rounded-xl"
-        >
-          {isSubmitting ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</>
-          ) : (
-            <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>
-          )}
+        <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
+        <Button onClick={() => onSubmit({ hourlyRate, travelRadius })} disabled={isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+          {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>
     </motion.div>
