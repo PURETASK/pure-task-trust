@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { MapPin, Loader2, ArrowLeft, Plus, X } from 'lucide-react';
+import { MapPin, Loader2, ArrowLeft, ArrowRight, Plus, X, Radio } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ServiceAreaStepProps {
-  initialData?: {
-    travelRadius?: number | null;
-    selectedAreas?: string[];
-  };
+  initialData?: { travelRadius?: number | null; selectedAreas?: string[] };
   onSubmit: (data: { travelRadius: number; selectedAreas: string[] }) => Promise<void>;
   onBack: () => void;
   isSubmitting: boolean;
@@ -27,159 +24,137 @@ export function ServiceAreaStep({ initialData, onSubmit, onBack, isSubmitting }:
     if (initialData?.selectedAreas) setSelectedAreas(initialData.selectedAreas);
   }, [initialData]);
 
+  const isValidZip = /^\d{5}(-\d{4})?$/.test(zipCodeInput.trim());
+
   const handleAddZipCode = () => {
     const trimmed = zipCodeInput.trim();
-    // Basic US zip code validation
-    if (/^\d{5}(-\d{4})?$/.test(trimmed) && !selectedAreas.includes(trimmed)) {
+    if (isValidZip && !selectedAreas.includes(trimmed)) {
       setSelectedAreas([...selectedAreas, trimmed]);
       setZipCodeInput('');
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddZipCode();
-    }
+    if (e.key === 'Enter') { e.preventDefault(); handleAddZipCode(); }
   };
-
-  const handleRemoveArea = (zipCode: string) => {
-    setSelectedAreas(selectedAreas.filter((z) => z !== zipCode));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmit({ travelRadius, selectedAreas });
-  };
-
-  const isValidZip = /^\d{5}(-\d{4})?$/.test(zipCodeInput.trim());
-  const isValid = selectedAreas.length > 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-primary" />
-          Service Areas
-        </CardTitle>
-        <CardDescription>
-          Enter the zip codes where you're willing to work and set your travel radius.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Zip Code Input */}
-          <div className="space-y-3">
-            <Label>Add Zip Codes</Label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter zip code (e.g., 90210)"
-                value={zipCodeInput}
-                onChange={(e) => setZipCodeInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                maxLength={10}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleAddZipCode}
-                disabled={!isValidZip || selectedAreas.includes(zipCodeInput.trim())}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Add all the zip codes where you want to receive job offers.
-            </p>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Where do you work?</h2>
+        <p className="text-muted-foreground mt-1">Add zip codes and set how far you're willing to travel.</p>
+      </div>
 
-          {/* Selected Areas */}
-          {selectedAreas.length > 0 && (
-            <div className="space-y-2">
-              <Label className="text-muted-foreground text-xs">Selected zip codes:</Label>
-              <div className="flex flex-wrap gap-2">
-                {selectedAreas.map((zipCode) => (
-                  <Badge
-                    key={zipCode}
-                    variant="secondary"
-                    className="pl-3 pr-1 py-1.5 flex items-center gap-1"
-                  >
-                    {zipCode}
+      {/* Travel radius — show first for visual impact */}
+      <div className="p-5 rounded-2xl bg-primary/5 border border-primary/15 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Radio className="h-4 w-4 text-primary" />
+            <Label className="font-semibold">Travel radius</Label>
+          </div>
+          <span className="text-2xl font-bold text-primary">{travelRadius} km</span>
+        </div>
+        <Slider
+          value={[travelRadius]}
+          onValueChange={(v) => setTravelRadius(v[0])}
+          min={5} max={50} step={5}
+          className="py-2"
+        />
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>5 km (local)</span>
+          <span>50 km (regional)</span>
+        </div>
+      </div>
+
+      {/* Zip code input */}
+      <div className="space-y-3">
+        <Label className="font-medium">Service zip codes</Label>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="90210"
+              value={zipCodeInput}
+              onChange={(e) => setZipCodeInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              maxLength={10}
+              className="pl-9 h-11 rounded-xl"
+            />
+          </div>
+          <Button
+            type="button"
+            onClick={handleAddZipCode}
+            disabled={!isValidZip || selectedAreas.includes(zipCodeInput.trim())}
+            className="h-11 px-4 rounded-xl"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Selected zip codes */}
+        <AnimatePresence>
+          {selectedAreas.length > 0 ? (
+            <motion.div className="flex flex-wrap gap-2 pt-1">
+              {selectedAreas.map((zip) => (
+                <motion.div
+                  key={zip}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                >
+                  <Badge variant="secondary" className="pl-3 pr-1 py-1.5 gap-1.5 text-sm">
+                    <MapPin className="h-3 w-3" />
+                    {zip}
                     <button
                       type="button"
-                      onClick={() => handleRemoveArea(zipCode)}
-                      className="ml-1 p-0.5 rounded-full hover:bg-muted"
+                      onClick={() => setSelectedAreas(selectedAreas.filter(z => z !== zip))}
+                      className="ml-0.5 h-4 w-4 rounded-full hover:bg-muted flex items-center justify-center"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-2.5 w-2.5" />
                     </button>
                   </Badge>
-                ))}
-              </div>
-            </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div className="text-center py-6 text-muted-foreground text-sm border border-dashed rounded-xl">
+              Add at least one zip code to continue
+            </motion.div>
           )}
+        </AnimatePresence>
+      </div>
 
-          {selectedAreas.length === 0 && (
-            <div className="text-center py-6 text-muted-foreground text-sm border border-dashed rounded-lg">
-              No zip codes added yet. Enter at least one above.
-            </div>
+      {selectedAreas.length > 0 && (
+        <div className="px-4 py-3 bg-success/5 rounded-xl border border-success/20 text-sm">
+          <span className="font-semibold text-success">Coverage: </span>
+          <span className="text-muted-foreground">
+            Within {travelRadius}km of {selectedAreas.length} zip code{selectedAreas.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl px-5">
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          onClick={() => selectedAreas.length > 0 && onSubmit({ travelRadius, selectedAreas })}
+          disabled={selectedAreas.length === 0 || isSubmitting}
+          className="flex-1 h-12 text-base font-semibold rounded-xl"
+        >
+          {isSubmitting ? (
+            <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</>
+          ) : (
+            <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>
           )}
-
-          {/* Travel Radius */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <Label>Travel Radius</Label>
-              <span className="text-sm font-medium text-primary">{travelRadius} km</span>
-            </div>
-            <Slider
-              value={[travelRadius]}
-              onValueChange={(value) => setTravelRadius(value[0])}
-              min={5}
-              max={50}
-              step={5}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>5 km</span>
-              <span>50 km</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              How far you're willing to travel from your listed zip codes.
-            </p>
-          </div>
-
-          {/* Summary */}
-          {selectedAreas.length > 0 && (
-            <div className="p-4 bg-muted/50 rounded-lg">
-              <p className="text-sm font-medium mb-1">Your coverage</p>
-              <p className="text-xs text-muted-foreground">
-                You'll receive job offers within {travelRadius}km of {selectedAreas.length} zip{' '}
-                {selectedAreas.length === 1 ? 'code' : 'codes'}.
-              </p>
-            </div>
-          )}
-
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={!isValid || isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                'Continue'
-              )}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        </Button>
+      </div>
+    </motion.div>
   );
 }

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Loader2, ArrowLeft, Sparkles } from 'lucide-react';
+import { Calendar, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface AvailabilityStepProps {
   onSubmit: (data: AvailabilityData) => Promise<void>;
@@ -41,229 +41,143 @@ const TIME_SLOTS = [
 ];
 
 const TEMPLATES = [
-  { 
-    id: 'weekdays-9-5', 
-    label: 'Weekdays 9-5',
-    description: 'Mon-Fri, 9am to 5pm',
-    schedule: {
-      monday: { enabled: true, startTime: '09:00', endTime: '17:00' },
-      tuesday: { enabled: true, startTime: '09:00', endTime: '17:00' },
-      wednesday: { enabled: true, startTime: '09:00', endTime: '17:00' },
-      thursday: { enabled: true, startTime: '09:00', endTime: '17:00' },
-      friday: { enabled: true, startTime: '09:00', endTime: '17:00' },
-      saturday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      sunday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-    }
-  },
-  { 
-    id: 'flexible', 
-    label: 'Flexible',
-    description: 'All week, 8am to 8pm',
-    schedule: {
-      monday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      tuesday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      wednesday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      thursday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      friday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      saturday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-      sunday: { enabled: true, startTime: '08:00', endTime: '20:00' },
-    }
-  },
-  { 
-    id: 'weekends', 
-    label: 'Weekends Only',
-    description: 'Sat-Sun, 9am to 6pm',
-    schedule: {
-      monday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      tuesday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      wednesday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      thursday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      friday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-      saturday: { enabled: true, startTime: '09:00', endTime: '18:00' },
-      sunday: { enabled: true, startTime: '09:00', endTime: '18:00' },
-    }
-  },
+  { id: 'weekdays', label: 'Weekdays', emoji: '💼', days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'], start: '09:00', end: '17:00' },
+  { id: 'flexible', label: 'Full week', emoji: '🌟', days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'], start: '08:00', end: '20:00' },
+  { id: 'weekends', label: 'Weekends', emoji: '🌴', days: ['saturday', 'sunday'], start: '09:00', end: '18:00' },
 ];
 
-const defaultSchedule: Record<string, DaySchedule> = {
-  monday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  tuesday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  wednesday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  thursday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  friday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  saturday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-  sunday: { enabled: false, startTime: '09:00', endTime: '17:00' },
-};
+const defaultSchedule: Record<string, DaySchedule> = Object.fromEntries(
+  DAYS.map(d => [d.key, { enabled: false, startTime: '09:00', endTime: '17:00' }])
+);
 
 export function AvailabilityStep({ onSubmit, onBack, isSubmitting }: AvailabilityStepProps) {
   const [schedule, setSchedule] = useState<Record<string, DaySchedule>>(defaultSchedule);
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
 
-  const handleTemplateSelect = (templateId: string) => {
-    const template = TEMPLATES.find((t) => t.id === templateId);
-    if (template) {
-      setSchedule(template.schedule);
-      setSelectedTemplate(templateId);
-    }
+  const applyTemplate = (t: typeof TEMPLATES[number]) => {
+    const newSched = { ...defaultSchedule };
+    DAYS.forEach(d => {
+      newSched[d.key] = {
+        enabled: t.days.includes(d.key),
+        startTime: t.start,
+        endTime: t.end,
+      };
+    });
+    setSchedule(newSched);
+    setActiveTemplate(t.id);
   };
 
-  const handleDayToggle = (day: string, enabled: boolean) => {
-    setSchedule((prev) => ({
-      ...prev,
-      [day]: { ...prev[day], enabled },
-    }));
-    setSelectedTemplate(null);
-  };
-
-  const handleTimeChange = (day: string, field: 'startTime' | 'endTime', value: string) => {
-    setSchedule((prev) => ({
-      ...prev,
-      [day]: { ...prev[day], [field]: value },
-    }));
-    setSelectedTemplate(null);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmit({ schedule });
-  };
-
-  const enabledDays = Object.values(schedule).filter((d) => d.enabled).length;
-  const isValid = enabledDays > 0;
+  const enabledDays = Object.values(schedule).filter(d => d.enabled).length;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          Set Your Availability
-        </CardTitle>
-        <CardDescription>
-          Choose when you're available to take cleaning jobs. You can always adjust this later.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Quick Templates */}
-          <div className="space-y-3">
-            <Label className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              Quick Setup
-            </Label>
-            <div className="grid grid-cols-3 gap-2">
-              {TEMPLATES.map((template) => (
-                <button
-                  key={template.id}
-                  type="button"
-                  onClick={() => handleTemplateSelect(template.id)}
-                  className={cn(
-                    'p-3 rounded-lg border text-left transition-colors',
-                    selectedTemplate === template.id
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
-                  )}
-                >
-                  <p className="text-sm font-medium">{template.label}</p>
-                  <p className="text-xs text-muted-foreground">{template.description}</p>
-                </button>
-              ))}
-            </div>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Set your hours</h2>
+        <p className="text-muted-foreground mt-1">When are you available for jobs? You can change this any time.</p>
+      </div>
 
-          {/* Day-by-day schedule */}
-          <div className="space-y-3">
-            <Label>Customize by Day</Label>
-            <div className="space-y-2">
-              {DAYS.map(({ key, label, short }) => (
-                <div
-                  key={key}
-                  className={cn(
-                    'flex items-center gap-3 p-3 rounded-lg border transition-colors',
-                    schedule[key].enabled ? 'bg-muted/50' : 'bg-background'
-                  )}
-                >
-                  <Switch
-                    checked={schedule[key].enabled}
-                    onCheckedChange={(checked) => handleDayToggle(key, checked)}
-                  />
-                  <span className="w-12 text-sm font-medium">{short}</span>
-                  
-                  {schedule[key].enabled && (
-                    <div className="flex items-center gap-2 flex-1">
-                      <Select
-                        value={schedule[key].startTime}
-                        onValueChange={(value) => handleTimeChange(key, 'startTime', value)}
-                      >
-                        <SelectTrigger className="w-24 h-8 text-xs">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {TIME_SLOTS.map((time) => (
-                            <SelectItem key={time} value={time}>
-                              {time}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <span className="text-muted-foreground text-xs">to</span>
-                      <Select
-                        value={schedule[key].endTime}
-                        onValueChange={(value) => handleTimeChange(key, 'endTime', value)}
-                      >
-                        <SelectTrigger className="w-24 h-8 text-xs">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {TIME_SLOTS.map((time) => (
-                            <SelectItem key={time} value={time}>
-                              {time}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Summary */}
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <p className="text-sm font-medium mb-1">
-              {enabledDays === 0 
-                ? 'No days selected' 
-                : `Available ${enabledDays} day${enabledDays !== 1 ? 's' : ''} per week`}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {enabledDays === 0 
-                ? 'Select at least one day to continue.' 
-                : 'You can modify your availability anytime from your dashboard.'}
-            </p>
-          </div>
-
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={!isValid || isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                'Continue'
+      {/* Quick template picker */}
+      <div className="space-y-2">
+        <Label className="font-medium text-sm text-muted-foreground">Quick templates</Label>
+        <div className="grid grid-cols-3 gap-2">
+          {TEMPLATES.map(t => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => applyTemplate(t)}
+              className={cn(
+                'flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-center',
+                activeTemplate === t.id
+                  ? 'border-primary bg-primary/5 shadow-sm'
+                  : 'border-border hover:border-primary/40'
               )}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+            >
+              <span className="text-2xl">{t.emoji}</span>
+              <span className="text-xs font-semibold">{t.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Day-by-day */}
+      <div className="space-y-2">
+        <Label className="font-medium text-sm text-muted-foreground">Customize by day</Label>
+        <div className="space-y-1.5">
+          {DAYS.map(({ key, short }) => (
+            <div
+              key={key}
+              className={cn(
+                'flex items-center gap-3 px-4 py-3 rounded-xl border transition-all',
+                schedule[key].enabled ? 'bg-primary/5 border-primary/20' : 'bg-background border-border'
+              )}
+            >
+              <Switch
+                checked={schedule[key].enabled}
+                onCheckedChange={(checked) => {
+                  setSchedule(prev => ({ ...prev, [key]: { ...prev[key], enabled: checked } }));
+                  setActiveTemplate(null);
+                }}
+              />
+              <span className={cn('w-10 text-sm font-semibold', schedule[key].enabled ? 'text-foreground' : 'text-muted-foreground')}>
+                {short}
+              </span>
+              {schedule[key].enabled ? (
+                <div className="flex items-center gap-2 flex-1">
+                  <Select value={schedule[key].startTime} onValueChange={v => setSchedule(p => ({ ...p, [key]: { ...p[key], startTime: v } }))}>
+                    <SelectTrigger className="w-24 h-8 text-xs rounded-lg border-primary/30">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIME_SLOTS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-xs text-muted-foreground">–</span>
+                  <Select value={schedule[key].endTime} onValueChange={v => setSchedule(p => ({ ...p, [key]: { ...p[key], endTime: v } }))}>
+                    <SelectTrigger className="w-24 h-8 text-xs rounded-lg border-primary/30">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIME_SLOTS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <span className="flex-1 text-xs text-muted-foreground">Tap to enable</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Summary pill */}
+      <div className={cn('flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium',
+        enabledDays > 0 ? 'bg-success/10 text-success border border-success/20' : 'bg-muted text-muted-foreground border border-border')}>
+        <Calendar className="h-4 w-4" />
+        {enabledDays === 0 ? 'Select at least one day' : `Available ${enabledDays} day${enabledDays !== 1 ? 's' : ''} per week`}
+      </div>
+
+      <div className="flex gap-3">
+        <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl px-5">
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          onClick={() => enabledDays > 0 && onSubmit({ schedule })}
+          disabled={enabledDays === 0 || isSubmitting}
+          className="flex-1 h-12 text-base font-semibold rounded-xl"
+        >
+          {isSubmitting ? (
+            <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</>
+          ) : (
+            <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>
+          )}
+        </Button>
+      </div>
+    </motion.div>
   );
 }
