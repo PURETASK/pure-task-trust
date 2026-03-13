@@ -14,124 +14,63 @@ interface BasicInfoStepProps {
   isSubmitting: boolean;
 }
 
-const BIO_TIPS = [
-  '"I have 5 years of experience with deep cleaning..."',
-  '"Specialised in eco-friendly products..."',
-  '"Detail-oriented and always on time..."',
-];
-
 export function BasicInfoStep({ initialData, onSubmit, onBack, isSubmitting }: BasicInfoStepProps) {
   const [firstName, setFirstName] = useState(initialData?.firstName || '');
   const [lastName, setLastName] = useState(initialData?.lastName || '');
   const [bio, setBio] = useState(initialData?.bio || '');
 
   useEffect(() => {
-    if (initialData) {
-      setFirstName(initialData.firstName || '');
-      setLastName(initialData.lastName || '');
-      setBio(initialData.bio || '');
-    }
+    if (initialData) { setFirstName(initialData.firstName || ''); setLastName(initialData.lastName || ''); setBio(initialData.bio || ''); }
   }, [initialData]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmit({ firstName, lastName, bio });
-  };
 
   const bioLen = bio.trim().length;
   const isValid = firstName.trim() && lastName.trim() && bioLen >= 20;
   const bioProgress = Math.min((bioLen / 20) * 100, 100);
 
+  const inputClass = "h-11 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-green-400 focus:ring-green-400/20";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3 }} className="space-y-5">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Tell us about yourself</h2>
-        <p className="text-muted-foreground mt-1">Clients choose cleaners by how much they connect with their story.</p>
+        <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">Step 2 of 10</p>
+        <h2 className="text-2xl font-bold text-white">Tell us about yourself</h2>
+        <p className="text-white/60 text-sm mt-1">Clients choose cleaners by how much they connect with their story.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName" className="font-medium">First Name</Label>
-            <Input
-              id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Jane"
-              className="h-11 rounded-xl"
-              required
-            />
+      <form onSubmit={async (e) => { e.preventDefault(); await onSubmit({ firstName, lastName, bio }); }} className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">First Name</Label>
+            <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jane" className={inputClass} required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName" className="font-medium">Last Name</Label>
-            <Input
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Smith"
-              className="h-11 rounded-xl"
-              required
-            />
+          <div className="space-y-1.5">
+            <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Last Name</Label>
+            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Smith" className={inputClass} required />
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label htmlFor="bio" className="font-medium">Your Bio</Label>
-            <span className={`text-xs font-medium ${bioLen >= 20 ? 'text-success' : 'text-muted-foreground'}`}>
-              {bioLen < 20 ? `${20 - bioLen} more chars` : `${bioLen} chars ✓`}
+            <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Your Bio</Label>
+            <span className={`text-xs font-medium ${bioLen >= 20 ? 'text-green-400' : 'text-white/40'}`}>
+              {bioLen < 20 ? `${20 - bioLen} more chars` : `${bioLen} ✓`}
             </span>
           </div>
-          <Textarea
-            id="bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Tell clients about your experience, specialties, and what makes you stand out…"
-            className="min-h-[110px] resize-none rounded-xl"
-            required
-          />
-          {/* Progress bar */}
-          <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-primary rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${bioProgress}%` }}
-              transition={{ duration: 0.3 }}
-            />
+          <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Tell clients about your experience, specialties, and what makes you stand out…" className="min-h-[100px] resize-none rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-green-400" required />
+          <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
+            <motion.div className="h-full bg-green-400 rounded-full" animate={{ width: `${bioProgress}%` }} transition={{ duration: 0.3 }} />
           </div>
         </div>
 
-        {/* Bio tip */}
-        <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-xl border border-primary/10">
-          <Lightbulb className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-          <div className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Pro tip: </span>
-            {BIO_TIPS[Math.floor(Math.random() * BIO_TIPS.length)]} Get specific — it converts 3× better.
-          </div>
+        <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
+          <Lightbulb className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-white/60"><span className="text-white font-semibold">Pro tip: </span>Be specific about your experience — "5 years deep-cleaning Airbnb properties" converts 3× better than generic bios.</p>
         </div>
 
-        <div className="flex gap-3 pt-1">
-          {onBack && (
-            <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl px-5">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            type="submit"
-            className="flex-1 h-12 text-base font-semibold rounded-xl"
-            disabled={!isValid || isSubmitting}
-          >
-            {isSubmitting ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
-            ) : (
-              <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>
-            )}
+        <div className="flex gap-3">
+          {onBack && <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>}
+          <Button type="submit" disabled={!isValid || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
           </Button>
         </div>
       </form>
