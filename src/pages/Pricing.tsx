@@ -208,7 +208,15 @@ export default function Pricing() {
                     </div>
                   <div>
                       <h3 className="text-xl font-bold mb-3">What the 15–20% Platform Fee Covers</h3>
-                      <p className="text-sm text-muted-foreground mb-3">Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.{" "}
+                        <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-2 font-medium">
+                          See what's included in every clean
+                        </Link>{" "}and{" "}
+                        <Link to="/cancellation-policy" className="text-primary hover:underline underline-offset-2 font-medium">
+                          review the cancellation policy
+                        </Link>.
+                      </p>
                       <div className="grid sm:grid-cols-2 gap-2.5">
                         {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
                           <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
