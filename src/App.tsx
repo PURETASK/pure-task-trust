@@ -134,7 +134,7 @@ const App = () => (
                     {/* Public routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
-                    <Route path="/cancellationpolicy" element={<CancellationPolicyPage />} />
+                    <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
                     <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />

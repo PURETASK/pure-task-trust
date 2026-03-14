@@ -74,7 +74,7 @@ function GuestFooter() {
                 { name: "Help Center", path: "/help" },
                 { name: "Privacy Policy", path: "/legal" },
                 { name: "Terms of Service", path: "/legal" },
-                { name: "Cancellation Policy", path: "/cancellationpolicy" },
+                { name: "Cancellation Policy", path: "/cancellation-policy" },
               ]
             }
           ].map((section) => (
