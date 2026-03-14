@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Info, Sparkles, Home as HomeIcon, Key, Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { SEO } from '@/components/seo';
+import { SEO, JsonLd, HowToSchema, BreadcrumbSchema } from '@/components/seo';
 
 const CLEANING_DUTIES = {
   basic: {

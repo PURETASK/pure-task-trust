@@ -20,7 +20,7 @@ import {
 import { useCreateTicket, useSupportTickets } from "@/hooks/useSupportTickets";
 import { FAQSection } from "@/components/faq/FAQSection";
 import { format } from "date-fns";
-import { SEO, FAQSchema } from "@/components/seo";
+import { SEO, FAQSchema, BreadcrumbSchema } from "@/components/seo";
 
 const issueTypes = [
   { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-destructive" },

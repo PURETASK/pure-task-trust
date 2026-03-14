@@ -8,7 +8,7 @@ import {
   CheckCircle, Award, Shield, Star, Zap, Clock, Info,
   TrendingUp, DollarSign, ArrowRight, Sparkles, Users
 } from 'lucide-react';
-import { SEO, ServiceSchema } from '@/components/seo';
+import { SEO, JsonLd, BreadcrumbSchema, FAQSchema } from '@/components/seo';
 import { motion } from 'framer-motion';
 
 const TIERS = [

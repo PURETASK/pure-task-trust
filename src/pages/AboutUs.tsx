@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { SEO, OrganizationSchema } from "@/components/seo";
+import { SEO, OrganizationSchema, BreadcrumbSchema } from "@/components/seo";
 import heroLandingImg from "@/assets/hero-landing.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
