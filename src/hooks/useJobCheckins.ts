@@ -321,8 +321,12 @@ export function useJobCheckins(jobId?: string) {
     },
   });
 
-  const hasCheckedIn = checkins?.some(c => c.type === 'check_in');
-  const hasCheckedOut = checkins?.some(c => c.type === 'check_out');
+  const hasCheckedIn = checkins?.some(
+    c => c.type === 'check_in' || ('check_in_at' in c && !!(c as Record<string, unknown>).check_in_at)
+  );
+  const hasCheckedOut = checkins?.some(
+    c => c.type === 'check_out' || ('check_out_at' in c && !!(c as Record<string, unknown>).check_out_at)
+  );
 
   return {
     checkins,
