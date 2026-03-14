@@ -292,7 +292,7 @@ export default function Index() {
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
             <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built on trust. Verified at every step.</h2>
+            <h2 id="trust-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built on trust. Verified at every step.</h2>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               We designed every part of the platform to give you complete confidence.
             </p>
