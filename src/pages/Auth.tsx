@@ -77,13 +77,8 @@ export default function AuthPage() {
         const result = await login(email, password);
         if (result.error) {
           toast({ title: "Sign in failed", description: result.error, variant: "destructive" });
-        } else {
-          const { data: { user: authUser } } = await supabase.auth.getUser();
-          if (authUser) {
-            const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", authUser.id).maybeSingle();
-            navigate(roleData?.role === "cleaner" ? "/cleaner/dashboard" : "/dashboard");
-          }
         }
+        // Navigation is handled by the useEffect watching isAuthenticated + user
       }
     } finally {
       setIsSubmitting(false);
