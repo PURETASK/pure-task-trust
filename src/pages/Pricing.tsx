@@ -71,7 +71,7 @@ export default function Pricing() {
     <main className="py-0">
       <SEO
         title="Transparent Cleaning Prices"
-        description="No hidden fees. Cleaner rates from $15–85/hour based on reliability tier. Know exactly what you pay."
+        description="No hidden fees, ever. Cleaner rates from $15–85/hr based on reliability tier. See exactly what you pay before booking any cleaning service."
         url="/pricing"
       />
       <ServiceSchema name="House Cleaning Services" description="Professional cleaning with verified cleaners" price="15-85" />

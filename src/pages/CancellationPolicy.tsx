@@ -22,7 +22,7 @@ export default function CancellationPolicy() {
     <main className="container max-w-4xl py-8">
       <SEO
         title="Cancellation Policy"
-        description="Understand PureTask's cancellation policy, fees, grace periods, and emergency cancellation rules for clients and cleaners."
+        description="PureTask's fair cancellation policy explained: grace periods, fee tiers, emergency rules, and full refund conditions for both clients and cleaners."
         url="/cancellation-policy"
         keywords="cancellation policy, cleaning cancellation, refund policy, PureTask cancellation"
       />

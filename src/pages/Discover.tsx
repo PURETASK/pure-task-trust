@@ -279,7 +279,7 @@ export default function Discover() {
     <main className="flex-1 bg-background min-h-screen">
       <SEO
         title="Find Verified Cleaners Near You"
-        description="Browse background-checked, verified cleaning professionals. Filter by rating, availability, and price. Book with confidence."
+        description="Browse background-checked cleaners near you. Filter by rating, price, and availability. Every cleaner is GPS-verified and insured. Book today."
         url="/discover"
         keywords="find cleaners, verified cleaners near me, book cleaning service, background checked cleaners"
       />

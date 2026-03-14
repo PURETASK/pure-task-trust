@@ -38,7 +38,7 @@ export default function ForFamilies() {
     <main className="overflow-hidden">
       <SEO
         title="Safe Cleaning for Families with Kids & Pets"
-        description="Background-checked cleaners who understand families with kids and pets. Child-safe cleaning products, GPS verification, and photo documentation."
+        description="Vetted cleaners for family homes. Child-safe products, pet-friendly routines, GPS-verified arrivals, and photo proof so you always know the job is done right."
         url="/for-families"
         keywords="family cleaning, child safe cleaning, pet safe cleaning"
       />

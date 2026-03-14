@@ -36,7 +36,7 @@ export default function Reviews() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SEO title="Customer Reviews" description="Read real reviews from PureTask customers." url="/reviews" keywords="cleaning service reviews, PureTask reviews" />
+      <SEO title="Customer Reviews" description="Read verified reviews from PureTask clients. See real ratings, honest feedback, and why thousands choose our background-checked cleaners again and again." url="/reviews" keywords="cleaning service reviews, PureTask reviews" />
       <AggregateRatingSchema />
 
       {/* Hero */}

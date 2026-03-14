@@ -71,7 +71,7 @@ export default function Legal() {
     <main className="container py-8">
       <SEO 
         title="Terms of Service & Privacy Policy"
-        description="PureTask legal documents: Privacy Policy, Terms of Service, Photo Consent Policy, Cancellation Policy, and Damage Claims process."
+        description="Read PureTask's Privacy Policy, Terms of Service, Photo Consent, Cancellation, and Damage Claims policies. Updated and written in plain language."
         url="/legal"
         keywords="privacy policy, terms of service, cleaning service terms, photo consent, cancellation policy"
       />
