@@ -43,6 +43,7 @@ export default function AboutUs() {
         keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service"
       />
       <OrganizationSchema />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'About Us', url: '/about' }]} />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[70vh] flex items-center">
