@@ -314,3 +314,23 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Performance helpers ──────────────────────────────────────────────── */
+
+/* Prevent layout shift from images without explicit dimensions */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* content-visibility: auto defers paint/layout for off-screen sections */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px; /* estimated height — prevents big scroll jumps */
+}
+
+/* Prevent invisible text while webfonts load (belt + suspenders for inline CSS) */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+}
