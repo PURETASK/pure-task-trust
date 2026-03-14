@@ -96,7 +96,7 @@ export default function ForRetirees() {
               <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-purple))', color: 'white', border: '2px solid white', borderRadius: '1rem' }}>
                 <Link to="/discover"><Heart className="mr-2 h-5 w-5" />Find a Trusted Cleaner</Link>
               </Button>
-              <Button size="xl" variant="outline" asChild className="rounded-2xl">
+              <Button size="xl" variant="outline" asChild className="rounded-2xl" style={{ border: '2px solid hsl(var(--pt-purple))', borderRadius: '1rem' }}>
                 <Link to="/book">Book a Cleaning<ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </motion.div>
