@@ -54,7 +54,7 @@ export default function ForProfessionals() {
   return (
     <main className="overflow-hidden">
       <SEO
-        title="Cleaning Services for Busy Professionals | PureTask"
+        title="Cleaning for Busy Professionals"
         description="Reclaim your weekends with verified, reliable cleaning professionals. Instant booking, GPS check-ins, and photo documentation."
         url="/for-professionals"
         keywords="professional cleaning, busy professional, verified cleaners"

@@ -37,7 +37,7 @@ export default function ForFamilies() {
   return (
     <main className="overflow-hidden">
       <SEO
-        title="Safe Cleaning for Families with Kids & Pets | PureTask"
+        title="Safe Cleaning for Families with Kids & Pets"
         description="Background-checked cleaners who understand families with kids and pets. Child-safe cleaning products, GPS verification, and photo documentation."
         url="/for-families"
         keywords="family cleaning, child safe cleaning, pet safe cleaning"

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,6 +109,7 @@ export default function CleanerSchedule() {
 
   return (
     <CleanerLayout>
+      <Helmet><title>My Schedule | PureTask</title></Helmet>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">My Schedule</h1>

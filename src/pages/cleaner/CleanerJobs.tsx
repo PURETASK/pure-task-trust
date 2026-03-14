@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -119,6 +120,7 @@ export default function CleanerJobs() {
 
   return (
     <CleanerLayout>
+      <Helmet><title>My Jobs | PureTask</title></Helmet>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

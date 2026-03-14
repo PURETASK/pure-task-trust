@@ -53,7 +53,7 @@ export default function Index() {
 
   return (
     <main className="overflow-x-hidden">
-      <SEO url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
+      <SEO title="Verified House Cleaning Services" url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
       <OrganizationSchema />
       <LocalBusinessSchema />
       <AggregateRatingSchema />

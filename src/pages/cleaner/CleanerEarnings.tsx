@@ -1,4 +1,5 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
+import { Helmet } from "react-helmet-async";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -68,6 +69,7 @@ export default function CleanerEarnings() {
 
   return (
     <CleanerLayout>
+      <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
       <div className="space-y-6">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>

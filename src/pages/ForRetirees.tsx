@@ -43,7 +43,7 @@ export default function ForRetirees() {
   return (
     <main className="overflow-hidden">
       <SEO
-        title="Trusted Cleaning for Seniors & Retirees | PureTask"
+        title="Trusted Cleaning for Seniors & Retirees"
         description="Reliable, respectful cleaning services for seniors. Background-checked cleaners, consistent scheduling, and easy communication."
         url="/for-retirees"
         keywords="senior cleaning, cleaning for retirees, elderly cleaning service"

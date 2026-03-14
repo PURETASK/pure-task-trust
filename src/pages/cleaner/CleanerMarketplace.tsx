@@ -1,5 +1,6 @@
 
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
+import { Helmet } from "react-helmet-async";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +55,7 @@ export default function CleanerMarketplace() {
 
   return (
     <CleanerLayout>
+      <Helmet><title>Job Marketplace | PureTask</title></Helmet>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
