@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { withCronMonitor } from "../_shared/sentry.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +10,7 @@ const corsHeaders = {
 
 const MIN_WEEKLY_PAYOUT = 20; // $20 minimum for weekly payouts
 
-serve(async (req) => {
+const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -117,7 +118,7 @@ serve(async (req) => {
 
         // Create the transfer (no fee for weekly payouts)
         const amountInCents = Math.round(totalAvailable * 100);
-        
+
         const transfer = await stripe.transfers.create({
           amount: amountInCents,
           currency: "usd",
@@ -211,4 +212,9 @@ serve(async (req) => {
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
+};
+
+serve((req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  return withCronMonitor("process-weekly-payouts", () => handler(req));
 });
