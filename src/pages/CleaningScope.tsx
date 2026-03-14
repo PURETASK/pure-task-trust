@@ -253,13 +253,13 @@ export default function CleaningScope() {
             </p>
             
             {/* Disclaimer */}
-            <Alert className="max-w-2xl mx-auto bg-amber-500/10 border-amber-500/30 text-left">
-              <Info className="h-5 w-5 text-amber-600" />
-              <AlertDescription className="text-amber-800 dark:text-amber-200">
+            <Alert className="max-w-2xl mx-auto bg-warning/10 border-warning/30 text-left">
+              <Info className="h-5 w-5 text-warning" />
+              <AlertDescription className="text-foreground/80">
                 <strong className="block mb-1">Important: This is a Guide Only</strong>
-                All cleaners on PureTask are independent contractors who set their own standards and methods. 
-                Nothing described on this page is mandatory. Each cleaner decides how they clean and what 
-                tasks they perform. We recommend discussing specific expectations directly with your cleaner 
+                All cleaners on PureTask are independent contractors who set their own standards and methods.
+                Nothing described on this page is mandatory. Each cleaner decides how they clean and what
+                tasks they perform. We recommend discussing specific expectations directly with your cleaner
                 before booking.
               </AlertDescription>
             </Alert>
