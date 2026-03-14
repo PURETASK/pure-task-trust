@@ -13,19 +13,20 @@ serve(async (req: Request) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const cronSecret = Deno.env.get("CRON_SECRET");
 
-  // Debug log to identify which key is available
-  console.log("SUPABASE_ANON_KEY available:", !!Deno.env.get("SUPABASE_ANON_KEY"));
-  console.log("SUPABASE_PUBLISHABLE_KEY available:", !!Deno.env.get("SUPABASE_PUBLISHABLE_KEY"));
-  console.log("CRON_SECRET available:", !!cronSecret);
-  
+  // Log partial keys for debugging (safe — only first/last 8 chars)
+  const anonPrefix = anonKey ? anonKey.substring(0, 8) : "none";
+  const anonSuffix = anonKey ? anonKey.substring(anonKey.length - 8) : "none";
+  console.log(`SUPABASE_ANON_KEY: ${anonPrefix}...${anonSuffix}`);
+
   const authHeader = req.headers.get("Authorization") || "";
-  const sentKey = authHeader.replace("Bearer ", "");
-  console.log("Sent key matches ANON:", sentKey === Deno.env.get("SUPABASE_ANON_KEY"));
-  console.log("Sent key matches PUBLISHABLE:", sentKey === Deno.env.get("SUPABASE_PUBLISHABLE_KEY"));
-  console.log("Sent key first 20 chars:", sentKey.substring(0, 20));
+  const sentKey = authHeader.replace("Bearer ", "").trim();
+  const sentPrefix = sentKey ? sentKey.substring(0, 8) : "none";
+  const sentSuffix = sentKey ? sentKey.substring(sentKey.length - 8) : "none";
+  console.log(`Received key: ${sentPrefix}...${sentSuffix}`);
+  console.log(`Keys match: ${sentKey === anonKey}`);
 
   if (!cronSecret) {
     return new Response(
@@ -36,7 +37,10 @@ serve(async (req: Request) => {
 
   if (!anonKey || sentKey !== anonKey) {
     return new Response(
-      JSON.stringify({ error: "Unauthorized", debug: { hasAnonKey: !!anonKey } }),
+      JSON.stringify({ 
+        error: "Unauthorized",
+        hint: `Expected key starting with: ${anonPrefix}` 
+      }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
