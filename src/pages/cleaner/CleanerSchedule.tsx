@@ -111,6 +111,8 @@ export default function CleanerSchedule() {
     <CleanerLayout>
       <Helmet><title>My Schedule | PureTask</title></Helmet>
       <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">My Schedule</h1>
           <Button variant="outline" asChild>
             <Link to="/cleaner/availability">
               <Settings className="h-4 w-4 mr-2" />
