@@ -1,20 +1,26 @@
 # PureTask Robots.txt
 
+# Allow all crawlers full access to public content
 User-agent: *
 Allow: /
 
-# Disallow private/authenticated areas
+# Never block assets, CSS, or JavaScript
+Allow: /assets/
+Allow: *.css
+Allow: *.js
+
+# Disallow private/authenticated client areas
 Disallow: /dashboard
 Disallow: /profile
 Disallow: /wallet
 Disallow: /messages
 Disallow: /properties
 Disallow: /favorites
-Disallow: /booking-status
-Disallow: /job-approval
-Disallow: /job-in-progress
+Disallow: /booking/
+Disallow: /job/
 Disallow: /reschedule-requests
-Disallow: /notification-settings
+Disallow: /settings/
+Disallow: /notifications
 
 # Disallow cleaner portal
 Disallow: /cleaner/
@@ -27,6 +33,22 @@ Disallow: /auth
 Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /role-selection
+
+# Allow GPTBot (ChatGPT / OpenAI) for AI visibility
+User-agent: GPTBot
+Allow: /
+
+# Allow PerplexityBot for AI search visibility
+User-agent: PerplexityBot
+Allow: /
+
+# Allow Google-Extended (Bard / Gemini)
+User-agent: Google-Extended
+Allow: /
+
+# Allow CCBot (Common Crawl — used by many AI training sets)
+User-agent: CCBot
+Allow: /
 
 # Sitemap
 Sitemap: https://pure-task-trust.lovable.app/sitemap.xml
