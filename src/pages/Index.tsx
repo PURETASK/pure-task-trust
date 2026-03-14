@@ -470,7 +470,7 @@ export default function Index() {
             <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
               <Star className="h-3 w-3 mr-1" /> Real Reviews
             </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">What our community says</h2>
+            <h2 id="testimonials-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold">What our community says</h2>
           </motion.div>
           <TestimonialsCarousel />
         </div>
