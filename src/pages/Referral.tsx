@@ -70,7 +70,7 @@ export default function Referral() {
               >
                 <Gift className="h-12 w-12 text-white" />
               </motion.div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-[hsl(var(--pt-purple))] bg-clip-text text-transparent">
                 Invite & Earn
               </h1>
               <p className="text-muted-foreground mt-3 text-lg">
