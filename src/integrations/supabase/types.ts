@@ -5587,6 +5587,11 @@ export type Database = {
           read_ct: number
         }[]
       }
+      vault_insert_cron_secret: {
+        Args: { secret_value: string }
+        Returns: undefined
+      }
+      vault_secret_exists: { Args: { secret_name: string }; Returns: boolean }
     }
     Enums: {
       actor_type_enum: "client" | "cleaner" | "admin" | "system"
