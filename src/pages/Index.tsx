@@ -328,7 +328,7 @@ export default function Index() {
               viewport={{ once: true }} whileHover={{ y: -4 }}
               className="relative overflow-hidden rounded-2xl sm:rounded-3xl group"
             >
-              <img src={cleanerImg} alt="Professional PureTask cleaner ready to start a verified cleaning job" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+              <img src={cleanerImg} alt="Professional PureTask cleaner ready to start a verified cleaning job" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
                 <Badge className="mb-2 sm:mb-3 bg-success/20 text-success border-success/30">For Cleaners</Badge>
