@@ -95,7 +95,9 @@ export function MobileBottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className="relative flex flex-col items-center justify-center flex-1 gap-0.5 transition-all duration-200 active:scale-95"
+              aria-label={item.label}
+              aria-current={active ? "page" : undefined}
+              className="relative flex flex-col items-center justify-center flex-1 gap-0.5 min-h-[48px] transition-all duration-200 active:scale-95"
             >
               {/* Active bar */}
               {active && (
