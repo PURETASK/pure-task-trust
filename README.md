@@ -38,7 +38,7 @@ Tests run automatically via GitHub Actions on every push and pull request:
 
 ## Project Info
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**URL**: https://pure-task-trust.lovable.app
 
 ## Technologies
 
