@@ -181,7 +181,7 @@ export default function CleanerDashboard() {
 
   return (
     <main className="flex-1 bg-background min-h-screen">
-      {/* ── HERO HEADER ─────────────────────────────────────────────────── */}
+      <Helmet><title>Cleaner Dashboard | PureTask</title></Helmet>
       <div className={`relative overflow-hidden bg-gradient-to-br ${tierStyle.gradient} border-b border-border/50`}>
         <div className="absolute inset-0 opacity-[0.03]">
           <img src={cleanerHeroImg} alt="" className="w-full h-full object-cover object-top" loading="lazy" />
