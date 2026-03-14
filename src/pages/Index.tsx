@@ -461,7 +461,7 @@ export default function Index() {
       </section>
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-background">
+      <section aria-labelledby="testimonials-heading" className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
