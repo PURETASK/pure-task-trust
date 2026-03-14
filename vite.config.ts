@@ -3,12 +3,18 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+  },
+  build: {
+    // "hidden" emits source maps but does not reference them in the bundle —
+    // Sentry uploads them at build time; they are never served to end users.
+    sourcemap: "hidden",
   },
   plugins: [
     react(),
@@ -47,6 +53,16 @@ export default defineConfig(({ mode }) => ({
         ],
       },
     }),
+    // Upload source maps to Sentry on production builds.
+    // Requires SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT env vars at build time.
+    // In dev / when auth token is absent the plugin is a no-op.
+    mode === "production" &&
+      process.env.SENTRY_AUTH_TOKEN &&
+      sentryVitePlugin({
+        org: process.env.SENTRY_ORG ?? "puretask",
+        project: process.env.SENTRY_PROJECT ?? "lovable_frontend_javascript-react",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      }),
   ].filter(Boolean),
   resolve: {
     alias: {
