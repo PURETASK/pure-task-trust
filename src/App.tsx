@@ -165,105 +165,101 @@ const App = () => (
                     </RequireAuth>
                   } />
 
-                  {/* All other routes with MainLayout */}
-                  <Route path="/*" element={
-                    <MainLayout>
-                      <Routes>
-                        {/* Public routes */}
-                        <Route path="/" element={<Index />} />
-                        <Route path="/legal" element={<Legal />} />
-                        <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
-                        <Route path="/cancellationpolicy" element={<Navigate to="/cancellation-policy" replace />} />
-                        <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
-                        <Route path="/pricing" element={<Pricing />} />
-                        <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />
-                        <Route path="/for-families" element={<ForFamilies />} />
-                        <Route path="/for-retirees" element={<ForRetirees />} />
-                        <Route path="/for-professionals" element={<ForProfessionals />} />
-                        <Route path="/cleaning-scope" element={<CleaningScope />} />
-                        <Route path="/about" element={<AboutUs />} />
-                        <Route path="/reviews" element={<Reviews />} />
-                        <Route path="/earnings-calculator" element={<EarningsCalculator />} />
-                        <Route path="/cost-estimator" element={<CostEstimator />} />
-                        <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
-                        <Route path="/checklists" element={<CleaningChecklists />} />
-                        <Route path="/ai-summary" element={<AISummary />} />
+                  {/* All other routes with MainLayout via layout route */}
+                  <Route element={<MainLayout />}>
+                    {/* Public routes */}
+                    <Route path="/" element={<Index />} />
+                    <Route path="/legal" element={<Legal />} />
+                    <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
+                    <Route path="/cancellationpolicy" element={<Navigate to="/cancellation-policy" replace />} />
+                    <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />
+                    <Route path="/for-families" element={<ForFamilies />} />
+                    <Route path="/for-retirees" element={<ForRetirees />} />
+                    <Route path="/for-professionals" element={<ForProfessionals />} />
+                    <Route path="/cleaning-scope" element={<CleaningScope />} />
+                    <Route path="/about" element={<AboutUs />} />
+                    <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/earnings-calculator" element={<EarningsCalculator />} />
+                    <Route path="/cost-estimator" element={<CostEstimator />} />
+                    <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
+                    <Route path="/checklists" element={<CleaningChecklists />} />
+                    <Route path="/ai-summary" element={<AISummary />} />
 
-                        {/* Admin routes */}
-                        <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
-                        <Route path="/admin/trust-safety" element={<RequireAdmin><TrustSafetyDashboard /></RequireAdmin>} />
-                        <Route path="/admin/bookings" element={<RequireAdmin><AdminBookingsConsole /></RequireAdmin>} />
-                        <Route path="/admin/client-jobs" element={<RequireAdmin><AdminClientJobs /></RequireAdmin>} />
-                        <Route path="/admin/pricing-rules" element={<RequireAdmin><AdminPricingRules /></RequireAdmin>} />
-                        <Route path="/admin/pricing" element={<RequireAdmin><AdminPricingManagement /></RequireAdmin>} />
-                        <Route path="/admin/ceo" element={<RequireAdmin><AdminCEODashboard /></RequireAdmin>} />
-                        <Route path="/admin/operations" element={<RequireAdmin><AdminOperationsDashboard /></RequireAdmin>} />
-                        <Route path="/admin/finance" element={<RequireAdmin><AdminFinanceDashboard /></RequireAdmin>} />
-                        <Route path="/admin/growth" element={<RequireAdmin><AdminGrowthDashboard /></RequireAdmin>} />
-                        <Route path="/admin/performance" element={<RequireAdmin><AdminPerformanceMetrics /></RequireAdmin>} />
-                        <Route path="/admin/fraud-alerts" element={<RequireAdmin><AdminFraudAlerts /></RequireAdmin>} />
-                        <Route path="/admin/disputes" element={<RequireAdmin><AdminDisputes /></RequireAdmin>} />
-                        <Route path="/admin/client-risk" element={<RequireAdmin><AdminClientRisk /></RequireAdmin>} />
-                        <Route path="/admin/trust-safety-reports" element={<RequireAdmin><AdminTrustSafetyReports /></RequireAdmin>} />
-                        <Route path="/admin/id-verifications" element={<RequireAdmin><AdminIDVerifications /></RequireAdmin>} />
-                        <Route path="/admin/conversions" element={<RequireAdmin><AdminConversionDashboard /></RequireAdmin>} />
-                        <Route path="/admin/geo-insights" element={<RequireAdmin><AdminGeoInsights /></RequireAdmin>} />
-                        <Route path="/admin/cohort-analysis" element={<RequireAdmin><AdminCohortAnalysis /></RequireAdmin>} />
-                        <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
-                        <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
-                        <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
-                        <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
+                    {/* Admin routes */}
+                    <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
+                    <Route path="/admin/trust-safety" element={<RequireAdmin><TrustSafetyDashboard /></RequireAdmin>} />
+                    <Route path="/admin/bookings" element={<RequireAdmin><AdminBookingsConsole /></RequireAdmin>} />
+                    <Route path="/admin/client-jobs" element={<RequireAdmin><AdminClientJobs /></RequireAdmin>} />
+                    <Route path="/admin/pricing-rules" element={<RequireAdmin><AdminPricingRules /></RequireAdmin>} />
+                    <Route path="/admin/pricing" element={<RequireAdmin><AdminPricingManagement /></RequireAdmin>} />
+                    <Route path="/admin/ceo" element={<RequireAdmin><AdminCEODashboard /></RequireAdmin>} />
+                    <Route path="/admin/operations" element={<RequireAdmin><AdminOperationsDashboard /></RequireAdmin>} />
+                    <Route path="/admin/finance" element={<RequireAdmin><AdminFinanceDashboard /></RequireAdmin>} />
+                    <Route path="/admin/growth" element={<RequireAdmin><AdminGrowthDashboard /></RequireAdmin>} />
+                    <Route path="/admin/performance" element={<RequireAdmin><AdminPerformanceMetrics /></RequireAdmin>} />
+                    <Route path="/admin/fraud-alerts" element={<RequireAdmin><AdminFraudAlerts /></RequireAdmin>} />
+                    <Route path="/admin/disputes" element={<RequireAdmin><AdminDisputes /></RequireAdmin>} />
+                    <Route path="/admin/client-risk" element={<RequireAdmin><AdminClientRisk /></RequireAdmin>} />
+                    <Route path="/admin/trust-safety-reports" element={<RequireAdmin><AdminTrustSafetyReports /></RequireAdmin>} />
+                    <Route path="/admin/id-verifications" element={<RequireAdmin><AdminIDVerifications /></RequireAdmin>} />
+                    <Route path="/admin/conversions" element={<RequireAdmin><AdminConversionDashboard /></RequireAdmin>} />
+                    <Route path="/admin/geo-insights" element={<RequireAdmin><AdminGeoInsights /></RequireAdmin>} />
+                    <Route path="/admin/cohort-analysis" element={<RequireAdmin><AdminCohortAnalysis /></RequireAdmin>} />
+                    <Route path="/admin/bulk-comms" element={<RequireAdmin><AdminBulkComms /></RequireAdmin>} />
+                    <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
+                    <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
+                    <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
 
-                        {/* Client routes */}
-                        <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
-                        <Route path="/discover" element={<Discover />} />
-                        <Route path="/cleaner/:id" element={<RequireClient><CleanerProfile /></RequireClient>} />
-                        <Route path="/book" element={<RequireClient><Book /></RequireClient>} />
-                        <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
-                        <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
-                        <Route path="/job/:id/approve" element={<RequireClient><JobApproval /></RequireClient>} />
-                        {/* Legacy alias → canonical path */}
-                        <Route path="/job-approval/:id" element={<Navigate to="/job/:id/approve" replace />} />
-                        <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
-                        <Route path="/messages" element={<RequireClient><Messages /></RequireClient>} />
-                        <Route path="/help" element={<Help />} />
-                        <Route path="/settings/notifications" element={<RequireAuth><NotificationSettings /></RequireAuth>} />
-                        <Route path="/notifications" element={<RequireAuth requireRole={false}><Notifications /></RequireAuth>} />
-                        <Route path="/properties" element={<RequireClient><Properties /></RequireClient>} />
-                        <Route path="/reschedule-requests" element={<RequireClient><RescheduleRequests /></RequireClient>} />
-                        <Route path="/referral" element={<RequireClient><Referral /></RequireClient>} />
-                        <Route path="/recurring-plans" element={<RequireClient><RecurringPlans /></RequireClient>} />
-                        <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
-                        <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
-                        <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
+                    {/* Client routes */}
+                    <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
+                    <Route path="/discover" element={<Discover />} />
+                    <Route path="/cleaner/:id" element={<RequireClient><CleanerProfile /></RequireClient>} />
+                    <Route path="/book" element={<RequireClient><Book /></RequireClient>} />
+                    <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
+                    <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
+                    <Route path="/job/:id/approve" element={<RequireClient><JobApproval /></RequireClient>} />
+                    {/* Legacy alias → canonical path */}
+                    <Route path="/job-approval/:id" element={<Navigate to="/job/:id/approve" replace />} />
+                    <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
+                    <Route path="/messages" element={<RequireClient><Messages /></RequireClient>} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/settings/notifications" element={<RequireAuth><NotificationSettings /></RequireAuth>} />
+                    <Route path="/notifications" element={<RequireAuth requireRole={false}><Notifications /></RequireAuth>} />
+                    <Route path="/properties" element={<RequireClient><Properties /></RequireClient>} />
+                    <Route path="/reschedule-requests" element={<RequireClient><RescheduleRequests /></RequireClient>} />
+                    <Route path="/referral" element={<RequireClient><Referral /></RequireClient>} />
+                    <Route path="/recurring-plans" element={<RequireClient><RecurringPlans /></RequireClient>} />
+                    <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
+                    <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
+                    <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
 
-                        {/* Cleaner routes */}
-                        <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
-                        <Route path="/cleaner/schedule" element={<RequireCleaner><CleanerSchedule /></RequireCleaner>} />
-                        <Route path="/cleaner/earnings" element={<RequireCleaner><CleanerEarnings /></RequireCleaner>} />
-                        <Route path="/cleaner/referral" element={<RequireCleaner><CleanerReferral /></RequireCleaner>} />
-                        <Route path="/cleaner/messages" element={<RequireCleaner><CleanerMessages /></RequireCleaner>} />
-                        <Route path="/cleaner/cancellation-policy" element={<RequireCleaner><CancellationPolicy /></RequireCleaner>} />
-                        <Route path="/cleaner/profile" element={<RequireCleaner><CleanerProfileSettings /></RequireCleaner>} />
-                        <Route path="/cleaner/profile/view" element={<RequireCleaner><CleanerProfileView /></RequireCleaner>} />
-                        <Route path="/cleaner/marketplace" element={<RequireCleaner><CleanerMarketplace /></RequireCleaner>} />
-                        <Route path="/cleaner/jobs" element={<RequireCleaner><CleanerJobs /></RequireCleaner>} />
-                        <Route path="/cleaner/jobs/:jobId" element={<RequireCleaner><CleanerJobDetail /></RequireCleaner>} />
-                        <Route path="/cleaner/analytics" element={<RequireCleaner><CleanerAnalytics /></RequireCleaner>} />
-                        <Route path="/cleaner/resources" element={<RequireCleaner><CleanerResources /></RequireCleaner>} />
-                        <Route path="/cleaner/availability" element={<RequireCleaner><CleanerAvailability /></RequireCleaner>} />
-                        <Route path="/cleaner/team" element={<RequireCleaner><CleanerTeam /></RequireCleaner>} />
-                        <Route path="/cleaner/service-areas" element={<RequireCleaner><CleanerServiceAreas /></RequireCleaner>} />
-                        <Route path="/cleaner/calendar-sync" element={<RequireCleaner><CleanerCalendarSync /></RequireCleaner>} />
-                        <Route path="/cleaner/verification" element={<RequireCleaner><CleanerVerification /></RequireCleaner>} />
-                        <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
-                        <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
-                        <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
+                    {/* Cleaner routes */}
+                    <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
+                    <Route path="/cleaner/schedule" element={<RequireCleaner><CleanerSchedule /></RequireCleaner>} />
+                    <Route path="/cleaner/earnings" element={<RequireCleaner><CleanerEarnings /></RequireCleaner>} />
+                    <Route path="/cleaner/referral" element={<RequireCleaner><CleanerReferral /></RequireCleaner>} />
+                    <Route path="/cleaner/messages" element={<RequireCleaner><CleanerMessages /></RequireCleaner>} />
+                    <Route path="/cleaner/cancellation-policy" element={<RequireCleaner><CancellationPolicy /></RequireCleaner>} />
+                    <Route path="/cleaner/profile" element={<RequireCleaner><CleanerProfileSettings /></RequireCleaner>} />
+                    <Route path="/cleaner/profile/view" element={<RequireCleaner><CleanerProfileView /></RequireCleaner>} />
+                    <Route path="/cleaner/marketplace" element={<RequireCleaner><CleanerMarketplace /></RequireCleaner>} />
+                    <Route path="/cleaner/jobs" element={<RequireCleaner><CleanerJobs /></RequireCleaner>} />
+                    <Route path="/cleaner/jobs/:jobId" element={<RequireCleaner><CleanerJobDetail /></RequireCleaner>} />
+                    <Route path="/cleaner/analytics" element={<RequireCleaner><CleanerAnalytics /></RequireCleaner>} />
+                    <Route path="/cleaner/resources" element={<RequireCleaner><CleanerResources /></RequireCleaner>} />
+                    <Route path="/cleaner/availability" element={<RequireCleaner><CleanerAvailability /></RequireCleaner>} />
+                    <Route path="/cleaner/team" element={<RequireCleaner><CleanerTeam /></RequireCleaner>} />
+                    <Route path="/cleaner/service-areas" element={<RequireCleaner><CleanerServiceAreas /></RequireCleaner>} />
+                    <Route path="/cleaner/calendar-sync" element={<RequireCleaner><CleanerCalendarSync /></RequireCleaner>} />
+                    <Route path="/cleaner/verification" element={<RequireCleaner><CleanerVerification /></RequireCleaner>} />
+                    <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
+                    <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
+                    <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
 
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </MainLayout>
-                  } />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
                 </Routes>
               </Suspense>
             </BrowserRouter>
