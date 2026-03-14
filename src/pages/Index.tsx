@@ -477,7 +477,8 @@ export default function Index() {
       </section>
 
       {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 relative overflow-hidden">
+      {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
+      <section aria-label="Call to action — get started" className="py-16 sm:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-[hsl(var(--pt-aqua)/0.05)]" />
         <div className="container relative z-10 text-center">
           <motion.div
