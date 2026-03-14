@@ -16,9 +16,15 @@
  * withCronMonitor sends a check-in at start (IN_PROGRESS) and a final
  * check-in (OK or ERROR) when the job finishes, exactly as denoCronIntegration
  * does for native Deno.cron() jobs.
+ *
+ * NOTE: We use npm:@sentry/deno (the official, non-deprecated SDK) but with
+ * defaultIntegrations:false to prevent Node.js-only transitive deps (call-bound
+ * etc.) from being bundled by the Supabase edge runtime.  Only the lightweight
+ * denoCronIntegration is added back explicitly.
  */
 
-import * as Sentry from "https://deno.land/x/sentry/index.mjs";
+// deno-lint-ignore-file no-explicit-any
+import * as Sentry from "npm:@sentry/deno@8.55.0";
 
 let initialised = false;
 
@@ -36,7 +42,12 @@ function init() {
     dsn,
     environment: Deno.env.get("SENTRY_ENVIRONMENT") ?? "production",
 
-    // denoCronIntegration auto-instruments native Deno.cron() jobs.
+    // defaultIntegrations:false prevents Node.js-only integrations from loading.
+    // These pull in transitive deps (call-bound, side-channel, etc.) that use
+    // syntax the Supabase edge runtime cannot parse.
+    defaultIntegrations: false,
+
+    // denoCronIntegration is pure Deno — safe to add explicitly.
     // Our edge functions are HTTP-triggered (pg_cron → net.http_post),
     // so we pair it with manual withCronMonitor() wrappers below.
     integrations: [Sentry.denoCronIntegration()],
