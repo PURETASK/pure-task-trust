@@ -194,6 +194,26 @@ export default function Index() {
               </motion.div>
             ))}
           </div>
+
+          {/* Contextual links to key trust pages */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-10 sm:mt-14 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm"
+          >
+            <Link to="/reliability-score" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
+              <Award className="h-4 w-4" /> How our cleaner reliability score works
+            </Link>
+            <Link to="/pricing" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
+              <CreditCard className="h-4 w-4" /> View transparent pricing &amp; tiers
+            </Link>
+            <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
+              <CheckCircle className="h-4 w-4" /> See exactly what's included in every clean
+            </Link>
+            <Link to="/reviews" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
+              <Star className="h-4 w-4" /> Read verified customer reviews
+            </Link>
+          </motion.div>
         </div>
       </section>
 
