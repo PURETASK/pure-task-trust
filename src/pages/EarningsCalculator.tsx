@@ -298,8 +298,8 @@ export default function EarningsCalculator() {
                   <p className="font-bold text-lg">{t.icon} {t.name}</p>
                   <p className="text-xs text-muted-foreground mb-3">Score {t.range[0]}–{t.range[1]}</p>
                   <p className="text-2xl font-bold text-success">${Math.round(annualEst).toLocaleString()}</p>
-                  <p className="text-xs text-muted-foreground">est. annual</p>
-                  <Badge className="mt-2 text-xs" variant="outline">{(t.fee * 100).toFixed(0)}% fee</Badge>
+              <p className="text-xs text-muted-foreground">est. annual</p>
+                  <Badge className="mt-2 text-xs" variant="outline">{(t.fee * 100).toFixed(0)}% platform fee</Badge>
                 </div>
               );
             })}
