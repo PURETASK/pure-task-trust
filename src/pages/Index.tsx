@@ -427,7 +427,7 @@ export default function Index() {
       </section>
 
       {/* ── WHO IS IT FOR ─────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-muted/30">
+      <section aria-labelledby="audience-heading" className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
