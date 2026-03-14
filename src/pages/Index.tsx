@@ -363,7 +363,7 @@ export default function Index() {
                 {i < STEPS.length - 1 &&
               <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
               }
-                <div className="text-5xl sm:text-6xl font-black text-primary/10 mb-2 sm:mb-3 leading-none">{s.step}</div>
+                <div className="text-5xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
                 <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
