@@ -146,6 +146,8 @@ const App = () => (
                     <Route path="/cleaning-scope" element={<CleaningScope />} />
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/earnings-calculator" element={<EarningsCalculator />} />
+                    <Route path="/cost-estimator" element={<CostEstimator />} />
                     
                     {/* Admin routes - protected by RequireAdmin (server-side role check) */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
