@@ -152,7 +152,8 @@ export function useCleanerOnboarding() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       goToNextStep();
     },
   });
