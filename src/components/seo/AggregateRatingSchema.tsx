@@ -1,7 +1,7 @@
 import { usePlatformStats } from "@/hooks/usePlatformStats";
 import { JsonLd } from "./JsonLd";
 
-const BASE_URL = "https://pure-task-trust.lovable.app";
+const BASE_URL = "https://puretask.co";
 
 export function AggregateRatingSchema() {
   const { data: stats } = usePlatformStats();

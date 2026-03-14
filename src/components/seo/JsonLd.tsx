@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-const BASE_URL = 'https://pure-task-trust.lovable.app';
+const BASE_URL = 'https://puretask.co';
 
 // ─── Generic passthrough ───────────────────────────────────────────────
 interface JsonLdProps {
