@@ -31,121 +31,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session first, then set up listener
+    // Initialise from existing session, then subscribe to changes
     supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
       setSession(existingSession);
       if (existingSession?.user) {
-        // Await profile fetch before clearing loading state
         fetchUserProfile(existingSession.user).finally(() => setIsLoading(false));
       } else {
         setIsLoading(false);
       }
     });
 
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      async (_event, currentSession) => {
         setSession(currentSession);
 
         if (currentSession?.user) {
-          // Handle Google OAuth role persistence for new users
-          if (event === 'SIGNED_IN') {
-            const pendingRole = localStorage.getItem('pendingOAuthRole') as UserRole | null;
-            if (pendingRole) {
-              // Check if role already exists in DB
-              const { data: existingRole } = await supabase
-                .from('user_roles')
-                .select('role')
-                .eq('user_id', currentSession.user.id)
-                .maybeSingle();
-
-              if (!existingRole) {
-                await supabase.from('user_roles').insert({
-                  user_id: currentSession.user.id,
-                  role: pendingRole,
-                });
-                // Also create appropriate profile
-                if (pendingRole === 'cleaner') {
-                  await supabase.from('cleaner_profiles').upsert(
-                    { user_id: currentSession.user.id, first_name: currentSession.user.user_metadata?.full_name },
-                    { onConflict: 'user_id' }
-                  );
-                } else {
-                  await supabase.from('client_profiles').upsert(
-                    { user_id: currentSession.user.id, first_name: currentSession.user.user_metadata?.full_name },
-                    { onConflict: 'user_id' }
-                  );
-                  await supabase.from('credit_accounts').upsert(
-                    { user_id: currentSession.user.id },
-                    { onConflict: 'user_id' }
-                  );
-                }
-              }
-              localStorage.removeItem('pendingOAuthRole');
-            }
-
-            // Send welcome email for new signups
-            const createdAt = new Date(currentSession.user.created_at);
-            const isNewUser = (Date.now() - createdAt.getTime()) < 60000;
-            if (isNewUser) {
-              const userRole = currentSession.user.user_metadata?.role as UserRole;
-              if (userRole) {
-                sendWelcomeEmail(currentSession.user.id, userRole, currentSession.user.email);
-              }
-            }
-          }
-
-          // Await profile fetch before clearing loading state to prevent auth flashes
           await fetchUserProfile(currentSession.user);
         } else {
           setUser(null);
         }
 
         setIsLoading(false);
-      }
+      },
     );
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const sendWelcomeEmail = async (userId: string, role: UserRole, email?: string) => {
-    try {
-      const template = role === 'cleaner' ? 'welcome_cleaner' : 'welcome_client';
-      supabase.functions.invoke('send-email', {
-        body: {
-          to: email,
-          template,
-          data: {
-            name: email?.split('@')[0] || 'there',
-          },
-        },
-      }).then(({ error }) => {
-        if (error) {
-          console.error('Failed to send welcome email:', error);
-        } else {
-          console.log('Welcome email sent successfully');
-        }
-      });
-    } catch (error) {
-      console.error('Error triggering welcome email:', error);
-    }
-  };
-
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
-      // Get user role
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', supabaseUser.id)
-        .maybeSingle();
-
-      // Get profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('full_name, avatar_url')
-        .eq('id', supabaseUser.id)
-        .maybeSingle();
+      const [{ data: roleData }, { data: profileData }] = await Promise.all([
+        supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', supabaseUser.id)
+          .maybeSingle(),
+        supabase
+          .from('profiles')
+          .select('full_name, avatar_url')
+          .eq('id', supabaseUser.id)
+          .maybeSingle(),
+      ]);
 
       setUser({
         id: supabaseUser.id,
@@ -156,7 +82,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
-      // Set basic user info even if profile fetch fails
       setUser({
         id: supabaseUser.id,
         email: supabaseUser.email || '',
@@ -168,26 +93,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) {
-        return { error: error.message };
-      }
-      
-      return {};
-    } catch (error) {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      return error ? { error: error.message } : {};
+    } catch {
       return { error: 'Login failed' };
     }
   };
 
   const signup = async (
-    email: string, 
-    password: string, 
+    email: string,
+    password: string,
     role: UserRole,
-    fullName?: string
+    fullName?: string,
   ): Promise<{ error?: string }> => {
     try {
       const { error } = await supabase.auth.signUp({
@@ -200,13 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         },
       });
-      
-      if (error) {
-        return { error: error.message };
-      }
-      
-      return {};
-    } catch (error) {
+      return error ? { error: error.message } : {};
+    } catch {
       return { error: 'Signup failed' };
     }
   };
@@ -219,39 +131,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithGoogle = async (role?: UserRole): Promise<{ error?: string }> => {
     try {
-      // Store selected role in localStorage only for new sign-ups (when role is provided)
+      // Persist selected role so usePostSignup can pick it up after the OAuth redirect
       if (role) {
         localStorage.setItem('pendingOAuthRole', role);
       } else {
         localStorage.removeItem('pendingOAuthRole');
       }
-      
-      const redirectUrl = `${window.location.origin}/`;
-      console.log('Google OAuth: Initiating with redirect to:', redirectUrl);
-      
-      const { data, error } = await supabase.auth.signInWithOAuth({
+
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: `${window.location.origin}/`,
           queryParams: {
             access_type: 'offline',
             prompt: 'select_account',
           },
         },
       });
-      
+
       if (error) {
-        console.error('Google OAuth error:', error);
         localStorage.removeItem('pendingOAuthRole');
         return { error: error.message };
       }
-      
-      console.log('Google OAuth: Redirect initiated', data);
+
       return {};
-    } catch (error: any) {
-      console.error('Google OAuth exception:', error);
+    } catch (err: any) {
       localStorage.removeItem('pendingOAuthRole');
-      return { error: error?.message || 'Google login failed' };
+      return { error: err?.message || 'Google login failed' };
     }
   };
 
