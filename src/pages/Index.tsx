@@ -183,7 +183,7 @@ export default function Index() {
       </section>
 
       {/* ── STATS BAR ─────────────────────────────────────────────────────── */}
-      <section className="bg-primary py-8 sm:py-10">
+      <section className="cv-auto bg-primary py-8 sm:py-10">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {STATS.map((s, i) => (
