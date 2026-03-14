@@ -2,13 +2,12 @@
 import "./instrument";
 
 import { createRoot } from "react-dom/client";
-import { reactErrorHandler } from "@sentry/react";
+import * as Sentry from "@sentry/react";
 import App from "./App.tsx";
 import "./index.css";
 
-createRoot(document.getElementById("root")!, {
-  // React 18: capture all uncaught / caught / recoverable errors in Sentry
-  onUncaughtError: reactErrorHandler({ logErrors: true }),
-  onCaughtError: reactErrorHandler({ logErrors: true }),
-  onRecoverableError: reactErrorHandler(),
-}).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <Sentry.ErrorBoundary fallback={<p>An unexpected error occurred.</p>} showDialog>
+    <App />
+  </Sentry.ErrorBoundary>
+);

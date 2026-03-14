@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
@@ -6,26 +6,16 @@ import { VitePWA } from "vite-plugin-pwa";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  build: {
-    // "hidden" emits source maps but does not reference them in the bundle —
-    // Sentry uploads them at build time; they are never served to end users.
-    sourcemap: "hidden",
-  },
-  plugins: [
+export default defineConfig(({ mode }) => {
+  const plugins: PluginOption[] = [
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "icons/*.png"],
-      manifest: false, // Use external manifest.json
+      manifest: false,
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
-        // Increase limit to 3MB to handle large bundle
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
@@ -33,10 +23,7 @@ export default defineConfig(({ mode }) => ({
             handler: "CacheFirst",
             options: {
               cacheName: "google-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
             },
           },
           {
@@ -44,33 +31,39 @@ export default defineConfig(({ mode }) => ({
             handler: "CacheFirst",
             options: {
               cacheName: "gstatic-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
             },
           },
         ],
       },
     }),
-    // Upload source maps to Sentry on production builds.
-    // Requires SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT env vars at build time.
-    // In dev / when auth token is absent the plugin is a no-op.
-    mode === "production" &&
-      process.env.SENTRY_AUTH_TOKEN &&
+  ];
+
+  // Upload source maps to Sentry on production builds only.
+  // Requires SENTRY_AUTH_TOKEN env var at build time.
+  if (mode === "production" && process.env.SENTRY_AUTH_TOKEN) {
+    plugins.push(
       sentryVitePlugin({
         org: process.env.SENTRY_ORG ?? "puretask",
         project: process.env.SENTRY_PROJECT ?? "lovable_frontend_javascript-react",
         authToken: process.env.SENTRY_AUTH_TOKEN,
-      }),
-  ].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+      })
+    );
+  }
+
+  return {
+    server: { host: "::", port: 8080 },
+    build: {
+      // Hidden source maps: emitted for Sentry upload but NOT referenced in the bundle
+      sourcemap: "hidden",
     },
-    dedupe: ["react", "react-dom", "react/jsx-runtime"],
-  },
-  optimizeDeps: {
-    include: ["react", "react-dom", "@tanstack/react-query"],
-  },
-}));
+    plugins,
+    resolve: {
+      alias: { "@": path.resolve(__dirname, "./src") },
+      dedupe: ["react", "react-dom", "react/jsx-runtime"],
+    },
+    optimizeDeps: {
+      include: ["react", "react-dom", "@tanstack/react-query"],
+    },
+  };
+});
