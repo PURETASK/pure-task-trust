@@ -363,6 +363,7 @@ export function AppSidebar() {
           ))}
         </SidebarContent>
       </Sidebar>
+      </nav>
     </TooltipProvider>
   );
 }
