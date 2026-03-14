@@ -3,26 +3,21 @@ import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Calendar, Clock, Star, Heart, Repeat, Trash2, Check,
-  Sparkles, MessageCircle, RotateCcw, HelpCircle, Zap, MapPin,
-  TrendingUp, CreditCard, Home, Search, Gift, Settings, Users,
-  ChevronRight, AlertCircle, Bell, ArrowRight, Camera, Shield,
+  Sparkles, MessageCircle, RotateCcw, Zap,
+  TrendingUp, CreditCard, Home, Search, Gift,
+  ChevronRight, AlertCircle, ArrowRight,
   Wallet, BookOpen
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useClientJobs } from "@/hooks/useJob";
-import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
-import { useRecurringBookings } from "@/hooks/useRecurringBookings";
-import { useAuth } from "@/contexts/AuthContext";
-import { useWallet } from "@/hooks/useWallet";
-import { format, isToday, isTomorrow } from "date-fns";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
 import { InviteFriendsCTA } from "@/components/referral";
 import { LoyaltyTracker } from "@/components/loyalty/LoyaltyTracker";
 import { Skeleton } from "@/components/ui/skeleton";
 import clientHeroImg from "@/assets/client-hero.jpg";
+import { useClientDashboard } from "@/hooks/useClientDashboard";
 
 const QUICK_ACTIONS = [
   { icon: Plus, label: "Book a Clean", href: "/book", color: "bg-primary text-primary-foreground", desc: "Schedule your next visit", priority: true },
@@ -49,36 +44,31 @@ function getStatusBadge(status: string) {
 
 function getDateLabel(dateStr: string) {
   const d = new Date(dateStr);
-  if (isToday(d)) return <span className="text-primary font-semibold">Today</span>;
-  if (isTomorrow(d)) return <span className="text-warning font-semibold">Tomorrow</span>;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+  const day = new Date(d); day.setHours(0,0,0,0);
+  if (day.getTime() === today.getTime()) return <span className="text-primary font-semibold">Today</span>;
+  if (day.getTime() === tomorrow.getTime()) return <span className="text-warning font-semibold">Tomorrow</span>;
   return <span>{format(d, "EEE, MMM d")}</span>;
 }
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"upcoming" | "approval" | "past" | "favorites" | "recurring">("upcoming");
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { data: jobs, isLoading } = useClientJobs();
-  const { data: favorites, isLoading: loadingFavorites } = useFavorites();
-  const { data: recurring } = useRecurringBookings();
-  const { removeFavorite } = useFavoriteActions();
-  const { account } = useWallet();
 
-  const upcomingJobs = jobs?.filter(j => ["created", "pending", "confirmed", "in_progress"].includes(j.status)) ?? [];
-  const pendingApprovalJobs = jobs?.filter(j => j.status === "completed" && j.final_charge_credits == null) ?? [];
-  const pastJobs = jobs?.filter(j => (j.status === "completed" && j.final_charge_credits != null) || j.status === "cancelled") ?? [];
-  const todayJobs = upcomingJobs.filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)));
-
-  const firstName = user?.name?.split(" ")[0] || "there";
-  const balance = account?.current_balance ?? 0;
-
-  const pastWithCleaner = jobs?.filter(j => j.status === "completed" && j.cleaner_id && j.cleaner) ?? [];
-  const seen = new Set<string>();
-  const recentCleaners = pastWithCleaner.filter(j => {
-    if (!j.cleaner_id || seen.has(j.cleaner_id)) return false;
-    seen.add(j.cleaner_id);
-    return true;
-  }).slice(0, 4);
+  const {
+    favorites,
+    recurring,
+    upcomingJobs,
+    pendingApprovalJobs,
+    pastJobs,
+    todayJobs,
+    recentCleaners,
+    firstName,
+    balance,
+    isLoading,
+    loadingFavorites,
+    removeFavorite,
+  } = useClientDashboard();
 
   return (
     <main className="flex-1 bg-background min-h-screen">
