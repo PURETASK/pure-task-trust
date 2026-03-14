@@ -34,20 +34,41 @@ Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /role-selection
 
-# Allow GPTBot (ChatGPT / OpenAI) for AI visibility
+# ─── AI & LLM Crawlers ───────────────────────────────────────────────
+
+# Allow GPTBot (ChatGPT / OpenAI)
 User-agent: GPTBot
 Allow: /
 
-# Allow PerplexityBot for AI search visibility
+# Allow OAI-SearchBot (OpenAI SearchGPT)
+User-agent: OAI-SearchBot
+Allow: /
+
+# Allow PerplexityBot
 User-agent: PerplexityBot
 Allow: /
 
-# Allow Google-Extended (Bard / Gemini)
+# Allow Google-Extended (Gemini / Bard)
 User-agent: Google-Extended
+Allow: /
+
+# Allow Claude / Anthropic crawlers
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
 Allow: /
 
 # Allow CCBot (Common Crawl — used by many AI training sets)
 User-agent: CCBot
+Allow: /
+
+# Allow Meta AI crawler
+User-agent: FacebookBot
+Allow: /
+
+# Allow Applebot (Apple Intelligence / Siri)
+User-agent: Applebot
 Allow: /
 
 # Sitemap

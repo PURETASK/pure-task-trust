@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SEO } from '@/components/seo';
+import { HowToSchema, BreadcrumbSchema } from '@/components/seo/JsonLd';
 import { Link } from 'react-router-dom';
 
 type ChecklistKey = 'weekly' | 'deep' | 'moveout' | 'airbnb';
@@ -241,6 +242,20 @@ export default function CleaningChecklists() {
         description="Free printable cleaning checklists for weekly maintenance, deep cleans, move-out inspections, and Airbnb turnovers. Interactive, copy-able, and print-ready."
         url="/checklists"
       />
+      <HowToSchema
+        name="How to Deep Clean a House — Complete Step-by-Step Checklist"
+        description="A complete room-by-room deep cleaning checklist covering kitchen, bathrooms, bedrooms, and living areas. Includes time estimates and professional tips."
+        url="/checklists"
+        totalTime="PT6H"
+        steps={[
+          { name: 'Kitchen', text: 'Clean oven inside and out, degrease rangehood, empty and clean fridge, scrub sink and faucet, clean inside all cabinets.' },
+          { name: 'Bathrooms', text: 'Descale showerhead and taps, scrub grout, clean exhaust fan, polish mirrors and chrome, mop floors.' },
+          { name: 'Bedrooms', text: 'Vacuum mattress, clean under furniture, wipe wardrobe interiors, clean window sills and tracks.' },
+          { name: 'Living Areas', text: 'Dust ceiling fans, clean interior windows, vacuum under furniture, spot clean walls, polish floors.' },
+          { name: 'General', text: 'Clean all air vents, wipe door frames, disinfect high-touch surfaces throughout.' },
+        ]}
+      />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Cleaning Checklists', url: '/checklists' }]} />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">

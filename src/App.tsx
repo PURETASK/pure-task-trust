@@ -71,6 +71,7 @@ import EarningsCalculator from "./pages/EarningsCalculator";
 import CostEstimator from "./pages/CostEstimator";
 import CleaningIndustryStats from "./pages/CleaningIndustryStats";
 import CleaningChecklists from "./pages/CleaningChecklists";
+import AISummary from "./pages/AISummary";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
@@ -152,6 +153,7 @@ const App = () => (
                     <Route path="/cost-estimator" element={<CostEstimator />} />
                     <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
                     <Route path="/checklists" element={<CleaningChecklists />} />
+                    <Route path="/ai-summary" element={<AISummary />} />
                     
                     {/* Admin routes - protected by RequireAdmin (server-side role check) */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
