@@ -498,7 +498,7 @@ export default function Index() {
               <Button size="lg" asChild className="text-base px-6 sm:px-10 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">Book Your First Clean <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl w-full xs:w-auto">
+              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl w-full xs:w-auto border-2 border-success text-success hover:bg-success/10">
                 <Link to="/auth?role=cleaner">Earn as a Cleaner</Link>
               </Button>
             </div>
