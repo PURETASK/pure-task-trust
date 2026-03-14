@@ -120,6 +120,7 @@ export default function CostEstimator() {
       <SEO
         title="House Cleaning Cost Estimator — Instant Pricing for Your Home"
         description="Get an instant, transparent estimate for professional home cleaning. Enter your home size, clean type, and frequency to see exact pricing with no hidden fees."
+        image="/og/og-cost-estimator.jpg"
         url="/cost-estimator"
       />
       <WebApplicationSchema

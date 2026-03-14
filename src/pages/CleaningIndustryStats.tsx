@@ -130,6 +130,7 @@ export default function CleaningIndustryStats() {
       <SEO
         title="Cleaning Industry Statistics 2025 — Market Data, Earnings & Trends"
         description="Comprehensive, citable cleaning industry statistics for 2025. Market size, cleaner earnings by tier, consumer booking behavior, and platform growth trends."
+        image="/og/og-industry-stats.jpg"
         url="/cleaning-industry-stats"
       />
       <DatasetSchema

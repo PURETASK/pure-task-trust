@@ -37,7 +37,7 @@ const QUICK_WINS = [
 export default function ReliabilityScoreExplained() {
   return (
     <main className="min-h-screen bg-background">
-      <SEO title="Reliability Score Explained" description="Discover how PureTask's reliability score ranks cleaners on punctuality, photo compliance, and client ratings. Higher score means better jobs and pay." url="/reliability-score" />
+      <SEO title="Reliability Score Explained — How PureTask Ranks Cleaners" description="Discover how PureTask's Reliability Score ranks cleaners on punctuality, photo compliance, and client ratings. Bronze to Platinum — higher score means better jobs and pay." url="/reliability-score" image="/og/og-reliability-score.jpg" />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">

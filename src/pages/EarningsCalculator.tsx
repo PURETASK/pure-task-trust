@@ -60,6 +60,7 @@ export default function EarningsCalculator() {
       <SEO
         title="Cleaner Earnings Calculator — How Much Can You Earn on PureTask?"
         description="Use our free interactive calculator to estimate your annual cleaning income on PureTask. Adjust hours, rates, and your reliability tier to see real projections."
+        image="/og/og-earnings-calculator.jpg"
         url="/earnings-calculator"
       />
       <WebApplicationSchema
