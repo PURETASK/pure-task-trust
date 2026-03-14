@@ -47,7 +47,7 @@ export default function AboutUs() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[70vh] flex items-center">
         <div className="absolute inset-0">
-          <img src={heroLandingImg} alt="PureTask" className="w-full h-full object-cover" />
+          <img src={heroLandingImg} alt="Bright, freshly cleaned living room with natural light" className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/97 via-background/85 to-background/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
         </div>
