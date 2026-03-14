@@ -14,37 +14,37 @@ import clientImg from "@/assets/client-hero.jpg";
 import {
   Shield, Star, Camera, MapPin, Clock, CreditCard, ArrowRight,
   CheckCircle, Sparkles, Users, TrendingUp, Heart, Repeat, Zap,
-  ChevronDown, Quote, Award, Lock, Phone, Calendar
-} from "lucide-react";
+  ChevronDown, Quote, Award, Lock, Phone, Calendar } from
+"lucide-react";
 import { useRef } from "react";
 
 const TRUST_PILLARS = [
-  { icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10" },
-  { icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10" },
-  { icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]" },
-  { icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10" },
-];
+{ icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10" },
+{ icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10" },
+{ icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]" },
+{ icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10" }];
+
 
 const AUDIENCE = [
-  { emoji: "🏠", label: "Homeowners", href: "/for-families", desc: "Spotless home, every time" },
-  { emoji: "✈️", label: "Airbnb Hosts", href: "/for-airbnb-hosts", desc: "Turnover-ready in hours" },
-  { emoji: "💼", label: "Professionals", href: "/for-professionals", desc: "Reclaim your weekends" },
-  { emoji: "👴", label: "Seniors", href: "/for-retirees", desc: "Safe, trusted, reliable" },
-];
+{ emoji: "🏠", label: "Homeowners", href: "/for-families", desc: "Spotless home, every time" },
+{ emoji: "✈️", label: "Airbnb Hosts", href: "/for-airbnb-hosts", desc: "Turnover-ready in hours" },
+{ emoji: "💼", label: "Professionals", href: "/for-professionals", desc: "Reclaim your weekends" },
+{ emoji: "👴", label: "Seniors", href: "/for-retirees", desc: "Safe, trusted, reliable" }];
+
 
 const STEPS = [
-  { step: "01", icon: Calendar, title: "Book in 60 seconds", desc: "Pick type, hours, date. Done." },
-  { step: "02", icon: Users, title: "Get matched", desc: "We find the best verified cleaner for your job." },
-  { step: "03", icon: CheckCircle, title: "They clean", desc: "GPS tracked with photo proof throughout." },
-  { step: "04", icon: Heart, title: "You approve & pay", desc: "Release payment only when you're 100% happy." },
-];
+{ step: "01", icon: Calendar, title: "Book in 60 seconds", desc: "Pick type, hours, date. Done." },
+{ step: "02", icon: Users, title: "Get matched", desc: "We find the best verified cleaner for your job." },
+{ step: "03", icon: CheckCircle, title: "They clean", desc: "GPS tracked with photo proof throughout." },
+{ step: "04", icon: Heart, title: "You approve & pay", desc: "Release payment only when you're 100% happy." }];
+
 
 const STATS = [
-  { value: "10K+", label: "Happy Clients" },
-  { value: "4.9★", label: "Average Rating" },
-  { value: "98%", label: "Satisfaction Rate" },
-  { value: "2,400+", label: "Verified Cleaners" },
-];
+{ value: "10K+", label: "Happy Clients" },
+{ value: "4.9★", label: "Average Rating" },
+{ value: "98%", label: "Satisfaction Rate" },
+{ value: "2,400+", label: "Verified Cleaners" }];
+
 
 export default function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -59,89 +59,89 @@ export default function Index() {
       {/* ── SCHEMA: Consolidated @graph — one <script> tag for the homepage ── */}
       <AggregateRatingSchema />
       <JsonLdGraph nodes={[
-        {
-          '@type': 'Organization',
-          '@id': 'https://puretask.co/#organization',
-          name: 'PureTask',
-          url: 'https://puretask.co',
-          logo: 'https://puretask.co/icons/icon-192x192.png',
-          description: 'PureTask is a trusted cleaning services marketplace connecting clients with verified, background-checked independent cleaners. GPS check-ins, before/after photo documentation, and escrow payment protection are built into every booking.',
-          contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service', availableLanguage: 'English' },
-          sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask', 'https://instagram.com/puretask'],
-          foundingDate: '2024',
-          areaServed: { '@type': 'Country', name: 'United States' },
-        },
-        {
-          '@type': 'LocalBusiness',
-          '@id': 'https://puretask.co/#business',
-          name: 'PureTask',
-          url: 'https://puretask.co',
-          image: 'https://puretask.co/og/puretask-og.png',
-          description: 'Professional cleaning services marketplace with GPS verification and photo documentation.',
-          priceRange: '$$',
-          address: { '@type': 'PostalAddress', addressCountry: 'US' },
-          areaServed: { '@type': 'Country', name: 'United States' },
-          serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover Cleaning'],
-          currenciesAccepted: 'USD',
-          paymentAccepted: 'Credit Card, Debit Card',
-          openingHours: 'Mo-Su 00:00-23:59',
-        },
-        {
-          '@type': 'WebSite',
-          '@id': 'https://puretask.co/#website',
-          url: 'https://puretask.co',
-          name: 'PureTask',
-          description: 'Book verified cleaners online with transparent pricing and escrow payment.',
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: { '@type': 'EntryPoint', urlTemplate: 'https://puretask.co/discover?q={search_term_string}' },
-            'query-input': 'required name=search_term_string',
-          },
-        },
-        {
-          '@type': 'Service',
-          '@id': 'https://puretask.co/#service',
-          name: 'PureTask Cleaning Services',
-          serviceType: 'House Cleaning',
-          description: 'Book background-checked, GPS-verified, independently insured cleaners for standard, deep, move-out, or Airbnb turnover cleans. Credits-based pricing: 1 credit = $1 USD. Cleaners earn 80–85% of each booking.',
-          provider: { '@type': 'Organization', '@id': 'https://puretask.co/#organization' },
-          areaServed: { '@type': 'Country', name: 'United States' },
-          hasOfferCatalog: {
-            '@type': 'OfferCatalog',
-            name: 'Cleaning Service Types',
-            itemListElement: [
-              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Standard Clean', description: 'Regular maintenance cleaning — dusting, vacuuming, mopping, kitchen and bathroom surfaces.' } },
-              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Deep Clean', description: 'Thorough top-to-bottom cleaning including inside appliances, baseboards, light fixtures, and all surfaces.' } },
-              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Move-Out Clean', description: 'Comprehensive cleaning for end-of-tenancy or property handover, including inside cabinets, walls, and fixtures.' } },
-              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Airbnb Turnover Clean', description: 'Fast turnaround cleaning between guest stays with linen change, restocking, and photo documentation.' } },
-            ],
-          },
-        },
-        {
-          '@type': 'HowTo',
-          '@id': 'https://puretask.co/#howto',
-          name: 'How to Book a Cleaning on PureTask',
-          description: 'Book a verified, background-checked cleaner in four simple steps using the PureTask platform.',
-          totalTime: 'PT2M',
-          step: [
-            { '@type': 'HowToStep', position: 1, name: 'Book in 60 seconds', text: 'Select your cleaning type (standard, deep, move-out, or Airbnb turnover), choose the number of hours, and pick your preferred date and time.' },
-            { '@type': 'HowToStep', position: 2, name: 'Get matched to a verified cleaner', text: 'PureTask matches you with a background-checked, GPS-verified cleaner available in your area. View cleaner profiles and ratings before confirming.' },
-            { '@type': 'HowToStep', position: 3, name: 'Cleaner arrives and cleans', text: 'Your cleaner checks in via GPS on arrival. Before-and-after photos are taken throughout the job for full documentation.' },
-            { '@type': 'HowToStep', position: 4, name: 'You approve and pay', text: 'Review the photo proof and approve the work. Credits are only deducted from your escrow hold when you are 100% satisfied.' },
-          ],
-        },
-        {
-          '@type': 'FAQPage',
-          '@id': 'https://puretask.co/#faq',
-          mainEntity: [
-            { '@type': 'Question', name: 'How much does a cleaning cost on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'PureTask uses a credits system where 1 credit = $1 USD. Cleaners set their own hourly rate, typically ranging from $25–$60/hour depending on their tier. You only pay for actual hours worked, and unused credits never expire.' } },
-            { '@type': 'Question', name: 'Are PureTask cleaners background checked?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every cleaner on PureTask undergoes a thorough background check and identity verification before their first job. Cleaners also maintain a reliability score based on punctuality, photo compliance, and client ratings.' } },
-            { '@type': 'Question', name: 'What is escrow payment protection?', acceptedAnswer: { '@type': 'Answer', text: 'When you book, credits are placed on hold (not charged). After the job is complete, you review the photo documentation and approve the work. Credits are only released to the cleaner once you are satisfied. If there is an issue, you can dispute the charge.' } },
-            { '@type': 'Question', name: 'Can I cancel or reschedule a booking?', acceptedAnswer: { '@type': 'Answer', text: 'You can cancel or reschedule for free up to 24 hours before your appointment. Cancellations within 24 hours may incur a fee. The full cancellation policy is available at puretask.co/cancellation-policy.' } },
-            { '@type': 'Question', name: 'How do cleaners earn money on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'Cleaners keep 80–85% of each booking depending on their tier. They set their own rates and schedule, receive weekly automatic payouts or opt for instant payouts. Top-tier cleaners earn higher commissions and get priority job matching.' } },
-          ],
-        },
-      ]} />
+      {
+        '@type': 'Organization',
+        '@id': 'https://puretask.co/#organization',
+        name: 'PureTask',
+        url: 'https://puretask.co',
+        logo: 'https://puretask.co/icons/icon-192x192.png',
+        description: 'PureTask is a trusted cleaning services marketplace connecting clients with verified, background-checked independent cleaners. GPS check-ins, before/after photo documentation, and escrow payment protection are built into every booking.',
+        contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service', availableLanguage: 'English' },
+        sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask', 'https://instagram.com/puretask'],
+        foundingDate: '2024',
+        areaServed: { '@type': 'Country', name: 'United States' }
+      },
+      {
+        '@type': 'LocalBusiness',
+        '@id': 'https://puretask.co/#business',
+        name: 'PureTask',
+        url: 'https://puretask.co',
+        image: 'https://puretask.co/og/puretask-og.png',
+        description: 'Professional cleaning services marketplace with GPS verification and photo documentation.',
+        priceRange: '$$',
+        address: { '@type': 'PostalAddress', addressCountry: 'US' },
+        areaServed: { '@type': 'Country', name: 'United States' },
+        serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover Cleaning'],
+        currenciesAccepted: 'USD',
+        paymentAccepted: 'Credit Card, Debit Card',
+        openingHours: 'Mo-Su 00:00-23:59'
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://puretask.co/#website',
+        url: 'https://puretask.co',
+        name: 'PureTask',
+        description: 'Book verified cleaners online with transparent pricing and escrow payment.',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: { '@type': 'EntryPoint', urlTemplate: 'https://puretask.co/discover?q={search_term_string}' },
+          'query-input': 'required name=search_term_string'
+        }
+      },
+      {
+        '@type': 'Service',
+        '@id': 'https://puretask.co/#service',
+        name: 'PureTask Cleaning Services',
+        serviceType: 'House Cleaning',
+        description: 'Book background-checked, GPS-verified, independently insured cleaners for standard, deep, move-out, or Airbnb turnover cleans. Credits-based pricing: 1 credit = $1 USD. Cleaners earn 80–85% of each booking.',
+        provider: { '@type': 'Organization', '@id': 'https://puretask.co/#organization' },
+        areaServed: { '@type': 'Country', name: 'United States' },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Cleaning Service Types',
+          itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Standard Clean', description: 'Regular maintenance cleaning — dusting, vacuuming, mopping, kitchen and bathroom surfaces.' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Deep Clean', description: 'Thorough top-to-bottom cleaning including inside appliances, baseboards, light fixtures, and all surfaces.' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Move-Out Clean', description: 'Comprehensive cleaning for end-of-tenancy or property handover, including inside cabinets, walls, and fixtures.' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Airbnb Turnover Clean', description: 'Fast turnaround cleaning between guest stays with linen change, restocking, and photo documentation.' } }]
+
+        }
+      },
+      {
+        '@type': 'HowTo',
+        '@id': 'https://puretask.co/#howto',
+        name: 'How to Book a Cleaning on PureTask',
+        description: 'Book a verified, background-checked cleaner in four simple steps using the PureTask platform.',
+        totalTime: 'PT2M',
+        step: [
+        { '@type': 'HowToStep', position: 1, name: 'Book in 60 seconds', text: 'Select your cleaning type (standard, deep, move-out, or Airbnb turnover), choose the number of hours, and pick your preferred date and time.' },
+        { '@type': 'HowToStep', position: 2, name: 'Get matched to a verified cleaner', text: 'PureTask matches you with a background-checked, GPS-verified cleaner available in your area. View cleaner profiles and ratings before confirming.' },
+        { '@type': 'HowToStep', position: 3, name: 'Cleaner arrives and cleans', text: 'Your cleaner checks in via GPS on arrival. Before-and-after photos are taken throughout the job for full documentation.' },
+        { '@type': 'HowToStep', position: 4, name: 'You approve and pay', text: 'Review the photo proof and approve the work. Credits are only deducted from your escrow hold when you are 100% satisfied.' }]
+
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://puretask.co/#faq',
+        mainEntity: [
+        { '@type': 'Question', name: 'How much does a cleaning cost on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'PureTask uses a credits system where 1 credit = $1 USD. Cleaners set their own hourly rate, typically ranging from $25–$60/hour depending on their tier. You only pay for actual hours worked, and unused credits never expire.' } },
+        { '@type': 'Question', name: 'Are PureTask cleaners background checked?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every cleaner on PureTask undergoes a thorough background check and identity verification before their first job. Cleaners also maintain a reliability score based on punctuality, photo compliance, and client ratings.' } },
+        { '@type': 'Question', name: 'What is escrow payment protection?', acceptedAnswer: { '@type': 'Answer', text: 'When you book, credits are placed on hold (not charged). After the job is complete, you review the photo documentation and approve the work. Credits are only released to the cleaner once you are satisfied. If there is an issue, you can dispute the charge.' } },
+        { '@type': 'Question', name: 'Can I cancel or reschedule a booking?', acceptedAnswer: { '@type': 'Answer', text: 'You can cancel or reschedule for free up to 24 hours before your appointment. Cancellations within 24 hours may incur a fee. The full cancellation policy is available at puretask.co/cancellation-policy.' } },
+        { '@type': 'Question', name: 'How do cleaners earn money on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'Cleaners keep 80–85% of each booking depending on their tier. They set their own rates and schedule, receive weekly automatic payouts or opt for instant payouts. Top-tier cleaners earn higher commissions and get priority job matching.' } }]
+
+      }]
+      } />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }]} />
 
       {/* ── AI-READABLE FACT BLOCK (visually hidden, crawlable by AI & search engines) ── */}
@@ -189,8 +189,8 @@ export default function Index() {
             height="1080"
             loading="eager"
             fetchPriority="high"
-            decoding="sync"
-          />
+            decoding="sync" />
+          
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
         </motion.div>
@@ -206,8 +206,8 @@ export default function Index() {
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6"
-            >
+              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6">
+              
               Cleaning you can{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
                 actually trust.
@@ -216,15 +216,15 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed"
-            >
+              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed">
+              
               Background-checked cleaners. GPS check-ins. Photo proof. Escrow payment — released only when you approve.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10"
-            >
+              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10">
+              
               <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
@@ -242,14 +242,14 @@ export default function Index() {
 
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm"
-            >
-              {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map(t => (
-                <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
+              className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
+              
+              {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map((t) =>
+              <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
                   <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-success flex-shrink-0" />
                   {t}
                 </div>
-              ))}
+              )}
             </motion.div>
           </div>
         </div>
@@ -258,8 +258,8 @@ export default function Index() {
         <motion.div
           style={{ opacity: heroOpacity }}
           className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground hidden sm:flex"
-          animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}
-        >
+          animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+          
           <span className="text-xs font-medium">Scroll to explore</span>
           <ChevronDown className="h-5 w-5" />
         </motion.div>
@@ -269,17 +269,17 @@ export default function Index() {
       <section aria-label="Platform statistics" className="cv-auto bg-primary py-8 sm:py-10">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {STATS.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center"
-              >
+            {STATS.map((s, i) =>
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              className="text-center">
+              
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground">{s.value}</p>
                 <p className="text-xs sm:text-sm text-primary-foreground/70 mt-1">{s.label}</p>
               </motion.div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -289,8 +289,8 @@ export default function Index() {
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
-          >
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
+            
             <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
             <h2 id="trust-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built on trust. Verified at every step.</h2>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -299,13 +299,13 @@ export default function Index() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {TRUST_PILLARS.map((p, i) => (
-              <motion.div
-                key={p.title}
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -4 }}
-              >
+            {TRUST_PILLARS.map((p, i) =>
+            <motion.div
+              key={p.title}
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              whileHover={{ y: -4 }}>
+              
                 <Card className="h-full border-border/50 hover:border-primary/30 hover:shadow-elevated transition-all duration-300">
                   <CardContent className="p-5 sm:p-8">
                     <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}>
@@ -316,15 +316,15 @@ export default function Index() {
                   </CardContent>
                 </Card>
               </motion.div>
-            ))}
+            )}
           </div>
 
           {/* Contextual links to key trust pages */}
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-10 sm:mt-14 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm"
-          >
+            className="mt-10 sm:mt-14 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm">
+            
             <Link to="/reliability-score" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
               <Award className="h-4 w-4" /> How our cleaner reliability score works
             </Link>
@@ -346,23 +346,23 @@ export default function Index() {
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
-          >
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
+            
             <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
             <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Book to clean in 4 steps</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {STEPS.map((s, i) => (
-              <motion.div
-                key={s.step}
-                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-                className="relative"
-              >
-                {i < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
-                )}
+            {STEPS.map((s, i) =>
+            <motion.div
+              key={s.step}
+              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.15 }}
+              className="relative">
+              
+                {i < STEPS.length - 1 &&
+              <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
+              }
                 <div className="text-5xl sm:text-6xl font-black text-primary/10 mb-2 sm:mb-3 leading-none">{s.step}</div>
                 <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -370,7 +370,7 @@ export default function Index() {
                 <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
                 <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{s.desc}</p>
               </motion.div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -380,8 +380,8 @@ export default function Index() {
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
-          >
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
+            
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built for two sides of trust</h2>
             <p className="text-base sm:text-xl text-muted-foreground">Whether you're booking or cleaning, PureTask has you covered.</p>
           </motion.div>
@@ -391,10 +391,10 @@ export default function Index() {
             <motion.div
               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group"
-            >
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group">
+              
               <img src={clientImg} alt="Happy homeowner inspecting a freshly cleaned living space" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-primary border-none border-4" />
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
                 <Badge className="mb-2 sm:mb-3 bg-primary/20 text-primary border-primary/30">For Clients</Badge>
                 <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
@@ -409,8 +409,8 @@ export default function Index() {
             <motion.div
               initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group"
-            >
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group">
+              
               <img src={cleanerImg} alt="Professional PureTask cleaner ready to start a verified cleaning job" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
@@ -431,20 +431,20 @@ export default function Index() {
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
-          >
+            viewport={{ once: true }} className="text-center mb-8 sm:mb-12">
+            
             <h2 id="audience-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Perfect for everyone</h2>
             <p className="text-base sm:text-xl text-muted-foreground">No matter your lifestyle, we've built for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {AUDIENCE.map((a, i) => (
-              <motion.div
-                key={a.label}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                whileHover={{ scale: 1.03 }}
-              >
+            {AUDIENCE.map((a, i) =>
+            <motion.div
+              key={a.label}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              whileHover={{ scale: 1.03 }}>
+              
                 <Link to={a.href}>
                   <Card className="text-center border-border/50 hover:border-primary/40 hover:shadow-elevated transition-all duration-300 cursor-pointer h-full">
                     <CardContent className="p-4 sm:p-8">
@@ -455,7 +455,7 @@ export default function Index() {
                   </Card>
                 </Link>
               </motion.div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -465,8 +465,8 @@ export default function Index() {
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
-          >
+            viewport={{ once: true }} className="text-center mb-8 sm:mb-12">
+            
             <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
               <Star className="h-3 w-3 mr-1" /> Real Reviews
             </Badge>
@@ -483,8 +483,8 @@ export default function Index() {
         <div className="container relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+            viewport={{ once: true }}>
+            
             <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-4 sm:mb-6">
               Your clean home is{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
@@ -508,6 +508,6 @@ export default function Index() {
           </motion.div>
         </div>
       </section>
-    </main>
-  );
+    </main>);
+
 }
