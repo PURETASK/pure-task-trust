@@ -349,7 +349,7 @@ export default function Index() {
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
             <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Book to clean in 4 steps</h2>
+            <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Book to clean in 4 steps</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
