@@ -179,7 +179,7 @@ export default function Index() {
       </div>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section ref={heroRef} className="relative min-h-[100dvh] flex items-center overflow-hidden">
+      <section ref={heroRef} aria-label="Hero — book verified cleaning services" className="relative min-h-[100dvh] flex items-center overflow-hidden">
         <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
           <img
             src={heroImg}
