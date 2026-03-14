@@ -104,6 +104,22 @@ export default function AuthPage() {
     }
   };
 
+  const handleAppleLogin = async () => {
+    if (isSignUp && !role) {
+      toast({ title: "Select a role first", variant: "destructive" });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) toast({ title: "Apple Sign-In Failed", description: String(result.error), variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
