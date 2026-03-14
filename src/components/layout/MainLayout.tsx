@@ -224,7 +224,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
           {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
           <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden">
-            <PageTransition>{children}</PageTransition>
+            <PageTransition>{children ?? <Outlet />}</PageTransition>
           </main>
 
           {/* ── FOOTER ───────────────────────────────────────────────────── */}
