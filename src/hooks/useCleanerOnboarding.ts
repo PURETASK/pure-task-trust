@@ -46,6 +46,9 @@ export interface ServiceAreaData {
   selectedAreas: string[];
 }
 
+// Shared query key — must match useCleanerProfile's key
+const CLEANER_PROFILE_KEY = 'cleaner-profile';
+
 export function useCleanerOnboarding() {
   const { user } = useAuth();
   const { profile, isLoading: profileLoading } = useCleanerProfile();
@@ -106,6 +109,12 @@ export function useCleanerOnboarding() {
     }
   };
 
+  // Invalidate all profile-related queries
+  const invalidateProfile = () => {
+    queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+  };
+
   // Step 1: Terms & Agreements
   const saveTermsMutation = useMutation({
     mutationFn: async () => {
@@ -126,8 +135,11 @@ export function useCleanerOnboarding() {
         },
       ];
 
-      const { error } = await supabase.from('cleaner_agreements').insert(agreements);
-      if (error) throw error;
+      // Use upsert-style: skip if already exists (ignore duplicate key errors)
+      const { error } = await supabase
+        .from('cleaner_agreements')
+        .insert(agreements);
+      if (error && !error.message.includes('duplicate')) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
@@ -152,7 +164,7 @@ export function useCleanerOnboarding() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
+      invalidateProfile();
       goToNextStep();
     },
   });
@@ -190,7 +202,7 @@ export function useCleanerOnboarding() {
       return publicUrl;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
+      invalidateProfile();
       goToNextStep();
     },
   });
@@ -231,24 +243,30 @@ export function useCleanerOnboarding() {
     mutationFn: async () => {
       if (!profile?.id) throw new Error('No cleaner profile found');
 
-      // Save consent agreement
+      // Save consent agreement — skip if duplicate
       const { error: agreementError } = await supabase.from('cleaner_agreements').insert({
         cleaner_id: profile.id,
         agreement_type: 'background_check_consent',
         version: '1.0',
         user_agent: navigator.userAgent,
       });
+      if (agreementError && !agreementError.message.includes('duplicate')) throw agreementError;
 
-      if (agreementError) throw agreementError;
+      // Only create background check if one doesn't already exist
+      const { data: existing } = await supabase
+        .from('background_checks')
+        .select('id')
+        .eq('cleaner_id', profile.id)
+        .maybeSingle();
 
-      // Create pending background check record
-      const { error: checkError } = await supabase.from('background_checks').insert({
-        cleaner_id: profile.id,
-        status: 'pending',
-        provider: 'checkr', // Default provider
-      });
-
-      if (checkError) throw checkError;
+      if (!existing) {
+        const { error: checkError } = await supabase.from('background_checks').insert({
+          cleaner_id: profile.id,
+          status: 'pending',
+          provider: 'checkr',
+        });
+        if (checkError) throw checkError;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
@@ -294,7 +312,7 @@ export function useCleanerOnboarding() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-service-areas'] });
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
+      invalidateProfile();
       goToNextStep();
     },
   });
@@ -361,7 +379,7 @@ export function useCleanerOnboarding() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
+      invalidateProfile();
       goToNextStep();
     },
   });
@@ -373,14 +391,18 @@ export function useCleanerOnboarding() {
 
       const { error } = await supabase
         .from('cleaner_profiles')
-        .update({ onboarding_completed_at: new Date().toISOString() })
+        .update({
+          onboarding_completed_at: new Date().toISOString(),
+          onboarding_current_step: 'review',
+        })
         .eq('id', profile.id);
 
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cleanerProfile'] });
-      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    onSuccess: async () => {
+      // Invalidate and wait for refetch so needsOnboarding clears before navigation
+      await queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
+      await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     },
   });
 
