@@ -19,10 +19,10 @@ import {
 import { useRef } from "react";
 
 const TRUST_PILLARS = [
-{ icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10" },
-{ icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10" },
-{ icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]" },
-{ icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10" }];
+{ icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10", borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.2)" },
+{ icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10", borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.2)" },
+{ icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]", borderColor: "hsl(var(--pt-purple))", shadowColor: "hsl(var(--pt-purple) / 0.2)" },
+{ icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10", borderColor: "hsl(var(--warning))", shadowColor: "hsl(var(--warning) / 0.2)" }];
 
 
 const AUDIENCE = [
@@ -306,9 +306,19 @@ export default function Index() {
               viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               whileHover={{ y: -4 }}>
               
-                <Card className="h-full border-border/50 hover:border-primary/30 hover:shadow-elevated transition-all duration-300">
+                <Card
+                  className="h-full transition-all duration-300"
+                  style={{
+                    border: `2px solid ${p.borderColor}`,
+                    borderRadius: '1rem',
+                    boxShadow: `0 4px 24px 0 ${p.shadowColor}, 0 1.5px 6px 0 ${p.shadowColor}`,
+                  }}
+                >
                   <CardContent className="p-5 sm:p-8">
-                    <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}>
+                    <div
+                      className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}
+                      style={{ border: `1px solid ${p.borderColor}`, borderRadius: '0.875rem' }}
+                    >
                       <p.icon className={`h-6 w-6 sm:h-7 sm:w-7 ${p.color}`} />
                     </div>
                     <h3 className="text-base sm:text-lg font-bold mb-2">{p.title}</h3>
