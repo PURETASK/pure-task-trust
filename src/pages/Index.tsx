@@ -433,7 +433,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Perfect for everyone</h2>
+            <h2 id="audience-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Perfect for everyone</h2>
             <p className="text-base sm:text-xl text-muted-foreground">No matter your lifestyle, we've built for you.</p>
           </motion.div>
 
