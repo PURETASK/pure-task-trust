@@ -175,7 +175,7 @@ export default function EarningsCalculator() {
                 <div>
                   <div className="flex justify-between mb-3">
                     <label className="font-semibold text-sm flex items-center gap-2">
-                      <Star className="h-4 w-4 text-amber-500" /> Reliability score
+                      <Star className="h-4 w-4 text-warning" /> Reliability score
                     </label>
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold">{reliabilityScore}</span>
