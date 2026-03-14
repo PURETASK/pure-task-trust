@@ -23,7 +23,7 @@ export default function CancellationPolicy() {
       <SEO
         title="Cancellation Policy"
         description="Understand PureTask's cancellation policy, fees, grace periods, and emergency cancellation rules for clients and cleaners."
-        url="/cancellationpolicy"
+        url="/cancellation-policy"
         keywords="cancellation policy, cleaning cancellation, refund policy, PureTask cancellation"
       />
       {/* Header */}
