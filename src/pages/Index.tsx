@@ -55,9 +55,45 @@ export default function Index() {
   return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
-      <OrganizationSchema />
-      <LocalBusinessSchema />
+      {/* Consolidated @graph — one <script> tag for the homepage */}
       <AggregateRatingSchema />
+      <JsonLdGraph nodes={[
+        {
+          '@type': 'Organization',
+          '@id': 'https://pure-task-trust.lovable.app/#organization',
+          name: 'PureTask',
+          url: 'https://pure-task-trust.lovable.app',
+          logo: 'https://pure-task-trust.lovable.app/icons/icon-192x192.png',
+          description: 'Trusted cleaning services marketplace with verified, background-checked cleaners, GPS-verified arrivals, and photo-documented results.',
+          contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service' },
+          sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask'],
+        },
+        {
+          '@type': 'LocalBusiness',
+          '@id': 'https://pure-task-trust.lovable.app/#business',
+          name: 'PureTask',
+          url: 'https://pure-task-trust.lovable.app',
+          image: 'https://pure-task-trust.lovable.app/og/puretask-og.png',
+          description: 'Professional cleaning services marketplace with GPS verification and photo documentation.',
+          priceRange: '$$',
+          address: { '@type': 'PostalAddress', addressCountry: 'US' },
+          areaServed: { '@type': 'Country', name: 'United States' },
+          serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover'],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://pure-task-trust.lovable.app/#website',
+          url: 'https://pure-task-trust.lovable.app',
+          name: 'PureTask',
+          description: 'Book verified cleaners online with transparent pricing and escrow payment.',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: { '@type': 'EntryPoint', urlTemplate: 'https://pure-task-trust.lovable.app/discover?q={search_term_string}' },
+            'query-input': 'required name=search_term_string',
+          },
+        },
+      ]} />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }]} />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-[100dvh] flex items-center overflow-hidden">
