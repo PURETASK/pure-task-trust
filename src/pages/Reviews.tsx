@@ -109,7 +109,7 @@ export default function Reviews() {
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map((review, index) => (
-                <motion.div key={review.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
+                <motion.article key={review.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
                   <Card className="h-full hover:shadow-elevated transition-all duration-300 border-border/60 group overflow-hidden">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
@@ -125,18 +125,18 @@ export default function Reviews() {
                       ) : (
                         <p className="text-muted-foreground italic mb-5">No written review</p>
                       )}
-                      <div className="flex items-center gap-3 pt-4 border-t border-border/40">
+                      <footer className="flex items-center gap-3 pt-4 border-t border-border/40">
                         <Avatar className="h-9 w-9">
                           <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">✓</AvatarFallback>
                         </Avatar>
                         <div>
                           <p className="text-sm font-semibold">Verified Customer</p>
-                          <p className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}</p>
+                          <time className="text-xs text-muted-foreground" dateTime={review.created_at}>{formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}</time>
                         </div>
-                      </div>
+                      </footer>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </motion.article>
               ))}
             </motion.div>
           )}
