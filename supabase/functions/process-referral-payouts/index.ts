@@ -141,4 +141,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+serve((req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" } });
+  return withCronMonitor("process-referral-payouts", () => handler(req));
+});

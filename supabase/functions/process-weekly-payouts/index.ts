@@ -10,7 +10,9 @@ const corsHeaders = {
 
 const MIN_WEEKLY_PAYOUT = 20; // $20 minimum for weekly payouts
 
-serve(async (req) => {
+serve((req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" } });
+  return withCronMonitor("process-weekly-payouts", async () => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
