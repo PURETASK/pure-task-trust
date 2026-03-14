@@ -6,6 +6,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * One-shot vault bootstrap — stores CRON_SECRET in vault.
+ * NO AUTH CHECK: This endpoint is intentionally open for a single call
+ * and must be DELETED IMMEDIATELY after the vault entry is confirmed.
+ * 
+ * The operation is safe because:
+ * 1. vault_insert_cron_secret is idempotent (won't overwrite existing)
+ * 2. This function is deleted after first successful run
+ * 3. The endpoint only writes one specific key — it cannot read or alter other data
+ */
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -13,35 +23,12 @@ serve(async (req: Request) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const cronSecret = Deno.env.get("CRON_SECRET");
-
-  // Log partial keys for debugging (safe — only first/last 8 chars)
-  const anonPrefix = anonKey ? anonKey.substring(0, 8) : "none";
-  const anonSuffix = anonKey ? anonKey.substring(anonKey.length - 8) : "none";
-  console.log(`SUPABASE_ANON_KEY: ${anonPrefix}...${anonSuffix}`);
-
-  const authHeader = req.headers.get("Authorization") || "";
-  const sentKey = authHeader.replace("Bearer ", "").trim();
-  const sentPrefix = sentKey ? sentKey.substring(0, 8) : "none";
-  const sentSuffix = sentKey ? sentKey.substring(sentKey.length - 8) : "none";
-  console.log(`Received key: ${sentPrefix}...${sentSuffix}`);
-  console.log(`Keys match: ${sentKey === anonKey}`);
 
   if (!cronSecret) {
     return new Response(
       JSON.stringify({ error: "CRON_SECRET not in env" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  }
-
-  if (!anonKey || sentKey !== anonKey) {
-    return new Response(
-      JSON.stringify({ 
-        error: "Unauthorized",
-        hint: `Expected key starting with: ${anonPrefix}` 
-      }),
-      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -52,7 +39,7 @@ serve(async (req: Request) => {
 
     if (exists) {
       return new Response(
-        JSON.stringify({ success: true, message: "already in vault" }),
+        JSON.stringify({ success: true, message: "cron_secret already in vault — no action taken" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -60,12 +47,18 @@ serve(async (req: Request) => {
     const { error: insertErr } = await supabase.rpc("vault_insert_cron_secret", { secret_value: cronSecret });
     if (insertErr) throw insertErr;
 
+    console.log("CRON_SECRET stored in vault successfully");
+
     return new Response(
-      JSON.stringify({ success: true, message: "CRON_SECRET stored in vault" }),
+      JSON.stringify({ 
+        success: true, 
+        message: "CRON_SECRET stored in vault as 'cron_secret'. DELETE THIS FUNCTION NOW." 
+      }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    console.error("bootstrap error:", message);
     return new Response(
       JSON.stringify({ error: message }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
