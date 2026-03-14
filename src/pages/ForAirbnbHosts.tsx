@@ -59,6 +59,7 @@ export default function ForAirbnbHosts() {
             src={heroAirbnb}
             alt="Beautifully clean modern Airbnb rental ready for guests"
             className="w-full h-full object-cover object-center"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />

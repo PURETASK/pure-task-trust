@@ -57,6 +57,7 @@ export default function ForRetirees() {
             src={heroRetirees}
             alt="Senior couple relaxing comfortably in their clean, welcoming home"
             className="w-full h-full object-cover object-center"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/25" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />

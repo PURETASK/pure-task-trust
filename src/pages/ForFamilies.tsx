@@ -49,8 +49,9 @@ export default function ForFamilies() {
         <div className="absolute inset-0">
           <img
             src={heroFamilies}
-            alt="Happy family in a clean, bright home"
+            alt="Happy family in a clean, bright home with kids and pets"
             className="w-full h-full object-cover object-center"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/20" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />

@@ -248,8 +248,9 @@ export default function CleanerProfile() {
                 {profilePhotoUrl ? (
                   <img
                     src={profilePhotoUrl}
-                    alt={cleaner.name}
+                    alt={`${cleaner.name} – verified PureTask cleaner`}
                     className="h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl object-cover"
+                    loading="eager"
                   />
                 ) : (
                   <div className={`h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${tier.gradient} flex items-center justify-center`}>
