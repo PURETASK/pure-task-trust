@@ -396,7 +396,7 @@ export default function Index() {
               <img src={clientImg} alt="Happy homeowner inspecting a freshly cleaned living space" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-2 border-primary rounded-2xl sm:rounded-3xl" />
               <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
-                <Badge className="mb-2 sm:mb-3 bg-primary text-primary-foreground border-primary text-sm px-4 py-1 font-semibold">For Clients</Badge>
+                <Badge className="mb-2 sm:mb-3 bg-primary/40 text-primary-foreground border-2 border-white/80 rounded-full text-sm px-4 py-1 font-semibold">For Clients</Badge>
                 <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
                 <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
                 <Button asChild className="rounded-xl h-10 sm:h-11">
