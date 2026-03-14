@@ -15,6 +15,7 @@ Sentry.init({
   sendDefaultPii: true,
 
   integrations: [
+    Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
     Sentry.reactRouterV6BrowserTracingIntegration({
       useEffect: React.useEffect,
       useLocation,
