@@ -42,7 +42,12 @@ function init() {
     dsn,
     environment: Deno.env.get("SENTRY_ENVIRONMENT") ?? "production",
 
-    // denoCronIntegration auto-instruments native Deno.cron() jobs.
+    // defaultIntegrations:false prevents Node.js-only integrations from loading.
+    // These pull in transitive deps (call-bound, side-channel, etc.) that use
+    // syntax the Supabase edge runtime cannot parse.
+    defaultIntegrations: false,
+
+    // denoCronIntegration is pure Deno — safe to add explicitly.
     // Our edge functions are HTTP-triggered (pg_cron → net.http_post),
     // so we pair it with manual withCronMonitor() wrappers below.
     integrations: [Sentry.denoCronIntegration()],
