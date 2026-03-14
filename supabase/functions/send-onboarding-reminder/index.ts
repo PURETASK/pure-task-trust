@@ -174,6 +174,11 @@ const handler = async (req: Request): Promise<Response> => {
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
+};
+
+serve((req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  return withCronMonitor("send-onboarding-reminder", () => handler(req));
 });
 
 function getStepDisplayName(step: string | null): string {
