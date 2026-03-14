@@ -55,7 +55,8 @@ export default function Index() {
   return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
-      {/* Consolidated @graph — one <script> tag for the homepage */}
+
+      {/* ── SCHEMA: Consolidated @graph — one <script> tag for the homepage ── */}
       <AggregateRatingSchema />
       <JsonLdGraph nodes={[
         {
@@ -64,9 +65,11 @@ export default function Index() {
           name: 'PureTask',
           url: 'https://pure-task-trust.lovable.app',
           logo: 'https://pure-task-trust.lovable.app/icons/icon-192x192.png',
-          description: 'Trusted cleaning services marketplace with verified, background-checked cleaners, GPS-verified arrivals, and photo-documented results.',
-          contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service' },
-          sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask'],
+          description: 'PureTask is a trusted cleaning services marketplace connecting clients with verified, background-checked independent cleaners. GPS check-ins, before/after photo documentation, and escrow payment protection are built into every booking.',
+          contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service', availableLanguage: 'English' },
+          sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask', 'https://instagram.com/puretask'],
+          foundingDate: '2024',
+          areaServed: { '@type': 'Country', name: 'United States' },
         },
         {
           '@type': 'LocalBusiness',
@@ -78,7 +81,10 @@ export default function Index() {
           priceRange: '$$',
           address: { '@type': 'PostalAddress', addressCountry: 'US' },
           areaServed: { '@type': 'Country', name: 'United States' },
-          serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover'],
+          serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover Cleaning'],
+          currenciesAccepted: 'USD',
+          paymentAccepted: 'Credit Card, Debit Card',
+          openingHours: 'Mo-Su 00:00-23:59',
         },
         {
           '@type': 'WebSite',
@@ -92,8 +98,85 @@ export default function Index() {
             'query-input': 'required name=search_term_string',
           },
         },
+        {
+          '@type': 'Service',
+          '@id': 'https://pure-task-trust.lovable.app/#service',
+          name: 'PureTask Cleaning Services',
+          serviceType: 'House Cleaning',
+          description: 'Book background-checked, GPS-verified, independently insured cleaners for standard, deep, move-out, or Airbnb turnover cleans. Credits-based pricing: 1 credit = $1 USD. Cleaners earn 80–85% of each booking.',
+          provider: { '@type': 'Organization', '@id': 'https://pure-task-trust.lovable.app/#organization' },
+          areaServed: { '@type': 'Country', name: 'United States' },
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'Cleaning Service Types',
+            itemListElement: [
+              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Standard Clean', description: 'Regular maintenance cleaning — dusting, vacuuming, mopping, kitchen and bathroom surfaces.' } },
+              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Deep Clean', description: 'Thorough top-to-bottom cleaning including inside appliances, baseboards, light fixtures, and all surfaces.' } },
+              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Move-Out Clean', description: 'Comprehensive cleaning for end-of-tenancy or property handover, including inside cabinets, walls, and fixtures.' } },
+              { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Airbnb Turnover Clean', description: 'Fast turnaround cleaning between guest stays with linen change, restocking, and photo documentation.' } },
+            ],
+          },
+        },
+        {
+          '@type': 'HowTo',
+          '@id': 'https://pure-task-trust.lovable.app/#howto',
+          name: 'How to Book a Cleaning on PureTask',
+          description: 'Book a verified, background-checked cleaner in four simple steps using the PureTask platform.',
+          totalTime: 'PT2M',
+          step: [
+            { '@type': 'HowToStep', position: 1, name: 'Book in 60 seconds', text: 'Select your cleaning type (standard, deep, move-out, or Airbnb turnover), choose the number of hours, and pick your preferred date and time.' },
+            { '@type': 'HowToStep', position: 2, name: 'Get matched to a verified cleaner', text: 'PureTask matches you with a background-checked, GPS-verified cleaner available in your area. View cleaner profiles and ratings before confirming.' },
+            { '@type': 'HowToStep', position: 3, name: 'Cleaner arrives and cleans', text: 'Your cleaner checks in via GPS on arrival. Before-and-after photos are taken throughout the job for full documentation.' },
+            { '@type': 'HowToStep', position: 4, name: 'You approve and pay', text: 'Review the photo proof and approve the work. Credits are only deducted from your escrow hold when you are 100% satisfied.' },
+          ],
+        },
+        {
+          '@type': 'FAQPage',
+          '@id': 'https://pure-task-trust.lovable.app/#faq',
+          mainEntity: [
+            { '@type': 'Question', name: 'How much does a cleaning cost on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'PureTask uses a credits system where 1 credit = $1 USD. Cleaners set their own hourly rate, typically ranging from $25–$60/hour depending on their tier. You only pay for actual hours worked, and unused credits never expire.' } },
+            { '@type': 'Question', name: 'Are PureTask cleaners background checked?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every cleaner on PureTask undergoes a thorough background check and identity verification before their first job. Cleaners also maintain a reliability score based on punctuality, photo compliance, and client ratings.' } },
+            { '@type': 'Question', name: 'What is escrow payment protection?', acceptedAnswer: { '@type': 'Answer', text: 'When you book, credits are placed on hold (not charged). After the job is complete, you review the photo documentation and approve the work. Credits are only released to the cleaner once you are satisfied. If there is an issue, you can dispute the charge.' } },
+            { '@type': 'Question', name: 'Can I cancel or reschedule a booking?', acceptedAnswer: { '@type': 'Answer', text: 'You can cancel or reschedule for free up to 24 hours before your appointment. Cancellations within 24 hours may incur a fee. The full cancellation policy is available at puretask.com/cancellation-policy.' } },
+            { '@type': 'Question', name: 'How do cleaners earn money on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'Cleaners keep 80–85% of each booking depending on their tier. They set their own rates and schedule, receive weekly automatic payouts or opt for instant payouts. Top-tier cleaners earn higher commissions and get priority job matching.' } },
+          ],
+        },
       ]} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }]} />
+
+      {/* ── AI-READABLE FACT BLOCK (visually hidden, crawlable by AI & search engines) ── */}
+      <div className="sr-only" aria-hidden="false" role="complementary" aria-label="About PureTask — key facts">
+        <h2>About PureTask</h2>
+        <p>PureTask is a cleaning services marketplace operating in the United States. We connect homeowners, Airbnb hosts, professionals, and retirees with verified, background-checked independent cleaners.</p>
+        <h3>What PureTask offers</h3>
+        <ul>
+          <li>Standard home cleaning</li>
+          <li>Deep cleaning</li>
+          <li>Move-out cleaning</li>
+          <li>Airbnb turnover cleaning</li>
+        </ul>
+        <h3>How PureTask works</h3>
+        <ol>
+          <li>Book online in under 60 seconds — choose cleaning type, hours, and date.</li>
+          <li>Get matched with a background-checked, GPS-verified cleaner in your area.</li>
+          <li>Cleaner arrives with GPS check-in and documents the job with before and after photos.</li>
+          <li>Review photo proof and approve payment — credits are only released when you are satisfied.</li>
+        </ol>
+        <h3>Pricing</h3>
+        <p>PureTask uses a credits system. 1 credit equals 1 US dollar. Cleaners set hourly rates typically between $25 and $60 per hour. You only pay for actual hours worked. Unused credits never expire.</p>
+        <h3>Trust and safety features</h3>
+        <ul>
+          <li>All cleaners are background checked and identity verified.</li>
+          <li>GPS check-in and check-out tracking on every job.</li>
+          <li>Before and after photo documentation for every cleaning.</li>
+          <li>Escrow payment protection — pay only when you approve the work.</li>
+          <li>Reliability score system rating cleaner punctuality, photo compliance, and client satisfaction.</li>
+        </ul>
+        <h3>For cleaners</h3>
+        <p>Cleaners keep 80 to 85 percent of each booking depending on their tier. They set their own schedule and rates. Weekly automatic payouts or instant payouts are available.</p>
+        <h3>Contact</h3>
+        <address>Email: support@puretask.com. Emergency line: 1-800-PURETASK, available 24/7.</address>
+      </div>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-[100dvh] flex items-center overflow-hidden">
