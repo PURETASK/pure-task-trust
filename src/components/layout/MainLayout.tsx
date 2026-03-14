@@ -385,14 +385,14 @@ export function MainLayout({ children }: MainLayoutProps) {
                   </>
                 ) : (
                   /* Guest CTAs */
-                  <div className="flex items-center gap-2">
+                  <nav aria-label="Main navigation" className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" asChild className="h-9 hidden sm:flex font-medium">
                       <Link to="/auth">Sign In</Link>
                     </Button>
                     <Button size="sm" asChild className="h-9 font-semibold rounded-full px-4">
                       <Link to="/auth?mode=signup">Get Started</Link>
                     </Button>
-                  </div>
+                  </nav>
                 )}
               </div>
             </div>

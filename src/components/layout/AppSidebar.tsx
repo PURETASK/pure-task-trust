@@ -282,6 +282,7 @@ export function AppSidebar() {
 
   return (
     <TooltipProvider delayDuration={0}>
+      <nav aria-label="Site navigation">
       <Sidebar
         className="transition-all duration-300 border-r border-border bg-background"
         collapsible="icon"
@@ -362,6 +363,7 @@ export function AppSidebar() {
           ))}
         </SidebarContent>
       </Sidebar>
+      </nav>
     </TooltipProvider>
   );
 }
