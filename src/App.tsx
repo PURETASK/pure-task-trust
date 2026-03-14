@@ -153,6 +153,7 @@ const App = () => (
                     <Route path="/cost-estimator" element={<CostEstimator />} />
                     <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
                     <Route path="/checklists" element={<CleaningChecklists />} />
+                    <Route path="/ai-summary" element={<AISummary />} />
                     
                     {/* Admin routes - protected by RequireAdmin (server-side role check) */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
