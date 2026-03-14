@@ -276,6 +276,7 @@ export default function Help() {
           <TabsContent value="faq">
             <Card>
               <CardContent className="p-6 sm:p-8">
+                {/* Semantically structured FAQ for AI/search crawlers */}
                 <FAQSection />
               </CardContent>
             </Card>
