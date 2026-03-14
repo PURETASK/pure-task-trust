@@ -19,10 +19,10 @@ import {
 import { useRef } from "react";
 
 const TRUST_PILLARS = [
-{ icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10" },
-{ icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10" },
-{ icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]" },
-{ icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10" }];
+{ icon: Shield, title: "Background Checked", desc: "Every cleaner is verified before their first job", color: "text-primary", bg: "bg-primary/10", borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.2)" },
+{ icon: Camera, title: "Photo Documentation", desc: "Before & after photos for every clean", color: "text-success", bg: "bg-success/10", borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.2)" },
+{ icon: MapPin, title: "GPS Verified", desc: "Real-time check-in and check-out tracking", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]", borderColor: "hsl(var(--pt-purple))", shadowColor: "hsl(var(--pt-purple) / 0.2)" },
+{ icon: Lock, title: "Escrow Protection", desc: "Your money is held safely until you approve", color: "text-warning", bg: "bg-warning/10", borderColor: "hsl(var(--warning))", shadowColor: "hsl(var(--warning) / 0.2)" }];
 
 
 const AUDIENCE = [
