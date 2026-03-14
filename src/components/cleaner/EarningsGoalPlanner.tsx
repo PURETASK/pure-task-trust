@@ -59,7 +59,7 @@ export function EarningsGoalPlanner({ cleanerId, currentGoal, earnings }: Earnin
     },
     onSuccess: () => {
       toast.success("Monthly goal saved!");
-      queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+      queryClient.invalidateQueries({ queryKey: ["cleaner-profile", cleanerId] });
       setEditing(false);
     },
     onError: () => toast.error("Failed to save goal"),
