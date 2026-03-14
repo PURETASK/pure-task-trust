@@ -8,11 +8,10 @@ const corsHeaders = {
 
 /**
  * One-shot bootstrap: stores CRON_SECRET in vault.secrets so pg_cron jobs
- * can reference it via:
- *   (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret')
- *
- * Must be called with the service role key as Bearer token.
- * After running, this function can be deleted.
+ * can reference it via vault.decrypted_secrets.
+ * 
+ * Protected by CRON_SECRET itself — only callable with the correct secret.
+ * After running once, this function should be deleted.
  */
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -30,15 +29,16 @@ serve(async (req: Request) => {
     );
   }
 
-  // Require service role key — only admins can bootstrap vault secrets
+  // Protect with CRON_SECRET itself — only those who know it can bootstrap
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader || authHeader !== `Bearer ${serviceRoleKey}`) {
+  if (!authHeader || authHeader !== `Bearer ${cronSecret}`) {
     return new Response(
-      JSON.stringify({ error: "Unauthorized — service role key required" }),
+      JSON.stringify({ error: "Unauthorized" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
+  // Use service role to write to vault
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
@@ -51,12 +51,12 @@ serve(async (req: Request) => {
 
     if (exists) {
       return new Response(
-        JSON.stringify({ success: true, message: "cron_secret already exists in vault — no action needed" }),
+        JSON.stringify({ success: true, message: "cron_secret already in vault — no action needed" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Insert into vault
+    // Insert into vault via DB function
     const { error: insertErr } = await supabase.rpc("vault_insert_cron_secret", {
       secret_value: cronSecret,
     });
@@ -66,7 +66,7 @@ serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "CRON_SECRET stored in vault as 'cron_secret'. Cron jobs can now use: (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret')",
+        message: "CRON_SECRET stored in vault as 'cron_secret'. Cron jobs can now use vault.decrypted_secrets reference.",
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
