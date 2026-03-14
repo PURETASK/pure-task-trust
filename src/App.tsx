@@ -67,6 +67,8 @@ import AboutUs from "./pages/AboutUs";
 import Referral from "./pages/Referral";
 import RecurringPlans from "./pages/RecurringPlans";
 import Reviews from "./pages/Reviews";
+import EarningsCalculator from "./pages/EarningsCalculator";
+import CostEstimator from "./pages/CostEstimator";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
