@@ -102,7 +102,11 @@ export default function Index() {
             src={heroImg}
             alt="Pristine clean home"
             className="w-full h-full object-cover"
+            width="1920"
+            height="1080"
             loading="eager"
+            fetchPriority="high"
+            decoding="sync"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
