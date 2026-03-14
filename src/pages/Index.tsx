@@ -342,7 +342,7 @@ export default function Index() {
       </section>
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section className="cv-auto py-16 sm:py-24 bg-muted/30">
+      <section aria-labelledby="how-it-works-heading" className="cv-auto py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
