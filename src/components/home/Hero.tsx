@@ -9,7 +9,16 @@ export function Hero() {
     <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-14 sm:pt-16 overflow-hidden w-full">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <img src={heroImage} alt="Clean, modern home interior" className="w-full h-full object-cover" />
+        <img
+          src={heroImage}
+          alt="Clean, modern home interior"
+          className="w-full h-full object-cover"
+          width="1920"
+          height="1080"
+          loading="eager"
+          fetchPriority="high"
+          decoding="sync"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-white/98 via-white/95 to-white/85 sm:from-white/95 sm:via-white/80 sm:to-white/40" />
       </div>
 

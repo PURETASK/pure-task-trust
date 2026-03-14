@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -313,4 +313,24 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ── Performance helpers ──────────────────────────────────────────────── */
+
+/* Prevent layout shift from images without explicit dimensions */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* content-visibility: auto defers paint/layout for off-screen sections */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px; /* estimated height — prevents big scroll jumps */
+}
+
+/* Prevent invisible text while webfonts load (belt + suspenders for inline CSS) */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
 }
