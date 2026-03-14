@@ -275,7 +275,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex">
       <Helmet><title>Sign In or Create Account | PureTask</title></Helmet>
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
-        <img src={panelBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={panelBg} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-background/50" />
         <div className="absolute top-8 left-8">
           <Link to="/" className="flex items-center gap-2 text-white/90 hover:text-white">
