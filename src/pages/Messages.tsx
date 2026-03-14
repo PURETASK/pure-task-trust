@@ -77,6 +77,7 @@ export default function Messages() {
 
   return (
     <main className="flex-1 py-4 sm:py-6">
+      <Helmet><title>Messages | PureTask</title></Helmet>
       <div className="container px-4 sm:px-6 max-w-6xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           

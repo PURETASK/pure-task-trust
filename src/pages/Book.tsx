@@ -246,7 +246,7 @@ export default function Book() {
   };
   return (
     <main className="flex-1 py-6 sm:py-12">
-        <div className="container px-4 sm:px-6 max-w-2xl">
+      <Helmet><title>Book a Cleaning Service | PureTask</title></Helmet>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
