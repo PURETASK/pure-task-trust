@@ -214,7 +214,7 @@ export default function CleanerProfile() {
         {/* Full-bleed background: photo or gradient */}
         <div className="absolute inset-0 z-0">
           {profilePhotoUrl ? (
-            <img src={profilePhotoUrl} alt="" className="w-full h-full object-cover object-top scale-105" />
+            <img src={profilePhotoUrl} alt="" role="presentation" className="w-full h-full object-cover object-top scale-105" loading="lazy" />
           ) : (
             <div className={`w-full h-full bg-gradient-to-br ${tier.gradient}`} />
           )}
@@ -248,8 +248,9 @@ export default function CleanerProfile() {
                 {profilePhotoUrl ? (
                   <img
                     src={profilePhotoUrl}
-                    alt={cleaner.name}
+                    alt={`${cleaner.name} – verified PureTask cleaner`}
                     className="h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl object-cover"
+                    loading="eager"
                   />
                 ) : (
                   <div className={`h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${tier.gradient} flex items-center justify-center`}>

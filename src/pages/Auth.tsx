@@ -162,7 +162,7 @@ export default function AuthPage() {
       <div className="min-h-screen flex">
         {/* Left: image panel */}
         <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
-          <img src={authSplitImg} alt="PureTask" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={authSplitImg} alt="PureTask verified cleaner in a spotless modern home" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/10 to-background/40" />
           <div className="absolute bottom-12 left-12 right-12">
             <div className="bg-background/80 backdrop-blur-md rounded-2xl p-6 border border-border/50">
@@ -222,7 +222,7 @@ export default function AuthPage() {
                     className={`w-full rounded-2xl border-2 border-border/60 ${opt.border} transition-all text-left overflow-hidden flex items-stretch`}
                   >
                     <div className="relative w-20 h-20 flex-shrink-0">
-                      <img src={opt.image} alt="" className="w-full h-full object-cover" />
+                      <img src={opt.image} alt={opt.title} className="w-full h-full object-cover" loading="lazy" />
                     </div>
                     <div className="flex-1 px-4 py-4 flex items-center gap-3">
                       <div className={`h-10 w-10 rounded-xl ${opt.bg} flex items-center justify-center flex-shrink-0`}>

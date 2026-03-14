@@ -47,7 +47,7 @@ export default function AboutUs() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[70vh] flex items-center">
         <div className="absolute inset-0">
-          <img src={heroLandingImg} alt="PureTask" className="w-full h-full object-cover" />
+          <img src={heroLandingImg} alt="Bright, freshly cleaned living room with natural light" className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/97 via-background/85 to-background/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
         </div>
@@ -140,7 +140,7 @@ export default function AboutUs() {
               <motion.div key={side.badge} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
                 <Card className="overflow-hidden border-border/50 hover:shadow-elevated transition-all h-full">
                   <div className="relative h-52 overflow-hidden">
-                    <img src={side.img} alt={side.badge} className="w-full h-full object-cover" />
+                    <img src={side.img} alt={side.title} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
                     <Badge className={`absolute top-4 left-4 ${side.badgeCls}`}>{side.badge}</Badge>
                   </div>
