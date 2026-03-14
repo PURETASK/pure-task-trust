@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 
 export default function CleanerAnalytics() {
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
-  const { earnings, isLoadingEarnings: isLoading } = useCleanerEarnings();
+  const { earnings, isLoadingEarnings } = useCleanerEarnings();
 
   const now = new Date();
 
