@@ -109,7 +109,7 @@ export default function Help() {
                         <Send className="h-5 w-5" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-semibold">Submit a Support Ticket</h2>
+                        <h3 className="text-lg font-semibold">Submit a Support Ticket</h3>
                         <p className="text-primary-foreground/80 text-sm">Typically resolved within 24 hours</p>
                       </div>
                     </div>
