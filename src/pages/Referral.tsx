@@ -50,7 +50,7 @@ export default function Referral() {
     <>
       <SEO 
         title="Referral Program"
-        description="Invite friends to PureTask and earn credits when they complete their first cleaning job."
+        description="Refer a friend to PureTask and earn credits when they book their first clean. Share your code, track rewards, and grow together on the platform."
       />
       <main className="flex-1 py-4 sm:py-8">
         <div className="container px-4 sm:px-6 max-w-4xl mx-auto space-y-8">

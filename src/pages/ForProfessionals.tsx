@@ -55,7 +55,7 @@ export default function ForProfessionals() {
     <main className="overflow-hidden">
       <SEO
         title="Cleaning for Busy Professionals"
-        description="Reclaim your weekends with verified, reliable cleaning professionals. Instant booking, GPS check-ins, and photo documentation."
+        description="Reclaim your weekends. Book a verified cleaner in minutes, set recurring visits, and come home to a spotless space without lifting a finger."
         url="/for-professionals"
         keywords="professional cleaning, busy professional, verified cleaners"
       />

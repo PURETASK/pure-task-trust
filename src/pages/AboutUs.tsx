@@ -38,7 +38,7 @@ export default function AboutUs() {
     <main className="bg-background overflow-x-hidden">
       <SEO
         title="About Us – Trust-First Cleaning"
-        description="We started PureTask because finding a reliable cleaner shouldn't feel like a gamble. Trust-first cleaning services."
+        description="PureTask was built because hiring a cleaner shouldn't be a gamble. Meet the team behind the trust-first cleaning marketplace with 10K+ happy clients."
         url="/about"
         keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service"
       />

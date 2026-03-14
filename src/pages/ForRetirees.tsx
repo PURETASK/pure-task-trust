@@ -44,7 +44,7 @@ export default function ForRetirees() {
     <main className="overflow-hidden">
       <SEO
         title="Trusted Cleaning for Seniors & Retirees"
-        description="Reliable, respectful cleaning services for seniors. Background-checked cleaners, consistent scheduling, and easy communication."
+        description="Trustworthy, respectful cleaning for seniors and retirees. Background-checked cleaners, consistent schedules, and transparent pricing with no hidden fees."
         url="/for-retirees"
         keywords="senior cleaning, cleaning for retirees, elderly cleaning service"
       />

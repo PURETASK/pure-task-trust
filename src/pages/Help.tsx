@@ -60,7 +60,7 @@ export default function Help() {
 
   return (
     <main className="flex-1">
-      <SEO title="Help & Support Center" description="Get help with PureTask cleaning services. Submit support tickets, view FAQs, and contact our team." url="/help" keywords="puretask support, cleaning service help" />
+      <SEO title="Help & Support Center" description="Find answers to common questions, submit a support ticket, or contact the PureTask team. Quick help for clients and cleaners, available 7 days a week." url="/help" keywords="puretask support, cleaning service help" />
       <FAQSchema faqs={[
         { question: "How do I book a cleaning?", answer: "Browse verified cleaners on our Discover page, select one, and book your preferred date and time." },
         { question: "How are cleaners verified?", answer: "All cleaners undergo comprehensive background checks and identity verification before joining PureTask." },
