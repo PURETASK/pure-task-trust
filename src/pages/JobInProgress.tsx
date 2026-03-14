@@ -197,7 +197,7 @@ export default function JobInProgress() {
               <Shield className="h-5 w-5 text-warning flex-shrink-0" />
               <div>
                 <p className="font-medium text-sm">{job.escrow_credits_reserved || 0} credits in escrow</p>
-                <p className="text-xs text-muted-foreground">{isCompleted ? 'Approve the job to release payment' : 'Released only after you approve the completed job'}</p>
+                <p className="text-xs text-muted-foreground">{isCompleted ? 'Review within 24 hours — credits release automatically if no dispute is raised' : 'Review within 24 hours after completion — credits release automatically if no dispute is raised'}</p>
               </div>
             </CardContent>
           </Card>

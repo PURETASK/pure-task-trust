@@ -214,7 +214,7 @@ export default function BookingStatus() {
               <div className="bg-success/5 border border-success/20 rounded-xl p-3 flex items-start gap-2">
                 <Shield className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">Escrow Protection:</span> Payment is held securely and only released when you approve the completed job.
+                  <span className="font-semibold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within 24 hours, or payment releases automatically.
                 </p>
               </div>
             </CardContent>

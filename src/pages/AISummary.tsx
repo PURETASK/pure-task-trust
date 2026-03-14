@@ -48,7 +48,7 @@ const FAQ_ITEMS = [
   {
     question: 'How do cleaners get paid on PureTask?',
     answer:
-      'Cleaners receive credits when clients approve a completed job. Credits can be withdrawn weekly or instantly (via Stripe Connect) to a linked bank account. Platinum-tier cleaners pay the lowest platform fee of 15%.',
+      'Cleaners receive credits when clients approve a completed job or automatically after the 24-hour review window if no dispute is raised. Credits can be withdrawn weekly or instantly (via Stripe Connect) to a linked bank account. Platinum-tier cleaners pay the lowest platform fee of 15%.',
   },
   {
     question: 'What is PureTask pricing for clients?',

@@ -51,7 +51,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-lg"
           >
-            Book independent cleaners, track every job with GPS and photos, and only release payment when you approve the work.
+            Book independent cleaners, track every job with GPS and photos, and review and approve within 24 hours — or payment releases automatically.
           </motion.p>
 
           <motion.div
