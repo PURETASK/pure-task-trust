@@ -10,9 +10,7 @@ const corsHeaders = {
 
 const MIN_WEEKLY_PAYOUT = 20; // $20 minimum for weekly payouts
 
-serve((req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" } });
-  return withCronMonitor("process-weekly-payouts", async () => {
+const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -120,7 +118,7 @@ serve((req) => {
 
         // Create the transfer (no fee for weekly payouts)
         const amountInCents = Math.round(totalAvailable * 100);
-        
+
         const transfer = await stripe.transfers.create({
           amount: amountInCents,
           currency: "usd",
@@ -214,4 +212,9 @@ serve((req) => {
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
+};
+
+serve((req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  return withCronMonitor("process-weekly-payouts", () => handler(req));
 });
