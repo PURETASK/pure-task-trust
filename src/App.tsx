@@ -69,6 +69,8 @@ import RecurringPlans from "./pages/RecurringPlans";
 import Reviews from "./pages/Reviews";
 import EarningsCalculator from "./pages/EarningsCalculator";
 import CostEstimator from "./pages/CostEstimator";
+import CleaningIndustryStats from "./pages/CleaningIndustryStats";
+import CleaningChecklists from "./pages/CleaningChecklists";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
