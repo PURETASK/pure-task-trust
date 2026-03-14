@@ -45,7 +45,7 @@ export default function ForAirbnbHosts() {
   return (
     <main className="overflow-hidden">
       <SEO
-        title="Airbnb Turnover Cleaning Services | PureTask"
+        title="Airbnb Turnover Cleaning Services"
         description="Fast, reliable turnover cleaning for Airbnb and short-term rental hosts. Same-day service, photo documentation, and verified cleaners."
         url="/for-airbnb-hosts"
         keywords="airbnb cleaning, turnover cleaning, vacation rental cleaning"

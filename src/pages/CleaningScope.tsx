@@ -198,7 +198,7 @@ export default function CleaningScope() {
   return (
     <main className="py-12">
       <SEO 
-        title="What's Included in Our Cleaning Services"
+        title="What's Included in Every Cleaning"
         description="Detailed guide to cleaning service scope: Basic, Deep, Move-Out, and Airbnb Turnover cleaning. Know exactly what tasks are included."
         url="/cleaning-scope"
         keywords="cleaning service scope, what's included in cleaning, deep cleaning tasks, move out cleaning checklist, airbnb turnover cleaning"
