@@ -15,10 +15,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SEO } from '@/components/seo';
 
 export default function CancellationPolicy() {
   return (
     <main className="container max-w-4xl py-8">
+      <SEO
+        title="Cancellation Policy"
+        description="Understand PureTask's cancellation policy, fees, grace periods, and emergency cancellation rules for clients and cleaners."
+        url="/cancellationpolicy"
+        keywords="cancellation policy, cleaning cancellation, refund policy, PureTask cancellation"
+      />
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
