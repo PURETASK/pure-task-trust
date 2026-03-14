@@ -124,7 +124,12 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  All cleaners are verified. Higher reliability score = higher rate = better service.{" "}
+                  <Link to="/reliability-score" className="text-primary hover:underline underline-offset-2 font-medium">
+                    Learn how the reliability score works →
+                  </Link>
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {TIERS.map((tier, i) => (
