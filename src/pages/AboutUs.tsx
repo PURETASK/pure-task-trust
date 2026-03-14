@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { SEO, OrganizationSchema } from "@/components/seo";
+import { SEO, OrganizationSchema, BreadcrumbSchema } from "@/components/seo";
 import heroLandingImg from "@/assets/hero-landing.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
@@ -43,6 +43,7 @@ export default function AboutUs() {
         keywords="about puretask, cleaning service company, trust first cleaning, reliable cleaning service"
       />
       <OrganizationSchema />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'About Us', url: '/about' }]} />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[70vh] flex items-center">

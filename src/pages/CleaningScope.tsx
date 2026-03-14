@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Info, Sparkles, Home as HomeIcon, Key, Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { SEO } from '@/components/seo';
+import { SEO, JsonLd, HowToSchema, BreadcrumbSchema } from '@/components/seo';
 
 const CLEANING_DUTIES = {
   basic: {
@@ -203,6 +203,34 @@ export default function CleaningScope() {
         url="/cleaning-scope"
         keywords="cleaning service scope, what's included in cleaning, deep cleaning tasks, move out cleaning checklist, airbnb turnover cleaning"
       />
+      {/* Service schema for each cleaning type — synchronized with visible tab content */}
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'PureTask Cleaning Service Types',
+        description: 'Complete task scope for each cleaning service type offered on PureTask.',
+        url: 'https://pure-task-trust.lovable.app/cleaning-scope',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Basic Cleaning', description: 'Standard maintenance cleaning — 2–3 hours. Covers kitchen countertops, bathrooms, floors, dusting, and trash.' },
+          { '@type': 'ListItem', position: 2, name: 'Deep Clean', description: 'Top-to-bottom cleaning — 4–6 hours. Includes inside oven, fridge, windows, grout scrubbing, behind furniture.' },
+          { '@type': 'ListItem', position: 3, name: 'Move-Out Cleaning', description: 'Full property clean for end-of-lease — 5–8 hours. Covers all surfaces, appliances inside, carpets, and garage.' },
+          { '@type': 'ListItem', position: 4, name: 'Airbnb Turnover', description: 'Guest-ready turnover clean — 1–3 hours. Includes linen change, restock supplies, full tidy and photo-ready finish.' },
+        ],
+      }} />
+      <HowToSchema
+        name="How to Deep Clean a Home — Room-by-Room Guide"
+        description="A professional deep cleaning walkthrough for every room in your home, based on the PureTask cleaner standard."
+        url="/cleaning-scope"
+        totalTime="PT6H"
+        steps={[
+          { name: 'Kitchen', text: 'Clean inside oven, microwave, and fridge. Degrease rangehood. Scrub sink. Wipe all surfaces, cabinet fronts, and tile backsplash.' },
+          { name: 'Bathrooms', text: 'Scrub grout, descale showerhead and taps, clean exhaust fan, polish mirrors, mop floors, disinfect toilet inside and out.' },
+          { name: 'Bedrooms', text: 'Vacuum mattress, clean under furniture, wipe wardrobe interiors, dust ceiling fans, clean window sills.' },
+          { name: 'Living Areas', text: 'Dust light fixtures, vacuum upholstery, clean interior windows, spot-clean walls, mop hard floors.' },
+          { name: 'Final touches', text: 'Wipe all door handles, light switches, air vents, and door frames. Photograph completed work.' },
+        ]}
+      />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Cleaning Scope', url: '/cleaning-scope' }]} />
       {/* Hero */}
       <section className="py-16 md:py-20 bg-gradient-to-b from-secondary/50 to-background">
         <div className="container">
@@ -225,13 +253,13 @@ export default function CleaningScope() {
             </p>
             
             {/* Disclaimer */}
-            <Alert className="max-w-2xl mx-auto bg-amber-500/10 border-amber-500/30 text-left">
-              <Info className="h-5 w-5 text-amber-600" />
-              <AlertDescription className="text-amber-800 dark:text-amber-200">
+            <Alert className="max-w-2xl mx-auto bg-warning/10 border-warning/30 text-left">
+              <Info className="h-5 w-5 text-warning" />
+              <AlertDescription className="text-foreground/80">
                 <strong className="block mb-1">Important: This is a Guide Only</strong>
-                All cleaners on PureTask are independent contractors who set their own standards and methods. 
-                Nothing described on this page is mandatory. Each cleaner decides how they clean and what 
-                tasks they perform. We recommend discussing specific expectations directly with your cleaner 
+                All cleaners on PureTask are independent contractors who set their own standards and methods.
+                Nothing described on this page is mandatory. Each cleaner decides how they clean and what
+                tasks they perform. We recommend discussing specific expectations directly with your cleaner
                 before booking.
               </AlertDescription>
             </Alert>

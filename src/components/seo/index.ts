@@ -1,9 +1,15 @@
 export { SEO, default } from './SEO';
 export { 
-  JsonLd, 
-  OrganizationSchema, 
-  LocalBusinessSchema, 
-  FAQSchema, 
-  ServiceSchema 
+  JsonLd,
+  JsonLdGraph,
+  OrganizationSchema,
+  LocalBusinessSchema,
+  FAQSchema,
+  ServiceSchema,
+  ArticleSchema,
+  DatasetSchema,
+  WebApplicationSchema,
+  HowToSchema,
+  BreadcrumbSchema,
 } from './JsonLd';
 export { AggregateRatingSchema } from './AggregateRatingSchema';

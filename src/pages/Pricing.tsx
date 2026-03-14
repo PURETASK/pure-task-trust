@@ -8,7 +8,7 @@ import {
   CheckCircle, Award, Shield, Star, Zap, Clock, Info,
   TrendingUp, DollarSign, ArrowRight, Sparkles, Users
 } from 'lucide-react';
-import { SEO, ServiceSchema } from '@/components/seo';
+import { SEO, JsonLd, BreadcrumbSchema, FAQSchema } from '@/components/seo';
 import { motion } from 'framer-motion';
 
 const TIERS = [
@@ -71,10 +71,35 @@ export default function Pricing() {
     <main className="py-0">
       <SEO
         title="Transparent Cleaning Prices"
-        description="No hidden fees, ever. Cleaner rates from $15–85/hr based on reliability tier. See exactly what you pay before booking any cleaning service."
+        description="No hidden fees, ever. Cleaner rates from $20–100/hr based on reliability tier. See exactly what you pay before booking any cleaning service."
         url="/pricing"
       />
-      <ServiceSchema name="House Cleaning Services" description="Professional cleaning with verified cleaners" price="15-85" />
+      {/* Service schema — one tag with full offer details matching visible tier table */}
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Professional House Cleaning',
+        description: 'Verified, background-checked cleaning professionals with GPS check-in, photo documentation, and escrow payment protection.',
+        provider: { '@type': 'Organization', name: 'PureTask', url: 'https://pure-task-trust.lovable.app' },
+        areaServed: { '@type': 'Country', name: 'United States' },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Cleaning Service Tiers',
+          itemListElement: [
+            { '@type': 'Offer', name: 'Bronze Tier Cleaning', description: 'Entry-level verified cleaner — building their reputation.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–35', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Silver Tier Cleaning', description: 'Proven reliability score 50–69. Priority scheduling.', price: '30', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '30–50', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Gold Tier Cleaning', description: 'High reliability score 70–89. Same-day booking available.', price: '40', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '40–65', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Platinum Tier Cleaning', description: 'Elite reliability score 90–100. White-glove service.', price: '50', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '50–100', priceCurrency: 'USD', unitText: 'per hour' } },
+          ],
+        },
+      }} />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
+      <FAQSchema faqs={[
+        { question: 'How much does cleaning cost on PureTask?', answer: 'Cleaning costs depend on cleaner tier: Bronze $20–35/hr, Silver $30–50/hr, Gold $40–65/hr, Platinum $50–100/hr. The platform fee is 15–20% paid by the cleaner, not added to your bill.' },
+        { question: 'What is a credit?', answer: '1 credit equals $1 USD. You purchase credits upfront and use them to book cleanings. Unused credits never expire.' },
+        { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras. The price shown is the price you pay.' },
+        { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job. If you\'re unhappy, you can dispute the job and credits may be returned.' },
+      ]} />
 
       {/* Hero */}
       <section className="relative py-12 sm:py-20 bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">

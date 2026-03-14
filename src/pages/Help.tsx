@@ -20,7 +20,7 @@ import {
 import { useCreateTicket, useSupportTickets } from "@/hooks/useSupportTickets";
 import { FAQSection } from "@/components/faq/FAQSection";
 import { format } from "date-fns";
-import { SEO, FAQSchema } from "@/components/seo";
+import { SEO, FAQSchema, BreadcrumbSchema } from "@/components/seo";
 
 const issueTypes = [
   { id: "cancellation", icon: Calendar, label: "Cancellation", color: "text-destructive" },
@@ -61,12 +61,22 @@ export default function Help() {
   return (
     <main className="flex-1">
       <SEO title="Help & Support Center" description="Find answers to common questions, submit a support ticket, or contact the PureTask team. Quick help for clients and cleaners, available 7 days a week." url="/help" keywords="puretask support, cleaning service help" />
+      {/* FAQSchema mirrors the full visible FAQ content in the FAQ tab */}
       <FAQSchema faqs={[
-        { question: "How do I book a cleaning?", answer: "Browse verified cleaners on our Discover page, select one, and book your preferred date and time." },
-        { question: "How are cleaners verified?", answer: "All cleaners undergo comprehensive background checks and identity verification before joining PureTask." },
-        { question: "What is GPS verification?", answer: "Cleaners check in and out using GPS, so you know exactly when they arrived and left." },
-        { question: "How does photo documentation work?", answer: "Cleaners take before and after photos of their work, which you can review in your dashboard." },
+        { question: "How do I book a cleaning?", answer: "Click 'Book a Cleaning' from your dashboard, select your cleaning type, choose the date and time, and confirm your booking. Your credits will be held until the job is complete." },
+        { question: "Can I cancel or reschedule a booking?", answer: "Yes. You can cancel or reschedule up to 24 hours before your appointment for free. Cancellations within 24 hours may incur a fee. Go to your booking details to make changes." },
+        { question: "How far in advance can I book?", answer: "You can book up to 3 months in advance. We recommend booking at least 2–3 days ahead to ensure your preferred cleaner is available." },
+        { question: "What if my cleaner doesn't show up?", answer: "If your cleaner fails to arrive, you'll receive a full refund plus $50 bonus credits. We take no-shows very seriously and may suspend cleaners who repeatedly miss appointments." },
+        { question: "What are credits?", answer: "Credits are our in-app currency. 1 credit = $1 USD. You purchase credits in advance and use them to book cleanings. All prices shown in dollars are equivalent to credits." },
+        { question: "How do credit holds work?", answer: "When you book, we place a hold on your credits (not a charge). After the job, you approve the final amount based on actual time worked, and only then are credits deducted." },
+        { question: "Can I get a refund on purchased credits?", answer: "Unused credits can be refunded within 30 days of purchase. Credits used for completed bookings cannot be refunded unless there was a service issue." },
+        { question: "How are cleaners vetted?", answer: "All cleaners undergo background checks, identity verification, and must maintain a high reliability score. We also collect reviews from every completed job." },
+        { question: "Can I request a specific cleaner?", answer: "Absolutely. Save cleaners to your Favorites and book directly with them. You can also view cleaner profiles before booking to find the right fit." },
+        { question: "What if I'm not satisfied with the cleaning?", answer: "Report any issues within 24 hours of job completion through the app. We'll investigate and may offer a partial or full credit refund depending on the situation." },
+        { question: "Is my home safe with PureTask cleaners?", answer: "Yes. All cleaners are background-checked, and our rating system ensures quality. You can also review cleaner profiles and read reviews before booking." },
+        { question: "What if something is damaged during cleaning?", answer: "Report damages immediately through the Help section. We have a claims process to handle such situations and will work to resolve issues fairly." },
       ]} />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Help & Support', url: '/help' }]} />
 
       {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/8 via-background to-[hsl(var(--pt-aqua)/0.04)] border-b border-border/50">
