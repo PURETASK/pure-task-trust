@@ -36,7 +36,8 @@ export function isTimeSlotAvailableForSameDay(
   const slotDateTime = setMinutes(setHours(bookingDate, hours), minutes);
   const minBookingTime = addHours(new Date(), SAME_DAY_CONFIG.minimumHoursNotice);
   
-  return !isBefore(slotDateTime, minBookingTime);
+  // Strict greater-than: slot must be MORE than minimumHoursNotice away (not equal)
+  return slotDateTime > minBookingTime;
 }
 
 /**
