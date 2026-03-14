@@ -92,6 +92,9 @@ export function useUserProfile() {
   });
 
   // Mutation to set user role and create profile
+  // NOTE: The handle_new_user DB trigger already creates the role and profiles on signup.
+  // This mutation handles the case for OAuth users who land on /role-selection without
+  // a role set (e.g. if the trigger didn't fire with the expected metadata).
   const setRoleMutation = useMutation({
     mutationFn: async (selectedRole: UserRole) => {
       if (!user?.id) throw new Error('No user logged in');
@@ -104,7 +107,8 @@ export function useUserProfile() {
         .maybeSingle();
 
       if (existingRole) {
-        throw new Error('Role already assigned');
+        // Role already set (e.g., by trigger) — just return it
+        return existingRole.role as UserRole;
       }
 
       // Insert role
@@ -114,9 +118,8 @@ export function useUserProfile() {
 
       if (roleError) throw roleError;
 
-      // Create corresponding profile
+      // Create corresponding profile only if it doesn't already exist
       if (selectedRole === 'client') {
-        // Check if client profile exists
         const { data: existingProfile } = await supabase
           .from('client_profiles')
           .select('id')
@@ -130,18 +133,17 @@ export function useUserProfile() {
               user_id: user.id,
               first_name: user.name || user.email?.split('@')[0],
             });
-          if (profileError) throw profileError;
+          if (profileError && !profileError.message.includes('duplicate')) throw profileError;
+        }
 
-          // Create credit account
-          const { error: creditError } = await supabase
-            .from('credit_accounts')
-            .insert({ user_id: user.id });
-          if (creditError && !creditError.message.includes('duplicate')) {
-            console.error('Credit account error:', creditError);
-          }
+        // Ensure credit account exists
+        const { error: creditError } = await supabase
+          .from('credit_accounts')
+          .insert({ user_id: user.id });
+        if (creditError && !creditError.message.includes('duplicate')) {
+          console.warn('Credit account warning:', creditError);
         }
       } else if (selectedRole === 'cleaner') {
-        // Check if cleaner profile exists
         const { data: existingProfile } = await supabase
           .from('cleaner_profiles')
           .select('id')
@@ -155,7 +157,7 @@ export function useUserProfile() {
               user_id: user.id,
               first_name: user.name || user.email?.split('@')[0],
             });
-          if (profileError) throw profileError;
+          if (profileError && !profileError.message.includes('duplicate')) throw profileError;
         }
       }
 
@@ -163,6 +165,7 @@ export function useUserProfile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
     },
   });
 
