@@ -62,6 +62,18 @@ export default function EarningsCalculator() {
         description="Use our free interactive calculator to estimate your annual cleaning income on PureTask. Adjust hours, rates, and your reliability tier to see real projections."
         url="/earnings-calculator"
       />
+      <WebApplicationSchema
+        name="PureTask Cleaner Earnings Calculator"
+        description="Free interactive tool to estimate annual cleaning income on PureTask by hours worked, hourly rate, and reliability tier."
+        url="/earnings-calculator"
+        applicationCategory="FinanceApplication"
+      />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Earnings Calculator', url: '/earnings-calculator' }]} />
+      <FAQSchema faqs={[
+        { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Bronze cleaners earn $19K–$34K/year, Silver $29K–$48K, Gold $38K–$62K, and Platinum tier cleaners can earn $48K–$96K annually working 30 hours/week.' },
+        { question: 'What is the PureTask platform fee?', answer: 'Platform fees range from 20% for Bronze tier down to 15% for Platinum tier cleaners.' },
+        { question: 'How do I increase my earnings on PureTask?', answer: 'Improve your Reliability Score to reach higher tiers with lower platform fees and premium job access. On-time check-ins, photo compliance, and high client ratings are the fastest ways to boost your score.' },
+      ]} />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">
