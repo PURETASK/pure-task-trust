@@ -140,7 +140,7 @@ export default function AboutUs() {
               <motion.div key={side.badge} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
                 <Card className="overflow-hidden border-border/50 hover:shadow-elevated transition-all h-full">
                   <div className="relative h-52 overflow-hidden">
-                    <img src={side.img} alt={side.badge} className="w-full h-full object-cover" />
+                    <img src={side.img} alt={side.title} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
                     <Badge className={`absolute top-4 left-4 ${side.badgeCls}`}>{side.badge}</Badge>
                   </div>

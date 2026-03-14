@@ -222,7 +222,7 @@ export default function AuthPage() {
                     className={`w-full rounded-2xl border-2 border-border/60 ${opt.border} transition-all text-left overflow-hidden flex items-stretch`}
                   >
                     <div className="relative w-20 h-20 flex-shrink-0">
-                      <img src={opt.image} alt="" className="w-full h-full object-cover" />
+                      <img src={opt.image} alt={opt.title} className="w-full h-full object-cover" loading="lazy" />
                     </div>
                     <div className="flex-1 px-4 py-4 flex items-center gap-3">
                       <div className={`h-10 w-10 rounded-xl ${opt.bg} flex items-center justify-center flex-shrink-0`}>
