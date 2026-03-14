@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { useCleanerProfile, useCleanerStats, useCleanerJobs } from './useCleanerProfile';
+import { useCleanerProfile, useCleanerJobs } from './useCleanerProfile';
+import { useCleanerStats } from './useCleanerEarnings';
 import { useReliabilityScore } from './useReliabilityScore';
 import { useAvailabilityBlocks } from './useAvailability';
 import { useCleanerReviews } from './useReviews';

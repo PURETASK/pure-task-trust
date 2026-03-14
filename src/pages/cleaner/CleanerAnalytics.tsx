@@ -7,7 +7,7 @@ import {
   BarChart3, TrendingUp, Star, Clock, Calendar, DollarSign, 
   CheckCircle, ArrowUpRight, Target, Zap, Award, Users
 } from "lucide-react";
-import { useCleanerStats, useCleanerEarnings } from "@/hooks/useCleanerProfile";
+import { useCleanerStats, useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartTooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area } from "recharts";
 import { format, subWeeks, startOfWeek, endOfWeek, eachWeekOfInterval, startOfMonth, endOfMonth } from "date-fns";
 import { motion } from "framer-motion";
