@@ -35,6 +35,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet><title>Reset Your Password | PureTask</title></Helmet>
       <Header />
       <main className="flex-1 flex items-center justify-center py-20 pt-28 px-4">
         <div className="w-full max-w-md">

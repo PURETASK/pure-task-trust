@@ -82,7 +82,7 @@ export default function Wallet() {
 
   return (
     <main className="flex-1 py-5 sm:py-10">
-      <div className="container px-4 sm:px-6 max-w-3xl">
+      <Helmet><title>My Wallet & Credits | PureTask</title></Helmet>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
 
           {/* Page Header */}

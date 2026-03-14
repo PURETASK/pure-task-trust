@@ -82,7 +82,7 @@ export default function Dashboard() {
 
   return (
     <main className="flex-1 bg-background min-h-screen">
-      {/* ── HERO HEADER ─────────────────────────────────────────────────── */}
+      <Helmet><title>Client Dashboard | PureTask</title></Helmet>
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/8 via-background to-[hsl(var(--pt-aqua)/0.05)] border-b border-border/50">
         <div className="absolute inset-0 opacity-[0.04]">
           <img src={clientHeroImg} alt="" className="w-full h-full object-cover" loading="lazy" />

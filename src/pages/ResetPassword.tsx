@@ -65,6 +65,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Helmet><title>Create New Password | PureTask</title></Helmet>
       <Header />
       <main className="flex-1 flex items-center justify-center py-20 pt-32 px-4">
         <div className="w-full max-w-md">
