@@ -47,6 +47,8 @@ export default function ForAirbnbHosts() {
       <SEO
         title="Airbnb Turnover Cleaning Services"
         description="Same-day turnover cleaning for Airbnb and short-term rental hosts. Verified cleaners, photo documentation, and on-time arrivals. Never miss a check-in."
+        image="/og/og-airbnb-hosts.jpg"
+        url="/for-airbnb-hosts"
         url="/for-airbnb-hosts"
         keywords="airbnb cleaning, turnover cleaning, vacation rental cleaning"
       />
