@@ -161,7 +161,7 @@ function ClientFooter() {
                 { name: "My Properties", path: "/properties" },
                 { name: "Recurring Plans", path: "/recurring-plans" },
                 { name: "Reschedule Requests", path: "/reschedule-requests" },
-                { name: "Cancellation Policy", path: "/cancellationpolicy" },
+                { name: "Cancellation Policy", path: "/cancellation-policy" },
               ].map(l => (
                 <li key={l.path}>
                   <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.name}</FooterLink>
