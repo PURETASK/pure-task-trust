@@ -122,6 +122,18 @@ export default function CostEstimator() {
         description="Get an instant, transparent estimate for professional home cleaning. Enter your home size, clean type, and frequency to see exact pricing with no hidden fees."
         url="/cost-estimator"
       />
+      <WebApplicationSchema
+        name="PureTask House Cleaning Cost Estimator"
+        description="Free interactive tool to instantly estimate professional home cleaning costs by service type, home size, and booking frequency."
+        url="/cost-estimator"
+        applicationCategory="UtilityApplication"
+      />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Cost Estimator', url: '/cost-estimator' }]} />
+      <FAQSchema faqs={[
+        { question: 'How much does house cleaning cost?', answer: 'National averages: standard clean (2BR/1BA) $85–$140, deep clean $150–$250, move-out clean $250–$450, Airbnb turnover $65–$120. Prices vary by home size, location, and cleaner tier.' },
+        { question: 'Can I get a discount for regular cleaning?', answer: 'Yes. PureTask offers 5% off monthly bookings, 10% off bi-weekly, and 15% off weekly recurring bookings.' },
+        { question: 'What is included in a standard clean?', answer: 'Standard cleans include vacuuming, mopping, kitchen and bathroom surfaces, dusting, and emptying bins. Add-ons like oven cleaning and interior windows are available for an extra charge.' },
+      ]} />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">
