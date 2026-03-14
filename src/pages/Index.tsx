@@ -196,7 +196,7 @@ export default function Index() {
         </motion.div>
 
         <div className="relative z-10 w-full px-4 sm:px-6 py-20 sm:py-32 pt-28 sm:pt-32">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold mb-5 sm:mb-6 backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -216,14 +216,14 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed">
+              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0">
               
               Background-checked cleaners. GPS check-ins. Photo proof. Escrow payment — released only when you approve.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10">
+              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-center sm:items-start">
               
               <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
@@ -242,7 +242,7 @@ export default function Index() {
 
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
+              className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 text-sm">
               
               {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map((t) =>
               <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
