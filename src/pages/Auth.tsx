@@ -256,7 +256,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left image panel */}
+      <Helmet><title>Sign In or Create Account | PureTask</title></Helmet>
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <img src={panelBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-background/50" />
