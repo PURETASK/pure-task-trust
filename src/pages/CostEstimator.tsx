@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { SEO } from '@/components/seo';
+import { WebApplicationSchema, BreadcrumbSchema, FAQSchema } from '@/components/seo/JsonLd';
 import { Link } from 'react-router-dom';
 
 type CleanType = 'standard' | 'deep' | 'moveout' | 'airbnb';
