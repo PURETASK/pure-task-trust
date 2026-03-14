@@ -196,7 +196,7 @@ export default function Index() {
         </motion.div>
 
         <div className="relative z-10 w-full px-4 sm:px-6 py-20 sm:py-32 pt-28 sm:pt-32">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold mb-5 sm:mb-6 backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -216,14 +216,14 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed">
+              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0">
               
               Background-checked cleaners. GPS check-ins. Photo proof. Escrow payment — released only when you approve.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10">
+              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-center sm:items-start">
               
               <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
@@ -242,7 +242,7 @@ export default function Index() {
 
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
+              className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 text-sm">
               
               {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map((t) =>
               <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
@@ -358,13 +358,13 @@ export default function Index() {
               key={s.step}
               initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-              className="relative">
+              className="relative text-center sm:text-left">
               
                 {i < STEPS.length - 1 &&
               <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
               }
                 <div className="text-5xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
-                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
+                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
@@ -395,7 +395,7 @@ export default function Index() {
               
               <img src={clientImg} alt="Happy homeowner inspecting a freshly cleaned living space" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-2 border-primary rounded-2xl sm:rounded-3xl" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 text-center sm:text-left flex flex-col items-center sm:items-start">
                 <Badge className="mb-2 sm:mb-3 bg-primary/40 text-primary-foreground border-2 border-white/80 rounded-full text-sm px-4 py-1 font-semibold">For Clients</Badge>
                 <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
                 <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
@@ -413,7 +413,7 @@ export default function Index() {
               
               <img src={cleanerImg} alt="Professional PureTask cleaner ready to start a verified cleaning job" className="w-full h-64 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="320" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-2 border-success rounded-2xl sm:rounded-3xl" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 text-center sm:text-left flex flex-col items-center sm:items-start">
                 <Badge className="mb-2 sm:mb-3 bg-success/20 text-success border-success/30">For Cleaners</Badge>
                 <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Earn on your terms</h3>
                 <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Set your own schedule and rates. Get paid weekly or instantly. Grow your reputation.</p>
