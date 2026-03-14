@@ -69,7 +69,8 @@ export default function CleanerEarnings() {
 
   return (
     <CleanerLayout>
-      <Helmet><title>Earnings & Payouts | PureTask</title></Helmet>
+      <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
+      <div className="space-y-6">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
