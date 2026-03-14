@@ -242,7 +242,6 @@ export default function CleaningChecklists() {
         description="Free printable cleaning checklists for weekly maintenance, deep cleans, move-out inspections, and Airbnb turnovers. Interactive, copy-able, and print-ready."
         image="/og/og-checklists.jpg"
         url="/checklists"
-        url="/checklists"
       />
       <HowToSchema
         name="How to Deep Clean a House — Complete Step-by-Step Checklist"

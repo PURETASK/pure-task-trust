@@ -74,7 +74,6 @@ export default function Pricing() {
         description="No hidden fees, ever. Cleaner rates from $20–100/hr based on reliability tier. See exactly what you pay before booking any cleaning service."
         image="/og/og-pricing.jpg"
         url="/pricing"
-        url="/pricing"
       />
       {/* Service schema — one tag with full offer details matching visible tier table */}
       <JsonLd data={{
