@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
@@ -138,8 +138,9 @@ const App = () => (
                   <Routes>
                     {/* Public routes */}
                     <Route path="/" element={<Index />} />
-                    <Route path="/legal" element={<Legal />} />
-                    <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
+                     <Route path="/legal" element={<Legal />} />
+                     <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
+                     <Route path="/cancellationpolicy" element={<Navigate to="/cancellation-policy" replace />} />
                     <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/for-airbnb-hosts" element={<ForAirbnbHosts />} />
