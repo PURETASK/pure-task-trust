@@ -43,6 +43,20 @@ export interface CleanerStats {
   paidOut: number;
 }
 
+/** Extended stats returned by useCleanerStats (dashboard / analytics) */
+export interface CleanerDashboardStats {
+  jobsThisWeek: number;
+  hoursThisWeek: number;
+  earnedThisWeek: number;
+  unreadMessages: number;
+  totalEarned: number;
+  availableBalance: number;
+  pendingBalance: number;
+  totalJobs: number;
+  completedJobs: number;
+  avgRating: number | null;
+}
+
 export function useCleanerEarnings() {
   const { profile } = useCleanerProfile();
   const queryClient = useQueryClient();
