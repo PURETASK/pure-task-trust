@@ -65,7 +65,8 @@ export function useUserProfile() {
           .eq('user_id', user.id)
           .maybeSingle();
         clientProfile = data;
-        needsOnboarding = !clientProfile;
+        // Client profile is auto-created by DB trigger — never block on missing profile
+        needsOnboarding = false;
       } else if (role === 'cleaner') {
         const { data } = await supabase
           .from('cleaner_profiles')
@@ -73,8 +74,8 @@ export function useUserProfile() {
           .eq('user_id', user.id)
           .maybeSingle();
         cleanerProfile = data;
-        // Check if cleaner has completed onboarding
-        needsOnboarding = !cleanerProfile || !cleanerProfile.onboarding_completed_at;
+        // Only redirect to onboarding if profile exists but onboarding is not complete
+        needsOnboarding = !!cleanerProfile && !cleanerProfile.onboarding_completed_at;
       }
 
       return {
