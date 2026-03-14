@@ -67,6 +67,8 @@ import AboutUs from "./pages/AboutUs";
 import Referral from "./pages/Referral";
 import RecurringPlans from "./pages/RecurringPlans";
 import Reviews from "./pages/Reviews";
+import EarningsCalculator from "./pages/EarningsCalculator";
+import CostEstimator from "./pages/CostEstimator";
 import AdminAnalyticsDashboard from "./pages/admin/AdminAnalyticsDashboard";
 import AdminBookingsConsole from "./pages/admin/AdminBookingsConsole";
 import AdminClientJobs from "./pages/admin/AdminClientJobs";
@@ -144,6 +146,8 @@ const App = () => (
                     <Route path="/cleaning-scope" element={<CleaningScope />} />
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/earnings-calculator" element={<EarningsCalculator />} />
+                    <Route path="/cost-estimator" element={<CostEstimator />} />
                     
                     {/* Admin routes - protected by RequireAdmin (server-side role check) */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
