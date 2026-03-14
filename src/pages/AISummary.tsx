@@ -43,7 +43,7 @@ const FAQ_ITEMS = [
   {
     question: 'How does PureTask protect clients?',
     answer:
-      'Client payments are held in escrow until they approve the completed job. GPS check-in confirms cleaner arrival. Photo documentation records before and after the clean. A dispute resolution system is available for all bookings.',
+      'Client payments are held in escrow after the job. Clients review and report any issue within 24 hours, or payment is released automatically. GPS check-in confirms cleaner arrival. Photo documentation records before and after the clean. A dispute resolution system is available for all bookings.',
   },
   {
     question: 'How do cleaners get paid on PureTask?',
