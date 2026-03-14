@@ -434,11 +434,13 @@ export default function Book() {
                   <Card className="mb-6">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-center gap-6">
-                        <Button
+                      <Button
                           variant="outline"
                           size="icon"
+                          className="h-12 w-12 touch-target rounded-xl"
                           onClick={() => setHours(Math.max(1, hours - 1))}
                           disabled={hours <= 1}
+                          aria-label="Decrease hours"
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
@@ -449,8 +451,10 @@ export default function Book() {
                         <Button
                           variant="outline"
                           size="icon"
+                          className="h-12 w-12 touch-target rounded-xl"
                           onClick={() => setHours(Math.min(8, hours + 1))}
                           disabled={hours >= 8}
+                          aria-label="Increase hours"
                         >
                           <Plus className="h-4 w-4" />
                         </Button>

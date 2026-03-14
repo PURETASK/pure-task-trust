@@ -20,10 +20,10 @@ export function Header() {
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" asChild className="hidden sm:flex h-11 px-4 touch-target font-medium">
             <Link to="/auth">Sign In</Link>
           </Button>
-          <Button size="sm" asChild className="rounded-full">
+          <Button size="sm" asChild className="h-11 px-5 touch-target rounded-full font-semibold">
             <Link to="/auth?mode=signup">Get Started</Link>
           </Button>
         </div>

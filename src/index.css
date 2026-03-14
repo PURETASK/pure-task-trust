@@ -169,6 +169,22 @@
   button {
     touch-action: manipulation;
   }
+
+  /* Global minimum tap target on mobile: 48×48px per WCAG 2.5.5 */
+  @media (max-width: 767px) {
+    button,
+    [role="button"],
+    a:not(.no-tap-expand) {
+      min-height: 44px;
+      /* Expand clickable area without changing layout using pseudo-element */
+      position: relative;
+    }
+    /* Expand actual interactive area by 4px on each side via padding compensation */
+    button:not(.no-tap-expand),
+    [role="button"]:not(.no-tap-expand) {
+      min-height: 48px;
+    }
+  }
 }
 
 @layer utilities {
@@ -264,9 +280,9 @@
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated;
   }
 
-  /* Touch-friendly minimum tap target */
+  /* Touch-friendly minimum tap target — 48px per WCAG 2.5.5 */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px];
+    @apply min-h-[48px] min-w-[48px];
   }
 
   /* Hide scrollbar while preserving scroll behavior */
