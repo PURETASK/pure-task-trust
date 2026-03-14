@@ -55,6 +55,7 @@ export default function CleanerMarketplace() {
 
   return (
     <CleanerLayout>
+      <Helmet><title>Job Marketplace | PureTask</title></Helmet>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
