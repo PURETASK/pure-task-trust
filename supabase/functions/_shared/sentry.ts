@@ -18,7 +18,7 @@
  * does for native Deno.cron() jobs.
  */
 
-import * as Sentry from "npm:@sentry/deno@8.38.0";
+import * as Sentry from "https://deno.land/x/sentry/index.mjs";
 
 let initialised = false;
 
