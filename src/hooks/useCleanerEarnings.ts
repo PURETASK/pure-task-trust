@@ -43,6 +43,20 @@ export interface CleanerStats {
   paidOut: number;
 }
 
+/** Extended stats returned by useCleanerStats (dashboard / analytics) */
+export interface CleanerDashboardStats {
+  jobsThisWeek: number;
+  hoursThisWeek: number;
+  earnedThisWeek: number;
+  unreadMessages: number;
+  totalEarned: number;
+  availableBalance: number;
+  pendingBalance: number;
+  totalJobs: number;
+  completedJobs: number;
+  avgRating: number | null;
+}
+
 export function useCleanerEarnings() {
   const { profile } = useCleanerProfile();
   const queryClient = useQueryClient();
@@ -126,19 +140,25 @@ export function useCleanerEarnings() {
   };
 }
 
-// Hook for cleaner stats (used in dashboard)
+// Hook for cleaner stats (used in dashboard, analytics, AI assistant)
 export function useCleanerStats() {
   const { profile } = useCleanerProfile();
 
   const query = useQuery({
     queryKey: ['cleaner-stats', profile?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<CleanerDashboardStats> => {
       if (!profile?.id) {
         return {
           jobsThisWeek: 0,
           hoursThisWeek: 0,
           earnedThisWeek: 0,
           unreadMessages: 0,
+          totalEarned: 0,
+          availableBalance: 0,
+          pendingBalance: 0,
+          totalJobs: 0,
+          completedJobs: 0,
+          avgRating: null,
         };
       }
 
@@ -146,47 +166,82 @@ export function useCleanerStats() {
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       weekStart.setHours(0, 0, 0, 0);
 
-      // Get jobs this week
-      const { data: jobs } = await supabase
-        .from('jobs')
-        .select('id, actual_minutes')
-        .eq('cleaner_id', profile.id)
-        .gte('scheduled_start_at', weekStart.toISOString())
-        .in('status', ['completed', 'in_progress', 'confirmed']);
+      // Run all queries in parallel
+      const [jobsRes, weekEarningsRes, allEarningsRes, allJobsRes, pendingJobsRes] =
+        await Promise.all([
+          supabase
+            .from('jobs')
+            .select('id, actual_minutes')
+            .eq('cleaner_id', profile.id)
+            .gte('scheduled_start_at', weekStart.toISOString())
+            .in('status', ['completed', 'in_progress', 'confirmed']),
+          supabase
+            .from('cleaner_earnings')
+            .select('net_credits')
+            .eq('cleaner_id', profile.id)
+            .gte('created_at', weekStart.toISOString()),
+          supabase
+            .from('cleaner_earnings')
+            .select('net_credits, payout_id')
+            .eq('cleaner_id', profile.id),
+          supabase
+            .from('jobs')
+            .select('id, status')
+            .eq('cleaner_id', profile.id),
+          supabase
+            .from('jobs')
+            .select('escrow_credits_reserved')
+            .eq('cleaner_id', profile.id)
+            .eq('status', 'in_progress'),
+        ]);
 
-      // Get earnings this week
-      const { data: earnings } = await supabase
-        .from('cleaner_earnings')
-        .select('net_credits')
-        .eq('cleaner_id', profile.id)
-        .gte('created_at', weekStart.toISOString());
+      const weeklyJobs = jobsRes.data || [];
+      const weeklyEarnings = weekEarningsRes.data || [];
+      const allEarnings = allEarningsRes.data || [];
+      const allJobs = allJobsRes.data || [];
+      const pendingJobs = pendingJobsRes.data || [];
 
-      // Get unread messages count
-      const unreadCount = 0; // Simplified - messages table may have different schema
-
-      const hoursThisWeek = jobs?.reduce((sum, j) => 
-        sum + ((j.actual_minutes as number | null) || 0) / 60, 0) || 0;
-
-      const earnedThisWeek = earnings?.reduce((sum, e) => 
-        sum + e.net_credits, 0) || 0;
+      const hoursThisWeek = weeklyJobs.reduce(
+        (sum, j) => sum + ((j.actual_minutes as number | null) || 0) / 60, 0,
+      );
+      const earnedThisWeek = weeklyEarnings.reduce((sum, e) => sum + e.net_credits, 0);
+      const totalEarned = allEarnings.reduce((sum, e) => sum + e.net_credits, 0);
+      const paidOut = allEarnings.filter(e => e.payout_id).reduce((sum, e) => sum + e.net_credits, 0);
+      const availableBalance = totalEarned - paidOut;
+      const pendingBalance = pendingJobs.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
+      const completedJobs = allJobs.filter(j => j.status === 'completed').length;
 
       return {
-        jobsThisWeek: jobs?.length || 0,
+        jobsThisWeek: weeklyJobs.length,
         hoursThisWeek: Math.round(hoursThisWeek * 10) / 10,
         earnedThisWeek,
-        unreadMessages: unreadCount || 0,
+        unreadMessages: 0,
+        totalEarned,
+        availableBalance,
+        pendingBalance,
+        totalJobs: allJobs.length,
+        completedJobs,
+        avgRating: profile.avg_rating,
       };
     },
     enabled: !!profile?.id,
   });
 
+  const empty: CleanerDashboardStats = {
+    jobsThisWeek: 0,
+    hoursThisWeek: 0,
+    earnedThisWeek: 0,
+    unreadMessages: 0,
+    totalEarned: 0,
+    availableBalance: 0,
+    pendingBalance: 0,
+    totalJobs: 0,
+    completedJobs: 0,
+    avgRating: null,
+  };
+
   return {
-    stats: query.data || {
-      jobsThisWeek: 0,
-      hoursThisWeek: 0,
-      earnedThisWeek: 0,
-      unreadMessages: 0,
-    },
+    stats: query.data || empty,
     isLoading: query.isLoading,
   };
 }

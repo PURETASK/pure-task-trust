@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { StatCard } from "@/components/cleaner/StatCard";
@@ -14,58 +13,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
+import { useCountdown } from "@/hooks/useCountdown";
+import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { format, differenceInMinutes, isToday } from "date-fns";
+import { motion } from "framer-motion";
+import { format, isToday } from "date-fns";
 import type { CleanerTier } from "@/lib/tier-config";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import {
-  Briefcase, Clock, DollarSign, MessageSquare, Search, Calendar,
-  BarChart3, BookOpen, Settings, TrendingUp, Gift, Users, ArrowRight,
-  Lightbulb, Timer, Star, Zap, Shield, Camera, MapPin, Award,
-  ChevronRight, Phone, CheckCircle, Flame, Target
+  Briefcase, Clock, DollarSign, MessageSquare, Search,
+  TrendingUp, ArrowRight, Lightbulb, Timer, Shield, Award,
 } from "lucide-react";
-
-const TIPS = [
-  { icon: "📸", text: "Upload before & after photos — cleaners with photo proof get 23% more repeat bookings." },
-  { icon: "⏰", text: "Respond to job offers within 15 mins to boost your acceptance rate and reliability score." },
-  { icon: "⭐", text: "5-star reviews unlock Gold tier. A friendly check-in message after every job goes a long way." },
-  { icon: "💰", text: "Set your rate closer to your tier ceiling — clients associate higher rates with higher quality." },
-  { icon: "📅", text: "Keep your availability calendar up to date so the system auto-assigns you the best matches." },
-  { icon: "🤝", text: "Refer a cleaner friend and earn credits. Every referral counts toward your monthly goals." },
-  { icon: "🔄", text: "Returning clients are worth 3× a new booking. Leave a thank-you note after every job." },
-  { icon: "🚀", text: "Use the Boost feature on slow weeks — it surfaces your profile first in the marketplace." },
-];
-
-const TIER_COLORS: Record<string, { bg: string; text: string; border: string; gradient: string }> = {
-  bronze: { bg: "bg-amber-500/10", text: "text-amber-600", border: "border-amber-500/30", gradient: "from-amber-500/20 to-amber-600/5" },
-  silver: { bg: "bg-slate-400/10", text: "text-slate-500", border: "border-slate-400/30", gradient: "from-slate-400/20 to-slate-500/5" },
-  gold: { bg: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/30", gradient: "from-yellow-400/20 to-yellow-600/5" },
-  platinum: { bg: "bg-cyan-500/10", text: "text-cyan-600", border: "border-cyan-500/30", gradient: "from-cyan-400/20 to-cyan-600/5" },
-};
-
-function useCountdown(targetDate: Date | null) {
-  const [timeLeft, setTimeLeft] = useState("");
-  useEffect(() => {
-    if (!targetDate) return;
-    const update = () => {
-      const diffMin = differenceInMinutes(targetDate, new Date());
-      if (diffMin < 0) { setTimeLeft("Now"); return; }
-      const h = Math.floor(diffMin / 60);
-      const m = diffMin % 60;
-      setTimeLeft(h > 0 ? `${h}h ${m}m` : `${m}m`);
-    };
-    update();
-    const id = setInterval(update, 60000);
-    return () => clearInterval(id);
-  }, [targetDate]);
-  return timeLeft;
-}
 
 function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["jobs"] }) {
   const todayJobs = jobs
@@ -103,69 +65,6 @@ function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["job
     </motion.div>
   );
 }
-
-const FEATURE_SECTIONS = [
-  {
-    title: "💼 Jobs & Work",
-    color: "bg-primary/5 border-primary/15",
-    iconBg: "bg-primary/10",
-    iconColor: "text-primary",
-    items: [
-      { icon: Search, label: "Job Marketplace", desc: "Find new opportunities", href: "/cleaner/marketplace" },
-      { icon: Briefcase, label: "Active Jobs", desc: "Manage accepted jobs", href: "/cleaner/jobs" },
-      { icon: Calendar, label: "Schedule", desc: "Your job calendar", href: "/cleaner/schedule" },
-      { icon: MapPin, label: "Service Areas", desc: "Your coverage zones", href: "/cleaner/service-areas" },
-    ],
-  },
-  {
-    title: "💰 Money & Earnings",
-    color: "bg-success/5 border-success/15",
-    iconBg: "bg-success/10",
-    iconColor: "text-success",
-    items: [
-      { icon: DollarSign, label: "Earnings & Payouts", desc: "Track income, request payouts", href: "/cleaner/earnings" },
-      { icon: BarChart3, label: "Analytics", desc: "Your performance metrics", href: "/cleaner/analytics" },
-      { icon: Zap, label: "Instant Payout", desc: "Get paid now", href: "/cleaner/earnings" },
-      { icon: Target, label: "Goals & Rewards", desc: "Monthly earning goals", href: "/cleaner/dashboard" },
-    ],
-  },
-  {
-    title: "⭐ Profile & Trust",
-    color: "bg-warning/5 border-warning/15",
-    iconBg: "bg-warning/10",
-    iconColor: "text-warning",
-    items: [
-      { icon: Shield, label: "Verification", desc: "ID, background & badges", href: "/cleaner/verification" },
-      { icon: TrendingUp, label: "Reliability Score", desc: "How your score works", href: "/cleaner/reliability" },
-      { icon: Star, label: "Reviews", desc: "Your ratings & feedback", href: "/reviews" },
-      { icon: Award, label: "Tier Progress", desc: "Bronze → Platinum path", href: "/cleaner/dashboard" },
-    ],
-  },
-  {
-    title: "🛠️ Tools & Settings",
-    color: "bg-[hsl(var(--pt-purple)/0.05)] border-[hsl(var(--pt-purple)/0.15)]",
-    iconBg: "bg-[hsl(var(--pt-purple)/0.1)]",
-    iconColor: "text-[hsl(var(--pt-purple))]",
-    items: [
-      { icon: Clock, label: "Availability", desc: "Set working hours & time off", href: "/cleaner/availability" },
-      { icon: Settings, label: "Profile Settings", desc: "Rates, services & info", href: "/cleaner/profile" },
-      { icon: Users, label: "My Team", desc: "Manage team members", href: "/cleaner/team" },
-      { icon: MessageSquare, label: "Messages", desc: "Chat with clients", href: "/cleaner/messages" },
-    ],
-  },
-  {
-    title: "📚 Growth & Resources",
-    color: "bg-accent/5 border-accent/15",
-    iconBg: "bg-accent/10",
-    iconColor: "text-primary",
-    items: [
-      { icon: BookOpen, label: "Resources & Tips", desc: "Training & education", href: "/cleaner/resources" },
-      { icon: Gift, label: "Referral Program", desc: "Earn by referring cleaners", href: "/cleaner/referral" },
-      { icon: Flame, label: "AI Assistant", desc: "Job support & guidance", href: "/cleaner/ai-assistant" },
-      { icon: Camera, label: "Calendar Sync", desc: "Sync with your calendar", href: "/cleaner/calendar-sync" },
-    ],
-  },
-];
 
 export default function CleanerDashboard() {
   const { user } = useAuth();
@@ -318,7 +217,7 @@ export default function CleanerDashboard() {
             >
               <h2 className="text-base sm:text-xl font-bold mb-3 sm:mb-4">{section.title}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-                {section.items.map((item, i) => (
+                {section.items.map((item) => (
                   <motion.div key={item.label} whileHover={{ y: -3, scale: 1.01 }} transition={{ type: "spring", stiffness: 400 }}>
                     <Link to={item.href}>
                       <Card className={`border ${section.color} hover:shadow-elevated transition-all duration-200 cursor-pointer h-full`}>

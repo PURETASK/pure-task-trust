@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,192 +17,17 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  LogOut, Settings, HelpCircle, Wallet, Wifi, WifiOff, Loader2,
-  LayoutDashboard, Calendar, DollarSign, Shield, Search, Sparkles,
-  Bell, User, BookOpen, Users, TrendingUp, Bot, Star
-} from "lucide-react";
-import { useWallet } from "@/hooks/useWallet";
-import { useCleanerProfile } from "@/hooks/useCleanerProfile";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { LogOut, HelpCircle, Sparkles, Shield, Bell } from "lucide-react";
+import { CreditChip } from "@/components/layout/header/CreditChip";
+import { CleanerAvailabilityToggle } from "@/components/layout/header/CleanerAvailabilityToggle";
+import { RoleBadge } from "@/components/layout/header/RoleBadge";
+import { RoleQuickLinks } from "@/components/layout/header/RoleQuickLinks";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
-// ─── CREDIT CHIP (Client only) ────────────────────────────────────────────────
-function CreditChip() {
-  const { account } = useWallet();
-  if (account === null || account === undefined) return null;
-  const available = (account.current_balance || 0) - (account.held_balance || 0);
-  return (
-    <Link
-      to="/wallet"
-      className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 hover:bg-primary/15 border border-primary/20 transition-colors group"
-    >
-      <Wallet className="h-3.5 w-3.5 text-primary" />
-      <span className="text-xs font-bold text-primary">{available}</span>
-      <span className="text-xs text-primary/60 font-medium">cr</span>
-    </Link>
-  );
-}
-
-// ─── AVAILABILITY TOGGLE (Cleaner only) ───────────────────────────────────────
-function CleanerAvailabilityToggle() {
-  const { profile } = useCleanerProfile();
-  const queryClient = useQueryClient();
-  const [toggling, setToggling] = useState(false);
-  const isAvailable = profile?.is_available ?? false;
-
-  const handleToggle = async () => {
-    if (!profile?.id) return;
-    setToggling(true);
-    try {
-      const { error } = await supabase
-        .from("cleaner_profiles")
-        .update({ is_available: !isAvailable })
-        .eq("id", profile.id);
-      if (error) throw error;
-      queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
-      toast.success(
-        !isAvailable
-          ? "You're now online — clients can book you!"
-          : "You're now offline — no new bookings."
-      );
-    } catch {
-      toast.error("Failed to update availability");
-    } finally {
-      setToggling(false);
-    }
-  };
-
-  return (
-    <button
-      onClick={handleToggle}
-      disabled={toggling || !profile}
-      className={cn(
-        "hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all",
-        isAvailable
-          ? "bg-success/10 border-success/30 text-success hover:bg-success/20 shadow-sm"
-          : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
-      )}
-    >
-      {toggling ? (
-        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-      ) : (
-        <span className={cn(
-          "h-2 w-2 rounded-full",
-          isAvailable ? "bg-success animate-pulse" : "bg-muted-foreground"
-        )} />
-      )}
-      {isAvailable ? "Online" : "Offline"}
-    </button>
-  );
-}
-
-// ─── ROLE BADGE ───────────────────────────────────────────────────────────────
-function RoleBadge({ role }: { role: string }) {
-  const config = {
-    admin:   { label: "Admin",   className: "bg-destructive/10 text-destructive border-destructive/20" },
-    cleaner: { label: "Cleaner", className: "bg-success/10 text-success border-success/20" },
-    client:  { label: "Client",  className: "bg-primary/10 text-primary border-primary/20" },
-  }[role] ?? { label: role, className: "bg-muted text-muted-foreground border-border" };
-
-  return (
-    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide", config.className)}>
-      {config.label}
-    </span>
-  );
-}
-
-// ─── ROLE-SPECIFIC QUICK LINKS in dropdown ────────────────────────────────────
-function RoleQuickLinks({ role }: { role: string }) {
-  if (role === "admin") return (
-    <>
-      <DropdownMenuItem asChild>
-        <Link to="/admin/hub" className="flex items-center gap-2 cursor-pointer">
-          <LayoutDashboard className="h-4 w-4 text-destructive" />Admin Hub
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/admin/analytics" className="flex items-center gap-2 cursor-pointer">
-          <TrendingUp className="h-4 w-4 text-destructive" />Analytics
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/admin/trust-safety" className="flex items-center gap-2 cursor-pointer">
-          <Shield className="h-4 w-4 text-destructive" />Trust & Safety
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/admin/users" className="flex items-center gap-2 cursor-pointer">
-          <Users className="h-4 w-4 text-destructive" />Users
-        </Link>
-      </DropdownMenuItem>
-    </>
-  );
-
-  if (role === "cleaner") return (
-    <>
-      <DropdownMenuItem asChild>
-        <Link to="/cleaner/dashboard" className="flex items-center gap-2 cursor-pointer">
-          <LayoutDashboard className="h-4 w-4 text-success" />Dashboard
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/cleaner/schedule" className="flex items-center gap-2 cursor-pointer">
-          <Calendar className="h-4 w-4 text-success" />My Schedule
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/cleaner/earnings" className="flex items-center gap-2 cursor-pointer">
-          <DollarSign className="h-4 w-4 text-success" />Earnings
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/cleaner/ai-assistant" className="flex items-center gap-2 cursor-pointer">
-          <Bot className="h-4 w-4 text-success" />AI Assistant
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/cleaner/settings" className="flex items-center gap-2 cursor-pointer">
-          <Settings className="h-4 w-4 text-success" />Settings
-        </Link>
-      </DropdownMenuItem>
-    </>
-  );
-
-  // Client
-  return (
-    <>
-      <DropdownMenuItem asChild>
-        <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
-          <LayoutDashboard className="h-4 w-4 text-primary" />Dashboard
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/discover" className="flex items-center gap-2 cursor-pointer">
-          <Search className="h-4 w-4 text-primary" />Find Cleaners
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/wallet" className="flex items-center gap-2 cursor-pointer">
-          <Wallet className="h-4 w-4 text-primary" />Wallet & Credits
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/referral" className="flex items-center gap-2 cursor-pointer">
-          <Star className="h-4 w-4 text-primary" />Referral Program
-        </Link>
-      </DropdownMenuItem>
-    </>
-  );
-}
-
-// ─── MAIN LAYOUT ──────────────────────────────────────────────────────────────
 export function MainLayout({ children }: MainLayoutProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -222,7 +47,6 @@ export function MainLayout({ children }: MainLayoutProps) {
     return "/dashboard";
   };
 
-  // Per-role header accent stripe color
   const headerAccentClass = !isAuthenticated
     ? ""
     : user?.role === "admin"

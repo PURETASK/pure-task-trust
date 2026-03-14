@@ -1,6 +1,6 @@
 import { Check, Clock, MapPin, Navigation, Camera, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { JobStatus } from '@/lib/api';
+import { JobStatus } from '@/lib/types';
 
 interface TimelineStep {
   status: JobStatus;

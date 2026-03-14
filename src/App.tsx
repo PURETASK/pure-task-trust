@@ -1,5 +1,4 @@
 import { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,6 +11,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePostSignup } from "@/hooks/usePostSignup";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
@@ -107,7 +107,6 @@ const AdminPlatformConfig = lazy(() => import("./pages/admin/AdminPlatformConfig
 const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminHub = lazy(() => import("./pages/admin/AdminHub"));
 
-// Minimal skeleton shown while a lazy chunk is loading
 function PageLoader() {
   return (
     <div className="min-h-[60vh] flex flex-col gap-4 p-6 container max-w-4xl">
@@ -119,10 +118,16 @@ function PageLoader() {
   );
 }
 
+// Thin component so usePostSignup runs inside AuthProvider
+function PostSignupRunner() {
+  usePostSignup();
+  return null;
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute default stale time
+      staleTime: 60 * 1000,
     },
   },
 });
@@ -133,32 +138,33 @@ const App = () => (
       <ThemeProvider defaultTheme="light" storageKey="puretask-theme">
         <AuthProvider>
           <TooltipProvider>
-            <Toaster />
+            {/* Single Sonner toaster — shadcn <Toaster /> removed */}
             <Sonner />
             <BrowserRouter>
+              <PostSignupRunner />
               <ScrollToTop />
               <ExitIntentPopup />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
-                  {/* Auth pages - no layout */}
+                  {/* Auth pages — no layout */}
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
-                  
-                  {/* Role selection - no layout */}
+
+                  {/* Role selection — no layout */}
                   <Route path="/role-selection" element={
                     <RequireAuth requireRole={false}>
                       <RoleSelection />
                     </RequireAuth>
                   } />
-                  
-                  {/* Cleaner onboarding - no layout */}
+
+                  {/* Cleaner onboarding — no layout */}
                   <Route path="/cleaner/onboarding" element={
                     <RequireAuth requireRole={false}>
                       <CleanerOnboarding />
                     </RequireAuth>
                   } />
-                  
+
                   {/* All other routes with MainLayout */}
                   <Route path="/*" element={
                     <MainLayout>
@@ -182,7 +188,7 @@ const App = () => (
                         <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
                         <Route path="/checklists" element={<CleaningChecklists />} />
                         <Route path="/ai-summary" element={<AISummary />} />
-                        
+
                         {/* Admin routes */}
                         <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
                         <Route path="/admin/trust-safety" element={<RequireAdmin><TrustSafetyDashboard /></RequireAdmin>} />
@@ -207,7 +213,7 @@ const App = () => (
                         <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                         <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
                         <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
-                        
+
                         {/* Client routes */}
                         <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
                         <Route path="/discover" element={<Discover />} />
@@ -216,7 +222,8 @@ const App = () => (
                         <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
                         <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
                         <Route path="/job/:id/approve" element={<RequireClient><JobApproval /></RequireClient>} />
-                        <Route path="/job-approval/:id" element={<RequireClient><JobApproval /></RequireClient>} />
+                        {/* Legacy alias → canonical path */}
+                        <Route path="/job-approval/:id" element={<Navigate to="/job/:id/approve" replace />} />
                         <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
                         <Route path="/messages" element={<RequireClient><Messages /></RequireClient>} />
                         <Route path="/help" element={<Help />} />
@@ -229,7 +236,7 @@ const App = () => (
                         <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
                         <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
                         <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
-                        
+
                         {/* Cleaner routes */}
                         <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
                         <Route path="/cleaner/schedule" element={<RequireCleaner><CleanerSchedule /></RequireCleaner>} />
@@ -252,7 +259,7 @@ const App = () => (
                         <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
                         <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
                         <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
-                        
+
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </MainLayout>
