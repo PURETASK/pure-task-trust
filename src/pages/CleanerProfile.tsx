@@ -214,7 +214,7 @@ export default function CleanerProfile() {
         {/* Full-bleed background: photo or gradient */}
         <div className="absolute inset-0 z-0">
           {profilePhotoUrl ? (
-            <img src={profilePhotoUrl} alt="" className="w-full h-full object-cover object-top scale-105" />
+            <img src={profilePhotoUrl} alt="" role="presentation" className="w-full h-full object-cover object-top scale-105" loading="lazy" />
           ) : (
             <div className={`w-full h-full bg-gradient-to-br ${tier.gradient}`} />
           )}
