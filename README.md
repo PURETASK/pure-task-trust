@@ -62,7 +62,7 @@ npm run dev
 
 ## Deployment
 
-Open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click Share → Publish.
+Open [PureTask Trust](https://pure-task-trust.lovable.app) and click Share → Publish.
 
 ## Custom Domain
 
