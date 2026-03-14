@@ -10,8 +10,9 @@ export function AggregateRatingSchema() {
 
   return (
     <JsonLd
-      type="Service"
       data={{
+        '@context': 'https://schema.org',
+        '@type': 'Service',
         name: "PureTask Cleaning Services",
         description:
           "Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results. Transparent pricing with escrow protection.",
