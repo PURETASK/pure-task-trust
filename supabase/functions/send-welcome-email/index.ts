@@ -19,6 +19,15 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const internalSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+  const authHeader = req.headers.get("Authorization");
+  if (!internalSecret || authHeader !== `Bearer ${internalSecret}`) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

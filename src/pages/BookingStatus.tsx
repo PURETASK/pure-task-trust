@@ -16,7 +16,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/10", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/10", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/10", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
-  completed: { icon: Check, color: "text-success", bg: "bg-success/10", label: "Job Complete!", desc: "Your home is sparkling — approve to release payment" },
+  completed: { icon: Check, color: "text-success", bg: "bg-success/10", label: "Job Complete!", desc: "Your home is sparkling — review within 24 hours or payment releases automatically" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/10", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
 };
 
@@ -214,7 +214,7 @@ export default function BookingStatus() {
               <div className="bg-success/5 border border-success/20 rounded-xl p-3 flex items-start gap-2">
                 <Shield className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">Escrow Protection:</span> Payment is held securely and only released when you approve the completed job.
+                  <span className="font-semibold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within 24 hours, or payment releases automatically.
                 </p>
               </div>
             </CardContent>

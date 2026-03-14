@@ -14,8 +14,8 @@ const pillars = [
   },
   {
     icon: CheckCircle,
-    title: "Approve Before Paying",
-    description: "Your credits are held safely until you review and approve the completed work.",
+    title: "24-Hour Review Window",
+    description: "Your credits are held safely after every job — review the work and report any issue within 24 hours, or payment releases automatically.",
   },
 ];
 

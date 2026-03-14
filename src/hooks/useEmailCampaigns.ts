@@ -26,8 +26,16 @@ export function useEmailCampaigns() {
       name?: string;
       email?: string;
     }) => {
-      const { data, error } = await supabase.functions.invoke("send-welcome-email", {
-        body: { userId, role, name, email },
+      const { data, error } = await supabase.functions.invoke("send-email", {
+        body: {
+          to: email,
+          template: role === "cleaner" ? "welcome_cleaner" : "welcome_client",
+          data: {
+            name: name || email?.split("@")[0] || "there",
+            userId,
+            role,
+          },
+        },
       });
 
       if (error) throw error;

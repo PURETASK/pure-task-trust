@@ -38,14 +38,17 @@ Tests run automatically via GitHub Actions on every push and pull request:
 
 ## Project Info
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**URL**: https://pure-task-trust.lovable.app
 
 ## Technologies
 
 - Vite + React + TypeScript
 - Tailwind CSS + shadcn/ui
-- Supabase (Auth, Database, Edge Functions)
+- Lovable Cloud (Auth, Database, Edge Functions)
 - Stripe (Payments)
+- Twilio (OTP/SMS)
+- SendGrid (Email)
+- PWA (vite-plugin-pwa)
 
 ## Development
 
@@ -59,7 +62,7 @@ npm run dev
 
 ## Deployment
 
-Open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click Share → Publish.
+Open [PureTask Trust](https://pure-task-trust.lovable.app) and click Share → Publish.
 
 ## Custom Domain
 

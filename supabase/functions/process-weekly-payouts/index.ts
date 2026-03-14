@@ -14,6 +14,15 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const cronSecret = Deno.env.get("CRON_SECRET");
+  const authHeader = req.headers.get("Authorization");
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   // This function is called by cron, so we use service role
   const supabaseAdmin = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",

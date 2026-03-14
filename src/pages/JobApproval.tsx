@@ -232,7 +232,7 @@ export default function JobApproval() {
             <Badge variant="success" className="mb-3">Cleaning Complete</Badge>
             <h1 className="text-2xl font-bold mb-2">Review & Approve</h1>
             <p className="text-muted-foreground">
-              {hasPhotos ? 'Check the photos below and approve to release payment' : 'Approve to release payment to the cleaner'}
+              {hasPhotos ? 'Check the photos and approve, or report an issue within 24 hours — payment releases automatically after that' : 'Approve or report an issue within 24 hours — payment releases automatically after that'}
             </p>
           </div>
 

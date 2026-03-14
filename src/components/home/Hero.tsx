@@ -31,7 +31,7 @@ export function Hero() {
           >
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-pt-blue/10 text-pt-blue text-xs sm:text-sm font-medium mb-4 sm:mb-6">
               <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              Pay Only When Happy
+              24-Hour Review Protection
             </div>
           </motion.div>
 
@@ -51,7 +51,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-lg"
           >
-            Book independent cleaners, track every job with GPS and photos, and only release payment when you approve the work.
+            Book independent cleaners, track every job with GPS and photos, and review and approve within 24 hours — or payment releases automatically.
           </motion.p>
 
           <motion.div
