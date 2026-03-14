@@ -124,7 +124,12 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">All cleaners are verified. Higher reliability score = higher rate = better service.</p>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  All cleaners are verified. Higher reliability score = higher rate = better service.{" "}
+                  <Link to="/reliability-score" className="text-primary hover:underline underline-offset-2 font-medium">
+                    Learn how the reliability score works →
+                  </Link>
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {TIERS.map((tier, i) => (
@@ -203,7 +208,15 @@ export default function Pricing() {
                     </div>
                   <div>
                       <h3 className="text-xl font-bold mb-3">What the 15–20% Platform Fee Covers</h3>
-                      <p className="text-sm text-muted-foreground mb-3">Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.{" "}
+                        <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-2 font-medium">
+                          See what's included in every clean
+                        </Link>{" "}and{" "}
+                        <Link to="/cancellation-policy" className="text-primary hover:underline underline-offset-2 font-medium">
+                          review the cancellation policy
+                        </Link>.
+                      </p>
                       <div className="grid sm:grid-cols-2 gap-2.5">
                         {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
                           <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">

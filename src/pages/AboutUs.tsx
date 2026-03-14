@@ -206,11 +206,22 @@ export default function AboutUs() {
             <p className="text-xl text-muted-foreground mb-8">Join thousands of happy clients and verified cleaners on PureTask today.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="h-14 px-10 rounded-2xl text-base">
-                <Link to="/discover">Find a Cleaner <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to="/discover">Find a Verified Cleaner Near You <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="h-14 px-10 rounded-2xl text-base border-success/40 text-success hover:bg-success/10">
                 <Link to="/auth?role=cleaner">Become a Cleaner</Link>
               </Button>
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-8 text-sm">
+              <Link to="/pricing" className="text-primary hover:underline underline-offset-4 font-medium">
+                View transparent pricing &amp; tiers
+              </Link>
+              <Link to="/reviews" className="text-primary hover:underline underline-offset-4 font-medium">
+                Read verified customer reviews
+              </Link>
+              <Link to="/reliability-score" className="text-primary hover:underline underline-offset-4 font-medium">
+                How our reliability score works
+              </Link>
             </div>
           </motion.div>
         </div>
