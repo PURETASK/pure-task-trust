@@ -93,7 +93,7 @@ export default function ForRetirees() {
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.27 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-purple))', color: 'white' }}>
+              <Button size="xl" asChild className="rounded-2xl font-bold shadow-lg" style={{ background: 'hsl(var(--pt-purple))', color: 'white', border: '2px solid white', borderRadius: '1rem' }}>
                 <Link to="/discover"><Heart className="mr-2 h-5 w-5" />Find a Trusted Cleaner</Link>
               </Button>
               <Button size="xl" variant="outline" asChild className="rounded-2xl">
