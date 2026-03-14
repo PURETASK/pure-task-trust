@@ -15,7 +15,7 @@ interface SEOProps {
 const SITE_NAME = 'PureTask';
 const DEFAULT_DESCRIPTION = 'Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results. Transparent pricing with escrow protection.';
 const DEFAULT_IMAGE = '/og/puretask-og.png';
-const BASE_URL = 'https://pure-task-trust.lovable.app';
+const BASE_URL = 'https://puretask.co';
 
 export function SEO({
   title,
