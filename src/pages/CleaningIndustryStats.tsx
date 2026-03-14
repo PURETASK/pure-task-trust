@@ -132,6 +132,21 @@ export default function CleaningIndustryStats() {
         description="Comprehensive, citable cleaning industry statistics for 2025. Market size, cleaner earnings by tier, consumer booking behavior, and platform growth trends."
         url="/cleaning-industry-stats"
       />
+      <DatasetSchema
+        name="US Cleaning Industry Statistics 2025"
+        description="Comprehensive data on the US residential cleaning market including market size, cleaner earnings by tier, pricing benchmarks, consumer booking behavior, and platform economy trends."
+        url="/cleaning-industry-stats"
+        datePublished="2026-03-14"
+        keywords={['cleaning industry statistics', 'house cleaning market size', 'cleaner earnings', 'residential cleaning trends', 'home cleaning prices 2025']}
+      />
+      <ArticleSchema
+        headline="Cleaning Industry Statistics & Market Data 2025"
+        description="Comprehensive, citable US cleaning industry statistics: $10.1B market, 1.2M+ businesses, earnings benchmarks, consumer behavior, and platform growth data."
+        datePublished="2026-03-14"
+        url="/cleaning-industry-stats"
+        imageUrl="https://pure-task-trust.lovable.app/og/puretask-og.png"
+      />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Industry Statistics', url: '/cleaning-industry-stats' }]} />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">
