@@ -44,8 +44,11 @@ Tests run automatically via GitHub Actions on every push and pull request:
 
 - Vite + React + TypeScript
 - Tailwind CSS + shadcn/ui
-- Supabase (Auth, Database, Edge Functions)
+- Lovable Cloud (Auth, Database, Edge Functions)
 - Stripe (Payments)
+- Twilio (OTP/SMS)
+- SendGrid (Email)
+- PWA (vite-plugin-pwa)
 
 ## Development
 
