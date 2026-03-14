@@ -110,9 +110,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const sendWelcomeEmail = async (userId: string, role: UserRole, email?: string) => {
     try {
-      // Fire and forget - don't block auth flow
-      supabase.functions.invoke('send-welcome-email', {
-        body: { userId, role, email },
+      const template = role === 'cleaner' ? 'welcome_cleaner' : 'welcome_client';
+      supabase.functions.invoke('send-email', {
+        body: {
+          to: email,
+          template,
+          data: {
+            name: email?.split('@')[0] || 'there',
+          },
+        },
       }).then(({ error }) => {
         if (error) {
           console.error('Failed to send welcome email:', error);
