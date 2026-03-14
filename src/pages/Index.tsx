@@ -358,7 +358,7 @@ export default function Index() {
               key={s.step}
               initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-              className="relative">
+              className="relative text-center sm:text-left">
               
                 {i < STEPS.length - 1 &&
               <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
