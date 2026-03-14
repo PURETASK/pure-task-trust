@@ -399,7 +399,7 @@ export default function Index() {
                 <Badge className="mb-2 sm:mb-3 bg-primary/40 text-primary-foreground border-2 border-white/80 rounded-full text-sm px-4 py-1 font-semibold">For Clients</Badge>
                 <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
                 <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
-                <Button asChild className="rounded-xl h-10 sm:h-11">
+                <Button asChild className="rounded-xl h-10 sm:h-11 border-2 border-white">
                   <Link to="/auth?role=client">Get Started Free <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
