@@ -47,8 +47,38 @@ export default function CleanerOnboarding() {
   } = useCleanerOnboarding();
 
   const handleCompleteOnboarding = async () => {
-    await completeOnboarding();
-    navigate('/cleaner/dashboard');
+    try {
+      await completeOnboarding();
+      navigate('/cleaner/dashboard');
+    } catch (err: any) {
+      console.error('Failed to complete onboarding:', err);
+    }
+  };
+
+  // Wrap each step submit so errors don't unmount the page
+  const handleSaveTerms = async () => {
+    try { await saveTerms(); } catch (err: any) { console.error('Terms save error:', err); }
+  };
+  const handleSaveBasicInfo = async (data: Parameters<typeof saveBasicInfo>[0]) => {
+    try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); }
+  };
+  const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]): Promise<string> => {
+    try { return await saveFacePhoto(file) ?? ''; } catch (err: any) { console.error('Face photo save error:', err); return ''; }
+  };
+  const handleSaveIdDocument = async (data: Parameters<typeof saveIdDocument>[0]) => {
+    try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); }
+  };
+  const handleSaveBackgroundConsent = async () => {
+    try { await saveBackgroundConsent(); } catch (err: any) { console.error('Background consent save error:', err); }
+  };
+  const handleSaveServiceAreas = async (data: Parameters<typeof saveServiceAreas>[0]) => {
+    try { await saveServiceAreas(data); } catch (err: any) { console.error('Service areas save error:', err); }
+  };
+  const handleSaveAvailability = async (data: Parameters<typeof saveAvailability>[0]) => {
+    try { await saveAvailability(data); } catch (err: any) { console.error('Availability save error:', err); }
+  };
+  const handleSaveRates = async (data: Parameters<typeof saveRates>[0]) => {
+    try { await saveRates(data); } catch (err: any) { console.error('Rates save error:', err); }
   };
 
   const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Pro';
@@ -189,12 +219,12 @@ export default function CleanerOnboarding() {
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
                     {currentStep === 'terms' && (
-                      <TermsAgreementStep onSubmit={saveTerms} isSubmitting={isSavingTerms} />
+                      <TermsAgreementStep onSubmit={handleSaveTerms} isSubmitting={isSavingTerms} />
                     )}
                     {currentStep === 'basic-info' && (
                       <BasicInfoStep
                         initialData={{ firstName: profile?.first_name, lastName: profile?.last_name, bio: profile?.bio }}
-                        onSubmit={saveBasicInfo}
+                        onSubmit={handleSaveBasicInfo}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingBasicInfo}
                       />
@@ -204,33 +234,33 @@ export default function CleanerOnboarding() {
                     )}
                     {currentStep === 'face-verification' && (
                       <FaceVerificationStep
-                        onSubmit={saveFacePhoto}
+                        onSubmit={handleSaveFacePhoto}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingFacePhoto}
                         userName={userName}
                       />
                     )}
                     {currentStep === 'id-verification' && (
-                      <IDVerificationStep onSubmit={saveIdDocument} onBack={goToPreviousStep} isSubmitting={isSavingIdDocument} />
+                      <IDVerificationStep onSubmit={handleSaveIdDocument} onBack={goToPreviousStep} isSubmitting={isSavingIdDocument} />
                     )}
                     {currentStep === 'background-consent' && (
-                      <BackgroundCheckConsentStep onSubmit={saveBackgroundConsent} onBack={goToPreviousStep} isSubmitting={isSavingBackgroundConsent} />
+                      <BackgroundCheckConsentStep onSubmit={handleSaveBackgroundConsent} onBack={goToPreviousStep} isSubmitting={isSavingBackgroundConsent} />
                     )}
                     {currentStep === 'service-areas' && (
                       <ServiceAreaStep
                         initialData={{ travelRadius: profile?.travel_radius_km }}
-                        onSubmit={saveServiceAreas}
+                        onSubmit={handleSaveServiceAreas}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingServiceAreas}
                       />
                     )}
                     {currentStep === 'availability' && (
-                      <AvailabilityStep onSubmit={saveAvailability} onBack={goToPreviousStep} isSubmitting={isSavingAvailability} />
+                      <AvailabilityStep onSubmit={handleSaveAvailability} onBack={goToPreviousStep} isSubmitting={isSavingAvailability} />
                     )}
                     {currentStep === 'rates' && (
                       <RatesStep
                         initialData={{ hourlyRate: profile?.hourly_rate_credits, travelRadius: profile?.travel_radius_km }}
-                        onSubmit={saveRates}
+                        onSubmit={handleSaveRates}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingRates}
                       />

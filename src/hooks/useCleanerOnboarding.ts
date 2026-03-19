@@ -111,6 +111,7 @@ export function useCleanerOnboarding() {
 
   // Invalidate all profile-related queries
   const invalidateProfile = () => {
+    // Invalidate both with and without user ID suffix
     queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
   };
@@ -118,17 +119,44 @@ export function useCleanerOnboarding() {
   // Step 1: Terms & Agreements
   const saveTermsMutation = useMutation({
     mutationFn: async () => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
+      if (!user?.id) throw new Error('Not authenticated');
+
+      // Ensure cleaner profile exists before saving agreements
+      let cleanerProfileId = profile?.id;
+      if (!cleanerProfileId) {
+        // Try to fetch it fresh (may have been created by DB trigger)
+        const { data: freshProfile } = await supabase
+          .from('cleaner_profiles')
+          .select('id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (freshProfile?.id) {
+          cleanerProfileId = freshProfile.id;
+          queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
+        } else {
+          // Create profile if it still doesn't exist
+          const { data: newProfile, error: createError } = await supabase
+            .from('cleaner_profiles')
+            .insert({ user_id: user.id })
+            .select('id')
+            .single();
+          if (createError) throw createError;
+          cleanerProfileId = newProfile.id;
+          queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
+          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        }
+      }
 
       const agreements = [
         {
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           agreement_type: 'terms_of_service',
           version: '1.0',
           user_agent: navigator.userAgent,
         },
         {
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           agreement_type: 'independent_contractor',
           version: '1.0',
           user_agent: navigator.userAgent,
