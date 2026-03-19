@@ -219,12 +219,12 @@ export default function CleanerOnboarding() {
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
                     {currentStep === 'terms' && (
-                      <TermsAgreementStep onSubmit={saveTerms} isSubmitting={isSavingTerms} />
+                      <TermsAgreementStep onSubmit={handleSaveTerms} isSubmitting={isSavingTerms} />
                     )}
                     {currentStep === 'basic-info' && (
                       <BasicInfoStep
                         initialData={{ firstName: profile?.first_name, lastName: profile?.last_name, bio: profile?.bio }}
-                        onSubmit={saveBasicInfo}
+                        onSubmit={handleSaveBasicInfo}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingBasicInfo}
                       />
@@ -234,33 +234,33 @@ export default function CleanerOnboarding() {
                     )}
                     {currentStep === 'face-verification' && (
                       <FaceVerificationStep
-                        onSubmit={saveFacePhoto}
+                        onSubmit={handleSaveFacePhoto}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingFacePhoto}
                         userName={userName}
                       />
                     )}
                     {currentStep === 'id-verification' && (
-                      <IDVerificationStep onSubmit={saveIdDocument} onBack={goToPreviousStep} isSubmitting={isSavingIdDocument} />
+                      <IDVerificationStep onSubmit={handleSaveIdDocument} onBack={goToPreviousStep} isSubmitting={isSavingIdDocument} />
                     )}
                     {currentStep === 'background-consent' && (
-                      <BackgroundCheckConsentStep onSubmit={saveBackgroundConsent} onBack={goToPreviousStep} isSubmitting={isSavingBackgroundConsent} />
+                      <BackgroundCheckConsentStep onSubmit={handleSaveBackgroundConsent} onBack={goToPreviousStep} isSubmitting={isSavingBackgroundConsent} />
                     )}
                     {currentStep === 'service-areas' && (
                       <ServiceAreaStep
                         initialData={{ travelRadius: profile?.travel_radius_km }}
-                        onSubmit={saveServiceAreas}
+                        onSubmit={handleSaveServiceAreas}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingServiceAreas}
                       />
                     )}
                     {currentStep === 'availability' && (
-                      <AvailabilityStep onSubmit={saveAvailability} onBack={goToPreviousStep} isSubmitting={isSavingAvailability} />
+                      <AvailabilityStep onSubmit={handleSaveAvailability} onBack={goToPreviousStep} isSubmitting={isSavingAvailability} />
                     )}
                     {currentStep === 'rates' && (
                       <RatesStep
                         initialData={{ hourlyRate: profile?.hourly_rate_credits, travelRadius: profile?.travel_radius_km }}
-                        onSubmit={saveRates}
+                        onSubmit={handleSaveRates}
                         onBack={goToPreviousStep}
                         isSubmitting={isSavingRates}
                       />
