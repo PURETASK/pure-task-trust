@@ -47,8 +47,38 @@ export default function CleanerOnboarding() {
   } = useCleanerOnboarding();
 
   const handleCompleteOnboarding = async () => {
-    await completeOnboarding();
-    navigate('/cleaner/dashboard');
+    try {
+      await completeOnboarding();
+      navigate('/cleaner/dashboard');
+    } catch (err: any) {
+      console.error('Failed to complete onboarding:', err);
+    }
+  };
+
+  // Wrap each step submit so errors don't unmount the page
+  const handleSaveTerms = async () => {
+    try { await saveTerms(); } catch (err: any) { console.error('Terms save error:', err); }
+  };
+  const handleSaveBasicInfo = async (data: Parameters<typeof saveBasicInfo>[0]) => {
+    try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); }
+  };
+  const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]) => {
+    try { await saveFacePhoto(file); } catch (err: any) { console.error('Face photo save error:', err); }
+  };
+  const handleSaveIdDocument = async (data: Parameters<typeof saveIdDocument>[0]) => {
+    try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); }
+  };
+  const handleSaveBackgroundConsent = async () => {
+    try { await saveBackgroundConsent(); } catch (err: any) { console.error('Background consent save error:', err); }
+  };
+  const handleSaveServiceAreas = async (data: Parameters<typeof saveServiceAreas>[0]) => {
+    try { await saveServiceAreas(data); } catch (err: any) { console.error('Service areas save error:', err); }
+  };
+  const handleSaveAvailability = async (data: Parameters<typeof saveAvailability>[0]) => {
+    try { await saveAvailability(data); } catch (err: any) { console.error('Availability save error:', err); }
+  };
+  const handleSaveRates = async (data: Parameters<typeof saveRates>[0]) => {
+    try { await saveRates(data); } catch (err: any) { console.error('Rates save error:', err); }
   };
 
   const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Pro';
