@@ -62,8 +62,8 @@ export default function CleanerOnboarding() {
   const handleSaveBasicInfo = async (data: Parameters<typeof saveBasicInfo>[0]) => {
     try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); }
   };
-  const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]) => {
-    try { await saveFacePhoto(file); } catch (err: any) { console.error('Face photo save error:', err); }
+  const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]): Promise<string> => {
+    try { return await saveFacePhoto(file) ?? ''; } catch (err: any) { console.error('Face photo save error:', err); return ''; }
   };
   const handleSaveIdDocument = async (data: Parameters<typeof saveIdDocument>[0]) => {
     try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); }
