@@ -111,6 +111,7 @@ export function useCleanerOnboarding() {
 
   // Invalidate all profile-related queries
   const invalidateProfile = () => {
+    // Invalidate both with and without user ID suffix
     queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
   };
