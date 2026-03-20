@@ -31,25 +31,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Set up the listener FIRST so we never miss an auth event.
-    // onAuthStateChange fires INITIAL_SESSION immediately with the stored
-    // session, so we use that as our single source of truth and skip a
-    // separate getSession() call to avoid the double-render race condition.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, currentSession) => {
-        setSession(currentSession);
+    let mounted = true;
 
+    // 1. Restore session from localStorage synchronously so the UI unblocks fast.
+    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+      if (!mounted) return;
+      setSession(initialSession);
+      if (initialSession?.user) {
+        await fetchUserProfile(initialSession.user);
+      } else {
+        setUser(null);
+      }
+      if (mounted) setIsLoading(false);
+    });
+
+    // 2. Listen for subsequent auth changes (sign-in, sign-out, token refresh).
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (!mounted) return;
+        // Skip INITIAL_SESSION — already handled by getSession() above.
+        if (event === 'INITIAL_SESSION') return;
+
+        setSession(currentSession);
         if (currentSession?.user) {
           await fetchUserProfile(currentSession.user);
         } else {
           setUser(null);
         }
-
-        setIsLoading(false);
+        if (mounted) setIsLoading(false);
       },
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
