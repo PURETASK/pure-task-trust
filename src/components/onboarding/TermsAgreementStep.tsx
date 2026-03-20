@@ -45,10 +45,10 @@ export function TermsAgreementStep({ onSubmit, isSubmitting }: TermsAgreementSte
             <ScrollArea className="h-28 px-4 py-3">
               <div className="text-xs text-white/50 space-y-2 leading-relaxed">{content}</div>
             </ScrollArea>
-            <div onClick={() => setAccepted(!accepted)} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors">
+            <label htmlFor={id} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors">
               <Checkbox id={id} checked={accepted} onCheckedChange={(c) => setAccepted(c === true)} className="border-white/30 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500" />
-              <Label htmlFor={id} className="text-sm text-white/80 leading-relaxed cursor-pointer">{label}</Label>
-            </div>
+              <span className="text-sm text-white/80 leading-relaxed">{label}</span>
+            </label>
           </div>
         ))}
 
