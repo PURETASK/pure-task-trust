@@ -36,6 +36,8 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
+  // While profile is (re)loading, keep showing the skeleton so we never
+  // redirect away mid-mutation (e.g. during onboarding step saves).
   const isLoading = authLoading || (isAuthenticated && profileLoading);
 
   if (isLoading) {
