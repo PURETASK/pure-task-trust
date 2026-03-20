@@ -31,16 +31,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialise from existing session, then subscribe to changes
-    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
-      setSession(existingSession);
-      if (existingSession?.user) {
-        fetchUserProfile(existingSession.user).finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-      }
-    });
-
+    // Set up the listener FIRST so we never miss an auth event.
+    // onAuthStateChange fires INITIAL_SESSION immediately with the stored
+    // session, so we use that as our single source of truth and skip a
+    // separate getSession() call to avoid the double-render race condition.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, currentSession) => {
         setSession(currentSession);
