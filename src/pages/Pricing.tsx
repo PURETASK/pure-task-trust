@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import pricingHero from '@/assets/pricing-hero.jpg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -103,10 +104,16 @@ export default function Pricing() {
       ]} />
 
       {/* Hero */}
-      <section className="relative py-12 sm:py-20 bg-gradient-to-br from-primary/10 via-background to-accent/5 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl translate-x-1/3 -translate-y-1/2" />
-          <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-accent/5 blur-3xl -translate-x-1/2 translate-y-1/2" />
+      <section className="relative py-12 sm:py-20 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={pricingHero}
+            alt="Professional cleaning service"
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/90 to-background/60" />
         </div>
         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
