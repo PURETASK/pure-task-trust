@@ -54,11 +54,18 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
-  // Check if cleaner needs to complete onboarding
+  // Check if cleaner needs to complete onboarding.
+  // Only redirect TO onboarding — never redirect AWAY while already on it,
+  // even during a brief moment when profileData is stale after a mutation.
   if (requireRole && role === 'cleaner' && needsOnboarding && 
       location.pathname !== '/cleaner/onboarding' && 
       location.pathname !== '/role-selection') {
     return <Navigate to="/cleaner/onboarding" replace />;
+  }
+
+  // If we're already on the onboarding page, never redirect away mid-flow.
+  if (location.pathname === '/cleaner/onboarding') {
+    return <>{children}</>;
   }
 
   // Check role if specified
