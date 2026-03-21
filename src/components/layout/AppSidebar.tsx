@@ -43,34 +43,34 @@ const guestNavGroups: NavGroup[] = [
   {
     group: "Explore",
     items: [
-      { title: "Home", url: "/", icon: Home },
-      { title: "Browse Cleaners", url: "/discover", icon: Search },
+      { title: "Home", url: "/", icon: House },
+      { title: "Browse Cleaners", url: "/discover", icon: SearchCheck },
       { title: "Pricing", url: "/pricing", icon: Tag },
-      { title: "About Us", url: "/about", icon: Globe },
-      { title: "Reviews", url: "/reviews", icon: Star },
+      { title: "About Us", url: "/about", icon: Globe2 },
+      { title: "Reviews", url: "/reviews", icon: StarHalf },
     ]
   },
   {
     group: "Use Cases",
     items: [
-      { title: "Airbnb Hosts", url: "/for-airbnb-hosts", icon: Star, badge: "Popular" },
-      { title: "Families", url: "/for-families", icon: Heart },
-      { title: "Professionals", url: "/for-professionals", icon: Briefcase },
-      { title: "Retirees", url: "/for-retirees", icon: Award },
+      { title: "Airbnb Hosts", url: "/for-airbnb-hosts", icon: MapPinHouse, badge: "Popular" },
+      { title: "Families", url: "/for-families", icon: HeartHandshake },
+      { title: "Professionals", url: "/for-professionals", icon: BriefcaseBusiness },
+      { title: "Retirees", url: "/for-retirees", icon: Trophy },
     ]
   },
   {
     group: "Resources",
     items: [
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
+      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
-      { title: "Reliability Score", url: "/reliability-score", icon: ShieldCheck },
+      { title: "Reliability Score", url: "/reliability-score", icon: Gauge },
     ]
   },
   {
     group: "Support",
     items: [
-      { title: "Help Center", url: "/help", icon: HelpCircle },
+      { title: "Help Center", url: "/help", icon: CircleHelp },
       { title: "Legal Center", url: "/legal", icon: Scale },
     ]
   }
@@ -82,36 +82,36 @@ const clientNavGroups: NavGroup[] = [
     group: "Overview",
     items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "Find Cleaners", url: "/discover", icon: Search },
+      { title: "Find Cleaners", url: "/discover", icon: SearchCheck },
       { title: "Book Cleaning", url: "/book", icon: Sparkles, badge: "Book" },
     ]
   },
   {
     group: "My Bookings",
     items: [
-      { title: "Properties", url: "/properties", icon: Building },
-      { title: "Recurring Plans", url: "/recurring-plans", icon: RefreshCcw },
+      { title: "Properties", url: "/properties", icon: Building2 },
+      { title: "Recurring Plans", url: "/recurring-plans", icon: Repeat2 },
       { title: "Reschedule Requests", url: "/reschedule-requests", icon: CalendarClock },
-      { title: "Favorite Cleaners", url: "/favorites", icon: Heart },
-      { title: "Reviews", url: "/reviews", icon: Star },
+      { title: "Favorite Cleaners", url: "/favorites", icon: HeartHandshake },
+      { title: "Reviews", url: "/reviews", icon: StarHalf },
     ]
   },
   {
     group: "Account",
     items: [
-      { title: "My Profile", url: "/profile", icon: User },
-      { title: "Wallet & Credits", url: "/wallet", icon: Wallet },
-      { title: "Messages", url: "/messages", icon: MessageSquare },
-      { title: "Notifications", url: "/notifications", icon: Bell },
+      { title: "My Profile", url: "/profile", icon: UserCircle2 },
+      { title: "Wallet & Credits", url: "/wallet", icon: WalletCards },
+      { title: "Messages", url: "/messages", icon: MessagesSquare },
+      { title: "Notifications", url: "/notifications", icon: BellDot },
       { title: "Referral Program", url: "/referral", icon: Gift as any, badge: "Earn" },
-      { title: "Notification Settings", url: "/settings/notifications", icon: Settings },
+      { title: "Notification Settings", url: "/settings/notifications", icon: SlidersHorizontal },
     ]
   },
   {
     group: "Help",
     items: [
-      { title: "Help & Support", url: "/help", icon: HelpCircle },
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: Clipboard },
+      { title: "Help & Support", url: "/help", icon: CircleHelp },
+      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
       { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
       { title: "Legal Center", url: "/legal", icon: Scale },
     ]
@@ -124,51 +124,51 @@ const cleanerNavGroups: NavGroup[] = [
     group: "Overview",
     items: [
       { title: "Dashboard", url: "/cleaner/dashboard", icon: LayoutDashboard },
-      { title: "My Schedule", url: "/cleaner/schedule", icon: Calendar },
-      { title: "Job Marketplace", url: "/cleaner/marketplace", icon: Search, badge: "Live" },
+      { title: "My Schedule", url: "/cleaner/schedule", icon: CalendarDays },
+      { title: "Job Marketplace", url: "/cleaner/marketplace", icon: PackageSearch, badge: "Live" },
     ]
   },
   {
     group: "Jobs",
     items: [
-      { title: "Active Jobs", url: "/cleaner/jobs", icon: Briefcase },
-      { title: "Messages", url: "/cleaner/messages", icon: MessageSquare },
+      { title: "Active Jobs", url: "/cleaner/jobs", icon: BriefcaseBusiness },
+      { title: "Messages", url: "/cleaner/messages", icon: MessagesSquare },
     ]
   },
   {
     group: "Earnings & Growth",
     items: [
-      { title: "Earnings", url: "/cleaner/earnings", icon: DollarSign },
-      { title: "Analytics", url: "/cleaner/analytics", icon: TrendingUp },
+      { title: "Earnings", url: "/cleaner/earnings", icon: Banknote },
+      { title: "Analytics", url: "/cleaner/analytics", icon: ChartNoAxesCombined },
       { title: "Referral & Earn", url: "/cleaner/referral", icon: Gift as any, badge: "Earn" },
-      { title: "AI Assistant", url: "/cleaner/ai-assistant", icon: Bot, badge: "New" },
+      { title: "AI Assistant", url: "/cleaner/ai-assistant", icon: BotMessageSquare, badge: "New" },
     ]
   },
   {
     group: "Profile & Setup",
     items: [
-      { title: "My Public Profile", url: "/cleaner/profile/view", icon: User },
-      { title: "Profile Settings", url: "/cleaner/profile", icon: Settings },
+      { title: "My Public Profile", url: "/cleaner/profile/view", icon: UserCircle2 },
+      { title: "Profile Settings", url: "/cleaner/profile", icon: SlidersHorizontal },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
-      { title: "Service Areas", url: "/cleaner/service-areas", icon: MapPin },
-      { title: "Calendar Sync", url: "/cleaner/calendar-sync", icon: Link2 },
+      { title: "Service Areas", url: "/cleaner/service-areas", icon: MapPinned },
+      { title: "Calendar Sync", url: "/cleaner/calendar-sync", icon: Cable },
       { title: "Team Management", url: "/cleaner/team", icon: Users },
     ]
   },
   {
     group: "Trust & Compliance",
     items: [
-      { title: "Verification", url: "/cleaner/verification", icon: CheckCircle },
-      { title: "Reliability Score", url: "/cleaner/reliability", icon: Award },
+      { title: "Verification", url: "/cleaner/verification", icon: ScanFace },
+      { title: "Reliability Score", url: "/cleaner/reliability", icon: Gauge },
       { title: "Cancellation Policy", url: "/cleaner/cancellation-policy", icon: AlertTriangle },
     ]
   },
   {
     group: "Support",
     items: [
-      { title: "Resources & Guides", url: "/cleaner/resources", icon: BookOpen },
-      { title: "Account Settings", url: "/cleaner/settings", icon: Settings },
-      { title: "Notifications", url: "/notifications", icon: Bell },
+      { title: "Resources & Guides", url: "/cleaner/resources", icon: BookOpenCheck },
+      { title: "Account Settings", url: "/cleaner/settings", icon: SlidersHorizontal },
+      { title: "Notifications", url: "/notifications", icon: BellDot },
     ]
   }
 ];
@@ -179,30 +179,30 @@ const adminNavGroups: NavGroup[] = [
     group: "Command",
     items: [
       { title: "Admin Hub", url: "/admin/hub", icon: LayoutDashboard },
-      { title: "CEO Dashboard", url: "/admin/ceo", icon: TrendingUp },
+      { title: "CEO Dashboard", url: "/admin/ceo", icon: ChartArea },
     ]
   },
   {
     group: "Analytics",
     items: [
       { title: "Analytics Hub", url: "/admin/analytics", icon: BarChart3 },
-      { title: "Operations", url: "/admin/operations", icon: Activity },
-      { title: "Finance", url: "/admin/finance", icon: DollarSign },
+      { title: "Operations", url: "/admin/operations", icon: ActivitySquare },
+      { title: "Finance", url: "/admin/finance", icon: Banknote },
       { title: "Growth", url: "/admin/growth", icon: TrendingUp },
-      { title: "Performance", url: "/admin/performance", icon: Star },
+      { title: "Performance", url: "/admin/performance", icon: Flame },
       { title: "Conversions", url: "/admin/conversions", icon: Target },
-      { title: "Cohort Analysis", url: "/admin/cohort-analysis", icon: BarChart2 },
-      { title: "Geo Insights", url: "/admin/geo-insights", icon: MapPin },
+      { title: "Cohort Analysis", url: "/admin/cohort-analysis", icon: ChartNoAxesCombined },
+      { title: "Geo Insights", url: "/admin/geo-insights", icon: Radar },
     ]
   },
   {
     group: "Trust & Safety",
     items: [
-      { title: "Trust & Safety", url: "/admin/trust-safety", icon: Shield },
-      { title: "Fraud Alerts", url: "/admin/fraud-alerts", icon: AlertTriangle, badge: "Live" },
-      { title: "Disputes", url: "/admin/disputes", icon: FileText },
-      { title: "Client Risk", url: "/admin/client-risk", icon: AlertOctagon },
-      { title: "ID Verifications", url: "/admin/id-verifications", icon: UserCheck },
+      { title: "Trust & Safety", url: "/admin/trust-safety", icon: ShieldCheck },
+      { title: "Fraud Alerts", url: "/admin/fraud-alerts", icon: ShieldAlert, badge: "Live" },
+      { title: "Disputes", url: "/admin/disputes", icon: FileBarChart2 },
+      { title: "Client Risk", url: "/admin/client-risk", icon: OctagonAlert },
+      { title: "ID Verifications", url: "/admin/id-verifications", icon: ScanFace },
       { title: "Safety Reports", url: "/admin/trust-safety-reports", icon: PieChart },
     ]
   },
@@ -210,17 +210,17 @@ const adminNavGroups: NavGroup[] = [
     group: "Operations",
     items: [
       { title: "Users", url: "/admin/users", icon: Users },
-      { title: "Bookings Console", url: "/admin/bookings", icon: CalendarClock },
-      { title: "Client Jobs", url: "/admin/client-jobs", icon: Briefcase },
-      { title: "Bulk Comms", url: "/admin/bulk-comms", icon: MessageSquare },
+      { title: "Bookings Console", url: "/admin/bookings", icon: ListTodo },
+      { title: "Client Jobs", url: "/admin/client-jobs", icon: BriefcaseBusiness },
+      { title: "Bulk Comms", url: "/admin/bulk-comms", icon: Megaphone },
     ]
   },
   {
     group: "Platform Config",
     items: [
-      { title: "Pricing Rules", url: "/admin/pricing-rules", icon: CreditCard },
-      { title: "Pricing Management", url: "/admin/pricing", icon: DollarSign },
-      { title: "Platform Config", url: "/admin/platform-config", icon: Layers },
+      { title: "Pricing Rules", url: "/admin/pricing-rules", icon: ReceiptText },
+      { title: "Pricing Management", url: "/admin/pricing", icon: BadgeDollarSign },
+      { title: "Platform Config", url: "/admin/platform-config", icon: Layers3 },
     ]
   }
 ];
