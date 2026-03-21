@@ -115,7 +115,8 @@ export default function AuthPage() {
     }
   };
 
-  if (isLoading) {
+  // Only block rendering if loading AND user is already authenticated (to prevent flash before redirect)
+  if (isLoading && isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
