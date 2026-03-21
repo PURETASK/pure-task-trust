@@ -2,13 +2,16 @@ import { useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  LayoutDashboard, Search, Wallet, MessageSquare, Calendar, DollarSign,
-  Users, User, Star, MapPin, Briefcase, TrendingUp, Shield, Settings,
-  Heart, CalendarClock, Award, Link2, CheckCircle, BarChart3, Building,
-  CreditCard, AlertTriangle, FileText, Activity, PieChart, Scale,
-  Sparkles, Home, Tag, HelpCircle, Target, Bot, BookOpen,
-  Bell, BarChart2, Globe, UserCheck, Layers, ChevronRight,
-  RefreshCw, ShieldAlert, LucideIcon, Clipboard, ShieldCheck, RefreshCcw, AlertOctagon
+  LayoutDashboard, SearchCheck, Wallet, MessagesSquare, CalendarDays, BadgeDollarSign,
+  Users, UserCircle2, StarHalf, MapPinned, BriefcaseBusiness, TrendingUp, ShieldCheck,
+  SlidersHorizontal, HeartHandshake, CalendarClock, Trophy, Cable, BadgeCheck,
+  BarChart3, Building2, CreditCard, AlertTriangle, FileBarChart2, ActivitySquare,
+  PieChart, Scale, Sparkles, House, Tag, CircleHelp, Target, BotMessageSquare,
+  BookMarked, BellDot, Globe2, UserRoundCheck, Layers3, ChevronRight,
+  RefreshCcw, ShieldAlert, LucideIcon, ClipboardList, ShieldX, OctagonAlert,
+  ReceiptText, Banknote, MapPinHouse, Repeat2, ListTodo, Megaphone,
+  PackageSearch, Gauge, Flame, WalletCards, BookOpenCheck, ScanFace,
+  ChartNoAxesCombined, ChartArea, Radar, DollarSign
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
