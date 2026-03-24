@@ -185,19 +185,29 @@ export default function AboutUs() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {VALUES.map((v, i) => (
-              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
-                <Card className={`h-full bg-gradient-to-br ${v.gradient} border-border/50 hover:shadow-card transition-all`}>
-                  <CardContent className="p-6">
-                    <div className="h-12 w-12 rounded-2xl bg-background/80 flex items-center justify-center mb-4 shadow-soft">
+            {VALUES.map((v, i) => {
+              const valColors = [
+                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
+                { border: "hsl(var(--success))", shadow: "hsl(var(--success) / 0.18)" },
+                { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
+                { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
+              ];
+              const c = valColors[i];
+              return (
+                <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                  <div
+                    className="h-full bg-card rounded-2xl p-6 transition-all duration-300"
+                    style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 20px 0 ${c.shadow}` }}
+                  >
+                    <div className="h-12 w-12 rounded-2xl bg-background/80 flex items-center justify-center mb-4" style={{ border: `1px solid ${c.border}` }}>
                       <v.icon className={`h-6 w-6 ${v.iconColor}`} />
                     </div>
                     <h3 className="text-lg font-bold mb-2">{v.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
