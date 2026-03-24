@@ -147,7 +147,7 @@ export default function ForAirbnbHosts() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/40 rounded-3xl overflow-hidden border border-border/40">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -155,26 +155,30 @@ export default function ForAirbnbHosts() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="bg-card p-8 group hover:bg-[hsl(var(--pt-amber)/0.04)] transition-colors duration-300 relative overflow-hidden"
+                whileHover={{ y: -4 }}
               >
                 <div
-                  className="absolute top-0 left-0 w-1 h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: `hsl(var(--${f.accent}))` }}
-                />
-                <span
-                  className="inline-block text-xs font-black tracking-widest uppercase mb-4 px-2.5 py-1 rounded-full"
-                  style={{ background: `hsl(var(--${f.accent})/0.12)`, color: `hsl(var(--${f.accent}))` }}
+                  className="bg-card rounded-3xl p-8 group transition-all duration-300 relative overflow-hidden h-full"
+                  style={{
+                    border: `2px solid hsl(var(--${f.accent}))`,
+                    boxShadow: `0 4px 20px 0 hsl(var(--${f.accent}) / 0.18)`,
+                  }}
                 >
-                  {f.tag}
-                </span>
-                <div
-                  className="h-11 w-11 rounded-2xl flex items-center justify-center mb-5"
-                  style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}
-                >
-                  <f.icon className="h-5 w-5" />
+                  <span
+                    className="inline-block text-xs font-black tracking-widest uppercase mb-4 px-2.5 py-1 rounded-full"
+                    style={{ background: `hsl(var(--${f.accent})/0.12)`, color: `hsl(var(--${f.accent}))` }}
+                  >
+                    {f.tag}
+                  </span>
+                  <div
+                    className="h-11 w-11 rounded-2xl flex items-center justify-center mb-5"
+                    style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}
+                  >
+                    <f.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-3">{f.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{f.description}</p>
                 </div>
-                <h3 className="font-bold text-lg mb-3 group-hover:text-[hsl(var(--pt-amber))] transition-colors">{f.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{f.description}</p>
               </motion.div>
             ))}
           </div>

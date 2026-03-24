@@ -179,51 +179,53 @@ export default function Help() {
 
               {/* Sidebar */}
               <div className="space-y-5">
-                <Card className="border-primary/20 bg-primary/3">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-base mb-4 flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-primary" /> Immediate Help
-                    </h3>
-                    <div className="space-y-4">
-                      {[
-                        { icon: Mail, label: "Email Support", value: "support@puretask.com", sub: "Response in 24 hours", color: "text-primary" },
-                        { icon: Phone, label: "Emergency Line", value: "1-800-PURETASK", sub: "Available 24/7", color: "text-foreground" },
-                        { icon: MessageCircle, label: "Live Chat", value: "Coming Soon", sub: "Instant support", color: "text-success" },
-                      ].map((item) => (
-                        <div key={item.label} className="flex items-start gap-3">
-                          <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <item.icon className="h-4 w-4 text-muted-foreground" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-sm">{item.label}</p>
-                            <p className={`text-sm ${item.color}`}>{item.value}</p>
-                            <p className="text-xs text-muted-foreground">{item.sub}</p>
-                          </div>
+                <div
+                  className="rounded-2xl bg-card p-6"
+                  style={{ border: "2px solid hsl(var(--primary))", boxShadow: "0 4px 20px 0 hsl(var(--primary) / 0.18)" }}
+                >
+                  <h3 className="font-bold text-base mb-4 flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" /> Immediate Help
+                  </h3>
+                  <div className="space-y-4">
+                    {[
+                      { icon: Mail, label: "Email Support", value: "support@puretask.com", sub: "Response in 24 hours", color: "text-primary" },
+                      { icon: Phone, label: "Emergency Line", value: "1-800-PURETASK", sub: "Available 24/7", color: "text-foreground" },
+                      { icon: MessageCircle, label: "Live Chat", value: "Coming Soon", sub: "Instant support", color: "text-success" },
+                    ].map((item) => (
+                      <div key={item.label} className="flex items-start gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <item.icon className="h-4 w-4 text-muted-foreground" />
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                        <div>
+                          <p className="font-medium text-sm">{item.label}</p>
+                          <p className={`text-sm ${item.color}`}>{item.value}</p>
+                          <p className="text-xs text-muted-foreground">{item.sub}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-base mb-4">Quick Links</h3>
-                    <div className="space-y-2">
-                      {[
-                        { label: "Cancellation Policy", href: "/cleaner/cancellation-policy" },
-                        { label: "How It Works", href: "/" },
-                        { label: "Cleaning Scope Guide", href: "/cleaning-scope" },
-                        { label: "Pricing Explained", href: "/pricing" },
-                      ].map((link) => (
-                        <a key={link.label} href={link.href}
-                          className="flex items-center justify-between text-sm py-2 hover:text-primary transition-colors border-b border-border/40 last:border-0">
-                          {link.label}
-                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
-                        </a>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                <div
+                  className="rounded-2xl bg-card p-6"
+                  style={{ border: "2px solid hsl(var(--pt-purple))", boxShadow: "0 4px 20px 0 hsl(var(--pt-purple) / 0.18)" }}
+                >
+                  <h3 className="font-bold text-base mb-4">Quick Links</h3>
+                  <div className="space-y-2">
+                    {[
+                      { label: "Cancellation Policy", href: "/cleaner/cancellation-policy" },
+                      { label: "How It Works", href: "/" },
+                      { label: "Cleaning Scope Guide", href: "/cleaning-scope" },
+                      { label: "Pricing Explained", href: "/pricing" },
+                    ].map((link) => (
+                      <a key={link.label} href={link.href}
+                        className="flex items-center justify-between text-sm py-2 hover:text-primary transition-colors border-b border-border/40 last:border-0">
+                        {link.label}
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>

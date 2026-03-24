@@ -127,14 +127,22 @@ export default function ForProfessionals() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="rounded-3xl p-6 border border-border/60 bg-card hover:shadow-lg hover:border-[hsl(var(--pt-cyan)/0.3)] transition-all duration-300 group"
+                whileHover={{ y: -4 }}
               >
-                <div className="h-11 w-11 rounded-2xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}>
-                  <f.icon className="h-5 w-5" />
+                <div
+                  className="rounded-3xl p-6 bg-card transition-all duration-300 group h-full"
+                  style={{
+                    border: `2px solid hsl(var(--${f.accent}))`,
+                    boxShadow: `0 4px 20px 0 hsl(var(--${f.accent}) / 0.18)`,
+                  }}
+                >
+                  <div className="h-11 w-11 rounded-2xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}>
+                    <f.icon className="h-5 w-5" />
+                  </div>
+                  <p className="text-3xl font-black mb-1" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
+                  <p className="font-bold text-sm mb-1">{f.title}</p>
+                  <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
                 </div>
-                <p className="text-3xl font-black mb-1 group-hover:text-[hsl(var(--pt-cyan))] transition-colors" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
-                <p className="font-bold text-sm mb-1">{f.title}</p>
-                <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>

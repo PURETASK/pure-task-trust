@@ -130,23 +130,28 @@ export default function AboutUs() {
                 img: clientHeroImg, badge: "For Clients", badgeCls: "bg-primary/15 text-primary border-primary/30",
                 title: "A home you can trust", cta: "Book a Clean", href: "/book",
                 points: ["Background-verified cleaners", "GPS check-in & photo proof", "Escrow: pay only when you approve", "Instant rebooking with favourites"],
-                iconColor: "text-primary", iconBg: "bg-primary/10"
+                iconColor: "text-primary", iconBg: "bg-primary/10",
+                borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.18)",
               },
               {
                 img: cleanerHeroImg, badge: "For Cleaners", badgeCls: "bg-success/15 text-success border-success/30",
                 title: "A career you control", cta: "Join as a Cleaner", href: "/auth?role=cleaner",
                 points: ["Set your own hourly rate", "Bronze → Platinum tier progression", "Weekly or instant Stripe payouts", "AI assistant & job support tools"],
-                iconColor: "text-success", iconBg: "bg-success/10"
+                iconColor: "text-success", iconBg: "bg-success/10",
+                borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.18)",
               },
             ].map((side, i) => (
-              <motion.div key={side.badge} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-                <Card className="overflow-hidden border-border/50 hover:shadow-elevated transition-all h-full">
+              <motion.div key={side.badge} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -4 }}>
+                <div
+                  className="overflow-hidden rounded-2xl bg-card h-full transition-all duration-300"
+                  style={{ border: `2px solid ${side.borderColor}`, boxShadow: `0 4px 24px 0 ${side.shadowColor}` }}
+                >
                   <div className="relative h-52 overflow-hidden">
                     <img src={side.img} alt={side.title} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
                     <Badge className={`absolute top-4 left-4 ${side.badgeCls}`}>{side.badge}</Badge>
                   </div>
-                  <CardContent className="p-6">
+                  <div className="p-6">
                     <h3 className="text-2xl font-bold mb-4">{side.title}</h3>
                     <div className="space-y-2.5 mb-6">
                       {side.points.map((p, j) => (
@@ -161,8 +166,8 @@ export default function AboutUs() {
                     <Button asChild className="w-full rounded-xl">
                       <Link to={side.href}>{side.cta} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -180,19 +185,29 @@ export default function AboutUs() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {VALUES.map((v, i) => (
-              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
-                <Card className={`h-full bg-gradient-to-br ${v.gradient} border-border/50 hover:shadow-card transition-all`}>
-                  <CardContent className="p-6">
-                    <div className="h-12 w-12 rounded-2xl bg-background/80 flex items-center justify-center mb-4 shadow-soft">
+            {VALUES.map((v, i) => {
+              const valColors = [
+                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
+                { border: "hsl(var(--success))", shadow: "hsl(var(--success) / 0.18)" },
+                { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
+                { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
+              ];
+              const c = valColors[i];
+              return (
+                <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                  <div
+                    className="h-full bg-card rounded-2xl p-6 transition-all duration-300"
+                    style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 20px 0 ${c.shadow}` }}
+                  >
+                    <div className="h-12 w-12 rounded-2xl bg-background/80 flex items-center justify-center mb-4" style={{ border: `1px solid ${c.border}` }}>
                       <v.icon className={`h-6 w-6 ${v.iconColor}`} />
                     </div>
                     <h3 className="text-lg font-bold mb-2">{v.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
