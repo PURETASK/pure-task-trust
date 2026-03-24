@@ -448,24 +448,35 @@ export default function Index() {
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {AUDIENCE.map((a, i) =>
-            <motion.div
-              key={a.label}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.03 }}>
-              
-                <Link to={a.href}>
-                  <Card className="text-center border-border/50 hover:border-primary/40 hover:shadow-elevated transition-all duration-300 cursor-pointer h-full">
-                    <CardContent className="p-4 sm:p-8">
-                      <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{a.emoji}</div>
-                      <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">{a.label}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground">{a.desc}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            )}
+            {AUDIENCE.map((a, i) => {
+              const audienceColors = [
+                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
+                { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
+                { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
+                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
+              ];
+              const c = audienceColors[i];
+              return (
+                <motion.div
+                  key={a.label}
+                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -4 }}>
+                  <Link to={a.href}>
+                    <div
+                      className="bg-card text-center rounded-2xl cursor-pointer h-full transition-all duration-300"
+                      style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 20px 0 ${c.shadow}` }}
+                    >
+                      <div className="p-4 sm:p-8">
+                        <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{a.emoji}</div>
+                        <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">{a.label}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{a.desc}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
