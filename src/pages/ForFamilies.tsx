@@ -149,25 +149,33 @@ export default function ForFamilies() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="group relative rounded-3xl p-8 border border-border/60 bg-card hover:border-[hsl(var(--pt-green)/0.4)] hover:shadow-lg transition-all duration-300 overflow-hidden"
+                whileHover={{ y: -4 }}
               >
                 <div
-                  className="absolute top-0 right-0 text-[6rem] font-black leading-none opacity-[0.06] group-hover:opacity-[0.1] transition-opacity"
-                  style={{ color: `hsl(var(--${pillar.accent}))` }}
+                  className="group relative rounded-3xl p-8 bg-card transition-all duration-300 overflow-hidden h-full"
+                  style={{
+                    border: `2px solid hsl(var(--${pillar.accent}))`,
+                    boxShadow: `0 4px 20px 0 hsl(var(--${pillar.accent}) / 0.18)`,
+                  }}
                 >
-                  {pillar.number}
+                  <div
+                    className="absolute top-0 right-0 text-[6rem] font-black leading-none opacity-[0.06] group-hover:opacity-[0.1] transition-opacity"
+                    style={{ color: `hsl(var(--${pillar.accent}))` }}
+                  >
+                    {pillar.number}
+                  </div>
+                  <span
+                    className="inline-block text-xs font-black tracking-widest uppercase mb-5 px-3 py-1 rounded-full"
+                    style={{ background: `hsl(var(--${pillar.accent})/0.12)`, color: `hsl(var(--${pillar.accent}))` }}
+                  >
+                    {pillar.tag}
+                  </span>
+                  <div className="h-12 w-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: `hsl(var(--${pillar.accent})/0.15)`, color: `hsl(var(--${pillar.accent}))` }}>
+                    <pillar.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-3">{pillar.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
                 </div>
-                <span
-                  className="inline-block text-xs font-black tracking-widest uppercase mb-5 px-3 py-1 rounded-full"
-                  style={{ background: `hsl(var(--${pillar.accent})/0.12)`, color: `hsl(var(--${pillar.accent}))` }}
-                >
-                  {pillar.tag}
-                </span>
-                <div className="h-12 w-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: `hsl(var(--${pillar.accent})/0.15)`, color: `hsl(var(--${pillar.accent}))` }}>
-                  <pillar.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-3">{pillar.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
               </motion.div>
             ))}
           </div>

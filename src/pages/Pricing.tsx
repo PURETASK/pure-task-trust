@@ -165,38 +165,50 @@ export default function Pricing() {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                {TIERS.map((tier, i) => (
-                  <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-                    <Card className={`relative ${tier.colorBg} border-2 ${tier.popular ? 'border-primary shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
-                      {tier.popular && (
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                          <Badge className="bg-primary text-primary-foreground shadow-md">⭐ Most Popular</Badge>
+                {TIERS.map((tier, i) => {
+                  const tierColors = [
+                    { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
+                    { border: "hsl(var(--success))", shadow: "hsl(var(--success) / 0.18)" },
+                    { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.22)" },
+                    { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
+                  ];
+                  const c = tier.popular ? { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.28)" } : tierColors[i];
+                  return (
+                    <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                      <div
+                        className={`relative bg-card rounded-2xl h-full transition-all duration-300 ${tier.popular ? 'scale-105' : ''}`}
+                        style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 24px 0 ${c.shadow}` }}
+                      >
+                        {tier.popular && (
+                          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                            <Badge className="bg-primary text-primary-foreground shadow-md">⭐ Most Popular</Badge>
+                          </div>
+                        )}
+                        <div className="pb-4 pt-6 text-center px-6">
+                          <div className={`h-12 w-12 rounded-2xl bg-background border ${tier.colorBadge} flex items-center justify-center mx-auto mb-3`}>
+                            <tier.icon className="h-6 w-6" />
+                          </div>
+                          <h3 className="text-lg font-semibold">{tier.tier}</h3>
+                          <div className="text-3xl font-bold mt-2">{tier.rate}</div>
+                          <Badge variant="outline" className={`mt-1 text-xs ${tier.colorBadge}`}>Score: {tier.score}</Badge>
                         </div>
-                      )}
-                      <CardHeader className="pb-4 pt-6 text-center">
-                        <div className={`h-12 w-12 rounded-2xl bg-background border ${tier.colorBadge} flex items-center justify-center mx-auto mb-3`}>
-                          <tier.icon className="h-6 w-6" />
+                        <div className="px-6 pb-6">
+                          <ul className="space-y-2.5 mb-6">
+                            {tier.features.map(f => (
+                              <li key={f} className="flex items-start gap-2 text-sm">
+                                <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                {f}
+                              </li>
+                            ))}
+                          </ul>
+                          <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                            <Link to="/discover">Browse {tier.tier} <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
+                          </Button>
                         </div>
-                        <CardTitle className="text-lg">{tier.tier}</CardTitle>
-                        <div className="text-3xl font-bold mt-2">{tier.rate}</div>
-                        <Badge variant="outline" className={`mt-1 text-xs ${tier.colorBadge}`}>Score: {tier.score}</Badge>
-                      </CardHeader>
-                      <CardContent>
-                        <ul className="space-y-2.5 mb-6">
-                          {tier.features.map(f => (
-                            <li key={f} className="flex items-start gap-2 text-sm">
-                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                              {f}
-                            </li>
-                          ))}
-                        </ul>
-                        <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
-                          <Link to="/discover">Browse {tier.tier} <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </section>

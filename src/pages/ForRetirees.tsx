@@ -138,22 +138,30 @@ export default function ForRetirees() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="group rounded-3xl p-8 border border-border/60 bg-card hover:border-[hsl(var(--pt-purple)/0.4)] hover:shadow-lg transition-all duration-300 relative overflow-hidden"
+                whileHover={{ y: -4 }}
               >
                 <div
-                  className="absolute top-5 right-6 text-7xl font-black leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
-                  style={{ color: `hsl(var(--${pillar.accent}))` }}
+                  className="group rounded-3xl p-8 bg-card transition-all duration-300 relative overflow-hidden h-full"
+                  style={{
+                    border: `2px solid hsl(var(--${pillar.accent}))`,
+                    boxShadow: `0 4px 20px 0 hsl(var(--${pillar.accent}) / 0.18)`,
+                  }}
                 >
-                  {pillar.number}
+                  <div
+                    className="absolute top-5 right-6 text-7xl font-black leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
+                    style={{ color: `hsl(var(--${pillar.accent}))` }}
+                  >
+                    {pillar.number}
+                  </div>
+                  <div
+                    className="h-12 w-12 rounded-2xl flex items-center justify-center mb-6"
+                    style={{ background: `hsl(var(--${pillar.accent})/0.15)`, color: `hsl(var(--${pillar.accent}))` }}
+                  >
+                    <pillar.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-3 leading-snug">{pillar.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
                 </div>
-                <div
-                  className="h-12 w-12 rounded-2xl flex items-center justify-center mb-6"
-                  style={{ background: `hsl(var(--${pillar.accent})/0.15)`, color: `hsl(var(--${pillar.accent}))` }}
-                >
-                  <pillar.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-3 leading-snug">{pillar.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
               </motion.div>
             ))}
           </div>
