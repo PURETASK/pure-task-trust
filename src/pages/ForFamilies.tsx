@@ -201,22 +201,30 @@ export default function ForFamilies() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="rounded-3xl p-8 border border-border/60 bg-card relative overflow-hidden"
+                whileHover={{ y: -4 }}
               >
-                <div className="flex gap-1 mb-5">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-warning text-warning" />)}
-                </div>
-                <p className="text-lg leading-relaxed italic mb-6 text-foreground">"{t.quote}"</p>
-                <div className="flex items-center gap-4">
-                  <div
-                    className="h-12 w-12 rounded-2xl flex items-center justify-center font-black text-sm"
-                    style={{ background: `hsl(var(--${t.color})/0.15)`, color: `hsl(var(--${t.color}))` }}
-                  >
-                    {t.initials}
+                <div
+                  className="rounded-3xl p-8 bg-card relative overflow-hidden h-full transition-all duration-300"
+                  style={{
+                    border: `2px solid hsl(var(--${t.color}))`,
+                    boxShadow: `0 4px 20px 0 hsl(var(--${t.color}) / 0.18)`,
+                  }}
+                >
+                  <div className="flex gap-1 mb-5">
+                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-warning text-warning" />)}
                   </div>
-                  <div>
-                    <p className="font-bold">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role}</p>
+                  <p className="text-lg leading-relaxed italic mb-6 text-foreground">"{t.quote}"</p>
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="h-12 w-12 rounded-2xl flex items-center justify-center font-black text-sm"
+                      style={{ background: `hsl(var(--${t.color})/0.15)`, color: `hsl(var(--${t.color}))` }}
+                    >
+                      {t.initials}
+                    </div>
+                    <div>
+                      <p className="font-bold">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
