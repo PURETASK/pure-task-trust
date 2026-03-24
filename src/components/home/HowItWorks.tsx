@@ -1,20 +1,33 @@
 import { motion } from "framer-motion";
 
+// Client-facing steps → blue border. Alternating with purple for variety.
 const steps = [
   {
     number: "01",
     title: "Book a Cleaner",
     description: "Browse verified cleaners, check their reviews and rates, then book the perfect match for your home.",
+    borderColor: "hsl(var(--primary))",
+    shadowColor: "hsl(var(--primary) / 0.18)",
+    numColor: "text-primary",
+    numBg: "bg-primary",
   },
   {
     number: "02",
     title: "Cleaner Works",
     description: "Your cleaner checks in with GPS, takes before photos, completes the job, and documents the results.",
+    borderColor: "hsl(var(--success))",
+    shadowColor: "hsl(var(--success) / 0.18)",
+    numColor: "text-success",
+    numBg: "bg-success",
   },
   {
     number: "03",
     title: "Approve & Pay",
     description: "Review the before & after photos, approve the work, and only then are your credits released.",
+    borderColor: "hsl(var(--pt-purple))",
+    shadowColor: "hsl(var(--pt-purple) / 0.18)",
+    numColor: "text-[hsl(var(--pt-purple))]",
+    numBg: "bg-[hsl(var(--pt-purple))]",
   },
 ];
 
@@ -47,10 +60,19 @@ export function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.15 }}
+                whileHover={{ y: -4 }}
                 className="relative text-center"
               >
-                <div className="bg-card rounded-2xl p-8 relative z-10">
-                  <div className="h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
+                <div
+                  className="bg-card rounded-2xl p-8 relative z-10 transition-all duration-300"
+                  style={{
+                    border: `2px solid ${step.borderColor}`,
+                    boxShadow: `0 4px 20px 0 ${step.shadowColor}, 0 1px 6px 0 ${step.shadowColor}`,
+                  }}
+                >
+                  <div
+                    className={`h-16 w-16 rounded-full ${step.numBg} text-primary-foreground flex items-center justify-center mx-auto mb-6 text-2xl font-bold`}
+                  >
                     {step.number}
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
