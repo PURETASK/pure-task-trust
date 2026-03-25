@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Check, Clock, AlertTriangle, ArrowLeft, ArrowRight, Sparkles, Loader2, ImageOff, Star, DollarSign } from "lucide-react";
+import { Check, Clock, AlertTriangle, ArrowLeft, ArrowRight, Sparkles, Loader2, ImageOff } from "lucide-react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useJob, useJobActions } from "@/hooks/useJob";
 import { useJobPhotos } from "@/hooks/useJobPhotos";
-import { useJobReview, useCreateReview } from "@/hooks/useReviews";
+import { useJobReview } from "@/hooks/useReviews";
 import {
   Dialog,
   DialogContent,
@@ -18,8 +18,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { PostJobFlow } from "@/components/job/PostJobFlow";
 
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hovered, setHovered] = useState(0);
