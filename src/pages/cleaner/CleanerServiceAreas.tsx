@@ -76,7 +76,7 @@ export default function CleanerServiceAreas() {
                 Add Area
               </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-2xl">
+            <DialogContent className="rounded-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add Service Area</DialogTitle>
                 <DialogDescription>Define a new area where you're willing to accept jobs.</DialogDescription>
@@ -110,7 +110,7 @@ export default function CleanerServiceAreas() {
                   {isAdding && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   Add Service Area
                 </Button>
-                {/* Interactive radius preview map — below the button so form fields are always visible */}
+                {/* Map preview — always below all form fields */}
                 <div className="space-y-1.5">
                   <Label className="text-xs text-muted-foreground">Coverage preview</Label>
                   <div className="rounded-xl overflow-hidden border border-border/60" style={{ height: 200 }}>
