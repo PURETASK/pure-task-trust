@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,264 +6,308 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Calendar, Plus, Trash2, Umbrella, Star } from "lucide-react";
+import { Calendar, Plus, Trash2, Umbrella, Star, CheckCircle2, Loader2 } from "lucide-react";
 import { useTimeOff } from "@/hooks/useAvailability";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+
+const YEAR = new Date().getFullYear();
 
 const HOLIDAYS = [
-  { label: "New Year's Day", date: `${new Date().getFullYear()}-01-01` },
-  { label: "Memorial Day", date: `${new Date().getFullYear()}-05-26` },
-  { label: "Independence Day (July 4th)", date: `${new Date().getFullYear()}-07-04` },
-  { label: "Labor Day", date: `${new Date().getFullYear()}-09-01` },
-  { label: "Thanksgiving", date: `${new Date().getFullYear()}-11-27` },
-  { label: "Christmas Eve", date: `${new Date().getFullYear()}-12-24` },
-  { label: "Christmas Day", date: `${new Date().getFullYear()}-12-25` },
-  { label: "New Year's Eve", date: `${new Date().getFullYear()}-12-31` },
+  { label: "New Year's Day",       date: `${YEAR}-01-01`, emoji: "🎆" },
+  { label: "Memorial Day",         date: `${YEAR}-05-26`, emoji: "🇺🇸" },
+  { label: "Independence Day",     date: `${YEAR}-07-04`, emoji: "🎇" },
+  { label: "Labor Day",            date: `${YEAR}-09-01`, emoji: "🛠️" },
+  { label: "Thanksgiving",         date: `${YEAR}-11-27`, emoji: "🦃" },
+  { label: "Christmas Eve",        date: `${YEAR}-12-24`, emoji: "🎄" },
+  { label: "Christmas Day",        date: `${YEAR}-12-25`, emoji: "🎁" },
+  { label: "New Year's Eve",       date: `${YEAR}-12-31`, emoji: "🥂" },
 ];
 
 export function TimeOffManager() {
   const { upcomingTimeOff, pastTimeOff, isLoading, addTimeOff, deleteTimeOff } = useTimeOff();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [addingHoliday, setAddingHoliday] = useState<string | null>(null);
   const [newTimeOff, setNewTimeOff] = useState({
-    start_date: '',
-    end_date: '',
+    start_date: "",
+    end_date: "",
     start_time: null as string | null,
     end_time: null as string | null,
     all_day: true,
-    reason: '',
+    reason: "",
   });
 
-  const resetForm = () => setNewTimeOff({
-    start_date: '', end_date: '', start_time: null, end_time: null, all_day: true, reason: '',
-  });
+  const resetForm = () =>
+    setNewTimeOff({ start_date: "", end_date: "", start_time: null, end_time: null, all_day: true, reason: "" });
 
   const handleAdd = () => {
-    addTimeOff.mutate({
-      start_date: newTimeOff.start_date,
-      end_date: newTimeOff.end_date,
-      start_time: newTimeOff.all_day ? null : newTimeOff.start_time,
-      end_time: newTimeOff.all_day ? null : newTimeOff.end_time,
-      all_day: newTimeOff.all_day,
-      reason: newTimeOff.reason || null,
-    }, {
-      onSuccess: () => { setIsDialogOpen(false); resetForm(); },
-    });
+    addTimeOff.mutate(
+      {
+        start_date: newTimeOff.start_date,
+        end_date: newTimeOff.end_date,
+        start_time: newTimeOff.all_day ? null : newTimeOff.start_time,
+        end_time: newTimeOff.all_day ? null : newTimeOff.end_time,
+        all_day: newTimeOff.all_day,
+        reason: newTimeOff.reason || null,
+      },
+      { onSuccess: () => { setIsDialogOpen(false); resetForm(); } }
+    );
   };
 
-  const addHoliday = (h: typeof HOLIDAYS[number]) => {
-    addTimeOff.mutate({
-      start_date: h.date,
-      end_date: h.date,
-      start_time: null,
-      end_time: null,
-      all_day: true,
-      reason: h.label,
-    });
+  const addHoliday = async (h: (typeof HOLIDAYS)[number]) => {
+    setAddingHoliday(h.date);
+    try {
+      await addTimeOff.mutateAsync({
+        start_date: h.date,
+        end_date: h.date,
+        start_time: null,
+        end_time: null,
+        all_day: true,
+        reason: h.label,
+      });
+    } finally {
+      setAddingHoliday(null);
+    }
   };
+
+  // Check which holidays are already blocked
+  const allTimeOff = [...(upcomingTimeOff || []), ...(pastTimeOff || [])];
+  const isHolidayBlocked = (date: string) =>
+    allTimeOff.some((t) => t.start_date === date || t.end_date === date);
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-48" />
-          <Skeleton className="h-4 w-64 mt-2" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <Skeleton className="h-40 rounded-3xl" />
+        <Skeleton className="h-56 rounded-3xl" />
+      </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {/* Holiday quick-add */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Star className="h-4 w-4 text-amber-500" />
-            Common Holidays
-          </CardTitle>
-          <CardDescription>Tap a holiday to instantly block that day off</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {HOLIDAYS.map(h => (
-              <Button
-                key={h.label}
-                variant="outline"
-                size="sm"
-                className="text-xs h-8"
-                onClick={() => addHoliday(h)}
-                disabled={addTimeOff.isPending}
-              >
-                {h.label}
-              </Button>
-            ))}
+      {/* ── Holiday quick-add ── */}
+      <div className="rounded-3xl border-2 border-warning/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+        <div className="flex items-center gap-3 px-5 py-4 bg-warning/8 border-b-2 border-warning/30">
+          <div className="h-9 w-9 rounded-xl bg-warning/15 border-2 border-warning/30 flex items-center justify-center">
+            <Star className="h-4 w-4 text-warning" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <p className="font-black text-base text-warning">Common Holidays</p>
+            <p className="text-xs text-muted-foreground">Tap any holiday to block that day off — tap again to remove</p>
+          </div>
+        </div>
+        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {HOLIDAYS.map((h) => {
+            const blocked = isHolidayBlocked(h.date);
+            const isAdding = addingHoliday === h.date;
+            // find the existing record so we can delete it
+            const existing = allTimeOff.find((t) => t.start_date === h.date && t.reason === h.label);
 
-      {/* Main days off manager */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Umbrella className="h-5 w-5" />
-                Days I Don't Work
-              </CardTitle>
-              <CardDescription>
-                Mark specific days or date ranges you won't be available
-              </CardDescription>
+            return (
+              <motion.button
+                key={h.date}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  if (blocked && existing) {
+                    deleteTimeOff.mutate(existing.id);
+                  } else if (!blocked) {
+                    addHoliday(h);
+                  }
+                }}
+                disabled={isAdding || (deleteTimeOff.isPending && existing?.id === deleteTimeOff.variables)}
+                className={cn(
+                  "relative flex flex-col items-center gap-1 p-3 rounded-2xl border-2 text-xs font-semibold transition-all text-center",
+                  blocked
+                    ? "border-success/60 bg-success/12 text-success"
+                    : "border-border/60 bg-muted/30 text-foreground hover:border-warning/40 hover:bg-warning/8"
+                )}
+              >
+                {isAdding ? (
+                  <Loader2 className="h-5 w-5 animate-spin text-warning" />
+                ) : blocked ? (
+                  <CheckCircle2 className="h-5 w-5 text-success" />
+                ) : (
+                  <span className="text-lg">{h.emoji}</span>
+                )}
+                <span className="leading-tight">{h.label}</span>
+                {blocked && (
+                  <span className="absolute top-1 right-1 text-[9px] font-bold text-success bg-success/15 rounded-full px-1">
+                    ✓ Set
+                  </span>
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Main days off manager ── */}
+      <div className="rounded-3xl border-2 border-primary/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+        <div className="flex items-center justify-between px-5 py-4 bg-primary/8 border-b-2 border-primary/30">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-primary/15 border-2 border-primary/30 flex items-center justify-center">
+              <Umbrella className="h-4 w-4 text-primary" />
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Days I Don't Work
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add Days I Don't Work</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-5 py-4">
+            <div>
+              <p className="font-black text-base text-primary">Days I Don't Work</p>
+              <p className="text-xs text-muted-foreground">Mark specific dates you won't be available</p>
+            </div>
+          </div>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="rounded-xl gap-1.5 border-2 border-primary bg-primary text-white font-bold">
+                <Plus className="h-4 w-4" /> Add
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="rounded-3xl">
+              <DialogHeader>
+                <DialogTitle>Add Days Off</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-5 py-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="font-semibold">Start Date</Label>
+                    <Input
+                      type="date"
+                      className="rounded-xl border-2 border-border/60 h-11"
+                      value={newTimeOff.start_date}
+                      onChange={(e) =>
+                        setNewTimeOff((p) => ({
+                          ...p,
+                          start_date: e.target.value,
+                          end_date: p.end_date || e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-semibold">End Date</Label>
+                    <Input
+                      type="date"
+                      className="rounded-xl border-2 border-border/60 h-11"
+                      value={newTimeOff.end_date}
+                      onChange={(e) => setNewTimeOff((p) => ({ ...p, end_date: e.target.value }))}
+                      min={newTimeOff.start_date}
+                    />
+                  </div>
+                </div>
+
+                {/* All Day toggle */}
+                <div
+                  onClick={() => setNewTimeOff((p) => ({ ...p, all_day: !p.all_day }))}
+                  className={cn(
+                    "flex items-center justify-between rounded-2xl border-2 px-4 py-3 cursor-pointer transition-all",
+                    newTimeOff.all_day ? "border-primary/50 bg-primary/8" : "border-border bg-muted/30"
+                  )}
+                >
+                  <div>
+                    <p className="font-bold text-sm">All Day</p>
+                    <p className="text-xs text-muted-foreground">Block the entire day</p>
+                  </div>
+                  <Switch
+                    checked={newTimeOff.all_day}
+                    onCheckedChange={(v) => setNewTimeOff((p) => ({ ...p, all_day: v }))}
+                    className="pointer-events-none"
+                  />
+                </div>
+
+                {!newTimeOff.all_day && (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Start Date</Label>
+                      <Label className="font-semibold">Start Time</Label>
                       <Input
-                        type="date"
-                        value={newTimeOff.start_date}
-                        onChange={(e) => setNewTimeOff(prev => ({
-                          ...prev,
-                          start_date: e.target.value,
-                          end_date: prev.end_date || e.target.value,
-                        }))}
+                        type="time"
+                        className="rounded-xl border-2 border-border/60 h-11"
+                        value={newTimeOff.start_time || ""}
+                        onChange={(e) => setNewTimeOff((p) => ({ ...p, start_time: e.target.value }))}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>End Date</Label>
+                      <Label className="font-semibold">End Time</Label>
                       <Input
-                        type="date"
-                        value={newTimeOff.end_date}
-                        onChange={(e) => setNewTimeOff(prev => ({ ...prev, end_date: e.target.value }))}
-                        min={newTimeOff.start_date}
+                        type="time"
+                        className="rounded-xl border-2 border-border/60 h-11"
+                        value={newTimeOff.end_time || ""}
+                        onChange={(e) => setNewTimeOff((p) => ({ ...p, end_time: e.target.value }))}
                       />
                     </div>
                   </div>
+                )}
 
-                  {/* All Day — big, prominent toggle */}
-                  <div className={cn(
-                    "flex items-center justify-between rounded-xl border-2 px-4 py-3 cursor-pointer transition-all",
-                    newTimeOff.all_day
-                      ? "border-primary bg-primary/10"
-                      : "border-border bg-muted/30"
-                  )}
-                    onClick={() => setNewTimeOff(prev => ({ ...prev, all_day: !prev.all_day }))}
-                  >
-                    <div>
-                      <p className="font-semibold text-sm">All Day</p>
-                      <p className="text-xs text-muted-foreground">Block the entire day</p>
-                    </div>
-                    <Switch
-                      checked={newTimeOff.all_day}
-                      onCheckedChange={(checked) => setNewTimeOff(prev => ({ ...prev, all_day: checked }))}
-                      className="pointer-events-none"
-                    />
-                  </div>
-
-                  {!newTimeOff.all_day && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Start Time</Label>
-                        <Input
-                          type="time"
-                          value={newTimeOff.start_time || ''}
-                          onChange={(e) => setNewTimeOff(prev => ({ ...prev, start_time: e.target.value }))}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>End Time</Label>
-                        <Input
-                          type="time"
-                          value={newTimeOff.end_time || ''}
-                          onChange={(e) => setNewTimeOff(prev => ({ ...prev, end_time: e.target.value }))}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <Label>Reason (optional)</Label>
-                    <Input
-                      placeholder="e.g., Holiday, Personal day, Travel"
-                      value={newTimeOff.reason}
-                      onChange={(e) => setNewTimeOff(prev => ({ ...prev, reason: e.target.value }))}
-                    />
-                  </div>
-
-                  <Button
-                    onClick={handleAdd}
-                    className="w-full"
-                    disabled={addTimeOff.isPending || !newTimeOff.start_date || !newTimeOff.end_date}
-                  >
-                    {addTimeOff.isPending ? 'Saving...' : 'Save Days Off'}
-                  </Button>
+                <div className="space-y-2">
+                  <Label className="font-semibold">Reason (optional)</Label>
+                  <Input
+                    className="rounded-xl border-2 border-border/60 h-11"
+                    placeholder="e.g. Holiday, Personal day, Travel"
+                    value={newTimeOff.reason}
+                    onChange={(e) => setNewTimeOff((p) => ({ ...p, reason: e.target.value }))}
+                  />
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
+
+                <Button
+                  onClick={handleAdd}
+                  className="w-full rounded-xl h-11 font-bold border-2 border-primary"
+                  disabled={addTimeOff.isPending || !newTimeOff.start_date || !newTimeOff.end_date}
+                >
+                  {addTimeOff.isPending ? (
+                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Saving…</>
+                  ) : (
+                    "Save Days Off"
+                  )}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="p-4">
           {upcomingTimeOff.length === 0 && pastTimeOff.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No days off added yet</p>
-              <p className="text-sm">Use the button above or tap a holiday shortcut</p>
+            <div className="text-center py-10 text-muted-foreground">
+              <Calendar className="h-12 w-12 mx-auto mb-3 opacity-30" />
+              <p className="font-semibold">No days off added yet</p>
+              <p className="text-sm mt-1">Use the Add button or tap a holiday shortcut above</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-5">
               {upcomingTimeOff.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Upcoming</h4>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Upcoming</p>
                   <div className="space-y-2">
-                    {upcomingTimeOff.map(timeOff => (
-                      <div
-                        key={timeOff.id}
-                        className="flex items-center justify-between p-3 rounded-lg border bg-primary/5"
+                    {upcomingTimeOff.map((t) => (
+                      <motion.div
+                        key={t.id}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center justify-between p-3 rounded-2xl border-2 border-primary/30 bg-primary/6"
                       >
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">
-                              {format(parseISO(timeOff.start_date), 'MMM d')}
-                              {timeOff.start_date !== timeOff.end_date && (
-                                <> – {format(parseISO(timeOff.end_date), 'MMM d')}</>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-sm">
+                              {format(parseISO(t.start_date), "MMM d")}
+                              {t.start_date !== t.end_date && (
+                                <> – {format(parseISO(t.end_date), "MMM d")}</>
                               )}
                             </span>
-                            {timeOff.all_day ? (
-                              <Badge variant="secondary">All Day</Badge>
+                            {t.all_day ? (
+                              <Badge className="bg-primary/15 text-primary border border-primary/30 text-xs rounded-full">All Day</Badge>
                             ) : (
-                              <Badge variant="outline">
-                                {timeOff.start_time} – {timeOff.end_time}
+                              <Badge className="bg-muted text-muted-foreground border border-border/40 text-xs rounded-full">
+                                {t.start_time} – {t.end_time}
                               </Badge>
                             )}
                           </div>
-                          {timeOff.reason && (
-                            <p className="text-sm text-muted-foreground mt-1">{timeOff.reason}</p>
-                          )}
+                          {t.reason && <p className="text-xs text-muted-foreground mt-0.5">{t.reason}</p>}
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => deleteTimeOff.mutate(timeOff.id)}
+                        <button
+                          onClick={() => deleteTimeOff.mutate(t.id)}
+                          className="h-8 w-8 rounded-xl bg-destructive/10 flex items-center justify-center hover:bg-destructive/20 transition-colors"
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
+                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                        </button>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -272,24 +315,15 @@ export function TimeOffManager() {
 
               {pastTimeOff.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Past</h4>
-                  <div className="space-y-2">
-                    {pastTimeOff.slice(0, 3).map(timeOff => (
-                      <div
-                        key={timeOff.id}
-                        className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
-                      >
-                        <div className="text-muted-foreground">
-                          <span>
-                            {format(parseISO(timeOff.start_date), 'MMM d')}
-                            {timeOff.start_date !== timeOff.end_date && (
-                              <> – {format(parseISO(timeOff.end_date), 'MMM d')}</>
-                            )}
-                          </span>
-                          {timeOff.reason && (
-                            <span className="text-sm ml-2">• {timeOff.reason}</span>
-                          )}
-                        </div>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Past</p>
+                  <div className="space-y-1.5">
+                    {pastTimeOff.slice(0, 4).map((t) => (
+                      <div key={t.id} className="flex items-center justify-between p-2.5 rounded-xl border border-border/40 bg-muted/20">
+                        <span className="text-sm text-muted-foreground">
+                          {format(parseISO(t.start_date), "MMM d")}
+                          {t.start_date !== t.end_date && <> – {format(parseISO(t.end_date), "MMM d")}</>}
+                          {t.reason && <span className="ml-2 text-xs">· {t.reason}</span>}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -297,8 +331,8 @@ export function TimeOffManager() {
               )}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

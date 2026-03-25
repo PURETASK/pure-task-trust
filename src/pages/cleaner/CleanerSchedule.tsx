@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap, Calendar } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap, Calendar, CalendarClock } from "lucide-react";
+import { RescheduleRequestsList } from "@/components/scheduling/RescheduleRequestsList";
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
@@ -131,7 +132,7 @@ export default function CleanerSchedule() {
           <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/35 blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
-              <div className="h-13 w-13 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25 p-3">
+              <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 p-3">
                 <Calendar className="h-7 w-7 text-white" />
               </div>
               <div>
@@ -448,6 +449,23 @@ export default function CleanerSchedule() {
             ))}
           </div>
         )}
+
+        {/* ── Reschedule Requests Section ───────────────────────────── */}
+        <div className="rounded-3xl border-2 border-warning/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+          <div className="flex items-center gap-3 px-5 py-4 bg-warning/8 border-b-2 border-warning/30">
+            <div className="h-9 w-9 rounded-xl bg-warning/15 border-2 border-warning/30 flex items-center justify-center">
+              <CalendarClock className="h-4 w-4 text-warning" />
+            </div>
+            <div>
+              <p className="font-black text-base text-warning">Reschedule Requests</p>
+              <p className="text-xs text-muted-foreground">Accept or decline client reschedule requests</p>
+            </div>
+          </div>
+          <div className="p-4">
+            <RescheduleRequestsList />
+          </div>
+        </div>
+
       </div>
     </CleanerLayout>
   );
