@@ -136,10 +136,10 @@ export default function CleanerEarnings() {
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/10">
+          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-primary/20 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-primary/50 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
@@ -160,10 +160,10 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/10">
+          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/20 flex items-center justify-center flex-shrink-0">
+                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/50 flex items-center justify-center flex-shrink-0">
                   <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
                 </div>
                 <div>
@@ -186,10 +186,10 @@ export default function CleanerEarnings() {
 
         {/* Payout Options */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/10">
+          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/20 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/50 flex items-center justify-center">
                   <Banknote className="h-5 w-5 text-[hsl(280,70%,55%)]" />
                 </div>
                 <div>
@@ -211,10 +211,10 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-success/60 bg-success/10">
+          <Card className="rounded-2xl border-2 border-success/60 bg-success/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-success/50 flex items-center justify-center">
                   <PiggyBank className="h-5 w-5 text-success" />
                 </div>
                 <div>
