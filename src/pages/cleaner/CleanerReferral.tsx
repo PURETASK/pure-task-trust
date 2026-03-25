@@ -152,10 +152,10 @@ export default function CleanerReferral() {
           className="grid grid-cols-2 md:grid-cols-4 gap-3"
         >
           {[
-            { icon: Users, value: stats.totalReferrals, label: "Total Referred", border: "border-primary/50", bg: "bg-primary/20", icon_c: "text-primary", icon_bg: "bg-primary/30" },
-            { icon: Clock, value: stats.pendingReferrals, label: "Pending", border: "border-warning/50", bg: "bg-warning/20", icon_c: "text-warning", icon_bg: "bg-warning/30" },
-            { icon: CheckCircle, value: stats.completedReferrals, label: "Completed", border: "border-success/50", bg: "bg-success/20", icon_c: "text-success", icon_bg: "bg-success/30" },
-            { icon: DollarSign, value: `$${stats.totalCreditsEarned}`, label: "Credits Earned", border: "border-[hsl(280,70%,55%)]/50", bg: "bg-[hsl(280,70%,55%)]/20", icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/30" },
+            { icon: Users, value: stats.totalReferrals, label: "Total Referred", border: "border-primary/50", bg: "bg-primary/20", icon_c: "text-primary", icon_bg: "bg-primary/30", val_c: "text-foreground" },
+            { icon: Clock, value: stats.pendingReferrals, label: "Pending", border: "border-warning/50", bg: "bg-warning/20", icon_c: "text-warning", icon_bg: "bg-warning/30", val_c: "text-foreground" },
+            { icon: CheckCircle, value: stats.completedReferrals, label: "Completed", border: "border-success/50", bg: "bg-success/20", icon_c: "text-success", icon_bg: "bg-success/30", val_c: "text-foreground" },
+            { icon: DollarSign, value: `$${stats.totalCreditsEarned}`, label: "Credits Earned", border: "border-[hsl(280,70%,55%)]/50", bg: "bg-[hsl(280,70%,55%)]/20", icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/30", val_c: "text-foreground" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.06 }}>
               <div className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4 flex items-center gap-3`}>
@@ -163,7 +163,7 @@ export default function CleanerReferral() {
                   <s.icon className={`h-5 w-5 ${s.icon_c}`} />
                 </div>
                 <div>
-                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className="text-2xl font-bold">{s.value}</p>}
+                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-bold ${s.val_c}`}>{s.value}</p>}
                   <p className="text-xs text-muted-foreground">{s.label}</p>
                 </div>
               </div>
