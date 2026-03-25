@@ -37,8 +37,9 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
-  // Only block on auth loading OR the very first profile fetch (no cached data yet)
-  const isLoading = authLoading || (isAuthenticated && profileLoading);
+  // Only block if auth is loading OR profile is loading AND we don't yet have role data from AuthContext
+  // user.role from AuthContext is always available once auth resolves — don't block on profile query
+  const isLoading = authLoading || (isAuthenticated && profileLoading && !user?.role);
 
   if (isLoading) {
     return <AuthLoadingSkeleton />;
@@ -48,24 +49,27 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  // Check if user needs to select a role (for OAuth users without role metadata)
-  if (requireRole && needsRoleSelection && location.pathname !== '/role-selection') {
-    return <Navigate to="/role-selection" state={{ from: location }} replace />;
-  }
-
-  // Check if cleaner needs to complete onboarding — ONLY redirect new cleaners
-  if (requireRole && role === 'cleaner' && needsOnboarding && 
-      location.pathname !== '/cleaner/onboarding' && 
-      location.pathname !== '/role-selection') {
-    return <Navigate to="/cleaner/onboarding" replace />;
-  }
-
   // Never redirect away from onboarding mid-flow
   if (location.pathname === '/cleaner/onboarding') {
     return <>{children}</>;
   }
 
-  // Check role if specified — use AuthContext role (always available)
+  // Check if user needs to select a role (for OAuth users without role metadata)
+  // Use profile-level needsRoleSelection only when profile data is ready; otherwise use AuthContext role
+  const effectiveRole = user?.role ?? role;
+  const hasNoRole = requireRole && !effectiveRole && needsRoleSelection;
+  if (hasNoRole && location.pathname !== '/role-selection') {
+    return <Navigate to="/role-selection" state={{ from: location }} replace />;
+  }
+
+  // Check if cleaner needs to complete onboarding — ONLY redirect brand-new cleaners
+  if (requireRole && effectiveRole === 'cleaner' && needsOnboarding && 
+      location.pathname !== '/cleaner/onboarding' && 
+      location.pathname !== '/role-selection') {
+    return <Navigate to="/cleaner/onboarding" replace />;
+  }
+
+  // Check role if specified — use AuthContext role (always available after auth resolves)
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     const redirectPath = user.role === 'cleaner' ? '/cleaner/dashboard' : user.role === 'admin' ? '/admin/hub' : '/dashboard';
     return <Navigate to={redirectPath} replace />;
