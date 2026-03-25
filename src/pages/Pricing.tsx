@@ -89,9 +89,9 @@ export default function Pricing() {
           name: 'Cleaning Service Tiers',
           itemListElement: [
             { '@type': 'Offer', name: 'Bronze Tier Cleaning', description: 'Entry-level verified cleaner — building their reputation.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–35', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Silver Tier Cleaning', description: 'Proven reliability score 50–69. Priority scheduling.', price: '30', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '30–50', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Gold Tier Cleaning', description: 'High reliability score 70–89. Same-day booking available.', price: '40', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '40–65', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Platinum Tier Cleaning', description: 'Elite reliability score 90–100. White-glove service.', price: '50', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '50–100', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Silver Tier Cleaning', description: 'Proven reliability score 50–69. Priority scheduling.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–50', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Gold Tier Cleaning', description: 'High reliability score 70–89. Same-day booking available.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–65', priceCurrency: 'USD', unitText: 'per hour' } },
+            { '@type': 'Offer', name: 'Platinum Tier Cleaning', description: 'Elite reliability score 90–100. White-glove service.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–100', priceCurrency: 'USD', unitText: 'per hour' } },
           ],
         },
       }} />
