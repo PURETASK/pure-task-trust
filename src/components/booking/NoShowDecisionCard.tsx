@@ -135,15 +135,15 @@ export function NoShowDecisionCard({
         is_reasonable: true,
       });
 
-      // Move job to "reschedule_offered" state (uses no_show_pending as interim)
+      // Keep job in pending status while reschedule is offered
       await supabase
         .from("jobs")
-        .update({ status: "no_show_pending", updated_at: new Date().toISOString() })
+        .update({ status: "pending" as any, updated_at: new Date().toISOString() })
         .eq("id", jobId);
 
       await supabase.from("job_status_history").insert({
         job_id: jobId,
-        to_status: "no_show_pending",
+        to_status: "pending",
         reason: `Client offered reschedule to ${format(newStart, "EEE MMM d 'at' h:mm a")}`,
         changed_by_type: "client",
       });
@@ -156,10 +156,10 @@ export function NoShowDecisionCard({
         .single();
 
       if (cleanerProfile?.user_id) {
-        await supabase.from("notifications").insert({
+        await supabase.from("in_app_notifications" as any).insert({
           user_id: cleanerProfile.user_id,
           title: "Client Offered You a Reschedule",
-          message: `Your client has offered to reschedule the missed job to ${format(newStart, "EEE, MMM d 'at' h:mm a")}. Please respond in the app.`,
+          body: `Your client has offered to reschedule the missed job to ${format(newStart, "EEE, MMM d 'at' h:mm a")}. Please respond in the app.`,
           type: "reschedule_offer",
           data: { job_id: jobId, new_start: newStart.toISOString() },
         });
