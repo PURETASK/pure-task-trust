@@ -151,10 +151,10 @@ export default function CleanerSchedule() {
         {/* ── Quick Stats Strip ─────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-3">
           {[
-            { label: "Today's Jobs",    value: getJobsForDate(new Date()).length,                           icon: Briefcase, border: "border-primary/50",                          bg: "bg-primary/5",                          icon_c: "text-primary",   icon_bg: "bg-primary/10" },
-            { label: "This Week",       value: twoWeeksDays.slice(0,7).filter(d => hasJobs(d)).length,      icon: Calendar,  border: "border-success/50",                          bg: "bg-success/5",                          icon_c: "text-success",   icon_bg: "bg-success/10" },
-            { label: "Pending Offers",  value: jobs.filter(j => j.status === 'pending' || j.status === 'created').length, icon: Clock, border: "border-warning/50",             bg: "bg-warning/5",                          icon_c: "text-warning",   icon_bg: "bg-warning/10" },
-            { label: "Confirmed",       value: jobs.filter(j => j.status === 'confirmed').length,           icon: DollarSign, border: "border-[hsl(280,70%,55%)]/50",             bg: "bg-[hsl(280,70%,55%)]/5",               icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/10" },
+            { label: "Today's Jobs",    value: getJobsForDate(new Date()).length,                           icon: Briefcase, border: "border-primary/50",                          bg: "bg-primary/20",                          icon_c: "text-primary",   icon_bg: "bg-primary/30" },
+            { label: "This Week",       value: twoWeeksDays.slice(0,7).filter(d => hasJobs(d)).length,      icon: Calendar,  border: "border-success/50",                          bg: "bg-success/20",                          icon_c: "text-success",   icon_bg: "bg-success/30" },
+            { label: "Pending Offers",  value: jobs.filter(j => j.status === 'pending' || j.status === 'created').length, icon: Clock, border: "border-warning/50",             bg: "bg-warning/20",                          icon_c: "text-warning",   icon_bg: "bg-warning/30" },
+            { label: "Confirmed",       value: jobs.filter(j => j.status === 'confirmed').length,           icon: DollarSign, border: "border-[hsl(280,70%,55%)]/50",             bg: "bg-[hsl(280,70%,55%)]/20",               icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/30" },
           ].map(s => (
             <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4 flex items-center gap-3`}>
               <div className={`h-10 w-10 rounded-xl ${s.icon_bg} flex items-center justify-center shrink-0`}>
