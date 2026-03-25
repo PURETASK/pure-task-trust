@@ -84,10 +84,10 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       <div className="p-4 rounded-2xl space-y-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className="flex items-center justify-between">
           <Label className="flex items-center gap-2 text-white/70 text-sm font-medium"><MapPin className="h-4 w-4" />Travel radius</Label>
-          <span className="text-xl font-black text-white">{travelRadius}<span className="text-sm font-normal text-white/50"> km</span></span>
+          <span className="text-xl font-black text-white">{travelRadius}<span className="text-sm font-normal text-white/50"> mi</span></span>
         </div>
         <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className={`py-1 ${sliderClass}`} />
-        <div className="flex justify-between text-xs text-white/30"><span>5 km</span><span>50 km</span></div>
+        <div className="flex justify-between text-xs text-white/30"><span>5 mi</span><span>50 mi</span></div>
       </div>
 
       <div className="flex gap-3">
