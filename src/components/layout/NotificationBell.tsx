@@ -11,8 +11,8 @@ export function NotificationBell() {
   if (!user) return null;
 
   return (
-    <Button variant="ghost" size="icon" className="relative" asChild>
-      <Link to="/notifications">
+    <Button variant="ghost" size="icon" className="relative touch-target" asChild>
+      <Link to="/notifications" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}>
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 h-4 w-4 min-w-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
