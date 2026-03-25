@@ -8,13 +8,31 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Clock, Plus, Trash2, Calendar } from "lucide-react";
-import { useAvailabilityBlocks, AvailabilityBlock } from "@/hooks/useAvailability";
+import { useAvailabilityBlocks } from "@/hooks/useAvailability";
 import { cn } from "@/lib/utils";
 
-const TIME_SLOTS = Array.from({ length: 24 }, (_, i) => {
-  const hour = i.toString().padStart(2, '0');
-  return [`${hour}:00`, `${hour}:30`];
-}).flat();
+// 12-hour time slots
+const TIME_SLOTS_12H = (() => {
+  const slots: { value: string; label: string }[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (const m of [0, 30]) {
+      const value = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+      const period = h < 12 ? 'AM' : 'PM';
+      const displayH = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      const label = `${displayH}:${m.toString().padStart(2, '0')} ${period}`;
+      slots.push({ value, label });
+    }
+  }
+  return slots;
+})();
+
+function to12h(time: string) {
+  const [hStr, mStr] = time.split(':');
+  const h = parseInt(hStr);
+  const period = h < 12 ? 'AM' : 'PM';
+  const displayH = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${displayH}:${mStr} ${period}`;
+}
 
 export function AvailabilityEditor() {
   const { blocksByDay, isLoading, addBlock, updateBlock, deleteBlock, DAYS_OF_WEEK } = useAvailabilityBlocks();
@@ -63,7 +81,7 @@ export function AvailabilityEditor() {
               Weekly Availability
             </CardTitle>
             <CardDescription>
-              Set your recurring weekly working hours
+              Set the hours you're open to taking jobs each week
             </CardDescription>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -75,7 +93,7 @@ export function AvailabilityEditor() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add Availability</DialogTitle>
+                <DialogTitle>Add Available Hours</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
@@ -102,11 +120,11 @@ export function AvailabilityEditor() {
                       onValueChange={(v) => setNewBlock(prev => ({ ...prev, start_time: v }))}
                     >
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue>{to12h(newBlock.start_time)}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        {TIME_SLOTS.map(time => (
-                          <SelectItem key={time} value={time}>{time}</SelectItem>
+                        {TIME_SLOTS_12H.map(slot => (
+                          <SelectItem key={slot.value} value={slot.value}>{slot.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -118,22 +136,22 @@ export function AvailabilityEditor() {
                       onValueChange={(v) => setNewBlock(prev => ({ ...prev, end_time: v }))}
                     >
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue>{to12h(newBlock.end_time)}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        {TIME_SLOTS.map(time => (
-                          <SelectItem key={time} value={time}>{time}</SelectItem>
+                        {TIME_SLOTS_12H.map(slot => (
+                          <SelectItem key={slot.value} value={slot.value}>{slot.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-                <Button 
-                  onClick={handleAddBlock} 
+                <Button
+                  onClick={handleAddBlock}
                   className="w-full"
                   disabled={addBlock.isPending}
                 >
-                  {addBlock.isPending ? 'Adding...' : 'Add Availability'}
+                  {addBlock.isPending ? 'Adding...' : 'Add Hours'}
                 </Button>
               </div>
             </DialogContent>
@@ -143,7 +161,7 @@ export function AvailabilityEditor() {
       <CardContent>
         <div className="space-y-4">
           {blocksByDay.map(({ day, dayIndex, blocks }) => (
-            <div 
+            <div
               key={dayIndex}
               className={cn(
                 "p-4 rounded-lg border",
@@ -159,7 +177,7 @@ export function AvailabilityEditor() {
               {blocks.length > 0 && (
                 <div className="space-y-2">
                   {blocks.map(block => (
-                    <div 
+                    <div
                       key={block.id}
                       className="flex items-center justify-between p-2 rounded bg-muted/50"
                     >
@@ -173,7 +191,7 @@ export function AvailabilityEditor() {
                         <div className="flex items-center gap-2 text-sm">
                           <Clock className="h-3 w-3 text-muted-foreground" />
                           <span className={cn(!block.is_active && "text-muted-foreground line-through")}>
-                            {block.start_time} - {block.end_time}
+                            {to12h(block.start_time)} – {to12h(block.end_time)}
                           </span>
                         </div>
                       </div>
