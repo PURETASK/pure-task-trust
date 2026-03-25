@@ -497,7 +497,7 @@ export default function CleanerProfile() {
         {/* Additional Services */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base"><Sparkles className="h-5 w-5 text-violet-500" />Additional Services & Pricing</CardTitle>
+            <CardTitle className="flex items-center gap-2 text-base"><Sparkles className="h-5 w-5 text-[hsl(var(--pt-purple))]" />Additional Services & Pricing</CardTitle>
             <CardDescription>Set prices for add-on services (ranges based on your tier)</CardDescription>
           </CardHeader>
           <CardContent><AdditionalServicesSetup /></CardContent>
