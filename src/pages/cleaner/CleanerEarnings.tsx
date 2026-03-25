@@ -75,16 +75,16 @@ export default function CleanerEarnings() {
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
         {/* Top-center (0°) */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[45vmin] h-[45vmin] object-contain opacity-30"
-          style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 30vmin))" }} />
+          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 25vmin))" }} />
         {/* Bottom-right (120°) */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[45vmin] h-[45vmin] object-contain opacity-30"
-          style={{ left: "50%", top: "50%", transform: "translate(calc(-50% + 26vmin), calc(-50% + 15vmin))" }} />
+          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          style={{ left: "50%", top: "50%", transform: "translate(calc(-50% + 22vmin), calc(-50% + 12.5vmin))" }} />
         {/* Bottom-left (240°) */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[45vmin] h-[45vmin] object-contain opacity-30"
-          style={{ left: "50%", top: "50%", transform: "translate(calc(-50% - 26vmin), calc(-50% + 15vmin))" }} />
+          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          style={{ left: "50%", top: "50%", transform: "translate(calc(-50% - 22vmin), calc(-50% + 12.5vmin))" }} />
       </div>
       <div className="space-y-6 relative z-10">
         {/* Header */}
