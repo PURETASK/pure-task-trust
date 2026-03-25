@@ -83,8 +83,12 @@ export function MobileBottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-lg border-t border-border pb-safe">
-      <div className="flex items-stretch justify-around h-16 px-1">
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-xl border-t border-border"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
+      <div className="flex items-stretch justify-around h-[56px] px-1">
         {config.items.map((item) => {
           const active   = isActive(item);
           const isMsgs   = item.path === messagesPath;
@@ -97,23 +101,23 @@ export function MobileBottomNav() {
               to={item.path}
               aria-label={item.label}
               aria-current={active ? "page" : undefined}
-              className="relative flex flex-col items-center justify-center flex-1 gap-0.5 min-h-[48px] transition-all duration-200 active:scale-95"
+              className="relative flex flex-col items-center justify-center flex-1 gap-0.5 min-h-[48px] transition-transform duration-100 active:scale-90 select-none"
             >
-              {/* Active bar */}
+              {/* Active indicator bar */}
               {active && (
                 <span className={cn(
-                  "absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-b-full",
+                  "absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-b-full transition-all",
                   config.activeIndicator
                 )} />
               )}
 
-              {/* Icon */}
+              {/* Icon container */}
               <div className={cn(
-                "relative flex items-center justify-center w-10 h-7 rounded-xl transition-all duration-200",
+                "relative flex items-center justify-center w-9 h-7 rounded-xl transition-all duration-150",
                 active ? config.activeBg : "bg-transparent"
               )}>
                 <item.icon className={cn(
-                  "h-5 w-5 transition-all duration-200",
+                  "h-[18px] w-[18px] transition-all duration-150",
                   active
                     ? cn(config.accent, "stroke-[2.5]")
                     : "text-muted-foreground stroke-[1.5]"
@@ -127,7 +131,7 @@ export function MobileBottomNav() {
 
               {/* Label */}
               <span className={cn(
-                "text-[10px] font-medium transition-colors duration-200",
+                "text-[9px] font-semibold transition-colors duration-150 leading-none",
                 active ? config.accent : "text-muted-foreground"
               )}>
                 {item.label}
