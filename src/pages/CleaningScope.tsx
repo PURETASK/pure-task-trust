@@ -1,430 +1,515 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Info, Sparkles, Home as HomeIcon, Key, Calendar, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { CheckCircle, XCircle, Info, ArrowRight, Clock, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SEO, JsonLd, HowToSchema, BreadcrumbSchema } from '@/components/seo';
+import { cn } from '@/lib/utils';
 
-const CLEANING_DUTIES = {
-  basic: {
-    title: 'Basic Cleaning (2 Bed / 2 Bath)',
-    subtitle: 'Standard maintenance cleaning - typical 2-3 hours',
-    icon: '🏠',
-    color: 'blue',
-    duties: {
-      'Kitchen': [
-        'Wipe down all countertops and backsplash',
-        'Clean exterior of appliances (fridge, stove, microwave, dishwasher)',
-        'Clean sink and faucet',
-        'Wipe cabinet fronts',
-        'Sweep and mop floor',
-        'Empty trash and replace liner'
-      ],
-      'Bathrooms (Both)': [
-        'Clean and disinfect toilet (bowl, seat, exterior)',
-        'Clean and disinfect sink, faucet, and counter',
-        'Clean mirror',
-        'Wipe down exterior of cabinets',
-        'Clean tub/shower (walls, fixtures, glass door if applicable)',
-        'Sweep and mop floor',
-        'Empty trash and replace liner'
-      ],
-      'Bedrooms (Both)': [
-        'Make beds (if linens are present)',
-        'Dust all accessible surfaces',
-        'Vacuum or sweep floors',
-        'Empty trash'
-      ],
-      'Living/Dining Areas': [
-        'Dust all accessible surfaces (tables, shelves, TV stands)',
-        'Vacuum carpets or sweep/mop hard floors',
-        'Wipe down light switches and doorknobs',
-        'Straighten pillows/cushions'
-      ],
-      'General (All Rooms)': [
-        'Spot clean walls and light switches',
-        'Empty all trash bins',
-        'Light dusting of accessible surfaces'
-      ]
-    }
+/* ─── DATA ─────────────────────────────────────────────────── */
+
+const SERVICE_TYPES = [
+  {
+    id: 'basic',
+    label: 'Basic',
+    emoji: '🏠',
+    tagline: 'Maintenance clean',
+    duration: '2–3 hrs',
+    accentClass: 'bg-primary text-primary-foreground',
+    softClass: 'bg-primary/8 border-primary/25 text-primary',
+    dotClass: 'bg-primary',
+    ringClass: 'ring-primary/30',
+    sections: [
+      {
+        room: 'Kitchen',
+        icon: '🍳',
+        tasks: [
+          'Wipe countertops & backsplash',
+          'Clean appliance exteriors',
+          'Clean sink & faucet',
+          'Wipe cabinet fronts',
+          'Sweep & mop floor',
+          'Empty trash & replace liner',
+        ],
+      },
+      {
+        room: 'Bathrooms',
+        icon: '🚿',
+        tasks: [
+          'Disinfect toilet (bowl, seat, exterior)',
+          'Clean & disinfect sink + faucet',
+          'Polish mirror',
+          'Wipe cabinet exteriors',
+          'Clean tub / shower',
+          'Sweep & mop floor',
+          'Empty trash',
+        ],
+      },
+      {
+        room: 'Bedrooms',
+        icon: '🛏️',
+        tasks: [
+          'Make beds (if linens present)',
+          'Dust accessible surfaces',
+          'Vacuum or sweep floors',
+          'Empty trash',
+        ],
+      },
+      {
+        room: 'Living & Dining',
+        icon: '🛋️',
+        tasks: [
+          'Dust tables, shelves & TV stands',
+          'Vacuum carpets / mop hard floors',
+          'Wipe light switches & doorknobs',
+          'Straighten pillows & cushions',
+        ],
+      },
+      {
+        room: 'General',
+        icon: '✅',
+        tasks: [
+          'Spot clean walls & switches',
+          'Empty all trash bins',
+          'Light dusting throughout',
+        ],
+      },
+    ],
+    notIncluded: [],
   },
-  deep: {
-    title: 'Deep Clean Add-Ons',
-    subtitle: 'Everything in Basic Clean PLUS these additional tasks (+$3-8/hour)',
-    icon: '✨',
-    color: 'purple',
-    duties: {
-      '✓ Includes All Basic Clean Tasks': [
-        'All kitchen, bathroom, bedroom, and living area tasks from Basic Clean are included',
-        'Floors, surfaces, appliances, fixtures - everything covered in Basic'
-      ],
-      'Additional Deep Clean Tasks': [
-        'Baseboards - wipe down all baseboards in every room',
-        'Ceiling fans - dust and wipe blades',
-        'Light fixtures - dust and clean',
-        'Window sills and tracks - thorough cleaning',
-        'Inside windows - clean interior glass',
-        'Door frames and trim - wipe down',
-        'Behind toilet deep clean',
-        'Inside cabinets and drawers (if empty)',
-        'Inside microwave - thorough cleaning',
-        'Walls - spot cleaning or full wipe down'
-      ]
-    }
+  {
+    id: 'deep',
+    label: 'Deep Clean',
+    emoji: '✨',
+    tagline: 'Top-to-bottom',
+    duration: '4–6 hrs',
+    accentClass: 'bg-[hsl(280,70%,50%)] text-white',
+    softClass: 'bg-[hsl(280,70%,50%)]/8 border-[hsl(280,70%,50%)]/25 text-[hsl(280,70%,50%)]',
+    dotClass: 'bg-[hsl(280,70%,50%)]',
+    ringClass: 'ring-[hsl(280,70%,50%)]/30',
+    sections: [
+      {
+        room: 'Includes All Basic Tasks',
+        icon: '🏠',
+        tasks: [
+          'All kitchen, bathroom, bedroom & living tasks',
+          'Floors, surfaces, appliances, fixtures — everything in Basic',
+        ],
+      },
+      {
+        room: 'Deep Add-Ons',
+        icon: '🔍',
+        tasks: [
+          'Baseboards — wipe all rooms',
+          'Ceiling fans — dust & wipe blades',
+          'Light fixtures — dust & clean',
+          'Window sills & tracks',
+          'Interior windows',
+          'Door frames & trim',
+          'Behind toilet deep clean',
+          'Inside cabinets & drawers (if empty)',
+          'Inside microwave — thorough clean',
+          'Walls — spot or full wipe-down',
+        ],
+      },
+    ],
+    notIncluded: [],
   },
-  specialRequests: {
-    title: 'Special Request Items',
-    subtitle: 'Individual tasks priced separately - discuss with your cleaner',
-    icon: '💎',
-    color: 'rose',
-    duties: {
-      'Kitchen Special Requests': [
-        'Inside oven - detailed cleaning',
-        'Inside refrigerator - remove items, clean shelves',
-        'Behind appliances (if accessible)',
-        'Degrease range hood and filter'
-      ],
-      'Bathroom Special Requests': [
-        'Grout scrubbing and whitening',
-        'Deep descale fixtures and showerheads',
-        'Tile scrubbing'
-      ],
-      'Other Special Requests': [
-        'Blinds and shutters - dust each slat',
-        'Vents and air returns - dust and wipe',
-        'Inside cabinets and drawers (detailed)'
-      ]
-    }
+  {
+    id: 'moveout',
+    label: 'Move-Out',
+    emoji: '📦',
+    tagline: 'Rental ready',
+    duration: '4–6+ hrs',
+    accentClass: 'bg-warning text-white',
+    softClass: 'bg-warning/8 border-warning/25 text-warning',
+    dotClass: 'bg-warning',
+    ringClass: 'ring-warning/30',
+    sections: [
+      {
+        room: 'Everything in Basic & Deep, Plus',
+        icon: '📋',
+        tasks: [
+          'All light fixtures & ceiling fans',
+          'All baseboards throughout',
+          'Inside all cabinets, drawers & closets',
+          'Inside oven & refrigerator',
+          'Inside dishwasher',
+          'All interior windows',
+          'All blinds & shutters',
+          'Garage floor sweep (if applicable)',
+          'Patio / balcony sweep (if applicable)',
+          'Photo documentation of completed work',
+        ],
+      },
+      {
+        room: 'Requirements',
+        icon: '⚠️',
+        tasks: [
+          'Property must be completely vacant',
+          'All personal items & debris removed',
+          'Goal: return to "rental ready" condition',
+          'Ideal for security deposit returns',
+        ],
+      },
+    ],
+    notIncluded: [
+      'Carpet steam cleaning (refer to specialist)',
+      'Wall repair or painting',
+      'Window screens or exterior windows',
+      'Pest control',
+      'Biohazard cleaning',
+    ],
   },
-  moveout: {
-    title: 'Move-Out Clean',
-    subtitle: 'Comprehensive cleaning for vacant properties - 4-6+ hours',
-    icon: '📦',
-    color: 'amber',
-    duties: {
-      'Includes Everything in Basic & Deep, Plus': [
-        'All light fixtures and ceiling fans',
-        'All baseboards throughout property',
-        'Inside all cabinets, drawers, and closets',
-        'Inside oven and refrigerator',
-        'Inside dishwasher',
-        'All windows (interior)',
-        'All blinds/shutters',
-        'Garage floor sweep (if applicable)',
-        'Patio/balcony sweep (if applicable)'
-      ],
-      'Focus Areas': [
-        'Property must be completely vacant',
-        'All personal items and debris removed',
-        'Goal: Return property to "rental ready" condition',
-        'Photo documentation of completed work',
-        'Ideal for security deposit returns'
-      ],
-      'Not Included': [
-        'Carpet steam cleaning (refer to specialist)',
-        'Wall repair or painting',
-        'Window screens',
-        'Exterior windows',
-        'Pest control',
-        'Biohazard cleaning'
-      ]
-    }
+  {
+    id: 'airbnb',
+    label: 'Airbnb',
+    emoji: '🏨',
+    tagline: 'Guest turnover',
+    duration: '2–4 hrs',
+    accentClass: 'bg-success text-white',
+    softClass: 'bg-success/8 border-success/25 text-success',
+    dotClass: 'bg-success',
+    ringClass: 'ring-success/30',
+    sections: [
+      {
+        room: 'Priority Reset',
+        icon: '🔄',
+        tasks: [
+          'Strip & remake all beds with fresh linens',
+          'Replace all towels',
+          'Full bathroom sanitisation',
+          'Kitchen reset to guest-ready',
+          'Restock consumables (if provided)',
+          'Check for guest left-behinds',
+          'Empty all trash',
+        ],
+      },
+      {
+        room: 'Standard Clean',
+        icon: '🧹',
+        tasks: [
+          'All surfaces wiped & sanitised',
+          'Floors vacuumed / mopped throughout',
+          'Mirrors & glass cleaned',
+          'Appliances wiped down',
+          'Light switches & remotes sanitised',
+        ],
+      },
+      {
+        room: 'Guest-Ready Touches',
+        icon: '🌟',
+        tasks: [
+          'Arrange amenities attractively',
+          'Fold towels decoratively',
+          'Set thermostat to welcome temperature',
+          'Open blinds & curtains',
+          'Final walkthrough inspection',
+          'Photo documentation for host',
+        ],
+      },
+    ],
+    notIncluded: [],
   },
-  airbnb: {
-    title: 'Airbnb / Turnover Clean',
-    subtitle: 'Quick turnaround between guests - 2-4 hours',
-    icon: '🏨',
-    color: 'cyan',
-    duties: {
-      'Priority Tasks': [
-        'Strip and remake all beds with fresh linens',
-        'Replace all towels',
-        'Full bathroom sanitization',
-        'Kitchen reset to guest-ready',
-        'Restock consumables (if provided)',
-        'Check for guest left-behinds',
-        'Empty all trash'
-      ],
-      'Standard Cleaning': [
-        'All surfaces wiped and sanitized',
-        'Floors vacuumed/mopped throughout',
-        'Mirrors and glass cleaned',
-        'Appliances wiped down',
-        'Light switches and remotes sanitized'
-      ],
-      'Guest-Ready Touches': [
-        'Arrange amenities attractively',
-        'Fold towels decoratively',
-        'Set thermostat to welcome temperature',
-        'Open blinds/curtains',
-        'Final walkthrough inspection',
-        'Photo documentation for host'
-      ]
-    }
-  }
-};
+  {
+    id: 'special',
+    label: 'Add-Ons',
+    emoji: '💎',
+    tagline: 'Extra tasks',
+    duration: 'Varies',
+    accentClass: 'bg-rose-500 text-white',
+    softClass: 'bg-rose-500/8 border-rose-500/25 text-rose-600',
+    dotClass: 'bg-rose-500',
+    ringClass: 'ring-rose-500/30',
+    sections: [
+      {
+        room: 'Kitchen Add-Ons',
+        icon: '🍳',
+        tasks: [
+          'Inside oven — detailed clean',
+          'Inside refrigerator — remove items, clean shelves',
+          'Behind appliances (if accessible)',
+          'Degrease range hood & filter',
+        ],
+      },
+      {
+        room: 'Bathroom Add-Ons',
+        icon: '🪣',
+        tasks: [
+          'Grout scrubbing & whitening',
+          'Deep descale fixtures & showerheads',
+          'Tile scrubbing',
+        ],
+      },
+      {
+        room: 'Other Add-Ons',
+        icon: '🪟',
+        tasks: [
+          'Blinds & shutters — dust each slat',
+          'Vents & air returns — dust & wipe',
+          'Inside cabinets & drawers (detailed)',
+          'Laundry — wash & fold per load',
+        ],
+      },
+    ],
+    notIncluded: [],
+  },
+];
 
-const colorMap: Record<string, string> = {
-  blue: 'bg-primary/10 text-primary border-primary/20',
-  purple: 'bg-pt-purple/10 text-pt-purple border-pt-purple/20',
-  amber: 'bg-pt-amber/10 text-pt-amber border-pt-amber/20',
-  cyan: 'bg-pt-cyan/10 text-pt-cyan border-pt-cyan/20',
-  rose: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
-};
-
-const iconColorMap: Record<string, string> = {
-  blue: 'text-primary',
-  purple: 'text-pt-purple',
-  amber: 'text-pt-amber',
-  cyan: 'text-pt-cyan',
-  rose: 'text-rose-600',
-};
-
-const tabActiveColorMap: Record<string, string> = {
-  blue: 'data-[state=active]:border-primary data-[state=active]:bg-primary/10',
-  purple: 'data-[state=active]:border-pt-purple data-[state=active]:bg-pt-purple/10',
-  amber: 'data-[state=active]:border-pt-amber data-[state=active]:bg-pt-amber/10',
-  cyan: 'data-[state=active]:border-pt-cyan data-[state=active]:bg-pt-cyan/10',
-  rose: 'data-[state=active]:border-rose-500 data-[state=active]:bg-rose-500/10',
-};
-
-export default function CleaningScope() {
-  const [activeTab, setActiveTab] = useState('basic');
+/* ─── ROOM ACCORDION ────────────────────────────────────────── */
+function RoomAccordion({
+  section,
+  dotClass,
+  defaultOpen = false,
+}: {
+  section: typeof SERVICE_TYPES[0]['sections'][0];
+  dotClass: string;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <main className="py-12">
-      <SEO 
+    <div className="rounded-2xl border border-border/60 overflow-hidden bg-card">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-muted/40 transition-colors"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg leading-none">{section.icon}</span>
+          <span className="font-semibold text-sm text-foreground">{section.room}</span>
+          <span className={cn(
+            'text-[10px] font-bold rounded-full px-2 py-0.5 bg-muted text-muted-foreground'
+          )}>
+            {section.tasks.length} tasks
+          </span>
+        </div>
+        {open ? (
+          <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        )}
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <ul className="px-4 pb-4 pt-1 space-y-2.5 border-t border-border/40">
+              {section.tasks.map((task, i) => (
+                <li key={i} className="flex items-start gap-2.5">
+                  <span className={cn('mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0', dotClass)} />
+                  <span className="text-sm text-muted-foreground leading-relaxed">{task}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ─── MAIN PAGE ─────────────────────────────────────────────── */
+export default function CleaningScope() {
+  const [activeId, setActiveId] = useState('basic');
+  const active = SERVICE_TYPES.find(s => s.id === activeId)!;
+
+  return (
+    <main>
+      <SEO
         title="What's Included in Every Cleaning"
-        description="Complete room-by-room checklists for Basic, Deep Clean, Move-Out, and Airbnb Turnover services. Know every task included before you book."
+        description="Complete room-by-room checklists for Basic, Deep Clean, Move-Out, and Airbnb Turnover services."
         url="/cleaning-scope"
-        keywords="cleaning service scope, what's included in cleaning, deep cleaning tasks, move out cleaning checklist, airbnb turnover cleaning"
       />
-      {/* Service schema for each cleaning type — synchronized with visible tab content */}
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         name: 'PureTask Cleaning Service Types',
-        description: 'Complete task scope for each cleaning service type offered on PureTask.',
         url: 'https://pure-task-trust.lovable.app/cleaning-scope',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Basic Cleaning', description: 'Standard maintenance cleaning — 2–3 hours. Covers kitchen countertops, bathrooms, floors, dusting, and trash.' },
-          { '@type': 'ListItem', position: 2, name: 'Deep Clean', description: 'Top-to-bottom cleaning — 4–6 hours. Includes inside oven, fridge, windows, grout scrubbing, behind furniture.' },
-          { '@type': 'ListItem', position: 3, name: 'Move-Out Cleaning', description: 'Full property clean for end-of-lease — 5–8 hours. Covers all surfaces, appliances inside, carpets, and garage.' },
-          { '@type': 'ListItem', position: 4, name: 'Airbnb Turnover', description: 'Guest-ready turnover clean — 1–3 hours. Includes linen change, restock supplies, full tidy and photo-ready finish.' },
-        ],
+        itemListElement: SERVICE_TYPES.map((s, i) => ({
+          '@type': 'ListItem', position: i + 1, name: s.label, description: s.tagline,
+        })),
       }} />
       <HowToSchema
-        name="How to Deep Clean a Home — Room-by-Room Guide"
-        description="A professional deep cleaning walkthrough for every room in your home, based on the PureTask cleaner standard."
+        name="How to Deep Clean a Home"
+        description="Professional deep cleaning walkthrough for every room."
         url="/cleaning-scope"
         totalTime="PT6H"
         steps={[
-          { name: 'Kitchen', text: 'Clean inside oven, microwave, and fridge. Degrease rangehood. Scrub sink. Wipe all surfaces, cabinet fronts, and tile backsplash.' },
-          { name: 'Bathrooms', text: 'Scrub grout, descale showerhead and taps, clean exhaust fan, polish mirrors, mop floors, disinfect toilet inside and out.' },
-          { name: 'Bedrooms', text: 'Vacuum mattress, clean under furniture, wipe wardrobe interiors, dust ceiling fans, clean window sills.' },
-          { name: 'Living Areas', text: 'Dust light fixtures, vacuum upholstery, clean interior windows, spot-clean walls, mop hard floors.' },
-          { name: 'Final touches', text: 'Wipe all door handles, light switches, air vents, and door frames. Photograph completed work.' },
+          { name: 'Kitchen', text: 'Clean inside oven, microwave, fridge. Degrease rangehood. Wipe all surfaces.' },
+          { name: 'Bathrooms', text: 'Scrub grout, descale showerhead, clean exhaust fan, disinfect toilet.' },
+          { name: 'Bedrooms', text: 'Vacuum mattress, clean under furniture, dust ceiling fans.' },
+          { name: 'Living Areas', text: 'Dust light fixtures, vacuum upholstery, clean interior windows.' },
+          { name: 'Final touches', text: 'Wipe door handles, switches, air vents, photograph completed work.' },
         ]}
       />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Cleaning Scope', url: '/cleaning-scope' }]} />
-      {/* Hero */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-secondary/50 to-background">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
-          >
-            <Badge variant="outline" className="mb-6">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Scope of Work
+
+      {/* ── HERO ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/6 via-background to-[hsl(280,70%,50%)]/5 pt-16 pb-10">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-[hsl(280,70%,50%)]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+        </div>
+
+        <div className="container max-w-4xl relative">
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Badge variant="outline" className="mb-4 border-primary/30 text-primary gap-1.5">
+              <Sparkles className="h-3.5 w-3.5" /> Scope of Work
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              What's Included in{' '}
+
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
+              What's Included in<br />
               <span className="text-primary">Your Cleaning</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              A friendly guide to help you understand what cleaning services <strong className="underline">typically</strong> include.
+            <p className="text-lg text-muted-foreground max-w-xl mb-7">
+              Tap a service type to explore what tasks are covered — room by room, nothing hidden.
             </p>
-            
-            {/* Disclaimer */}
-            <Alert className="max-w-2xl mx-auto bg-warning/10 border-warning/30 text-left">
-              <Info className="h-5 w-5 text-warning" />
-              <AlertDescription className="text-foreground/80">
-                <strong className="block mb-1">Important: This is a Guide Only</strong>
-                All cleaners on PureTask are independent contractors who set their own standards and methods.
-                Nothing described on this page is mandatory. Each cleaner decides how they clean and what
-                tasks they perform. We recommend discussing specific expectations directly with your cleaner
-                before booking.
-              </AlertDescription>
-            </Alert>
-            
-            {/* Cleaner-focused message */}
-            <Alert className="max-w-2xl mx-auto mt-4 bg-primary/10 border-primary/30 text-left">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <AlertDescription className="text-foreground/80">
-                <strong className="block mb-1">For Our Cleaners</strong>
-                Our goal is to help cleaners on PureTask understand what customers typically expect when 
-                booking through our platform. We hope this guide serves as a helpful reference that you 
-                can use and build upon over time to deliver great experiences.
-              </AlertDescription>
-            </Alert>
+
+            {/* Disclaimer pill */}
+            <div className="inline-flex items-start gap-2.5 bg-warning/10 border border-warning/30 rounded-2xl px-4 py-3 max-w-xl text-left">
+              <Info className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-foreground/80 leading-relaxed">
+                <strong>Guide only.</strong> Cleaners are independent contractors who set their own standards.
+                Discuss specific expectations directly before booking.
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Cleaning Types Tabs */}
-      <section className="py-12">
-        <div className="container max-w-5xl">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0 mb-8">
-              {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
-                <TabsTrigger
-                  key={key}
-                  value={key}
-                  className={`flex flex-col items-center gap-1 p-4 rounded-xl border-2 transition-all ${tabActiveColorMap[value.color]}`}
-                >
-                  <span className="text-2xl">{value.icon}</span>
-                  <span className="text-sm font-medium">{value.title.split('(')[0].trim()}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {Object.entries(CLEANING_DUTIES).map(([key, value]) => (
-              <TabsContent key={key} value={key} className="mt-0">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className={`mb-8 ${colorMap[value.color]}`}>
-                    <CardHeader>
-                      <div className="flex items-center gap-3">
-                        <span className="text-4xl">{value.icon}</span>
-                        <div>
-                          <CardTitle className="text-2xl">{value.title}</CardTitle>
-                          <p className="text-muted-foreground mt-1">{value.subtitle}</p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {Object.entries(value.duties).map(([room, tasks], index) => (
-                      <motion.div
-                        key={room}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Card className={`h-full ${colorMap[value.color]}`}>
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-lg flex items-center gap-2">
-                              {room.includes('Not') ? (
-                                <Info className={`h-5 w-5 ${iconColorMap[value.color]}`} />
-                              ) : (
-                                <CheckCircle className={`h-5 w-5 ${iconColorMap[value.color]}`} />
-                              )}
-                              {room}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2">
-                              {tasks.map((task, taskIndex) => (
-                                <li 
-                                  key={taskIndex} 
-                                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                                >
-                                  <span className={`mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
-                                    room.includes('Not') ? 'bg-muted-foreground' : 'bg-primary'
-                                  }`} />
-                                  {task}
-                                </li>
-                              ))}
-                            </ul>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              </TabsContent>
+      {/* ── SERVICE SELECTOR ── */}
+      <section className="sticky top-0 z-30 bg-background/95 backdrop-blur-lg border-b border-border/50 py-3">
+        <div className="container max-w-4xl">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
+            {SERVICE_TYPES.map(s => (
+              <button
+                key={s.id}
+                onClick={() => setActiveId(s.id)}
+                className={cn(
+                  'flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap border-2 transition-all duration-150 flex-shrink-0',
+                  activeId === s.id
+                    ? cn(s.accentClass, 'border-transparent shadow-md')
+                    : 'border-border/50 text-muted-foreground hover:border-border hover:text-foreground bg-background'
+                )}
+              >
+                <span className="text-base leading-none">{s.emoji}</span>
+                {s.label}
+              </button>
             ))}
-          </Tabs>
-        </div>
-      </section>
-
-      {/* Important Notes */}
-      <section className="py-12 bg-secondary/30">
-        <div className="container max-w-5xl">
-          <h2 className="text-2xl font-bold mb-6 text-center">Important Notes</h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <Alert className="bg-primary/10 border-primary/30">
-              <Info className="h-4 w-4 text-primary" />
-              <AlertDescription>
-                <strong>Time Estimates:</strong> All cleaning times vary. Duration depends primarily on the 
-                individual cleaner and how dirty the property is. Times shown are rough estimates only.
-              </AlertDescription>
-            </Alert>
-            
-            <Alert className="bg-pt-purple/10 border-pt-purple/30">
-              <Info className="h-4 w-4 text-pt-purple" />
-              <AlertDescription>
-                <strong>Supplies:</strong> Most cleaners bring their own supplies. If you have specific product 
-                preferences (eco-friendly, allergen-free) or special requests, please mention during booking. 
-                If you require a specific product or have an out-of-the-ordinary request, you should supply it yourself.
-              </AlertDescription>
-            </Alert>
-            
-            <Alert className="bg-pt-amber/10 border-pt-amber/30">
-              <Info className="h-4 w-4 text-pt-amber" />
-              <AlertDescription>
-                <strong>Access:</strong> Please ensure the cleaner can access all areas needing cleaning. 
-                Locked rooms or areas with pets may affect the scope.
-              </AlertDescription>
-            </Alert>
-            
-            <Alert className="bg-pt-cyan/10 border-pt-cyan/30">
-              <Info className="h-4 w-4 text-pt-cyan" />
-              <AlertDescription>
-                <strong>Special Requests:</strong> Need something specific? Add notes during booking or message 
-                your cleaner directly to discuss custom requirements.
-              </AlertDescription>
-            </Alert>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16">
-        <div className="container">
-          <Card className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground max-w-3xl mx-auto">
-            <CardContent className="p-8 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Ready to Book Your Cleaning?
-              </h2>
-              <p className="text-primary-foreground/90 mb-6">
-                Now that you know what's included, find a verified cleaner in your area.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild>
-                  <Link to="/book">
-                    Book a Cleaning
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="border-white/40 text-white bg-white/10 hover:bg-white/20" asChild>
-                  <Link to="/discover">Browse Cleaners</Link>
-                </Button>
+      {/* ── CONTENT ── */}
+      <section className="py-10">
+        <div className="container max-w-4xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeId}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+            >
+              {/* Service header bar */}
+              <div className={cn(
+                'flex items-center justify-between rounded-2xl border-2 p-4 mb-6',
+                active.softClass
+              )}>
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{active.emoji}</span>
+                  <div>
+                    <h2 className="font-black text-xl text-foreground">{active.label}</h2>
+                    <p className="text-sm text-muted-foreground">{active.tagline}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground bg-background/60 rounded-xl px-3 py-1.5">
+                  <Clock className="h-4 w-4" />
+                  {active.duration}
+                </div>
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Room accordions */}
+              <div className="space-y-3 mb-6">
+                {active.sections.map((section, i) => (
+                  <RoomAccordion
+                    key={section.room}
+                    section={section}
+                    dotClass={active.dotClass}
+                    defaultOpen={i === 0}
+                  />
+                ))}
+              </div>
+
+              {/* Not included */}
+              {active.notIncluded.length > 0 && (
+                <div className="rounded-2xl border-2 border-destructive/20 bg-destructive/5 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <XCircle className="h-4.5 w-4.5 text-destructive flex-shrink-0" />
+                    <span className="font-bold text-sm text-destructive">Not Included</span>
+                  </div>
+                  <ul className="space-y-2">
+                    {active.notIncluded.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-destructive/50 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+
+      {/* ── NOTES GRID ── */}
+      <section className="py-10 bg-muted/30">
+        <div className="container max-w-4xl">
+          <h2 className="text-xl font-bold mb-5 text-center">Good to Know</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              { color: 'border-primary/30 bg-primary/5', icon: '⏱️', title: 'Time Estimates', body: 'Duration depends on the cleaner and property condition. Times shown are rough estimates only.' },
+              { color: 'border-[hsl(280,70%,50%)]/30 bg-[hsl(280,70%,50%)]/5', icon: '🧴', title: 'Supplies', body: 'Most cleaners bring their own supplies. Mention specific preferences (eco-friendly, allergen-free) when booking.' },
+              { color: 'border-warning/30 bg-warning/5', icon: '🔑', title: 'Access', body: 'Ensure the cleaner can access all areas. Locked rooms or pets may affect the scope.' },
+              { color: 'border-success/30 bg-success/5', icon: '📸', title: 'Photo Proof', body: 'All cleaners on PureTask document their work with before/after photos, held securely.' },
+            ].map(note => (
+              <div key={note.title} className={cn('rounded-2xl border-2 p-4 flex gap-3', note.color)}>
+                <span className="text-2xl flex-shrink-0">{note.icon}</span>
+                <div>
+                  <p className="font-semibold text-sm mb-1">{note.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{note.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="py-12">
+        <div className="container max-w-4xl">
+          <div className="gradient-brand rounded-3xl p-8 text-center text-white">
+            <h2 className="text-2xl font-black mb-2">Ready to Book?</h2>
+            <p className="text-white/85 mb-6 max-w-sm mx-auto text-sm">
+              Browse verified cleaners and book with confidence — full scope, no surprises.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button asChild variant="glass" className="bg-white text-primary border-0 hover:bg-white/90 font-bold">
+                <Link to="/discover">Browse Cleaners <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
+              </Button>
+              <Button asChild variant="glass" className="bg-white/20 text-white border-white/30 hover:bg-white/30 font-bold">
+                <Link to="/pricing">View Pricing</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
     </main>
