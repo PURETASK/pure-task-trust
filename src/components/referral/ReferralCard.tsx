@@ -124,7 +124,7 @@ export function ReferralCard({
           <div>
             <h2 className="font-bold text-xl">Referral Program</h2>
             <p className="text-muted-foreground">
-              Give ${referralCode?.referee_credits || 500}, Get ${referralCode?.reward_credits || 500}
+              Give ${referralCode?.referee_credits || 25}, Get ${referralCode?.reward_credits || 25}
             </p>
           </div>
         </div>
