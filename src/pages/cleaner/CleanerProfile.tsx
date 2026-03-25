@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { AdditionalServicesSetup } from "@/components/cleaner/AdditionalServicesSetup";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
-import { getTierFromScore, getTierConfig, CleanerTier } from "@/lib/tier-config";
+import { getTierFromScore, getTierConfig, CleanerTier, TIER_VISUAL } from "@/lib/tier-config";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
@@ -262,24 +262,27 @@ export default function CleanerProfile() {
         </div>
 
         {/* Tier Status Banner */}
-        <Card className="bg-gradient-to-r from-success/10 to-success/5 border-success/30">
+        <Card
+          className={`${TIER_VISUAL[tier].bg} ${TIER_VISUAL[tier].border} border-2 rounded-2xl`}
+          style={{ boxShadow: TIER_VISUAL[tier].glow }}
+        >
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-success/20 flex items-center justify-center">
-                <Award className="h-6 w-6 text-success" />
+              <div className={`h-12 w-12 rounded-xl ${TIER_VISUAL[tier].bg} border ${TIER_VISUAL[tier].border} flex items-center justify-center`}>
+                <span className="text-2xl">{TIER_VISUAL[tier].emoji}</span>
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h3 className="font-semibold capitalize">{tier} Tier</h3>
-                  <Badge variant="outline">{reliabilityScore} pts</Badge>
+                  <h3 className={`font-bold capitalize ${TIER_VISUAL[tier].text}`}>{tier} Tier</h3>
+                  <Badge className={`${TIER_VISUAL[tier].badge} text-xs`}>{reliabilityScore} pts</Badge>
                   {bioScore > 0 && <BioScoreBadge score={bioScore} />}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   ${hourlyRateRange.min}–${hourlyRateRange.max}/hr · {tierConfig.platformFeePercent}% platform fee
                 </p>
               </div>
-              <div className="text-sm text-muted-foreground">
-                {tier === "platinum" ? "🏆 Max tier!" : `${70 - reliabilityScore > 0 ? 70 - reliabilityScore : 0} pts to next tier`}
+              <div className={`text-sm font-medium ${TIER_VISUAL[tier].text}`}>
+                {tier === "platinum" ? "🏆 Max tier!" : `${TIER_VISUAL[tier].nextMin - reliabilityScore > 0 ? TIER_VISUAL[tier].nextMin - reliabilityScore : 0} pts to ${TIER_VISUAL[tier].next}`}
               </div>
             </div>
           </CardContent>

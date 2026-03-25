@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Crown, Star, Award, Shield, Sparkles } from "lucide-react";
 import { useTierHistory } from "@/hooks/useCleanerGamification";
+import { TIER_VISUAL } from "@/lib/tier-config";
 
 const tierConfig: Record<string, { 
   label: string; 
@@ -13,36 +14,36 @@ const tierConfig: Record<string, {
   standard: {
     label: 'Standard',
     icon: Shield,
-    color: 'text-slate-600 dark:text-slate-400',
-    bgColor: 'bg-slate-100 dark:bg-slate-800',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
     description: 'Starting tier for all cleaners',
   },
   bronze: {
     label: 'Bronze',
     icon: Award,
-    color: 'text-amber-700 dark:text-amber-500',
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    color: TIER_VISUAL.bronze.text,
+    bgColor: TIER_VISUAL.bronze.bg,
     description: 'Complete 10+ jobs with good ratings',
   },
   silver: {
     label: 'Silver',
     icon: Star,
-    color: 'text-gray-500 dark:text-gray-400',
-    bgColor: 'bg-gray-100 dark:bg-gray-800',
+    color: TIER_VISUAL.silver.text,
+    bgColor: TIER_VISUAL.silver.bg,
     description: 'Complete 25+ jobs with 4.5+ rating',
   },
   gold: {
     label: 'Gold',
     icon: Crown,
-    color: 'text-yellow-600 dark:text-yellow-500',
-    bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+    color: TIER_VISUAL.gold.text,
+    bgColor: TIER_VISUAL.gold.bg,
     description: 'Complete 50+ jobs with 4.7+ rating',
   },
   platinum: {
     label: 'Platinum',
     icon: Sparkles,
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-gradient-to-r from-cyan-100 to-purple-100 dark:from-cyan-900/30 dark:to-purple-900/30',
+    color: TIER_VISUAL.platinum.text,
+    bgColor: TIER_VISUAL.platinum.bg,
     description: 'Elite cleaner status - top 5%',
   },
 };

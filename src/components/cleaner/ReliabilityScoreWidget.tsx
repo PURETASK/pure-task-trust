@@ -13,14 +13,7 @@ import {
   CheckCircle2, Clock, Camera, Star, XCircle,
   TrendingUp, ArrowRight, Zap, AlertTriangle
 } from "lucide-react";
-import { getTierFromScore } from "@/lib/tier-config";
-
-const TIER_STYLES = {
-  bronze:   { gradient: "from-amber-500 to-amber-700",   badge: "bg-amber-500/10 text-amber-600 border-amber-500/30",   icon: "🥉", next: "Silver",   nextMin: 50  },
-  silver:   { gradient: "from-slate-400 to-slate-600",   badge: "bg-slate-400/10 text-slate-500 border-slate-400/30",   icon: "🥈", next: "Gold",    nextMin: 70  },
-  gold:     { gradient: "from-yellow-400 to-amber-500",  badge: "bg-yellow-400/10 text-yellow-600 border-yellow-400/30", icon: "🥇", next: "Platinum", nextMin: 90 },
-  platinum: { gradient: "from-violet-500 to-violet-700", badge: "bg-violet-500/10 text-violet-600 border-violet-500/30", icon: "💎", next: null,       nextMin: 100 },
-};
+import { getTierFromScore, TIER_VISUAL } from "@/lib/tier-config";
 
 interface MetricRowProps {
   icon: React.ElementType;
@@ -100,7 +93,7 @@ export function ReliabilityScoreWidget() {
 
   const currentScore = score?.current_score ?? profile?.reliability_score ?? 0;
   const tier = getTierFromScore(currentScore);
-  const tierStyle = TIER_STYLES[tier];
+  const tierStyle = TIER_VISUAL[tier];
   const pointsToNext = tierStyle.next ? Math.max(0, tierStyle.nextMin - currentScore) : 0;
 
   const noCancelPct = metrics && metrics.total_jobs_window > 0
@@ -138,7 +131,7 @@ export function ReliabilityScoreWidget() {
       <div className={`bg-gradient-to-r ${tierStyle.gradient} p-3.5 sm:p-4 text-white`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <span className="text-xl sm:text-2xl flex-shrink-0">{tierStyle.icon}</span>
+            <span className="text-xl sm:text-2xl flex-shrink-0">{tierStyle.emoji}</span>
             <div className="min-w-0">
               <p className="text-[10px] sm:text-xs font-medium text-white/70 uppercase tracking-wider">Reliability Score</p>
               <div className="flex items-center gap-1.5 sm:gap-2">

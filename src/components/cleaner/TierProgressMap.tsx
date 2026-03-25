@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Trophy, Lock } from "lucide-react";
-import { TIER_CONFIGS, type CleanerTier } from "@/lib/tier-config";
+import { TIER_CONFIGS, TIER_VISUAL, type CleanerTier } from "@/lib/tier-config";
 
 const TIER_ORDER: CleanerTier[] = ["bronze", "silver", "gold", "platinum"];
 const TIER_MIN_SCORE: Record<CleanerTier, number> = {
@@ -18,20 +18,6 @@ const TIER_BENEFITS: Record<CleanerTier, string[]> = {
   silver: ["Lower 18% platform fee", "Priority support access", "Higher rate ceiling ($50/hr)"],
   gold: ["17% platform fee", "Featured in search results", "Instant payout enabled", "Rate up to $65/hr"],
   platinum: ["15% platform fee (lowest)", "Top placement in search", "Dedicated account manager", "Rate up to $100/hr"],
-};
-
-const TIER_RING_CLASSES: Record<CleanerTier, string> = {
-  bronze: "border-orange-500/50 bg-orange-500/10 text-orange-600",
-  silver: "border-slate-500/50 bg-slate-500/10 text-slate-500",
-  gold: "border-yellow-500/50 bg-yellow-500/10 text-yellow-500",
-  platinum: "border-sky-500/50 bg-sky-500/10 text-sky-500",
-};
-
-const TIER_EMOJIS: Record<CleanerTier, string> = {
-  bronze: "🥉",
-  silver: "🥈",
-  gold: "🥇",
-  platinum: "💎",
 };
 
 interface TierProgressMapProps {
@@ -69,12 +55,12 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
                     <div className="flex flex-col items-center gap-1 flex-1 cursor-default">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-2 transition-all ${
                         isActive
-                          ? "ring-2 ring-primary ring-offset-2 " + TIER_RING_CLASSES[tier]
+                          ? "ring-2 ring-primary ring-offset-2 " + TIER_VISUAL[tier].ring
                           : isUnlocked
-                          ? TIER_RING_CLASSES[tier]
+                          ? TIER_VISUAL[tier].ring
                           : "bg-muted border-border text-muted-foreground"
                       }`}>
-                        {isUnlocked ? TIER_EMOJIS[tier] : <Lock className="h-4 w-4" />}
+                        {isUnlocked ? TIER_VISUAL[tier].emoji : <Lock className="h-4 w-4" />}
                       </div>
                       <span className={`text-xs font-medium capitalize ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
                         {tier}
@@ -106,7 +92,7 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
             </div>
             <Progress value={progressToNext} className="h-2" />
             <p className="text-xs text-muted-foreground">
-              {nextTierMinScore! - reliabilityScore} more reliability points needed to unlock {TIER_EMOJIS[nextTier]} {nextTier}
+              {nextTierMinScore! - reliabilityScore} more reliability points needed to unlock {TIER_VISUAL[nextTier].emoji} {nextTier}
             </p>
           </div>
         ) : (
