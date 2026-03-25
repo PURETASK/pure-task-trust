@@ -370,7 +370,7 @@ export default function CleanerReferral() {
               </div>
               <h3 className="font-bold text-lg mb-2">Start earning now</h3>
               <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">
-                Copy your code above and share it. The moment someone signs up with it, you're on your way to ${rewardAmt} in credits.
+                Copy your code above and share it. Once your friend signs up and completes <strong>3 cleanings</strong>, you both receive ${rewardAmt} in credits.
               </p>
               <Button onClick={copyCode} className="gap-2" disabled={!referralCode}>
                 <Copy className="h-4 w-4" />
