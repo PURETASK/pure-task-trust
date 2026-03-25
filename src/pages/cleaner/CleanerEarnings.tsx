@@ -406,7 +406,7 @@ export default function CleanerEarnings() {
                   <p className="text-xs text-muted-foreground mt-1">{Math.round(hoursProgress)}% complete</p>
                   {!editingHoursGoal && (
                     <Button variant="outline" size="sm" className="mt-3 gap-1.5 rounded-xl border-2 border-warning/40 text-warning hover:bg-warning/10 text-xs" asChild>
-                      <a href="/cleaner/marketplace">Find more jobs <ArrowRight className="h-3 w-3" /></a>
+                      <a href="/cleaner/availability">Update availability <ArrowRight className="h-3 w-3" /></a>
                     </Button>
                   )}
                 </div>
