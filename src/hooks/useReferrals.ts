@@ -54,33 +54,46 @@ export function useReferrals() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Get or create referral code for current user
+  // Get referral code — primary source is the `referrals` table (set by DB trigger on signup),
+  // fallback to `referral_codes` table for backwards compat.
   const referralCodeQuery = useQuery({
     queryKey: ['referral-code', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
 
-      // First try to get existing code
-      const { data: existingCode, error: fetchError } = await supabase
+      // 1. Try the canonical referrals row (created by handle_new_user trigger)
+      const { data: referralRow } = await supabase
+        .from('referrals')
+        .select('referral_code')
+        .eq('referrer_id', user.id)
+        .is('referred_id', null)
+        .maybeSingle();
+
+      const canonicalCode = referralRow?.referral_code;
+
+      // 2. Try referral_codes table
+      const { data: existingCode } = await supabase
         .from('referral_codes')
         .select('*')
         .eq('user_id', user.id)
         .eq('type', 'standard')
         .maybeSingle();
 
-      if (fetchError) throw fetchError;
-
       if (existingCode) {
+        // Sync the code from canonical source if it differs
+        if (canonicalCode && existingCode.code !== canonicalCode) {
+          return { ...existingCode, code: canonicalCode } as ReferralCode;
+        }
         return existingCode as ReferralCode;
       }
 
-      // Create new referral code if none exists
-      const generatedCode = user.id.slice(0, 8).toUpperCase();
+      // 3. Create referral_codes row using the canonical code (or fallback)
+      const codeToUse = canonicalCode || user.id.slice(0, 8).toUpperCase();
       const { data: newCode, error: createError } = await supabase
         .from('referral_codes')
         .insert({
           user_id: user.id,
-          code: generatedCode,
+          code: codeToUse,
           type: 'standard',
           reward_credits: 25,
           referee_credits: 25,
@@ -89,7 +102,25 @@ export function useReferrals() {
         .select()
         .single();
 
-      if (createError) throw createError;
+      if (createError) {
+        // If insert fails (e.g. duplicate), return a synthetic object with the canonical code
+        if (canonicalCode) {
+          return {
+            id: user.id,
+            user_id: user.id,
+            code: canonicalCode,
+            type: 'standard',
+            reward_credits: 25,
+            referee_credits: 25,
+            uses_count: 0,
+            max_uses: null,
+            is_active: true,
+            expires_at: null,
+            created_at: new Date().toISOString(),
+          } as ReferralCode;
+        }
+        throw createError;
+      }
       return newCode as ReferralCode;
     },
     enabled: !!user?.id,
