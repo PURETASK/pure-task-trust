@@ -14,10 +14,10 @@ interface RatesStepProps {
 }
 
 const TIERS = [
-  { id: 'bronze', label: 'Bronze', range: '$20–35', emoji: '🥉', min: 20, max: 35 },
-  { id: 'silver', label: 'Silver', range: '$30–50', emoji: '🥈', min: 30, max: 50 },
-  { id: 'gold', label: 'Gold',   range: '$40–65', emoji: '🥇', min: 40, max: 65 },
-  { id: 'platinum', label: 'Platinum', range: '$50–100', emoji: '💎', min: 50, max: 100 },
+  { id: 'bronze', label: 'Bronze', range: '$20–30', emoji: '🥉', min: 20, max: 30 },
+  { id: 'silver', label: 'Silver', range: '$20–40', emoji: '🥈', min: 20, max: 40 },
+  { id: 'gold', label: 'Gold',   range: '$20–50', emoji: '🥇', min: 20, max: 50 },
+  { id: 'platinum', label: 'Platinum', range: '$20–65', emoji: '💎', min: 20, max: 65 },
 ];
 
 export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: RatesStepProps) {
@@ -59,8 +59,8 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
           <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Your hourly rate</Label>
           <span className="text-3xl font-black text-green-400">${hourlyRate}</span>
         </div>
-        <Slider value={[hourlyRate]} onValueChange={(v) => setHourlyRate(v[0])} min={20} max={100} step={1} className={`py-2 ${sliderClass}`} />
-        <div className="flex justify-between text-xs text-white/30"><span>$20/hr</span><span>$100/hr</span></div>
+        <Slider value={[hourlyRate]} onValueChange={(v) => setHourlyRate(v[0])} min={20} max={65} step={1} className={`py-2 ${sliderClass}`} />
+        <div className="flex justify-between text-xs text-white/30"><span>$20/hr</span><span>$65/hr</span></div>
       </div>
 
       {/* Tier grid */}

@@ -88,10 +88,8 @@ export default function CleanerOnboarding() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'hsl(145 65% 8%)' }}>
         <div className="flex flex-col items-center gap-4">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-            className="h-10 w-10 rounded-full border-2 border-white/20 border-t-white"
+          <div
+            className="h-10 w-10 rounded-full border-2 border-white/20 border-t-white animate-spin"
           />
           <span className="text-white/60 text-sm">Loading your profile…</span>
         </div>
