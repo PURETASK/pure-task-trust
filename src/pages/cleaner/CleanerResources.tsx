@@ -310,9 +310,12 @@ export default function CleanerResources() {
 
         {/* ── Tabs ── */}
         <Tabs defaultValue="checklists" className="w-full">
-          <TabsList className="w-full sm:w-auto mb-6 rounded-2xl border-2 border-border/50 bg-muted/50 p-1.5 h-auto flex gap-1">
+          <TabsList className="w-full sm:w-auto mb-6 rounded-2xl border-2 border-border/50 bg-muted/50 p-1.5 h-auto flex flex-wrap gap-1">
             <TabsTrigger value="checklists" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-success data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <FileText className="h-4 w-4 mr-1.5" />Checklists
+            </TabsTrigger>
+            <TabsTrigger value="scope" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+              <ListChecks className="h-4 w-4 mr-1.5" />Scope Guide
             </TabsTrigger>
             <TabsTrigger value="growth" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-warning data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <TrendingUp className="h-4 w-4 mr-1.5" />Growth
