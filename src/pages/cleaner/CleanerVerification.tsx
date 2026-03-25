@@ -296,8 +296,8 @@ export default function CleanerVerification() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                    <Camera className="h-5 w-5 text-violet-500" />
+                  <div className="h-11 w-11 rounded-xl bg-accent flex items-center justify-center">
+                    <Camera className="h-5 w-5 text-accent-foreground" />
                   </div>
                   <div>
                     <CardTitle className="text-base">Selfie Photo</CardTitle>
@@ -313,8 +313,8 @@ export default function CleanerVerification() {
             <CardContent className="space-y-4">
 
               {/* Selfie tips */}
-              <div className="rounded-xl bg-violet-500/5 border border-violet-500/20 p-4 space-y-2">
-                <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">📸 Selfie Requirements</p>
+              <div className="rounded-xl bg-muted/40 border border-border/60 p-4 space-y-2">
+                <p className="text-xs font-semibold text-foreground mb-2">📸 Selfie Requirements</p>
                 {[
                   "Your entire face must be visible — no sunglasses or hats",
                   "Good lighting — no shadows across your face",
@@ -322,7 +322,7 @@ export default function CleanerVerification() {
                   "Hold your ID next to your face for best results",
                 ].map(tip => (
                   <div key={tip} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <CheckCircle className="h-3.5 w-3.5 text-violet-500 mt-0.5 shrink-0" />
+                    <CheckCircle className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />
                     {tip}
                   </div>
                 ))}
