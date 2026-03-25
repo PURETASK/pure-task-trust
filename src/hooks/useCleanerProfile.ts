@@ -15,7 +15,7 @@ export interface CleanerJobWithClient extends Job {
 }
 
 export function useCleanerProfile() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
   const profileQuery = useQuery({
     queryKey: ['cleaner-profile', user?.id],
@@ -32,12 +32,13 @@ export function useCleanerProfile() {
       return data as CleanerProfile | null;
     },
     enabled: !!user?.id,
+    staleTime: 1000 * 60 * 2,
   });
 
   return {
     profile: profileQuery.data ?? null,
-    // Show loading when auth hasn't resolved yet OR the query is in-flight
-    isLoading: !user?.id || profileQuery.isLoading || profileQuery.isFetching,
+    // Show loading while auth is still resolving OR the query is in-flight
+    isLoading: authLoading || !user?.id || profileQuery.isPending,
     error: profileQuery.error,
   };
 }
