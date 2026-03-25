@@ -84,6 +84,18 @@ export interface TierConfig {
   additionalServices: Record<string, { min: number; max: number; unit?: string }>;
 }
 
+// Shared additional service price ranges — same for ALL tiers
+const ALL_TIER_ADDITIONAL_SERVICES = {
+  oven:            { min: 15, max: 40 },
+  fridge:          { min: 15, max: 40 },
+  baseboards:      { min: 10, max: 25 },
+  blinds:          { min: 5,  max: 20, unit: 'per set (2 blinds)' },
+  inside_cabinets: { min: 5,  max: 20 },
+  laundry:         { min: 5,  max: 15, unit: 'per load' },
+  windows:         { min: 3,  max: 7,  unit: 'each' },
+  fans:            { min: 5,  max: 15, unit: 'each' },
+};
+
 export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   bronze: {
     name: 'bronze',
@@ -92,16 +104,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     maxScore: 49,
     platformFeePercent: 20,
     hourlyRateRange: { min: 25, max: 35 },
-    additionalServices: {
-      oven: { min: 15, max: 20 },
-      fridge: { min: 15, max: 20 },
-      baseboards: { min: 10, max: 15 },
-      blinds: { min: 5, max: 10, unit: 'per set (2 blinds)' },
-      inside_cabinets: { min: 5, max: 10 },
-      laundry: { min: 5, max: 8, unit: 'per load' },
-      windows: { min: 3, max: 5, unit: 'each' },
-      fans: { min: 5, max: 8, unit: 'each' },
-    },
+    additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   silver: {
     name: 'silver',
@@ -110,16 +113,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     maxScore: 69,
     platformFeePercent: 18,
     hourlyRateRange: { min: 30, max: 50 },
-    additionalServices: {
-      oven: { min: 17, max: 28 },
-      fridge: { min: 17, max: 28 },
-      baseboards: { min: 12, max: 18 },
-      blinds: { min: 8, max: 14, unit: 'per set (2 blinds)' },
-      inside_cabinets: { min: 5, max: 14 },
-      laundry: { min: 5, max: 10, unit: 'per load' },
-      windows: { min: 3, max: 6, unit: 'each' },
-      fans: { min: 6, max: 10, unit: 'each' },
-    },
+    additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   gold: {
     name: 'gold',
@@ -128,16 +122,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     maxScore: 89,
     platformFeePercent: 17,
     hourlyRateRange: { min: 40, max: 65 },
-    additionalServices: {
-      oven: { min: 18, max: 35 },
-      fridge: { min: 18, max: 35 },
-      baseboards: { min: 13, max: 22 },
-      blinds: { min: 10, max: 18, unit: 'per set (2 blinds)' },
-      inside_cabinets: { min: 5, max: 17 },
-      laundry: { min: 5, max: 13, unit: 'per load' },
-      windows: { min: 3, max: 6, unit: 'each' },
-      fans: { min: 8, max: 12, unit: 'each' },
-    },
+    additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   platinum: {
     name: 'platinum',
@@ -146,16 +131,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     maxScore: 100,
     platformFeePercent: 15,
     hourlyRateRange: { min: 50, max: 100 },
-    additionalServices: {
-      oven: { min: 20, max: 40 },
-      fridge: { min: 20, max: 40 },
-      baseboards: { min: 15, max: 25 },
-      blinds: { min: 15, max: 20, unit: 'per set (2 blinds)' },
-      inside_cabinets: { min: 5, max: 20 },
-      laundry: { min: 5, max: 15, unit: 'per load' },
-      windows: { min: 3, max: 7, unit: 'each' },
-      fans: { min: 10, max: 15, unit: 'each' },
-    },
+    additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
 };
 
