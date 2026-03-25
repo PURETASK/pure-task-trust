@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import {
   FileText, TrendingUp, ShoppingBag, Lightbulb, Star, Clock,
   CheckCircle, Download, Mail, Printer, Shield, Zap, HeartHandshake,
-  Camera, Lock, Sparkles, ChevronRight, BookOpen, ListChecks, ArrowRight, Calculator, DollarSign
+  Camera, Lock, Sparkles, ChevronRight, BookOpen, ListChecks, ArrowRight, Calculator, DollarSign, BarChart2
 } from "lucide-react";
 import { toast } from "sonner";
 
