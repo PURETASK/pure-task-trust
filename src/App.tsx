@@ -251,7 +251,7 @@ const App = () => (
                     <Route path="/cleaner/cancellation-policy" element={<RequireCleaner><CancellationPolicy /></RequireCleaner>} />
                     <Route path="/cleaner/profile" element={<RequireCleaner><CleanerProfileSettings /></RequireCleaner>} />
                     <Route path="/cleaner/profile/view" element={<RequireCleaner><CleanerProfileView /></RequireCleaner>} />
-                    <Route path="/cleaner/marketplace" element={<RequireCleaner><CleanerMarketplace /></RequireCleaner>} />
+                    <Route path="/cleaner/marketplace" element={<Navigate to="/discover" replace />} />
                     <Route path="/cleaner/jobs" element={<RequireCleaner><CleanerJobs /></RequireCleaner>} />
                     <Route path="/cleaner/jobs/:jobId" element={<RequireCleaner><CleanerJobDetail /></RequireCleaner>} />
                     <Route path="/cleaner/analytics" element={<RequireCleaner><CleanerAnalytics /></RequireCleaner>} />
