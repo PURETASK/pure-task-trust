@@ -161,7 +161,7 @@ export function TimeOffManager() {
                   <div className={cn(
                     "flex items-center justify-between rounded-xl border-2 px-4 py-3 cursor-pointer transition-all",
                     newTimeOff.all_day
-                      ? "border-primary bg-primary/8"
+                      ? "border-primary bg-primary/10"
                       : "border-border bg-muted/30"
                   )}
                     onClick={() => setNewTimeOff(prev => ({ ...prev, all_day: !prev.all_day }))}

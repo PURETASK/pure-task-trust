@@ -24,7 +24,7 @@ export default function CleanerAvailability() {
               aria-hidden="true"
             />
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-cyan-500/8 to-violet-500/12 rounded-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-cyan-500/5 to-violet-500/10 rounded-3xl" />
             <div className="absolute -right-12 -top-12 w-40 h-40 bg-primary/5 rounded-full" />
             <div className="flex items-center gap-4 relative">
               <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25">
