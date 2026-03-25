@@ -65,7 +65,7 @@ function EventCard({ event }: { event: any }) {
   const statusColor =
     job?.status === "completed"  ? "bg-success/15 border-success/40 text-success"   :
     job?.status === "confirmed"  ? "bg-primary/15 border-primary/40 text-primary"   :
-    job?.status === "scheduled"  ? "bg-warning/15 border-warning/40 text-warning"   :
+    job?.status === "in_progress"? "bg-warning/15 border-warning/40 text-warning"   :
                                    "bg-muted border-border text-muted-foreground";
 
   return (
@@ -124,7 +124,7 @@ function ConnectedCalendarCard({
   const info = getProviderInfo(connection.provider);
 
   // Summarize event stats
-  const upcoming   = events.filter(e => e.job?.status === "scheduled" || e.job?.status === "confirmed").length;
+  const upcoming   = events.filter(e => e.job?.status === "confirmed" || e.job?.status === "in_progress").length;
   const completed  = events.filter(e => e.job?.status === "completed").length;
 
   return (
