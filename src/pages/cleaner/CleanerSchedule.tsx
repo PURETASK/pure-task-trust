@@ -170,7 +170,7 @@ export default function CleanerSchedule() {
 
         {/* Calendar Card */}
         <Card className="border-2 border-primary/30 rounded-2xl overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/5 border-b border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/15 border-b border-primary/30">
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" />
               Calendar
