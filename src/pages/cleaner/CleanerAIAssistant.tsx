@@ -297,7 +297,7 @@ export default function CleanerAIAssistant() {
 
           {/* Quick Prompts Sidebar */}
           <div className="space-y-4">
-            <Card>
+            <Card className="rounded-2xl" style={{ border: "2px solid hsl(var(--success))", boxShadow: "0 4px 24px -4px hsl(var(--success)/0.25)", background: "hsl(var(--success)/0.04)" }}>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
               </CardHeader>
