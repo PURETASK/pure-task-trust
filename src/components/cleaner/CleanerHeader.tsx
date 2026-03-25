@@ -67,9 +67,15 @@ export function CleanerHeader() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
+  const handleLogout = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    try {
+      await logout();
+    } catch {
+      // ignore — session cleared client-side regardless
+    }
+    navigate("/", { replace: true });
   };
 
   return (
@@ -184,7 +190,7 @@ export function CleanerHeader() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+              <DropdownMenuItem onClick={(e) => handleLogout(e)} className="text-destructive">
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </DropdownMenuItem>
