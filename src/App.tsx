@@ -222,7 +222,7 @@ const App = () => (
                     {/* Client routes */}
                     <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
                     <Route path="/discover" element={<Discover />} />
-                    <Route path="/cleaner/:id" element={<RequireClient><CleanerProfile /></RequireClient>} />
+                    <Route path="/cleaner/:id" element={<RequireAuth><CleanerProfile /></RequireAuth>} />
                     <Route path="/book" element={<RequireClient><Book /></RequireClient>} />
                     <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
                     <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
