@@ -233,7 +233,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </header>
 
           {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
-          <main className="flex-1 overflow-x-hidden min-w-0" style={{ paddingBottom: "calc(56px + env(safe-area-inset-bottom, 0px))" }}>
+          <main className="flex-1 overflow-x-hidden min-w-0 pb-14 md:pb-0">
             <PageTransition>{children ?? <Outlet />}</PageTransition>
           </main>
 
