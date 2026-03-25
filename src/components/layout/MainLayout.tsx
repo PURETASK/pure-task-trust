@@ -113,7 +113,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </div>
 
               {/* RIGHT: Actions */}
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <ThemeToggle />
 
                 {isAuthenticated && user ? (
@@ -129,8 +129,12 @@ export function MainLayout({ children }: MainLayoutProps) {
                     {/* Cleaner: Online/Offline toggle */}
                     {user.role === "cleaner" && <CleanerAvailabilityToggle />}
 
-                    {/* Client: Credit balance chip */}
-                    {user.role === "client" && <CreditChip />}
+                    {/* Client: Credit balance chip — hide on smallest screens */}
+                    {user.role === "client" && (
+                      <div className="hidden xs:flex">
+                        <CreditChip />
+                      </div>
+                    )}
 
                     {/* Notifications bell */}
                     <div className="hidden sm:flex">
