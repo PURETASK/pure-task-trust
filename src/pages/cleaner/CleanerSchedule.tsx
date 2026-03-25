@@ -265,26 +265,31 @@ export default function CleanerSchedule() {
         </Card>
 
         {/* Selected Date Summary */}
-        <Card>
+        <Card className="border-2 border-[hsl(280,70%,55%)]/40 rounded-2xl bg-[hsl(280,70%,55%)]/5">
           <CardContent className="p-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-0.5">
-                  {format(selectedDate, "EEEE, MMMM d")}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/15 flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-[hsl(280,70%,55%)]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-0.5">
+                    {format(selectedDate, "EEEE, MMMM d")}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
+                  </p>
+                </div>
               </div>
               {selectedDateJobs.length > 0 && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{dailyHours}h scheduled</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-xl bg-warning/10 border border-warning/30">
+                    <Clock className="h-4 w-4 text-warning" />
+                    <span className="font-medium text-warning">{dailyHours}h scheduled</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-sm">
+                  <div className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-xl bg-success/10 border border-success/30">
                     <DollarSign className="h-4 w-4 text-success" />
-                    <span className="font-semibold text-success">${dailyNet} projected earnings</span>
+                    <span className="font-semibold text-success">${dailyNet} projected</span>
                   </div>
                 </div>
               )}
@@ -295,11 +300,14 @@ export default function CleanerSchedule() {
         {/* Job Lists */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold mb-3">Job Requests</h3>
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-warning">
+              <Clock className="h-4 w-4" />
+              Job Requests
+            </h3>
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
-              <Card>
+              <Card className="border-2 border-warning/20 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No job requests for this day.
                 </CardContent>
@@ -307,7 +315,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {pendingJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/30 rounded-2xl bg-warning/5">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
