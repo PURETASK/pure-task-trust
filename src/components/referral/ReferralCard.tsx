@@ -47,7 +47,7 @@ export function ReferralCard({
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm">Your Referral Code</h3>
               <p className="text-xs text-muted-foreground">
-                Share to earn ${referralCode?.reward_credits || 500}
+                Share to earn ${referralCode?.reward_credits || 25}
               </p>
             </div>
           </div>
