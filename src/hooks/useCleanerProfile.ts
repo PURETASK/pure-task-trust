@@ -37,8 +37,9 @@ export function useCleanerProfile() {
 
   return {
     profile: profileQuery.data ?? null,
-    // Show loading while auth is still resolving OR the query is in-flight
-    isLoading: authLoading || !user?.id || profileQuery.isPending,
+    // Only show loading on the very first fetch (isLoading), not on background refetches (isFetching).
+    // This prevents the onboarding spinner from re-appearing every time we invalidate the profile cache.
+    isLoading: authLoading || !user?.id || profileQuery.isLoading,
     error: profileQuery.error,
   };
 }

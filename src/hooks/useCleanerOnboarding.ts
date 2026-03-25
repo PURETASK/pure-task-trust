@@ -136,7 +136,8 @@ export function useCleanerOnboarding() {
 
         if (freshProfile?.id) {
           cleanerProfileId = freshProfile.id;
-          queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
+          // Use exact key with user.id to avoid a full cache bust → re-loading spinner
+          queryClient.invalidateQueries({ queryKey: ['cleaner-profile', user.id] });
         } else {
           // Create profile if it still doesn't exist
           const { data: newProfile, error: createError } = await supabase
@@ -146,7 +147,7 @@ export function useCleanerOnboarding() {
             .single();
           if (createError) throw createError;
           cleanerProfileId = newProfile.id;
-          queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
+          queryClient.invalidateQueries({ queryKey: ['cleaner-profile', user.id] });
           queryClient.invalidateQueries({ queryKey: ['userProfile'] });
         }
       }
@@ -444,7 +445,8 @@ export function useCleanerOnboarding() {
     progress,
     // Only block on loading if we don't yet know whether profile exists.
     // Once the query has settled (even to null), show the onboarding form immediately.
-    isLoading: profileLoading && !isInitialized && profile === undefined,
+    // Once initialized, never re-show the loading screen even if profile refetches in background.
+    isLoading: !isInitialized && profileLoading,
     profile,
     completedData,
     goToNextStep,
