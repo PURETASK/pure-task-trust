@@ -19,6 +19,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import earningsBg from "@/assets/earnings-bg.png";
 
 const WEEKLY_HOURS_GOAL = 20;
 
@@ -70,7 +71,19 @@ export default function CleanerEarnings() {
   return (
     <CleanerLayout>
       <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
-      <div className="space-y-6">
+      {/* Page-level money background illustration */}
+      <div className="fixed inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
+        <img
+          src={earningsBg}
+          alt=""
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="w-[70vmin] h-[70vmin] object-contain opacity-[0.055]"
+          aria-hidden="true"
+        />
+      </div>
+      <div className="space-y-6 relative z-10">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">

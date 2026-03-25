@@ -5,7 +5,7 @@ import { RescheduleRequestsList } from "@/components/scheduling/RescheduleReques
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Umbrella, CalendarClock, Info } from "lucide-react";
 import { motion } from "framer-motion";
-import calendarBg from "@/assets/calendar-bg.jpg";
+import availabilityBg from "@/assets/availability-bg.png";
 
 export default function CleanerAvailability() {
   return (
@@ -14,13 +14,14 @@ export default function CleanerAvailability() {
         {/* Header with calendar background */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="relative overflow-hidden rounded-3xl border border-primary/20 p-8">
-            {/* Calendar background image */}
+            {/* Availability background illustration */}
             <img
-              src={calendarBg}
+              src={availabilityBg}
               alt=""
-              width={1280}
-              height={960}
-              className="absolute inset-0 w-full h-full object-cover opacity-10"
+              loading="lazy"
+              width={1024}
+              height={1024}
+              className="absolute inset-0 w-full h-full object-contain object-center opacity-[0.07] pointer-events-none select-none"
               aria-hidden="true"
             />
             {/* Gradient overlay */}
