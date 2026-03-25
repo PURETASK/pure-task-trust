@@ -67,9 +67,15 @@ export function CleanerHeader() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
+  const handleLogout = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    try {
+      await logout();
+    } catch {
+      // ignore — session cleared client-side regardless
+    }
+    navigate("/", { replace: true });
   };
 
   return (
