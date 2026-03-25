@@ -132,7 +132,7 @@ export default function CleanerSchedule() {
           <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/35 blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
-              <div className="h-13 w-13 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25 p-3">
+              <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 p-3">
                 <Calendar className="h-7 w-7 text-white" />
               </div>
               <div>
