@@ -113,13 +113,13 @@ export default function CleanerEarnings() {
           ) : (
             <>
               {[
-                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/50", border: "border-2 border-success/60", cardBg: "bg-success/40" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/50", border: "border-2 border-primary/60", cardBg: "bg-primary/40" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/50", border: "border-2 border-warning/60", cardBg: "bg-warning/40" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/50", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/40" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/20", border: "border-2 border-primary/60", cardBg: "bg-primary/10" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/20", border: "border-2 border-warning/60", cardBg: "bg-warning/10" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/20", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/10" },
+                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/70", border: "border-2 border-success/80", cardBg: "bg-success/70" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
               ].map(({ label, value, icon: Icon, color, bg, border, cardBg }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                    <Card className={`hover:shadow-md transition-shadow rounded-2xl ${border} ${cardBg}`}>
@@ -139,7 +139,7 @@ export default function CleanerEarnings() {
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/40">
+          <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-primary/50 flex items-center justify-center">
@@ -163,7 +163,7 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/40">
+          <Card className="rounded-2xl border-2 border-warning/80 bg-warning/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/50 flex items-center justify-center flex-shrink-0">
@@ -189,7 +189,7 @@ export default function CleanerEarnings() {
 
         {/* Payout Options */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/40">
+          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/80 bg-[hsl(280,70%,55%)]/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/50 flex items-center justify-center">
@@ -214,7 +214,7 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-success/60 bg-success/40">
+          <Card className="rounded-2xl border-2 border-success/80 bg-success/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-success/50 flex items-center justify-center">
@@ -241,7 +241,7 @@ export default function CleanerEarnings() {
         </div>
 
         {/* History Tabs */}
-        <Card className="rounded-2xl border-2 border-primary/50 bg-primary/5">
+        <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
           <Tabs defaultValue="earnings">
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
               {["earnings", "payouts"].map(tab => (

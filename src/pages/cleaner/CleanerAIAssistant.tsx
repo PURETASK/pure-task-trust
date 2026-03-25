@@ -192,7 +192,7 @@ export default function CleanerAIAssistant() {
         {/* Main Chat Area */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Chat Column */}
-          <Card className="lg:col-span-3 rounded-2xl" style={{ border: "2px solid hsl(var(--primary))", boxShadow: "0 4px 24px -4px hsl(var(--primary)/0.25)", background: "hsl(var(--primary)/0.04)" }}>
+          <Card className="lg:col-span-3 rounded-2xl" style={{ border: "2px solid hsl(var(--primary))", boxShadow: "0 4px 24px -4px hsl(var(--primary)/0.35)", background: "hsl(var(--primary)/0.44)" }}>
             <CardContent className="p-0 flex flex-col h-[600px]">
               {/* Messages */}
               <ScrollArea className="flex-1 p-4">
