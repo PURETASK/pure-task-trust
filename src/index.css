@@ -303,7 +303,29 @@
   .scroll-x-safe::-webkit-scrollbar {
     display: none;
   }
-}
+
+  /* GPU-accelerated card transitions for smoother mobile animations */
+  .card-mobile {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Prevent text selection on interactive elements (better touch UX) */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Full-bleed section on mobile only */
+  @media (max-width: 640px) {
+    .mobile-full-bleed {
+      margin-left: -1rem;
+      margin-right: -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
 
 @keyframes fadeUp {
   from {

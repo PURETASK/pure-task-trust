@@ -12,10 +12,14 @@ import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePostSignup } from "@/hooks/usePostSignup";
+import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+
+// Eagerly load Install page for mobile users landing there
+import Install from "./pages/Install";
 
 // Lazy load everything else for code splitting
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -144,12 +148,15 @@ const App = () => (
               <PostSignupRunner />
               <ScrollToTop />
               <ExitIntentPopup />
+              <PWAInstallBanner />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Auth pages — no layout */}
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  {/* PWA Install page — no layout */}
+                  <Route path="/install" element={<Install />} />
 
                   {/* Role selection — no layout */}
                   <Route path="/role-selection" element={

@@ -17,13 +17,13 @@ export function StatCard({
   iconBgColor = "bg-primary/10"
 }: StatCardProps) {
   return (
-    <Card className="border-border/50">
-      <CardContent className="p-5">
-        <div className={`h-10 w-10 rounded-xl ${iconBgColor} flex items-center justify-center mb-3`}>
-          <Icon className={`h-5 w-5 ${iconColor}`} />
+    <Card className="border-border/50 active:scale-[0.97] transition-transform">
+      <CardContent className="p-3 sm:p-5">
+        <div className={`h-8 w-8 sm:h-10 sm:w-10 rounded-xl ${iconBgColor} flex items-center justify-center mb-2 sm:mb-3`}>
+          <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${iconColor}`} />
         </div>
-        <div className="text-2xl font-bold">{value}</div>
-        <div className="text-sm text-muted-foreground">{label}</div>
+        <div className="text-xl sm:text-2xl font-bold">{value}</div>
+        <div className="text-xs sm:text-sm text-muted-foreground">{label}</div>
       </CardContent>
     </Card>
   );
