@@ -299,7 +299,7 @@ export default function CleanerEarnings() {
               </p>
               {confirmedThisWeek.length === 0 ? (
                 <Button variant="outline" size="sm" className="gap-2 rounded-xl border-2 border-primary/40 text-primary hover:bg-primary/10" asChild>
-                  <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
+                  <a href="/cleaner/availability">Update Availability <ArrowUpRight className="h-3.5 w-3.5" /></a>
                 </Button>
               ) : (
                 <div className="space-y-2">
@@ -406,7 +406,7 @@ export default function CleanerEarnings() {
                   <p className="text-xs text-muted-foreground mt-1">{Math.round(hoursProgress)}% complete</p>
                   {!editingHoursGoal && (
                     <Button variant="outline" size="sm" className="mt-3 gap-1.5 rounded-xl border-2 border-warning/40 text-warning hover:bg-warning/10 text-xs" asChild>
-                      <a href="/cleaner/marketplace">Find more jobs <ArrowRight className="h-3 w-3" /></a>
+                      <a href="/cleaner/availability">Update availability <ArrowRight className="h-3 w-3" /></a>
                     </Button>
                   )}
                 </div>

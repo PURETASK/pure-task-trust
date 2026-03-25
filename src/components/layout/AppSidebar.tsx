@@ -126,7 +126,6 @@ const cleanerNavGroups: NavGroup[] = [
       { title: "Home", url: "/", icon: House },
       { title: "Dashboard", url: "/cleaner/dashboard", icon: LayoutDashboard },
       { title: "My Schedule", url: "/cleaner/schedule", icon: CalendarDays },
-      { title: "Job Marketplace", url: "/cleaner/marketplace", icon: PackageSearch, badge: "Live" },
     ]
   },
   {
