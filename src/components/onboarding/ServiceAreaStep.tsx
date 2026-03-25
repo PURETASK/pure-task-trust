@@ -5,6 +5,7 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { MapPin, Loader2, ArrowLeft, ArrowRight, Plus, X, Radio } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import RadiusMap from '@/components/booking/RadiusMap';
 
 interface ServiceAreaStepProps {
   initialData?: { travelRadius?: number | null; selectedAreas?: string[] };

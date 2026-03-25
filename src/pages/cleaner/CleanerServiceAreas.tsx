@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import RadiusMap from "@/components/booking/RadiusMap";
 
 export default function CleanerServiceAreas() {
   const { toast } = useToast();
