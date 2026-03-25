@@ -263,28 +263,57 @@ export default function CleanerProfile() {
 
         {/* Tier Status Banner */}
         <Card
-          className={`${TIER_VISUAL[tier].bg} ${TIER_VISUAL[tier].border} border-2 rounded-2xl`}
+          className={`${TIER_VISUAL[tier].bg} ${TIER_VISUAL[tier].border} border-2 rounded-2xl overflow-hidden`}
           style={{ boxShadow: TIER_VISUAL[tier].glow }}
         >
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className={`h-12 w-12 rounded-xl ${TIER_VISUAL[tier].bg} border ${TIER_VISUAL[tier].border} flex items-center justify-center`}>
-                <span className="text-2xl">{TIER_VISUAL[tier].emoji}</span>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h3 className={`font-bold capitalize ${TIER_VISUAL[tier].text}`}>{tier} Tier</h3>
-                  <Badge className={`${TIER_VISUAL[tier].badge} text-xs`}>{reliabilityScore} pts</Badge>
-                  {bioScore > 0 && <BioScoreBadge score={bioScore} />}
+          <CardContent className="p-0">
+            {/* Top: tier name + score */}
+            <div className={`bg-gradient-to-r ${TIER_VISUAL[tier].gradient} px-6 py-4 flex items-center justify-between`}>
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">{TIER_VISUAL[tier].emoji}</span>
+                <div>
+                  <p className="text-white/70 text-xs font-semibold uppercase tracking-widest">Your Tier</p>
+                  <h3 className="text-white text-2xl font-black capitalize leading-tight">{tier}</h3>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  ${hourlyRateRange.min}–${hourlyRateRange.max}/hr · {tierConfig.platformFeePercent}% platform fee
-                </p>
               </div>
-              <div className={`text-sm font-medium ${TIER_VISUAL[tier].text}`}>
-                {tier === "platinum" ? "🏆 Max tier!" : `${TIER_VISUAL[tier].nextMin - reliabilityScore > 0 ? TIER_VISUAL[tier].nextMin - reliabilityScore : 0} pts to ${TIER_VISUAL[tier].next}`}
+              <div className="text-right">
+                <p className="text-white/70 text-xs font-semibold uppercase tracking-widest">Reliability</p>
+                <p className="text-white text-3xl font-black">{reliabilityScore}<span className="text-base font-normal text-white/60">/100</span></p>
               </div>
             </div>
+            {/* Bottom: rate + fee stats */}
+            <div className="grid grid-cols-3 divide-x divide-border/60 px-0">
+              <div className="px-5 py-4 text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Rate Range</p>
+                <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>${hourlyRateRange.min}–${hourlyRateRange.max}</p>
+                <p className="text-xs text-muted-foreground font-medium">per hour</p>
+              </div>
+              <div className="px-5 py-4 text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Platform Fee</p>
+                <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>{tierConfig.platformFeePercent}%</p>
+                <p className="text-xs text-muted-foreground font-medium">you keep {100 - tierConfig.platformFeePercent}%</p>
+              </div>
+              <div className="px-5 py-4 text-center">
+                {tier === "platinum" ? (
+                  <>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Status</p>
+                    <p className="text-2xl font-black text-foreground">🏆</p>
+                    <p className="text-xs text-muted-foreground font-medium">Max tier!</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Next Tier</p>
+                    <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>{Math.max(0, TIER_VISUAL[tier].nextMin - reliabilityScore)}</p>
+                    <p className="text-xs text-muted-foreground font-medium">pts to {TIER_VISUAL[tier].next}</p>
+                  </>
+                )}
+              </div>
+            </div>
+            {bioScore > 0 && (
+              <div className="px-5 pb-4">
+                <BioScoreBadge score={bioScore} />
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -292,12 +321,26 @@ export default function CleanerProfile() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base"><User className="h-5 w-5 text-success" />Profile Photo</CardTitle>
-            <CardDescription>Upload a professional photo to build trust with clients</CardDescription>
+            <CardDescription>Your photo is the first thing clients see — make it count!</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <ProfilePhotoUpload userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"} />
+            {/* Photo tip */}
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-warning/5 border border-warning/30">
+              <span className="text-2xl flex-shrink-0 mt-0.5">📸</span>
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-0.5">Pro tip: Smile into the camera!</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Cleaners with a warm, natural smile looking directly at the camera get <span className="font-semibold text-foreground">up to 40% more bookings</span>. Use a close-up face shot with good lighting — no sunglasses, hats, or group photos.
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
+
+        {/* Intro Video */}
+        <IntroVideoUpload cleanerId={profile?.id} />
+
 
         {/* Hourly Rate */}
         <Card>
