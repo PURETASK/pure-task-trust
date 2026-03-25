@@ -16,7 +16,7 @@ interface UserProfileData {
 }
 
 export function useUserProfile() {
-  const { user, session } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: profileData, isLoading, error } = useQuery({
