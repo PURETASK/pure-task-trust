@@ -496,7 +496,7 @@ export default function CleanerVerification() {
         {/* ── Security footer ───────────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <Card className="overflow-hidden border-0">
-            <div className="bg-gradient-to-br from-primary to-violet-600 p-7 text-white text-center">
+            <div className="bg-gradient-to-br from-primary to-primary/60 p-7 text-primary-foreground text-center">
               <Lock className="h-10 w-10 mx-auto mb-3 opacity-80" />
               <h3 className="text-xl font-bold mb-1">Your Data is Secure</h3>
               <p className="text-white/75 text-sm max-w-md mx-auto">
