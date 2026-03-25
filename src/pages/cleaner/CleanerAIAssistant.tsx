@@ -163,7 +163,7 @@ export default function CleanerAIAssistant() {
           style={{
             width: "125vmin",
             height: "125vmin",
-            left: "14%",
+            left: "34%",
             top: "50%",
             transform: "translate(-50%, -50%)",
           }}
