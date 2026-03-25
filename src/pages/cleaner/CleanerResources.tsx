@@ -357,7 +357,59 @@ export default function CleanerResources() {
             </motion.div>
           </TabsContent>
 
-          {/* ── Growth Tab ── */}
+          {/* ── Scope Guide Tab ── */}
+          <TabsContent value="scope">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-9 w-9 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+                  <ListChecks className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Cleaning Scope Guide</h2>
+                  <p className="text-xs text-muted-foreground">What's included in each service type</p>
+                </div>
+              </div>
+
+              {/* Service cards */}
+              <div className="grid sm:grid-cols-2 gap-4 mb-5">
+                {[
+                  { emoji: '🏠', label: 'Basic Clean', duration: '2–3 hrs', tasks: ['Kitchen countertops & appliance exteriors', 'Bathroom disinfect & mop', 'Beds made, surfaces dusted', 'Floors vacuumed/mopped', 'All trash emptied'], color: 'border-primary/30 bg-primary/5', badge: 'bg-primary/10 text-primary border-primary/20' },
+                  { emoji: '✨', label: 'Deep Clean', duration: '4–6 hrs', tasks: ['Everything in Basic, plus:', 'Baseboards & ceiling fans', 'Interior windows & sills', 'Inside microwave & cabinets', 'Door frames & wall wipe-down'], color: 'border-[hsl(280,70%,50%)]/30 bg-[hsl(280,70%,50%)]/5', badge: 'bg-[hsl(280,70%,50%)]/10 text-[hsl(280,70%,50%)] border-[hsl(280,70%,50%)]/20' },
+                  { emoji: '📦', label: 'Move-Out', duration: '4–6+ hrs', tasks: ['Full Deep Clean scope', 'Inside oven & fridge', 'All blinds & shutters', 'Closets & cabinet interiors', 'Garage & patio sweep'], color: 'border-warning/30 bg-warning/5', badge: 'bg-warning/10 text-warning border-warning/20' },
+                  { emoji: '🏨', label: 'Airbnb Turnover', duration: '2–4 hrs', tasks: ['Strip & remake all beds', 'Full bathroom sanitise', 'Kitchen guest-ready reset', 'Restock consumables', 'Photo documentation for host'], color: 'border-success/30 bg-success/5', badge: 'bg-success/10 text-success border-success/20' },
+                ].map(s => (
+                  <div key={s.label} className={`rounded-2xl border-2 p-4 ${s.color}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{s.emoji}</span>
+                        <span className="font-bold text-sm">{s.label}</span>
+                      </div>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${s.badge}`}>
+                        {s.duration}
+                      </span>
+                    </div>
+                    <ul className="space-y-1.5">
+                      {s.tasks.map(t => (
+                        <li key={t} className="flex items-start gap-2 text-xs text-muted-foreground">
+                          <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              <Button asChild className="w-full rounded-2xl font-bold border-2" variant="outline">
+                <Link to="/cleaning-scope">
+                  <ListChecks className="h-4 w-4 mr-2" />
+                  View Full Scope Guide <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </TabsContent>
+
+
           <TabsContent value="growth">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <div className="flex items-center gap-3 mb-5">
