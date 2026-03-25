@@ -32,9 +32,15 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
+  const handleLogout = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    try {
+      await logout();
+    } catch {
+      // ignore logout errors — session is cleared client-side regardless
+    }
+    navigate("/", { replace: true });
   };
 
   const getInitials = (name: string) =>
