@@ -4,18 +4,20 @@
  * All authenticated pages use the header embedded in MainLayout.
  */
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import logo from "@/assets/logo.png";
 
 export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/90 backdrop-blur-xl border-b border-border/50 flex items-center px-6">
       <div className="flex w-full items-center justify-between max-w-7xl mx-auto">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="h-8 w-8 rounded-xl gradient-brand flex items-center justify-center group-hover:scale-105 transition-transform">
-            <Sparkles className="h-4 w-4 text-white" />
-          </div>
+          <img
+            src={logo}
+            alt="PureTask logo"
+            className="h-8 w-8 object-contain transition-transform group-hover:scale-105"
+          />
           <span className="font-bold text-lg text-foreground">PureTask</span>
         </Link>
         <div className="flex items-center gap-3">
