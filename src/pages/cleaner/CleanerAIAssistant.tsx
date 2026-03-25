@@ -327,7 +327,7 @@ export default function CleanerAIAssistant() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-2xl" style={{ border: "2px solid hsl(var(--warning))", boxShadow: "0 4px 24px -4px hsl(var(--warning)/0.25)", background: "hsl(var(--warning)/0.04)" }}>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Your Data</CardTitle>
               </CardHeader>
