@@ -113,13 +113,13 @@ export default function CleanerEarnings() {
           ) : (
             <>
               {[
-                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/10" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/10" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/10" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
-              ].map(({ label, value, icon: Icon, color, bg }, i) => (
+                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/20", border: "border-2 border-success/60", cardBg: "bg-success/10" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/20", border: "border-2 border-primary/60", cardBg: "bg-primary/10" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/20", border: "border-2 border-warning/60", cardBg: "bg-warning/10" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/20", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/10" },
+              ].map(({ label, value, icon: Icon, color, bg, border, cardBg }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-                   <Card className="hover:shadow-md transition-shadow">
+                   <Card className={`hover:shadow-md transition-shadow rounded-2xl ${border} ${cardBg}`}>
                      <CardContent className="p-3.5 sm:p-5">
                        <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${bg} flex items-center justify-center mb-2 sm:mb-3`}>
                          <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${color}`} />
@@ -136,10 +136,10 @@ export default function CleanerEarnings() {
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/10">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-primary/20 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
@@ -160,10 +160,10 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/10">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
+                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/20 flex items-center justify-center flex-shrink-0">
                   <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
                 </div>
                 <div>
@@ -186,10 +186,10 @@ export default function CleanerEarnings() {
 
         {/* Payout Options */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="border-primary/20">
+          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/10">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/20 flex items-center justify-center">
                   <Banknote className="h-5 w-5 text-primary" />
                 </div>
                 <div>
@@ -211,7 +211,7 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="bg-success/5 border-success/20">
+          <Card className="rounded-2xl border-2 border-success/60 bg-success/10">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
@@ -238,7 +238,7 @@ export default function CleanerEarnings() {
         </div>
 
         {/* History Tabs */}
-        <Card>
+        <Card className="rounded-2xl border-2 border-primary/50 bg-primary/5">
           <Tabs defaultValue="earnings">
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
               {["earnings", "payouts"].map(tab => (
