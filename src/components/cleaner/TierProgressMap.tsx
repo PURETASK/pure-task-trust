@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Trophy, Lock } from "lucide-react";
-import { TIER_CONFIGS, type CleanerTier } from "@/lib/tier-config";
+import { TIER_CONFIGS, TIER_VISUAL, type CleanerTier } from "@/lib/tier-config";
 
 const TIER_ORDER: CleanerTier[] = ["bronze", "silver", "gold", "platinum"];
 const TIER_MIN_SCORE: Record<CleanerTier, number> = {
@@ -18,20 +18,6 @@ const TIER_BENEFITS: Record<CleanerTier, string[]> = {
   silver: ["Lower 18% platform fee", "Priority support access", "Higher rate ceiling ($50/hr)"],
   gold: ["17% platform fee", "Featured in search results", "Instant payout enabled", "Rate up to $65/hr"],
   platinum: ["15% platform fee (lowest)", "Top placement in search", "Dedicated account manager", "Rate up to $100/hr"],
-};
-
-const TIER_RING_CLASSES: Record<CleanerTier, string> = {
-  bronze: "border-orange-500/50 bg-orange-500/10 text-orange-600",
-  silver: "border-slate-500/50 bg-slate-500/10 text-slate-500",
-  gold: "border-yellow-500/50 bg-yellow-500/10 text-yellow-500",
-  platinum: "border-sky-500/50 bg-sky-500/10 text-sky-500",
-};
-
-const TIER_EMOJIS: Record<CleanerTier, string> = {
-  bronze: "🥉",
-  silver: "🥈",
-  gold: "🥇",
-  platinum: "💎",
 };
 
 interface TierProgressMapProps {

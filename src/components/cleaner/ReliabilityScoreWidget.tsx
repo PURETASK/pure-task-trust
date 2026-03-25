@@ -13,14 +13,7 @@ import {
   CheckCircle2, Clock, Camera, Star, XCircle,
   TrendingUp, ArrowRight, Zap, AlertTriangle
 } from "lucide-react";
-import { getTierFromScore } from "@/lib/tier-config";
-
-const TIER_STYLES = {
-  bronze:   { gradient: "from-amber-500 to-amber-700",   badge: "bg-amber-500/10 text-amber-600 border-amber-500/30",   icon: "🥉", next: "Silver",   nextMin: 50  },
-  silver:   { gradient: "from-slate-400 to-slate-600",   badge: "bg-slate-400/10 text-slate-500 border-slate-400/30",   icon: "🥈", next: "Gold",    nextMin: 70  },
-  gold:     { gradient: "from-yellow-400 to-amber-500",  badge: "bg-yellow-400/10 text-yellow-600 border-yellow-400/30", icon: "🥇", next: "Platinum", nextMin: 90 },
-  platinum: { gradient: "from-violet-500 to-violet-700", badge: "bg-violet-500/10 text-violet-600 border-violet-500/30", icon: "💎", next: null,       nextMin: 100 },
-};
+import { getTierFromScore, TIER_VISUAL } from "@/lib/tier-config";
 
 interface MetricRowProps {
   icon: React.ElementType;
