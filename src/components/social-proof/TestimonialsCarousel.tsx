@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import { TestimonialCard } from "./TestimonialCard";
 import { useFeaturedTestimonials, type Testimonial } from "@/hooks/useFeaturedTestimonials";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const FALLBACK_TESTIMONIALS: Testimonial[] = [
   { id: "1", author_name: "Jennifer M.", author_role: "Busy Professional", author_location: "Austin, TX", quote: "Finally, a cleaning service I can trust! The GPS check-in and photo proof give me total peace of mind. My apartment has never looked better.", rating: 5, avatar_url: null },
@@ -22,14 +21,12 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
 ];
 
 export function TestimonialsCarousel() {
-  const { data: fetchedTestimonials, isLoading, isError } = useFeaturedTestimonials();
+  const { data: fetchedTestimonials } = useFeaturedTestimonials();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
-  // Use fallback data if fetch failed or returned empty
-  const testimonials = (isError || !fetchedTestimonials?.length) && !isLoading
-    ? FALLBACK_TESTIMONIALS
-    : (fetchedTestimonials ?? []);
+  // Always show fallback immediately; replace with real data if available
+  const testimonials = fetchedTestimonials?.length ? fetchedTestimonials : FALLBACK_TESTIMONIALS;
 
   const onSelect = useCallback(() => {
     if (!api) return;
@@ -53,22 +50,6 @@ export function TestimonialsCarousel() {
     }, 5000);
     return () => clearInterval(interval);
   }, [api, testimonials.length]);
-
-  if (isLoading) {
-    return (
-      <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30">
-        <div className="container px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-64 rounded-xl" />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (!testimonials.length) return null;
 
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30 overflow-x-hidden">
