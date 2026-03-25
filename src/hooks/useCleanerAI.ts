@@ -6,6 +6,7 @@ import { useAvailabilityBlocks } from './useAvailability';
 import { useCleanerReviews } from './useReviews';
 import { useMarketplaceJobs } from './useMarketplaceJobs';
 import { format, addDays, isAfter, isBefore } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
 type Message = {
   role: 'user' | 'assistant';
