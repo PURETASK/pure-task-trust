@@ -153,8 +153,27 @@ export default function CleanerAIAssistant() {
 
   return (
     <CleanerLayout>
-      {/* Robot background — left side, full height, highly visible */}
+      {/* Robot background — colored panel + robot */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
+        {/* Colored gradient panel behind the robot */}
+        <div
+          className="absolute inset-y-0 left-0"
+          style={{
+            width: "48%",
+            background: "linear-gradient(135deg, hsl(var(--primary)/0.18) 0%, hsl(var(--success)/0.12) 60%, transparent 100%)",
+            borderRight: "2px solid hsl(var(--primary)/0.35)",
+            boxShadow: "inset -8px 0 32px -8px hsl(var(--primary)/0.12)",
+          }}
+        />
+        {/* Secondary accent strip */}
+        <div
+          className="absolute inset-y-0 left-0"
+          style={{
+            width: "3px",
+            background: "linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--success)) 50%, hsl(var(--primary)) 100%)",
+            opacity: 0.7,
+          }}
+        />
         <img
           src={aiBotImg}
           alt=""
