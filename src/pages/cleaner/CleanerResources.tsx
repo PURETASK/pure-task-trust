@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { motion } from "framer-motion";
 import {
   FileText, TrendingUp, ShoppingBag, Lightbulb, Star, Clock,
   CheckCircle, Download, Mail, Printer, Shield, Zap, HeartHandshake,
-  Camera, Lock, Sparkles, ChevronRight, BookOpen
+  Camera, Lock, Sparkles, ChevronRight, BookOpen, ListChecks, ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
 
