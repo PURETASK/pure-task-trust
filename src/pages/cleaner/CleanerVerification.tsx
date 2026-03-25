@@ -499,7 +499,7 @@ export default function CleanerVerification() {
             <div className="bg-gradient-to-br from-primary to-primary/60 p-7 text-primary-foreground text-center">
               <Lock className="h-10 w-10 mx-auto mb-3 opacity-80" />
               <h3 className="text-xl font-bold mb-1">Your Data is Secure</h3>
-              <p className="text-white/75 text-sm max-w-md mx-auto">
+              <p className="text-primary-foreground/75 text-sm max-w-md mx-auto">
                 All documents are encrypted with AES-256 and stored securely. We never share your information with third parties without your explicit consent.
               </p>
             </div>
