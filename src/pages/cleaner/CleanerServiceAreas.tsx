@@ -33,6 +33,7 @@ export default function CleanerServiceAreas() {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [radius, setRadius] = useState(10);
+  const [previewRadius, setPreviewRadius] = useState(10);
 
   const handleAddArea = async () => {
     if (!city.trim() && !zipCode.trim()) {
