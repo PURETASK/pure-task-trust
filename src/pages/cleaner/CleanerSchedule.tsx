@@ -265,7 +265,7 @@ export default function CleanerSchedule() {
         </Card>
 
         {/* Selected Date Summary */}
-        <Card className="border-2 border-[hsl(280,70%,55%)]/40 rounded-2xl bg-[hsl(280,70%,55%)]/5">
+        <Card className="border-2 border-[hsl(280,70%,55%)]/50 rounded-2xl bg-[hsl(280,70%,55%)]/20">
           <CardContent className="p-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
