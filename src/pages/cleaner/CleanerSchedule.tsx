@@ -11,6 +11,7 @@ import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefca
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import scheduleBg from "@/assets/availability-bg.png";
 
 const TIER_FEE: Record<string, number> = {
   platinum: 0.15,
