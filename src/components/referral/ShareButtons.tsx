@@ -16,7 +16,7 @@ interface ShareButtonsProps {
 export function ShareButtons({ 
   referralLink, 
   referralCode, 
-  rewardAmount = 500,
+  rewardAmount = 25,
   variant = "grid",
   className = ""
 }: ShareButtonsProps) {
