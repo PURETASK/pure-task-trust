@@ -33,15 +33,11 @@ function AuthLoadingSkeleton() {
 
 export function RequireAuth({ children, allowedRoles, requireRole = true }: RequireAuthProps) {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
-  // Use isLoading (not isFetching) so cached data never blocks navigation
-  const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
+  const { needsRoleSelection, needsOnboarding, role } = useUserProfile();
   const location = useLocation();
 
-  // Only block if auth is loading OR profile is loading AND we don't yet have role data from AuthContext
-  // user.role from AuthContext is always available once auth resolves — don't block on profile query
-  const isLoading = authLoading || (isAuthenticated && profileLoading && !user?.role);
-
-  if (isLoading) {
+  // Only block on the initial auth check — never block once we know the auth state
+  if (authLoading) {
     return <AuthLoadingSkeleton />;
   }
 
@@ -54,9 +50,10 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <>{children}</>;
   }
 
-  // Check if user needs to select a role (for OAuth users without role metadata)
-  // Use profile-level needsRoleSelection only when profile data is ready; otherwise use AuthContext role
+  // Use role from AuthContext (set immediately after login), fall back to profile query role
   const effectiveRole = user?.role ?? role;
+
+  // Check if user needs to select a role (only when we know they don't have one)
   const hasNoRole = requireRole && !effectiveRole && needsRoleSelection;
   if (hasNoRole && location.pathname !== '/role-selection') {
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
@@ -69,9 +66,9 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <Navigate to="/cleaner/onboarding" replace />;
   }
 
-  // Check role if specified — use AuthContext role (always available after auth resolves)
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    const redirectPath = user.role === 'cleaner' ? '/cleaner/dashboard' : user.role === 'admin' ? '/admin/hub' : '/dashboard';
+  // Check role if specified — use effectiveRole so cleaners/admins get correct redirects
+  if (allowedRoles && effectiveRole && !allowedRoles.includes(effectiveRole)) {
+    const redirectPath = effectiveRole === 'cleaner' ? '/cleaner/dashboard' : effectiveRole === 'admin' ? '/admin/hub' : '/dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 
