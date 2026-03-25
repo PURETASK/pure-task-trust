@@ -91,7 +91,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     minScore: 0,
     maxScore: 49,
     platformFeePercent: 20,
-    hourlyRateRange: { min: 20, max: 35 },
+    hourlyRateRange: { min: 25, max: 35 },
     additionalServices: {
       oven: { min: 15, max: 20 },
       fridge: { min: 15, max: 20 },
