@@ -48,7 +48,7 @@ export default function CleanerReferral() {
   const shareVia = (channel: 'whatsapp' | 'sms' | 'email' | 'native') => {
     const code = referralCode?.code || '';
     const reward = referralCode?.reward_credits || 25;
-    const msg = `Use my code ${code} when signing up on PureTask and we both get $${reward} in credits! ${referralLink}`;
+    const msg = `Use my code ${code} when signing up on PureTask — complete 3 cleanings and we both get $${reward} in credits! ${referralLink}`;
     if (channel === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     else if (channel === 'sms') window.open(`sms:?body=${encodeURIComponent(msg)}`, '_blank');
     else if (channel === 'email') window.open(`mailto:?subject=Join PureTask and get $${reward} free!&body=${encodeURIComponent(msg)}`, '_blank');
