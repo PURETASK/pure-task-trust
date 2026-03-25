@@ -113,7 +113,10 @@ export default function CleanerEarnings() {
           ) : (
             <>
               {[
-                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/20", border: "border-2 border-success/60", cardBg: "bg-success/10" },
+                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/50", border: "border-2 border-success/60", cardBg: "bg-success/40" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/50", border: "border-2 border-primary/60", cardBg: "bg-primary/40" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/50", border: "border-2 border-warning/60", cardBg: "bg-warning/40" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/50", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/40" },
                 { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/20", border: "border-2 border-primary/60", cardBg: "bg-primary/10" },
                 { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/20", border: "border-2 border-warning/60", cardBg: "bg-warning/10" },
                 { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/20", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/10" },
@@ -136,10 +139,10 @@ export default function CleanerEarnings() {
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/10">
+          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-primary/20 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-primary/50 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
@@ -160,10 +163,10 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/10">
+          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/20 flex items-center justify-center flex-shrink-0">
+                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/50 flex items-center justify-center flex-shrink-0">
                   <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
                 </div>
                 <div>
@@ -186,10 +189,10 @@ export default function CleanerEarnings() {
 
         {/* Payout Options */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/10">
+          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/20 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/50 flex items-center justify-center">
                   <Banknote className="h-5 w-5 text-[hsl(280,70%,55%)]" />
                 </div>
                 <div>
@@ -211,10 +214,10 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-success/60 bg-success/10">
+          <Card className="rounded-2xl border-2 border-success/60 bg-success/40">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-success/10 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-success/50 flex items-center justify-center">
                   <PiggyBank className="h-5 w-5 text-success" />
                 </div>
                 <div>
