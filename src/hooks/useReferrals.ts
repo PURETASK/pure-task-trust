@@ -188,7 +188,7 @@ export function useReferrals() {
           referee_id: refereeId,
           referral_code: code.toUpperCase(),
           referee_role: role,
-          jobs_required: role === 'cleaner' ? 3 : 1, // Cleaners need 3 jobs, clients need 1
+          jobs_required: 3, // Both roles need 3 completed cleanings
           jobs_completed: 0,
           referrer_reward: referralCode.reward_credits,
           referee_reward: referralCode.referee_credits,
