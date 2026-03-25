@@ -1,12 +1,17 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Helmet } from "react-helmet-async";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Clock, CheckCircle, Calendar, Check, Target, Zap, ArrowUpRight, Banknote, PiggyBank, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  TrendingUp, DollarSign, Clock, CheckCircle, Target,
+  Zap, ArrowUpRight, Banknote, PiggyBank, Check,
+  ChevronRight, Wallet, ArrowRight, Calendar, Star
+} from "lucide-react";
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { format, addDays, startOfWeek } from "date-fns";
@@ -18,7 +23,6 @@ import { EarningsGoalPlanner } from "@/components/cleaner/EarningsGoalPlanner";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import earningsBg from "@/assets/earnings-bg.png";
 
 const WEEKLY_HOURS_GOAL = 20;
@@ -68,139 +72,138 @@ export default function CleanerEarnings() {
     }
   };
 
+  const fadeUp = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay, duration: 0.4 },
+  });
+
   return (
     <CleanerLayout>
       <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
-      {/* 3 background illustrations — top center + bottom corners in empty space */}
+
+      {/* Background illustrations */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
-        {/* Top-center — pushed up 30% more */}
-        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 33vmin))" }} />
-        {/* Bottom-left — pushed further into corner */}
-        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ left: "-20vmin", bottom: "-20vmin" }} />
-        {/* Bottom-right — pushed further into corner */}
-        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ right: "-20vmin", bottom: "-20vmin" }} />
+        <img src={earningsBg} alt="" aria-hidden="true"
+          className="absolute w-[90vmin] h-[90vmin] object-contain opacity-[0.06]"
+          style={{ right: "-20vmin", top: "5vmin" }} />
       </div>
-      <div className="space-y-6 relative z-10">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
-            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
-              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
+
+      <div className="space-y-5 relative z-10 max-w-6xl">
+
+        {/* ── HERO: Available Balance ─────────────────────────────── */}
+        <motion.div {...fadeUp(0)}>
+          <div className="relative overflow-hidden rounded-3xl p-8"
+            style={{
+              background: "linear-gradient(135deg, hsl(210,100%,20%) 0%, hsl(210,100%,35%) 50%, hsl(145,65%,30%) 100%)",
+              boxShadow: "0 20px 60px -10px hsl(210,100%,30%/0.5)"
+            }}>
+            {/* Glowing orbs */}
+            <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full opacity-20 blur-3xl"
+              style={{ background: "hsl(145,65%,47%)" }} />
+            <div className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full opacity-20 blur-3xl"
+              style={{ background: "hsl(190,100%,50%)" }} />
+
+            <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              {/* Left: balance */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Wallet className="h-4 w-4 text-white/60" />
+                  <span className="text-white/60 text-sm font-medium uppercase tracking-wider">Available to withdraw</span>
+                </div>
+                {isLoadingEarnings ? (
+                  <Skeleton className="h-16 w-48 bg-white/20" />
+                ) : (
+                  <div className="flex items-end gap-3">
+                    <span className="text-6xl font-black text-white leading-none">
+                      ${stats.availableBalance.toFixed(0)}
+                    </span>
+                    <span className="text-white/50 text-xl mb-1">.{(stats.availableBalance % 1).toFixed(2).slice(2)}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-white/50 text-sm">Total earned all time:</span>
+                  <span className="text-white font-bold text-sm">${stats.totalEarned.toFixed(0)}</span>
+                  <TrendingUp className="h-3.5 w-3.5 text-green-300" />
+                </div>
+              </div>
+
+              {/* Right: quick stats */}
+              <div className="grid grid-cols-3 gap-3 w-full lg:w-auto">
+                {[
+                  { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, sub: "in escrow", color: "bg-white/10 border-white/20" },
+                  { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, sub: "total released", color: "bg-white/10 border-white/20" },
+                  { label: "This Week", value: `$${forecastEarnings}`, sub: `${confirmedThisWeek.length} jobs`, color: "bg-white/10 border-white/20" },
+                ].map(s => (
+                  <div key={s.label} className={`rounded-2xl border ${s.color} px-4 py-3 text-white backdrop-blur-sm`}>
+                    <p className="text-white/60 text-xs mb-1">{s.label}</p>
+                    <p className="text-xl font-bold">{isLoadingEarnings ? '—' : s.value}</p>
+                    <p className="text-white/40 text-[11px]">{s.sub}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            Earnings & Payouts
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">Track your income, request payouts, and plan your goals</p>
+
+            {/* Progress bar: weekly hours */}
+            <div className="relative mt-6 pt-5 border-t border-white/15">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-white/70 text-xs font-medium">Weekly hours progress</span>
+                <span className="text-white font-bold text-sm">{forecastHours} / {WEEKLY_HOURS_GOAL}h</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: "linear-gradient(90deg, hsl(145,65%,47%), hsl(190,100%,50%))" }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${hoursProgress}%` }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                />
+              </div>
+              {hoursProgress >= 100 && (
+                <Badge className="mt-2 bg-green-400 text-green-950 border-0">🎉 Weekly goal hit!</Badge>
+              )}
+            </div>
+          </div>
         </motion.div>
 
-        {/* Goal Planner */}
+        {/* ── GOAL PLANNER ─────────────────────────────────────────── */}
         {profile?.id && (
-          <EarningsGoalPlanner cleanerId={profile.id} currentGoal={(profile as any).monthly_earnings_goal ?? null} earnings={earnings} />
+          <motion.div {...fadeUp(0.08)}>
+            <EarningsGoalPlanner cleanerId={profile.id} currentGoal={(profile as any).monthly_earnings_goal ?? null} earnings={earnings} />
+          </motion.div>
         )}
 
-        {/* Bank Account */}
-        <BankAccountStatus onStatusChange={setPayoutsEnabled} />
+        {/* ── BANK ACCOUNT ─────────────────────────────────────────── */}
+        <motion.div {...fadeUp(0.12)}>
+          <BankAccountStatus onStatusChange={setPayoutsEnabled} />
+        </motion.div>
 
-        {/* Key Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
-          {isLoadingEarnings ? (
-            <>{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}</>
-          ) : (
-            <>
-              {[
-                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/70", border: "border-2 border-success/80", cardBg: "bg-success/70" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
-              ].map(({ label, value, icon: Icon, color, bg, border, cardBg }, i) => (
-                <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-                   <Card className={`hover:shadow-md transition-shadow rounded-2xl ${border} ${cardBg}`}>
-                     <CardContent className="p-3.5 sm:p-5">
-                       <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${bg} flex items-center justify-center mb-2 sm:mb-3`}>
-                         <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${color}`} />
-                       </div>
-                       <div className="text-xs sm:text-sm text-muted-foreground">{label}</div>
-                       <div className="text-xl sm:text-2xl font-bold">{value}</div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </>
-          )}
-        </div>
-
-        {/* Forecast + Hours Goal */}
-        <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
-            <CardContent className="p-4 sm:p-6">
+        {/* ── PAYOUT METHODS ───────────────────────────────────────── */}
+        <motion.div {...fadeUp(0.16)}>
+          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
+            <Banknote className="h-5 w-5 text-primary" /> Payout Options
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Instant */}
+            <div className="rounded-2xl p-6 border-2 border-[hsl(280,70%,55%)]/70 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(280,70%,55%/0.12), hsl(280,70%,55%/0.04))" }}>
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-[hsl(280,70%,55%)] text-white border-0 text-[10px]">5% fee</Badge>
+              </div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-primary/50 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-primary" />
+                <div className="h-12 w-12 rounded-2xl flex items-center justify-center"
+                  style={{ background: "hsl(280,70%,55%/0.25)" }}>
+                  <Zap className="h-6 w-6 text-[hsl(280,70%,55%)]" />
                 </div>
                 <div>
-                  <p className="font-semibold">This Week's Forecast</p>
-                  <p className="text-xs text-muted-foreground">Based on your confirmed bookings</p>
+                  <h3 className="font-bold text-base">Instant Payout</h3>
+                  <p className="text-xs text-muted-foreground">Money in your account within minutes</p>
                 </div>
               </div>
-              <div className="text-3xl sm:text-4xl font-bold mb-2">${forecastEarnings}</div>
-              <p className="text-sm text-muted-foreground mb-1">
-                {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
-              </p>
-              {confirmedThisWeek.length === 0 && (
-                <p className="text-xs text-muted-foreground italic mt-2">Accept jobs from the marketplace to build your forecast.</p>
-              )}
-              <Button variant="outline" size="sm" className="mt-4 gap-2" asChild>
-                <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-2 border-warning/80 bg-warning/70">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/50 flex items-center justify-center flex-shrink-0">
-                  <Target className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
-                </div>
-                <div>
-                  <p className="font-semibold text-sm sm:text-base">Weekly Hours Goal</p>
-                  <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h per week</p>
-                </div>
+              <div className="text-4xl font-black mb-1" style={{ color: "hsl(280,70%,55%)" }}>
+                ${stats.availableBalance.toFixed(2)}
               </div>
-              <div className="flex items-end gap-2 mb-3">
-                <span className="text-3xl sm:text-4xl font-bold">{forecastHours}</span>
-                <span className="text-muted-foreground mb-1">/ {WEEKLY_HOURS_GOAL}h</span>
-                {hoursProgress >= 100 && <Badge variant="success" className="mb-1">Goal Met! 🎉</Badge>}
-              </div>
-              <Progress value={hoursProgress} className="h-2.5 mb-3" />
-              <p className="text-xs text-muted-foreground">
-                {hoursProgress >= 100 ? "Excellent! You've hit your weekly target." : `${hoursRemaining}h more to reach your goal`}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Payout Options */}
-        <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/80 bg-[hsl(280,70%,55%)]/70">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/50 flex items-center justify-center">
-                  <Banknote className="h-5 w-5 text-[hsl(280,70%,55%)]" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Instant Payout</h3>
-                  <p className="text-sm text-muted-foreground">5% fee · Available now</p>
-                </div>
-              </div>
-              <div className="text-3xl font-bold mb-4">${stats.availableBalance.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground mb-4">Available balance</p>
               <InstantPayoutButton
                 availableBalance={stats.availableBalance}
                 onRequestPayout={handleInstantPayout}
@@ -211,61 +214,163 @@ export default function CleanerEarnings() {
               {!payoutsEnabled && stats.availableBalance >= 10 && (
                 <p className="text-xs text-muted-foreground mt-2">Connect your bank account to enable payouts</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card className="rounded-2xl border-2 border-success/80 bg-success/70">
-            <CardContent className="p-4 sm:p-6">
+            {/* Weekly */}
+            <div className="rounded-2xl p-6 border-2 border-success/70 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(145,65%,47%/0.12), hsl(145,65%,47%/0.04))" }}>
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-success text-success-foreground border-0 text-[10px]">Free</Badge>
+              </div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-11 w-11 rounded-xl bg-success/50 flex items-center justify-center">
-                  <PiggyBank className="h-5 w-5 text-success" />
+                <div className="h-12 w-12 rounded-2xl bg-success/25 flex items-center justify-center">
+                  <PiggyBank className="h-6 w-6 text-success" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Weekly Payout</h3>
-                  <p className="text-sm text-muted-foreground">Free · Every Friday</p>
+                  <h3 className="font-bold text-base">Weekly Payout</h3>
+                  <p className="text-xs text-muted-foreground">Automatic every Friday — no fees</p>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Next payout: <strong>{getNextFriday()}</strong></p>
-              <div className="text-3xl font-bold text-success mb-4">
+              <div className="text-4xl font-black text-success mb-1">
                 ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(2) : '0.00'}
               </div>
-              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground mb-4">Next payout: <strong>{getNextFriday()}</strong></p>
+              <div className="flex flex-wrap gap-2">
                 {["No fees", "Automatic", "Min. $20"].map(t => (
-                  <span key={t} className="flex items-center gap-1.5 bg-success/10 px-2.5 py-1 rounded-full text-success font-medium">
+                  <span key={t} className="flex items-center gap-1.5 bg-success/15 border border-success/30 px-3 py-1 rounded-full text-success text-xs font-semibold">
                     <Check className="h-3 w-3" />{t}
                   </span>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
+        </motion.div>
 
-        {/* History Tabs */}
-        <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
-          <Tabs defaultValue="earnings">
-            <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
-              {["earnings", "payouts"].map(tab => (
-                <TabsTrigger
-                  key={tab}
-                  value={tab}
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3 capitalize"
-                >
-                  {tab}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <TabsContent value="earnings">
-              <CardContent>
+        {/* ── WEEK AT A GLANCE ─────────────────────────────────────── */}
+        <motion.div {...fadeUp(0.2)}>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Forecast */}
+            <div className="rounded-2xl border-2 border-primary/70 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(210,100%,50%/0.12), hsl(210,100%,50%/0.04))" }}>
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-11 w-11 rounded-2xl bg-primary/20 flex items-center justify-center">
+                    <Calendar className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-bold">This Week's Forecast</p>
+                    <p className="text-xs text-muted-foreground">Confirmed bookings</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-end gap-2 mb-1">
+                <span className="text-5xl font-black text-primary">${forecastEarnings}</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
+              </p>
+              {confirmedThisWeek.length === 0 ? (
+                <Button variant="outline" size="sm" className="gap-2 rounded-xl border-primary/40 text-primary hover:bg-primary/10" asChild>
+                  <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
+                </Button>
+              ) : (
+                <div className="space-y-2">
+                  {confirmedThisWeek.slice(0, 3).map((j, i) => (
+                    <div key={j.id} className="flex items-center justify-between bg-primary/10 rounded-xl px-3 py-2">
+                      <span className="text-xs font-medium">{j.cleaning_type || 'Cleaning'}</span>
+                      <span className="text-xs font-bold text-primary">${j.escrow_credits_reserved || 0}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Hours goal */}
+            <div className="rounded-2xl border-2 border-warning/70 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(38,95%,55%/0.12), hsl(38,95%,55%/0.04))" }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-11 w-11 rounded-2xl bg-warning/20 flex items-center justify-center">
+                  <Target className="h-5 w-5 text-warning" />
+                </div>
+                <div>
+                  <p className="font-bold">Weekly Hours Goal</p>
+                  <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h this week</p>
+                </div>
+              </div>
+
+              {/* Circular-style progress */}
+              <div className="flex items-center gap-6 mb-4">
+                <div className="relative h-24 w-24 shrink-0">
+                  <svg className="h-24 w-24 -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(38,95%,55%/0.15)" strokeWidth="10" />
+                    <motion.circle
+                      cx="50" cy="50" r="40" fill="none"
+                      stroke="hsl(38,95%,55%)"
+                      strokeWidth="10"
+                      strokeLinecap="round"
+                      strokeDasharray={`${2 * Math.PI * 40}`}
+                      initial={{ strokeDashoffset: 2 * Math.PI * 40 }}
+                      animate={{ strokeDashoffset: 2 * Math.PI * 40 * (1 - hoursProgress / 100) }}
+                      transition={{ duration: 1.2, delay: 0.3 }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-black text-warning leading-none">{forecastHours}</span>
+                    <span className="text-[10px] text-muted-foreground">of {WEEKLY_HOURS_GOAL}h</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  {hoursProgress >= 100 ? (
+                    <div className="flex items-center gap-2 text-success font-bold">
+                      <Star className="h-5 w-5 fill-current" /> Goal hit!
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-3xl font-black text-warning">{hoursRemaining}h</p>
+                      <p className="text-sm text-muted-foreground">remaining to reach goal</p>
+                    </>
+                  )}
+                  <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl border-warning/40 text-warning hover:bg-warning/10 text-xs" asChild>
+                    <a href="/cleaner/marketplace">Find more jobs <ArrowRight className="h-3 w-3" /></a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── EARNINGS HISTORY ─────────────────────────────────────── */}
+        <motion.div {...fadeUp(0.26)}>
+          <div className="rounded-2xl border-2 border-border overflow-hidden">
+            <Tabs defaultValue="earnings">
+              <div className="bg-muted/30 border-b border-border px-6 pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="font-bold text-base flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-primary" /> Transaction History
+                  </h2>
+                </div>
+                <TabsList className="bg-transparent h-auto p-0 gap-1">
+                  {["earnings", "payouts"].map(tab => (
+                    <TabsTrigger
+                      key={tab}
+                      value={tab}
+                      className="rounded-t-xl rounded-b-none border border-b-0 border-transparent data-[state=active]:border-border data-[state=active]:bg-background data-[state=active]:shadow-none px-5 py-2 capitalize text-sm"
+                    >
+                      {tab === "earnings" ? "💰 Earnings" : "🏦 Payouts"}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+              <TabsContent value="earnings" className="p-5 mt-0">
                 <EarningsBreakdown earnings={earnings} isLoading={isLoadingEarnings} />
-              </CardContent>
-            </TabsContent>
-            <TabsContent value="payouts">
-              <CardContent>
+              </TabsContent>
+              <TabsContent value="payouts" className="p-5 mt-0">
                 <PayoutHistoryTable payouts={payouts} isLoading={isLoadingEarnings} />
-              </CardContent>
-            </TabsContent>
-          </Tabs>
-        </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </motion.div>
+
       </div>
     </CleanerLayout>
   );
