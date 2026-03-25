@@ -299,7 +299,7 @@ export default function CleanerEarnings() {
               </p>
               {confirmedThisWeek.length === 0 ? (
                 <Button variant="outline" size="sm" className="gap-2 rounded-xl border-2 border-primary/40 text-primary hover:bg-primary/10" asChild>
-                  <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
+                  <a href="/cleaner/availability">Update Availability <ArrowUpRight className="h-3.5 w-3.5" /></a>
                 </Button>
               ) : (
                 <div className="space-y-2">

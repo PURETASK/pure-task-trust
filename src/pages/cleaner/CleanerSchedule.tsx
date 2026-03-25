@@ -439,9 +439,9 @@ export default function CleanerSchedule() {
                     </div>
                   </div>
                   <Button size="sm" variant="outline" className="gap-1.5 flex-shrink-0" asChild>
-                    <Link to="/cleaner/marketplace">
+                    <Link to="/cleaner/schedule">
                       <Search className="h-3.5 w-3.5" />
-                      Find Jobs
+                      View Schedule
                     </Link>
                   </Button>
                 </CardContent>
