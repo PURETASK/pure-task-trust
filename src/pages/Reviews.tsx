@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Filter, MessageSquare, TrendingUp, Award, Sparkles } from "lucide-react";
+import { Star, Filter, MessageSquare, TrendingUp, Award, Sparkles, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SEO } from "@/components/seo";
@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 
 interface Review { id: string; rating: number; review_text: string | null; created_at: string; }
 const RATINGS_FILTER = [5, 4, 3, 2, 1] as const;
@@ -46,10 +47,11 @@ export default function Reviews() {
         <div className="absolute top-20 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
         <div className="container relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-amber-500/10 text-amber-600 border-amber-500/20 text-sm px-4 py-1.5">
-              <Star className="h-4 w-4 mr-2 fill-amber-500" />Verified Reviews
-            </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">Real People,<br />Real Results</h1>
+            {/* Badge — plain div to avoid framer-motion ref warning */}
+            <div className="inline-flex items-center gap-2 mb-6 bg-amber-500/10 text-amber-600 border border-amber-500/20 text-sm px-4 py-1.5 rounded-full font-medium">
+              <Star className="h-4 w-4 fill-amber-500" />Verified Reviews
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Real People,<br />Real Results</h1>
             <p className="text-xl text-muted-foreground mb-10">Every review is from a verified customer who experienced PureTask firsthand</p>
 
             {/* Rating Display */}
@@ -101,11 +103,36 @@ export default function Reviews() {
               {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}
             </div>
           ) : !reviews?.length ? (
-            <Card className="p-16 text-center border-dashed">
-              <MessageSquare className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-foreground mb-2">No reviews yet</h3>
-              <p className="text-muted-foreground">{filterRating ? `No ${filterRating}-star reviews found.` : "Be the first!"}</p>
-            </Card>
+            <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
+              <div className="h-20 w-20 rounded-full bg-amber-500/10 border-2 border-amber-500/20 flex items-center justify-center mx-auto mb-6">
+                <MessageSquare className="h-10 w-10 text-amber-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">
+                {filterRating ? `No ${filterRating}-star reviews yet` : "Be Among the First to Review!"}
+              </h3>
+              <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
+                {filterRating
+                  ? `No ${filterRating}-star reviews found. Try a different filter or check back later.`
+                  : "Reviews are submitted after a completed cleaning. Book your first clean and share your experience — it helps the whole community!"}
+              </p>
+              {!filterRating && (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button asChild size="lg" className="rounded-full gap-2">
+                    <Link to="/discover">
+                      Find a Cleaner <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="rounded-full">
+                    <Link to="/pricing">View Pricing</Link>
+                  </Button>
+                </div>
+              )}
+              {filterRating && (
+                <Button variant="outline" size="sm" onClick={() => setFilterRating(null)} className="rounded-full">
+                  Clear Filter
+                </Button>
+              )}
+            </div>
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map((review, index) => (
