@@ -307,7 +307,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
-              <Card className="border-2 border-warning/20 rounded-2xl">
+              <Card className="border-2 border-warning/30 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No job requests for this day.
                 </CardContent>
@@ -315,7 +315,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {pendingJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/30 rounded-2xl bg-warning/5">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/40 rounded-2xl bg-warning/20">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -365,7 +365,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
-              <Card className="border-2 border-success/20 rounded-2xl">
+              <Card className="border-2 border-success/30 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No accepted jobs for this day.
                 </CardContent>
@@ -373,7 +373,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {acceptedJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/30 rounded-2xl bg-success/5">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/40 rounded-2xl bg-success/20">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -424,7 +424,7 @@ export default function CleanerSchedule() {
               Free Time Gaps — Fill Your Schedule
             </h3>
             {gaps.map((gap, i) => (
-              <Card key={i} className="border-primary/30 bg-primary/5">
+              <Card key={i} className="border-primary/40 bg-primary/20">
                 <CardContent className="p-4 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
