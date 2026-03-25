@@ -103,7 +103,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     minScore: 0,
     maxScore: 49,
     platformFeePercent: 20,
-    hourlyRateRange: { min: 20, max: 35 },
+    hourlyRateRange: { min: 20, max: 30 },
     additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   silver: {
@@ -112,7 +112,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     minScore: 50,
     maxScore: 69,
     platformFeePercent: 18,
-    hourlyRateRange: { min: 20, max: 50 },
+    hourlyRateRange: { min: 20, max: 40 },
     additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   gold: {
@@ -121,7 +121,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     minScore: 70,
     maxScore: 89,
     platformFeePercent: 17,
-    hourlyRateRange: { min: 20, max: 65 },
+    hourlyRateRange: { min: 20, max: 50 },
     additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
   platinum: {
@@ -130,7 +130,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
     minScore: 90,
     maxScore: 100,
     platformFeePercent: 15,
-    hourlyRateRange: { min: 20, max: 100 },
+    hourlyRateRange: { min: 20, max: 65 },
     additionalServices: ALL_TIER_ADDITIONAL_SERVICES,
   },
 };
