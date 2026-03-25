@@ -12,6 +12,7 @@ import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePostSignup } from "@/hooks/usePostSignup";
+import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
