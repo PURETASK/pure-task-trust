@@ -14,10 +14,10 @@ const TIER_MIN_SCORE: Record<CleanerTier, number> = {
 };
 
 const TIER_BENEFITS: Record<CleanerTier, string[]> = {
-  bronze: ["Access to marketplace", "Weekly payouts ($20 min)", "Basic profile listing"],
-  silver: ["Lower 18% platform fee", "Priority support access", "Higher rate ceiling ($50/hr)"],
-  gold: ["17% platform fee", "Featured in search results", "Instant payout enabled", "Rate up to $65/hr"],
-  platinum: ["15% platform fee (lowest)", "Top placement in search", "Dedicated account manager", "Rate up to $100/hr"],
+  bronze: ["Access to platform", "Weekly payouts ($20 min)", "Basic profile listing"],
+  silver: ["Lower 18% platform fee", "Priority support access", "Higher rate ceiling ($40/hr)"],
+  gold: ["17% platform fee", "Featured in search results", "Instant payout enabled", "Rate up to $50/hr"],
+  platinum: ["15% platform fee (lowest)", "Top placement in search", "Dedicated account manager", "Rate up to $65/hr"],
 };
 
 interface TierProgressMapProps {

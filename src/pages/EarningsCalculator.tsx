@@ -34,9 +34,9 @@ const TIERS = [
 
 const SCENARIOS = [
   { label: '🌱 Side Hustle', hoursPerWeek: 10, rate: 25, score: 30, weeksPerYear: 40, desc: '~2 jobs/week' },
-  { label: '⚡ Part-Time',   hoursPerWeek: 20, rate: 35, score: 55, weeksPerYear: 46, desc: '~4 jobs/week' },
-  { label: '🔥 Full-Time',   hoursPerWeek: 32, rate: 45, score: 75, weeksPerYear: 48, desc: '~6 jobs/week' },
-  { label: '💎 Top Earner',  hoursPerWeek: 40, rate: 70, score: 92, weeksPerYear: 50, desc: 'Platinum tier' },
+  { label: '⚡ Part-Time',   hoursPerWeek: 20, rate: 30, score: 55, weeksPerYear: 46, desc: '~4 jobs/week' },
+  { label: '🔥 Full-Time',   hoursPerWeek: 32, rate: 40, score: 75, weeksPerYear: 48, desc: '~6 jobs/week' },
+  { label: '💎 Top Earner',  hoursPerWeek: 40, rate: 65, score: 92, weeksPerYear: 50, desc: 'Platinum tier' },
 ];
 
 function getTier(score: number) {
@@ -185,8 +185,8 @@ export default function EarningsCalculator() {
             <SliderRow
               label="Rate per hour" icon={DollarSign} iconClass="text-success"
               value={ratePerHour} display={`$${ratePerHour}/hr`}
-              min={20} max={100} step={1} onChange={setRatePerHour}
-              minLabel="$20 (entry)" maxLabel="$100 (Platinum max)"
+              min={20} max={65} step={1} onChange={setRatePerHour}
+              minLabel="$20 (entry)" maxLabel="$65 (Platinum max)"
             />
 
             <SliderRow

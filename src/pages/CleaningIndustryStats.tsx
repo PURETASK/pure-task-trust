@@ -61,10 +61,10 @@ const HEADLINE_STATS = [
 ];
 
 const EARNINGS_DATA = [
-  { tier: 'Entry (Bronze)', hourly: '$20–35', monthly: '$1,600–2,800', annual: '$19K–34K', fee: '20%', borderClass: 'border-border/50', badgeClass: 'bg-muted/40 text-muted-foreground border-border/40' },
-  { tier: 'Mid (Silver)', hourly: '$30–50', monthly: '$2,400–4,000', annual: '$29K–48K', fee: '18%', borderClass: 'border-primary/30', badgeClass: 'bg-primary/10 text-primary border-primary/30' },
-  { tier: 'Experienced (Gold)', hourly: '$40–65', monthly: '$3,200–5,200', annual: '$38K–62K', fee: '17%', borderClass: 'border-warning/30', badgeClass: 'bg-warning/10 text-warning border-warning/30' },
-  { tier: 'Top (Platinum)', hourly: '$50–100', monthly: '$4,000–8,000', annual: '$48K–96K', fee: '15%', borderClass: 'border-[hsl(var(--pt-purple))]/30', badgeClass: 'bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple))]/30' },
+  { tier: 'Entry (Bronze)', hourly: '$20–30', monthly: '$1,600–2,400', annual: '$19K–29K', fee: '20%', borderClass: 'border-border/50', badgeClass: 'bg-muted/40 text-muted-foreground border-border/40' },
+  { tier: 'Mid (Silver)', hourly: '$20–40', monthly: '$1,600–3,200', annual: '$19K–38K', fee: '18%', borderClass: 'border-primary/30', badgeClass: 'bg-primary/10 text-primary border-primary/30' },
+  { tier: 'Experienced (Gold)', hourly: '$20–50', monthly: '$1,600–4,000', annual: '$19K–48K', fee: '17%', borderClass: 'border-warning/30', badgeClass: 'bg-warning/10 text-warning border-warning/30' },
+  { tier: 'Top (Platinum)', hourly: '$20–65', monthly: '$1,600–5,200', annual: '$19K–62K', fee: '15%', borderClass: 'border-[hsl(var(--pt-purple))]/30', badgeClass: 'bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple))]/30' },
 ];
 
 const PRICING_DATA = [
