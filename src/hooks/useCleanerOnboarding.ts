@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCleanerProfile } from '@/hooks/useCleanerProfile';
 import { AvailabilityData } from '@/components/onboarding/AvailabilityStep';
 
-export type OnboardingStep = 
+export type OnboardingStep =
   | 'terms'
-  | 'basic-info' 
+  | 'basic-info'
   | 'phone-verification'
-  | 'face-verification' 
-  | 'id-verification' 
+  | 'face-verification'
+  | 'id-verification'
   | 'background-consent'
   | 'service-areas'
   | 'availability'
-  | 'rates' 
+  | 'rates'
   | 'review';
 
 const STEPS: OnboardingStep[] = [
@@ -62,8 +62,34 @@ export function useCleanerOnboarding() {
     availableDays: 0,
   });
 
+  // Keep a ref to the latest profile id so mutations always have the freshest value
+  // even if the React state hasn't re-rendered yet.
+  const profileIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (profile?.id) profileIdRef.current = profile.id;
+  }, [profile?.id]);
+
+  // Helper: get the current cleaner profile id — from ref (latest) or a fresh DB fetch
+  const getCleanerProfileId = async (): Promise<string> => {
+    if (profileIdRef.current) return profileIdRef.current;
+    if (!user?.id) throw new Error('Not authenticated');
+
+    // Try a fresh fetch
+    const { data, error } = await supabase
+      .from('cleaner_profiles')
+      .select('id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (data?.id) {
+      profileIdRef.current = data.id;
+      return data.id;
+    }
+    throw new Error('No cleaner profile found. Please restart onboarding.');
+  };
+
   // Load saved step from database on mount.
-  // If profile is null (new cleaner) or populated, mark initialized immediately.
   useEffect(() => {
     if (!isInitialized && !profileLoading) {
       if (profile) {
@@ -82,11 +108,12 @@ export function useCleanerOnboarding() {
 
   // Save step to database
   const saveStepToDatabase = async (step: OnboardingStep) => {
-    if (!profile?.id) return;
+    const id = profileIdRef.current;
+    if (!id) return;
     await supabase
       .from('cleaner_profiles')
       .update({ onboarding_current_step: step })
-      .eq('id', profile.id);
+      .eq('id', id);
   };
 
   const setCurrentStep = (step: OnboardingStep) => {
@@ -114,20 +141,18 @@ export function useCleanerOnboarding() {
 
   // Invalidate all profile-related queries
   const invalidateProfile = () => {
-    // Invalidate both with and without user ID suffix
     queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
   };
 
-  // Step 1: Terms & Agreements
+  // ─── STEP 1: Terms & Agreements ───────────────────────────────────────────
   const saveTermsMutation = useMutation({
     mutationFn: async () => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      // Ensure cleaner profile exists before saving agreements
-      let cleanerProfileId = profile?.id;
+      // Ensure cleaner profile exists
+      let cleanerProfileId = profileIdRef.current;
       if (!cleanerProfileId) {
-        // Try to fetch it fresh (may have been created by DB trigger)
         const { data: freshProfile } = await supabase
           .from('cleaner_profiles')
           .select('id')
@@ -136,10 +161,8 @@ export function useCleanerOnboarding() {
 
         if (freshProfile?.id) {
           cleanerProfileId = freshProfile.id;
-          // Use exact key with user.id to avoid a full cache bust → re-loading spinner
-          queryClient.invalidateQueries({ queryKey: ['cleaner-profile', user.id] });
+          profileIdRef.current = cleanerProfileId;
         } else {
-          // Create profile if it still doesn't exist
           const { data: newProfile, error: createError } = await supabase
             .from('cleaner_profiles')
             .insert({ user_id: user.id })
@@ -147,31 +170,35 @@ export function useCleanerOnboarding() {
             .single();
           if (createError) throw createError;
           cleanerProfileId = newProfile.id;
-          queryClient.invalidateQueries({ queryKey: ['cleaner-profile', user.id] });
-          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+          profileIdRef.current = cleanerProfileId;
         }
+        // Refresh cache with the exact key so isLoading stays false
+        queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY, user.id] });
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       }
 
-      const agreements = [
-        {
-          cleaner_id: cleanerProfileId,
-          agreement_type: 'terms_of_service',
-          version: '1.0',
-          user_agent: navigator.userAgent,
-        },
-        {
-          cleaner_id: cleanerProfileId,
-          agreement_type: 'independent_contractor',
-          version: '1.0',
-          user_agent: navigator.userAgent,
-        },
-      ];
+      // Upsert agreements — use ON CONFLICT DO NOTHING to be idempotent
+      // (no unique constraint exists, so we check first then insert)
+      const agreementTypes = ['terms_of_service', 'independent_contractor'];
+      for (const agreementType of agreementTypes) {
+        const { data: existing } = await supabase
+          .from('cleaner_agreements')
+          .select('id')
+          .eq('cleaner_id', cleanerProfileId)
+          .eq('agreement_type', agreementType)
+          .maybeSingle();
 
-      // Use upsert-style: skip if already exists (ignore duplicate key errors)
-      const { error } = await supabase
-        .from('cleaner_agreements')
-        .insert(agreements);
-      if (error && !error.message.includes('duplicate')) throw error;
+        if (!existing) {
+          const { error } = await supabase.from('cleaner_agreements').insert({
+            cleaner_id: cleanerProfileId,
+            agreement_type: agreementType,
+            version: '1.0',
+            user_agent: navigator.userAgent,
+          });
+          // Only throw on non-duplicate errors
+          if (error && !error.message.toLowerCase().includes('duplicate')) throw error;
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
@@ -179,11 +206,10 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 2: Basic Info
+  // ─── STEP 2: Basic Info ───────────────────────────────────────────────────
   const saveBasicInfoMutation = useMutation({
     mutationFn: async (data: BasicInfoData) => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
-
+      const cleanerProfileId = await getCleanerProfileId();
       const { error } = await supabase
         .from('cleaner_profiles')
         .update({
@@ -191,8 +217,7 @@ export function useCleanerOnboarding() {
           last_name: data.lastName,
           bio: data.bio,
         })
-        .eq('id', profile.id);
-
+        .eq('id', cleanerProfileId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -201,15 +226,31 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 3: Phone Verification - handled in component, just advance
-  const completePhoneVerification = () => {
+  // ─── STEP 3: Phone Verification ───────────────────────────────────────────
+  // Saves phone number to cleaner_profiles after OTP is verified
+  const savePhoneToProfile = async (phoneNumber: string) => {
+    try {
+      const cleanerProfileId = await getCleanerProfileId();
+      await supabase
+        .from('cleaner_profiles')
+        .update({ phone_number: phoneNumber })
+        .eq('id', cleanerProfileId);
+      invalidateProfile();
+    } catch {
+      // Non-blocking — phone save failure shouldn't block progression
+    }
+  };
+
+  const completePhoneVerification = (phoneNumber?: string) => {
+    if (phoneNumber) savePhoneToProfile(phoneNumber);
     goToNextStep();
   };
 
-  // Step 4: Face Photo
+  // ─── STEP 4: Face Photo ───────────────────────────────────────────────────
   const saveFacePhotoMutation = useMutation({
     mutationFn: async (file: File) => {
-      if (!user?.id || !profile?.id) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
+      const cleanerProfileId = await getCleanerProfileId();
 
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/face-${Date.now()}.${fileExt}`;
@@ -217,7 +258,6 @@ export function useCleanerOnboarding() {
       const { error: uploadError } = await supabase.storage
         .from('profile-photos')
         .upload(fileName, file, { upsert: true });
-
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
@@ -227,8 +267,7 @@ export function useCleanerOnboarding() {
       const { error: updateError } = await supabase
         .from('cleaner_profiles')
         .update({ profile_photo_url: publicUrl })
-        .eq('id', profile.id);
-
+        .eq('id', cleanerProfileId);
       if (updateError) throw updateError;
 
       return publicUrl;
@@ -239,10 +278,11 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 5: ID Verification
+  // ─── STEP 5: ID Verification ──────────────────────────────────────────────
   const saveIdDocumentMutation = useMutation({
     mutationFn: async ({ file, documentType }: { file: File; documentType: string }) => {
-      if (!user?.id || !profile?.id) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
+      const cleanerProfileId = await getCleanerProfileId();
 
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${documentType}-${Date.now()}.${fileExt}`;
@@ -250,19 +290,33 @@ export function useCleanerOnboarding() {
       const { error: uploadError } = await supabase.storage
         .from('identity-documents')
         .upload(fileName, file, { upsert: true });
-
       if (uploadError) throw uploadError;
 
-      const { error: verifyError } = await supabase
+      // Check for existing verification to avoid duplicate
+      const { data: existing } = await supabase
         .from('id_verifications')
-        .insert({
-          cleaner_id: profile.id,
-          document_type: documentType,
-          status: 'pending',
-          document_url: fileName,
-        });
+        .select('id')
+        .eq('cleaner_id', cleanerProfileId)
+        .eq('document_type', documentType)
+        .maybeSingle();
 
-      if (verifyError) throw verifyError;
+      if (!existing) {
+        const { error: verifyError } = await supabase
+          .from('id_verifications')
+          .insert({
+            cleaner_id: cleanerProfileId,
+            document_type: documentType,
+            status: 'pending',
+            document_url: fileName,
+          });
+        if (verifyError) throw verifyError;
+      } else {
+        // Update the document URL if re-uploading
+        await supabase
+          .from('id_verifications')
+          .update({ document_url: fileName, status: 'pending' })
+          .eq('id', existing.id);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['id-verifications'] });
@@ -270,30 +324,39 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 6: Background Check Consent
+  // ─── STEP 6: Background Check Consent ────────────────────────────────────
   const saveBackgroundConsentMutation = useMutation({
     mutationFn: async () => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
+      const cleanerProfileId = await getCleanerProfileId();
 
-      // Save consent agreement — skip if duplicate
-      const { error: agreementError } = await supabase.from('cleaner_agreements').insert({
-        cleaner_id: profile.id,
-        agreement_type: 'background_check_consent',
-        version: '1.0',
-        user_agent: navigator.userAgent,
-      });
-      if (agreementError && !agreementError.message.includes('duplicate')) throw agreementError;
-
-      // Only create background check if one doesn't already exist
-      const { data: existing } = await supabase
-        .from('background_checks')
+      // Check if consent already exists
+      const { data: existingConsent } = await supabase
+        .from('cleaner_agreements')
         .select('id')
-        .eq('cleaner_id', profile.id)
+        .eq('cleaner_id', cleanerProfileId)
+        .eq('agreement_type', 'background_check_consent')
         .maybeSingle();
 
-      if (!existing) {
+      if (!existingConsent) {
+        const { error: agreementError } = await supabase.from('cleaner_agreements').insert({
+          cleaner_id: cleanerProfileId,
+          agreement_type: 'background_check_consent',
+          version: '1.0',
+          user_agent: navigator.userAgent,
+        });
+        if (agreementError && !agreementError.message.toLowerCase().includes('duplicate')) throw agreementError;
+      }
+
+      // Only create background check if one doesn't already exist
+      const { data: existingCheck } = await supabase
+        .from('background_checks')
+        .select('id')
+        .eq('cleaner_id', cleanerProfileId)
+        .maybeSingle();
+
+      if (!existingCheck) {
         const { error: checkError } = await supabase.from('background_checks').insert({
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           status: 'pending',
           provider: 'checkr',
         });
@@ -307,36 +370,31 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 7: Service Areas
+  // ─── STEP 7: Service Areas ────────────────────────────────────────────────
   const saveServiceAreasMutation = useMutation({
     mutationFn: async (data: ServiceAreaData) => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
+      const cleanerProfileId = await getCleanerProfileId();
 
-      // Update travel radius on profile
       const { error: profileError } = await supabase
         .from('cleaner_profiles')
         .update({ travel_radius_km: data.travelRadius })
-        .eq('id', profile.id);
-
+        .eq('id', cleanerProfileId);
       if (profileError) throw profileError;
 
-      // Delete existing service areas
+      // Delete existing service areas then insert fresh
       await supabase
         .from('cleaner_service_areas')
         .delete()
-        .eq('cleaner_id', profile.id);
+        .eq('cleaner_id', cleanerProfileId);
 
-      // Insert new service areas
       if (data.selectedAreas.length > 0) {
         const serviceAreas = data.selectedAreas.map((zipCode) => ({
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           zip_code: zipCode,
         }));
-
         const { error: areasError } = await supabase
           .from('cleaner_service_areas')
           .insert(serviceAreas);
-
         if (areasError) throw areasError;
       }
 
@@ -351,31 +409,25 @@ export function useCleanerOnboarding() {
 
   // Map day name to number for database
   const dayToNumber: Record<string, number> = {
-    monday: 1,
-    tuesday: 2,
-    wednesday: 3,
-    thursday: 4,
-    friday: 5,
-    saturday: 6,
-    sunday: 0,
+    monday: 1, tuesday: 2, wednesday: 3, thursday: 4,
+    friday: 5, saturday: 6, sunday: 0,
   };
 
-  // Step 8: Availability
+  // ─── STEP 8: Availability ─────────────────────────────────────────────────
   const saveAvailabilityMutation = useMutation({
     mutationFn: async (data: AvailabilityData) => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
+      const cleanerProfileId = await getCleanerProfileId();
 
       // Delete existing availability blocks
       await supabase
         .from('availability_blocks')
         .delete()
-        .eq('cleaner_id', profile.id);
+        .eq('cleaner_id', cleanerProfileId);
 
-      // Insert new blocks for enabled days
       const blocks = Object.entries(data.schedule)
         .filter(([_, schedule]) => schedule.enabled)
         .map(([day, schedule]) => ({
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           day_of_week: dayToNumber[day] ?? 1,
           start_time: schedule.startTime,
           end_time: schedule.endTime,
@@ -395,19 +447,17 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 9: Rates
+  // ─── STEP 9: Rates ────────────────────────────────────────────────────────
   const saveRatesMutation = useMutation({
     mutationFn: async (data: RatesData) => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
-
+      const cleanerProfileId = await getCleanerProfileId();
       const { error } = await supabase
         .from('cleaner_profiles')
         .update({
           hourly_rate_credits: data.hourlyRate,
           travel_radius_km: data.travelRadius,
         })
-        .eq('id', profile.id);
-
+        .eq('id', cleanerProfileId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -416,23 +466,20 @@ export function useCleanerOnboarding() {
     },
   });
 
-  // Step 10: Complete Onboarding
+  // ─── STEP 10: Complete Onboarding ─────────────────────────────────────────
   const completeOnboardingMutation = useMutation({
     mutationFn: async () => {
-      if (!profile?.id) throw new Error('No cleaner profile found');
-
+      const cleanerProfileId = await getCleanerProfileId();
       const { error } = await supabase
         .from('cleaner_profiles')
         .update({
           onboarding_completed_at: new Date().toISOString(),
           onboarding_current_step: 'review',
         })
-        .eq('id', profile.id);
-
+        .eq('id', cleanerProfileId);
       if (error) throw error;
     },
     onSuccess: async () => {
-      // Invalidate and wait for refetch so needsOnboarding clears before navigation
       await queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
       await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     },
@@ -443,9 +490,7 @@ export function useCleanerOnboarding() {
     currentStepIndex,
     totalSteps,
     progress,
-    // Only block on loading if we don't yet know whether profile exists.
-    // Once the query has settled (even to null), show the onboarding form immediately.
-    // Once initialized, never re-show the loading screen even if profile refetches in background.
+    // Only block render on the very first load — never re-show spinner on background refetches
     isLoading: !isInitialized && profileLoading,
     profile,
     completedData,
