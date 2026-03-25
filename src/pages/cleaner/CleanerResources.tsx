@@ -326,6 +326,9 @@ export default function CleanerResources() {
             <TabsTrigger value="partners" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <ShoppingBag className="h-4 w-4 mr-1.5" />Partners
             </TabsTrigger>
+            <TabsTrigger value="calculator" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-success data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+              <Calculator className="h-4 w-4 mr-1.5" />Calculator
+            </TabsTrigger>
           </TabsList>
 
           {/* ── Checklists Tab ── */}
