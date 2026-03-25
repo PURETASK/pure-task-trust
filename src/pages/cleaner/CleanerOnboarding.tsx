@@ -230,7 +230,7 @@ export default function CleanerOnboarding() {
                       />
                     )}
                     {currentStep === 'phone-verification' && (
-                      <PhoneVerificationStep onComplete={completePhoneVerification} onBack={goToPreviousStep} />
+                      <PhoneVerificationStep onComplete={(phone) => completePhoneVerification(phone)} onBack={goToPreviousStep} />
                     )}
                     {currentStep === 'face-verification' && (
                       <FaceVerificationStep

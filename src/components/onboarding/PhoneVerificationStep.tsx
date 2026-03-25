@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PhoneVerificationStepProps {
-  onComplete: () => void;
+  onComplete: (phoneNumber?: string) => void;
   onBack: () => void;
   isLoading?: boolean;
 }
@@ -55,7 +55,7 @@ export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationS
       const { error } = await supabase.functions.invoke('verify-otp', { body: { phone_number: formatPhoneForE164(phoneNumber), otp_code: otpCode } });
       if (error) throw error;
       setSubStep('verified');
-      setTimeout(() => onComplete(), 1200);
+      setTimeout(() => onComplete(formatPhoneForE164(phoneNumber)), 1200);
     } catch (error: any) {
       toast({ title: 'Verification failed', description: error.message || 'Invalid or expired code.', variant: 'destructive' });
     } finally { setIsVerifying(false); }
