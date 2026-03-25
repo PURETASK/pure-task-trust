@@ -75,15 +75,15 @@ export default function CleanerEarnings() {
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
         {/* Top-center */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
           style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 25vmin))" }} />
         {/* Bottom-left corner — empty space */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
           style={{ left: "-8vmin", bottom: "-8vmin" }} />
         {/* Bottom-right corner — empty space */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
-          className="absolute w-[58vmin] h-[58vmin] object-contain opacity-30"
+          className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
           style={{ right: "-8vmin", bottom: "-8vmin" }} />
       </div>
       <div className="space-y-6 relative z-10">
