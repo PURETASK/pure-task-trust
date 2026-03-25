@@ -42,23 +42,23 @@ export function CleanerAvailabilityToggle() {
       onClick={handleToggle}
       disabled={toggling || !profile}
       className={cn(
-        "hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all",
+        "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold transition-all active:scale-95",
         isAvailable
           ? "bg-success/10 border-success/30 text-success hover:bg-success/20 shadow-sm"
           : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
       )}
     >
       {toggling ? (
-        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        <Loader2 className="h-3 w-3 animate-spin" />
       ) : (
         <span
           className={cn(
-            "h-2 w-2 rounded-full",
+            "h-2 w-2 rounded-full flex-shrink-0",
             isAvailable ? "bg-success animate-pulse" : "bg-muted-foreground"
           )}
         />
       )}
-      {isAvailable ? "Online" : "Offline"}
+      <span className="hidden xs:inline">{isAvailable ? "Online" : "Offline"}</span>
     </button>
   );
 }
