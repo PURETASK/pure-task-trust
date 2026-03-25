@@ -106,7 +106,11 @@ export default function CleanerServiceAreas() {
                     <span>5 miles</span><span>50 miles</span>
                   </div>
                 </div>
-                {/* Interactive radius preview map */}
+                <Button className="w-full rounded-xl" onClick={handleAddArea} disabled={isAdding}>
+                  {isAdding && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  Add Service Area
+                </Button>
+                {/* Interactive radius preview map — below the button so form fields are always visible */}
                 <div className="space-y-1.5">
                   <Label className="text-xs text-muted-foreground">Coverage preview</Label>
                   <div className="rounded-xl overflow-hidden border border-border/60" style={{ height: 200 }}>
@@ -116,10 +120,6 @@ export default function CleanerServiceAreas() {
                     The shaded area shows your {radius}-mile coverage zone
                   </p>
                 </div>
-                <Button className="w-full rounded-xl" onClick={handleAddArea} disabled={isAdding}>
-                  {isAdding && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                  Add Service Area
-                </Button>
               </div>
             </DialogContent>
           </Dialog>
