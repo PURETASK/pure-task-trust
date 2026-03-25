@@ -126,9 +126,9 @@ export default function CleanerSchedule() {
       <div className="space-y-6 relative z-10">
 
         {/* ── Hero Header ─────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/10 via-background to-success/5 p-7">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/8 blur-2xl pointer-events-none" />
-          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/8 blur-2xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/25 via-background to-success/15 p-7">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/20 blur-2xl pointer-events-none" />
+          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/20 blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
               <div className="h-13 w-13 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25 p-3">
