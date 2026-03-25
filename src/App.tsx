@@ -148,6 +148,7 @@ const App = () => (
               <PostSignupRunner />
               <ScrollToTop />
               <ExitIntentPopup />
+              <PWAInstallBanner />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Auth pages — no layout */}
