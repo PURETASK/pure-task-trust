@@ -113,13 +113,13 @@ export default function CleanerEarnings() {
           ) : (
             <>
               {[
-                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/50", border: "border-2 border-success/60", cardBg: "bg-success/40" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/50", border: "border-2 border-primary/60", cardBg: "bg-primary/40" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/50", border: "border-2 border-warning/60", cardBg: "bg-warning/40" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/50", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/40" },
-                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/20", border: "border-2 border-primary/60", cardBg: "bg-primary/10" },
-                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/20", border: "border-2 border-warning/60", cardBg: "bg-warning/10" },
-                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/20", border: "border-2 border-[hsl(280,70%,55%)]/60", cardBg: "bg-[hsl(280,70%,55%)]/10" },
+                { label: "Total Earned", value: `$${stats.totalEarned.toFixed(0)}`, icon: TrendingUp, color: "text-success", bg: "bg-success/70", border: "border-2 border-success/80", cardBg: "bg-success/70" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
+                { label: "Available", value: `$${stats.availableBalance.toFixed(0)}`, icon: DollarSign, color: "text-primary", bg: "bg-primary/70", border: "border-2 border-primary/80", cardBg: "bg-primary/70" },
+                { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, icon: Clock, color: "text-warning", bg: "bg-warning/70", border: "border-2 border-warning/80", cardBg: "bg-warning/70" },
+                { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, icon: CheckCircle, color: "text-[hsl(280,70%,55%)]", bg: "bg-[hsl(280,70%,55%)]/70", border: "border-2 border-[hsl(280,70%,55%)]/80", cardBg: "bg-[hsl(280,70%,55%)]/70" },
               ].map(({ label, value, icon: Icon, color, bg, border, cardBg }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                    <Card className={`hover:shadow-md transition-shadow rounded-2xl ${border} ${cardBg}`}>
