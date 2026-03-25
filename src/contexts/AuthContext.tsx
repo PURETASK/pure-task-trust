@@ -147,7 +147,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // signOut can fail in Preview environments — always clear local state
+    }
     setUser(null);
     setSession(null);
   };
