@@ -42,11 +42,19 @@ export function ServiceAreaStep({ initialData, onSubmit, onBack, isSubmitting }:
             <Radio className="h-4 w-4 text-green-400" />
             <Label className="text-white/80 font-semibold text-sm">Travel radius</Label>
           </div>
-          <span className="text-2xl font-black text-green-400">{travelRadius}<span className="text-sm font-medium text-white/60 ml-1">km</span></span>
+          <span className="text-2xl font-black text-green-400">{travelRadius}<span className="text-sm font-medium text-white/60 ml-1">mi</span></span>
         </div>
         <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className="py-1 [&_[role=slider]]:bg-green-400 [&_[role=slider]]:border-green-400 [&_.relative]:bg-white/20 [&_[data-orientation=horizontal]]:bg-white/20" />
-        <div className="flex justify-between text-xs text-white/30"><span>5 km</span><span>50 km</span></div>
+        <div className="flex justify-between text-xs text-white/30"><span>5 mi</span><span>50 mi</span></div>
       </div>
+
+      {/* Interactive radius map */}
+      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(74,222,128,0.2)', height: 220 }}>
+        <RadiusMap radiusMiles={travelRadius} className="h-full" dark />
+      </div>
+      <p className="text-center text-xs text-white/40 -mt-2">
+        Shaded area = your {travelRadius}-mile coverage zone
+      </p>
 
       {/* Zip input */}
       <div className="space-y-3">
