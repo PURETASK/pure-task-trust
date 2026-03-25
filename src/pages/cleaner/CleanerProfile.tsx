@@ -414,9 +414,9 @@ export default function CleanerProfile() {
             {/* Toggles */}
             <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { icon: Package, label: "Own Supplies", value: suppliesProvided, set: setSuppliesProvided, color: "text-cyan-500" },
-                { icon: Car, label: "Has Vehicle", value: hasVehicle, set: setHasVehicle, color: "text-blue-500" },
-                { icon: Dog, label: "Pet Friendly", value: petFriendly, set: setPetFriendly, color: "text-rose-500" },
+              { icon: Package, label: "Own Supplies", value: suppliesProvided, set: setSuppliesProvided, color: "text-primary" },
+                { icon: Car, label: "Has Vehicle", value: hasVehicle, set: setHasVehicle, color: "text-primary" },
+                { icon: Dog, label: "Pet Friendly", value: petFriendly, set: setPetFriendly, color: "text-destructive" },
               ].map(t => (
                 <div key={t.label} className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/50">
                   <div className="flex items-center gap-2">
