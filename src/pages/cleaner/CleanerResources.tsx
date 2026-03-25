@@ -460,6 +460,68 @@ export default function CleanerResources() {
 
 
 
+          {/* ── Cost Estimator Tab ── */}
+          <TabsContent value="estimator">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-9 w-9 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+                  <DollarSign className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Cost Estimator</h2>
+                  <p className="text-xs text-muted-foreground">Understand what clients see when they price a job</p>
+                </div>
+              </div>
+
+              {/* Clean type preview grid */}
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {[
+                  { emoji: '🏠', label: 'Standard Clean', per: '$18/room', ex: '2BR/1BA ~$95', color: 'border-primary/30 bg-primary/5', badge: 'bg-primary/10 text-primary border-primary/20', note: 'Most popular' },
+                  { emoji: '✨', label: 'Deep Clean',     per: '$30/room', ex: '2BR/1BA ~$160', color: 'border-[hsl(var(--pt-purple))]/30 bg-[hsl(var(--pt-purple))]/5', badge: 'bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple))]/20', note: 'Quarterly rec.' },
+                  { emoji: '📦', label: 'Move-Out',       per: '$40/room', ex: '2BR/1BA ~$215', color: 'border-warning/30 bg-warning/5', badge: 'bg-warning/10 text-warning border-warning/20', note: 'End-of-lease' },
+                  { emoji: '🏨', label: 'Airbnb Turnover',per: '$22/room', ex: '2BR/1BA ~$118', color: 'border-success/30 bg-success/5', badge: 'bg-success/10 text-success border-success/20', note: 'For hosts' },
+                ].map(s => (
+                  <div key={s.label} className={`rounded-2xl border-2 p-4 ${s.color}`}>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{s.emoji}</span>
+                        <span className="font-bold text-sm">{s.label}</span>
+                      </div>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${s.badge}`}>{s.note}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-1">{s.per} base rate</p>
+                    <p className="text-sm font-black text-foreground">{s.ex}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Frequency discounts strip */}
+              <div className="rounded-2xl border-2 border-warning/30 bg-warning/5 p-4 mb-4">
+                <p className="font-bold text-warning text-sm mb-2">💡 Frequency discounts clients can earn</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { label: 'One-time', disc: '—', color: 'text-muted-foreground' },
+                    { label: 'Monthly', disc: '−5%', color: 'text-success' },
+                    { label: 'Bi-weekly', disc: '−10%', color: 'text-warning' },
+                    { label: 'Weekly', disc: '−15%', color: 'text-[hsl(var(--pt-purple))]' },
+                  ].map(f => (
+                    <div key={f.label} className="rounded-xl border-2 border-border/50 bg-card p-2 text-center">
+                      <p className={`text-sm font-black ${f.color}`}>{f.disc}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{f.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Button asChild className="w-full rounded-2xl font-bold border-2" variant="outline">
+                <Link to="/cost-estimator">
+                  <DollarSign className="h-4 w-4 mr-2" />
+                  Open Full Cost Estimator <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </TabsContent>
+
           <TabsContent value="growth">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <div className="flex items-center gap-3 mb-5">
