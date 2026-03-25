@@ -32,6 +32,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Comic Sans for all paragraph text */
+p {
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
 @layer base {
   :root {
     /* ========================================
