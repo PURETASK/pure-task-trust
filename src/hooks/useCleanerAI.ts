@@ -6,6 +6,7 @@ import { useAvailabilityBlocks } from './useAvailability';
 import { useCleanerReviews } from './useReviews';
 import { useMarketplaceJobs } from './useMarketplaceJobs';
 import { format, addDays, isAfter, isBefore } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -137,11 +138,15 @@ export function useCleanerAI() {
         marketplaceOpportunities: topOpportunities,
       };
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      if (!accessToken) throw new Error('Unauthorized');
+
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ 
           messages: [...messages, userMsg],
