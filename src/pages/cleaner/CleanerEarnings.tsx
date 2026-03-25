@@ -71,17 +71,17 @@ export default function CleanerEarnings() {
   return (
     <CleanerLayout>
       <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
-      {/* Page-level money background illustration */}
-      <div className="fixed inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
-        <img
-          src={earningsBg}
-          alt=""
-          loading="lazy"
-          width={1024}
-          height={1024}
-          className="w-[70vmin] h-[70vmin] object-contain opacity-60"
-          aria-hidden="true"
-        />
+      {/* Page-level money background illustrations × 3 spread around edges */}
+      <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
+        {/* Top-left */}
+        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
+          className="absolute -top-24 -left-24 w-[55vmin] h-[55vmin] object-contain opacity-15 rotate-[-15deg]" />
+        {/* Bottom-right */}
+        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
+          className="absolute -bottom-20 -right-20 w-[60vmin] h-[60vmin] object-contain opacity-15 rotate-[20deg]" />
+        {/* Top-right edge */}
+        <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
+          className="absolute top-[30%] -right-16 w-[40vmin] h-[40vmin] object-contain opacity-10 rotate-[8deg]" />
       </div>
       <div className="space-y-6 relative z-10">
         {/* Header */}
