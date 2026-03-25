@@ -144,6 +144,43 @@ export default function CleanerServiceAreas() {
           </div>
         </motion.div>
 
+        {/* Live Radius Preview */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Navigation className="h-4 w-4 text-primary" />
+                    Coverage Radius Preview
+                  </CardTitle>
+                  <CardDescription className="text-xs mt-0.5">Drag the slider to visualise your travel zone</CardDescription>
+                </div>
+                <Badge variant="secondary" className="font-mono text-base px-3 py-1">{previewRadius} mi</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Slider
+                value={[previewRadius]}
+                onValueChange={([v]) => setPreviewRadius(v)}
+                min={5}
+                max={50}
+                step={5}
+                className="mb-1"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                <span>5 mi</span><span>50 mi</span>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-border/60" style={{ height: 300 }}>
+                <RadiusMap radiusMiles={previewRadius} className="h-full" />
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Blue shaded area shows your {previewRadius}-mile coverage zone from your base location
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Your Service Areas */}
         <Card>
           <CardHeader>
