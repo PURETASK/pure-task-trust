@@ -233,7 +233,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </header>
 
           {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
-          <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden">
+          <main className="flex-1 pb-20 md:pb-0 overflow-x-hidden min-w-0">
             <PageTransition>{children ?? <Outlet />}</PageTransition>
           </main>
 
