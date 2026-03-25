@@ -62,16 +62,19 @@ export function useCleanerOnboarding() {
     availableDays: 0,
   });
 
-  // Load saved step from database on mount
+  // Load saved step from database on mount.
+  // If profile is null (new cleaner) or populated, mark initialized immediately.
   useEffect(() => {
-    if (profile && !isInitialized) {
-      const savedStep = profile.onboarding_current_step as OnboardingStep | null;
-      if (savedStep && STEPS.includes(savedStep)) {
-        setCurrentStepLocal(savedStep);
+    if (!isInitialized && !profileLoading) {
+      if (profile) {
+        const savedStep = profile.onboarding_current_step as OnboardingStep | null;
+        if (savedStep && STEPS.includes(savedStep)) {
+          setCurrentStepLocal(savedStep);
+        }
       }
       setIsInitialized(true);
     }
-  }, [profile, isInitialized]);
+  }, [profile, profileLoading, isInitialized]);
 
   const currentStepIndex = STEPS.indexOf(currentStep);
   const totalSteps = STEPS.length;
