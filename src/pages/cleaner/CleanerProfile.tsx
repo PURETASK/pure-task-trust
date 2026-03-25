@@ -404,9 +404,9 @@ export default function CleanerProfile() {
             {/* Languages */}
             <div>
               <Label className="text-sm font-semibold flex items-center gap-2 mb-3">
-                <Languages className="h-4 w-4 text-violet-500" />Languages
+                <Languages className="h-4 w-4 text-[hsl(var(--pt-purple))]" />Languages
               </Label>
-              <PillSelect options={LANGUAGE_OPTIONS} selected={languages} onChange={setLanguages} color="bg-violet-500/10 text-violet-600 border-violet-500/30" />
+              <PillSelect options={LANGUAGE_OPTIONS} selected={languages} onChange={setLanguages} color="bg-[hsl(var(--pt-purple)/0.1)] text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple)/0.3)]" />
             </div>
 
             <Separator />
