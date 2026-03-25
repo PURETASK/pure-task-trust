@@ -239,7 +239,7 @@ export default function CleanerReferral() {
                 {[
                   { step: 1, title: "Share Your Link", desc: "Send your unique referral link to friends, family, or on social media", icon: Share2 },
                   { step: 2, title: "They Sign Up", desc: "Your friend creates an account and completes their first booking", icon: Users },
-                  { step: 3, title: "Both Earn Credits", desc: `You both receive $${referralCode?.reward_credits || 500} to use on cleanings!`, icon: Sparkles },
+                  { step: 3, title: "Both Earn Credits", desc: `You both receive $${referralCode?.reward_credits || 25} to use on cleanings!`, icon: Sparkles },
                 ].map((item, index) => (
                   <motion.div 
                     key={item.step}
