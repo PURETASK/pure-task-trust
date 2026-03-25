@@ -74,8 +74,14 @@ export function useUserProfile() {
           .eq('user_id', user.id)
           .maybeSingle();
         cleanerProfile = data;
-        // Only redirect to onboarding if profile exists but onboarding is not complete
-        needsOnboarding = !!cleanerProfile && !cleanerProfile.onboarding_completed_at;
+        // Only redirect to onboarding if:
+        // 1. Profile exists AND onboarding not completed AND
+        // 2. The profile was created very recently (within 10 minutes) — i.e. brand new signup
+        // This prevents redirect loops for existing cleaners whose onboarding_completed_at may be null
+        const isNewProfile = cleanerProfile?.created_at 
+          ? (Date.now() - new Date(cleanerProfile.created_at).getTime()) < 10 * 60 * 1000
+          : false;
+        needsOnboarding = !!cleanerProfile && !cleanerProfile.onboarding_completed_at && isNewProfile;
       }
 
       return {
