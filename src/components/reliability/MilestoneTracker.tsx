@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useCleanerProfile } from '@/hooks/useCleanerProfile';
 import { Trophy, Star, Zap, Gift, Crown, CheckCircle, Lock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Milestone {
   id: string;
@@ -14,25 +14,26 @@ interface Milestone {
   reward: string;
   rewardType: 'credits' | 'badge' | 'perk';
   unlocked: boolean;
+  color: { border: string; bg: string; icon: string; badge: string };
 }
 
 export function MilestoneTracker() {
   const { profile } = useCleanerProfile();
-
   const jobsCompleted = profile?.jobs_completed || 0;
-  const score = profile?.reliability_score || 0;
+  const score         = profile?.reliability_score || 0;
 
   const milestones: Milestone[] = [
     {
       id: 'first-job',
       title: 'First Clean',
-      description: 'Complete your first cleaning job',
+      description: 'Complete your very first cleaning job',
       icon: Star,
       target: 1,
       current: Math.min(jobsCompleted, 1),
-      reward: '+$50 bonus',
+      reward: '+$25 bonus',   // was $50 → cut 50%
       rewardType: 'credits',
       unlocked: jobsCompleted >= 1,
+      color: { border: "border-success/60", bg: "bg-success/10", icon: "text-success", badge: "bg-success/15 text-success border-success/40" },
     },
     {
       id: 'rising-star',
@@ -41,9 +42,10 @@ export function MilestoneTracker() {
       icon: Zap,
       target: 10,
       current: Math.min(jobsCompleted, 10),
-      reward: '+$100 bonus',
+      reward: '+$50 bonus',   // was $100 → cut 50%
       rewardType: 'credits',
       unlocked: jobsCompleted >= 10,
+      color: { border: "border-primary/60", bg: "bg-primary/10", icon: "text-primary", badge: "bg-primary/15 text-primary border-primary/40" },
     },
     {
       id: 'pro-cleaner',
@@ -55,6 +57,7 @@ export function MilestoneTracker() {
       reward: 'Pro Badge + Priority Listings',
       rewardType: 'badge',
       unlocked: jobsCompleted >= 25,
+      color: { border: "border-warning/60", bg: "bg-warning/10", icon: "text-warning", badge: "bg-warning/15 text-warning border-warning/40" },
     },
     {
       id: 'elite-status',
@@ -66,6 +69,7 @@ export function MilestoneTracker() {
       reward: 'Elite Badge + Lower Fees',
       rewardType: 'perk',
       unlocked: jobsCompleted >= 50 && score >= 90,
+      color: { border: "border-[hsl(280,70%,55%)]/60", bg: "bg-[hsl(280,70%,55%)]/10", icon: "text-[hsl(280,70%,55%)]", badge: "bg-[hsl(280,70%,55%)]/15 text-[hsl(280,70%,55%)] border-[hsl(280,70%,55%)]/40" },
     },
     {
       id: 'reliability-master',
@@ -77,6 +81,7 @@ export function MilestoneTracker() {
       reward: 'Free Instant Payouts',
       rewardType: 'perk',
       unlocked: score >= 95,
+      color: { border: "border-success/60", bg: "bg-success/10", icon: "text-success", badge: "bg-success/15 text-success border-success/40" },
     },
     {
       id: 'century-club',
@@ -85,95 +90,86 @@ export function MilestoneTracker() {
       icon: Gift,
       target: 100,
       current: Math.min(jobsCompleted, 100),
-      reward: '+$500 bonus',
+      reward: '+$250 bonus',  // was $500 → cut 50%
       rewardType: 'credits',
       unlocked: jobsCompleted >= 100,
+      color: { border: "border-warning/60", bg: "bg-warning/10", icon: "text-warning", badge: "bg-warning/15 text-warning border-warning/40" },
     },
   ];
 
   const unlockedCount = milestones.filter(m => m.unlocked).length;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-amber-500" />
-            Milestones & Achievements
-          </CardTitle>
-          <Badge variant="secondary">
-            {unlockedCount} / {milestones.length} Unlocked
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {milestones.map((milestone) => {
-          const Icon = milestone.icon;
-          const progress = (milestone.current / milestone.target) * 100;
+    <div className="rounded-3xl border-2 border-warning/50 overflow-hidden"
+      style={{ background: "hsl(var(--card))" }}>
 
+      {/* Header */}
+      <div className="p-5 border-b-2 border-warning/20 bg-warning/5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-2xl border-2 border-warning/50 bg-warning/15 flex items-center justify-center">
+            <Trophy className="h-5 w-5 text-warning" />
+          </div>
+          <div>
+            <h2 className="font-bold text-base">Milestones & Achievements</h2>
+            <p className="text-xs text-muted-foreground">Track your progress and earn rewards</p>
+          </div>
+        </div>
+        <Badge className="bg-warning/15 text-warning border-warning/40 border text-xs font-bold">
+          {unlockedCount} / {milestones.length} Unlocked
+        </Badge>
+      </div>
+
+      {/* Milestones list */}
+      <div className="p-4 space-y-3">
+        {milestones.map((m, i) => {
+          const Icon = m.icon;
+          const progress = (m.current / m.target) * 100;
           return (
-            <div
-              key={milestone.id}
-              className={`p-4 rounded-lg border transition-all ${
-                milestone.unlocked
-                  ? 'bg-success/5 border-success/20'
-                  : 'bg-muted/30 border-border'
+            <motion.div
+              key={m.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className={`rounded-2xl border-2 p-4 transition-all ${
+                m.unlocked ? `${m.color.border} ${m.color.bg}` : "border-border/40 bg-muted/15"
               }`}
             >
-              <div className="flex items-start gap-4">
-                <div
-                  className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${
-                    milestone.unlocked
-                      ? 'bg-success/10'
-                      : 'bg-muted'
-                  }`}
-                >
-                  {milestone.unlocked ? (
-                    <Icon className="h-6 w-6 text-success" />
-                  ) : (
-                    <Lock className="h-5 w-5 text-muted-foreground" />
-                  )}
+              <div className="flex items-start gap-3">
+                {/* Icon */}
+                <div className={`h-11 w-11 rounded-xl border-2 flex items-center justify-center shrink-0 ${
+                  m.unlocked ? `${m.color.border} ${m.color.bg}` : "border-border/40 bg-muted/30"
+                }`}>
+                  {m.unlocked
+                    ? <Icon className={`h-5 w-5 ${m.color.icon}`} />
+                    : <Lock className="h-4 w-4 text-muted-foreground/50" />
+                  }
                 </div>
+
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold">{milestone.title}</h4>
-                    {milestone.unlocked && (
-                      <Badge variant="outline" className="bg-success/10 text-success border-success/20 text-xs">
-                        Unlocked
-                      </Badge>
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                    <h4 className="font-bold text-sm">{m.title}</h4>
+                    {m.unlocked && (
+                      <Badge className={`text-[10px] h-4 px-1.5 border ${m.color.badge}`}>✓ Unlocked</Badge>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {milestone.description}
-                  </p>
-                  {!milestone.unlocked && (
-                    <div className="space-y-1">
-                      <Progress value={progress} className="h-2" />
-                      <p className="text-xs text-muted-foreground">
-                        {milestone.current} / {milestone.target}
-                      </p>
+                  <p className="text-xs text-muted-foreground mb-2">{m.description}</p>
+
+                  {!m.unlocked && (
+                    <div className="space-y-1 mb-2">
+                      <Progress value={progress} className="h-1.5" />
+                      <p className="text-[11px] text-muted-foreground">{m.current} / {m.target}</p>
                     </div>
                   )}
-                  <div className="mt-2">
-                    <Badge
-                      variant="secondary"
-                      className={`text-xs ${
-                        milestone.rewardType === 'credits'
-                          ? 'bg-amber-500/10 text-amber-600'
-                          : milestone.rewardType === 'badge'
-                          ? 'bg-purple-500/10 text-purple-600'
-                          : 'bg-cyan-500/10 text-cyan-600'
-                      }`}
-                    >
-                      🎁 {milestone.reward}
-                    </Badge>
-                  </div>
+
+                  <Badge variant="secondary" className={`text-[11px] border ${m.color.badge}`}>
+                    🎁 {m.reward}
+                  </Badge>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
