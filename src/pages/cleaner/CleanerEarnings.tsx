@@ -1,16 +1,15 @@
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Helmet } from "react-helmet-async";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import {
   TrendingUp, DollarSign, Clock, CheckCircle, Target,
-  Zap, ArrowUpRight, Banknote, PiggyBank, Check,
-  ChevronRight, Wallet, ArrowRight, Calendar, Star
+  Zap, Banknote, PiggyBank, Check, ArrowRight, Calendar,
+  Star, Wallet, Edit2, Save, X, ArrowUpRight, BarChart3,
 } from "lucide-react";
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
@@ -25,7 +24,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import earningsBg from "@/assets/earnings-bg.png";
 
-const WEEKLY_HOURS_GOAL = 20;
+const DEFAULT_WEEKLY_HOURS_GOAL = 20;
+
+const f = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.4 },
+});
 
 export default function CleanerEarnings() {
   const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
@@ -33,6 +38,9 @@ export default function CleanerEarnings() {
   const { profile } = useCleanerProfile();
   const [payoutsEnabled, setPayoutsEnabled] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
+  const [editingHoursGoal, setEditingHoursGoal] = useState(false);
+  const [weeklyHoursGoal, setWeeklyHoursGoal] = useState(DEFAULT_WEEKLY_HOURS_GOAL);
+  const [hoursInput, setHoursInput] = useState(String(DEFAULT_WEEKLY_HOURS_GOAL));
 
   const now = new Date();
   const weekStart = startOfWeek(now, { weekStartsOn: 1 });
@@ -46,8 +54,8 @@ export default function CleanerEarnings() {
 
   const forecastEarnings = confirmedThisWeek.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
   const forecastHours = confirmedThisWeek.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
-  const hoursProgress = Math.min(100, (forecastHours / WEEKLY_HOURS_GOAL) * 100);
-  const hoursRemaining = Math.max(0, WEEKLY_HOURS_GOAL - forecastHours);
+  const hoursProgress = Math.min(100, (forecastHours / weeklyHoursGoal) * 100);
+  const hoursRemaining = Math.max(0, weeklyHoursGoal - forecastHours);
 
   const getNextFriday = () => {
     const today = new Date();
@@ -72,172 +80,185 @@ export default function CleanerEarnings() {
     }
   };
 
-  const fadeUp = (delay = 0) => ({
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { delay, duration: 0.4 },
-  });
+  const saveHoursGoal = () => {
+    const val = parseInt(hoursInput);
+    if (!isNaN(val) && val > 0 && val <= 80) {
+      setWeeklyHoursGoal(val);
+      toast.success(`Weekly hours goal set to ${val}h`);
+    } else {
+      toast.error("Enter a value between 1 and 80 hours");
+      setHoursInput(String(weeklyHoursGoal));
+    }
+    setEditingHoursGoal(false);
+  };
 
   return (
     <CleanerLayout>
       <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
 
-      {/* Background illustrations */}
+      {/* Background illustration */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
         <img src={earningsBg} alt="" aria-hidden="true"
-          className="absolute w-[90vmin] h-[90vmin] object-contain opacity-[0.06]"
-          style={{ right: "-20vmin", top: "5vmin" }} />
+          className="absolute w-[80vmin] h-[80vmin] object-contain opacity-[0.05]"
+          style={{ right: "-15vmin", top: "10vmin" }} />
       </div>
 
       <div className="space-y-5 relative z-10 max-w-6xl">
 
-        {/* ── HERO: Available Balance ─────────────────────────────── */}
-        <motion.div {...fadeUp(0)}>
-          <div className="relative overflow-hidden rounded-3xl p-8"
+        {/* ── SECTION 1: AVAILABLE TO WITHDRAW — hero spotlight ─── */}
+        <motion.div {...f(0)}>
+          <div className="relative overflow-hidden rounded-3xl border-2 border-success/70"
             style={{
-              background: "linear-gradient(135deg, hsl(210,100%,20%) 0%, hsl(210,100%,35%) 50%, hsl(145,65%,30%) 100%)",
-              boxShadow: "0 20px 60px -10px hsl(210,100%,30%/0.5)"
+              background: "linear-gradient(135deg, hsl(var(--success)/0.20) 0%, hsl(var(--success)/0.08) 60%, hsl(var(--background)) 100%)",
+              boxShadow: "0 0 0 1px hsl(var(--success)/0.15), 0 24px 60px -8px hsl(var(--success)/0.30)",
             }}>
-            {/* Glowing orbs */}
-            <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full opacity-20 blur-3xl"
-              style={{ background: "hsl(145,65%,47%)" }} />
-            <div className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full opacity-20 blur-3xl"
-              style={{ background: "hsl(190,100%,50%)" }} />
 
-            <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              {/* Left: balance */}
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Wallet className="h-4 w-4 text-white/60" />
-                  <span className="text-white/60 text-sm font-medium uppercase tracking-wider">Available to withdraw</span>
+            {/* glow orbs */}
+            <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full blur-3xl pointer-events-none"
+              style={{ background: "hsl(var(--success)/0.25)" }} />
+            <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+              style={{ background: "hsl(var(--primary)/0.15)" }} />
+
+            <div className="relative p-8">
+              {/* Label */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-9 w-9 rounded-xl bg-success/20 border-2 border-success/40 flex items-center justify-center">
+                  <Wallet className="h-4 w-4 text-success" />
                 </div>
-                {isLoadingEarnings ? (
-                  <Skeleton className="h-16 w-48 bg-white/20" />
-                ) : (
-                  <div className="flex items-end gap-3">
-                    <span className="text-6xl font-black text-white leading-none">
-                      ${stats.availableBalance.toFixed(0)}
-                    </span>
-                    <span className="text-white/50 text-xl mb-1">.{(stats.availableBalance % 1).toFixed(2).slice(2)}</span>
+                <span className="text-success font-bold text-sm uppercase tracking-widest">Available to Withdraw</span>
+              </div>
+
+              {/* BIG balance number */}
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                <div>
+                  {isLoadingEarnings ? (
+                    <Skeleton className="h-24 w-64 rounded-2xl" />
+                  ) : (
+                    <div className="flex items-end gap-1 leading-none">
+                      <span className="text-7xl sm:text-8xl font-black text-success tracking-tight">
+                        ${stats.availableBalance.toFixed(0)}
+                      </span>
+                      <span className="text-3xl font-bold text-success/60 mb-3">
+                        .{(stats.availableBalance % 1).toFixed(2).slice(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex flex-wrap items-center gap-4 mt-4">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-success" />
+                      <span className="text-muted-foreground text-sm">All-time: </span>
+                      <span className="font-bold text-foreground text-sm">${stats.totalEarned.toFixed(0)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-warning" />
+                      <span className="text-muted-foreground text-sm">Pending: </span>
+                      <span className="font-bold text-foreground text-sm">${stats.pendingPayout.toFixed(0)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span className="text-muted-foreground text-sm">Paid out: </span>
+                      <span className="font-bold text-foreground text-sm">${stats.paidOut.toFixed(0)}</span>
+                    </div>
                   </div>
-                )}
-                <div className="flex items-center gap-2 mt-3">
-                  <span className="text-white/50 text-sm">Total earned all time:</span>
-                  <span className="text-white font-bold text-sm">${stats.totalEarned.toFixed(0)}</span>
-                  <TrendingUp className="h-3.5 w-3.5 text-green-300" />
+                </div>
+
+                {/* Quick stat pills */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-3 lg:min-w-[200px]">
+                  {[
+                    { label: "This Week", value: `$${forecastEarnings}`, icon: Calendar, color: "border-primary/50 bg-primary/10 text-primary" },
+                    { label: `${confirmedThisWeek.length} Jobs Confirmed`, value: `${forecastHours}h`, icon: BarChart3, color: "border-warning/50 bg-warning/10 text-warning" },
+                  ].map(s => (
+                    <div key={s.label} className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 ${s.color}`}>
+                      <s.icon className="h-4 w-4 shrink-0" />
+                      <div>
+                        <p className="text-xs opacity-70">{s.label}</p>
+                        <p className="font-black text-xl leading-none">{s.value}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {/* Right: quick stats */}
-              <div className="grid grid-cols-3 gap-3 w-full lg:w-auto">
-                {[
-                  { label: "Pending", value: `$${stats.pendingPayout.toFixed(0)}`, sub: "in escrow", color: "bg-white/10 border-white/20" },
-                  { label: "Paid Out", value: `$${stats.paidOut.toFixed(0)}`, sub: "total released", color: "bg-white/10 border-white/20" },
-                  { label: "This Week", value: `$${forecastEarnings}`, sub: `${confirmedThisWeek.length} jobs`, color: "bg-white/10 border-white/20" },
-                ].map(s => (
-                  <div key={s.label} className={`rounded-2xl border ${s.color} px-4 py-3 text-white backdrop-blur-sm`}>
-                    <p className="text-white/60 text-xs mb-1">{s.label}</p>
-                    <p className="text-xl font-bold">{isLoadingEarnings ? '—' : s.value}</p>
-                    <p className="text-white/40 text-[11px]">{s.sub}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Progress bar: weekly hours */}
-            <div className="relative mt-6 pt-5 border-t border-white/15">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-white/70 text-xs font-medium">Weekly hours progress</span>
-                <span className="text-white font-bold text-sm">{forecastHours} / {WEEKLY_HOURS_GOAL}h</span>
-              </div>
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: "linear-gradient(90deg, hsl(145,65%,47%), hsl(190,100%,50%))" }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${hoursProgress}%` }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                />
-              </div>
-              {hoursProgress >= 100 && (
-                <Badge className="mt-2 bg-green-400 text-green-950 border-0">🎉 Weekly goal hit!</Badge>
-              )}
             </div>
           </div>
         </motion.div>
 
-        {/* ── GOAL PLANNER ─────────────────────────────────────────── */}
-        {profile?.id && (
-          <motion.div {...fadeUp(0.08)}>
-            <EarningsGoalPlanner cleanerId={profile.id} currentGoal={(profile as any).monthly_earnings_goal ?? null} earnings={earnings} />
-          </motion.div>
-        )}
-
-        {/* ── BANK ACCOUNT ─────────────────────────────────────────── */}
-        <motion.div {...fadeUp(0.12)}>
-          <BankAccountStatus onStatusChange={setPayoutsEnabled} />
-        </motion.div>
-
-        {/* ── PAYOUT METHODS ───────────────────────────────────────── */}
-        <motion.div {...fadeUp(0.16)}>
-          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
-            <Banknote className="h-5 w-5 text-primary" /> Payout Options
-          </h2>
+        {/* ── SECTION 2: PAYOUT OPTIONS ─────────────────────────── */}
+        <motion.div {...f(0.08)}>
+          <div className="flex items-center gap-2 mb-3">
+            <Banknote className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-black text-foreground">Payout Options</h2>
+          </div>
           <div className="grid md:grid-cols-2 gap-4">
-            {/* Instant */}
-            <div className="rounded-2xl p-6 border-2 border-[hsl(280,70%,55%)]/70 relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(280,70%,55%/0.12), hsl(280,70%,55%/0.04))" }}>
+
+            {/* Instant Payout — GREEN */}
+            <div className="rounded-3xl border-2 border-success/70 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(var(--success)/0.15), hsl(var(--success)/0.04))" }}>
+              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none"
+                style={{ background: "hsl(var(--success)/0.3)" }} />
               <div className="absolute top-3 right-3">
-                <Badge className="bg-[hsl(280,70%,55%)] text-white border-0 text-[10px]">5% fee</Badge>
+                <Badge className="bg-success text-success-foreground border-0 text-xs font-bold px-2 py-0.5">⚡ Fast</Badge>
               </div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-12 w-12 rounded-2xl flex items-center justify-center"
-                  style={{ background: "hsl(280,70%,55%/0.25)" }}>
-                  <Zap className="h-6 w-6 text-[hsl(280,70%,55%)]" />
+              <div className="relative flex items-center gap-3 mb-5">
+                <div className="h-14 w-14 rounded-2xl border-2 border-success/50 bg-success/20 flex items-center justify-center">
+                  <Zap className="h-7 w-7 text-success" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base">Instant Payout</h3>
-                  <p className="text-xs text-muted-foreground">Money in your account within minutes</p>
+                  <h3 className="font-black text-lg text-foreground">Instant Payout</h3>
+                  <p className="text-sm text-muted-foreground">Money in your account within minutes</p>
                 </div>
               </div>
-              <div className="text-4xl font-black mb-1" style={{ color: "hsl(280,70%,55%)" }}>
-                ${stats.availableBalance.toFixed(2)}
+              <div className="relative mb-1">
+                <span className="text-5xl font-black text-success">${stats.availableBalance.toFixed(0)}</span>
+                <span className="text-xl font-bold text-success/60">.{(stats.availableBalance % 1).toFixed(2).slice(2)}</span>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">Available balance</p>
-              <InstantPayoutButton
-                availableBalance={stats.availableBalance}
-                onRequestPayout={handleInstantPayout}
-                minPayout={10}
-                feePercentage={5}
-                disabled={!payoutsEnabled}
-              />
+              <p className="text-xs text-muted-foreground mb-5">Available balance · 5% convenience fee applies</p>
+              <div className="relative">
+                <InstantPayoutButton
+                  availableBalance={stats.availableBalance}
+                  onRequestPayout={handleInstantPayout}
+                  minPayout={10}
+                  feePercentage={5}
+                  disabled={!payoutsEnabled}
+                />
+              </div>
               {!payoutsEnabled && stats.availableBalance >= 10 && (
                 <p className="text-xs text-muted-foreground mt-2">Connect your bank account to enable payouts</p>
               )}
             </div>
 
-            {/* Weekly */}
-            <div className="rounded-2xl p-6 border-2 border-success/70 relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(145,65%,47%/0.12), hsl(145,65%,47%/0.04))" }}>
+            {/* Weekly Auto Payout */}
+            <div className="rounded-3xl border-2 border-[hsl(var(--pt-purple))]/60 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(var(--pt-purple)/0.15), hsl(var(--pt-purple)/0.04))" }}>
+              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none"
+                style={{ background: "hsl(var(--pt-purple)/0.25)" }} />
               <div className="absolute top-3 right-3">
-                <Badge className="bg-success text-success-foreground border-0 text-[10px]">Free</Badge>
+                <Badge className="bg-[hsl(var(--pt-purple))] text-white border-0 text-xs font-bold px-2 py-0.5">✓ Free</Badge>
               </div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-12 w-12 rounded-2xl bg-success/25 flex items-center justify-center">
-                  <PiggyBank className="h-6 w-6 text-success" />
+              <div className="relative flex items-center gap-3 mb-5">
+                <div className="h-14 w-14 rounded-2xl border-2 border-[hsl(var(--pt-purple))]/40 bg-[hsl(var(--pt-purple))]/20 flex items-center justify-center">
+                  <PiggyBank className="h-7 w-7 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base">Weekly Payout</h3>
-                  <p className="text-xs text-muted-foreground">Automatic every Friday — no fees</p>
+                  <h3 className="font-black text-lg text-foreground">Weekly Payout</h3>
+                  <p className="text-sm text-muted-foreground">Automatic every Friday — no fees ever</p>
                 </div>
               </div>
-              <div className="text-4xl font-black text-success mb-1">
-                ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(2) : '0.00'}
+              <div className="relative mb-1">
+                <span className="text-5xl font-black" style={{ color: "hsl(var(--pt-purple))" }}>
+                  ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(0) : '0'}
+                </span>
+                <span className="text-xl font-bold ml-0.5" style={{ color: "hsl(var(--pt-purple)/0.6)" }}>
+                  .{(stats.availableBalance >= 20 ? stats.availableBalance % 1 : 0).toFixed(2).slice(2)}
+                </span>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">Next payout: <strong>{getNextFriday()}</strong></p>
+              <p className="text-sm font-semibold text-foreground mb-1">
+                Next payout: <span style={{ color: "hsl(var(--pt-purple))" }}>{getNextFriday()}</span>
+              </p>
+              <p className="text-xs text-muted-foreground mb-5">Minimum $20 to qualify</p>
               <div className="flex flex-wrap gap-2">
-                {["No fees", "Automatic", "Min. $20"].map(t => (
-                  <span key={t} className="flex items-center gap-1.5 bg-success/15 border border-success/30 px-3 py-1 rounded-full text-success text-xs font-semibold">
+                {["No fees ever", "Fully automatic", "Min. $20"].map(t => (
+                  <span key={t} className="flex items-center gap-1.5 border-2 border-[hsl(var(--pt-purple))]/30 bg-[hsl(var(--pt-purple))]/10 px-3 py-1.5 rounded-full text-xs font-bold"
+                    style={{ color: "hsl(var(--pt-purple))" }}>
                     <Check className="h-3 w-3" />{t}
                   </span>
                 ))}
@@ -246,66 +267,110 @@ export default function CleanerEarnings() {
           </div>
         </motion.div>
 
-        {/* ── WEEK AT A GLANCE ─────────────────────────────────────── */}
-        <motion.div {...fadeUp(0.2)}>
+        {/* ── SECTION 3: WEEK AT A GLANCE ──────────────────────── */}
+        <motion.div {...f(0.14)}>
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-black text-foreground">This Week</h2>
+          </div>
           <div className="grid md:grid-cols-2 gap-4">
+
             {/* Forecast */}
-            <div className="rounded-2xl border-2 border-primary/70 p-6 relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(210,100%,50%/0.12), hsl(210,100%,50%/0.04))" }}>
-              <div className="flex items-center justify-between mb-5">
+            <div className="rounded-3xl border-2 border-primary/60 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(var(--primary)/0.15), hsl(var(--primary)/0.04))" }}>
+              <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none"
+                style={{ background: "hsl(var(--primary)/0.2)" }} />
+              <div className="relative flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-primary/20 flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 rounded-2xl border-2 border-primary/40 bg-primary/20 flex items-center justify-center">
+                    <Calendar className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="font-bold">This Week's Forecast</p>
-                    <p className="text-xs text-muted-foreground">Confirmed bookings</p>
+                    <p className="font-black text-base text-foreground">Forecast Earnings</p>
+                    <p className="text-xs text-muted-foreground">Confirmed bookings this week</p>
                   </div>
                 </div>
               </div>
-              <div className="flex items-end gap-2 mb-1">
-                <span className="text-5xl font-black text-primary">${forecastEarnings}</span>
+              <div className="relative flex items-end gap-1 mb-2">
+                <span className="text-6xl font-black text-primary leading-none">${forecastEarnings}</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-muted-foreground mb-5">
                 {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
               </p>
               {confirmedThisWeek.length === 0 ? (
-                <Button variant="outline" size="sm" className="gap-2 rounded-xl border-primary/40 text-primary hover:bg-primary/10" asChild>
+                <Button variant="outline" size="sm" className="gap-2 rounded-xl border-2 border-primary/40 text-primary hover:bg-primary/10" asChild>
                   <a href="/cleaner/marketplace">Browse Jobs <ArrowUpRight className="h-3.5 w-3.5" /></a>
                 </Button>
               ) : (
                 <div className="space-y-2">
-                  {confirmedThisWeek.slice(0, 3).map((j, i) => (
-                    <div key={j.id} className="flex items-center justify-between bg-primary/10 rounded-xl px-3 py-2">
-                      <span className="text-xs font-medium">{j.cleaning_type || 'Cleaning'}</span>
-                      <span className="text-xs font-bold text-primary">${j.escrow_credits_reserved || 0}</span>
+                  {confirmedThisWeek.slice(0, 3).map((j) => (
+                    <div key={j.id} className="flex items-center justify-between border-2 border-primary/20 bg-primary/10 rounded-2xl px-4 py-2.5">
+                      <span className="text-sm font-semibold text-foreground">{j.cleaning_type || 'Cleaning'}</span>
+                      <span className="text-sm font-black text-primary">${j.escrow_credits_reserved || 0}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Hours goal */}
-            <div className="rounded-2xl border-2 border-warning/70 p-6 relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(38,95%,55%/0.12), hsl(38,95%,55%/0.04))" }}>
-              <div className="flex items-center gap-3 mb-5">
-                <div className="h-11 w-11 rounded-2xl bg-warning/20 flex items-center justify-center">
-                  <Target className="h-5 w-5 text-warning" />
+            {/* Weekly Hours Goal — editable */}
+            <div className="rounded-3xl border-2 border-warning/60 p-6 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(var(--warning)/0.15), hsl(var(--warning)/0.04))" }}>
+              <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none"
+                style={{ background: "hsl(var(--warning)/0.2)" }} />
+              <div className="relative flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-2xl border-2 border-warning/40 bg-warning/20 flex items-center justify-center">
+                    <Target className="h-6 w-6 text-warning" />
+                  </div>
+                  <div>
+                    <p className="font-black text-base text-foreground">Weekly Hours Goal</p>
+                    <p className="text-xs text-muted-foreground">Set your target hours per week</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-bold">Weekly Hours Goal</p>
-                  <p className="text-xs text-muted-foreground">Target: {WEEKLY_HOURS_GOAL}h this week</p>
-                </div>
+                {/* Edit button */}
+                {!editingHoursGoal ? (
+                  <button onClick={() => { setEditingHoursGoal(true); setHoursInput(String(weeklyHoursGoal)); }}
+                    className="h-8 w-8 rounded-xl border-2 border-warning/40 bg-warning/10 flex items-center justify-center text-warning hover:bg-warning/20 transition-colors">
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <button onClick={saveHoursGoal}
+                      className="h-8 w-8 rounded-xl border-2 border-success/40 bg-success/10 flex items-center justify-center text-success hover:bg-success/20 transition-colors">
+                      <Save className="h-3.5 w-3.5" />
+                    </button>
+                    <button onClick={() => setEditingHoursGoal(false)}
+                      className="h-8 w-8 rounded-xl border-2 border-destructive/40 bg-destructive/10 flex items-center justify-center text-destructive hover:bg-destructive/20 transition-colors">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* Circular-style progress */}
-              <div className="flex items-center gap-6 mb-4">
-                <div className="relative h-24 w-24 shrink-0">
-                  <svg className="h-24 w-24 -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(38,95%,55%/0.15)" strokeWidth="10" />
+              {/* Goal input when editing */}
+              {editingHoursGoal && (
+                <div className="relative mb-4 flex items-center gap-2">
+                  <Input
+                    type="number"
+                    value={hoursInput}
+                    onChange={e => setHoursInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveHoursGoal(); if (e.key === 'Escape') setEditingHoursGoal(false); }}
+                    className="border-2 border-warning/50 bg-warning/10 text-warning font-black text-2xl h-14 rounded-2xl text-center focus-visible:ring-warning/40"
+                    autoFocus
+                  />
+                  <span className="text-2xl font-black text-warning/60">h</span>
+                </div>
+              )}
+
+              {/* SVG ring + stats */}
+              <div className="relative flex items-center gap-6 mb-4">
+                <div className="relative h-28 w-28 shrink-0">
+                  <svg className="h-28 w-28 -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--warning)/0.15)" strokeWidth="10" />
                     <motion.circle
                       cx="50" cy="50" r="40" fill="none"
-                      stroke="hsl(38,95%,55%)"
+                      stroke="hsl(var(--warning))"
                       strokeWidth="10"
                       strokeLinecap="round"
                       strokeDasharray={`${2 * Math.PI * 40}`}
@@ -316,37 +381,61 @@ export default function CleanerEarnings() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-2xl font-black text-warning leading-none">{forecastHours}</span>
-                    <span className="text-[10px] text-muted-foreground">of {WEEKLY_HOURS_GOAL}h</span>
+                    <span className="text-[10px] text-muted-foreground">of {weeklyHoursGoal}h</span>
                   </div>
                 </div>
                 <div className="flex-1">
                   {hoursProgress >= 100 ? (
-                    <div className="flex items-center gap-2 text-success font-bold">
-                      <Star className="h-5 w-5 fill-current" /> Goal hit!
+                    <div className="flex items-center gap-2 text-success font-black text-xl">
+                      <Star className="h-6 w-6 fill-current" /> Goal achieved!
                     </div>
                   ) : (
                     <>
-                      <p className="text-3xl font-black text-warning">{hoursRemaining}h</p>
-                      <p className="text-sm text-muted-foreground">remaining to reach goal</p>
+                      <p className="text-4xl font-black text-warning">{hoursRemaining}h</p>
+                      <p className="text-sm text-muted-foreground">remaining to goal</p>
                     </>
                   )}
-                  <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl border-warning/40 text-warning hover:bg-warning/10 text-xs" asChild>
-                    <a href="/cleaner/marketplace">Find more jobs <ArrowRight className="h-3 w-3" /></a>
-                  </Button>
+                  <div className="mt-3 h-2 rounded-full bg-warning/15 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full bg-warning"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${hoursProgress}%` }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{Math.round(hoursProgress)}% complete</p>
+                  {!editingHoursGoal && (
+                    <Button variant="outline" size="sm" className="mt-3 gap-1.5 rounded-xl border-2 border-warning/40 text-warning hover:bg-warning/10 text-xs" asChild>
+                      <a href="/cleaner/marketplace">Find more jobs <ArrowRight className="h-3 w-3" /></a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* ── EARNINGS HISTORY ─────────────────────────────────────── */}
-        <motion.div {...fadeUp(0.26)}>
-          <div className="rounded-2xl border-2 border-border overflow-hidden">
+        {/* ── SECTION 4: GOAL PLANNER ───────────────────────────── */}
+        {profile?.id && (
+          <motion.div {...f(0.18)}>
+            <EarningsGoalPlanner cleanerId={profile.id} currentGoal={(profile as any).monthly_earnings_goal ?? null} earnings={earnings} />
+          </motion.div>
+        )}
+
+        {/* ── SECTION 5: BANK ACCOUNT ───────────────────────────── */}
+        <motion.div {...f(0.22)}>
+          <BankAccountStatus onStatusChange={setPayoutsEnabled} />
+        </motion.div>
+
+        {/* ── SECTION 6: TRANSACTION HISTORY ───────────────────── */}
+        <motion.div {...f(0.26)}>
+          <div className="rounded-3xl border-2 border-primary/40 overflow-hidden">
             <Tabs defaultValue="earnings">
-              <div className="bg-muted/30 border-b border-border px-6 pt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-bold text-base flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-primary" /> Transaction History
+              <div className="border-b border-primary/20 px-6 pt-5"
+                style={{ background: "linear-gradient(135deg, hsl(var(--primary)/0.08), transparent)" }}>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-black text-lg flex items-center gap-2 text-foreground">
+                    <DollarSign className="h-5 w-5 text-primary" /> Transaction History
                   </h2>
                 </div>
                 <TabsList className="bg-transparent h-auto p-0 gap-1">
@@ -354,7 +443,7 @@ export default function CleanerEarnings() {
                     <TabsTrigger
                       key={tab}
                       value={tab}
-                      className="rounded-t-xl rounded-b-none border border-b-0 border-transparent data-[state=active]:border-border data-[state=active]:bg-background data-[state=active]:shadow-none px-5 py-2 capitalize text-sm"
+                      className="rounded-t-2xl rounded-b-none border-2 border-b-0 border-transparent data-[state=active]:border-primary/40 data-[state=active]:bg-background data-[state=active]:shadow-none px-5 py-2.5 capitalize text-sm font-semibold"
                     >
                       {tab === "earnings" ? "💰 Earnings" : "🏦 Payouts"}
                     </TabsTrigger>

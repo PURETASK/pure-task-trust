@@ -8,8 +8,8 @@ import {
 } from "lucide-react";
 import { useCleanerStats, useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip as RechartTooltip,
-  ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip as RechartTooltip,
+  ResponsiveContainer, CartesianGrid, Cell,
 } from "recharts";
 import {
   format, subWeeks, startOfWeek, endOfWeek, eachWeekOfInterval,
@@ -21,19 +21,20 @@ import { motion } from "framer-motion";
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-card border border-border/60 rounded-2xl px-4 py-3 shadow-elevated text-sm">
+    <div className="bg-card border-2 border-primary/30 rounded-2xl px-4 py-3 shadow-lg text-sm">
       <p className="text-xs text-muted-foreground mb-1">{label}</p>
       <p className="text-lg font-black text-foreground">${payload[0]?.value ?? 0}</p>
     </div>
   );
 }
 
-/* ─── Animated number card ───────────────────────────────────────────── */
+/* ─── Stat Card ──────────────────────────────────────────────────────── */
 function StatCard({
-  label, value, sub, icon: Icon, colorClass, bgClass, trend, delay,
+  label, value, sub, icon: Icon, colorClass, bgClass, borderClass, trend, delay,
 }: {
   label: string; value: string; sub?: string;
-  icon: typeof DollarSign; colorClass: string; bgClass: string;
+  icon: typeof DollarSign;
+  colorClass: string; bgClass: string; borderClass: string;
   trend?: { pct: number } | null;
   delay: number;
 }) {
@@ -42,13 +43,13 @@ function StatCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="rounded-2xl border border-border/60 bg-card shadow-card p-5"
+      className={`rounded-2xl border-2 ${borderClass} ${bgClass} p-5 relative overflow-hidden`}
     >
-      <div className={`h-11 w-11 rounded-xl ${bgClass} flex items-center justify-center mb-3`}>
+      <div className={`h-12 w-12 rounded-2xl border-2 ${borderClass} bg-card flex items-center justify-center mb-3`}>
         <Icon className={`h-5 w-5 ${colorClass}`} />
       </div>
-      <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
-      <p className="text-3xl font-black text-foreground leading-none">{value}</p>
+      <p className="text-xs text-muted-foreground mb-0.5 font-medium">{label}</p>
+      <p className={`text-3xl font-black leading-none ${colorClass}`}>{value}</p>
       {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
       {trend !== undefined && trend !== null && (
         <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${positive ? "text-success" : "text-destructive"}`}>
@@ -60,14 +61,22 @@ function StatCard({
   );
 }
 
-/* ─── Performance insight pill ───────────────────────────────────────── */
-function InsightPill({ icon: Icon, text, color }: { icon: typeof Zap; text: string; color: string }) {
+/* ─── Insight Pill ───────────────────────────────────────────────────── */
+function InsightPill({
+  icon: Icon, text, borderClass, iconBgClass, iconColorClass,
+}: {
+  icon: typeof Zap;
+  text: string;
+  borderClass: string;
+  iconBgClass: string;
+  iconColorClass: string;
+}) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-border/60 bg-card p-4">
-      <div className={`h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
-        <Icon className="h-4 w-4" />
+    <div className={`flex items-start gap-3 rounded-2xl border-2 ${borderClass} bg-card p-4`}>
+      <div className={`h-10 w-10 rounded-xl border-2 ${borderClass} ${iconBgClass} flex items-center justify-center flex-shrink-0`}>
+        <Icon className={`h-4 w-4 ${iconColorClass}`} />
       </div>
-      <p className="text-sm text-muted-foreground leading-relaxed pt-0.5">{text}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed pt-1.5">{text}</p>
     </div>
   );
 }
@@ -113,51 +122,59 @@ export default function CleanerAnalytics() {
   const prev4 = weeklyChartData.slice(-8, -4).reduce((s, w) => s + w.earnings, 0);
   const trendPct = prev4 > 0 ? Math.round(((last4 - prev4) / prev4) * 100) : null;
   const trendPositive = trendPct !== null && trendPct >= 0;
-
-  /* Bar chart colors */
   const maxEarnings = Math.max(...weeklyChartData.map(w => w.earnings), 1);
+
+  const f = (delay: number) => ({
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay },
+  });
 
   return (
     <CleanerLayout>
       <div className="space-y-6 pb-8">
 
         {/* ── HERO HEADER ──────────────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white"
+        <motion.div {...f(0)}
+          className="relative overflow-hidden rounded-3xl border-2 border-primary/60 p-6 sm:p-8"
           style={{
-            background: "linear-gradient(135deg, hsl(210,100%,22%) 0%, hsl(210,100%,35%) 55%, hsl(190,90%,35%) 100%)",
-            boxShadow: "0 20px 60px -10px hsl(210,100%,30%/0.45)",
+            background: "linear-gradient(135deg, hsl(var(--primary)/0.20) 0%, hsl(var(--primary)/0.08) 60%, hsl(var(--background)) 100%)",
+            boxShadow: "0 0 0 1px hsl(var(--primary)/0.15), 0 20px 60px -10px hsl(var(--primary)/0.3)",
           }}
         >
-          <div className="absolute -top-16 -right-16 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+          <div className="absolute -top-16 -right-16 h-60 w-60 rounded-full blur-3xl pointer-events-none"
+            style={{ background: "hsl(var(--primary)/0.25)" }} />
+          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full blur-2xl pointer-events-none"
+            style={{ background: "hsl(var(--success)/0.15)" }} />
 
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <div className="h-12 w-12 rounded-2xl bg-white/15 flex items-center justify-center">
-                  <BarChart3 className="h-6 w-6 text-white" />
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-14 w-14 rounded-2xl border-2 border-primary/40 bg-primary/20 flex items-center justify-center">
+                  <BarChart3 className="h-7 w-7 text-primary" />
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight">Analytics</h1>
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground">Analytics</h1>
+                  <p className="text-muted-foreground text-sm">Track performance, earnings trends & growth</p>
+                </div>
               </div>
-              <p className="text-white/70 text-sm sm:text-base">
-                Track performance, earnings trends & growth
-              </p>
             </div>
 
             {/* Trend badge */}
             {trendPct !== null && (
-              <div className={`flex items-center gap-2 rounded-2xl px-4 py-3 border ${
-                trendPositive ? "bg-success/20 border-success/30" : "bg-destructive/20 border-destructive/30"
+              <div className={`flex items-center gap-3 rounded-2xl border-2 px-5 py-4 ${
+                trendPositive
+                  ? "bg-success/15 border-success/50"
+                  : "bg-destructive/15 border-destructive/50"
               }`}>
                 {trendPositive
-                  ? <TrendingUp className="h-5 w-5 text-white" />
-                  : <TrendingDown className="h-5 w-5 text-white" />
-                }
+                  ? <TrendingUp className="h-6 w-6 text-success" />
+                  : <TrendingDown className="h-6 w-6 text-destructive" />}
                 <div>
-                  <p className="text-white font-black text-xl leading-none">{trendPositive ? "+" : ""}{trendPct}%</p>
-                  <p className="text-white/70 text-xs">vs prior 4 weeks</p>
+                  <p className={`font-black text-2xl leading-none ${trendPositive ? "text-success" : "text-destructive"}`}>
+                    {trendPositive ? "+" : ""}{trendPct}%
+                  </p>
+                  <p className="text-muted-foreground text-xs">vs prior 4 weeks</p>
                 </div>
               </div>
             )}
@@ -166,13 +183,13 @@ export default function CleanerAnalytics() {
           {/* Mini stats row */}
           <div className="relative mt-5 grid grid-cols-3 gap-3">
             {[
-              { label: "This Month", value: `$${thisMonthEarnings.toFixed(0)}` },
-              { label: "Total Jobs",  value: stats.totalJobs || 0 },
-              { label: "Avg Rating",  value: stats.avgRating?.toFixed(1) || "—" },
+              { label: "This Month", value: `$${thisMonthEarnings.toFixed(0)}`, border: "border-primary/30", bg: "bg-primary/10", color: "text-primary" },
+              { label: "Total Jobs",  value: stats.totalJobs || 0,              border: "border-success/30", bg: "bg-success/10", color: "text-success" },
+              { label: "Avg Rating",  value: stats.avgRating?.toFixed(1) || "—", border: "border-warning/30", bg: "bg-warning/10", color: "text-warning" },
             ].map(s => (
-              <div key={s.label} className="bg-white/10 rounded-2xl px-4 py-3 text-center border border-white/10">
-                <p className="text-xl sm:text-2xl font-black text-white">{s.value}</p>
-                <p className="text-white/60 text-xs mt-0.5">{s.label}</p>
+              <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} px-4 py-3 text-center`}>
+                <p className={`text-2xl sm:text-3xl font-black ${s.color}`}>{s.value}</p>
+                <p className="text-muted-foreground text-xs mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
@@ -181,68 +198,71 @@ export default function CleanerAnalytics() {
         {/* ── KEY METRICS ──────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {isLoadingStats ? (
-            <>{[1,2,3,4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}</>
+            <>{[1,2,3,4].map(i => <Skeleton key={i} className="h-36 rounded-2xl" />)}</>
           ) : (
             <>
               <StatCard label="This Month" value={`$${thisMonthEarnings.toFixed(0)}`}
-                icon={DollarSign} colorClass="text-success" bgClass="bg-success/10"
+                icon={DollarSign}
+                colorClass="text-success" bgClass="bg-success/10" borderClass="border-success/40"
                 trend={monthGrowth !== null ? { pct: monthGrowth } : null} delay={0} />
               <StatCard label="Avg Job Value" value={`$${avgJobValue.toFixed(0)}`}
                 sub="per completed job"
-                icon={TrendingUp} colorClass="text-primary" bgClass="bg-primary/10"
+                icon={TrendingUp}
+                colorClass="text-primary" bgClass="bg-primary/10" borderClass="border-primary/40"
                 delay={0.07} />
               <StatCard label="Avg Rating" value={stats.avgRating?.toFixed(1) || "N/A"}
                 sub="client satisfaction"
-                icon={Star} colorClass="text-warning" bgClass="bg-warning/10"
+                icon={Star}
+                colorClass="text-warning" bgClass="bg-warning/10" borderClass="border-warning/40"
                 delay={0.14} />
               <StatCard label="Completion" value={`${completionRate}%`}
                 sub={`${stats.completedJobs} of ${stats.totalJobs} jobs`}
-                icon={CheckCircle} colorClass="text-success" bgClass="bg-success/10"
+                icon={CheckCircle}
+                colorClass="text-[hsl(var(--pt-purple))]" bgClass="bg-[hsl(var(--pt-purple))]/10" borderClass="border-[hsl(var(--pt-purple))]/40"
                 delay={0.21} />
             </>
           )}
         </div>
 
         {/* ── EARNINGS CHART ───────────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-          className="rounded-2xl border border-border/60 bg-card shadow-card p-5 sm:p-6"
+        <motion.div {...f(0.25)}
+          className="rounded-3xl border-2 border-primary/40 bg-card p-5 sm:p-6"
+          style={{ boxShadow: "0 4px 24px -4px hsl(var(--primary)/0.15)" }}
         >
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-lg font-bold text-foreground">Weekly Earnings</h2>
+              <h2 className="text-lg font-black text-foreground">Weekly Earnings</h2>
               <p className="text-xs text-muted-foreground">Last 8 weeks</p>
             </div>
             {trendPct !== null && (
               <Badge
                 variant="outline"
-                className={`gap-1 font-semibold ${trendPositive ? "border-success/40 text-success" : "border-destructive/40 text-destructive"}`}
+                className={`gap-1 font-bold text-sm px-3 py-1 rounded-xl border-2 ${trendPositive ? "border-success/40 text-success bg-success/10" : "border-destructive/40 text-destructive bg-destructive/10"}`}
               >
-                {trendPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+                {trendPositive ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
                 {trendPositive ? "+" : ""}{trendPct}%
               </Badge>
             )}
           </div>
 
-          {isLoadingEarnings ? <Skeleton className="h-56 rounded-xl" /> : (
+          {isLoadingEarnings ? <Skeleton className="h-56 rounded-2xl" /> : (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={weeklyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }} barCategoryGap="30%">
                 <defs>
                   <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={1} />
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
                   </linearGradient>
                   <linearGradient id="barGradPeak" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="hsl(var(--success))" stopOpacity={1} />
-                    <stop offset="100%" stopColor="hsl(var(--success))" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="hsl(var(--success))" stopOpacity={0.5} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                 <XAxis dataKey="week" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} tickFormatter={v => `$${v}`} />
-                <RechartTooltip content={<CustomTooltip />} cursor={{ fill: "hsl(var(--muted)/0.5)", radius: 8 }} />
-                <Bar dataKey="earnings" radius={[8, 8, 0, 0]}>
+                <RechartTooltip content={<CustomTooltip />} cursor={{ fill: "hsl(var(--muted)/0.4)", radius: 8 }} />
+                <Bar dataKey="earnings" radius={[10, 10, 0, 0]}>
                   {weeklyChartData.map((entry, i) => (
                     <Cell
                       key={i}
@@ -259,30 +279,31 @@ export default function CleanerAnalytics() {
         <div className="grid md:grid-cols-2 gap-6">
 
           {/* Job Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-border/60 bg-card shadow-card overflow-hidden"
+          <motion.div {...f(0.30)}
+            className="rounded-3xl border-2 border-success/40 overflow-hidden"
+            style={{ boxShadow: "0 4px 24px -4px hsl(var(--success)/0.15)" }}
           >
-            <div className="p-5 border-b border-border/60">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />Job Statistics
+            <div className="p-5 border-b-2 border-success/20 bg-success/10">
+              <h2 className="text-lg font-black text-foreground flex items-center gap-2">
+                <Target className="h-5 w-5 text-success" />Job Statistics
               </h2>
             </div>
-            {isLoadingStats ? <div className="p-5"><Skeleton className="h-40 rounded-xl" /></div> : (
+            {isLoadingStats ? <div className="p-5"><Skeleton className="h-40 rounded-2xl" /></div> : (
               <div className="divide-y divide-border/40">
                 {[
-                  { label: "Total Jobs",        value: stats.totalJobs,               icon: BarChart3,    color: "text-primary"  },
-                  { label: "Completed",          value: stats.completedJobs,           icon: CheckCircle,  color: "text-success"  },
-                  { label: "This Week",          value: stats.jobsThisWeek,            icon: Calendar,     color: "text-pt-purple" },
-                  { label: "Hours This Week",    value: `${stats.hoursThisWeek || 0}h`, icon: Clock,       color: "text-warning"  },
-                ].map(({ label, value, icon: Icon, color }) => (
-                  <div key={label} className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/20 transition-colors">
+                  { label: "Total Jobs",      value: stats.totalJobs,                icon: BarChart3,    color: "text-primary",                   bg: "bg-primary/10",                border: "border-primary/30"               },
+                  { label: "Completed",        value: stats.completedJobs,            icon: CheckCircle,  color: "text-success",                   bg: "bg-success/10",                border: "border-success/30"               },
+                  { label: "This Week",        value: stats.jobsThisWeek,             icon: Calendar,     color: "text-[hsl(var(--pt-purple))]",   bg: "bg-[hsl(var(--pt-purple))]/10", border: "border-[hsl(var(--pt-purple))]/30" },
+                  { label: "Hours This Week",  value: `${stats.hoursThisWeek || 0}h`, icon: Clock,        color: "text-warning",                   bg: "bg-warning/10",                border: "border-warning/30"               },
+                ].map(({ label, value, icon: Icon, color, bg, border }) => (
+                  <div key={label} className="flex items-center justify-between px-5 py-4 hover:bg-muted/20 transition-colors">
                     <div className="flex items-center gap-3">
-                      <Icon className={`h-4 w-4 ${color}`} />
-                      <span className="text-sm text-muted-foreground">{label}</span>
+                      <div className={`h-9 w-9 rounded-xl border-2 ${border} ${bg} flex items-center justify-center`}>
+                        <Icon className={`h-4 w-4 ${color}`} />
+                      </div>
+                      <span className="text-sm font-medium text-muted-foreground">{label}</span>
                     </div>
-                    <span className="font-black text-xl text-foreground">{value}</span>
+                    <span className={`font-black text-2xl ${color}`}>{value}</span>
                   </div>
                 ))}
               </div>
@@ -290,20 +311,19 @@ export default function CleanerAnalytics() {
           </motion.div>
 
           {/* Recent Earnings */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.37 }}
-            className="rounded-2xl border border-border/60 bg-card shadow-card overflow-hidden"
+          <motion.div {...f(0.37)}
+            className="rounded-3xl border-2 border-warning/40 overflow-hidden"
+            style={{ boxShadow: "0 4px 24px -4px hsl(var(--warning)/0.15)" }}
           >
-            <div className="p-5 border-b border-border/60">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-success" />Recent Earnings
+            <div className="p-5 border-b-2 border-warning/20 bg-warning/10">
+              <h2 className="text-lg font-black text-foreground flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-warning" />Recent Earnings
               </h2>
             </div>
-            {isLoadingEarnings ? <div className="p-5"><Skeleton className="h-40 rounded-xl" /></div>
+            {isLoadingEarnings ? <div className="p-5"><Skeleton className="h-40 rounded-2xl" /></div>
             : earnings.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
-                <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mb-3">
+                <div className="h-16 w-16 rounded-2xl border-2 border-border bg-muted flex items-center justify-center mb-3">
                   <Zap className="h-8 w-8 text-muted-foreground/40" />
                 </div>
                 <p className="text-sm font-semibold text-foreground">No earnings yet</p>
@@ -320,7 +340,7 @@ export default function CleanerAnalytics() {
                       key={earning.id}
                       initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.05 * i }}
-                      className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/20 transition-colors"
+                      className="flex items-center justify-between px-5 py-4 hover:bg-muted/20 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-xl">{emoji}</span>
@@ -339,25 +359,47 @@ export default function CleanerAnalytics() {
         </div>
 
         {/* ── PERFORMANCE INSIGHTS ─────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42 }}
-        >
+        <motion.div {...f(0.42)}>
           <div className="flex items-center gap-2 mb-4">
             <Award className="h-5 w-5 text-warning" />
-            <h2 className="text-lg font-bold text-foreground">Performance Insights</h2>
+            <h2 className="text-lg font-black text-foreground">Performance Insights</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
-              { icon: Zap,       text: "Respond to job offers within 15 minutes for higher acceptance rates",           color: "bg-warning/10 text-warning"  },
-              { icon: Calendar,  text: "Keep your availability updated to get more job matches in your area",           color: "bg-primary/10 text-primary"  },
-              { icon: CheckCircle, text: "Always upload before/after photos — clients consistently rate you higher",    color: "bg-success/10 text-success"  },
-              { icon: TrendingUp, text: "Maintain 90%+ reliability score for priority marketplace placement",           color: "bg-pt-purple/10 text-pt-purple" },
-            ].map(({ icon, text, color }, i) => (
-              <InsightPill key={i} icon={icon} text={text} color={color} />
+              {
+                icon: Zap,
+                text: "Respond to job offers within 15 minutes for higher acceptance rates",
+                borderClass: "border-warning/40",
+                iconBgClass: "bg-warning/10",
+                iconColorClass: "text-warning",
+              },
+              {
+                icon: Calendar,
+                text: "Keep your availability updated to get more job matches in your area",
+                borderClass: "border-primary/40",
+                iconBgClass: "bg-primary/10",
+                iconColorClass: "text-primary",
+              },
+              {
+                icon: CheckCircle,
+                text: "Always upload before/after photos — clients consistently rate you higher",
+                borderClass: "border-success/40",
+                iconBgClass: "bg-success/10",
+                iconColorClass: "text-success",
+              },
+              {
+                icon: TrendingUp,
+                text: "Maintain 90%+ reliability score for priority marketplace placement",
+                borderClass: "border-[hsl(var(--pt-purple))]/40",
+                iconBgClass: "bg-[hsl(var(--pt-purple))]/10",
+                iconColorClass: "text-[hsl(var(--pt-purple))]",
+              },
+            ].map((item, i) => (
+              <InsightPill key={i} {...item} />
             ))}
           </div>
         </motion.div>
+
       </div>
     </CleanerLayout>
   );
