@@ -88,22 +88,11 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <SidebarTrigger className="h-9 w-9 touch-target" />
 
                 <Link to={getHomePath()} className="flex items-center gap-2 group">
-                  <div className={cn(
-                    "h-7 w-7 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105",
-                    !isAuthenticated || user?.role === "client"
-                      ? "gradient-brand"
-                      : user?.role === "cleaner"
-                      ? "bg-success"
-                      : "bg-destructive"
-                  )}>
-                    {user?.role === "admin" ? (
-                      <Shield className="h-4 w-4 text-white" />
-                    ) : user?.role === "cleaner" ? (
-                      <Sparkles className="h-4 w-4 text-white" />
-                    ) : (
-                      <span className="text-white font-bold text-xs sm:text-sm">P</span>
-                    )}
-                  </div>
+                  <img
+                    src={logo}
+                    alt="PureTask logo"
+                    className="h-7 w-7 sm:h-8 sm:w-8 object-contain transition-transform group-hover:scale-105"
+                  />
                   <span className="font-bold text-base sm:text-lg text-foreground">PureTask</span>
                   {isAuthenticated && user?.role === "admin" && (
                     <span className="hidden sm:block text-xs font-bold text-destructive bg-destructive/10 px-2 py-0.5 rounded-full border border-destructive/20">
