@@ -159,12 +159,12 @@ export default function CleanerAIAssistant() {
           src={aiBotImg}
           alt=""
           aria-hidden="true"
-          className="absolute object-contain opacity-20"
+          className="absolute object-contain opacity-30"
           style={{
-            width: "52vh",
-            height: "52vh",
-            right: "-4vh",
-            bottom: "8vh",
+            width: "50vh",
+            height: "50vh",
+            right: "-3vh",
+            bottom: "6vh",
           }}
         />
       </div>
