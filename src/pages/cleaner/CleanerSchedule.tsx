@@ -358,11 +358,14 @@ export default function CleanerSchedule() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Accepted Jobs</h3>
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-success">
+              <Briefcase className="h-4 w-4" />
+              Accepted Jobs
+            </h3>
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
-              <Card>
+              <Card className="border-2 border-success/20 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No accepted jobs for this day.
                 </CardContent>
@@ -370,7 +373,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {acceptedJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/30 rounded-2xl bg-success/5">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
