@@ -13,7 +13,7 @@ import { useFeaturedTestimonials } from "@/hooks/useFeaturedTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function TestimonialsCarousel() {
-  const { data: testimonials, isLoading } = useFeaturedTestimonials();
+  const { data: testimonials, isLoading, isError } = useFeaturedTestimonials();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
