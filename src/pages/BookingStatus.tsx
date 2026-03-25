@@ -116,7 +116,7 @@ export default function BookingStatus() {
           </div>
 
           {/* Progress Timeline */}
-          {statusKey !== "declined" && (
+          {statusKey !== "declined" && statusKey !== "no_show_pending" && (
             <Card className="overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex items-center">
@@ -144,6 +144,17 @@ export default function BookingStatus() {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* No-Show Decision Card */}
+          {statusKey === "no_show_pending" && (
+            <NoShowDecisionCard
+              jobId={job.id}
+              clientId={job.client_id || ""}
+              cleanerId={job.cleaner_id || null}
+              originalStart={job.scheduled_start_at || ""}
+              escrowCredits={job.escrow_credits_reserved || 0}
+            />
           )}
 
           {/* Booking Details Card */}
