@@ -70,12 +70,14 @@ export function CleanerHeader() {
   const handleLogout = async (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    // Navigate to public page FIRST before clearing auth state
+    // to prevent RequireAuth from redirecting back to /auth mid-logout.
+    navigate("/", { replace: true });
     try {
       await logout();
     } catch {
       // ignore — session cleared client-side regardless
     }
-    navigate("/", { replace: true });
   };
 
   return (
