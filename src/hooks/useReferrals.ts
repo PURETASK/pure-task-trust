@@ -126,7 +126,7 @@ export function useReferrals() {
     enabled: !!user?.id,
   });
 
-  // Get referrals made by current user
+  // Get referrals made by current user (exclude the user's own code row where referred_id is null)
   const referralsQuery = useQuery({
     queryKey: ['referrals', user?.id],
     queryFn: async () => {
@@ -136,6 +136,7 @@ export function useReferrals() {
         .from('referrals')
         .select('*')
         .eq('referrer_id', user.id)
+        .not('referred_id', 'is', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
