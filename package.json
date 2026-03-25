@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
     "@capacitor/core": "^8.2.0",
     "@capacitor/ios": "^8.2.0",
     "@fontsource/dm-sans": "^5.2.8",
