@@ -37,8 +37,9 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
-  // Only block on auth loading OR the very first profile fetch (no cached data yet)
-  const isLoading = authLoading || (isAuthenticated && profileLoading);
+  // Only block if auth is loading OR profile is loading AND we don't yet have role data from AuthContext
+  // user.role from AuthContext is always available once auth resolves — don't block on profile query
+  const isLoading = authLoading || (isAuthenticated && profileLoading && !user?.role);
 
   if (isLoading) {
     return <AuthLoadingSkeleton />;
