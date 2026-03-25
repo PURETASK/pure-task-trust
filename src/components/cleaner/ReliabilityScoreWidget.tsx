@@ -93,7 +93,7 @@ export function ReliabilityScoreWidget() {
 
   const currentScore = score?.current_score ?? profile?.reliability_score ?? 0;
   const tier = getTierFromScore(currentScore);
-  const tierStyle = TIER_STYLES[tier];
+  const tierStyle = TIER_VISUAL[tier];
   const pointsToNext = tierStyle.next ? Math.max(0, tierStyle.nextMin - currentScore) : 0;
 
   const noCancelPct = metrics && metrics.total_jobs_window > 0

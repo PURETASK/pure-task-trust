@@ -55,12 +55,12 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
                     <div className="flex flex-col items-center gap-1 flex-1 cursor-default">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-2 transition-all ${
                         isActive
-                          ? "ring-2 ring-primary ring-offset-2 " + TIER_RING_CLASSES[tier]
+                          ? "ring-2 ring-primary ring-offset-2 " + TIER_VISUAL[tier].ring
                           : isUnlocked
-                          ? TIER_RING_CLASSES[tier]
+                          ? TIER_VISUAL[tier].ring
                           : "bg-muted border-border text-muted-foreground"
                       }`}>
-                        {isUnlocked ? TIER_EMOJIS[tier] : <Lock className="h-4 w-4" />}
+                        {isUnlocked ? TIER_VISUAL[tier].emoji : <Lock className="h-4 w-4" />}
                       </div>
                       <span className={`text-xs font-medium capitalize ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
                         {tier}
