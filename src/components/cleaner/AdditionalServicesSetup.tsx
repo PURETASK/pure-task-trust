@@ -305,8 +305,7 @@ export function AdditionalServicesSetup() {
         <div>
           <h2 className="text-xl font-bold">Additional Services</h2>
           <p className="text-sm text-muted-foreground">
-            Set your prices for add-on services based on your{' '}
-            <Badge variant="outline" className="ml-1">{tier.toUpperCase()}</Badge> tier
+            All cleaners can offer any add-on service — set your own price within the platform range
           </p>
         </div>
         <Badge className="bg-primary/10 text-primary border-primary/30">
