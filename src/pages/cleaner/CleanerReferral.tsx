@@ -285,7 +285,7 @@ export default function CleanerReferral() {
                 { n: "1", title: "Copy your code", desc: "Your code is permanently tied to your account", color: "border-primary/50 bg-primary/20", num_c: "bg-primary text-white" },
                 { n: "2", title: "Share it anywhere", desc: "Text, email, WhatsApp, social — wherever your friends are", color: "border-warning/50 bg-warning/20", num_c: "bg-warning text-white" },
                 { n: "3", title: "They sign up", desc: "Your friend enters your code at signup or uses your link", color: "border-[hsl(280,70%,55%)]/50 bg-[hsl(280,70%,55%)]/20", num_c: "bg-[hsl(280,70%,55%)] text-white" },
-                { n: "4", title: "You both get paid", desc: `$${rewardAmt} lands in both wallets automatically after their first job`, color: "border-success/50 bg-success/20", num_c: "bg-success text-white" },
+                { n: "4", title: "You both get paid", desc: `After they complete 3 cleanings, $${rewardAmt} lands in both wallets automatically`, color: "border-success/50 bg-success/20", num_c: "bg-success text-white" },
               ].map(({ n, title, desc, color, num_c }) => (
                 <div key={n} className={`rounded-xl border-2 ${color} p-4 relative`}>
                   <div className={`h-8 w-8 rounded-full ${num_c} flex items-center justify-center font-bold text-sm mb-3`}>{n}</div>
