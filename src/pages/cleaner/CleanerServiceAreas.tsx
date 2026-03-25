@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCleanerServiceAreas, useCities } from "@/hooks/useServiceAreas";
 import { useToast } from "@/hooks/use-toast";
 import {
-  MapPin, Plus, Trash2, Navigation, Building2, Loader2,
-  CheckCircle, Map, Globe, Target, Crosshair, Layers, X
+  MapPin, Plus, Navigation, Building2, Loader2,
+  CheckCircle, Map, Globe, Target, Crosshair, Layers, X,
+  Save, Radio
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
@@ -18,36 +19,64 @@ import {
 import { Label } from "@/components/ui/label";
 import RadiusMap from "@/components/booking/RadiusMap";
 
-const RADIUS_COLOR: Record<number, { ring: string; glow: string; label: string }> = {
-  5:  { ring: "border-success/70",  glow: "shadow-success/20",  label: "Hyper local" },
-  10: { ring: "border-primary/70",  glow: "shadow-primary/20",  label: "Local"       },
-  15: { ring: "border-primary/70",  glow: "shadow-primary/20",  label: "Nearby"      },
-  20: { ring: "border-warning/70",  glow: "shadow-warning/20",  label: "Mid-range"   },
-  25: { ring: "border-warning/70",  glow: "shadow-warning/20",  label: "Wide"        },
-  30: { ring: "border-[hsl(280,70%,55%)]/70", glow: "shadow-[hsl(280,70%,55%)]/20", label: "Regional" },
-  35: { ring: "border-[hsl(280,70%,55%)]/70", glow: "shadow-[hsl(280,70%,55%)]/20", label: "Regional" },
-  40: { ring: "border-destructive/70", glow: "shadow-destructive/20", label: "Extended" },
-  45: { ring: "border-destructive/70", glow: "shadow-destructive/20", label: "Extended" },
-  50: { ring: "border-destructive/70", glow: "shadow-destructive/20", label: "Max range" },
-};
+const RADIUS_STEPS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 
-function getRadiusStyle(r: number) {
-  return RADIUS_COLOR[r] || RADIUS_COLOR[10];
+function getRadiusLabel(r: number) {
+  if (r <= 5)  return "Hyper local";
+  if (r <= 10) return "Local";
+  if (r <= 15) return "Nearby";
+  if (r <= 20) return "Mid-range";
+  if (r <= 25) return "Wide";
+  if (r <= 35) return "Regional";
+  return "Extended";
+}
+
+function getRadiusColor(r: number) {
+  if (r <= 15) return { border: "border-success/70", bg: "bg-success/10", text: "text-success" };
+  if (r <= 25) return { border: "border-primary/70", bg: "bg-primary/10", text: "text-primary" };
+  if (r <= 35) return { border: "border-warning/70", bg: "bg-warning/10", text: "text-warning" };
+  return { border: "border-[hsl(280,70%,55%)]/70", bg: "bg-[hsl(280,70%,55%)]/10", text: "text-[hsl(280,70%,55%)]" };
 }
 
 export default function CleanerServiceAreas() {
   const { toast } = useToast();
-  const { serviceAreas, isLoading, addServiceArea, removeServiceArea } = useCleanerServiceAreas();
+  const {
+    serviceAreas, isLoading,
+    addServiceArea, removeServiceArea,
+    travelRadius, updateTravelRadius
+  } = useCleanerServiceAreas();
   const { cities, isLoading: loadingCities } = useCities();
-  const isAdding = addServiceArea.isPending;
+
+  const isAdding   = addServiceArea.isPending;
   const isRemoving = removeServiceArea.isPending;
+  const isSavingRadius = updateTravelRadius.isPending;
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
+  const [city, setCity]     = useState("");
+  const [state, setState]   = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [radius, setRadius] = useState(10);
-  const [previewRadius, setPreviewRadius] = useState(10);
+  const [areaRadius, setAreaRadius] = useState(10);
+
+  // Travel radius in miles (convert from km stored in DB: 1 km ≈ 0.621371 mi)
+  const storedMiles = travelRadius ? Math.round((travelRadius as number) * 0.621371) : 15;
+  const [globalRadius, setGlobalRadius] = useState<number>(storedMiles);
+  const [radiusDirty, setRadiusDirty]   = useState(false);
+
+  const handleRadiusChange = (val: number) => {
+    setGlobalRadius(val);
+    setRadiusDirty(true);
+  };
+
+  const handleSaveRadius = async () => {
+    const km = Math.round(globalRadius / 0.621371);
+    try {
+      await updateTravelRadius.mutateAsync(km);
+      setRadiusDirty(false);
+      toast({ title: "Travel radius saved!", description: `Set to ${globalRadius} miles` });
+    } catch (err: any) {
+      toast({ title: "Failed to save radius", description: err.message, variant: "destructive" });
+    }
+  };
 
   const handleAddArea = async () => {
     if (!city.trim() && !zipCode.trim()) {
@@ -55,10 +84,17 @@ export default function CleanerServiceAreas() {
       return;
     }
     try {
-      await addServiceArea.mutateAsync({ city, state, zip_code: zipCode, radius_miles: radius, latitude: null, longitude: null });
+      await addServiceArea.mutateAsync({
+        city: city.trim() || null,
+        state: state.trim() || null,
+        zip_code: zipCode.trim() || null,
+        radius_miles: areaRadius,
+        latitude: null,
+        longitude: null,
+      });
       toast({ title: "Service area added!" });
       setDialogOpen(false);
-      setCity(""); setState(""); setZipCode(""); setRadius(10);
+      setCity(""); setState(""); setZipCode(""); setAreaRadius(10);
     } catch (error: any) {
       toast({ title: "Failed to add area", description: error.message, variant: "destructive" });
     }
@@ -73,13 +109,13 @@ export default function CleanerServiceAreas() {
     }
   };
 
-  const totalCoverage = serviceAreas.reduce((acc, a) => acc + Math.PI * Math.pow(a.radius_miles || 10, 2), 0);
+  const rc = getRadiusColor(globalRadius);
 
   return (
     <CleanerLayout>
       <div className="space-y-6 max-w-4xl">
 
-        {/* ── HERO HEADER ──────────────────────────────────────────── */}
+        {/* ── HERO HEADER ──────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
           <div className="relative overflow-hidden rounded-3xl p-7"
             style={{
@@ -98,17 +134,16 @@ export default function CleanerServiceAreas() {
                   <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Coverage Map</span>
                 </div>
                 <h1 className="text-4xl font-black text-white leading-none mb-2">Service Areas</h1>
-                <p className="text-white/60 text-sm">Define where you're available to work and attract more jobs</p>
+                <p className="text-white/60 text-sm">Define where you're available to work</p>
               </div>
 
-              {/* Stats strip */}
               <div className="flex gap-3 flex-wrap">
                 {[
-                  { icon: MapPin, value: serviceAreas.length, label: "Areas", color: "bg-white/10 border-white/20" },
-                  { icon: Target, value: serviceAreas.length > 0 ? `${Math.max(...serviceAreas.map(a => a.radius_miles || 10))} mi` : "—", label: "Max Radius", color: "bg-white/10 border-white/20" },
-                  { icon: Building2, value: cities.filter(c => c.is_active).length, label: "Cities", color: "bg-white/10 border-white/20" },
+                  { icon: MapPin, value: serviceAreas.length, label: "Zones" },
+                  { icon: Target, value: `${globalRadius} mi`, label: "Travel Radius" },
+                  { icon: Building2, value: cities.filter(c => c.is_active).length, label: "Cities" },
                 ].map(s => (
-                  <div key={s.label} className={`rounded-2xl border ${s.color} px-4 py-3 text-white backdrop-blur-sm text-center min-w-[80px]`}>
+                  <div key={s.label} className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-white backdrop-blur-sm text-center min-w-[80px]">
                     <s.icon className="h-4 w-4 mx-auto mb-1 text-white/60" />
                     <p className="text-xl font-bold leading-none">{s.value}</p>
                     <p className="text-white/50 text-[11px] mt-0.5">{s.label}</p>
@@ -117,8 +152,7 @@ export default function CleanerServiceAreas() {
               </div>
             </div>
 
-            {/* Add Area button inside hero */}
-            <div className="relative mt-5">
+            <div className="relative mt-5 flex gap-3">
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="gap-2 bg-white text-primary hover:bg-white/90 font-bold rounded-xl h-11 px-6 shadow-lg">
@@ -138,55 +172,80 @@ export default function CleanerServiceAreas() {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">City</Label>
-                        <Input placeholder="e.g., Austin" value={city} onChange={e => setCity(e.target.value)} className="rounded-xl" />
+                        <Input
+                          placeholder="e.g., Austin"
+                          value={city}
+                          onChange={e => setCity(e.target.value)}
+                          className="rounded-xl"
+                        />
                       </div>
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">State</Label>
-                        <Input placeholder="e.g., TX" value={state} onChange={e => setState(e.target.value)} className="rounded-xl" />
+                        <Input
+                          placeholder="e.g., TX"
+                          value={state}
+                          onChange={e => setState(e.target.value)}
+                          className="rounded-xl"
+                        />
                       </div>
                     </div>
 
                     {/* Zip */}
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Or Zip Code</Label>
-                      <Input placeholder="e.g., 78701" value={zipCode} onChange={e => setZipCode(e.target.value)} className="rounded-xl" />
+                      <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Zip Code <span className="text-muted-foreground/50 normal-case font-normal">(or enter city above)</span>
+                      </Label>
+                      <Input
+                        placeholder="e.g., 78701"
+                        value={zipCode}
+                        onChange={e => setZipCode(e.target.value)}
+                        className="rounded-xl"
+                      />
                     </div>
 
                     {/* Radius picker */}
-                    <div className="space-y-3">
+                    <div className="space-y-3 p-4 rounded-2xl border-2 border-success/30 bg-success/5">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Service Radius</Label>
                         <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="font-mono font-bold">{radius} mi</Badge>
-                          <span className="text-xs text-muted-foreground">{getRadiusStyle(radius).label}</span>
+                          <Radio className="h-4 w-4 text-success" />
+                          <Label className="font-semibold text-sm">Area Radius</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-black text-success">{areaRadius}</span>
+                          <span className="text-sm text-muted-foreground">mi</span>
+                          <Badge variant="secondary" className="text-xs">{getRadiusLabel(areaRadius)}</Badge>
                         </div>
                       </div>
-                      <Slider value={[radius]} onValueChange={([val]) => setRadius(val)} min={5} max={50} step={5} />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>5 mi — local</span><span>50 mi — extended</span>
+                      <Slider
+                        value={[areaRadius]}
+                        onValueChange={([val]) => setAreaRadius(val)}
+                        min={5} max={50} step={5}
+                      />
+                      <div className="flex justify-between text-[11px] text-muted-foreground">
+                        <span>5 mi</span><span>50 mi</span>
+                      </div>
+                    </div>
+
+                    {/* Map preview */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Map className="h-3.5 w-3.5 text-muted-foreground" />
+                        <Label className="text-xs text-muted-foreground">Coverage preview — {areaRadius}-mile zone</Label>
+                      </div>
+                      <div className="rounded-xl overflow-hidden border-2 border-border/50" style={{ height: 200 }}>
+                        <RadiusMap radiusMiles={areaRadius} className="h-full" />
                       </div>
                     </div>
 
                     {/* CTA */}
                     <Button
-                      className="w-full rounded-xl h-11 font-bold gap-2"
+                      className="w-full rounded-xl h-12 font-bold gap-2 bg-success hover:bg-success/90 text-white border-0"
                       onClick={handleAddArea}
-                      disabled={isAdding}
+                      disabled={isAdding || (!city.trim() && !zipCode.trim())}
                     >
                       {isAdding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                      {isAdding ? "Adding…" : "Add Service Area"}
+                      {isAdding ? "Adding…" : "Save Service Area"}
                     </Button>
-
-                    {/* Map preview — after button so form always visible first */}
-                    <div className="space-y-2 pt-1">
-                      <div className="flex items-center gap-2">
-                        <Map className="h-3.5 w-3.5 text-muted-foreground" />
-                        <Label className="text-xs text-muted-foreground">Coverage preview — {radius}-mile zone</Label>
-                      </div>
-                      <div className="rounded-xl overflow-hidden border-2 border-border/50" style={{ height: 220 }}>
-                        <RadiusMap radiusMiles={radius} className="h-full" />
-                      </div>
-                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -194,49 +253,74 @@ export default function CleanerServiceAreas() {
           </div>
         </motion.div>
 
-        {/* ── LIVE RADIUS EXPLORER ─────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-          <div className="rounded-3xl border-2 border-primary/60 overflow-hidden"
-            style={{ background: "linear-gradient(135deg, hsl(210,100%,50%/0.06), hsl(210,100%,50%/0.02))" }}>
-            <div className="p-5 border-b border-primary/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center">
-                    <Navigation className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-base">Coverage Explorer</h2>
-                    <p className="text-xs text-muted-foreground">Drag the slider to see your travel zone</p>
-                  </div>
+        {/* ── GLOBAL TRAVEL RADIUS ─────────────────────── */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }}>
+          <div className={`rounded-3xl border-2 ${rc.border} overflow-hidden`}
+            style={{ background: "hsl(var(--card))" }}>
+            <div className="p-5 border-b border-border/40">
+              <div className="flex items-center gap-3 mb-1">
+                <div className={`h-10 w-10 rounded-xl ${rc.bg} flex items-center justify-center`}>
+                  <Navigation className={`h-5 w-5 ${rc.text}`} />
                 </div>
-                <Badge className="bg-primary/15 text-primary border-primary/30 border font-mono font-bold text-base px-4 py-1.5">
-                  {previewRadius} mi
-                </Badge>
-              </div>
-              <div className="mt-4 space-y-1">
-                <Slider value={[previewRadius]} onValueChange={([v]) => setPreviewRadius(v)} min={5} max={50} step={5} />
-                <div className="flex justify-between text-[11px] text-muted-foreground pt-1">
-                  {[5,10,15,20,25,30,35,40,45,50].map(v => (
-                    <button key={v} onClick={() => setPreviewRadius(v)}
-                      className={`text-[10px] font-bold transition-colors ${v === previewRadius ? 'text-primary' : 'text-muted-foreground/50 hover:text-muted-foreground'}`}>
-                      {v}
-                    </button>
-                  ))}
+                <div>
+                  <h2 className="font-bold text-base">Global Travel Radius</h2>
+                  <p className="text-xs text-muted-foreground">How far you're willing to travel from your base</p>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  <span className={`text-3xl font-black ${rc.text}`}>{globalRadius}</span>
+                  <span className="text-sm text-muted-foreground">mi</span>
+                  <Badge variant="secondary" className="text-xs">{getRadiusLabel(globalRadius)}</Badge>
                 </div>
               </div>
             </div>
-            <div style={{ height: 280 }}>
-              <RadiusMap radiusMiles={previewRadius} className="h-full" />
-            </div>
-            <div className="px-5 py-3 bg-primary/5 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Blue shaded zone = your coverage from base location</span>
-              <span className="text-xs font-semibold text-primary">{getRadiusStyle(previewRadius).label}</span>
+
+            <div className="p-5 space-y-4">
+              <Slider
+                value={[globalRadius]}
+                onValueChange={([v]) => handleRadiusChange(v)}
+                min={5} max={50} step={5}
+              />
+              <div className="flex justify-between">
+                {RADIUS_STEPS.map(v => (
+                  <button
+                    key={v}
+                    onClick={() => handleRadiusChange(v)}
+                    className={`text-[11px] font-bold transition-colors px-1 ${v === globalRadius ? rc.text : 'text-muted-foreground/50 hover:text-muted-foreground'}`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+
+              {/* Map */}
+              <div className={`rounded-2xl overflow-hidden border-2 ${rc.border}`} style={{ height: 250 }}>
+                <RadiusMap radiusMiles={globalRadius} className="h-full" />
+              </div>
+              <p className="text-center text-xs text-muted-foreground">
+                Blue zone = your {globalRadius}-mile coverage area
+              </p>
+
+              {/* Save button — always visible, highlighted when dirty */}
+              <Button
+                className={`w-full h-12 font-bold rounded-xl gap-2 transition-all ${
+                  radiusDirty
+                    ? "bg-success hover:bg-success/90 text-white border-0 shadow-lg shadow-success/30"
+                    : "bg-muted/60 text-muted-foreground hover:bg-muted border-0"
+                }`}
+                onClick={handleSaveRadius}
+                disabled={isSavingRadius || !radiusDirty}
+              >
+                {isSavingRadius
+                  ? <><Loader2 className="h-4 w-4 animate-spin" />Saving…</>
+                  : <><Save className="h-4 w-4" />{radiusDirty ? "Save Travel Radius" : "Radius Saved ✓"}</>
+                }
+              </Button>
             </div>
           </div>
         </motion.div>
 
-        {/* ── YOUR SERVICE AREAS GRID ──────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
+        {/* ── YOUR SERVICE AREAS GRID ──────────────────── */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-lg flex items-center gap-2">
               <Layers className="h-5 w-5 text-primary" /> Your Coverage Zones
@@ -248,13 +332,13 @@ export default function CleanerServiceAreas() {
 
           {isLoading ? (
             <div className="grid sm:grid-cols-2 gap-3">
-              {[1,2,3].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}
             </div>
           ) : serviceAreas.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-3">
               <AnimatePresence>
                 {serviceAreas.map((area, i) => {
-                  const rs = getRadiusStyle(area.radius_miles || 10);
+                  const rc2 = getRadiusColor(area.radius_miles || 10);
                   return (
                     <motion.div
                       key={area.id}
@@ -263,9 +347,8 @@ export default function CleanerServiceAreas() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: i * 0.05 }}
                     >
-                      <div className={`rounded-2xl border-2 ${rs.ring} p-5 relative group hover:shadow-lg transition-all duration-200`}
+                      <div className={`rounded-2xl border-2 ${rc2.border} p-5 relative group hover:shadow-lg transition-all duration-200`}
                         style={{ background: "hsl(var(--card))" }}>
-                        {/* Remove button */}
                         <button
                           onClick={() => handleRemoveArea(area.id)}
                           disabled={isRemoving}
@@ -275,12 +358,10 @@ export default function CleanerServiceAreas() {
                         </button>
 
                         <div className="flex items-start gap-4">
-                          {/* Radius ring visual */}
                           <div className="relative shrink-0">
-                            <div className={`h-14 w-14 rounded-full border-4 ${rs.ring} flex items-center justify-center`}
-                              style={{ background: "hsl(var(--muted)/0.5)" }}>
+                            <div className={`h-14 w-14 rounded-full border-4 ${rc2.border} flex items-center justify-center ${rc2.bg}`}>
                               <div className="text-center">
-                                <p className="text-sm font-black leading-none">{area.radius_miles || 10}</p>
+                                <p className={`text-sm font-black leading-none ${rc2.text}`}>{area.radius_miles || 10}</p>
                                 <p className="text-[9px] text-muted-foreground">mi</p>
                               </div>
                             </div>
@@ -293,13 +374,13 @@ export default function CleanerServiceAreas() {
                             <p className="font-bold text-base leading-tight truncate">
                               {area.city && area.state
                                 ? `${area.city}, ${area.state}`
-                                : area.zip_code ? `ZIP ${area.zip_code}` : "Custom Area"}
+                                : area.zip_code
+                                  ? `ZIP ${area.zip_code}`
+                                  : "Custom Area"}
                             </p>
                             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                              <Badge variant="outline" className="text-[11px] h-5 border-success/40 text-success">
-                                Active
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">{rs.label}</span>
+                              <Badge variant="outline" className="text-[11px] h-5 border-success/40 text-success">Active</Badge>
+                              <span className="text-xs text-muted-foreground">{getRadiusLabel(area.radius_miles || 10)}</span>
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
                               ~{Math.round(Math.PI * Math.pow(area.radius_miles || 10, 2)).toLocaleString()} sq mi coverage
@@ -318,7 +399,9 @@ export default function CleanerServiceAreas() {
                 <Map className="h-10 w-10 text-muted-foreground/30" />
               </div>
               <p className="font-bold text-lg text-muted-foreground mb-1">No zones defined yet</p>
-              <p className="text-sm text-muted-foreground mb-5 max-w-xs mx-auto">Add your first service area to start receiving job matches in your area</p>
+              <p className="text-sm text-muted-foreground mb-5 max-w-xs mx-auto">
+                Add your first service area to start receiving job matches
+              </p>
               <Button className="gap-2 rounded-xl" onClick={() => setDialogOpen(true)}>
                 <Plus className="h-4 w-4" /> Add Your First Area
               </Button>
@@ -326,8 +409,8 @@ export default function CleanerServiceAreas() {
           )}
         </motion.div>
 
-        {/* ── PLATFORM CITIES ─────────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        {/* ── PLATFORM CITIES ──────────────────────────── */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
           <div className="rounded-3xl border-2 border-warning/50 p-6"
             style={{ background: "linear-gradient(135deg, hsl(38,95%,55%/0.06), transparent)" }}>
             <div className="flex items-center gap-3 mb-4">
@@ -341,7 +424,7 @@ export default function CleanerServiceAreas() {
             </div>
             {loadingCities ? (
               <div className="flex gap-2 flex-wrap">
-                {[1,2,3,4].map(i => <Skeleton key={i} className="h-8 w-24 rounded-full" />)}
+                {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-8 w-24 rounded-full" />)}
               </div>
             ) : cities.length > 0 ? (
               <div className="flex flex-wrap gap-2">
