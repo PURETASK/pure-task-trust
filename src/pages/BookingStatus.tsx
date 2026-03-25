@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
 import { CancelAlternativesModal } from "@/components/booking/CancelAlternativesModal";
+import { NoShowDecisionCard } from "@/components/booking/NoShowDecisionCard";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,6 +18,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/10", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/10", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
   completed: { icon: Check, color: "text-success", bg: "bg-success/10", label: "Job Complete!", desc: "Your home is sparkling — review within 24 hours or payment releases automatically" },
+  no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/10", label: "Cleaner Hasn't Arrived", desc: "It's been over 45 minutes — choose to reschedule or get a full refund" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/10", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
 };
 
@@ -33,6 +35,7 @@ function getStatusKey(status: string): string {
     case "confirmed": return "accepted";
     case "in_progress": return "active";
     case "completed": return "completed";
+    case "no_show_pending": return "no_show_pending";
     case "cancelled": case "no_show": case "disputed": return "declined";
     default: return "pending";
   }
@@ -113,7 +116,7 @@ export default function BookingStatus() {
           </div>
 
           {/* Progress Timeline */}
-          {statusKey !== "declined" && (
+          {statusKey !== "declined" && statusKey !== "no_show_pending" && (
             <Card className="overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex items-center">
@@ -141,6 +144,17 @@ export default function BookingStatus() {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* No-Show Decision Card */}
+          {statusKey === "no_show_pending" && (
+            <NoShowDecisionCard
+              jobId={job.id}
+              clientId={job.client_id || ""}
+              cleanerId={job.cleaner_id || null}
+              originalStart={job.scheduled_start_at || ""}
+              escrowCredits={job.escrow_credits_reserved || 0}
+            />
           )}
 
           {/* Booking Details Card */}
