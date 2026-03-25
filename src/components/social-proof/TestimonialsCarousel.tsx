@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import { TestimonialCard } from "./TestimonialCard";
 import { useFeaturedTestimonials, type Testimonial } from "@/hooks/useFeaturedTestimonials";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const FALLBACK_TESTIMONIALS: Testimonial[] = [
   { id: "1", author_name: "Jennifer M.", author_role: "Busy Professional", author_location: "Austin, TX", quote: "Finally, a cleaning service I can trust! The GPS check-in and photo proof give me total peace of mind. My apartment has never looked better.", rating: 5, avatar_url: null },
