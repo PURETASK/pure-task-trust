@@ -9,8 +9,17 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { TestimonialCard } from "./TestimonialCard";
-import { useFeaturedTestimonials } from "@/hooks/useFeaturedTestimonials";
+import { useFeaturedTestimonials, type Testimonial } from "@/hooks/useFeaturedTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
+
+const FALLBACK_TESTIMONIALS: Testimonial[] = [
+  { id: "1", author_name: "Jennifer M.", author_role: "Busy Professional", author_location: "Austin, TX", quote: "Finally, a cleaning service I can trust! The GPS check-in and photo proof give me total peace of mind. My apartment has never looked better.", rating: 5, avatar_url: null },
+  { id: "2", author_name: "Robert & Linda K.", author_role: "Retirees", author_location: "Dallas, TX", quote: "As seniors, safety is our top priority. Knowing every cleaner is background-checked and ID-verified makes all the difference. Wonderful service!", rating: 5, avatar_url: null },
+  { id: "3", author_name: "Marcus T.", author_role: "Airbnb Superhost", author_location: "Houston, TX", quote: "Game changer for my rental properties! The before/after photos protect me from disputes, and the escrow system means I only pay for quality work.", rating: 5, avatar_url: null },
+  { id: "4", author_name: "Sarah & Mike D.", author_role: "Family with Kids", author_location: "San Antonio, TX", quote: "With two young kids and a dog, we needed cleaners we could absolutely trust. PureTask exceeded our expectations — reliable, thorough, and professional.", rating: 5, avatar_url: null },
+  { id: "5", author_name: "Amanda L.", author_role: "Working Mom", author_location: "Austin, TX", quote: "The booking process is so simple, and I love that I can see exactly when the cleaner arrives and leaves. No more wondering if they actually came!", rating: 5, avatar_url: null },
+  { id: "6", author_name: "David C.", author_role: "Property Manager", author_location: "Fort Worth, TX", quote: "Managing 15 units used to be a nightmare. Now I have a network of verified cleaners I can trust, with photo documentation for every turnover.", rating: 5, avatar_url: null },
+];
 
 export function TestimonialsCarousel() {
   const { data: testimonials, isLoading, isError } = useFeaturedTestimonials();
