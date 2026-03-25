@@ -56,7 +56,7 @@ export default function CleanerProfileView() {
     return <Badge variant="destructive" className="gap-1 h-6 text-xs"><XCircle className="h-3 w-3" />Failed</Badge>;
   };
 
-  if (isLoading) {
+  if (isLoading || !profile) {
     return (
       <CleanerLayout>
         <div className="max-w-3xl space-y-6">
