@@ -76,16 +76,18 @@ const handler = async (req: Request): Promise<Response> => {
         const cancelledAt = new Date(job.cancelled_at);
         const hoursBeforeJob = (scheduledDateTime.getTime() - cancelledAt.getTime()) / (1000 * 60 * 60);
 
-        // No fee if cancelled 24h+ before
-        if (hoursBeforeJob >= 24) {
+        // No fee if cancelled 48h+ before (free cancellation window)
+        if (hoursBeforeJob >= 48) {
           results.noFee++;
           continue;
         }
 
-        // Calculate fee (50% if <24h, 100% if <6h)
-        let feePercent = 0.5;
-        if (hoursBeforeJob < 6) {
-          feePercent = 1.0;
+        // Fee tiers aligned with published cancellation policy:
+        // < 24 hours notice  → 100% fee (cleaner has reserved the time)
+        // 24–48 hours notice → 50% fee (partial notice given)
+        let feePercent = 0.5; // 24–48h window
+        if (hoursBeforeJob < 24) {
+          feePercent = 1.0;   // < 24h window
         }
 
         const fee = Math.round((job.escrow_credits_reserved || 0) * feePercent);
