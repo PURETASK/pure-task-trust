@@ -1,321 +1,723 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import {
-  MapPin, Clock, Calendar, MessageCircle, Play, Eye, ArrowRight,
-  DollarSign, Briefcase, CheckCircle, Flame, Zap, ArrowUpDown,
-  Star, ChevronRight, Timer, TrendingUp
+  MapPin, Clock, Calendar, MessageCircle, Navigation,
+  DollarSign, Briefcase, CheckCircle, Flame, Zap, Timer,
+  TrendingUp, Play, Camera, Upload, Loader2, ExternalLink,
+  LogIn, LogOut, Image as ImageIcon, ChevronDown, ChevronUp,
+  AlertCircle, X, Star, ArrowLeft
 } from "lucide-react";
-import { format, isToday, isTomorrow, differenceInHours } from "date-fns";
+import {
+  format, isToday, isThisWeek, isThisMonth,
+  differenceInMinutes, startOfWeek, endOfWeek,
+  startOfMonth, endOfMonth, isSameDay
+} from "date-fns";
 import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { useJobCheckins } from "@/hooks/useJobCheckins";
+import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
+import { useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-
-type SortKey = "date_asc" | "date_desc" | "earnings_desc";
+import { toast } from "sonner";
+import type { CleanerJobWithClient } from "@/hooks/useCleanerProfile";
 
 const TIER_FEE: Record<string, number> = { platinum: 0.15, gold: 0.16, silver: 0.18, bronze: 0.20 };
-
-const STATUS_META: Record<string, { label: string; dot: string; border: string; bg: string; text: string }> = {
-  pending:     { label: "Pending",     dot: "bg-warning",    border: "border-warning/60",    bg: "bg-warning/8",    text: "text-warning"   },
-  created:     { label: "New",         dot: "bg-primary",    border: "border-primary/60",    bg: "bg-primary/8",    text: "text-primary"   },
-  confirmed:   { label: "Confirmed",   dot: "bg-success",    border: "border-success/60",    bg: "bg-success/8",    text: "text-success"   },
-  on_way:      { label: "On the Way",  dot: "bg-blue-500",   border: "border-blue-500/60",   bg: "bg-blue-500/8",   text: "text-blue-500"  },
-  arrived:     { label: "Arrived",     dot: "bg-cyan-500",   border: "border-cyan-500/60",   bg: "bg-cyan-500/8",   text: "text-cyan-500"  },
-  in_progress: { label: "In Progress", dot: "bg-orange-500", border: "border-orange-500/60", bg: "bg-orange-500/8", text: "text-orange-500"},
-  completed:   { label: "Completed",   dot: "bg-success",    border: "border-success/60",    bg: "bg-success/8",    text: "text-success"   },
-};
 
 const TYPE_EMOJI: Record<string, string> = {
   standard: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
 };
 
-function getDateLabel(dateStr: string | null) {
-  if (!dateStr) return { label: "TBD", urgent: false };
-  const d = new Date(dateStr);
-  if (isToday(d)) return { label: "Today", urgent: true };
-  if (isTomorrow(d)) return { label: "Tomorrow", urgent: false };
-  const hrs = differenceInHours(d, new Date());
-  if (hrs < 48) return { label: `In ${hrs}h`, urgent: hrs < 6 };
-  return { label: format(d, "EEE, MMM d"), urgent: false };
+function formatAddress(job: any): string {
+  const parts = [
+    job.address_line1,
+    job.address_city,
+    job.address_state,
+    job.address_postal_code,
+  ].filter(Boolean);
+  if (parts.length) return parts.join(", ");
+  return job.address || "Address not available";
 }
 
+function googleMapsUrl(address: string) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+}
+
+// ─── Individual job card for Today section (with clock in/out + photos) ──────
+function TodayJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const [photoType, setPhotoType] = useState<"before" | "after">("before");
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: photos = [] } = useJobPhotos(job.id);
+  const uploadPhoto = useUploadJobPhoto(job.id);
+  const { checkins, hasCheckedIn, hasCheckedOut, checkIn, checkOut, isLoading: checkinsLoading } = useJobCheckins(job.id);
+  const { beforeCount, afterCount, canCheckout } = useJobPhotoValidation(photos);
+
+  const gross = job.escrow_credits_reserved || 0;
+  const net = Math.round(gross * (1 - feeRate));
+  const address = formatAddress(job);
+  const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
+  const isInProgress = job.status === "in_progress";
+  const isConfirmed = job.status === "confirmed";
+  const isCompleted = job.status === "completed";
+
+  const lastCheckin = checkins?.filter(c => c.type === "check_in").pop();
+  const lastCheckout = checkins?.filter(c => c.type === "check_out").pop();
+
+  // elapsed timer
+  const [elapsedMin, setElapsedMin] = useState(0);
+  useEffect(() => {
+    if (!job.check_in_at || job.status !== "in_progress") return;
+    const update = () => setElapsedMin(differenceInMinutes(new Date(), new Date(job.check_in_at!)));
+    update();
+    const t = setInterval(update, 30000);
+    return () => clearInterval(t);
+  }, [job.check_in_at, job.status]);
+
+  const fetchLocation = () => {
+    setLocating(true);
+    navigator.geolocation?.getCurrentPosition(
+      (pos) => {
+        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocating(false);
+      },
+      () => { toast.error("Unable to get location"); setLocating(false); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
+  const handleCheckin = async () => {
+    try {
+      await checkIn.mutateAsync({
+        jobId: job.id,
+        jobLat: (job as any).checkin_lat || (job as any).address_lat || 0,
+        jobLng: (job as any).checkin_lng || (job as any).address_lng || 0,
+      });
+      fetchLocation();
+    } catch { /* handled in hook */ }
+  };
+
+  const handleCheckout = async () => {
+    if (!canCheckout) {
+      toast.error("Upload at least 1 before & 1 after photo before clocking out");
+      return;
+    }
+    try {
+      await checkOut.mutateAsync({
+        jobId: job.id,
+        jobLat: (job as any).checkin_lat || (job as any).address_lat || 0,
+        jobLng: (job as any).checkin_lng || (job as any).address_lng || 0,
+      });
+    } catch { /* handled in hook */ }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      await uploadPhoto.mutateAsync({ file, type: photoType });
+      toast.success(`${photoType === "before" ? "Before" : "After"} photo uploaded!`);
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const stepIndex = isConfirmed ? 0 : isInProgress ? 1 : isCompleted ? 2 : 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`rounded-3xl border-2 overflow-hidden transition-all duration-200 ${
+        isInProgress
+          ? "border-warning/60 ring-2 ring-warning/20"
+          : isCompleted
+          ? "border-success/60"
+          : "border-primary/40"
+      }`}
+      style={{ background: "hsl(var(--card))" }}
+    >
+      {/* accent stripe */}
+      <div className={`h-1.5 w-full ${
+        isInProgress ? "bg-gradient-to-r from-warning to-warning/70"
+        : isCompleted ? "bg-success"
+        : "bg-gradient-to-r from-primary to-primary/70"
+      }`} />
+
+      <div className="p-5 space-y-4">
+        {/* ── TOP ROW ── */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className={`h-12 w-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 border-2 ${
+              isInProgress ? "border-warning/40 bg-warning/10" : "border-primary/30 bg-primary/8"
+            }`}>
+              {isInProgress ? <span className="animate-pulse">{emoji}</span> : emoji}
+            </div>
+            <div>
+              <h3 className="font-bold text-base capitalize">
+                {(job.cleaning_type || "standard").replace(/_/g, " ")} Clean
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {job.client?.first_name ? `${job.client.first_name} ${(job.client.last_name || "").charAt(0)}.` : "Private Client"}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-1.5">
+                <span className="flex items-center gap-1 text-xs bg-muted/60 rounded-full px-2.5 py-1">
+                  <Clock className="h-3 w-3" />
+                  {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "h:mm a") : "TBD"}
+                </span>
+                <span className="flex items-center gap-1 text-xs bg-muted/60 rounded-full px-2.5 py-1">
+                  <Timer className="h-3 w-3" />
+                  {job.estimated_hours || 2}h est.
+                </span>
+                <span className="flex items-center gap-1 text-xs bg-success/15 border border-success/30 rounded-full px-2.5 py-1 font-bold text-success">
+                  <DollarSign className="h-3 w-3" />${net} you earn
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* Status badge */}
+          <div className={`shrink-0 text-xs font-bold px-3 py-1 rounded-full border-2 ${
+            isInProgress ? "border-warning/60 text-warning bg-warning/10"
+            : isCompleted ? "border-success/60 text-success bg-success/10"
+            : "border-primary/60 text-primary bg-primary/10"
+          }`}>
+            {isInProgress ? "🔥 In Progress" : isCompleted ? "✅ Done" : "✅ Confirmed"}
+          </div>
+        </div>
+
+        {/* ── ADDRESS ── */}
+        <div className="flex items-start gap-2.5 p-3 rounded-2xl border-2 border-border/60 bg-muted/30">
+          <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground font-medium mb-0.5">Service Address</p>
+            <p className="text-sm font-medium leading-snug">{address}</p>
+          </div>
+          <a
+            href={googleMapsUrl(address)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 border border-primary/30 rounded-xl px-3 py-1.5 hover:bg-primary/20 transition-colors"
+          >
+            <Navigation className="h-3.5 w-3.5" /> Directions
+          </a>
+        </div>
+
+        {/* ── PROGRESS STEPPER ── */}
+        {!isCompleted && (
+          <div className="flex items-center gap-2">
+            {["Clock In", "Upload Photos", "Clock Out"].map((step, i) => (
+              <div key={step} className="flex items-center gap-1 flex-1">
+                <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                  stepIndex > i ? "bg-success text-white"
+                  : stepIndex === i ? "bg-primary text-white"
+                  : "bg-muted text-muted-foreground"
+                }`}>
+                  {stepIndex > i ? "✓" : i + 1}
+                </div>
+                <span className={`text-[10px] font-medium hidden sm:block ${stepIndex >= i ? "text-foreground" : "text-muted-foreground"}`}>{step}</span>
+                {i < 2 && <div className={`flex-1 h-0.5 rounded-full ${stepIndex > i ? "bg-success" : "bg-border"}`} />}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── CLOCK IN/OUT SECTION ── */}
+        {!isCompleted && (
+          <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Navigation className="h-4 w-4 text-primary" />
+              <span className="font-bold text-sm text-primary">GPS Clock-In / Clock-Out</span>
+            </div>
+
+            {/* Clock-in row */}
+            <div className="flex items-center justify-between p-3 rounded-xl border-2 border-border/60 bg-card">
+              <div className="flex items-center gap-2">
+                <div className={`h-8 w-8 rounded-full flex items-center justify-center ${hasCheckedIn ? "bg-success" : "bg-muted"}`}>
+                  <LogIn className={`h-4 w-4 ${hasCheckedIn ? "text-white" : "text-muted-foreground"}`} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Clock In</p>
+                  {lastCheckin && (
+                    <p className="text-xs text-muted-foreground">{format(new Date(lastCheckin.created_at), "h:mm a")}</p>
+                  )}
+                </div>
+              </div>
+              {hasCheckedIn ? (
+                <Badge className="bg-success/20 text-success border border-success/40 rounded-xl text-xs font-bold">
+                  {lastCheckin?.is_within_radius ? "✓ Verified" : `${lastCheckin?.distance_from_job_meters}m away`}
+                </Badge>
+              ) : (
+                <Button
+                  size="sm"
+                  className="rounded-xl bg-success text-white border-2 border-success font-bold"
+                  onClick={handleCheckin}
+                  disabled={checkIn.isPending}
+                >
+                  {checkIn.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Play className="h-3.5 w-3.5 mr-1" />Clock In</>}
+                </Button>
+              )}
+            </div>
+
+            {/* Clock-out row */}
+            <div className={`flex items-center justify-between p-3 rounded-xl border-2 border-border/60 bg-card ${!hasCheckedIn ? "opacity-50 pointer-events-none" : ""}`}>
+              <div className="flex items-center gap-2">
+                <div className={`h-8 w-8 rounded-full flex items-center justify-center ${hasCheckedOut ? "bg-success" : "bg-muted"}`}>
+                  <LogOut className={`h-4 w-4 ${hasCheckedOut ? "text-white" : "text-muted-foreground"}`} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Clock Out</p>
+                  {lastCheckout && (
+                    <p className="text-xs text-muted-foreground">{format(new Date(lastCheckout.created_at), "h:mm a")}</p>
+                  )}
+                  {!hasCheckedOut && !canCheckout && hasCheckedIn && (
+                    <p className="text-xs text-warning font-medium">Need before + after photos first</p>
+                  )}
+                </div>
+              </div>
+              {hasCheckedOut ? (
+                <Badge className="bg-success/20 text-success border border-success/40 rounded-xl text-xs font-bold">
+                  {lastCheckout?.is_within_radius ? "✓ Verified" : `${lastCheckout?.distance_from_job_meters}m away`}
+                </Badge>
+              ) : (
+                <Button
+                  size="sm"
+                  className="rounded-xl bg-destructive text-white border-2 border-destructive font-bold"
+                  onClick={handleCheckout}
+                  disabled={checkOut.isPending || !hasCheckedIn || hasCheckedOut || !canCheckout}
+                >
+                  {checkOut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><LogOut className="h-3.5 w-3.5 mr-1" />Clock Out</>}
+                </Button>
+              )}
+            </div>
+
+            {/* GPS Coordinates display */}
+            {(userLocation || lastCheckin) && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-xl p-2.5">
+                <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="font-medium">Your location:</span>
+                <span className="font-mono">
+                  {userLocation
+                    ? `${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`
+                    : lastCheckin
+                    ? `${(lastCheckin.lat || 0).toFixed(6)}, ${(lastCheckin.lng || 0).toFixed(6)}`
+                    : "—"}
+                </span>
+                <button
+                  onClick={fetchLocation}
+                  className="ml-auto text-primary underline-offset-2 hover:underline"
+                >
+                  {locating ? <Loader2 className="h-3 w-3 animate-spin" /> : "refresh"}
+                </button>
+              </div>
+            )}
+
+            {/* In-progress timer */}
+            {isInProgress && job.check_in_at && (
+              <div className="flex items-center gap-3 bg-warning/10 border border-warning/30 rounded-xl p-3">
+                <Timer className="h-4 w-4 text-warning" />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground">Time elapsed</p>
+                  <p className="font-bold text-sm">{Math.floor(elapsedMin / 60)}h {elapsedMin % 60}m / {job.estimated_hours || 2}h est.</p>
+                </div>
+                <Progress value={Math.min(100, (elapsedMin / ((job.estimated_hours || 2) * 60)) * 100)} className="w-24 h-2" />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── PHOTOS SECTION ── */}
+        {(isInProgress || (hasCheckedIn && !hasCheckedOut)) && (
+          <div className="rounded-2xl border-2 border-warning/40 bg-warning/5 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Camera className="h-4 w-4 text-warning" />
+                <span className="font-bold text-sm text-warning">Before & After Photos</span>
+              </div>
+              <div className="flex gap-2 text-xs font-medium">
+                <span className={`px-2 py-0.5 rounded-full border ${beforeCount > 0 ? "bg-success/15 text-success border-success/40" : "bg-muted text-muted-foreground border-border"}`}>
+                  {beforeCount} before
+                </span>
+                <span className={`px-2 py-0.5 rounded-full border ${afterCount > 0 ? "bg-success/15 text-success border-success/40" : "bg-muted text-muted-foreground border-border"}`}>
+                  {afterCount} after
+                </span>
+              </div>
+            </div>
+
+            {/* Photo type toggle */}
+            <div className="flex gap-2 p-1 bg-muted/50 rounded-xl">
+              {(["before", "after"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setPhotoType(t)}
+                  disabled={t === "after" && beforeCount === 0}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
+                    photoType === t
+                      ? "bg-warning text-white shadow"
+                      : "text-muted-foreground hover:text-foreground disabled:opacity-40"
+                  }`}
+                >
+                  {t === "before" ? `📷 Before (${beforeCount})` : `✨ After (${afterCount})`}
+                </button>
+              ))}
+            </div>
+
+            {/* Photo thumbnails */}
+            {photos.filter(p => p.photo_type === photoType).length > 0 && (
+              <div className="grid grid-cols-3 gap-2">
+                {photos.filter(p => p.photo_type === photoType).map((photo) => (
+                  <div key={photo.id} className="relative aspect-square rounded-xl overflow-hidden border-2 border-border/60">
+                    <img src={photo.photo_url} alt={`${photoType} photo`} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload button */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+            <Button
+              variant="outline"
+              className="w-full border-2 border-warning/50 text-warning hover:bg-warning/10 rounded-xl font-semibold gap-2"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadPhoto.isPending || (photoType === "after" && beforeCount === 0)}
+            >
+              {uploadPhoto.isPending ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> Uploading...</>
+              ) : (
+                <><Upload className="h-4 w-4" /> Upload {photoType === "before" ? "Before" : "After"} Photo</>
+              )}
+            </Button>
+
+            {!canCheckout && (beforeCount > 0 || afterCount > 0) && (
+              <div className="flex items-start gap-2 text-xs text-warning bg-warning/10 rounded-xl p-2.5">
+                <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <span>Need at least 1 before photo AND 1 after photo before clocking out. The full set will be sent to the client for review.</span>
+              </div>
+            )}
+
+            {canCheckout && (
+              <div className="flex items-center gap-2 text-xs text-success bg-success/10 rounded-xl p-2.5">
+                <CheckCircle className="h-3.5 w-3.5 shrink-0" />
+                <span className="font-semibold">All photos uploaded! You can now clock out — the client will receive everything for review.</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── COMPLETED NOTICE ── */}
+        {isCompleted && (
+          <div className="flex items-center gap-3 p-3 rounded-2xl border-2 border-success/40 bg-success/8">
+            <CheckCircle className="h-5 w-5 text-success shrink-0" />
+            <div>
+              <p className="text-sm font-bold text-success">Job Complete — Awaiting Client Approval</p>
+              <p className="text-xs text-muted-foreground">Photos and summary sent to client. Payment releases upon approval.</p>
+            </div>
+          </div>
+        )}
+
+        {/* ── ACTIONS ROW ── */}
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
+            <Link to={`/cleaner/messages?job=${job.id}`}>
+              <MessageCircle className="h-4 w-4" /> Message
+            </Link>
+          </Button>
+          <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
+            <Link to={`/cleaner/jobs/${job.id}`}>
+              <ExternalLink className="h-4 w-4" /> Full Details
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Simple compact job card for Week/Month sections ────────────────────────
+function CompactJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: number }) {
+  const gross = job.escrow_credits_reserved || 0;
+  const net = Math.round(gross * (1 - feeRate));
+  const address = formatAddress(job);
+  const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
+  const date = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
+  const isCompleted = job.status === "completed";
+  const isInProgress = job.status === "in_progress";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`rounded-2xl border-2 overflow-hidden transition-all hover:shadow-md ${
+        isCompleted ? "border-success/40" : isInProgress ? "border-warning/50" : "border-border/60"
+      }`}
+      style={{ background: "hsl(var(--card))" }}
+    >
+      <div className="p-4 flex items-center gap-3">
+        {/* emoji + type */}
+        <div className={`h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0 border-2 ${
+          isCompleted ? "border-success/30 bg-success/8" : "border-border/60 bg-muted/40"
+        }`}>{emoji}</div>
+
+        {/* main info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-sm capitalize">{(job.cleaning_type || "standard").replace(/_/g, " ")} Clean</span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+              isCompleted ? "border-success/40 text-success bg-success/10"
+              : isInProgress ? "border-warning/40 text-warning bg-warning/10"
+              : "border-primary/40 text-primary bg-primary/10"
+            }`}>
+              {isCompleted ? "Done" : isInProgress ? "Active" : "Confirmed"}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-1 text-xs text-muted-foreground">
+            {date && (
+              <span className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                {format(date, "EEE, MMM d")}
+              </span>
+            )}
+            {date && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {format(date, "h:mm a")}
+              </span>
+            )}
+            <span className="flex items-center gap-1 text-success font-semibold">
+              <DollarSign className="h-3 w-3" />${net}
+            </span>
+          </div>
+          {/* address + maps */}
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
+            <span className="text-xs text-muted-foreground truncate">{address}</span>
+            <a
+              href={googleMapsUrl(address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 flex items-center gap-0.5 text-[10px] font-semibold text-primary hover:underline"
+            >
+              <ExternalLink className="h-3 w-3" /> Map
+            </a>
+          </div>
+        </div>
+
+        {/* action */}
+        <Button variant="ghost" size="sm" className="shrink-0 rounded-xl h-8 px-3 text-xs gap-1" asChild>
+          <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Section wrapper ─────────────────────────────────────────────────────────
+function Section({
+  title, icon: Icon, count, color, borderColor, bgColor, children, defaultOpen = true
+}: {
+  title: string; icon: React.ElementType; count: number;
+  color: string; borderColor: string; bgColor: string;
+  children: React.ReactNode; defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className={`rounded-3xl border-2 ${borderColor} overflow-hidden`} style={{ background: "hsl(var(--card))" }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`w-full flex items-center justify-between px-5 py-4 ${bgColor} border-b-2 ${open ? borderColor : "border-transparent"} transition-all`}
+      >
+        <div className="flex items-center gap-3">
+          <div className={`h-9 w-9 rounded-xl flex items-center justify-center border-2 ${borderColor} bg-card`}>
+            <Icon className={`h-4.5 w-4.5 ${color}`} />
+          </div>
+          <div className="text-left">
+            <p className={`font-black text-base ${color}`}>{title}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full border-2 ${borderColor} ${color} bg-card`}>
+            {count} {count === 1 ? "job" : "jobs"}
+          </span>
+          {open ? <ChevronUp className={`h-4 w-4 ${color}`} /> : <ChevronDown className={`h-4 w-4 ${color}`} />}
+        </div>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="p-4 space-y-3">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Main page ───────────────────────────────────────────────────────────────
 export default function CleanerJobs() {
   const { jobs, isLoading } = useCleanerJobs();
   const { profile } = useCleanerProfile();
-  const [sort, setSort] = useState<SortKey>("date_asc");
-  const [tab, setTab] = useState<"active" | "pending" | "completed">("active");
 
   const tier = profile?.tier || "bronze";
   const feeRate = TIER_FEE[tier] ?? 0.20;
   const getNet = (gross: number) => Math.round(gross * (1 - feeRate));
 
-  const activeJobs    = jobs.filter(j => ['confirmed', 'in_progress', 'on_way', 'arrived'].includes(j.status));
-  const pendingJobs   = jobs.filter(j => ['pending', 'created'].includes(j.status));
-  const completedJobs = jobs.filter(j => j.status === 'completed');
+  const now = new Date();
 
-  const sortJobs = (list: typeof jobs) => [...list].sort((a, b) => {
-    if (sort === "date_asc")  return new Date(a.scheduled_start_at || 0).getTime() - new Date(b.scheduled_start_at || 0).getTime();
-    if (sort === "date_desc") return new Date(b.scheduled_start_at || 0).getTime() - new Date(a.scheduled_start_at || 0).getTime();
-    return (b.escrow_credits_reserved || 0) - (a.escrow_credits_reserved || 0);
-  });
+  // filter to accepted/active jobs (confirmed, in_progress)
+  const acceptedJobs = jobs
+    .filter(j => ["confirmed", "in_progress", "on_way", "arrived", "completed"].includes(j.status))
+    .sort((a, b) => new Date(a.scheduled_start_at || 0).getTime() - new Date(b.scheduled_start_at || 0).getTime());
 
-  const totalEarned = completedJobs.reduce((s, j) => s + getNet(j.escrow_credits_reserved || 0), 0);
+  const todayJobs   = acceptedJobs.filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)));
+  const weekJobs    = acceptedJobs.filter(j => j.scheduled_start_at && isThisWeek(new Date(j.scheduled_start_at), { weekStartsOn: 1 }) && !isToday(new Date(j.scheduled_start_at)));
+  const monthJobs   = acceptedJobs.filter(j => j.scheduled_start_at && isThisMonth(new Date(j.scheduled_start_at)) && !isThisWeek(new Date(j.scheduled_start_at), { weekStartsOn: 1 }));
 
-  const tabs = [
-    { key: "active" as const,    label: "Active",    count: activeJobs.length,    icon: Flame,        color: "text-orange-500", activeBg: "bg-orange-500" },
-    { key: "pending" as const,   label: "Pending",   count: pendingJobs.length,   icon: Timer,        color: "text-primary",    activeBg: "bg-primary" },
-    { key: "completed" as const, label: "Completed", count: completedJobs.length, icon: CheckCircle,  color: "text-success",    activeBg: "bg-success" },
-  ];
+  const todayEarnings = todayJobs.reduce((s, j) => s + getNet(j.escrow_credits_reserved || 0), 0);
+  const weekEarnings  = [...todayJobs, ...weekJobs].reduce((s, j) => s + getNet(j.escrow_credits_reserved || 0), 0);
+  const monthEarnings = acceptedJobs.filter(j => j.scheduled_start_at && isThisMonth(new Date(j.scheduled_start_at))).reduce((s, j) => s + getNet(j.escrow_credits_reserved || 0), 0);
 
-  const currentJobs = tab === "active" ? activeJobs : tab === "pending" ? pendingJobs : completedJobs;
+  const weekStart = format(startOfWeek(now, { weekStartsOn: 1 }), "MMM d");
+  const weekEnd   = format(endOfWeek(now, { weekStartsOn: 1 }), "MMM d");
+  const monthName = format(now, "MMMM");
 
   return (
     <CleanerLayout>
-      <Helmet><title>My Jobs | PureTask</title></Helmet>
-      <div className="space-y-5 max-w-4xl">
+      <Helmet><title>Active Jobs | PureTask</title></Helmet>
+      <div className="space-y-6 max-w-3xl">
 
-        {/* ── HEADER STRIP ─────────────────────────────────────────── */}
+        {/* ── HEADER ── */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-black flex items-center gap-2">
-                <Briefcase className="h-7 w-7 text-primary" /> My Jobs
-              </h1>
-              <p className="text-muted-foreground text-sm mt-0.5">Track, manage, and complete your bookings</p>
-            </div>
-            <div className="flex items-center gap-3">
-              {/* Total earned pill */}
-              <div className="flex items-center gap-2 bg-success/10 border border-success/30 rounded-full px-4 py-2">
-                <TrendingUp className="h-4 w-4 text-success" />
-                <span className="text-sm font-bold text-success">${totalEarned} earned</span>
-              </div>
-              <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-                <SelectTrigger className="w-40 h-9 text-sm rounded-xl border-border/60">
-                  <ArrowUpDown className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="date_asc">Earliest first</SelectItem>
-                  <SelectItem value="date_desc">Latest first</SelectItem>
-                  <SelectItem value="earnings_desc">Highest pay</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── TAB SWITCHER ─────────────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }}>
-          <div className="flex gap-2 p-1 bg-muted/50 rounded-2xl border border-border/60">
-            {tabs.map(t => (
-              <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                  tab === t.key
-                    ? `${t.activeBg} text-white shadow-md`
-                    : "text-muted-foreground hover:text-foreground hover:bg-background/60"
-                }`}
-              >
-                <t.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{t.label}</span>
-                <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                  tab === t.key ? "bg-white/25 text-white" : "bg-muted-foreground/20"
-                }`}>{t.count}</span>
-              </button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* ── JOB LIST ─────────────────────────────────────────────── */}
-        <div>
-          {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
-            </div>
-          ) : sortJobs(currentJobs).length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="rounded-3xl border-2 border-dashed border-muted-foreground/20 py-20 text-center"
-            >
-              <div className="h-20 w-20 rounded-3xl bg-muted flex items-center justify-center mx-auto mb-4">
-                <Briefcase className="h-10 w-10 text-muted-foreground/30" />
-              </div>
-              <p className="font-bold text-lg text-muted-foreground mb-1">
-                {tab === "active" ? "No active jobs right now" : tab === "pending" ? "No pending requests" : "No completed jobs yet"}
-              </p>
-              <p className="text-sm text-muted-foreground mb-5">
-                {tab !== "completed" ? "Browse the marketplace to find your next job" : "Complete your first job to see it here"}
-              </p>
-              {tab !== "completed" && (
-                <Button className="gap-2 rounded-xl" asChild>
-                  <Link to="/cleaner/marketplace"><Zap className="h-4 w-4" />Browse Marketplace</Link>
-                </Button>
-              )}
-            </motion.div>
-          ) : (
-            <AnimatePresence mode="popLayout">
-              <div className="space-y-3">
-                {sortJobs(currentJobs).map((job, i) => {
-                  const gross = job.escrow_credits_reserved || 0;
-                  const net = getNet(gross);
-                  const sm = STATUS_META[job.status] || STATUS_META.pending;
-                  const isActive = ['confirmed', 'in_progress', 'on_way', 'arrived'].includes(job.status);
-                  const isInProgress = job.status === 'in_progress';
-                  const dateInfo = getDateLabel(job.scheduled_start_at);
-                  const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
-
-                  return (
-                    <motion.div
-                      key={job.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ delay: i * 0.05 }}
-                    >
-                      <div className={`rounded-2xl border-2 ${sm.border} overflow-hidden hover:shadow-lg transition-all duration-200 ${isInProgress ? 'ring-2 ring-orange-500/30' : ''}`}
-                        style={{ background: "hsl(var(--card))" }}>
-
-                        {/* Top accent bar */}
-                        <div className={`h-1 w-full ${isInProgress ? 'bg-gradient-to-r from-orange-500 to-orange-400' : isActive ? 'bg-gradient-to-r from-primary to-success' : job.status === 'completed' ? 'bg-success' : 'bg-muted-foreground/20'}`} />
-
-                        <div className="p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-
-                            {/* Left: type icon + info */}
-                            <div className="flex items-start gap-4 flex-1 min-w-0">
-                              {/* Big emoji icon */}
-                              <div className={`h-14 w-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 border-2 ${sm.border}`}
-                                style={{ background: `hsl(var(--muted)/0.5)` }}>
-                                {isInProgress ? <span className="animate-pulse">{emoji}</span> : emoji}
-                              </div>
-
-                              <div className="flex-1 min-w-0">
-                                {/* Title row */}
-                                <div className="flex items-center gap-2 flex-wrap mb-1">
-                                  <h3 className="font-bold text-base leading-tight capitalize">
-                                    {(job.cleaning_type || "standard").replace(/_/g, " ")} Clean
-                                  </h3>
-                                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${sm.border} ${sm.text}`}
-                                    style={{ background: `hsl(var(--background))` }}>
-                                    <span className={`h-1.5 w-1.5 rounded-full ${sm.dot} ${isActive ? 'animate-pulse' : ''}`} />
-                                    {sm.label}
-                                  </span>
-                                  {dateInfo.urgent && (
-                                    <Badge className="bg-destructive/15 text-destructive border-destructive/30 border text-[10px] h-5">
-                                      🔥 {dateInfo.label}
-                                    </Badge>
-                                  )}
-                                </div>
-
-                                {/* Client */}
-                                <p className="text-sm text-muted-foreground mb-2">
-                                  Client: {job.client?.first_name ? `${job.client.first_name} ${(job.client.last_name || '').charAt(0)}.` : 'Private'}
-                                </p>
-
-                                {/* Meta pills */}
-                                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                                  <span className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1">
-                                    <Calendar className="h-3 w-3" />
-                                    {dateInfo.urgent ? (
-                                      <span className="font-bold text-foreground">{dateInfo.label}</span>
-                                    ) : dateInfo.label}
-                                  </span>
-                                  <span className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1">
-                                    <Clock className="h-3 w-3" />
-                                    {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
-                                  </span>
-                                  <span className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1">
-                                    <Timer className="h-3 w-3" />
-                                    {job.estimated_hours || 2}h est.
-                                  </span>
-                                  {net > 0 && (
-                                    <span className="flex items-center gap-1.5 bg-success/15 border border-success/30 rounded-full px-2.5 py-1 font-bold text-success">
-                                      <DollarSign className="h-3 w-3" />${net} you earn
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Right: actions */}
-                            <div className="flex items-center gap-2 shrink-0 sm:flex-col sm:items-end">
-                              {/* Message */}
-                              <Button variant="outline" size="icon" asChild className="h-9 w-9 rounded-xl border-border/60">
-                                <Link to={`/cleaner/messages?job=${job.id}`}>
-                                  <MessageCircle className="h-4 w-4" />
-                                </Link>
-                              </Button>
-
-                              {/* Primary CTA */}
-                              {job.status === 'confirmed' && (
-                                <Button asChild className="gap-2 rounded-xl h-9 bg-success hover:bg-success/90 font-bold shadow-md">
-                                  <Link to={`/cleaner/jobs/${job.id}`}>
-                                    <Play className="h-3.5 w-3.5" /> Start Job
-                                  </Link>
-                                </Button>
-                              )}
-                              {job.status === 'in_progress' && (
-                                <Button asChild className="gap-2 rounded-xl h-9 font-bold shadow-md"
-                                  style={{ background: "linear-gradient(135deg, hsl(25,95%,55%), hsl(38,95%,55%))", color: "white" }}>
-                                  <Link to={`/cleaner/jobs/${job.id}`}>
-                                    <Zap className="h-3.5 w-3.5" /> Continue
-                                  </Link>
-                                </Button>
-                              )}
-                              {['on_way', 'arrived'].includes(job.status) && (
-                                <Button asChild variant="outline" className="gap-2 rounded-xl h-9 border-primary/50 text-primary">
-                                  <Link to={`/cleaner/jobs/${job.id}`}>
-                                    <Eye className="h-3.5 w-3.5" /> View
-                                  </Link>
-                                </Button>
-                              )}
-                              {['pending', 'created'].includes(job.status) && (
-                                <Button asChild variant="outline" className="gap-2 rounded-xl h-9">
-                                  <Link to={`/cleaner/jobs/${job.id}`}>
-                                    <Eye className="h-3.5 w-3.5" /> Details
-                                  </Link>
-                                </Button>
-                              )}
-                              {job.status === 'completed' && (
-                                <Button asChild variant="ghost" size="sm" className="gap-1.5 text-muted-foreground rounded-xl">
-                                  <Link to={`/cleaner/jobs/${job.id}`}>
-                                    <Star className="h-3.5 w-3.5" /> Review <ChevronRight className="h-3 w-3" />
-                                  </Link>
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </AnimatePresence>
-          )}
-        </div>
-
-        {/* ── MARKETPLACE NUDGE ────────────────────────────────────── */}
-        {!isLoading && activeJobs.length === 0 && tab === "active" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-            <div className="rounded-2xl border-2 border-primary/30 p-5 flex items-center justify-between gap-4"
-              style={{ background: "linear-gradient(135deg, hsl(210,100%,50%/0.06), transparent)" }}>
+          <div className="rounded-3xl border-2 border-primary/40 bg-primary/8 p-5">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
               <div>
-                <p className="font-bold">Ready for your next job?</p>
-                <p className="text-sm text-muted-foreground">Browse available jobs in your service area</p>
+                <h1 className="text-3xl font-black flex items-center gap-2 text-primary">
+                  <Briefcase className="h-7 w-7" /> Active Jobs
+                </h1>
+                <p className="text-muted-foreground text-sm mt-0.5">All accepted jobs — clock in, upload photos, clock out</p>
               </div>
-              <Button asChild className="gap-2 rounded-xl shrink-0">
-                <Link to="/cleaner/marketplace"><Zap className="h-4 w-4" />Browse Jobs <ArrowRight className="h-3.5 w-3.5" /></Link>
+              <div className="flex gap-3 flex-wrap">
+                <div className="flex flex-col items-center bg-card border-2 border-success/40 rounded-2xl px-4 py-2.5">
+                  <span className="text-xl font-black text-success">${todayEarnings}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Today</span>
+                </div>
+                <div className="flex flex-col items-center bg-card border-2 border-primary/40 rounded-2xl px-4 py-2.5">
+                  <span className="text-xl font-black text-primary">${weekEarnings}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">This Week</span>
+                </div>
+                <div className="flex flex-col items-center bg-card border-2 border-warning/40 rounded-2xl px-4 py-2.5">
+                  <span className="text-xl font-black text-warning">${monthEarnings}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">{monthName}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {isLoading ? (
+          <div className="space-y-4">
+            {[1, 2, 3].map(i => <Skeleton key={i} className="h-40 rounded-3xl" />)}
+          </div>
+        ) : acceptedJobs.length === 0 ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="rounded-3xl border-2 border-dashed border-muted-foreground/20 py-20 text-center">
+            <div className="h-20 w-20 rounded-3xl bg-muted flex items-center justify-center mx-auto mb-4">
+              <Briefcase className="h-10 w-10 text-muted-foreground/30" />
+            </div>
+            <p className="font-bold text-lg text-muted-foreground mb-2">No accepted jobs yet</p>
+            <p className="text-sm text-muted-foreground mb-5">Browse the marketplace to find and accept your next job</p>
+            <Button className="gap-2 rounded-xl" asChild>
+              <Link to="/cleaner/marketplace"><Zap className="h-4 w-4" />Browse Marketplace</Link>
+            </Button>
+          </motion.div>
+        ) : (
+          <>
+            {/* ── TODAY ── */}
+            <Section
+              title={`Today — ${format(now, "EEEE, MMMM d")}`}
+              icon={Flame}
+              count={todayJobs.length}
+              color="text-destructive"
+              borderColor="border-destructive/40"
+              bgColor="bg-destructive/5"
+              defaultOpen
+            >
+              {todayJobs.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">No jobs scheduled for today</p>
+              ) : (
+                todayJobs.map(job => <TodayJobCard key={job.id} job={job} feeRate={feeRate} />)
+              )}
+            </Section>
+
+            {/* ── THIS WEEK ── */}
+            <Section
+              title={`This Week — ${weekStart} – ${weekEnd}`}
+              icon={Calendar}
+              count={weekJobs.length}
+              color="text-primary"
+              borderColor="border-primary/40"
+              bgColor="bg-primary/5"
+              defaultOpen={weekJobs.length > 0}
+            >
+              {weekJobs.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">No other jobs this week</p>
+              ) : (
+                weekJobs.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+              )}
+            </Section>
+
+            {/* ── THIS MONTH ── */}
+            <Section
+              title={`${monthName} — Rest of Month`}
+              icon={TrendingUp}
+              count={monthJobs.length}
+              color="text-warning"
+              borderColor="border-warning/40"
+              bgColor="bg-warning/5"
+              defaultOpen={false}
+            >
+              {monthJobs.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">No other jobs this month</p>
+              ) : (
+                monthJobs.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+              )}
+            </Section>
+          </>
+        )}
+
+        {/* ── MARKETPLACE NUDGE ── */}
+        {!isLoading && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <div className="rounded-3xl border-2 border-success/40 bg-success/5 p-5 flex items-center justify-between gap-4">
+              <div>
+                <p className="font-bold text-success">Looking for more work?</p>
+                <p className="text-sm text-muted-foreground">Browse available jobs in your area</p>
+              </div>
+              <Button className="shrink-0 rounded-xl bg-success text-white border-2 border-success gap-2 font-bold hover:bg-success/90" asChild>
+                <Link to="/cleaner/marketplace"><Zap className="h-4 w-4" /> Marketplace</Link>
               </Button>
             </div>
           </motion.div>
         )}
-
       </div>
     </CleanerLayout>
   );
