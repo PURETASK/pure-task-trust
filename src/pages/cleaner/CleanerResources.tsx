@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import {
   FileText, TrendingUp, ShoppingBag, Lightbulb, Star, Clock,
   CheckCircle, Download, Mail, Printer, Shield, Zap, HeartHandshake,
-  Camera, Lock, Sparkles, ChevronRight, BookOpen, ListChecks, ArrowRight
+  Camera, Lock, Sparkles, ChevronRight, BookOpen, ListChecks, ArrowRight, Calculator, DollarSign
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -326,6 +326,9 @@ export default function CleanerResources() {
             <TabsTrigger value="partners" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <ShoppingBag className="h-4 w-4 mr-1.5" />Partners
             </TabsTrigger>
+            <TabsTrigger value="calculator" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-success data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+              <Calculator className="h-4 w-4 mr-1.5" />Calculator
+            </TabsTrigger>
           </TabsList>
 
           {/* ── Checklists Tab ── */}
@@ -408,6 +411,49 @@ export default function CleanerResources() {
               </Button>
             </motion.div>
           </TabsContent>
+
+          {/* ── Calculator Tab ── */}
+          <TabsContent value="calculator">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-9 w-9 rounded-2xl bg-success/10 border-2 border-success/30 flex items-center justify-center">
+                  <Calculator className="h-4 w-4 text-success" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Earnings Calculator</h2>
+                  <p className="text-xs text-muted-foreground">Estimate your income at a glance</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {[
+                  { label: '🌱 Side Hustle', hrs: 10, rate: 25, score: 30, wks: 40, keep: '80%', color: 'border-amber-500/30 bg-amber-500/5' },
+                  { label: '⚡ Part-Time',   hrs: 20, rate: 35, score: 55, wks: 46, keep: '82%', color: 'border-slate-400/30 bg-slate-400/5' },
+                  { label: '🔥 Full-Time',   hrs: 32, rate: 45, score: 75, wks: 48, keep: '83%', color: 'border-primary/30 bg-primary/5' },
+                  { label: '💎 Top Earner',  hrs: 40, rate: 70, score: 92, wks: 50, keep: '85%', color: 'border-[hsl(280,70%,50%)]/30 bg-[hsl(280,70%,50%)]/5' },
+                ].map(s => {
+                  const fee    = s.score >= 90 ? 0.15 : s.score >= 70 ? 0.17 : s.score >= 50 ? 0.18 : 0.20;
+                  const annual = Math.round(s.hrs * s.rate * (1 - fee) * s.wks);
+                  return (
+                    <div key={s.label} className={`rounded-2xl border-2 p-3.5 ${s.color}`}>
+                      <p className="font-bold text-sm mb-1">{s.label}</p>
+                      <p className="text-xs text-muted-foreground mb-2">{s.hrs}h/wk · ${s.rate}/hr · keep {s.keep}</p>
+                      <p className="text-xl font-black text-success">${annual.toLocaleString()}<span className="text-xs text-muted-foreground font-normal">/yr</span></p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <Button asChild className="w-full rounded-2xl font-bold border-2" variant="outline">
+                <Link to="/earnings-calculator">
+                  <Calculator className="h-4 w-4 mr-2" />
+                  Open Full Calculator <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </TabsContent>
+
+
 
 
           <TabsContent value="growth">
