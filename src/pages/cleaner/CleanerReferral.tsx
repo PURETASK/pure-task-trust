@@ -382,7 +382,7 @@ export default function CleanerReferral() {
               <Gift className="h-4 w-4" />
               <AlertDescription>
                 <strong>No referrals yet!</strong> Share your referral link above to start earning credits. 
-                You'll earn {referralCode?.reward_credits || 500} credits for each friend who signs up and completes their first job.
+                You'll earn ${referralCode?.reward_credits || 25} for each friend who signs up and completes their first job.
               </AlertDescription>
             </Alert>
           </motion.div>
