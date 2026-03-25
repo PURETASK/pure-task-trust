@@ -33,11 +33,11 @@ function AuthLoadingSkeleton() {
 
 export function RequireAuth({ children, allowedRoles, requireRole = true }: RequireAuthProps) {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  // Use isLoading (not isFetching) so cached data never blocks navigation
   const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
-  // While profile is (re)loading, keep showing the skeleton so we never
-  // redirect away mid-mutation (e.g. during onboarding step saves).
+  // Only block on auth loading OR the very first profile fetch (no cached data yet)
   const isLoading = authLoading || (isAuthenticated && profileLoading);
 
   if (isLoading) {
@@ -45,7 +45,6 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   }
 
   if (!isAuthenticated) {
-    // Redirect to auth page, preserving the intended destination
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
@@ -54,23 +53,20 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
-  // Check if cleaner needs to complete onboarding.
-  // Only redirect TO onboarding — never redirect AWAY while already on it,
-  // even during a brief moment when profileData is stale after a mutation.
+  // Check if cleaner needs to complete onboarding — ONLY redirect new cleaners
   if (requireRole && role === 'cleaner' && needsOnboarding && 
       location.pathname !== '/cleaner/onboarding' && 
       location.pathname !== '/role-selection') {
     return <Navigate to="/cleaner/onboarding" replace />;
   }
 
-  // If we're already on the onboarding page, never redirect away mid-flow.
+  // Never redirect away from onboarding mid-flow
   if (location.pathname === '/cleaner/onboarding') {
     return <>{children}</>;
   }
 
-  // Check role if specified
+  // Check role if specified — use AuthContext role (always available)
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    // Redirect to appropriate dashboard based on role
     const redirectPath = user.role === 'cleaner' ? '/cleaner/dashboard' : user.role === 'admin' ? '/admin/hub' : '/dashboard';
     return <Navigate to={redirectPath} replace />;
   }

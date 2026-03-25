@@ -16,7 +16,7 @@ interface UserProfileData {
 }
 
 export function useUserProfile() {
-  const { user, session } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: profileData, isLoading, error } = useQuery({
@@ -93,7 +93,7 @@ export function useUserProfile() {
         needsOnboarding,
       };
     },
-    enabled: !!user?.id && !!session,
+    enabled: !!user?.id,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
