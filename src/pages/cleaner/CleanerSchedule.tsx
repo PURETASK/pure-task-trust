@@ -449,6 +449,23 @@ export default function CleanerSchedule() {
             ))}
           </div>
         )}
+
+        {/* ── Reschedule Requests Section ───────────────────────────── */}
+        <div className="rounded-3xl border-2 border-warning/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+          <div className="flex items-center gap-3 px-5 py-4 bg-warning/8 border-b-2 border-warning/30">
+            <div className="h-9 w-9 rounded-xl bg-warning/15 border-2 border-warning/30 flex items-center justify-center">
+              <CalendarClock className="h-4 w-4 text-warning" />
+            </div>
+            <div>
+              <p className="font-black text-base text-warning">Reschedule Requests</p>
+              <p className="text-xs text-muted-foreground">Accept or decline client reschedule requests</p>
+            </div>
+          </div>
+          <div className="p-4">
+            <RescheduleRequestsList />
+          </div>
+        </div>
+
       </div>
     </CleanerLayout>
   );
