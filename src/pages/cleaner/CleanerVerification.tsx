@@ -476,7 +476,7 @@ export default function CleanerVerification() {
                         <Button
                           onClick={handleBgSubmit}
                           disabled={submittingBg || isRequesting || !bgConsentName.trim()}
-                          className="w-full rounded-xl h-11 gap-2 bg-gradient-to-r from-rose-500 to-primary font-semibold"
+                          className="w-full rounded-xl h-11 gap-2 bg-gradient-to-r from-destructive to-primary font-semibold"
                         >
                           {submittingBg || isRequesting ? (
                             <><Loader2 className="h-4 w-4 animate-spin" />Submitting…</>
