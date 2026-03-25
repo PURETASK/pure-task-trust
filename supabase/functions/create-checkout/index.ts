@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // Credit packages with Stripe price IDs
 const CREDIT_PACKAGES: Record<string, { priceId: string; credits: number }> = {
-  "mini": { priceId: "price_PLACEHOLDER_MINI_5", credits: 5 },
+  "mini": { priceId: "price_1SfxSIPTR9uh6ukNLfdViy3O", credits: 5 },
   "starter": { priceId: "price_1SfxSuPTR9uh6ukNLfdViy3O", credits: 50 },
   "standard": { priceId: "price_1SfxT8PTR9uh6ukNzkaP77Zi", credits: 100 },
   "value": { priceId: "price_1SfxTIPTR9uh6ukNmEQu7VMV", credits: 200 },

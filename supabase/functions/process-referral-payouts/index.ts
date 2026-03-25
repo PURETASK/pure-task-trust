@@ -65,7 +65,7 @@ const handler = async (req: Request): Promise<Response> => {
           continue;
         }
 
-        const bonusCredits = referral.bonus_credits || 25; // Default 25 credits
+        const bonusCredits = referral.bonus_credits || 25; // $25 referral reward
 
         // Credit the referrer
         await supabase.rpc("add_user_credits", {
