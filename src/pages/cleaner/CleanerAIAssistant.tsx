@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useCleanerAI } from "@/hooks/useCleanerAI";
 import { cn } from "@/lib/utils";
+import aiBotImg from "@/assets/ai-bot-assistant.jpg";
 
 const QUICK_PROMPTS = [
   {
@@ -152,7 +153,22 @@ export default function CleanerAIAssistant() {
 
   return (
     <CleanerLayout>
-      <div className="space-y-6">
+      {/* Robot background — right-side white space, half the page height */}
+      <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
+        <img
+          src={aiBotImg}
+          alt=""
+          aria-hidden="true"
+          className="absolute object-contain opacity-30"
+          style={{
+            width: "50vh",
+            height: "50vh",
+            right: "-3vh",
+            bottom: "6vh",
+          }}
+        />
+      </div>
+      <div className="space-y-6 relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
