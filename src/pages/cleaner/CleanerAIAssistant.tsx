@@ -153,27 +153,8 @@ export default function CleanerAIAssistant() {
 
   return (
     <CleanerLayout>
-      {/* Robot background — colored panel + robot */}
+      {/* Robot background — left side, full height, highly visible */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
-        {/* Colored gradient panel behind the robot */}
-        <div
-          className="absolute inset-y-0 left-0"
-          style={{
-            width: "48%",
-            background: "linear-gradient(135deg, hsl(var(--primary)/0.18) 0%, hsl(var(--success)/0.12) 60%, transparent 100%)",
-            borderRight: "2px solid hsl(var(--primary)/0.35)",
-            boxShadow: "inset -8px 0 32px -8px hsl(var(--primary)/0.12)",
-          }}
-        />
-        {/* Secondary accent strip */}
-        <div
-          className="absolute inset-y-0 left-0"
-          style={{
-            width: "3px",
-            background: "linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--success)) 50%, hsl(var(--primary)) 100%)",
-            opacity: 0.7,
-          }}
-        />
         <img
           src={aiBotImg}
           alt=""
@@ -211,7 +192,7 @@ export default function CleanerAIAssistant() {
         {/* Main Chat Area */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Chat Column */}
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-3 rounded-2xl" style={{ border: "2px solid hsl(var(--primary))", boxShadow: "0 4px 24px -4px hsl(var(--primary)/0.25)", background: "hsl(var(--primary)/0.04)" }}>
             <CardContent className="p-0 flex flex-col h-[600px]">
               {/* Messages */}
               <ScrollArea className="flex-1 p-4">
@@ -316,7 +297,7 @@ export default function CleanerAIAssistant() {
 
           {/* Quick Prompts Sidebar */}
           <div className="space-y-4">
-            <Card>
+            <Card className="rounded-2xl" style={{ border: "2px solid hsl(var(--success))", boxShadow: "0 4px 24px -4px hsl(var(--success)/0.25)", background: "hsl(var(--success)/0.04)" }}>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
               </CardHeader>
@@ -346,7 +327,7 @@ export default function CleanerAIAssistant() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-2xl" style={{ border: "2px solid hsl(var(--warning))", boxShadow: "0 4px 24px -4px hsl(var(--warning)/0.25)", background: "hsl(var(--warning)/0.04)" }}>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Your Data</CardTitle>
               </CardHeader>
