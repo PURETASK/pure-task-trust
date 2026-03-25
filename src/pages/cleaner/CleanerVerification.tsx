@@ -13,9 +13,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Shield, CheckCircle, Clock, AlertTriangle, ExternalLink, Camera,
-  Upload, FileCheck, Loader2, Lock, User, CreditCard, Passport,
-  ChevronRight, Image as ImageIcon, BadgeCheck, X
+  Shield, CheckCircle, Clock, ExternalLink, Camera,
+  FileCheck, Loader2, Lock, CreditCard,
+  BadgeCheck, ScanFace
 } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
