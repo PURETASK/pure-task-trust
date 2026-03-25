@@ -153,18 +153,19 @@ export default function CleanerAIAssistant() {
 
   return (
     <CleanerLayout>
-      {/* Robot background — right-side white space, half the page height */}
+      {/* Robot background — centered in the gap between chat and sidebar, full height */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
         <img
           src={aiBotImg}
           alt=""
           aria-hidden="true"
-          className="absolute object-contain opacity-30"
+          className="absolute object-contain opacity-25"
           style={{
-            width: "50vh",
-            height: "50vh",
-            right: "-3vh",
-            bottom: "6vh",
+            width: "125vmin",
+            height: "125vmin",
+            right: "14%",
+            top: "50%",
+            transform: "translate(50%, -50%)",
           }}
         />
       </div>
