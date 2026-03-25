@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Smartphone, Download, Share, Plus, Wifi, WifiOff,
-  Bell, Zap, Shield, Star, CheckCircle2, ChevronDown
+  Download, Share, Plus, WifiOff,
+  Bell, Zap, Shield, Star, CheckCircle2,
+  ArrowDown, X, Smartphone
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -18,21 +18,19 @@ export default function Install() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
-  const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installed, setInstalled] = useState(false);
+  const [showIOSSheet, setShowIOSSheet] = useState(false);
+  const [installing, setInstalling] = useState(false);
 
   useEffect(() => {
-    // Detect iOS
-    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !("MSStream" in window);
     setIsIOS(ios);
 
-    // Detect already installed
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (navigator as unknown as { standalone?: boolean }).standalone === true;
     setIsInstalled(standalone);
 
-    // Listen for Android install prompt
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -42,33 +40,33 @@ export default function Install() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") {
-      setInstalled(true);
-      setDeferredPrompt(null);
+    if (isIOS) {
+      setShowIOSSheet(true);
+      return;
+    }
+    if (!deferredPrompt) {
+      setShowIOSSheet(true);
+      return;
+    }
+    setInstalling(true);
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setInstalled(true);
+        setDeferredPrompt(null);
+      }
+    } finally {
+      setInstalling(false);
     }
   };
 
   const features = [
-    { icon: WifiOff, label: "Works Offline", desc: "Access your jobs & schedule without internet", color: "text-primary" },
-    { icon: Bell, label: "Push Notifications", desc: "Real-time job alerts and booking updates", color: "text-warning" },
-    { icon: Zap, label: "Lightning Fast", desc: "Loads instantly from your home screen", color: "text-success" },
-    { icon: Shield, label: "Secure & Private", desc: "Same security as the website, no extra permissions", color: "text-trust" },
+    { icon: WifiOff, label: "Works Offline", color: "text-primary" },
+    { icon: Bell, label: "Push Alerts", color: "text-warning" },
+    { icon: Zap, label: "Instant Load", color: "text-success" },
+    { icon: Shield, label: "Secure", color: "text-trust" },
   ];
-
-  const steps = isIOS
-    ? [
-        { icon: Share, text: 'Tap the Share button at the bottom of Safari', highlight: false },
-        { icon: Plus, text: 'Scroll down and tap "Add to Home Screen"', highlight: true },
-        { icon: CheckCircle2, text: 'Tap "Add" in the top right corner', highlight: false },
-      ]
-    : [
-        { icon: ChevronDown, text: "Open your browser menu (⋮ or ⋯)", highlight: false },
-        { icon: Download, text: '"Add to Home Screen" or "Install App"', highlight: true },
-        { icon: CheckCircle2, text: "Tap Install to confirm", highlight: false },
-      ];
 
   if (isInstalled || installed) {
     return (
@@ -83,7 +81,7 @@ export default function Install() {
         </motion.div>
         <h1 className="text-3xl font-bold mb-2">You're all set!</h1>
         <p className="text-muted-foreground mb-6 max-w-xs">
-          PureTask is installed on your home screen. Open it anytime for the full app experience.
+          PureTask is on your home screen. Open it anytime for the full app experience.
         </p>
         <Button asChild className="rounded-full px-8">
           <a href="/">Open PureTask</a>
@@ -93,90 +91,109 @@ export default function Install() {
   }
 
   return (
-    <div className="min-h-dvh bg-background overflow-x-hidden">
+    <div className="min-h-dvh bg-background overflow-x-hidden flex flex-col">
       {/* Hero */}
-      <div className="relative bg-gradient-to-br from-primary/10 via-background to-success/5 px-6 pt-16 pb-12 text-center overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-8 left-8 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-8 right-8 w-48 h-48 bg-success/15 rounded-full blur-3xl" />
+      <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center overflow-hidden">
+        {/* Background blobs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-16 left-8 w-40 h-40 bg-success/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-8 right-8 w-32 h-32 bg-warning/10 rounded-full blur-3xl" />
         </div>
 
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="relative"
+          className="relative flex flex-col items-center"
         >
-          <div className="inline-flex h-20 w-20 rounded-3xl gradient-brand items-center justify-center mb-4 shadow-elevated mx-auto">
-            <span className="text-white font-black text-3xl">P</span>
+          {/* App icon */}
+          <div className="h-24 w-24 rounded-[28px] gradient-brand flex items-center justify-center mb-5 shadow-elevated">
+            <span className="text-white font-black text-4xl">P</span>
           </div>
 
-          <Badge className="mb-3 bg-primary/10 text-primary border-primary/20 rounded-full px-4">
-            Free • No App Store Required
-          </Badge>
-
-          <h1 className="text-4xl font-black mb-3 tracking-tight">
-            Install PureTask
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-xs mx-auto leading-relaxed">
-            Add to your home screen for the fastest, most seamless experience
+          <h1 className="text-4xl font-black tracking-tight mb-2">PureTask</h1>
+          <p className="text-muted-foreground text-base max-w-xs mb-1">
+            Professional cleaning, right on your home screen
           </p>
-        </motion.div>
 
-        {/* Install CTA */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-8 relative"
-        >
-          {deferredPrompt ? (
-            <Button
-              size="lg"
+          {/* Stars */}
+          <div className="flex gap-0.5 mt-2 mb-8">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="h-4 w-4 fill-warning text-warning" />
+            ))}
+            <span className="text-xs text-muted-foreground ml-1.5 mt-0.5">2,400+ users</span>
+          </div>
+
+          {/* THE BIG INSTALL BUTTON */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.15, type: "spring", stiffness: 260, damping: 20 }}
+            className="w-full max-w-xs"
+          >
+            <button
               onClick={handleInstall}
-              className="rounded-2xl h-14 px-10 text-base font-bold shadow-elevated gap-3"
+              disabled={installing}
+              className={cn(
+                "relative w-full h-16 rounded-2xl font-black text-xl text-white shadow-elevated",
+                "gradient-brand overflow-hidden",
+                "active:scale-95 transition-transform duration-100",
+                "flex items-center justify-center gap-3",
+                installing && "opacity-80"
+              )}
             >
-              <Download className="h-5 w-5" />
-              Install Now — It's Free
-            </Button>
-          ) : (
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => setShowIOSGuide(true)}
-              className="rounded-2xl h-14 px-10 text-base font-bold gap-3 border-2 border-primary/30"
-            >
-              <Share className="h-5 w-5 text-primary" />
-              {isIOS ? "Add to Home Screen" : "See Instructions"}
-            </Button>
-          )}
+              {/* Shine effect */}
+              <span className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+              {installing ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="h-6 w-6 border-2 border-white/40 border-t-white rounded-full"
+                  />
+                  Installing…
+                </>
+              ) : (
+                <>
+                  <Download className="h-6 w-6" strokeWidth={2.5} />
+                  {isIOS ? "Add to Home Screen" : "Install App — Free"}
+                </>
+              )}
+            </button>
 
-          <p className="text-xs text-muted-foreground mt-3">
-            <Wifi className="h-3 w-3 inline mr-1" />
-            Works even without an internet connection
-          </p>
+            <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1.5">
+              <span className="inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+              Free · No App Store · Works offline
+            </p>
+          </motion.div>
+
+          {/* Bounce arrow */}
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            className="mt-5"
+          >
+            <ArrowDown className="h-5 w-5 text-muted-foreground/50" />
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Features Grid */}
-      <div className="px-4 py-10">
-        <h2 className="text-center font-bold text-xl mb-6 text-foreground">
-          Why install the app?
-        </h2>
-        <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+      {/* Feature pills */}
+      <div className="px-5 pb-10">
+        <div className="grid grid-cols-4 gap-2 max-w-sm mx-auto">
           {features.map((f, i) => (
             <motion.div
               key={f.label}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + i * 0.07 }}
+              transition={{ delay: 0.25 + i * 0.06 }}
             >
-              <Card className="border-2 border-border/60 rounded-2xl hover:border-primary/30 transition-all">
-                <CardContent className="p-4 text-center">
-                  <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center mx-auto mb-3">
-                    <f.icon className={cn("h-5 w-5", f.color)} />
+              <Card className="border border-border/60 rounded-2xl">
+                <CardContent className="p-3 flex flex-col items-center text-center gap-1.5">
+                  <div className="h-9 w-9 rounded-xl bg-muted flex items-center justify-center">
+                    <f.icon className={cn("h-4.5 w-4.5", f.color)} />
                   </div>
-                  <p className="font-semibold text-sm">{f.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{f.desc}</p>
+                  <p className="font-semibold text-[10px] leading-tight text-foreground">{f.label}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -184,67 +201,103 @@ export default function Install() {
         </div>
       </div>
 
-      {/* Rating */}
-      <div className="px-4 pb-6">
-        <Card className="rounded-2xl border-2 border-warning/20 bg-warning/5 max-w-sm mx-auto">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-warning text-warning" />
-              ))}
-            </div>
-            <p className="text-sm font-medium">
-              Loved by 2,400+ cleaners & clients
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Manual steps (always visible on iOS, expandable on Android) */}
-      <div className="px-4 pb-12 max-w-sm mx-auto">
-        <button
-          onClick={() => setShowIOSGuide(!showIOSGuide)}
-          className="w-full text-center text-sm text-muted-foreground underline-offset-4 hover:underline flex items-center justify-center gap-1 py-2"
-        >
-          <Smartphone className="h-4 w-4" />
-          {isIOS ? "See step-by-step guide" : "Manual install instructions"}
-        </button>
-
-        <AnimatePresence>
-          {(showIOSGuide || isIOS) && (
+      {/* iOS Bottom Sheet */}
+      <AnimatePresence>
+        {showIOSSheet && (
+          <>
+            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowIOSSheet(false)}
+            />
+
+            {/* Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl border-t border-border shadow-elevated"
+              style={{ paddingBottom: "env(safe-area-inset-bottom, 20px)" }}
             >
-              <Card className="rounded-2xl border-2 border-primary/20 bg-primary/5">
-                <CardContent className="p-5 space-y-4">
-                  <p className="font-bold text-sm text-center">
-                    {isIOS ? "iPhone/iPad Steps" : "Manual Steps"}
-                  </p>
-                  {steps.map((s, i) => (
-                    <div key={i} className="flex items-start gap-3">
+              {/* Handle */}
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="h-1 w-10 rounded-full bg-border" />
+              </div>
+
+              {/* Close */}
+              <button
+                onClick={() => setShowIOSSheet(false)}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+
+              <div className="px-6 pt-2 pb-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-12 w-12 rounded-2xl gradient-brand flex items-center justify-center flex-shrink-0">
+                    <Smartphone className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Add to Home Screen</h3>
+                    <p className="text-sm text-muted-foreground">3 quick steps in Safari</p>
+                  </div>
+                </div>
+
+                {/* Steps */}
+                <div className="space-y-4 mb-6">
+                  {[
+                    {
+                      step: 1,
+                      icon: Share,
+                      title: "Tap the Share button",
+                      desc: "The square with an arrow — at the bottom of Safari",
+                      highlight: false,
+                    },
+                    {
+                      step: 2,
+                      icon: Plus,
+                      title: "Add to Home Screen",
+                      desc: 'Scroll down in the share sheet and tap "Add to Home Screen"',
+                      highlight: true,
+                    },
+                    {
+                      step: 3,
+                      icon: CheckCircle2,
+                      title: 'Tap "Add"',
+                      desc: "Confirm in the top-right corner",
+                      highlight: false,
+                    },
+                  ].map((s) => (
+                    <div key={s.step} className="flex items-start gap-4">
                       <div className={cn(
-                        "h-8 w-8 rounded-xl flex items-center justify-center flex-shrink-0",
-                        s.highlight ? "bg-primary text-white" : "bg-muted text-muted-foreground"
+                        "h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0",
+                        s.highlight ? "gradient-brand" : "bg-muted"
                       )}>
-                        <s.icon className="h-4 w-4" />
+                        <s.icon className={cn("h-5 w-5", s.highlight ? "text-white" : "text-muted-foreground")} />
                       </div>
-                      <p className={cn(
-                        "text-sm leading-relaxed pt-1",
-                        s.highlight ? "font-semibold text-foreground" : "text-muted-foreground"
-                      )}>
-                        {s.text}
-                      </p>
+                      <div className="pt-0.5">
+                        <p className={cn("font-semibold text-sm", s.highlight && "text-primary")}>{s.title}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                      </div>
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+                </div>
+
+                <Button
+                  className="w-full rounded-xl h-12 text-base font-bold"
+                  onClick={() => setShowIOSSheet(false)}
+                >
+                  Got it!
+                </Button>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
