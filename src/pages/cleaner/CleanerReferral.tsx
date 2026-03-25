@@ -215,7 +215,7 @@ export default function CleanerReferral() {
               <ShareButtons 
                 referralLink={referralLink}
                 referralCode={referralCode?.code || ''}
-                rewardAmount={referralCode?.reward_credits || 500}
+                rewardAmount={referralCode?.reward_credits || 25}
               />
             </CardContent>
           </Card>
