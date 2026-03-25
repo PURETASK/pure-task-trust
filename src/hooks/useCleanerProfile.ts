@@ -35,8 +35,9 @@ export function useCleanerProfile() {
   });
 
   return {
-    profile: profileQuery.data,
-    isLoading: profileQuery.isLoading,
+    profile: profileQuery.data ?? null,
+    // Show loading when auth hasn't resolved yet OR the query is in-flight
+    isLoading: !user?.id || profileQuery.isLoading || profileQuery.isFetching,
     error: profileQuery.error,
   };
 }
