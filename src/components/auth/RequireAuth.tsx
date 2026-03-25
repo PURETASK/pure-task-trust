@@ -10,7 +10,6 @@ interface RequireAuthProps {
   requireRole?: boolean;
 }
 
-// Simple inline loading state to avoid circular dependencies
 function AuthLoadingSkeleton() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -33,49 +32,64 @@ function AuthLoadingSkeleton() {
 
 export function RequireAuth({ children, allowedRoles, requireRole = true }: RequireAuthProps) {
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
-  const { needsRoleSelection, needsOnboarding, role } = useUserProfile();
+  const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
 
-  // Only block on the initial auth check — never block once we know the auth state
+  // Step 1: Wait for the auth session to be resolved
   if (authLoading) {
     return <AuthLoadingSkeleton />;
   }
 
+  // Step 2: Not logged in → send to /auth
   if (!isAuthenticated) {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  // Never redirect away from onboarding mid-flow
+  // Step 3: Never interrupt the onboarding flow
   if (location.pathname === '/cleaner/onboarding') {
     return <>{children}</>;
   }
 
-  // Use role from AuthContext (set immediately after login), fall back to profile query role
+  // Step 4: Determine effective role — prefer AuthContext (set immediately on login)
+  // If AuthContext has the role, we can act on it immediately without waiting for profile query
   const effectiveRole = user?.role ?? role;
 
-  // Check if user needs to select a role (only when we know they don't have one)
-  const hasNoRole = requireRole && !effectiveRole && needsRoleSelection;
-  if (hasNoRole && location.pathname !== '/role-selection') {
+  // Step 5: If we don't have a role from AuthContext yet AND profile is still loading,
+  // show skeleton briefly rather than making a wrong redirect decision
+  if (!effectiveRole && profileLoading && requireRole) {
+    return <AuthLoadingSkeleton />;
+  }
+
+  // Step 6: Role-based redirect decisions (only when we have settled state)
+  // Check if user needs to select a role
+  if (requireRole && !effectiveRole && needsRoleSelection && location.pathname !== '/role-selection') {
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
-  // Check if cleaner needs to complete onboarding — ONLY redirect brand-new cleaners
-  if (requireRole && effectiveRole === 'cleaner' && needsOnboarding && 
-      location.pathname !== '/cleaner/onboarding' && 
-      location.pathname !== '/role-selection') {
+  // Step 7: New cleaner needs onboarding
+  if (
+    requireRole &&
+    effectiveRole === 'cleaner' &&
+    needsOnboarding &&
+    location.pathname !== '/cleaner/onboarding' &&
+    location.pathname !== '/role-selection'
+  ) {
     return <Navigate to="/cleaner/onboarding" replace />;
   }
 
-  // Check role if specified — use effectiveRole so cleaners/admins get correct redirects
+  // Step 8: Wrong role for this route → redirect to their home
   if (allowedRoles && effectiveRole && !allowedRoles.includes(effectiveRole)) {
-    const redirectPath = effectiveRole === 'cleaner' ? '/cleaner/dashboard' : effectiveRole === 'admin' ? '/admin/hub' : '/dashboard';
+    const redirectPath =
+      effectiveRole === 'cleaner' ? '/cleaner/dashboard' :
+      effectiveRole === 'admin' ? '/admin/hub' :
+      '/dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 
   return <>{children}</>;
 }
 
-// Convenience wrappers for role-specific routes
+// Convenience wrappers
 export function RequireClient({ children }: { children: ReactNode }) {
   return <RequireAuth allowedRoles={['client']}>{children}</RequireAuth>;
 }
