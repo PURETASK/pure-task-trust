@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap, Calendar } from "lucide-react";
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
