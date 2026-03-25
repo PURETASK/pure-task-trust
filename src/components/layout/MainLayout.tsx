@@ -36,12 +36,14 @@ export function MainLayout({ children }: MainLayoutProps) {
   const handleLogout = async (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    // Navigate first so we land on a public page before auth state clears,
+    // preventing RequireAuth from bouncing back to /auth mid-logout.
+    navigate("/", { replace: true });
     try {
       await logout();
     } catch {
-      // ignore logout errors — session is cleared client-side regardless
+      // ignore — session is cleared client-side regardless
     }
-    navigate("/", { replace: true });
   };
 
   const getInitials = (name: string) =>
