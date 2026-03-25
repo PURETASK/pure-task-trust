@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
 import { CancelAlternativesModal } from "@/components/booking/CancelAlternativesModal";
+import { NoShowDecisionCard } from "@/components/booking/NoShowDecisionCard";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
