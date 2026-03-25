@@ -111,7 +111,19 @@ export default function CleanerSchedule() {
   return (
     <CleanerLayout>
       <Helmet><title>My Schedule | PureTask</title></Helmet>
-      <div className="space-y-6">
+      {/* Oversized transparent calendar background */}
+      <div className="fixed inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
+        <img
+          src={scheduleBg}
+          alt=""
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="w-[90vmin] h-[90vmin] object-contain opacity-[0.06]"
+          aria-hidden="true"
+        />
+      </div>
+      <div className="space-y-6 relative z-10">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">My Schedule</h1>
           <Button variant="outline" asChild>
