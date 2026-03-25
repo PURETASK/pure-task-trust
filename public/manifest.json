@@ -4,34 +4,72 @@
   "description": "Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results.",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#ffffff",
   "theme_color": "#0078FF",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": ["lifestyle", "utilities"],
+  "screenshots": [
+    {
+      "src": "/og/puretask-og.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PureTask Dashboard"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "Book Cleaning",
+      "name": "Book a Cleaning",
+      "short_name": "Book",
       "url": "/book",
-      "description": "Book a new cleaning service"
+      "description": "Book a new cleaning service",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "My Dashboard",
+      "short_name": "Dashboard",
       "url": "/dashboard",
-      "description": "View your bookings and manage account"
+      "description": "View your bookings and account",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cleaner Portal",
+      "short_name": "Jobs",
+      "url": "/cleaner/dashboard",
+      "description": "View your jobs and earnings",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }
