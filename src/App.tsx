@@ -70,7 +70,6 @@ const CleanerReferral = lazy(() => import("./pages/cleaner/CleanerReferral"));
 const CleanerMessages = lazy(() => import("./pages/cleaner/CleanerMessages"));
 const CancellationPolicy = lazy(() => import("./pages/cleaner/CancellationPolicy"));
 const CleanerProfileSettings = lazy(() => import("./pages/cleaner/CleanerProfile"));
-const CleanerMarketplace = lazy(() => import("./pages/cleaner/CleanerMarketplace"));
 const CleanerJobs = lazy(() => import("./pages/cleaner/CleanerJobs"));
 const CleanerJobDetail = lazy(() => import("./pages/cleaner/CleanerJobDetail"));
 const CleanerAnalytics = lazy(() => import("./pages/cleaner/CleanerAnalytics"));
