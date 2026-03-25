@@ -13,7 +13,7 @@ import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { IntroVideoUpload } from "@/components/profile/IntroVideoUpload";
 import { AdditionalServicesSetup } from "@/components/cleaner/AdditionalServicesSetup";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
-import { getTierFromScore, getTierConfig, CleanerTier, TIER_VISUAL } from "@/lib/tier-config";
+import { getTierFromScore, getTierConfig, CleanerTier, TIER_VISUAL, TIER_CONFIGS } from "@/lib/tier-config";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
@@ -344,30 +344,95 @@ export default function CleanerProfile() {
 
 
         {/* Hourly Rate */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base"><DollarSign className="h-5 w-5 text-success" />Hourly Rate</CardTitle>
-            <CardDescription className="flex items-center gap-2">
-              Tier range: <Badge variant="outline" className="text-xs">${hourlyRateRange.min} – ${hourlyRateRange.max}</Badge>
+        <Card
+          className={`border-2 ${TIER_VISUAL[tier].border}`}
+          style={{ boxShadow: TIER_VISUAL[tier].glow }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <DollarSign className="h-5 w-5 text-success" />
+              Your Hourly Rate
+            </CardTitle>
+            <CardDescription>
+              Your rate range is determined by your reliability score and tier — the higher you score, the more you can charge.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-primary/5 text-primary text-sm">
-              <Info className="h-4 w-4 shrink-0" />
-              Improve your reliability score to unlock higher rates!
+
+            {/* How it works explainer */}
+            <div className="rounded-xl border border-border/60 overflow-hidden">
+              <div className="bg-muted/50 px-4 py-2.5 border-b border-border/60">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rate Range by Tier & Reliability Score</p>
+              </div>
+              <div className="divide-y divide-border/40">
+                {(["bronze", "silver", "gold", "platinum"] as const).map((t) => {
+                  const tc = TIER_CONFIGS[t];
+                  const isCurrentTier = t === tier;
+                  return (
+                    <div
+                      key={t}
+                      className={`flex items-center gap-3 px-4 py-3 transition-colors ${isCurrentTier ? `${TIER_VISUAL[t].bg}` : ""}`}
+                    >
+                      <span className="text-xl w-7 text-center flex-shrink-0">{TIER_VISUAL[t].emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`text-sm font-bold capitalize ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
+                            {tc.label}
+                          </span>
+                          <span className="text-xs text-muted-foreground">Score {tc.minScore}–{tc.maxScore}</span>
+                          {isCurrentTier && (
+                            <Badge className={`${TIER_VISUAL[t].badge} text-[10px] h-4 px-1.5`}>You are here</Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <span className={`text-base font-black ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
+                          ${tc.hourlyRateRange.min}–${tc.hourlyRateRange.max}
+                        </span>
+                        <p className="text-[10px] text-muted-foreground">/hr</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Slider value={[hourlyRate]} onValueChange={([v]) => setHourlyRate(v)} min={hourlyRateRange.min} max={hourlyRateRange.max} step={1} />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>${hourlyRateRange.min}</span><span>${hourlyRateRange.max}</span>
+
+            {/* Current rate slider */}
+            <div className="space-y-3 pt-1">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold">Set Your Rate</Label>
+                <div className="text-right">
+                  <span className={`text-3xl font-black ${TIER_VISUAL[tier].text}`}>${hourlyRate}</span>
+                  <span className="text-sm text-muted-foreground ml-1">/ hr</span>
                 </div>
               </div>
-              <div className="w-20 text-right">
-                <span className="text-2xl font-bold text-success">${hourlyRate}</span>
-                <p className="text-xs text-muted-foreground">per hour</p>
+              <Slider
+                value={[hourlyRate]}
+                onValueChange={([v]) => setHourlyRate(v)}
+                min={hourlyRateRange.min}
+                max={hourlyRateRange.max}
+                step={1}
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>${hourlyRateRange.min} min</span>
+                <span className="text-center text-foreground font-medium">
+                  Your {tier} range: <span className={TIER_VISUAL[tier].text}>${hourlyRateRange.min}–${hourlyRateRange.max}</span>
+                </span>
+                <span>${hourlyRateRange.max} max</span>
+              </div>
+              <div className={`flex items-start gap-2.5 p-3 rounded-xl ${TIER_VISUAL[tier].bg} border ${TIER_VISUAL[tier].border}`}>
+                <TrendingUp className={`h-4 w-4 shrink-0 mt-0.5 ${TIER_VISUAL[tier].text}`} />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <span className={`font-semibold ${TIER_VISUAL[tier].text}`}>Want to charge more? </span>
+                  Increase your reliability score to unlock the next tier.
+                  {tier !== "platinum" && (
+                    <> You need <span className="font-semibold text-foreground">{Math.max(0, TIER_VISUAL[tier].nextMin - reliabilityScore)} more points</span> to reach {TIER_VISUAL[tier].next} (up to ${TIER_CONFIGS[TIER_VISUAL[tier].next?.toLowerCase() as keyof typeof TIER_CONFIGS]?.hourlyRateRange.max ?? hourlyRateRange.max}/hr).</>
+                  )}
+                  {tier === "platinum" && <> You're at the top — enjoy the best rates on the platform!</>}
+                </p>
               </div>
             </div>
+
             <Separator />
             <div>
               <Label className="text-sm flex items-center gap-2 mb-2"><MapPin className="h-4 w-4" />Travel Radius</Label>
