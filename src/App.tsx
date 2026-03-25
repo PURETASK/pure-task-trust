@@ -153,6 +153,8 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  {/* PWA Install page — no layout */}
+                  <Route path="/install" element={<Install />} />
 
                   {/* Role selection — no layout */}
                   <Route path="/role-selection" element={
