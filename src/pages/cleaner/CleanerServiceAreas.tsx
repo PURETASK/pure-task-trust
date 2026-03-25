@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import RadiusMap from "@/components/booking/RadiusMap";
 
 export default function CleanerServiceAreas() {
   const { toast } = useToast();
@@ -32,6 +33,7 @@ export default function CleanerServiceAreas() {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [radius, setRadius] = useState(10);
+  const [previewRadius, setPreviewRadius] = useState(10);
 
   const handleAddArea = async () => {
     if (!city.trim() && !zipCode.trim()) {
@@ -104,6 +106,16 @@ export default function CleanerServiceAreas() {
                     <span>5 miles</span><span>50 miles</span>
                   </div>
                 </div>
+                {/* Interactive radius preview map */}
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Coverage preview</Label>
+                  <div className="rounded-xl overflow-hidden border border-border/60" style={{ height: 200 }}>
+                    <RadiusMap radiusMiles={radius} className="h-full" />
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
+                    The shaded area shows your {radius}-mile coverage zone
+                  </p>
+                </div>
                 <Button className="w-full rounded-xl" onClick={handleAddArea} disabled={isAdding}>
                   {isAdding && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   Add Service Area
@@ -130,6 +142,43 @@ export default function CleanerServiceAreas() {
               </Card>
             ))}
           </div>
+        </motion.div>
+
+        {/* Live Radius Preview */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Navigation className="h-4 w-4 text-primary" />
+                    Coverage Radius Preview
+                  </CardTitle>
+                  <CardDescription className="text-xs mt-0.5">Drag the slider to visualise your travel zone</CardDescription>
+                </div>
+                <Badge variant="secondary" className="font-mono text-base px-3 py-1">{previewRadius} mi</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Slider
+                value={[previewRadius]}
+                onValueChange={([v]) => setPreviewRadius(v)}
+                min={5}
+                max={50}
+                step={5}
+                className="mb-1"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                <span>5 mi</span><span>50 mi</span>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-border/60" style={{ height: 300 }}>
+                <RadiusMap radiusMiles={previewRadius} className="h-full" />
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Blue shaded area shows your {previewRadius}-mile coverage zone from your base location
+              </p>
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Your Service Areas */}
