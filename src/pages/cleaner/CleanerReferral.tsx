@@ -163,7 +163,7 @@ export default function CleanerReferral() {
                   <s.icon className={`h-5 w-5 ${s.icon_c}`} />
                 </div>
                 <div>
-                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-bold ${s.val_c}`}>{s.value}</p>}
+                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-black font-mono ${s.val_c}`}>{s.value}</p>}
                   <p className="text-xs text-muted-foreground">{s.label}</p>
                 </div>
               </div>
