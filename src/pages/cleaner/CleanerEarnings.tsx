@@ -79,7 +79,7 @@ export default function CleanerEarnings() {
           loading="lazy"
           width={1024}
           height={1024}
-          className="w-[70vmin] h-[70vmin] object-contain opacity-[0.055]"
+          className="w-[70vmin] h-[70vmin] object-contain opacity-60"
           aria-hidden="true"
         />
       </div>

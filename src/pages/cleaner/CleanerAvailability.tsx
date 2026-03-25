@@ -21,7 +21,7 @@ export default function CleanerAvailability() {
               loading="lazy"
               width={1024}
               height={1024}
-              className="absolute inset-0 w-full h-full object-contain object-center opacity-[0.07] pointer-events-none select-none"
+              className="absolute inset-0 w-full h-full object-contain object-center opacity-60 pointer-events-none select-none"
               aria-hidden="true"
             />
             {/* Gradient overlay */}
