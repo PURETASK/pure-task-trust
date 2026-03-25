@@ -5,7 +5,7 @@ import { RescheduleRequestsList } from "@/components/scheduling/RescheduleReques
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Umbrella, CalendarClock, Info } from "lucide-react";
 import { motion } from "framer-motion";
-import calendarBg from "@/assets/calendar-bg.jpg";
+import availabilityBg from "@/assets/availability-bg.png";
 
 export default function CleanerAvailability() {
   return (
