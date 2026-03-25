@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useCleanerAI } from "@/hooks/useCleanerAI";
 import { cn } from "@/lib/utils";
+import aiBotImg from "@/assets/ai-bot-assistant.jpg";
 
 const QUICK_PROMPTS = [
   {
