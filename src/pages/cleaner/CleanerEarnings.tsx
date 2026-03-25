@@ -139,7 +139,7 @@ export default function CleanerEarnings() {
 
         {/* Forecast + Hours Goal */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <Card className="rounded-2xl border-2 border-primary/60 bg-primary/40">
+          <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-primary/50 flex items-center justify-center">
@@ -163,7 +163,7 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-warning/60 bg-warning/40">
+          <Card className="rounded-2xl border-2 border-warning/80 bg-warning/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-warning/50 flex items-center justify-center flex-shrink-0">
@@ -189,7 +189,7 @@ export default function CleanerEarnings() {
 
         {/* Payout Options */}
         <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
-          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/60 bg-[hsl(280,70%,55%)]/40">
+          <Card className="rounded-2xl border-2 border-[hsl(280,70%,55%)]/80 bg-[hsl(280,70%,55%)]/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/50 flex items-center justify-center">
@@ -214,7 +214,7 @@ export default function CleanerEarnings() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-2 border-success/60 bg-success/40">
+          <Card className="rounded-2xl border-2 border-success/80 bg-success/70">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-success/50 flex items-center justify-center">
@@ -241,7 +241,7 @@ export default function CleanerEarnings() {
         </div>
 
         {/* History Tabs */}
-        <Card className="rounded-2xl border-2 border-primary/50 bg-primary/5">
+        <Card className="rounded-2xl border-2 border-primary/80 bg-primary/70">
           <Tabs defaultValue="earnings">
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
               {["earnings", "payouts"].map(tab => (
