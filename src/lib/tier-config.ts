@@ -9,6 +9,71 @@
 
 export type CleanerTier = 'bronze' | 'silver' | 'gold' | 'platinum';
 
+// ── SINGLE SOURCE OF TRUTH for tier visual styles ──────────────────────────
+// Use these across ALL components to ensure visual consistency.
+// Platinum = purple (--pt-purple), Gold = amber/yellow, Silver = slate, Bronze = orange
+export const TIER_VISUAL: Record<CleanerTier, {
+  emoji: string;
+  gradient: string;        // Tailwind gradient for card headers / backgrounds
+  badge: string;           // Badge className (bg + text + border)
+  border: string;          // 2px card border
+  ring: string;            // ring/circle avatar style
+  text: string;            // text color class
+  bg: string;              // subtle background tint
+  glow: string;            // box-shadow inline style value
+  next: string | null;
+  nextMin: number;
+}> = {
+  bronze: {
+    emoji: '🥉',
+    gradient: 'from-amber-600 to-amber-800',
+    badge: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
+    border: 'border-amber-500/40',
+    ring: 'border-amber-500/50 bg-amber-500/10 text-amber-600',
+    text: 'text-amber-600',
+    bg: 'bg-amber-500/5',
+    glow: '0 4px 20px 0 hsl(25 95% 55% / 0.2)',
+    next: 'Silver',
+    nextMin: 50,
+  },
+  silver: {
+    emoji: '🥈',
+    gradient: 'from-slate-400 to-slate-600',
+    badge: 'bg-slate-400/10 text-slate-500 border-slate-400/30',
+    border: 'border-slate-400/40',
+    ring: 'border-slate-400/50 bg-slate-400/10 text-slate-500',
+    text: 'text-slate-500',
+    bg: 'bg-slate-400/5',
+    glow: '0 4px 20px 0 hsl(220 10% 45% / 0.2)',
+    next: 'Gold',
+    nextMin: 70,
+  },
+  gold: {
+    emoji: '🥇',
+    gradient: 'from-yellow-400 to-amber-500',
+    badge: 'bg-yellow-400/10 text-yellow-600 border-yellow-400/30',
+    border: 'border-yellow-400/40',
+    ring: 'border-yellow-400/50 bg-yellow-400/10 text-yellow-600',
+    text: 'text-yellow-600',
+    bg: 'bg-yellow-400/5',
+    glow: '0 4px 20px 0 hsl(38 95% 55% / 0.25)',
+    next: 'Platinum',
+    nextMin: 90,
+  },
+  platinum: {
+    emoji: '💎',
+    gradient: 'from-[hsl(280,70%,45%)] to-[hsl(280,70%,30%)]',
+    badge: 'bg-[hsl(280,70%,55%)]/10 text-[hsl(280,70%,45%)] border-[hsl(280,70%,55%)]/30',
+    border: 'border-[hsl(280,70%,55%)]/40',
+    ring: 'border-[hsl(280,70%,55%)]/50 bg-[hsl(280,70%,55%)]/10 text-[hsl(280,70%,45%)]',
+    text: 'text-[hsl(280,70%,45%)]',
+    bg: 'bg-[hsl(280,70%,55%)]/5',
+    glow: '0 4px 24px 0 hsl(280 70% 55% / 0.3)',
+    next: null,
+    nextMin: 100,
+  },
+};
+
 export interface TierConfig {
   name: string;
   label: string;
