@@ -77,10 +77,10 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="flex-1 flex flex-col min-h-dvh min-w-0">
           {/* ── HEADER ───────────────────────────────────────────────────── */}
           <header className={cn(
-            "sticky top-0 z-40 h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+            "sticky top-0 z-40 h-12 sm:h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-safe",
             headerAccentClass
           )}>
-            <div className="flex h-full items-center justify-between px-3 sm:px-4">
+            <div className="flex h-full items-center justify-between px-2 sm:px-4">
 
               {/* LEFT: Trigger + Logo */}
               <div className="flex items-center gap-2 sm:gap-3">
