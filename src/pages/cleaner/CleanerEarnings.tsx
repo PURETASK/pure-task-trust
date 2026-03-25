@@ -190,7 +190,7 @@ export default function CleanerEarnings() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/20 flex items-center justify-center">
-                  <Banknote className="h-5 w-5 text-primary" />
+                  <Banknote className="h-5 w-5 text-[hsl(280,70%,55%)]" />
                 </div>
                 <div>
                   <h3 className="font-semibold">Instant Payout</h3>
