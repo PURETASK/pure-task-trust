@@ -79,12 +79,12 @@ export default function Referral() {
               <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
                   <Sparkles className="h-4 w-4 mr-2 text-amber-500" />
-                  Give ${referralCode?.referee_credits || 500}
+                  Give ${referralCode?.referee_credits || 25}
                 </Badge>
                 <span className="text-muted-foreground">→</span>
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
                   <Star className="h-4 w-4 mr-2 text-amber-500" />
-                  Get ${referralCode?.reward_credits || 500}
+                  Get ${referralCode?.reward_credits || 25}
                 </Badge>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function Referral() {
                 <ShareButtons 
                   referralLink={referralLink}
                   referralCode={referralCode?.code || ''}
-                  rewardAmount={referralCode?.reward_credits || 500}
+                  rewardAmount={referralCode?.reward_credits || 25}
                 />
               </CardContent>
             </Card>
@@ -258,7 +258,7 @@ export default function Referral() {
                   {[
                     { step: 1, title: "Share Your Link", desc: "Send your unique referral link to friends, family, or on social media", icon: Share2 },
                     { step: 2, title: "They Sign Up", desc: "Your friend creates an account and completes their first booking", icon: Users },
-                    { step: 3, title: "Both Earn Credits", desc: `You both receive $${referralCode?.reward_credits || 500} to use on cleanings!`, icon: Sparkles },
+                    { step: 3, title: "Both Earn Credits", desc: `You both receive $${referralCode?.reward_credits || 25} to use on cleanings!`, icon: Sparkles },
                   ].map((item, index) => (
                     <motion.div 
                       key={item.step}

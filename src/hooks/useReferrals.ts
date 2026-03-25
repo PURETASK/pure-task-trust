@@ -82,8 +82,8 @@ export function useReferrals() {
           user_id: user.id,
           code: generatedCode,
           type: 'standard',
-          reward_credits: 500,
-          referee_credits: 500,
+          reward_credits: 25,
+          referee_credits: 25,
           is_active: true,
         })
         .select()

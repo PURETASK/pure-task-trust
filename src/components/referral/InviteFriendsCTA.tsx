@@ -17,7 +17,7 @@ export function InviteFriendsCTA({
   className = ""
 }: InviteFriendsCTAProps) {
   const { referralCode, stats } = useReferrals();
-  const rewardAmount = referralCode?.reward_credits || 500;
+  const rewardAmount = referralCode?.reward_credits || 25;
 
   if (variant === "banner") {
     return (
