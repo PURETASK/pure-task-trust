@@ -27,7 +27,7 @@ const TIERS = [
   {
     tier: 'Silver',
     score: '50–69',
-    rate: '$30–50/hr',
+    rate: '$20–50/hr',
     earnRate: '82%',
     popular: false,
     colorBg: 'bg-success/5',
@@ -38,7 +38,7 @@ const TIERS = [
   {
     tier: 'Gold',
     score: '70–89',
-    rate: '$40–65/hr',
+    rate: '$20–65/hr',
     earnRate: '83%',
     popular: true,
     colorBg: 'bg-primary/5',
@@ -49,7 +49,7 @@ const TIERS = [
   {
     tier: 'Platinum',
     score: '90–100',
-    rate: '$50–100/hr',
+    rate: '$20–100/hr',
     earnRate: '85%',
     popular: false,
     colorBg: 'bg-amber-500/5',
