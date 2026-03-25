@@ -89,7 +89,7 @@ export function NoShowDecisionCard({
           await supabase.from("credit_ledger").insert({
             user_id: clientProfile.user_id,
             delta_credits: escrowCredits,
-            reason: `Full refund: cleaner no-show on job #${jobId.slice(0, 8)}`,
+            reason: "refund" as any,
             job_id: jobId,
           });
         }
