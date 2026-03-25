@@ -71,8 +71,8 @@ export function MobileBottomNav() {
 
   const messagesPath = role === "cleaner" ? "/cleaner/messages" : "/messages";
 
-  // Hide on auth/onboarding
-  const hiddenPaths = ["/auth", "/role-selection", "/cleaner/onboarding", "/forgot-password", "/reset-password"];
+  // Hide on auth/onboarding/install
+  const hiddenPaths = ["/auth", "/role-selection", "/cleaner/onboarding", "/forgot-password", "/reset-password", "/install"];
   if (hiddenPaths.some((p) => location.pathname.startsWith(p))) return null;
 
   const isActive = (item: NavItem) => {
