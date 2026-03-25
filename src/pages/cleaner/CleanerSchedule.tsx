@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Clock, Settings, DollarSign, Briefcase, Search, Zap, Calendar } from "lucide-react";
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
@@ -124,20 +124,57 @@ export default function CleanerSchedule() {
         />
       </div>
       <div className="space-y-6 relative z-10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">My Schedule</h1>
-          <Button variant="outline" asChild>
-            <Link to="/cleaner/availability">
-              <Settings className="h-4 w-4 mr-2" />
-              Manage Availability
-            </Link>
-          </Button>
+
+        {/* ── Hero Header ─────────────────────────────────────────────── */}
+        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/10 via-background to-success/5 p-7">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/8 blur-2xl pointer-events-none" />
+          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/8 blur-2xl pointer-events-none" />
+          <div className="flex items-center justify-between relative">
+            <div className="flex items-center gap-4">
+              <div className="h-13 w-13 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25 p-3">
+                <Calendar className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">My Schedule</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">Your upcoming jobs and availability at a glance</p>
+              </div>
+            </div>
+            <Button variant="outline" asChild className="rounded-xl border-2 border-primary/40 hover:border-primary/70">
+              <Link to="/cleaner/availability">
+                <Settings className="h-4 w-4 mr-2" />
+                Manage Availability
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        {/* ── Quick Stats Strip ─────────────────────────────────────────── */}
+        <div className="grid grid-cols-4 gap-3">
+          {[
+            { label: "Today's Jobs",    value: getJobsForDate(new Date()).length,                           icon: Briefcase, border: "border-primary/50",                          bg: "bg-primary/5",                          icon_c: "text-primary",   icon_bg: "bg-primary/10" },
+            { label: "This Week",       value: twoWeeksDays.slice(0,7).filter(d => hasJobs(d)).length,      icon: Calendar,  border: "border-success/50",                          bg: "bg-success/5",                          icon_c: "text-success",   icon_bg: "bg-success/10" },
+            { label: "Pending Offers",  value: jobs.filter(j => j.status === 'pending' || j.status === 'created').length, icon: Clock, border: "border-warning/50",             bg: "bg-warning/5",                          icon_c: "text-warning",   icon_bg: "bg-warning/10" },
+            { label: "Confirmed",       value: jobs.filter(j => j.status === 'confirmed').length,           icon: DollarSign, border: "border-[hsl(280,70%,55%)]/50",             bg: "bg-[hsl(280,70%,55%)]/5",               icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/10" },
+          ].map(s => (
+            <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4 flex items-center gap-3`}>
+              <div className={`h-10 w-10 rounded-xl ${s.icon_bg} flex items-center justify-center shrink-0`}>
+                <s.icon className={`h-5 w-5 ${s.icon_c}`} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{s.value}</p>
+                <p className="text-xs text-muted-foreground">{s.label}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Calendar Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg">Calendar</CardTitle>
+        <Card className="border-2 border-primary/30 rounded-2xl overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/5 border-b border-primary/20">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" />
+              Calendar
+            </CardTitle>
             <div className="flex items-center gap-2">
               {viewMode === "month" && (
                 <>
@@ -228,26 +265,31 @@ export default function CleanerSchedule() {
         </Card>
 
         {/* Selected Date Summary */}
-        <Card>
+        <Card className="border-2 border-[hsl(280,70%,55%)]/40 rounded-2xl bg-[hsl(280,70%,55%)]/5">
           <CardContent className="p-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-0.5">
-                  {format(selectedDate, "EEEE, MMMM d")}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="h-11 w-11 rounded-xl bg-[hsl(280,70%,55%)]/15 flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-[hsl(280,70%,55%)]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-0.5">
+                    {format(selectedDate, "EEEE, MMMM d")}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
+                  </p>
+                </div>
               </div>
               {selectedDateJobs.length > 0 && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{dailyHours}h scheduled</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-xl bg-warning/10 border border-warning/30">
+                    <Clock className="h-4 w-4 text-warning" />
+                    <span className="font-medium text-warning">{dailyHours}h scheduled</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-sm">
+                  <div className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-xl bg-success/10 border border-success/30">
                     <DollarSign className="h-4 w-4 text-success" />
-                    <span className="font-semibold text-success">${dailyNet} projected earnings</span>
+                    <span className="font-semibold text-success">${dailyNet} projected</span>
                   </div>
                 </div>
               )}
@@ -258,11 +300,14 @@ export default function CleanerSchedule() {
         {/* Job Lists */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold mb-3">Job Requests</h3>
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-warning">
+              <Clock className="h-4 w-4" />
+              Job Requests
+            </h3>
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
-              <Card>
+              <Card className="border-2 border-warning/20 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No job requests for this day.
                 </CardContent>
@@ -270,7 +315,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {pendingJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/30 rounded-2xl bg-warning/5">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -313,11 +358,14 @@ export default function CleanerSchedule() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Accepted Jobs</h3>
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-success">
+              <Briefcase className="h-4 w-4" />
+              Accepted Jobs
+            </h3>
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
-              <Card>
+              <Card className="border-2 border-success/20 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No accepted jobs for this day.
                 </CardContent>
@@ -325,7 +373,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {acceptedJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/30 rounded-2xl bg-success/5">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
