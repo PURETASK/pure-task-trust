@@ -347,8 +347,8 @@ export default function CleanerVerification() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-rose-500/10 flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-rose-500" />
+                  <div className="h-11 w-11 rounded-xl bg-destructive/10 flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-destructive" />
                   </div>
                   <div>
                     <CardTitle className="text-base">Background Check</CardTitle>
