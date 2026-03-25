@@ -525,6 +525,60 @@ export default function CleanerResources() {
             </motion.div>
           </TabsContent>
 
+          {/* ── Industry Stats Tab ── */}
+          <TabsContent value="industry-stats">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-9 w-9 rounded-2xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center">
+                  <BarChart2 className="h-4 w-4 text-[hsl(var(--pt-purple))]" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Industry Statistics</h2>
+                  <p className="text-xs text-muted-foreground">Key market data & trends for 2025</p>
+                </div>
+              </div>
+
+              {/* Headline stats mini grid */}
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {[
+                  { value: '$10.1B', label: 'US market size (2024)', color: 'text-primary', border: 'border-primary/30', bg: 'bg-primary/5' },
+                  { value: '1.2M+', label: 'Cleaning businesses', color: 'text-success', border: 'border-success/30', bg: 'bg-success/5' },
+                  { value: '88%', label: 'Re-book after 5-star clean', color: 'text-warning', border: 'border-warning/30', bg: 'bg-warning/5' },
+                  { value: '31%', label: 'Growth in gig cleaners', color: 'text-[hsl(var(--pt-purple))]', border: 'border-[hsl(var(--pt-purple))]/30', bg: 'bg-[hsl(var(--pt-purple))]/5' },
+                ].map(s => (
+                  <div key={s.value} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4`}>
+                    <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick consumer stats */}
+              <div className="rounded-2xl border-2 border-[hsl(var(--pt-purple))]/30 bg-[hsl(var(--pt-purple))]/5 p-4 mb-4">
+                <p className="font-bold text-[hsl(var(--pt-purple))] text-sm mb-3">📊 Consumer Booking Insights</p>
+                <div className="space-y-2">
+                  {[
+                    { pct: '73%', txt: 'book online or via app' },
+                    { pct: '68%', txt: 'require background checks' },
+                    { pct: '64%', txt: 'say transparent pricing is #1 factor' },
+                  ].map(i => (
+                    <div key={i.pct} className="flex items-center gap-3 text-sm">
+                      <span className="font-black text-[hsl(var(--pt-purple))] w-10 flex-shrink-0">{i.pct}</span>
+                      <span className="text-muted-foreground">{i.txt}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Button asChild className="w-full rounded-2xl font-bold border-2" variant="outline">
+                <Link to="/cleaning-industry-stats">
+                  <BarChart2 className="h-4 w-4 mr-2" />
+                  View Full Industry Report <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </TabsContent>
+
           <TabsContent value="growth">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <div className="flex items-center gap-3 mb-5">
