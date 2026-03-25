@@ -79,12 +79,12 @@ export default function Referral() {
               <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
                   <Sparkles className="h-4 w-4 mr-2 text-amber-500" />
-                  Give ${referralCode?.referee_credits || 500}
+                  Give ${referralCode?.referee_credits || 25}
                 </Badge>
                 <span className="text-muted-foreground">→</span>
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
                   <Star className="h-4 w-4 mr-2 text-amber-500" />
-                  Get ${referralCode?.reward_credits || 500}
+                  Get ${referralCode?.reward_credits || 25}
                 </Badge>
               </div>
             </div>
