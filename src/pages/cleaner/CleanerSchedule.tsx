@@ -126,9 +126,9 @@ export default function CleanerSchedule() {
       <div className="space-y-6 relative z-10">
 
         {/* ── Hero Header ─────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/10 via-background to-success/5 p-7">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/8 blur-2xl pointer-events-none" />
-          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/8 blur-2xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/25 via-background to-success/15 p-7">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/20 blur-2xl pointer-events-none" />
+          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/20 blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
               <div className="h-13 w-13 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg shadow-primary/25 p-3">
@@ -151,10 +151,10 @@ export default function CleanerSchedule() {
         {/* ── Quick Stats Strip ─────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-3">
           {[
-            { label: "Today's Jobs",    value: getJobsForDate(new Date()).length,                           icon: Briefcase, border: "border-primary/50",                          bg: "bg-primary/5",                          icon_c: "text-primary",   icon_bg: "bg-primary/10" },
-            { label: "This Week",       value: twoWeeksDays.slice(0,7).filter(d => hasJobs(d)).length,      icon: Calendar,  border: "border-success/50",                          bg: "bg-success/5",                          icon_c: "text-success",   icon_bg: "bg-success/10" },
-            { label: "Pending Offers",  value: jobs.filter(j => j.status === 'pending' || j.status === 'created').length, icon: Clock, border: "border-warning/50",             bg: "bg-warning/5",                          icon_c: "text-warning",   icon_bg: "bg-warning/10" },
-            { label: "Confirmed",       value: jobs.filter(j => j.status === 'confirmed').length,           icon: DollarSign, border: "border-[hsl(280,70%,55%)]/50",             bg: "bg-[hsl(280,70%,55%)]/5",               icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/10" },
+            { label: "Today's Jobs",    value: getJobsForDate(new Date()).length,                           icon: Briefcase, border: "border-primary/50",                          bg: "bg-primary/20",                          icon_c: "text-primary",   icon_bg: "bg-primary/30" },
+            { label: "This Week",       value: twoWeeksDays.slice(0,7).filter(d => hasJobs(d)).length,      icon: Calendar,  border: "border-success/50",                          bg: "bg-success/20",                          icon_c: "text-success",   icon_bg: "bg-success/30" },
+            { label: "Pending Offers",  value: jobs.filter(j => j.status === 'pending' || j.status === 'created').length, icon: Clock, border: "border-warning/50",             bg: "bg-warning/20",                          icon_c: "text-warning",   icon_bg: "bg-warning/30" },
+            { label: "Confirmed",       value: jobs.filter(j => j.status === 'confirmed').length,           icon: DollarSign, border: "border-[hsl(280,70%,55%)]/50",             bg: "bg-[hsl(280,70%,55%)]/20",               icon_c: "text-[hsl(280,70%,55%)]", icon_bg: "bg-[hsl(280,70%,55%)]/30" },
           ].map(s => (
             <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4 flex items-center gap-3`}>
               <div className={`h-10 w-10 rounded-xl ${s.icon_bg} flex items-center justify-center shrink-0`}>
@@ -170,7 +170,7 @@ export default function CleanerSchedule() {
 
         {/* Calendar Card */}
         <Card className="border-2 border-primary/30 rounded-2xl overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/5 border-b border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/15 border-b border-primary/30">
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" />
               Calendar
@@ -265,7 +265,7 @@ export default function CleanerSchedule() {
         </Card>
 
         {/* Selected Date Summary */}
-        <Card className="border-2 border-[hsl(280,70%,55%)]/40 rounded-2xl bg-[hsl(280,70%,55%)]/5">
+        <Card className="border-2 border-[hsl(280,70%,55%)]/50 rounded-2xl bg-[hsl(280,70%,55%)]/20">
           <CardContent className="p-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
@@ -307,7 +307,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
-              <Card className="border-2 border-warning/20 rounded-2xl">
+              <Card className="border-2 border-warning/30 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No job requests for this day.
                 </CardContent>
@@ -315,7 +315,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {pendingJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/30 rounded-2xl bg-warning/5">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-warning/40 rounded-2xl bg-warning/20">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -365,7 +365,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
-              <Card className="border-2 border-success/20 rounded-2xl">
+              <Card className="border-2 border-success/30 rounded-2xl">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   No accepted jobs for this day.
                 </CardContent>
@@ -373,7 +373,7 @@ export default function CleanerSchedule() {
             ) : (
               <div className="space-y-3">
                 {acceptedJobs.map((job) => (
-                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/30 rounded-2xl bg-success/5">
+                  <Card key={job.id} className="hover:shadow-elevated transition-all border-2 border-success/40 rounded-2xl bg-success/20">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -424,7 +424,7 @@ export default function CleanerSchedule() {
               Free Time Gaps — Fill Your Schedule
             </h3>
             {gaps.map((gap, i) => (
-              <Card key={i} className="border-primary/30 bg-primary/5">
+              <Card key={i} className="border-primary/40 bg-primary/20">
                 <CardContent className="p-4 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
