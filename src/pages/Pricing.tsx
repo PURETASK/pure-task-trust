@@ -117,34 +117,36 @@ export default function Pricing() {
         </div>
         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Badge variant="outline" className="mb-4 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-1.5 border-primary/30 text-primary">
-              <Shield className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 sm:mr-1.5" /> No Hidden Fees
-            </Badge>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
-              Transparent,<br /><span className="text-primary">Fair Pricing</span>
-            </h1>
-            <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
-              Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 80–85% of every booking.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
-              {[
-                { value: "1 credit", label: "= $1 USD" },
-                { value: "15–20%", label: "Platform fee" },
-                { value: "100%", label: "Verified cleaners" },
-              ].map(({ value, label }) => (
-                <div key={label} className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
-                  <div className="text-muted-foreground text-xs sm:text-sm">{label}</div>
-                </div>
-              ))}
-            </div>
+            <div className="bg-background/90 backdrop-blur-md rounded-3xl px-6 sm:px-12 py-8 sm:py-12 shadow-card inline-block w-full max-w-2xl">
+              <Badge variant="outline" className="mb-4 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-1.5 border-primary/30 text-primary">
+                <Shield className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 sm:mr-1.5" /> No Hidden Fees
+              </Badge>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
+                Transparent,<br /><span className="text-primary">Fair Pricing</span>
+              </h1>
+              <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
+                Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 80–85% of every booking.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
+                {[
+                  { value: "1 credit", label: "= $1 USD" },
+                  { value: "15–20%", label: "Platform fee" },
+                  { value: "100%", label: "Verified cleaners" },
+                ].map(({ value, label }) => (
+                  <div key={label} className="text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
+                    <div className="text-muted-foreground text-xs sm:text-sm">{label}</div>
+                  </div>
+                ))}
+              </div>
 
-            <Tabs value={userType} onValueChange={setUserType} className="max-w-sm mx-auto">
-              <TabsList className="grid w-full grid-cols-2 h-10 sm:h-11">
-                <TabsTrigger value="client" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Clients</TabsTrigger>
-                <TabsTrigger value="cleaner" className="gap-1.5 text-xs sm:text-sm"><DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Cleaners</TabsTrigger>
-              </TabsList>
-            </Tabs>
+              <Tabs value={userType} onValueChange={setUserType} className="max-w-sm mx-auto">
+                <TabsList className="grid w-full grid-cols-2 h-10 sm:h-11">
+                  <TabsTrigger value="client" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Clients</TabsTrigger>
+                  <TabsTrigger value="cleaner" className="gap-1.5 text-xs sm:text-sm"><DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />For Cleaners</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </motion.div>
         </div>
       </section>
