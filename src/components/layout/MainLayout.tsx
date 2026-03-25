@@ -17,7 +17,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, HelpCircle, Sparkles, Shield, Bell } from "lucide-react";
+import { LogOut, HelpCircle, Shield, Bell } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { CreditChip } from "@/components/layout/header/CreditChip";
 import { CleanerAvailabilityToggle } from "@/components/layout/header/CleanerAvailabilityToggle";
 import { RoleBadge } from "@/components/layout/header/RoleBadge";

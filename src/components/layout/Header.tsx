@@ -4,9 +4,9 @@
  * All authenticated pages use the header embedded in MainLayout.
  */
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import logo from "@/assets/logo.png";
 
 export function Header() {
   return (
