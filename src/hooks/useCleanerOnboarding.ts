@@ -227,14 +227,14 @@ export function useCleanerOnboarding() {
   });
 
   // ─── STEP 3: Phone Verification ───────────────────────────────────────────
-  // Saves phone number to cleaner_profiles after OTP is verified
+  // Saves verified phone number to the profiles table
   const savePhoneToProfile = async (phoneNumber: string) => {
     try {
-      const cleanerProfileId = await getCleanerProfileId();
+      if (!user?.id) return;
       await supabase
-        .from('cleaner_profiles')
-        .update({ phone_number: phoneNumber })
-        .eq('id', cleanerProfileId);
+        .from('profiles')
+        .update({ phone_number: phoneNumber, phone_verified: true })
+        .eq('id', user.id);
       invalidateProfile();
     } catch {
       // Non-blocking — phone save failure shouldn't block progression
