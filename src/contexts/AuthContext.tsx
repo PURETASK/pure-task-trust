@@ -147,13 +147,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch {
-      // signOut can fail in Preview environments — always clear local state
-    }
+    // Clear local state FIRST so the UI reflects logged-out immediately
     setUser(null);
     setSession(null);
+
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // signOut can fail in Preview/iframe environments — manually purge tokens
+    }
+
+    // Belt-and-suspenders: remove all supabase auth keys from localStorage
+    // so a page refresh doesn't restore the session
+    try {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith('sb-') || k.includes('supabase'))
+        .forEach(k => localStorage.removeItem(k));
+    } catch {
+      // localStorage may be unavailable in some environments
+    }
   };
 
   const loginWithGoogle = async (role?: UserRole): Promise<{ error?: string }> => {
