@@ -439,7 +439,9 @@ export function useCleanerOnboarding() {
     currentStepIndex,
     totalSteps,
     progress,
-    isLoading: profileLoading,
+    // Only block on loading if we don't yet know whether profile exists.
+    // Once the query has settled (even to null), show the onboarding form immediately.
+    isLoading: profileLoading && !isInitialized && profile === undefined,
     profile,
     completedData,
     goToNextStep,
