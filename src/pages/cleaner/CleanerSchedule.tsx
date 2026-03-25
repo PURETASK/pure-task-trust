@@ -119,7 +119,7 @@ export default function CleanerSchedule() {
           loading="lazy"
           width={1024}
           height={1024}
-          className="w-[135vmin] h-[135vmin] object-contain opacity-40 -translate-x-[15%]"
+          className="w-[135vmin] h-[135vmin] object-contain opacity-15 -translate-x-[15%]"
           aria-hidden="true"
         />
       </div>
