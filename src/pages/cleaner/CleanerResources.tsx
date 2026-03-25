@@ -435,9 +435,9 @@ export default function CleanerResources() {
               <div className="grid grid-cols-2 gap-3 mb-5">
                 {[
                   { label: '🌱 Side Hustle', hrs: 10, rate: 25, score: 30, wks: 40, keep: '80%', color: 'border-amber-500/30 bg-amber-500/5' },
-                  { label: '⚡ Part-Time',   hrs: 20, rate: 35, score: 55, wks: 46, keep: '82%', color: 'border-slate-400/30 bg-slate-400/5' },
-                  { label: '🔥 Full-Time',   hrs: 32, rate: 45, score: 75, wks: 48, keep: '83%', color: 'border-primary/30 bg-primary/5' },
-                  { label: '💎 Top Earner',  hrs: 40, rate: 70, score: 92, wks: 50, keep: '85%', color: 'border-[hsl(280,70%,50%)]/30 bg-[hsl(280,70%,50%)]/5' },
+                  { label: '⚡ Part-Time',   hrs: 20, rate: 30, score: 55, wks: 46, keep: '82%', color: 'border-slate-400/30 bg-slate-400/5' },
+                  { label: '🔥 Full-Time',   hrs: 32, rate: 40, score: 75, wks: 48, keep: '83%', color: 'border-primary/30 bg-primary/5' },
+                  { label: '💎 Top Earner',  hrs: 40, rate: 65, score: 92, wks: 50, keep: '85%', color: 'border-[hsl(280,70%,50%)]/30 bg-[hsl(280,70%,50%)]/5' },
                 ].map(s => {
                   const fee    = s.score >= 90 ? 0.15 : s.score >= 70 ? 0.17 : s.score >= 50 ? 0.18 : 0.20;
                   const annual = Math.round(s.hrs * s.rate * (1 - fee) * s.wks);
