@@ -73,18 +73,18 @@ export default function CleanerEarnings() {
       <Helmet><title>Earnings &amp; Payouts | PureTask</title></Helmet>
       {/* 3 background illustrations — top center + bottom corners in empty space */}
       <div className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
-        {/* Top-center */}
+        {/* Top-center — pushed up 30% more */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
           className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 25vmin))" }} />
-        {/* Bottom-left corner — empty space */}
+          style={{ left: "50%", top: "50%", transform: "translate(-50%, calc(-50% - 33vmin))" }} />
+        {/* Bottom-left — pushed further into corner */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
           className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ left: "-8vmin", bottom: "-8vmin" }} />
-        {/* Bottom-right corner — empty space */}
+          style={{ left: "-20vmin", bottom: "-20vmin" }} />
+        {/* Bottom-right — pushed further into corner */}
         <img src={earningsBg} alt="" loading="lazy" width={800} height={800} aria-hidden="true"
           className="absolute w-[101vmin] h-[101vmin] object-contain opacity-30"
-          style={{ right: "-8vmin", bottom: "-8vmin" }} />
+          style={{ right: "-20vmin", bottom: "-20vmin" }} />
       </div>
       <div className="space-y-6 relative z-10">
         {/* Header */}
