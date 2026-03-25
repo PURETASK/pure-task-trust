@@ -330,6 +330,9 @@ export default function CleanerResources() {
             <TabsTrigger value="calculator" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-success data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <Calculator className="h-4 w-4 mr-1.5" />Calculator
             </TabsTrigger>
+            <TabsTrigger value="estimator" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+              <DollarSign className="h-4 w-4 mr-1.5" />Cost Estimator
+            </TabsTrigger>
           </TabsList>
 
           {/* ── Checklists Tab ── */}
