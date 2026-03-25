@@ -17,6 +17,9 @@ import { usePostSignup } from "@/hooks/usePostSignup";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 
+// Eagerly load Install page for mobile users landing there
+import Install from "./pages/Install";
+
 // Lazy load everything else for code splitting
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
