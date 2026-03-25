@@ -291,11 +291,12 @@ export default function CleanerResources() {
                 <p className="text-sm text-muted-foreground">Checklists, growth guides, and partner perks</p>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-5">
+            <div className="grid grid-cols-4 gap-3 mt-5">
               {[
                 { label: "Checklists", value: "4", color: "text-success", bg: "bg-success/10 border-success/30" },
                 { label: "Growth Guides", value: "6", color: "text-warning", bg: "bg-warning/10 border-warning/30" },
                 { label: "Pro Tips", value: "6", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple))]/10 border-[hsl(var(--pt-purple))]/30" },
+                { label: "Tools", value: "3", color: "text-primary", bg: "bg-primary/10 border-primary/30" },
               ].map((s, i) => (
                 <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
                   <div className={`rounded-2xl border-2 ${s.bg} p-3 text-center`}>
