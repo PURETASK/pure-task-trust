@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { AdditionalServicesSetup } from "@/components/cleaner/AdditionalServicesSetup";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
-import { getTierFromScore, getTierConfig, CleanerTier } from "@/lib/tier-config";
+import { getTierFromScore, getTierConfig, CleanerTier, TIER_VISUAL } from "@/lib/tier-config";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
