@@ -1500,11 +1500,15 @@ export type Database = {
       cleaner_profiles: {
         Row: {
           accepts_high_risk: boolean | null
+          ai_bio: string | null
           avg_rating: number | null
           background_check_required: boolean | null
           background_check_status: string | null
           base_rate_cph: number | null
           bio: string | null
+          bio_generated_at: string | null
+          bio_score: number | null
+          cleaning_types: string[] | null
           created_at: string
           deep_addon_cph: number | null
           first_name: string | null
@@ -1513,6 +1517,7 @@ export type Database = {
           instant_payout_enabled: boolean | null
           is_available: boolean | null
           jobs_completed: number
+          languages: string[] | null
           last_name: string | null
           latitude: number | null
           longitude: number | null
@@ -1527,10 +1532,12 @@ export type Database = {
           onboarding_started_at: string | null
           payout_percent: number | null
           payout_schedule: string | null
+          personality: string[] | null
           professional_headline: string | null
           profile_photo_url: string | null
           push_token: string | null
           reliability_score: number
+          specialties: string[] | null
           stripe_account_id: string | null
           stripe_connect_id: string | null
           stripe_payouts_enabled: boolean | null
@@ -1539,14 +1546,20 @@ export type Database = {
           travel_radius_km: number | null
           updated_at: string
           user_id: string
+          work_style: string[] | null
+          years_experience: number | null
         }
         Insert: {
           accepts_high_risk?: boolean | null
+          ai_bio?: string | null
           avg_rating?: number | null
           background_check_required?: boolean | null
           background_check_status?: string | null
           base_rate_cph?: number | null
           bio?: string | null
+          bio_generated_at?: string | null
+          bio_score?: number | null
+          cleaning_types?: string[] | null
           created_at?: string
           deep_addon_cph?: number | null
           first_name?: string | null
@@ -1555,6 +1568,7 @@ export type Database = {
           instant_payout_enabled?: boolean | null
           is_available?: boolean | null
           jobs_completed?: number
+          languages?: string[] | null
           last_name?: string | null
           latitude?: number | null
           longitude?: number | null
@@ -1569,10 +1583,12 @@ export type Database = {
           onboarding_started_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          personality?: string[] | null
           professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
+          specialties?: string[] | null
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
@@ -1581,14 +1597,20 @@ export type Database = {
           travel_radius_km?: number | null
           updated_at?: string
           user_id: string
+          work_style?: string[] | null
+          years_experience?: number | null
         }
         Update: {
           accepts_high_risk?: boolean | null
+          ai_bio?: string | null
           avg_rating?: number | null
           background_check_required?: boolean | null
           background_check_status?: string | null
           base_rate_cph?: number | null
           bio?: string | null
+          bio_generated_at?: string | null
+          bio_score?: number | null
+          cleaning_types?: string[] | null
           created_at?: string
           deep_addon_cph?: number | null
           first_name?: string | null
@@ -1597,6 +1619,7 @@ export type Database = {
           instant_payout_enabled?: boolean | null
           is_available?: boolean | null
           jobs_completed?: number
+          languages?: string[] | null
           last_name?: string | null
           latitude?: number | null
           longitude?: number | null
@@ -1611,10 +1634,12 @@ export type Database = {
           onboarding_started_at?: string | null
           payout_percent?: number | null
           payout_schedule?: string | null
+          personality?: string[] | null
           professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
           reliability_score?: number
+          specialties?: string[] | null
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
@@ -1623,6 +1648,8 @@ export type Database = {
           travel_radius_km?: number | null
           updated_at?: string
           user_id?: string
+          work_style?: string[] | null
+          years_experience?: number | null
         }
         Relationships: []
       }
