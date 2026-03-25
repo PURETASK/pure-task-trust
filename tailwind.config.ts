@@ -29,6 +29,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
         poppins: ["Poppins", "system-ui", "sans-serif"],
+        comic: ["Comic Sans MS", "Comic Sans", "cursive"],
       },
       colors: {
         // Brand colors
