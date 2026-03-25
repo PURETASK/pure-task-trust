@@ -66,7 +66,7 @@ export function Hero() {
                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
+            <Button variant="outline" size="lg" className="w-full sm:w-auto bg-success text-success-foreground border-2 border-success hover:bg-success/90 hover:border-success/90" asChild>
               <Link to="/discover">Browse Cleaners</Link>
             </Button>
           </motion.div>
