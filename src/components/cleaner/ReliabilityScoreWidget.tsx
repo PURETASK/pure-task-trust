@@ -131,7 +131,7 @@ export function ReliabilityScoreWidget() {
       <div className={`bg-gradient-to-r ${tierStyle.gradient} p-3.5 sm:p-4 text-white`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <span className="text-xl sm:text-2xl flex-shrink-0">{tierStyle.icon}</span>
+            <span className="text-xl sm:text-2xl flex-shrink-0">{tierStyle.emoji}</span>
             <div className="min-w-0">
               <p className="text-[10px] sm:text-xs font-medium text-white/70 uppercase tracking-wider">Reliability Score</p>
               <div className="flex items-center gap-1.5 sm:gap-2">

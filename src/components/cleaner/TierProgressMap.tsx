@@ -92,7 +92,7 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
             </div>
             <Progress value={progressToNext} className="h-2" />
             <p className="text-xs text-muted-foreground">
-              {nextTierMinScore! - reliabilityScore} more reliability points needed to unlock {TIER_EMOJIS[nextTier]} {nextTier}
+              {nextTierMinScore! - reliabilityScore} more reliability points needed to unlock {TIER_VISUAL[nextTier].emoji} {nextTier}
             </p>
           </div>
         ) : (
