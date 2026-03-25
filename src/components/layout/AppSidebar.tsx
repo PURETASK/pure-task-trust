@@ -147,6 +147,7 @@ const cleanerNavGroups: NavGroup[] = [
   {
     group: "Profile & Setup",
     items: [
+      { title: "Onboarding", url: "/cleaner/onboarding", icon: UserRoundCheck, badge: "Setup" },
       { title: "My Public Profile", url: "/cleaner/profile/view", icon: UserCircle2 },
       { title: "Profile Settings", url: "/cleaner/profile", icon: SlidersHorizontal },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
