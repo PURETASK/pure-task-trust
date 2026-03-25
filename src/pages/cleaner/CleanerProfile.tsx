@@ -396,9 +396,9 @@ export default function CleanerProfile() {
             {/* Personality */}
             <div>
               <Label className="text-sm font-semibold flex items-center gap-2 mb-3">
-                <Heart className="h-4 w-4 text-rose-500" />Personality
+                <Heart className="h-4 w-4 text-destructive" />Personality
               </Label>
-              <PillSelect options={PERSONALITY_OPTIONS} selected={personality} onChange={setPersonality} color="bg-rose-500/10 text-rose-600 border-rose-500/30" />
+              <PillSelect options={PERSONALITY_OPTIONS} selected={personality} onChange={setPersonality} color="bg-destructive/10 text-destructive border-destructive/30" />
             </div>
 
             {/* Languages */}
