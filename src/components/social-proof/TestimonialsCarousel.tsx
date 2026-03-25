@@ -22,9 +22,14 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
 ];
 
 export function TestimonialsCarousel() {
-  const { data: testimonials, isLoading, isError } = useFeaturedTestimonials();
+  const { data: fetchedTestimonials, isLoading, isError } = useFeaturedTestimonials();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  // Use fallback data if fetch failed or returned empty
+  const testimonials = (isError || !fetchedTestimonials?.length) && !isLoading
+    ? FALLBACK_TESTIMONIALS
+    : (fetchedTestimonials ?? []);
 
   const onSelect = useCallback(() => {
     if (!api) return;
@@ -42,23 +47,17 @@ export function TestimonialsCarousel() {
 
   // Auto-advance carousel
   useEffect(() => {
-    if (!api || !testimonials?.length) return;
-
+    if (!api || !testimonials.length) return;
     const interval = setInterval(() => {
       api.scrollNext();
     }, 5000);
-
     return () => clearInterval(interval);
-  }, [api, testimonials?.length]);
+  }, [api, testimonials.length]);
 
   if (isLoading) {
     return (
       <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30">
         <div className="container px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <Skeleton className="h-8 w-64 mx-auto mb-4" />
-            <Skeleton className="h-5 w-96 mx-auto" />
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-64 rounded-xl" />
@@ -69,7 +68,7 @@ export function TestimonialsCarousel() {
     );
   }
 
-  if (!testimonials?.length) return null;
+  if (!testimonials.length) return null;
 
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30 overflow-x-hidden">
