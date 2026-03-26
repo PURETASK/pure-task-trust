@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import onboardingBg from '@/assets/onboarding-bg.jpg';
 
 const STEPS = [
@@ -57,28 +58,28 @@ export default function CleanerOnboarding() {
 
   // Wrap each step submit so errors don't unmount the page
   const handleSaveTerms = async () => {
-    try { await saveTerms(); } catch (err: any) { console.error('Terms save error:', err); }
+    try { await saveTerms(); } catch (err: any) { console.error('Terms save error:', err); toast.error(err?.message || 'Failed to save terms. Please try again.'); }
   };
   const handleSaveBasicInfo = async (data: Parameters<typeof saveBasicInfo>[0]) => {
-    try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); }
+    try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); toast.error(err?.message || 'Failed to save info. Please try again.'); }
   };
   const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]): Promise<string> => {
-    try { return await saveFacePhoto(file) ?? ''; } catch (err: any) { console.error('Face photo save error:', err); return ''; }
+    try { return await saveFacePhoto(file) ?? ''; } catch (err: any) { console.error('Face photo save error:', err); toast.error(err?.message || 'Failed to upload photo.'); return ''; }
   };
   const handleSaveIdDocument = async (data: Parameters<typeof saveIdDocument>[0]) => {
-    try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); }
+    try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); toast.error(err?.message || 'Failed to save ID.'); }
   };
   const handleSaveBackgroundConsent = async () => {
-    try { await saveBackgroundConsent(); } catch (err: any) { console.error('Background consent save error:', err); }
+    try { await saveBackgroundConsent(); } catch (err: any) { console.error('Background consent save error:', err); toast.error(err?.message || 'Failed to save consent.'); }
   };
   const handleSaveServiceAreas = async (data: Parameters<typeof saveServiceAreas>[0]) => {
-    try { await saveServiceAreas(data); } catch (err: any) { console.error('Service areas save error:', err); }
+    try { await saveServiceAreas(data); } catch (err: any) { console.error('Service areas save error:', err); toast.error(err?.message || 'Failed to save areas.'); }
   };
   const handleSaveAvailability = async (data: Parameters<typeof saveAvailability>[0]) => {
-    try { await saveAvailability(data); } catch (err: any) { console.error('Availability save error:', err); }
+    try { await saveAvailability(data); } catch (err: any) { console.error('Availability save error:', err); toast.error(err?.message || 'Failed to save availability.'); }
   };
   const handleSaveRates = async (data: Parameters<typeof saveRates>[0]) => {
-    try { await saveRates(data); } catch (err: any) { console.error('Rates save error:', err); }
+    try { await saveRates(data); } catch (err: any) { console.error('Rates save error:', err); toast.error(err?.message || 'Failed to save rates.'); }
   };
 
   const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Pro';
