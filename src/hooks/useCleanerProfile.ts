@@ -35,10 +35,17 @@ export function useCleanerProfile() {
     staleTime: 1000 * 60 * 2,
   });
 
+  console.log('[useCleanerProfile]', {
+    authLoading,
+    userId: user?.id,
+    queryIsLoading: profileQuery.isLoading,
+    queryStatus: profileQuery.status,
+    queryError: profileQuery.error,
+    data: profileQuery.data,
+  });
+
   return {
     profile: profileQuery.data ?? null,
-    // Only show loading on the very first fetch (isLoading), not on background refetches (isFetching).
-    // This prevents the onboarding spinner from re-appearing every time we invalidate the profile cache.
     isLoading: authLoading || !user?.id || profileQuery.isLoading,
     error: profileQuery.error,
   };

@@ -84,6 +84,8 @@ export default function CleanerOnboarding() {
   const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Pro';
   const currentMeta = STEPS[currentStepIndex] ?? STEPS[0];
 
+  console.log('[CleanerOnboarding] isLoading:', isLoading, 'profileLoading detail:', { profile: !!profile, currentStep, isInitialized: !isLoading });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'hsl(145 65% 8%)' }}>
