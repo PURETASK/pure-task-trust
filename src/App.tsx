@@ -263,7 +263,7 @@ const App = () => (
                     <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
                     <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
                     <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
-                    <Route path="/cleaner/onboarding" element={<RequireAuth requireRole={false}><CleanerOnboarding /></RequireAuth>} />
+                    
 
                     <Route path="*" element={<NotFound />} />
                   </Route>
