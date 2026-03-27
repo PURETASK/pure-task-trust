@@ -6,6 +6,7 @@ import { WorkSetupPhase } from '@/components/onboarding/phases/WorkSetupPhase';
 import { LaunchPhase } from '@/components/onboarding/phases/LaunchPhase';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
