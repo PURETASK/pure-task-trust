@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -120,6 +120,28 @@ export default function CleanerVerification() {
   const [bgConsentName, setBgConsentName]     = useState("");
   const [submittingBg, setSubmittingBg]       = useState(false);
 
+  // Check existing verification records on mount
+  useEffect(() => {
+    if (!profile?.id) return;
+    (async () => {
+      const { data } = await supabase
+        .from("id_verifications")
+        .select("document_type, metadata")
+        .eq("cleaner_id", profile.id);
+      if (data && data.length > 0) {
+        const hasFront = data.some((d: any) => d.metadata?.id_front_path);
+        const hasSelfie = data.some((d: any) => d.metadata?.selfie_path);
+        const hasBack = data.some((d: any) => d.metadata?.id_back_path);
+        if (hasFront) setIdFrontUploaded(true);
+        if (hasSelfie) setSelfieUploaded(true);
+        if (hasBack) setIdBackUploaded(true);
+        // Set the document type from saved record
+        const docType = data[0]?.document_type;
+        if (docType) setSelectedIdType(docType);
+      }
+    })();
+  }, [profile?.id]);
+
   const uploadFile = async (
     file: File, path: string,
     setLoading: (v: boolean) => void,
@@ -136,7 +158,46 @@ export default function CleanerVerification() {
       const { error } = await supabase.storage.from("identity-documents").upload(filePath, file, { upsert: true });
       if (error) throw error;
       setDone(true);
-      toast({ title: "Uploaded ✓", description: `${path.replace(/-/g, " ")} uploaded successfully.` });
+
+      // Save/update the id_verifications record with the file path
+      if (profile?.id) {
+        const metadataKey = path === "id-front" ? "id_front_path"
+          : path === "id-back" ? "id_back_path"
+          : "selfie_path";
+
+        // Check if a record already exists for this cleaner
+        const { data: existing } = await supabase
+          .from("id_verifications")
+          .select("id, metadata")
+          .eq("cleaner_id", profile.id)
+          .maybeSingle();
+
+        if (existing) {
+          // Update existing record's metadata
+          const updatedMeta = { ...(existing.metadata as Record<string, unknown> || {}), [metadataKey]: filePath };
+          await supabase
+            .from("id_verifications")
+            .update({
+              metadata: updatedMeta as any,
+              document_type: selectedIdType,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", existing.id);
+        } else {
+          // Insert new record
+          await supabase
+            .from("id_verifications")
+            .insert({
+              cleaner_id: profile.id,
+              provider: "manual",
+              status: "pending",
+              document_type: selectedIdType,
+              metadata: { [metadataKey]: filePath } as any,
+            });
+        }
+      }
+
+      toast({ title: "Uploaded ✓", description: `${path.replace(/-/g, " ")} uploaded and saved to your profile.` });
     } catch (e: any) {
       toast({ title: "Upload failed", description: e.message, variant: "destructive" });
     } finally {
@@ -165,7 +226,6 @@ export default function CleanerVerification() {
   const allDone    = idComplete && bgComplete;
 
   const uploadColor = { border: "border-success/60", bg: "bg-success/10", icon: "text-success" };
-  const warnColor   = { border: "border-warning/60",  bg: "bg-warning/10",  icon: "text-warning"  };
 
   return (
     <CleanerLayout>
@@ -202,7 +262,7 @@ export default function CleanerVerification() {
                   )}
                 </div>
                 <p className="text-white/60 text-sm max-w-sm">
-                  Verify your identity to unlock higher rates and build client trust. Documents are encrypted and never shared without consent.
+                  Verify your identity to unlock higher rates and build client trust. Documents are encrypted and only visible to you and platform admins.
                 </p>
               </div>
             </div>
@@ -238,7 +298,6 @@ export default function CleanerVerification() {
           <div className={`rounded-3xl border-2 overflow-hidden ${idComplete ? "border-success/60" : "border-primary/50"}`}
             style={{ background: "hsl(var(--card))" }}>
 
-            {/* Section header */}
             <div className={`p-5 border-b-2 flex items-center justify-between ${
               idComplete ? "border-success/20 bg-success/5" : "border-primary/20 bg-primary/5"
             }`}>
@@ -260,7 +319,6 @@ export default function CleanerVerification() {
             </div>
 
             <div className="p-5 space-y-5">
-              {/* ID type buttons */}
               <div>
                 <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3 block">Select ID Type</Label>
                 <div className="grid grid-cols-2 gap-2">
@@ -324,7 +382,6 @@ export default function CleanerVerification() {
             </div>
 
             <div className="p-5 space-y-4">
-              {/* Tips panel */}
               <div className="rounded-2xl border-2 border-warning/40 bg-warning/5 p-4 space-y-2">
                 <p className="text-xs font-bold text-warning uppercase tracking-wide mb-2">📸 Selfie Requirements</p>
                 {[
@@ -420,7 +477,6 @@ export default function CleanerVerification() {
                 </div>
               ) : (
                 <>
-                  {/* What's included */}
                   <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-4 space-y-2">
                     <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">🔍 What's included:</p>
                     {[
@@ -435,7 +491,6 @@ export default function CleanerVerification() {
                     ))}
                   </div>
 
-                  {/* Consent toggle */}
                   <div className={`rounded-2xl border-2 p-4 transition-all ${bgConsentGiven ? "border-success/50 bg-success/5" : "border-border/50 bg-muted/20"}`}>
                     <div className="flex items-start gap-4">
                       <Switch checked={bgConsentGiven} onCheckedChange={setBgConsentGiven} className="mt-0.5" />
@@ -448,7 +503,6 @@ export default function CleanerVerification() {
                     </div>
                   </div>
 
-                  {/* Name confirmation */}
                   <AnimatePresence>
                     {bgConsentGiven && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
@@ -507,10 +561,10 @@ export default function CleanerVerification() {
               </div>
               <h3 className="text-xl font-black text-white mb-1">Your Data is Secure</h3>
               <p className="text-white/60 text-sm max-w-md mx-auto">
-                All documents are encrypted with AES-256 and stored securely. We never share your information with third parties without your explicit consent.
+                All documents are encrypted with AES-256 and stored securely. Documents are only visible to you and platform administrators — clients see only a verification badge.
               </p>
               <div className="flex gap-3 justify-center mt-4">
-                {["AES-256", "Zero-Share", "GDPR Ready"].map(tag => (
+                {["AES-256", "Cleaner + Admin Only", "GDPR Ready"].map(tag => (
                   <div key={tag} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/70 font-semibold">{tag}</div>
                 ))}
               </div>
