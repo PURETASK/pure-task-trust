@@ -3,39 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCleanerProfile } from '@/hooks/useCleanerProfile';
-import { AvailabilityData } from '@/components/onboarding/AvailabilityStep';
 import type { Database } from '@/integrations/supabase/types';
 
-export type OnboardingStep =
-  | 'terms'
-  | 'basic-info'
-  | 'phone-verification'
-  | 'face-verification'
-  | 'id-verification'
-  | 'background-consent'
-  | 'service-areas'
-  | 'availability'
-  | 'rates'
-  | 'review';
+// ── Types ───────────────────────────────────────────────────────────────────
 
-const STEPS: OnboardingStep[] = [
-  'terms',
-  'basic-info',
-  'phone-verification',
-  'face-verification',
-  'id-verification',
-  'background-consent',
-  'service-areas',
-  'availability',
-  'rates',
-  'review',
-];
+export type OnboardingPhase = 'agreement' | 'profile' | 'verification' | 'work-setup' | 'launch';
 
-const REQUIRED_TERMS_AGREEMENTS = ['terms_of_service', 'independent_contractor'] as const;
-
-const isValidOnboardingStep = (step: string | null | undefined): step is OnboardingStep => {
-  return !!step && STEPS.includes(step as OnboardingStep);
-};
+const PHASES: OnboardingPhase[] = ['agreement', 'profile', 'verification', 'work-setup', 'launch'];
 
 export interface BasicInfoData {
   firstName: string;
@@ -53,670 +27,414 @@ export interface ServiceAreaData {
   selectedAreas: string[];
 }
 
+export interface AvailabilityData {
+  schedule: Record<string, { enabled: boolean; startTime: string; endTime: string }>;
+}
+
 type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
 
-// Shared query key — must match useCleanerProfile's key
+// ── Constants ───────────────────────────────────────────────────────────────
+
 const CLEANER_PROFILE_KEY = 'cleaner-profile';
-const PROFILE_LOADING_FALLBACK_MS = 4000;
-const DIRECT_PROFILE_FETCH_TIMEOUT_MS = 2500;
-const ONBOARDING_MUTATION_TIMEOUT_MS = 8000;
+const TIMEOUT_MS = 8000;
 
-async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
-  const timeout = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error(message)), timeoutMs);
-  });
+// Map legacy 10-step names to new 5-phase names
+const LEGACY_STEP_MAP: Record<string, OnboardingPhase> = {
+  terms: 'agreement',
+  'basic-info': 'profile',
+  'phone-verification': 'profile',
+  'face-verification': 'profile',
+  'id-verification': 'verification',
+  'background-consent': 'verification',
+  'service-areas': 'work-setup',
+  availability: 'work-setup',
+  rates: 'work-setup',
+  review: 'launch',
+};
 
-  return Promise.race([promise, timeout]);
+// ── Helpers ─────────────────────────────────────────────────────────────────
+
+async function withTimeout<T>(promise: Promise<T>, msg: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error(msg)), TIMEOUT_MS)),
+  ]);
 }
 
-async function fetchCleanerProfileWithTimeout(userId: string): Promise<CleanerProfile | null> {
-  const request = (async () => {
-    try {
-      const { data, error } = await supabase
-        .from('cleaner_profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      return { type: 'data' as const, data: data as CleanerProfile | null };
-    } catch (error) {
-      return { type: 'error' as const, error };
-    }
-  })();
-
-  const timeout = new Promise<{ type: 'timeout' }>((resolve) => {
-    setTimeout(() => resolve({ type: 'timeout' }), DIRECT_PROFILE_FETCH_TIMEOUT_MS);
-  });
-
-  const result = await Promise.race([request, timeout]);
-
-  if (result.type === 'timeout') {
-    console.warn('[useCleanerOnboarding] Fallback cleaner profile fetch timed out');
-    return null;
-  }
-
-  if (result.type === 'error') {
-    throw result.error;
-  }
-
-  return result.data;
+function resolvePhase(step: string | null | undefined): OnboardingPhase {
+  if (!step) return 'agreement';
+  if (PHASES.includes(step as OnboardingPhase)) return step as OnboardingPhase;
+  return LEGACY_STEP_MAP[step] ?? 'agreement';
 }
+
+const DAY_TO_NUM: Record<string, number> = {
+  monday: 1, tuesday: 2, wednesday: 3, thursday: 4,
+  friday: 5, saturday: 6, sunday: 0,
+};
+
+// ── Hook ────────────────────────────────────────────────────────────────────
 
 export function useCleanerOnboarding() {
   const { user } = useAuth();
   const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const [currentStep, setCurrentStepLocal] = useState<OnboardingStep>('terms');
+
+  const [currentPhase, setPhaseLocal] = useState<OnboardingPhase>('agreement');
   const [isInitialized, setIsInitialized] = useState(false);
-  const [fallbackProfile, setFallbackProfile] = useState<CleanerProfile | null>(null);
-  const [bypassProfileLoading, setBypassProfileLoading] = useState(false);
-
-  // Track completed data for review step
-  const [completedData, setCompletedData] = useState({
-    serviceAreasCount: 0,
-    availableDays: 0,
-  });
-
-  // Keep a ref to the latest profile id so mutations always have the freshest value
-  // even if the React state hasn't re-rendered yet.
   const profileIdRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (profile?.id) profileIdRef.current = profile.id;
   }, [profile?.id]);
 
-  const effectiveProfile = profile ?? fallbackProfile;
-
-  const setCachedProfileStep = (step: OnboardingStep) => {
-    setFallbackProfile((prev) => (prev ? { ...prev, onboarding_current_step: step } : prev));
-    queryClient.setQueryData<CleanerProfile | null>([CLEANER_PROFILE_KEY, user?.id], (prev) => (
-      prev ? { ...prev, onboarding_current_step: step } : prev
-    ));
-  };
+  // ── Initialize phase from DB ──────────────────────────────────────────
 
   useEffect(() => {
-    if (!user?.id || profile?.id || !profileLoading) {
-      setBypassProfileLoading(false);
-      if (profile?.id) {
-        setFallbackProfile(null);
+    if (isInitialized || profileLoading) return;
+    let cancelled = false;
+
+    (async () => {
+      if (!profile?.id) {
+        if (!cancelled) setIsInitialized(true);
+        return;
       }
-      return;
-    }
 
-    let isCancelled = false;
+      // If onboarding already completed, go to launch
+      if (profile.onboarding_completed_at) {
+        if (!cancelled) { setPhaseLocal('launch'); setIsInitialized(true); }
+        return;
+      }
 
-    const timer = setTimeout(async () => {
-      try {
-        const directProfile = await fetchCleanerProfileWithTimeout(user.id);
-        if (isCancelled) return;
+      const saved = resolvePhase(profile.onboarding_current_step);
 
-        if (directProfile?.id) {
-          profileIdRef.current = directProfile.id;
-          setFallbackProfile(directProfile);
-        }
-      } catch (error) {
-        if (!isCancelled) {
-          console.error('[useCleanerOnboarding] Failed fallback profile fetch:', error);
-        }
-      } finally {
-        if (!isCancelled) {
-          setBypassProfileLoading(true);
+      // If saved is agreement, check if terms are already accepted
+      if (saved === 'agreement') {
+        const { data: agreements } = await supabase
+          .from('cleaner_agreements')
+          .select('agreement_type')
+          .eq('cleaner_id', profile.id)
+          .in('agreement_type', ['terms_of_service', 'independent_contractor']);
+
+        const types = new Set((agreements ?? []).map(a => a.agreement_type));
+        if (types.has('terms_of_service') && types.has('independent_contractor')) {
+          if (!cancelled) { setPhaseLocal('profile'); setIsInitialized(true); }
+          return;
         }
       }
-    }, PROFILE_LOADING_FALLBACK_MS);
 
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-  }, [user?.id, profile?.id, profileLoading]);
+      if (!cancelled) { setPhaseLocal(saved); setIsInitialized(true); }
+    })();
 
-  // Helper: get the current cleaner profile id — from ref (latest) or a fresh DB fetch
-  const getCleanerProfileId = async (): Promise<string> => {
+    return () => { cancelled = true; };
+  }, [isInitialized, profile?.id, profile?.onboarding_completed_at, profile?.onboarding_current_step, profileLoading]);
+
+  // ── Profile ID helpers ────────────────────────────────────────────────
+
+  const getProfileId = async (): Promise<string> => {
     if (profileIdRef.current) return profileIdRef.current;
     if (!user?.id) throw new Error('Not authenticated');
 
-    // Try a fresh fetch
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('cleaner_profiles')
       .select('id')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    if (error) throw error;
-    if (data?.id) {
-      profileIdRef.current = data.id;
-      return data.id;
-    }
-    throw new Error('No cleaner profile found. Please restart onboarding.');
+    if (data?.id) { profileIdRef.current = data.id; return data.id; }
+    throw new Error('No cleaner profile found');
   };
 
-  const ensureCleanerProfileId = async (): Promise<string> => {
+  const ensureProfileId = async (): Promise<string> => {
     if (profileIdRef.current) return profileIdRef.current;
-    if (effectiveProfile?.id) {
-      profileIdRef.current = effectiveProfile.id;
-      return effectiveProfile.id;
-    }
+    if (profile?.id) { profileIdRef.current = profile.id; return profile.id; }
     if (!user?.id) throw new Error('Not authenticated');
 
-    const { data: existingProfiles, error: existingProfilesError } = await withTimeout(
-      (async () => await supabase
-        .from('cleaner_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .limit(1))(),
-      ONBOARDING_MUTATION_TIMEOUT_MS,
-      'Loading your cleaner profile took too long. Please try again.'
+    const { data: existing } = await withTimeout(
+      supabase.from('cleaner_profiles').select('id').eq('user_id', user.id).limit(1),
+      'Loading profile timed out'
     );
 
-    if (existingProfilesError) throw existingProfilesError;
-
-    const existingProfileId = existingProfiles?.[0]?.id;
-    if (existingProfileId) {
-      profileIdRef.current = existingProfileId;
-      return existingProfileId;
+    if (existing?.[0]?.id) {
+      profileIdRef.current = existing[0].id;
+      return existing[0].id;
     }
 
-    const { data: createdProfile, error: createProfileError } = await withTimeout(
-      (async () => await supabase
-        .from('cleaner_profiles')
-        .insert({ user_id: user.id })
-        .select('id')
-        .single())(),
-      ONBOARDING_MUTATION_TIMEOUT_MS,
-      'Creating your cleaner profile took too long. Please try again.'
+    const { data: created, error } = await withTimeout(
+      supabase.from('cleaner_profiles').insert({ user_id: user.id }).select('id').single(),
+      'Creating profile timed out'
     );
-
-    if (createProfileError) throw createProfileError;
-
-    profileIdRef.current = createdProfile.id;
-    return createdProfile.id;
-  };
-
-  // Load saved step from database on mount.
-  useEffect(() => {
-    if (isInitialized || (profileLoading && !bypassProfileLoading)) return;
-
-    let isCancelled = false;
-
-    const initializeStep = async () => {
-      if (!effectiveProfile?.id) {
-        if (!isCancelled) setIsInitialized(true);
-        return;
-      }
-
-      const savedStep = isValidOnboardingStep(effectiveProfile.onboarding_current_step)
-        ? effectiveProfile.onboarding_current_step
-        : null;
-
-      if (savedStep && savedStep !== 'terms') {
-        if (!isCancelled) {
-          setCurrentStepLocal(savedStep);
-          setIsInitialized(true);
-        }
-        return;
-      }
-
-      const { data: agreements, error } = await supabase
-        .from('cleaner_agreements')
-        .select('agreement_type')
-        .eq('cleaner_id', effectiveProfile.id)
-        .in('agreement_type', [...REQUIRED_TERMS_AGREEMENTS]);
-
-      const acceptedTypes = new Set((agreements ?? []).map(({ agreement_type }) => agreement_type));
-      const hasAcceptedRequiredTerms = REQUIRED_TERMS_AGREEMENTS.every((type) => acceptedTypes.has(type));
-
-      const resolvedStep = effectiveProfile.onboarding_completed_at
-        ? 'review'
-        : hasAcceptedRequiredTerms
-          ? 'basic-info'
-          : (savedStep ?? 'terms');
-
-      if (error) {
-        console.error('Failed to resolve onboarding step from agreements:', error);
-      }
-
-      if (!isCancelled) {
-        setCurrentStepLocal(resolvedStep);
-        setIsInitialized(true);
-      }
-    };
-
-    void initializeStep();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [
-    isInitialized,
-    effectiveProfile?.id,
-    effectiveProfile?.onboarding_completed_at,
-    effectiveProfile?.onboarding_current_step,
-    bypassProfileLoading,
-    profileLoading,
-  ]);
-
-  const currentStepIndex = STEPS.indexOf(currentStep);
-  const totalSteps = STEPS.length;
-  const progress = ((currentStepIndex + 1) / totalSteps) * 100;
-
-  // Save step to database
-  const saveStepToDatabase = async (step: OnboardingStep) => {
-    const cleanerProfileId = await getCleanerProfileId();
-    const { error } = await supabase
-      .from('cleaner_profiles')
-      .update({ onboarding_current_step: step })
-      .eq('id', cleanerProfileId);
-
     if (error) throw error;
+    profileIdRef.current = created.id;
+    return created.id;
   };
 
-  const setCurrentStep = (step: OnboardingStep) => {
-    setCurrentStepLocal(step);
-    void saveStepToDatabase(step).catch((error) => {
-      console.error('Failed to persist onboarding step:', error);
-    });
-  };
+  // ── Navigation ────────────────────────────────────────────────────────
 
-  const goToNextStep = () => {
-    const nextIndex = currentStepIndex + 1;
-    if (nextIndex < STEPS.length) {
-      const nextStep = STEPS[nextIndex];
-      setCurrentStepLocal(nextStep);
-      void saveStepToDatabase(nextStep).catch((error) => {
-        console.error('Failed to persist next onboarding step:', error);
-      });
+  const savePhaseToDb = async (phase: OnboardingPhase) => {
+    try {
+      const id = await getProfileId();
+      await supabase.from('cleaner_profiles').update({ onboarding_current_step: phase }).eq('id', id);
+    } catch (e) {
+      console.error('Failed to persist phase:', e);
     }
   };
 
-  const goToPreviousStep = () => {
-    const prevIndex = currentStepIndex - 1;
-    if (prevIndex >= 0) {
-      const prevStep = STEPS[prevIndex];
-      setCurrentStepLocal(prevStep);
-      void saveStepToDatabase(prevStep).catch((error) => {
-        console.error('Failed to persist previous onboarding step:', error);
-      });
+  const advancePhase = () => {
+    const idx = PHASES.indexOf(currentPhase);
+    if (idx < PHASES.length - 1) {
+      const next = PHASES[idx + 1];
+      setPhaseLocal(next);
+      void savePhaseToDb(next);
     }
   };
 
-  // Invalidate all profile-related queries
+  const goBack = () => {
+    const idx = PHASES.indexOf(currentPhase);
+    if (idx > 0) {
+      const prev = PHASES[idx - 1];
+      setPhaseLocal(prev);
+      void savePhaseToDb(prev);
+    }
+  };
+
   const invalidateProfile = () => {
     queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
   };
 
-  // ─── STEP 1: Terms & Agreements ───────────────────────────────────────────
-  const saveTermsMutation = useMutation({
+  // ── Phase 1: Agreement ────────────────────────────────────────────────
+
+  const saveAgreementsMutation = useMutation({
     mutationFn: async () => {
-      if (!user?.id) throw new Error('Not authenticated');
-      const cleanerProfileId = await ensureCleanerProfileId();
+      const id = await ensureProfileId();
+      const types = ['terms_of_service', 'independent_contractor'];
 
-      const agreementTypes = ['terms_of_service', 'independent_contractor'];
-
-      const { data: existingAgreements, error: existingAgreementsError } = await withTimeout(
-        (async () => await supabase
-          .from('cleaner_agreements')
-          .select('agreement_type')
-          .eq('cleaner_id', cleanerProfileId)
-          .in('agreement_type', agreementTypes))(),
-        ONBOARDING_MUTATION_TIMEOUT_MS,
-        'Loading your agreement status took too long. Please try again.'
+      const { data: existing } = await withTimeout(
+        supabase.from('cleaner_agreements').select('agreement_type').eq('cleaner_id', id).in('agreement_type', types),
+        'Loading agreements timed out'
       );
 
-      if (existingAgreementsError) throw existingAgreementsError;
+      const accepted = new Set((existing ?? []).map(a => a.agreement_type));
+      const missing = types.filter(t => !accepted.has(t)).map(t => ({
+        cleaner_id: id, agreement_type: t, version: '1.0', user_agent: navigator.userAgent,
+      }));
 
-      const acceptedAgreementTypes = new Set((existingAgreements ?? []).map(({ agreement_type }) => agreement_type));
-      const missingAgreementRows = agreementTypes
-        .filter((agreementType) => !acceptedAgreementTypes.has(agreementType))
-        .map((agreement_type) => ({
-          cleaner_id: cleanerProfileId,
-          agreement_type,
-          version: '1.0',
-          user_agent: navigator.userAgent,
-        }));
-
-      if (missingAgreementRows.length > 0) {
-        const { error: insertAgreementsError } = await withTimeout(
-          (async () => await supabase.from('cleaner_agreements').insert(missingAgreementRows))(),
-          ONBOARDING_MUTATION_TIMEOUT_MS,
-          'Saving your agreements took too long. Please try again.'
+      if (missing.length > 0) {
+        const { error } = await withTimeout(
+          supabase.from('cleaner_agreements').insert(missing),
+          'Saving agreements timed out'
         );
-
-        if (insertAgreementsError) throw insertAgreementsError;
+        if (error) throw error;
       }
-
-      const { error: stepError } = await withTimeout(
-        (async () => await supabase
-          .from('cleaner_profiles')
-          .update({ onboarding_current_step: 'basic-info' })
-          .eq('id', cleanerProfileId))(),
-        ONBOARDING_MUTATION_TIMEOUT_MS,
-        'Updating your onboarding progress took too long. Please try again.'
-      );
-
-      if (stepError) throw stepError;
-
-      return cleanerProfileId;
     },
     onSuccess: () => {
-      setCachedProfileStep('basic-info');
-      invalidateProfile();
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
-      setCurrentStepLocal('basic-info');
     },
   });
 
-  // ─── STEP 2: Basic Info ───────────────────────────────────────────────────
+  // ── Phase 2: Profile — Basic Info ─────────────────────────────────────
+
   const saveBasicInfoMutation = useMutation({
     mutationFn: async (data: BasicInfoData) => {
-      const cleanerProfileId = await getCleanerProfileId();
-      const { error } = await supabase
-        .from('cleaner_profiles')
-        .update({
-          first_name: data.firstName,
-          last_name: data.lastName,
-          bio: data.bio,
-        })
-        .eq('id', cleanerProfileId);
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({ first_name: data.firstName, last_name: data.lastName, bio: data.bio })
+        .eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      invalidateProfile();
-      goToNextStep();
-    },
+    onSuccess: () => invalidateProfile(),
   });
 
-  // ─── STEP 3: Phone Verification ───────────────────────────────────────────
-  // Saves verified phone number to the profiles table
-  const savePhoneToProfile = async (phoneNumber: string) => {
-    try {
-      if (!user?.id) return;
-      await supabase
-        .from('profiles')
-        .update({ phone_number: phoneNumber, phone_verified: true })
-        .eq('id', user.id);
-      invalidateProfile();
-    } catch {
-      // Non-blocking — phone save failure shouldn't block progression
-    }
-  };
+  // ── Phase 2: Profile — Face Photo ─────────────────────────────────────
 
-  const completePhoneVerification = (phoneNumber?: string) => {
-    if (phoneNumber) savePhoneToProfile(phoneNumber);
-    goToNextStep();
-  };
-
-  // ─── STEP 4: Face Photo ───────────────────────────────────────────────────
   const saveFacePhotoMutation = useMutation({
     mutationFn: async (file: File) => {
       if (!user?.id) throw new Error('Not authenticated');
-      const cleanerProfileId = await getCleanerProfileId();
+      const id = await getProfileId();
+      const ext = file.name.split('.').pop();
+      const fileName = `${user.id}/face-${Date.now()}.${ext}`;
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/face-${Date.now()}.${fileExt}`;
+      const { error: uploadErr } = await supabase.storage.from('profile-photos').upload(fileName, file, { upsert: true });
+      if (uploadErr) throw uploadErr;
 
-      const { error: uploadError } = await supabase.storage
-        .from('profile-photos')
-        .upload(fileName, file, { upsert: true });
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('profile-photos')
-        .getPublicUrl(fileName);
-
-      const { error: updateError } = await supabase
-        .from('cleaner_profiles')
-        .update({ profile_photo_url: publicUrl })
-        .eq('id', cleanerProfileId);
-      if (updateError) throw updateError;
-
+      const { data: { publicUrl } } = supabase.storage.from('profile-photos').getPublicUrl(fileName);
+      const { error } = await supabase.from('cleaner_profiles').update({ profile_photo_url: publicUrl }).eq('id', id);
+      if (error) throw error;
       return publicUrl;
     },
-    onSuccess: () => {
-      invalidateProfile();
-      goToNextStep();
-    },
+    onSuccess: () => invalidateProfile(),
   });
 
-  // ─── STEP 5: ID Verification ──────────────────────────────────────────────
+  // ── Phase 2: Profile — Phone ──────────────────────────────────────────
+
+  const savePhoneToProfile = async (phone: string) => {
+    if (!user?.id) return;
+    await supabase.from('profiles').update({ phone_number: phone, phone_verified: true }).eq('id', user.id);
+    invalidateProfile();
+  };
+
+  // ── Phase 3: Verification — ID Document ───────────────────────────────
+
   const saveIdDocumentMutation = useMutation({
     mutationFn: async ({ file, documentType }: { file: File; documentType: string }) => {
       if (!user?.id) throw new Error('Not authenticated');
-      const cleanerProfileId = await getCleanerProfileId();
+      const id = await getProfileId();
+      const ext = file.name.split('.').pop();
+      const fileName = `${user.id}/${documentType}-${Date.now()}.${ext}`;
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${documentType}-${Date.now()}.${fileExt}`;
+      const { error: uploadErr } = await supabase.storage.from('identity-documents').upload(fileName, file, { upsert: true });
+      if (uploadErr) throw uploadErr;
 
-      const { error: uploadError } = await supabase.storage
-        .from('identity-documents')
-        .upload(fileName, file, { upsert: true });
-      if (uploadError) throw uploadError;
-
-      // Check for existing verification to avoid duplicate
-      const { data: existing } = await supabase
-        .from('id_verifications')
-        .select('id')
-        .eq('cleaner_id', cleanerProfileId)
-        .eq('document_type', documentType)
-        .maybeSingle();
+      const { data: existing } = await supabase.from('id_verifications')
+        .select('id').eq('cleaner_id', id).eq('document_type', documentType).maybeSingle();
 
       if (!existing) {
-        const { error: verifyError } = await supabase
-          .from('id_verifications')
-          .insert({
-            cleaner_id: cleanerProfileId,
-            document_type: documentType,
-            status: 'pending',
-            document_url: fileName,
-          });
-        if (verifyError) throw verifyError;
+        await supabase.from('id_verifications').insert({ cleaner_id: id, document_type: documentType, status: 'pending', document_url: fileName });
       } else {
-        // Update the document URL if re-uploading
-        await supabase
-          .from('id_verifications')
-          .update({ document_url: fileName, status: 'pending' })
-          .eq('id', existing.id);
+        await supabase.from('id_verifications').update({ document_url: fileName, status: 'pending' }).eq('id', existing.id);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['id-verifications'] });
-      goToNextStep();
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['id-verifications'] }),
   });
 
-  // ─── STEP 6: Background Check Consent ────────────────────────────────────
+  // ── Phase 3: Verification — Background Consent ────────────────────────
+
   const saveBackgroundConsentMutation = useMutation({
     mutationFn: async () => {
-      const cleanerProfileId = await getCleanerProfileId();
+      const id = await getProfileId();
 
-      // Check if consent already exists
-      const { data: existingConsent } = await supabase
-        .from('cleaner_agreements')
-        .select('id')
-        .eq('cleaner_id', cleanerProfileId)
-        .eq('agreement_type', 'background_check_consent')
-        .maybeSingle();
+      const { data: existingConsent } = await supabase.from('cleaner_agreements')
+        .select('id').eq('cleaner_id', id).eq('agreement_type', 'background_check_consent').maybeSingle();
 
       if (!existingConsent) {
-        const { error: agreementError } = await supabase.from('cleaner_agreements').insert({
-          cleaner_id: cleanerProfileId,
-          agreement_type: 'background_check_consent',
-          version: '1.0',
-          user_agent: navigator.userAgent,
+        const { error } = await supabase.from('cleaner_agreements').insert({
+          cleaner_id: id, agreement_type: 'background_check_consent', version: '1.0', user_agent: navigator.userAgent,
         });
-        if (agreementError && !agreementError.message.toLowerCase().includes('duplicate')) throw agreementError;
+        if (error && !error.message.toLowerCase().includes('duplicate')) throw error;
       }
 
-      // Only create background check if one doesn't already exist
-      const { data: existingCheck } = await supabase
-        .from('background_checks')
-        .select('id')
-        .eq('cleaner_id', cleanerProfileId)
-        .maybeSingle();
+      const { data: existingCheck } = await supabase.from('background_checks')
+        .select('id').eq('cleaner_id', id).maybeSingle();
 
       if (!existingCheck) {
-        const { error: checkError } = await supabase.from('background_checks').insert({
-          cleaner_id: cleanerProfileId,
-          status: 'pending',
-          provider: 'checkr',
-        });
-        if (checkError) throw checkError;
+        const { error } = await supabase.from('background_checks').insert({ cleaner_id: id, status: 'pending', provider: 'checkr' });
+        if (error) throw error;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
       queryClient.invalidateQueries({ queryKey: ['background-checks'] });
-      goToNextStep();
     },
   });
 
-  // ─── STEP 7: Service Areas ────────────────────────────────────────────────
+  // ── Phase 4: Work Setup — Service Areas ───────────────────────────────
+
   const saveServiceAreasMutation = useMutation({
     mutationFn: async (data: ServiceAreaData) => {
-      const cleanerProfileId = await getCleanerProfileId();
-
-      const { error: profileError } = await supabase
-        .from('cleaner_profiles')
-        .update({ travel_radius_km: data.travelRadius })
-        .eq('id', cleanerProfileId);
-      if (profileError) throw profileError;
-
-      // Delete existing service areas then insert fresh
-      await supabase
-        .from('cleaner_service_areas')
-        .delete()
-        .eq('cleaner_id', cleanerProfileId);
+      const id = await getProfileId();
+      await supabase.from('cleaner_profiles').update({ travel_radius_km: data.travelRadius }).eq('id', id);
+      await supabase.from('cleaner_service_areas').delete().eq('cleaner_id', id);
 
       if (data.selectedAreas.length > 0) {
-        const serviceAreas = data.selectedAreas.map((zipCode) => ({
-          cleaner_id: cleanerProfileId,
-          zip_code: zipCode,
-        }));
-        const { error: areasError } = await supabase
-          .from('cleaner_service_areas')
-          .insert(serviceAreas);
-        if (areasError) throw areasError;
+        const { error } = await supabase.from('cleaner_service_areas')
+          .insert(data.selectedAreas.map(zip => ({ cleaner_id: id, zip_code: zip })));
+        if (error) throw error;
       }
-
-      setCompletedData((prev) => ({ ...prev, serviceAreasCount: data.selectedAreas.length }));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cleaner-service-areas'] });
       invalidateProfile();
-      goToNextStep();
     },
   });
 
-  // Map day name to number for database
-  const dayToNumber: Record<string, number> = {
-    monday: 1, tuesday: 2, wednesday: 3, thursday: 4,
-    friday: 5, saturday: 6, sunday: 0,
-  };
+  // ── Phase 4: Work Setup — Availability ────────────────────────────────
 
-  // ─── STEP 8: Availability ─────────────────────────────────────────────────
   const saveAvailabilityMutation = useMutation({
     mutationFn: async (data: AvailabilityData) => {
-      const cleanerProfileId = await getCleanerProfileId();
-
-      // Delete existing availability blocks
-      await supabase
-        .from('availability_blocks')
-        .delete()
-        .eq('cleaner_id', cleanerProfileId);
+      const id = await getProfileId();
+      await supabase.from('availability_blocks').delete().eq('cleaner_id', id);
 
       const blocks = Object.entries(data.schedule)
-        .filter(([_, schedule]) => schedule.enabled)
-        .map(([day, schedule]) => ({
-          cleaner_id: cleanerProfileId,
-          day_of_week: dayToNumber[day] ?? 1,
-          start_time: schedule.startTime,
-          end_time: schedule.endTime,
-          is_active: true,
+        .filter(([, s]) => s.enabled)
+        .map(([day, s]) => ({
+          cleaner_id: id, day_of_week: DAY_TO_NUM[day] ?? 1,
+          start_time: s.startTime, end_time: s.endTime, is_active: true,
         }));
 
       if (blocks.length > 0) {
         const { error } = await supabase.from('availability_blocks').insert(blocks);
         if (error) throw error;
       }
-
-      setCompletedData((prev) => ({ ...prev, availableDays: blocks.length }));
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability-blocks'] });
-      goToNextStep();
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['availability-blocks'] }),
   });
 
-  // ─── STEP 9: Rates ────────────────────────────────────────────────────────
+  // ── Phase 4: Work Setup — Rates ───────────────────────────────────────
+
   const saveRatesMutation = useMutation({
     mutationFn: async (data: RatesData) => {
-      const cleanerProfileId = await getCleanerProfileId();
-      const { error } = await supabase
-        .from('cleaner_profiles')
-        .update({
-          hourly_rate_credits: data.hourlyRate,
-          travel_radius_km: data.travelRadius,
-        })
-        .eq('id', cleanerProfileId);
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({ hourly_rate_credits: data.hourlyRate, travel_radius_km: data.travelRadius })
+        .eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      invalidateProfile();
-      goToNextStep();
-    },
+    onSuccess: () => invalidateProfile(),
   });
 
-  // ─── STEP 10: Complete Onboarding ─────────────────────────────────────────
+  // ── Phase 5: Complete ─────────────────────────────────────────────────
+
   const completeOnboardingMutation = useMutation({
     mutationFn: async () => {
-      const cleanerProfileId = await getCleanerProfileId();
-      const { error } = await supabase
-        .from('cleaner_profiles')
-        .update({
-          onboarding_completed_at: new Date().toISOString(),
-          onboarding_current_step: 'review',
-        })
-        .eq('id', cleanerProfileId);
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({ onboarding_completed_at: new Date().toISOString(), onboarding_current_step: 'launch' })
+        .eq('id', id);
       if (error) throw error;
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY] });
-      await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-    },
+    onSuccess: () => invalidateProfile(),
   });
 
+  // ── Return ────────────────────────────────────────────────────────────
+
+  const phaseIndex = PHASES.indexOf(currentPhase);
+
   return {
-    currentStep,
-    currentStepIndex,
-    totalSteps,
-    progress,
-    // Only block render on the very first load — never re-show spinner on background refetches
-    isLoading: (profileLoading && !bypassProfileLoading) || !isInitialized,
-    profile: effectiveProfile,
-    completedData,
-    goToNextStep,
-    goToPreviousStep,
-    setCurrentStep,
-    // Step mutations
-    saveTerms: saveTermsMutation.mutateAsync,
-    isSavingTerms: saveTermsMutation.isPending,
+    currentPhase,
+    currentPhaseIndex: phaseIndex,
+    totalPhases: PHASES.length,
+    isLoading: profileLoading || !isInitialized,
+    profile,
+
+    advancePhase,
+    goBack,
+
+    saveAgreements: saveAgreementsMutation.mutateAsync,
+    isSavingAgreements: saveAgreementsMutation.isPending,
+
     saveBasicInfo: saveBasicInfoMutation.mutateAsync,
     isSavingBasicInfo: saveBasicInfoMutation.isPending,
-    completePhoneVerification,
+
     saveFacePhoto: saveFacePhotoMutation.mutateAsync,
     isSavingFacePhoto: saveFacePhotoMutation.isPending,
+
+    savePhone: savePhoneToProfile,
+
     saveIdDocument: saveIdDocumentMutation.mutateAsync,
     isSavingIdDocument: saveIdDocumentMutation.isPending,
+
     saveBackgroundConsent: saveBackgroundConsentMutation.mutateAsync,
     isSavingBackgroundConsent: saveBackgroundConsentMutation.isPending,
+
     saveServiceAreas: saveServiceAreasMutation.mutateAsync,
     isSavingServiceAreas: saveServiceAreasMutation.isPending,
+
     saveAvailability: saveAvailabilityMutation.mutateAsync,
     isSavingAvailability: saveAvailabilityMutation.isPending,
+
     saveRates: saveRatesMutation.mutateAsync,
     isSavingRates: saveRatesMutation.isPending,
+
     completeOnboarding: completeOnboardingMutation.mutateAsync,
     isCompletingOnboarding: completeOnboardingMutation.isPending,
   };
