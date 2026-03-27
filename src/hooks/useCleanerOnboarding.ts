@@ -108,17 +108,20 @@ export function useCleanerOnboarding() {
 
   // Save step to database
   const saveStepToDatabase = async (step: OnboardingStep) => {
-    const id = profileIdRef.current;
-    if (!id) return;
-    await supabase
+    const cleanerProfileId = await getCleanerProfileId();
+    const { error } = await supabase
       .from('cleaner_profiles')
       .update({ onboarding_current_step: step })
-      .eq('id', id);
+      .eq('id', cleanerProfileId);
+
+    if (error) throw error;
   };
 
   const setCurrentStep = (step: OnboardingStep) => {
     setCurrentStepLocal(step);
-    saveStepToDatabase(step);
+    void saveStepToDatabase(step).catch((error) => {
+      console.error('Failed to persist onboarding step:', error);
+    });
   };
 
   const goToNextStep = () => {
@@ -126,7 +129,9 @@ export function useCleanerOnboarding() {
     if (nextIndex < STEPS.length) {
       const nextStep = STEPS[nextIndex];
       setCurrentStepLocal(nextStep);
-      saveStepToDatabase(nextStep);
+      void saveStepToDatabase(nextStep).catch((error) => {
+        console.error('Failed to persist next onboarding step:', error);
+      });
     }
   };
 
@@ -135,7 +140,9 @@ export function useCleanerOnboarding() {
     if (prevIndex >= 0) {
       const prevStep = STEPS[prevIndex];
       setCurrentStepLocal(prevStep);
-      saveStepToDatabase(prevStep);
+      void saveStepToDatabase(prevStep).catch((error) => {
+        console.error('Failed to persist previous onboarding step:', error);
+      });
     }
   };
 
@@ -153,11 +160,14 @@ export function useCleanerOnboarding() {
       // Ensure cleaner profile exists
       let cleanerProfileId = profileIdRef.current;
       if (!cleanerProfileId) {
-        const { data: freshProfile } = await supabase
+        const { data: freshProfile, error: freshProfileError } = await supabase
           .from('cleaner_profiles')
           .select('id')
           .eq('user_id', user.id)
+          .limit(1)
           .maybeSingle();
+
+        if (freshProfileError) throw freshProfileError;
 
         if (freshProfile?.id) {
           cleanerProfileId = freshProfile.id;
@@ -181,12 +191,15 @@ export function useCleanerOnboarding() {
       // (no unique constraint exists, so we check first then insert)
       const agreementTypes = ['terms_of_service', 'independent_contractor'];
       for (const agreementType of agreementTypes) {
-        const { data: existing } = await supabase
+        const { data: existing, error: existingError } = await supabase
           .from('cleaner_agreements')
           .select('id')
           .eq('cleaner_id', cleanerProfileId)
           .eq('agreement_type', agreementType)
+          .limit(1)
           .maybeSingle();
+
+        if (existingError) throw existingError;
 
         if (!existing) {
           const { error } = await supabase.from('cleaner_agreements').insert({
@@ -199,10 +212,18 @@ export function useCleanerOnboarding() {
           if (error && !error.message.toLowerCase().includes('duplicate')) throw error;
         }
       }
+
+      const { error: stepError } = await supabase
+        .from('cleaner_profiles')
+        .update({ onboarding_current_step: 'basic-info' })
+        .eq('id', cleanerProfileId);
+
+      if (stepError) throw stepError;
     },
     onSuccess: () => {
+      invalidateProfile();
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
-      goToNextStep();
+      setCurrentStepLocal('basic-info');
     },
   });
 
