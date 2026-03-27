@@ -42,7 +42,7 @@ const SECTION_STYLE = {
 
 export default function CleanerProfileView() {
   const { user } = useAuth();
-  const { profile, isLoading } = useCleanerProfile();
+  const { profile, isLoading, error } = useCleanerProfile();
   const { latestCheck } = useBackgroundChecks();
 
   const reliabilityScore = profile?.reliability_score || 0;
@@ -55,6 +55,23 @@ export default function CleanerProfileView() {
     if (["passed", "verified"].includes(status)) return <Badge className="gap-1 h-6 text-xs bg-success/10 text-success border-success/30"><CheckCircle className="h-3 w-3" />Verified</Badge>;
     return <Badge variant="destructive" className="gap-1 h-6 text-xs"><XCircle className="h-3 w-3" />Failed</Badge>;
   };
+
+  if (error) {
+    return (
+      <CleanerLayout>
+        <div className="max-w-3xl flex flex-col items-center justify-center py-20 text-center gap-4">
+          <div className="h-16 w-16 rounded-full bg-destructive/10 flex items-center justify-center">
+            <XCircle className="h-8 w-8 text-destructive" />
+          </div>
+          <h2 className="text-xl font-bold">Unable to load profile</h2>
+          <p className="text-muted-foreground text-sm">Please check your connection and try again.</p>
+          <Button onClick={() => window.location.reload()} variant="outline" className="gap-2">
+            Try Again
+          </Button>
+        </div>
+      </CleanerLayout>
+    );
+  }
 
   if (isLoading || !profile) {
     return (
