@@ -67,7 +67,7 @@ export default function Book() {
   const cleanerId = searchParams.get('cleaner');
   
   const [step, setStep] = useState(1);
-  const [confirmedJob, setConfirmedJob] = useState<{ id: string; type: string; date?: string; address?: string; credits: number; paymentMode?: string } | null>(null);
+  // Note: Booking confirmation is shown on /booking/:id after useBooking navigates there
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
@@ -163,7 +163,7 @@ export default function Book() {
       return;
     }
     try {
-      const job = await createBooking({
+      await createBooking({
         cleaningType: selectedType,
         hours,
         addOns: selectedAddOns,
@@ -172,15 +172,7 @@ export default function Book() {
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
       });
-      setConfirmedJob({
-        id: (job as any)?.id || '',
-        type: selectedType || 'basic',
-        date: getScheduledDateTime(),
-        address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
-        credits: totalCredits,
-        paymentMode: 'credits',
-      });
-      toast({ title: "Booking confirmed!", description: "Your credits have been held." });
+      // useBooking.onSuccess navigates to /booking/:id automatically
     } catch (error: any) {
       toast({ 
         title: "Booking failed", 
