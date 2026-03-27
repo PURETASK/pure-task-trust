@@ -128,10 +128,10 @@ export function useCleanerOnboarding() {
       const acceptedTypes = new Set((agreements ?? []).map(({ agreement_type }) => agreement_type));
       const hasAcceptedRequiredTerms = REQUIRED_TERMS_AGREEMENTS.every((type) => acceptedTypes.has(type));
 
-      const resolvedStep = hasAcceptedRequiredTerms
-        ? 'basic-info'
-        : profile.onboarding_completed_at
-          ? 'review'
+      const resolvedStep = profile.onboarding_completed_at
+        ? 'review'
+        : hasAcceptedRequiredTerms
+          ? 'basic-info'
           : (savedStep ?? 'terms');
 
       if (error) {
@@ -567,7 +567,7 @@ export function useCleanerOnboarding() {
     totalSteps,
     progress,
     // Only block render on the very first load — never re-show spinner on background refetches
-    isLoading: !isInitialized && profileLoading,
+    isLoading: profileLoading || !isInitialized,
     profile,
     completedData,
     goToNextStep,
