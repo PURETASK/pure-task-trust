@@ -27,16 +27,16 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
     
-    if (claimsError || !claimsData?.claims) {
+    if (userError || !userData?.user) {
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const userId = claimsData.claims.sub as string;
+    const userId = userData.user.id;
 
     // Get cleaner profile with Stripe ID
     const { data: cleanerProfile, error: profileError } = await supabaseClient
@@ -46,9 +46,10 @@ serve(async (req) => {
       .maybeSingle();
 
     if (profileError || !cleanerProfile) {
+      // Return not-connected instead of 404 so the UI doesn't break during onboarding
       return new Response(
-        JSON.stringify({ error: "Cleaner profile not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ connected: false, payouts_enabled: false, details_submitted: false, charges_enabled: false }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
