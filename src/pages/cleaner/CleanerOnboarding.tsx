@@ -26,11 +26,19 @@ export default function CleanerOnboarding() {
   const onboarding = useCleanerOnboarding();
   const { currentPhase, currentPhaseIndex, totalPhases, isLoading, profile, advancePhase, goBack } = onboarding;
 
+  // Auto-redirect if onboarding already completed
+  useEffect(() => {
+    if (!isLoading && profile?.onboarding_completed_at) {
+      navigate('/cleaner/dashboard', { replace: true });
+    }
+  }, [isLoading, profile?.onboarding_completed_at, navigate]);
+
   const handleComplete = async () => {
     try {
       await onboarding.completeOnboarding();
-      navigate('/cleaner/dashboard');
+      navigate('/cleaner/dashboard', { replace: true });
     } catch (err: any) {
+      console.error('[CleanerOnboarding] completeOnboarding failed:', err);
       toast.error(err?.message || 'Failed to activate. Please try again.');
     }
   };
