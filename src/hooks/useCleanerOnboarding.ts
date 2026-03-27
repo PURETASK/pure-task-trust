@@ -59,6 +59,15 @@ type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
 const CLEANER_PROFILE_KEY = 'cleaner-profile';
 const PROFILE_LOADING_FALLBACK_MS = 4000;
 const DIRECT_PROFILE_FETCH_TIMEOUT_MS = 2500;
+const ONBOARDING_MUTATION_TIMEOUT_MS = 8000;
+
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  const timeout = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error(message)), timeoutMs);
+  });
+
+  return Promise.race([promise, timeout]);
+}
 
 async function fetchCleanerProfileWithTimeout(userId: string): Promise<CleanerProfile | null> {
   const request = (async () => {
@@ -119,6 +128,13 @@ export function useCleanerOnboarding() {
 
   const effectiveProfile = profile ?? fallbackProfile;
 
+  const setCachedProfileStep = (step: OnboardingStep) => {
+    setFallbackProfile((prev) => (prev ? { ...prev, onboarding_current_step: step } : prev));
+    queryClient.setQueryData<CleanerProfile | null>([CLEANER_PROFILE_KEY, user?.id], (prev) => (
+      prev ? { ...prev, onboarding_current_step: step } : prev
+    ));
+  };
+
   useEffect(() => {
     if (!user?.id || profile?.id || !profileLoading) {
       setBypassProfileLoading(false);
@@ -174,6 +190,48 @@ export function useCleanerOnboarding() {
       return data.id;
     }
     throw new Error('No cleaner profile found. Please restart onboarding.');
+  };
+
+  const ensureCleanerProfileId = async (): Promise<string> => {
+    if (profileIdRef.current) return profileIdRef.current;
+    if (effectiveProfile?.id) {
+      profileIdRef.current = effectiveProfile.id;
+      return effectiveProfile.id;
+    }
+    if (!user?.id) throw new Error('Not authenticated');
+
+    const { data: existingProfiles, error: existingProfilesError } = await withTimeout(
+      supabase
+        .from('cleaner_profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1),
+      ONBOARDING_MUTATION_TIMEOUT_MS,
+      'Loading your cleaner profile took too long. Please try again.'
+    );
+
+    if (existingProfilesError) throw existingProfilesError;
+
+    const existingProfileId = existingProfiles?.[0]?.id;
+    if (existingProfileId) {
+      profileIdRef.current = existingProfileId;
+      return existingProfileId;
+    }
+
+    const { data: createdProfile, error: createProfileError } = await withTimeout(
+      supabase
+        .from('cleaner_profiles')
+        .insert({ user_id: user.id })
+        .select('id')
+        .single(),
+      ONBOARDING_MUTATION_TIMEOUT_MS,
+      'Creating your cleaner profile took too long. Please try again.'
+    );
+
+    if (createProfileError) throw createProfileError;
+
+    profileIdRef.current = createdProfile.id;
+    return createdProfile.id;
   };
 
   // Load saved step from database on mount.
@@ -293,71 +351,57 @@ export function useCleanerOnboarding() {
   const saveTermsMutation = useMutation({
     mutationFn: async () => {
       if (!user?.id) throw new Error('Not authenticated');
+      const cleanerProfileId = await ensureCleanerProfileId();
 
-      // Ensure cleaner profile exists
-      let cleanerProfileId = profileIdRef.current;
-      if (!cleanerProfileId) {
-        const { data: freshProfile, error: freshProfileError } = await supabase
-          .from('cleaner_profiles')
-          .select('id')
-          .eq('user_id', user.id)
-          .limit(1)
-          .maybeSingle();
-
-        if (freshProfileError) throw freshProfileError;
-
-        if (freshProfile?.id) {
-          cleanerProfileId = freshProfile.id;
-          profileIdRef.current = cleanerProfileId;
-        } else {
-          const { data: newProfile, error: createError } = await supabase
-            .from('cleaner_profiles')
-            .insert({ user_id: user.id })
-            .select('id')
-            .single();
-          if (createError) throw createError;
-          cleanerProfileId = newProfile.id;
-          profileIdRef.current = cleanerProfileId;
-        }
-        // Refresh cache with the exact key so isLoading stays false
-        queryClient.invalidateQueries({ queryKey: [CLEANER_PROFILE_KEY, user.id] });
-        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      }
-
-      // Upsert agreements — use ON CONFLICT DO NOTHING to be idempotent
-      // (no unique constraint exists, so we check first then insert)
       const agreementTypes = ['terms_of_service', 'independent_contractor'];
-      for (const agreementType of agreementTypes) {
-        const { data: existing, error: existingError } = await supabase
+
+      const { data: existingAgreements, error: existingAgreementsError } = await withTimeout(
+        supabase
           .from('cleaner_agreements')
-          .select('id')
+          .select('agreement_type')
           .eq('cleaner_id', cleanerProfileId)
-          .eq('agreement_type', agreementType)
-          .limit(1)
-          .maybeSingle();
+          .in('agreement_type', agreementTypes),
+        ONBOARDING_MUTATION_TIMEOUT_MS,
+        'Loading your agreement status took too long. Please try again.'
+      );
 
-        if (existingError) throw existingError;
+      if (existingAgreementsError) throw existingAgreementsError;
 
-        if (!existing) {
-          const { error } = await supabase.from('cleaner_agreements').insert({
-            cleaner_id: cleanerProfileId,
-            agreement_type: agreementType,
-            version: '1.0',
-            user_agent: navigator.userAgent,
-          });
-          // Only throw on non-duplicate errors
-          if (error && !error.message.toLowerCase().includes('duplicate')) throw error;
-        }
+      const acceptedAgreementTypes = new Set((existingAgreements ?? []).map(({ agreement_type }) => agreement_type));
+      const missingAgreementRows = agreementTypes
+        .filter((agreementType) => !acceptedAgreementTypes.has(agreementType))
+        .map((agreement_type) => ({
+          cleaner_id: cleanerProfileId,
+          agreement_type,
+          version: '1.0',
+          user_agent: navigator.userAgent,
+        }));
+
+      if (missingAgreementRows.length > 0) {
+        const { error: insertAgreementsError } = await withTimeout(
+          supabase.from('cleaner_agreements').insert(missingAgreementRows),
+          ONBOARDING_MUTATION_TIMEOUT_MS,
+          'Saving your agreements took too long. Please try again.'
+        );
+
+        if (insertAgreementsError) throw insertAgreementsError;
       }
 
-      const { error: stepError } = await supabase
-        .from('cleaner_profiles')
-        .update({ onboarding_current_step: 'basic-info' })
-        .eq('id', cleanerProfileId);
+      const { error: stepError } = await withTimeout(
+        supabase
+          .from('cleaner_profiles')
+          .update({ onboarding_current_step: 'basic-info' })
+          .eq('id', cleanerProfileId),
+        ONBOARDING_MUTATION_TIMEOUT_MS,
+        'Updating your onboarding progress took too long. Please try again.'
+      );
 
       if (stepError) throw stepError;
+
+      return cleanerProfileId;
     },
     onSuccess: () => {
+      setCachedProfileStep('basic-info');
       invalidateProfile();
       queryClient.invalidateQueries({ queryKey: ['cleaner-agreements'] });
       setCurrentStepLocal('basic-info');
