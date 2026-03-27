@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCleanerProfile } from '@/hooks/useCleanerProfile';
 import { AvailabilityData } from '@/components/onboarding/AvailabilityStep';
+import type { Database } from '@/integrations/supabase/types';
 
 export type OnboardingStep =
   | 'terms'
@@ -52,8 +53,42 @@ export interface ServiceAreaData {
   selectedAreas: string[];
 }
 
+type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
+
 // Shared query key — must match useCleanerProfile's key
 const CLEANER_PROFILE_KEY = 'cleaner-profile';
+const PROFILE_LOADING_FALLBACK_MS = 4000;
+const DIRECT_PROFILE_FETCH_TIMEOUT_MS = 2500;
+
+async function fetchCleanerProfileWithTimeout(userId: string): Promise<CleanerProfile | null> {
+  const request = supabase
+    .from('cleaner_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle()
+    .then(({ data, error }) => {
+      if (error) throw error;
+      return { type: 'data' as const, data: data as CleanerProfile | null };
+    })
+    .catch((error) => ({ type: 'error' as const, error }));
+
+  const timeout = new Promise<{ type: 'timeout' }>((resolve) => {
+    setTimeout(() => resolve({ type: 'timeout' }), DIRECT_PROFILE_FETCH_TIMEOUT_MS);
+  });
+
+  const result = await Promise.race([request, timeout]);
+
+  if (result.type === 'timeout') {
+    console.warn('[useCleanerOnboarding] Fallback cleaner profile fetch timed out');
+    return null;
+  }
+
+  if (result.type === 'error') {
+    throw result.error;
+  }
+
+  return result.data;
+}
 
 export function useCleanerOnboarding() {
   const { user } = useAuth();
@@ -61,6 +96,8 @@ export function useCleanerOnboarding() {
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStepLocal] = useState<OnboardingStep>('terms');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [fallbackProfile, setFallbackProfile] = useState<CleanerProfile | null>(null);
+  const [bypassProfileLoading, setBypassProfileLoading] = useState(false);
 
   // Track completed data for review step
   const [completedData, setCompletedData] = useState({
@@ -74,6 +111,45 @@ export function useCleanerOnboarding() {
   useEffect(() => {
     if (profile?.id) profileIdRef.current = profile.id;
   }, [profile?.id]);
+
+  const effectiveProfile = profile ?? fallbackProfile;
+
+  useEffect(() => {
+    if (!user?.id || profile?.id || !profileLoading) {
+      setBypassProfileLoading(false);
+      if (profile?.id) {
+        setFallbackProfile(null);
+      }
+      return;
+    }
+
+    let isCancelled = false;
+
+    const timer = setTimeout(async () => {
+      try {
+        const directProfile = await fetchCleanerProfileWithTimeout(user.id);
+        if (isCancelled) return;
+
+        if (directProfile?.id) {
+          profileIdRef.current = directProfile.id;
+          setFallbackProfile(directProfile);
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          console.error('[useCleanerOnboarding] Failed fallback profile fetch:', error);
+        }
+      } finally {
+        if (!isCancelled) {
+          setBypassProfileLoading(true);
+        }
+      }
+    }, PROFILE_LOADING_FALLBACK_MS);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [user?.id, profile?.id, profileLoading]);
 
   // Helper: get the current cleaner profile id — from ref (latest) or a fresh DB fetch
   const getCleanerProfileId = async (): Promise<string> => {
@@ -97,18 +173,18 @@ export function useCleanerOnboarding() {
 
   // Load saved step from database on mount.
   useEffect(() => {
-    if (isInitialized || profileLoading) return;
+    if (isInitialized || (profileLoading && !bypassProfileLoading)) return;
 
     let isCancelled = false;
 
     const initializeStep = async () => {
-      if (!profile?.id) {
+      if (!effectiveProfile?.id) {
         if (!isCancelled) setIsInitialized(true);
         return;
       }
 
-      const savedStep = isValidOnboardingStep(profile.onboarding_current_step)
-        ? profile.onboarding_current_step
+      const savedStep = isValidOnboardingStep(effectiveProfile.onboarding_current_step)
+        ? effectiveProfile.onboarding_current_step
         : null;
 
       if (savedStep && savedStep !== 'terms') {
@@ -122,13 +198,13 @@ export function useCleanerOnboarding() {
       const { data: agreements, error } = await supabase
         .from('cleaner_agreements')
         .select('agreement_type')
-        .eq('cleaner_id', profile.id)
+        .eq('cleaner_id', effectiveProfile.id)
         .in('agreement_type', [...REQUIRED_TERMS_AGREEMENTS]);
 
       const acceptedTypes = new Set((agreements ?? []).map(({ agreement_type }) => agreement_type));
       const hasAcceptedRequiredTerms = REQUIRED_TERMS_AGREEMENTS.every((type) => acceptedTypes.has(type));
 
-      const resolvedStep = profile.onboarding_completed_at
+      const resolvedStep = effectiveProfile.onboarding_completed_at
         ? 'review'
         : hasAcceptedRequiredTerms
           ? 'basic-info'
@@ -151,9 +227,10 @@ export function useCleanerOnboarding() {
     };
   }, [
     isInitialized,
-    profile?.id,
-    profile?.onboarding_completed_at,
-    profile?.onboarding_current_step,
+    effectiveProfile?.id,
+    effectiveProfile?.onboarding_completed_at,
+    effectiveProfile?.onboarding_current_step,
+    bypassProfileLoading,
     profileLoading,
   ]);
 
@@ -567,8 +644,8 @@ export function useCleanerOnboarding() {
     totalSteps,
     progress,
     // Only block render on the very first load — never re-show spinner on background refetches
-    isLoading: profileLoading || !isInitialized,
-    profile,
+    isLoading: (profileLoading && !bypassProfileLoading) || !isInitialized,
+    profile: effectiveProfile,
     completedData,
     goToNextStep,
     goToPreviousStep,
