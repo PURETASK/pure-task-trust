@@ -26,7 +26,7 @@ const QUICK_ACTIONS = [
   { icon: Home, label: "My Properties", href: "/properties", color: "bg-warning/10 text-warning", desc: "Manage addresses" },
   { icon: MessageCircle, label: "Messages", href: "/messages", color: "bg-primary/10 text-primary", desc: "Chat with cleaners" },
   { icon: Heart, label: "Favourites", href: "/favorites", color: "bg-destructive/10 text-destructive", desc: "Saved cleaners" },
-  { icon: Repeat, label: "Recurring Plans", href: "/recurring", color: "bg-[hsl(var(--pt-purple)/0.1)] text-[hsl(var(--pt-purple))]", desc: "Subscriptions" },
+  { icon: Repeat, label: "Recurring Plans", href: "/recurring-plans", color: "bg-[hsl(var(--pt-purple)/0.1)] text-[hsl(var(--pt-purple))]", desc: "Subscriptions" },
   { icon: Gift, label: "Refer Friends", href: "/referral", color: "bg-warning/10 text-warning", desc: "Earn free credits" },
 ];
 

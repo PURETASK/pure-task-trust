@@ -70,16 +70,31 @@ export default function ClientProfileEdit() {
     }
   }, [clientProfile]);
 
+  // Load phone from profiles table
+  useEffect(() => {
+    if (user?.id) {
+      supabase
+        .from('profiles')
+        .select('phone')
+        .eq('id', user.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data?.phone) setPhone(data.phone);
+        });
+    }
+  }, [user?.id]);
+
   const getInitials = (name?: string | null) => {
     if (!name) return "U";
     return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   };
 
   const handleSaveProfile = async () => {
-    if (!clientProfile?.id) return;
+    if (!clientProfile?.id || !user?.id) return;
     setSaving(true);
 
     try {
+      // Update client_profiles table
       const { error } = await supabase
         .from("client_profiles")
         .update({
@@ -89,6 +104,16 @@ export default function ClientProfileEdit() {
         .eq("id", clientProfile.id);
 
       if (error) throw error;
+
+      // Update phone in profiles table
+      if (phone) {
+        const { error: phoneError } = await supabase
+          .from("profiles")
+          .update({ phone })
+          .eq("id", user.id);
+
+        if (phoneError) console.warn("Failed to update phone:", phoneError);
+      }
 
       toast.success("Profile updated successfully");
     } catch (error) {

@@ -17,7 +17,7 @@ const quickLinks = [
   { to: "/properties", icon: Building2, label: "Properties", desc: "Manage your properties", color: "text-amber-500", bg: "bg-amber-500/10" },
   { to: "/recurring-plans", icon: Repeat, label: "Recurring Plans", desc: "Set up scheduled cleanings", color: "text-primary", bg: "bg-primary/10" },
   { to: "/referral", icon: Gift, label: "Referral Program", desc: "Invite friends & earn credits", color: "text-violet-500", bg: "bg-violet-500/10" },
-  { to: "/notification-settings", icon: Bell, label: "Notifications", desc: "Email, push & SMS preferences", color: "text-blue-500", bg: "bg-blue-500/10" },
+  { to: "/settings/notifications", icon: Bell, label: "Notifications", desc: "Email, push & SMS preferences", color: "text-blue-500", bg: "bg-blue-500/10" },
 ];
 
 export default function ClientProfile() {
