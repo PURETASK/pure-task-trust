@@ -1,299 +1,255 @@
 import { useCleanerOnboarding } from '@/hooks/useCleanerOnboarding';
-import { TermsAgreementStep } from '@/components/onboarding/TermsAgreementStep';
-import { BasicInfoStep } from '@/components/onboarding/BasicInfoStep';
-import { PhoneVerificationStep } from '@/components/onboarding/PhoneVerificationStep';
-import { FaceVerificationStep } from '@/components/onboarding/FaceVerificationStep';
-import { IDVerificationStep } from '@/components/onboarding/IDVerificationStep';
-import { BackgroundCheckConsentStep } from '@/components/onboarding/BackgroundCheckConsentStep';
-import { ServiceAreaStep } from '@/components/onboarding/ServiceAreaStep';
-import { AvailabilityStep } from '@/components/onboarding/AvailabilityStep';
-import { RatesStep } from '@/components/onboarding/RatesStep';
-import { OnboardingReviewStep } from '@/components/onboarding/OnboardingReviewStep';
+import { AgreementPhase } from '@/components/onboarding/phases/AgreementPhase';
+import { ProfilePhase } from '@/components/onboarding/phases/ProfilePhase';
+import { VerificationPhase } from '@/components/onboarding/phases/VerificationPhase';
+import { WorkSetupPhase } from '@/components/onboarding/phases/WorkSetupPhase';
+import { LaunchPhase } from '@/components/onboarding/phases/LaunchPhase';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import onboardingBg from '@/assets/onboarding-bg.jpg';
+import { cn } from '@/lib/utils';
+import {
+  Shield, User, ScanFace, Briefcase, Rocket,
+  CheckCircle2, Sparkles,
+} from 'lucide-react';
 
-const STEPS = [
-  { key: 'terms',               label: 'Terms',        num: '01' },
-  { key: 'basic-info',          label: 'Profile',      num: '02' },
-  { key: 'phone-verification',  label: 'Phone',        num: '03' },
-  { key: 'face-verification',   label: 'Photo',        num: '04' },
-  { key: 'id-verification',     label: 'ID',           num: '05' },
-  { key: 'background-consent',  label: 'Background',   num: '06' },
-  { key: 'service-areas',       label: 'Areas',        num: '07' },
-  { key: 'availability',        label: 'Hours',        num: '08' },
-  { key: 'rates',               label: 'Rates',        num: '09' },
-  { key: 'review',              label: 'Review',       num: '10' },
-];
+const PHASE_META = [
+  { key: 'agreement', label: 'Agreement', icon: Shield, color: '#38bdf8' },
+  { key: 'profile', label: 'Profile', icon: User, color: '#a78bfa' },
+  { key: 'verification', label: 'Verify', icon: ScanFace, color: '#f472b6' },
+  { key: 'work-setup', label: 'Setup', icon: Briefcase, color: '#34d399' },
+  { key: 'launch', label: 'Launch', icon: Rocket, color: '#fbbf24' },
+] as const;
 
 export default function CleanerOnboarding() {
   const navigate = useNavigate();
-  const {
-    currentStep, currentStepIndex, totalSteps,
-    isLoading, profile, completedData,
-    goToPreviousStep,
-    saveTerms, isSavingTerms,
-    saveBasicInfo, isSavingBasicInfo,
-    completePhoneVerification,
-    saveFacePhoto, isSavingFacePhoto,
-    saveIdDocument, isSavingIdDocument,
-    saveBackgroundConsent, isSavingBackgroundConsent,
-    saveServiceAreas, isSavingServiceAreas,
-    saveAvailability, isSavingAvailability,
-    saveRates, isSavingRates,
-    completeOnboarding, isCompletingOnboarding,
-  } = useCleanerOnboarding();
+  const onboarding = useCleanerOnboarding();
+  const { currentPhase, currentPhaseIndex, totalPhases, isLoading, profile, advancePhase, goBack } = onboarding;
 
-  const handleCompleteOnboarding = async () => {
+  const handleComplete = async () => {
     try {
-      await completeOnboarding();
+      await onboarding.completeOnboarding();
       navigate('/cleaner/dashboard');
     } catch (err: any) {
-      console.error('Failed to complete onboarding:', err);
+      toast.error(err?.message || 'Failed to activate. Please try again.');
     }
   };
 
-  // Wrap each step submit so errors don't unmount the page
-  const handleSaveTerms = async () => {
-    try { await saveTerms(); } catch (err: any) { console.error('Terms save error:', err); toast.error(err?.message || 'Failed to save terms. Please try again.'); }
-  };
-  const handleSaveBasicInfo = async (data: Parameters<typeof saveBasicInfo>[0]) => {
-    try { await saveBasicInfo(data); } catch (err: any) { console.error('Basic info save error:', err); toast.error(err?.message || 'Failed to save info. Please try again.'); }
-  };
-  const handleSaveFacePhoto = async (file: Parameters<typeof saveFacePhoto>[0]): Promise<string> => {
-    try { return await saveFacePhoto(file) ?? ''; } catch (err: any) { console.error('Face photo save error:', err); toast.error(err?.message || 'Failed to upload photo.'); return ''; }
-  };
-  const handleSaveIdDocument = async (data: Parameters<typeof saveIdDocument>[0]) => {
-    try { await saveIdDocument(data); } catch (err: any) { console.error('ID doc save error:', err); toast.error(err?.message || 'Failed to save ID.'); }
-  };
-  const handleSaveBackgroundConsent = async () => {
-    try { await saveBackgroundConsent(); } catch (err: any) { console.error('Background consent save error:', err); toast.error(err?.message || 'Failed to save consent.'); }
-  };
-  const handleSaveServiceAreas = async (data: Parameters<typeof saveServiceAreas>[0]) => {
-    try { await saveServiceAreas(data); } catch (err: any) { console.error('Service areas save error:', err); toast.error(err?.message || 'Failed to save areas.'); }
-  };
-  const handleSaveAvailability = async (data: Parameters<typeof saveAvailability>[0]) => {
-    try { await saveAvailability(data); } catch (err: any) { console.error('Availability save error:', err); toast.error(err?.message || 'Failed to save availability.'); }
-  };
-  const handleSaveRates = async (data: Parameters<typeof saveRates>[0]) => {
-    try { await saveRates(data); } catch (err: any) { console.error('Rates save error:', err); toast.error(err?.message || 'Failed to save rates.'); }
-  };
-
-  const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Pro';
-  const currentMeta = STEPS[currentStepIndex] ?? STEPS[0];
-
-  console.log('[CleanerOnboarding] isLoading:', isLoading, 'profileLoading detail:', { profile: !!profile, currentStep, isInitialized: !isLoading });
-
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'hsl(145 65% 8%)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#080c18' }}>
         <div className="flex flex-col items-center gap-4">
-          <div
-            className="h-10 w-10 rounded-full border-2 border-white/20 border-t-white animate-spin"
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+            className="h-10 w-10 rounded-full border-2 border-cyan-500/30 border-t-cyan-400"
           />
-          <span className="text-white/60 text-sm">Loading your profile…</span>
+          <span className="text-white/40 text-sm font-medium">Preparing your workspace…</span>
         </div>
       </div>
     );
   }
 
+  const meta = PHASE_META[currentPhaseIndex] ?? PHASE_META[0];
+
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col">
-      {/* ── FULL-BLEED BACKGROUND ── */}
-      <div className="absolute inset-0 z-0">
-        <img src={onboardingBg} alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-black/60" />
-        {/* Decorative orbs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-success/10 blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[100px] translate-y-1/3 -translate-x-1/3" />
+    <div className="min-h-screen relative overflow-hidden flex flex-col" style={{ background: '#080c18' }}>
+      {/* ── Animated background ── */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full opacity-20 blur-[120px]" style={{ background: meta.color }} />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-15 blur-[100px]" style={{ background: '#6366f1' }} />
+        <div className="absolute top-[40%] left-[60%] w-[300px] h-[300px] rounded-full opacity-10 blur-[80px]" style={{ background: '#ec4899' }} />
+        {/* Grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
+        />
       </div>
 
-      {/* ── TOP BAR ── */}
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-12 pt-6 pb-0">
+      {/* ── Top bar ── */}
+      <header className="relative z-10 flex items-center justify-between px-6 md:px-10 pt-6 pb-2">
         <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-white" />
+          <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.3)' }}>
+            <Sparkles className="h-4 w-4 text-cyan-400" />
           </div>
           <span className="font-bold text-white text-lg tracking-tight">PureTask</span>
-        </div>
-
-        {/* Step counter */}
-        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5">
-          <span className="text-white/60 text-xs font-medium">Step</span>
-          <span className="text-white font-bold text-sm">{currentStepIndex + 1}</span>
-          <span className="text-white/40 text-xs">/</span>
-          <span className="text-white/60 text-xs">{totalSteps}</span>
+          <span className="text-white/20 text-sm ml-1">Pro Setup</span>
         </div>
       </header>
 
-      {/* ── MAIN LAYOUT ── */}
-      <main className="relative z-10 flex-1 flex flex-col lg:flex-row items-stretch px-6 md:px-12 py-8 gap-8 lg:gap-16">
+      {/* ── Phase stepper ── */}
+      <nav className="relative z-10 px-6 md:px-10 py-4">
+        <div className="max-w-2xl mx-auto flex items-center gap-0">
+          {PHASE_META.map((pm, i) => {
+            const Icon = pm.icon;
+            const isComplete = i < currentPhaseIndex;
+            const isCurrent = i === currentPhaseIndex;
+            const isUpcoming = i > currentPhaseIndex;
 
-        {/* LEFT: Giant step number + context */}
-        <aside className="lg:w-[340px] xl:w-[400px] flex-shrink-0 flex flex-col justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="space-y-6"
-            >
-              {/* Giant number */}
-              <div
-                className="text-[120px] xl:text-[160px] font-black leading-none select-none"
-                style={{
-                  WebkitTextStroke: '1px rgba(255,255,255,0.15)',
-                  color: 'transparent',
-                  letterSpacing: '-4px',
-                }}
-              >
-                {currentMeta.num}
-              </div>
-
-              {/* Step label pill */}
-              <div className="inline-flex items-center gap-2 bg-success/20 border border-success/30 rounded-full px-4 py-1.5">
-                <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-                <span className="text-success text-sm font-semibold uppercase tracking-wider">{currentMeta.label}</span>
-              </div>
-
-              {/* Step dots — vertical */}
-              <div className="flex flex-row lg:flex-col gap-2 flex-wrap lg:flex-nowrap">
-                {STEPS.map((step, i) => (
-                  <div key={step.key} className="flex items-center gap-2">
-                    <div
-                      className={cn(
-                        'rounded-full transition-all duration-300',
-                        i < currentStepIndex
-                          ? 'h-2 w-8 bg-success'
-                          : i === currentStepIndex
-                          ? 'h-2 w-8 bg-white'
-                          : 'h-2 w-2 bg-white/20'
-                      )}
-                    />
-                    {i === currentStepIndex && (
-                      <span className="hidden lg:block text-xs text-white/70 font-medium">{step.label}</span>
-                    )}
-                    {i < currentStepIndex && (
-                      <CheckCircle2 className="hidden lg:block h-3 w-3 text-success" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </aside>
-
-        {/* RIGHT: Glass form card */}
-        <div className="flex-1 flex items-center justify-center lg:justify-start">
-          <div className="w-full max-w-lg">
-            {/* Glass card */}
-            <div
-              className="rounded-3xl border border-white/15 shadow-2xl overflow-hidden"
-              style={{
-                background: 'rgba(255,255,255,0.07)',
-                backdropFilter: 'blur(40px)',
-                WebkitBackdropFilter: 'blur(40px)',
-              }}
-            >
-              {/* Progress bar inside card top */}
-              <div className="h-1 bg-white/10">
+            return (
+              <div key={pm.key} className="flex items-center flex-1 last:flex-none">
+                {/* Node */}
                 <motion.div
-                  className="h-full bg-success rounded-r-full"
-                  initial={false}
-                  animate={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                />
-              </div>
+                  className={cn(
+                    'relative flex items-center justify-center rounded-full transition-all duration-300',
+                    isCurrent ? 'h-11 w-11' : 'h-9 w-9',
+                  )}
+                  style={{
+                    background: isComplete
+                      ? pm.color
+                      : isCurrent
+                        ? `${pm.color}22`
+                        : 'rgba(255,255,255,0.05)',
+                    border: `2px solid ${isComplete ? pm.color : isCurrent ? pm.color : 'rgba(255,255,255,0.1)'}`,
+                    boxShadow: isCurrent ? `0 0 20px ${pm.color}40` : 'none',
+                  }}
+                  animate={isCurrent ? { scale: [1, 1.05, 1] } : {}}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  {isComplete ? (
+                    <CheckCircle2 className="h-4 w-4 text-white" />
+                  ) : (
+                    <Icon className={cn('h-4 w-4', isCurrent ? 'text-white' : 'text-white/30')} />
+                  )}
+                </motion.div>
 
-              <div className="p-6 md:p-8">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    {currentStep === 'terms' && (
-                      <TermsAgreementStep onSubmit={handleSaveTerms} isSubmitting={isSavingTerms} />
-                    )}
-                    {currentStep === 'basic-info' && (
-                      <BasicInfoStep
-                        initialData={{ firstName: profile?.first_name, lastName: profile?.last_name, bio: profile?.bio }}
-                        onSubmit={handleSaveBasicInfo}
-                        onBack={goToPreviousStep}
-                        isSubmitting={isSavingBasicInfo}
-                      />
-                    )}
-                    {currentStep === 'phone-verification' && (
-                      <PhoneVerificationStep onComplete={(phone) => completePhoneVerification(phone)} onBack={goToPreviousStep} />
-                    )}
-                    {currentStep === 'face-verification' && (
-                      <FaceVerificationStep
-                        onSubmit={handleSaveFacePhoto}
-                        onBack={goToPreviousStep}
-                        isSubmitting={isSavingFacePhoto}
-                        userName={userName}
-                      />
-                    )}
-                    {currentStep === 'id-verification' && (
-                      <IDVerificationStep onSubmit={handleSaveIdDocument} onBack={goToPreviousStep} isSubmitting={isSavingIdDocument} />
-                    )}
-                    {currentStep === 'background-consent' && (
-                      <BackgroundCheckConsentStep onSubmit={handleSaveBackgroundConsent} onBack={goToPreviousStep} isSubmitting={isSavingBackgroundConsent} />
-                    )}
-                    {currentStep === 'service-areas' && (
-                      <ServiceAreaStep
-                        initialData={{ travelRadius: profile?.travel_radius_km }}
-                        onSubmit={handleSaveServiceAreas}
-                        onBack={goToPreviousStep}
-                        isSubmitting={isSavingServiceAreas}
-                      />
-                    )}
-                    {currentStep === 'availability' && (
-                      <AvailabilityStep onSubmit={handleSaveAvailability} onBack={goToPreviousStep} isSubmitting={isSavingAvailability} />
-                    )}
-                    {currentStep === 'rates' && (
-                      <RatesStep
-                        initialData={{ hourlyRate: profile?.hourly_rate_credits, travelRadius: profile?.travel_radius_km }}
-                        onSubmit={handleSaveRates}
-                        onBack={goToPreviousStep}
-                        isSubmitting={isSavingRates}
-                      />
-                    )}
-                    {currentStep === 'review' && (
-                      <OnboardingReviewStep
-                        profileData={{
-                          firstName: profile?.first_name,
-                          lastName: profile?.last_name,
-                          bio: profile?.bio,
-                          profilePhotoUrl: profile?.profile_photo_url,
-                          hourlyRate: profile?.hourly_rate_credits,
-                          travelRadius: profile?.travel_radius_km,
-                          phoneVerified: true,
-                          serviceAreasCount: completedData.serviceAreasCount,
-                          availableDays: completedData.availableDays,
-                        }}
-                        onComplete={handleCompleteOnboarding}
-                        onBack={goToPreviousStep}
-                        isCompleting={isCompletingOnboarding}
-                      />
-                    )}
-                  </motion.div>
-                </AnimatePresence>
+                {/* Connector line */}
+                {i < PHASE_META.length - 1 && (
+                  <div className="flex-1 h-0.5 mx-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: isComplete ? pm.color : 'transparent' }}
+                      initial={false}
+                      animate={{ width: isComplete ? '100%' : '0%' }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  </div>
+                )}
               </div>
+            );
+          })}
+        </div>
+        {/* Phase label */}
+        <div className="max-w-2xl mx-auto mt-3 flex items-center justify-between">
+          <motion.div
+            key={currentPhase}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2"
+          >
+            <div className="h-2 w-2 rounded-full animate-pulse" style={{ background: meta.color }} />
+            <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: meta.color }}>{meta.label}</span>
+          </motion.div>
+          <span className="text-white/30 text-xs font-medium">
+            Phase {currentPhaseIndex + 1} of {totalPhases}
+          </span>
+        </div>
+      </nav>
+
+      {/* ── Main content ── */}
+      <main className="relative z-10 flex-1 flex items-start justify-center px-4 md:px-10 pb-8 pt-2">
+        <div className="w-full max-w-xl">
+          {/* Glass card */}
+          <motion.div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              background: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(40px)',
+              WebkitBackdropFilter: 'blur(40px)',
+              border: `1px solid ${meta.color}20`,
+              boxShadow: `0 0 60px ${meta.color}08, 0 20px 60px rgba(0,0,0,0.4)`,
+            }}
+            layout
+          >
+            {/* Top accent bar */}
+            <div className="h-1" style={{ background: `linear-gradient(90deg, ${meta.color}, transparent)` }} />
+
+            <div className="p-6 md:p-8">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPhase}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  {currentPhase === 'agreement' && (
+                    <AgreementPhase
+                      onComplete={async () => {
+                        try { await onboarding.saveAgreements(); advancePhase(); }
+                        catch (err: any) { toast.error(err?.message || 'Failed to save agreements.'); }
+                      }}
+                      isSaving={onboarding.isSavingAgreements}
+                    />
+                  )}
+                  {currentPhase === 'profile' && (
+                    <ProfilePhase
+                      profile={profile}
+                      onSaveBasicInfo={async (data) => {
+                        try { await onboarding.saveBasicInfo(data); } catch (err: any) { toast.error(err?.message || 'Failed to save info.'); throw err; }
+                      }}
+                      isSavingBasicInfo={onboarding.isSavingBasicInfo}
+                      onSaveFacePhoto={async (file) => {
+                        try { return await onboarding.saveFacePhoto(file) ?? ''; } catch (err: any) { toast.error(err?.message || 'Failed to upload photo.'); return ''; }
+                      }}
+                      isSavingFacePhoto={onboarding.isSavingFacePhoto}
+                      onCompletePhone={(phone) => { onboarding.savePhone(phone); }}
+                      onComplete={advancePhase}
+                      onBack={goBack}
+                    />
+                  )}
+                  {currentPhase === 'verification' && (
+                    <VerificationPhase
+                      onSaveIdDocument={async (data) => {
+                        try { await onboarding.saveIdDocument(data); } catch (err: any) { toast.error(err?.message || 'Failed to upload ID.'); throw err; }
+                      }}
+                      isSavingIdDocument={onboarding.isSavingIdDocument}
+                      onSaveBackgroundConsent={async () => {
+                        try { await onboarding.saveBackgroundConsent(); } catch (err: any) { toast.error(err?.message || 'Failed to save consent.'); throw err; }
+                      }}
+                      isSavingBackgroundConsent={onboarding.isSavingBackgroundConsent}
+                      onComplete={advancePhase}
+                      onBack={goBack}
+                    />
+                  )}
+                  {currentPhase === 'work-setup' && (
+                    <WorkSetupPhase
+                      profile={profile}
+                      onSaveServiceAreas={async (data) => {
+                        try { await onboarding.saveServiceAreas(data); } catch (err: any) { toast.error(err?.message || 'Failed to save areas.'); throw err; }
+                      }}
+                      isSavingServiceAreas={onboarding.isSavingServiceAreas}
+                      onSaveAvailability={async (data) => {
+                        try { await onboarding.saveAvailability(data); } catch (err: any) { toast.error(err?.message || 'Failed to save availability.'); throw err; }
+                      }}
+                      isSavingAvailability={onboarding.isSavingAvailability}
+                      onSaveRates={async (data) => {
+                        try { await onboarding.saveRates(data); } catch (err: any) { toast.error(err?.message || 'Failed to save rates.'); throw err; }
+                      }}
+                      isSavingRates={onboarding.isSavingRates}
+                      onComplete={advancePhase}
+                      onBack={goBack}
+                    />
+                  )}
+                  {currentPhase === 'launch' && (
+                    <LaunchPhase
+                      profile={profile}
+                      onComplete={handleComplete}
+                      onBack={goBack}
+                      isCompleting={onboarding.isCompletingOnboarding}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
+          </motion.div>
 
-            {/* Below-card hint */}
-            <p className="text-center text-white/35 text-xs mt-4">
-              Your progress is saved automatically — pick up where you left off any time.
-            </p>
-          </div>
+          <p className="text-center text-white/20 text-xs mt-4 font-medium">
+            Progress saved automatically • Pick up anytime
+          </p>
         </div>
       </main>
     </div>
