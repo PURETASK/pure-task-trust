@@ -201,11 +201,11 @@ export function useCleanerOnboarding() {
     if (!user?.id) throw new Error('Not authenticated');
 
     const { data: existingProfiles, error: existingProfilesError } = await withTimeout(
-      supabase
+      (async () => await supabase
         .from('cleaner_profiles')
         .select('id')
         .eq('user_id', user.id)
-        .limit(1),
+        .limit(1))(),
       ONBOARDING_MUTATION_TIMEOUT_MS,
       'Loading your cleaner profile took too long. Please try again.'
     );
@@ -219,11 +219,11 @@ export function useCleanerOnboarding() {
     }
 
     const { data: createdProfile, error: createProfileError } = await withTimeout(
-      supabase
+      (async () => await supabase
         .from('cleaner_profiles')
         .insert({ user_id: user.id })
         .select('id')
-        .single(),
+        .single())(),
       ONBOARDING_MUTATION_TIMEOUT_MS,
       'Creating your cleaner profile took too long. Please try again.'
     );
@@ -356,11 +356,11 @@ export function useCleanerOnboarding() {
       const agreementTypes = ['terms_of_service', 'independent_contractor'];
 
       const { data: existingAgreements, error: existingAgreementsError } = await withTimeout(
-        supabase
+        (async () => await supabase
           .from('cleaner_agreements')
           .select('agreement_type')
           .eq('cleaner_id', cleanerProfileId)
-          .in('agreement_type', agreementTypes),
+          .in('agreement_type', agreementTypes))(),
         ONBOARDING_MUTATION_TIMEOUT_MS,
         'Loading your agreement status took too long. Please try again.'
       );
@@ -379,7 +379,7 @@ export function useCleanerOnboarding() {
 
       if (missingAgreementRows.length > 0) {
         const { error: insertAgreementsError } = await withTimeout(
-          supabase.from('cleaner_agreements').insert(missingAgreementRows),
+          (async () => await supabase.from('cleaner_agreements').insert(missingAgreementRows))(),
           ONBOARDING_MUTATION_TIMEOUT_MS,
           'Saving your agreements took too long. Please try again.'
         );
@@ -388,10 +388,10 @@ export function useCleanerOnboarding() {
       }
 
       const { error: stepError } = await withTimeout(
-        supabase
+        (async () => await supabase
           .from('cleaner_profiles')
           .update({ onboarding_current_step: 'basic-info' })
-          .eq('id', cleanerProfileId),
+          .eq('id', cleanerProfileId))(),
         ONBOARDING_MUTATION_TIMEOUT_MS,
         'Updating your onboarding progress took too long. Please try again.'
       );
