@@ -61,16 +61,21 @@ const PROFILE_LOADING_FALLBACK_MS = 4000;
 const DIRECT_PROFILE_FETCH_TIMEOUT_MS = 2500;
 
 async function fetchCleanerProfileWithTimeout(userId: string): Promise<CleanerProfile | null> {
-  const request = supabase
-    .from('cleaner_profiles')
-    .select('*')
-    .eq('user_id', userId)
-    .maybeSingle()
-    .then(({ data, error }) => {
+  const request = (async () => {
+    try {
+      const { data, error } = await supabase
+        .from('cleaner_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
       if (error) throw error;
+
       return { type: 'data' as const, data: data as CleanerProfile | null };
-    })
-    .catch((error) => ({ type: 'error' as const, error }));
+    } catch (error) {
+      return { type: 'error' as const, error };
+    }
+  })();
 
   const timeout = new Promise<{ type: 'timeout' }>((resolve) => {
     setTimeout(() => resolve({ type: 'timeout' }), DIRECT_PROFILE_FETCH_TIMEOUT_MS);
