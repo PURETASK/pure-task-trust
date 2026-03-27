@@ -19,29 +19,17 @@ export function useCleanerProfile() {
 
   const profileQuery = useQuery({
     queryKey: ['cleaner-profile', user?.id],
-    queryFn: async ({ signal }) => {
+    queryFn: async () => {
       if (!user?.id) return null;
 
-      // Add timeout to prevent hanging requests
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      
-      // Link React Query signal
-      signal?.addEventListener('abort', () => controller.abort());
+      const { data, error } = await supabase
+        .from('cleaner_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-      try {
-        const { data, error } = await supabase
-          .from('cleaner_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle()
-          .abortSignal(controller.signal);
-
-        if (error) throw error;
-        return data as CleanerProfile | null;
-      } finally {
-        clearTimeout(timeout);
-      }
+      if (error) throw error;
+      return data as CleanerProfile | null;
     },
     enabled: !!user?.id && !authLoading,
     staleTime: 1000 * 60 * 2,
