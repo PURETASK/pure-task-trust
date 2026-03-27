@@ -31,22 +31,15 @@ export function useCleanerProfile() {
       if (error) throw error;
       return data as CleanerProfile | null;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && !authLoading,
     staleTime: 1000 * 60 * 2,
-  });
-
-  console.log('[useCleanerProfile]', {
-    authLoading,
-    userId: user?.id,
-    queryIsLoading: profileQuery.isLoading,
-    queryStatus: profileQuery.status,
-    queryError: profileQuery.error,
-    data: profileQuery.data,
+    retry: 2,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
   });
 
   return {
     profile: profileQuery.data ?? null,
-    isLoading: authLoading || !user?.id || profileQuery.isLoading,
+    isLoading: authLoading || profileQuery.isLoading,
     error: profileQuery.error,
   };
 }
