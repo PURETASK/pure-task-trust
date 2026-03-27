@@ -30,6 +30,12 @@ const STEPS: OnboardingStep[] = [
   'review',
 ];
 
+const REQUIRED_TERMS_AGREEMENTS = ['terms_of_service', 'independent_contractor'] as const;
+
+const isValidOnboardingStep = (step: string | null | undefined): step is OnboardingStep => {
+  return !!step && STEPS.includes(step as OnboardingStep);
+};
+
 export interface BasicInfoData {
   firstName: string;
   lastName: string;
@@ -91,16 +97,65 @@ export function useCleanerOnboarding() {
 
   // Load saved step from database on mount.
   useEffect(() => {
-    if (!isInitialized && !profileLoading) {
-      if (profile) {
-        const savedStep = profile.onboarding_current_step as OnboardingStep | null;
-        if (savedStep && STEPS.includes(savedStep)) {
-          setCurrentStepLocal(savedStep);
-        }
+    if (isInitialized || profileLoading) return;
+
+    let isCancelled = false;
+
+    const initializeStep = async () => {
+      if (!profile?.id) {
+        if (!isCancelled) setIsInitialized(true);
+        return;
       }
-      setIsInitialized(true);
-    }
-  }, [profile, profileLoading, isInitialized]);
+
+      const savedStep = isValidOnboardingStep(profile.onboarding_current_step)
+        ? profile.onboarding_current_step
+        : null;
+
+      if (savedStep && savedStep !== 'terms') {
+        if (!isCancelled) {
+          setCurrentStepLocal(savedStep);
+          setIsInitialized(true);
+        }
+        return;
+      }
+
+      const { data: agreements, error } = await supabase
+        .from('cleaner_agreements')
+        .select('agreement_type')
+        .eq('cleaner_id', profile.id)
+        .in('agreement_type', [...REQUIRED_TERMS_AGREEMENTS]);
+
+      const acceptedTypes = new Set((agreements ?? []).map(({ agreement_type }) => agreement_type));
+      const hasAcceptedRequiredTerms = REQUIRED_TERMS_AGREEMENTS.every((type) => acceptedTypes.has(type));
+
+      const resolvedStep = profile.onboarding_completed_at
+        ? 'review'
+        : hasAcceptedRequiredTerms
+          ? 'basic-info'
+          : (savedStep ?? 'terms');
+
+      if (error) {
+        console.error('Failed to resolve onboarding step from agreements:', error);
+      }
+
+      if (!isCancelled) {
+        setCurrentStepLocal(resolvedStep);
+        setIsInitialized(true);
+      }
+    };
+
+    void initializeStep();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    isInitialized,
+    profile?.id,
+    profile?.onboarding_completed_at,
+    profile?.onboarding_current_step,
+    profileLoading,
+  ]);
 
   const currentStepIndex = STEPS.indexOf(currentStep);
   const totalSteps = STEPS.length;
@@ -512,7 +567,7 @@ export function useCleanerOnboarding() {
     totalSteps,
     progress,
     // Only block render on the very first load — never re-show spinner on background refetches
-    isLoading: !isInitialized && profileLoading,
+    isLoading: profileLoading || !isInitialized,
     profile,
     completedData,
     goToNextStep,
