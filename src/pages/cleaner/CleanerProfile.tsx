@@ -194,21 +194,21 @@ export default function CleanerProfile() {
   useEffect(() => {
     if (!profile) return;
     setHourlyRate(Math.max(hourlyRateRange.min, Math.min(hourlyRateRange.max, profile.hourly_rate_credits || hourlyRateRange.min)));
-    setTravelRadius((profile as any).travel_radius_km || 15);
-    setYearsExperience((profile as any).years_experience || 0);
-    setCleaningTypes((profile as any).cleaning_types || ["basic"]);
-    setSpecialties((profile as any).specialties || []);
-    setLanguages((profile as any).languages || ["English"]);
-    setWorkStyle((profile as any).work_style || []);
-    setPersonality((profile as any).personality || []);
+    setTravelRadius(profile.travel_radius_km || 15);
+    setYearsExperience(profile.years_experience || 0);
+    setCleaningTypes(profile.cleaning_types || ["basic"]);
+    setSpecialties(profile.specialties || []);
+    setLanguages(profile.languages || ["English"]);
+    setWorkStyle(profile.work_style || []);
+    setPersonality(profile.personality || []);
     setSuppliesProvided((profile as any).supplies_provided ?? true);
     setHasVehicle((profile as any).has_vehicle ?? false);
     setPetFriendly((profile as any).pet_friendly ?? false);
 
-    const savedBio = (profile as any).ai_bio || profile.bio || "";
+    const savedBio = profile.ai_bio || profile.bio || "";
     setAiBio(savedBio);
     setBioText(savedBio);
-    setBioScore((profile as any).bio_score || 0);
+    setBioScore(profile.bio_score || 0);
   }, [profile, hourlyRateRange.min, hourlyRateRange.max]);
 
   const generateBio = useCallback(async () => {
