@@ -1512,6 +1512,7 @@ export type Database = {
           hourly_rate_credits: number
           id: string
           instant_payout_enabled: boolean | null
+          intro_video_url: string | null
           is_available: boolean | null
           jobs_completed: number
           languages: string[] | null
@@ -1530,6 +1531,7 @@ export type Database = {
           payout_percent: number | null
           payout_schedule: string | null
           personality: string[] | null
+          pet_friendly: boolean | null
           professional_headline: string | null
           profile_photo_url: string | null
           push_token: string | null
@@ -1538,6 +1540,7 @@ export type Database = {
           stripe_account_id: string | null
           stripe_connect_id: string | null
           stripe_payouts_enabled: boolean | null
+          supplies_provided: boolean | null
           tier: string
           tier_demotion_warning_at: string | null
           travel_radius_km: number | null
@@ -1563,6 +1566,7 @@ export type Database = {
           hourly_rate_credits?: number
           id?: string
           instant_payout_enabled?: boolean | null
+          intro_video_url?: string | null
           is_available?: boolean | null
           jobs_completed?: number
           languages?: string[] | null
@@ -1581,6 +1585,7 @@ export type Database = {
           payout_percent?: number | null
           payout_schedule?: string | null
           personality?: string[] | null
+          pet_friendly?: boolean | null
           professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
@@ -1589,6 +1594,7 @@ export type Database = {
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
+          supplies_provided?: boolean | null
           tier?: string
           tier_demotion_warning_at?: string | null
           travel_radius_km?: number | null
@@ -1614,6 +1620,7 @@ export type Database = {
           hourly_rate_credits?: number
           id?: string
           instant_payout_enabled?: boolean | null
+          intro_video_url?: string | null
           is_available?: boolean | null
           jobs_completed?: number
           languages?: string[] | null
@@ -1632,6 +1639,7 @@ export type Database = {
           payout_percent?: number | null
           payout_schedule?: string | null
           personality?: string[] | null
+          pet_friendly?: boolean | null
           professional_headline?: string | null
           profile_photo_url?: string | null
           push_token?: string | null
@@ -1640,6 +1648,7 @@ export type Database = {
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
           stripe_payouts_enabled?: boolean | null
+          supplies_provided?: boolean | null
           tier?: string
           tier_demotion_warning_at?: string | null
           travel_radius_km?: number | null
