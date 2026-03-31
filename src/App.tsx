@@ -197,6 +197,10 @@ const App = () => (
                     <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
                     <Route path="/checklists" element={<CleaningChecklists />} />
                     <Route path="/ai-summary" element={<AISummary />} />
+                    <Route path="/residential-cleaning" element={<ResidentialCleaning />} />
+                    <Route path="/deep-cleaning" element={<DeepCleaning />} />
+                    <Route path="/move-out-cleaning" element={<MoveOutCleaning />} />
+                    <Route path="/recurring-cleaning" element={<RecurringCleaning />} />
 
                     {/* Admin routes */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
