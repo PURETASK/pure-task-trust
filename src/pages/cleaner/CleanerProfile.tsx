@@ -375,7 +375,14 @@ export default function CleanerProfile() {
             <CardDescription>Your photo is the first thing clients see — make it count!</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ProfilePhotoUpload userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"} />
+            <ProfilePhotoUpload
+              currentPhotoUrl={profile?.profile_photo_url}
+              userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"}
+              onUploadComplete={async (url) => {
+                if (!profile?.id) return;
+                await supabase.from("cleaner_profiles").update({ profile_photo_url: url }).eq("id", profile.id);
+              }}
+            />
             {/* Photo tip */}
             <div className="flex items-start gap-3 p-4 rounded-xl bg-warning/5 border border-warning/30">
               <span className="text-2xl flex-shrink-0 mt-0.5">📸</span>
