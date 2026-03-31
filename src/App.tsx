@@ -60,6 +60,10 @@ const CostEstimator = lazy(() => import("./pages/CostEstimator"));
 const CleaningIndustryStats = lazy(() => import("./pages/CleaningIndustryStats"));
 const CleaningChecklists = lazy(() => import("./pages/CleaningChecklists"));
 const AISummary = lazy(() => import("./pages/AISummary"));
+const ResidentialCleaning = lazy(() => import("./pages/ResidentialCleaning"));
+const DeepCleaning = lazy(() => import("./pages/DeepCleaning"));
+const MoveOutCleaning = lazy(() => import("./pages/MoveOutCleaning"));
+const RecurringCleaning = lazy(() => import("./pages/RecurringCleaning"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 
 // Cleaner pages
@@ -192,6 +196,10 @@ const App = () => (
                     <Route path="/cleaning-industry-stats" element={<CleaningIndustryStats />} />
                     <Route path="/checklists" element={<CleaningChecklists />} />
                     <Route path="/ai-summary" element={<AISummary />} />
+                    <Route path="/residential-cleaning" element={<ResidentialCleaning />} />
+                    <Route path="/deep-cleaning" element={<DeepCleaning />} />
+                    <Route path="/move-out-cleaning" element={<MoveOutCleaning />} />
+                    <Route path="/recurring-cleaning" element={<RecurringCleaning />} />
 
                     {/* Admin routes */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />

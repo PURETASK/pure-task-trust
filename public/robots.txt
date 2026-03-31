@@ -72,4 +72,4 @@ User-agent: Applebot
 Allow: /
 
 # Sitemap
-Sitemap: https://pure-task-trust.lovable.app/sitemap.xml
+Sitemap: https://puretask.co/sitemap.xml

@@ -3,142 +3,168 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Discovery & Booking -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/discover</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/discover</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/book</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/book</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Main Info Pages -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/pricing</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/pricing</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/about</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/about</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/reviews</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/reviews</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/cleaning-scope</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/cleaning-scope</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <!-- Service-Type Landing Pages -->
+  <url>
+    <loc>https://puretask.co/residential-cleaning</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://puretask.co/deep-cleaning</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://puretask.co/move-out-cleaning</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://puretask.co/recurring-cleaning</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Audience Landing Pages -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/for-airbnb-hosts</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/for-airbnb-hosts</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/for-families</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/for-families</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/for-retirees</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/for-retirees</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/for-professionals</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/for-professionals</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Trust & Reliability -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/reliability-score</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/reliability-score</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Interactive Tools (link-worthy, high priority) -->
+  <!-- Interactive Tools -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/earnings-calculator</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/earnings-calculator</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/cost-estimator</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/cost-estimator</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Research & Data -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/cleaning-industry-stats</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/cleaning-industry-stats</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>quarterly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Free Resources -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/checklists</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/checklists</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- GEO / AI Summary -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/ai-summary</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/ai-summary</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Support -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/help</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/help</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Legal & Policies -->
   <url>
-    <loc>https://pure-task-trust.lovable.app/legal</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/legal</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pure-task-trust.lovable.app/cancellation-policy</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://puretask.co/cancellation-policy</loc>
+    <lastmod>2026-03-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
