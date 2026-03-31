@@ -194,21 +194,21 @@ export default function CleanerProfile() {
   useEffect(() => {
     if (!profile) return;
     setHourlyRate(Math.max(hourlyRateRange.min, Math.min(hourlyRateRange.max, profile.hourly_rate_credits || hourlyRateRange.min)));
-    setTravelRadius((profile as any).travel_radius_km || 15);
-    setYearsExperience((profile as any).years_experience || 0);
-    setCleaningTypes((profile as any).cleaning_types || ["basic"]);
-    setSpecialties((profile as any).specialties || []);
-    setLanguages((profile as any).languages || ["English"]);
-    setWorkStyle((profile as any).work_style || []);
-    setPersonality((profile as any).personality || []);
+    setTravelRadius(profile.travel_radius_km || 15);
+    setYearsExperience(profile.years_experience || 0);
+    setCleaningTypes(profile.cleaning_types || ["basic"]);
+    setSpecialties(profile.specialties || []);
+    setLanguages(profile.languages || ["English"]);
+    setWorkStyle(profile.work_style || []);
+    setPersonality(profile.personality || []);
     setSuppliesProvided((profile as any).supplies_provided ?? true);
     setHasVehicle((profile as any).has_vehicle ?? false);
     setPetFriendly((profile as any).pet_friendly ?? false);
 
-    const savedBio = (profile as any).ai_bio || profile.bio || "";
+    const savedBio = profile.ai_bio || profile.bio || "";
     setAiBio(savedBio);
     setBioText(savedBio);
-    setBioScore((profile as any).bio_score || 0);
+    setBioScore(profile.bio_score || 0);
   }, [profile, hourlyRateRange.min, hourlyRateRange.max]);
 
   const generateBio = useCallback(async () => {
@@ -264,25 +264,26 @@ export default function CleanerProfile() {
     if (!profile?.id) return;
     setSaving(true);
     try {
+      const updateData: Record<string, unknown> = {
+        hourly_rate_credits: hourlyRate,
+        travel_radius_km: travelRadius,
+        bio: bioText,
+        ai_bio: aiBio,
+        bio_score: bioScore,
+        years_experience: yearsExperience,
+        cleaning_types: cleaningTypes,
+        specialties,
+        languages,
+        work_style: workStyle,
+        personality,
+        supplies_provided: suppliesProvided,
+        pet_friendly: petFriendly,
+      };
+      if (aiBio) updateData.bio_generated_at = new Date().toISOString();
+
       const { error } = await supabase
         .from("cleaner_profiles")
-        .update({
-          hourly_rate_credits: hourlyRate,
-          travel_radius_km: travelRadius,
-          bio: bioText,
-          ai_bio: aiBio,
-          bio_score: bioScore,
-          years_experience: yearsExperience,
-          cleaning_types: cleaningTypes,
-          specialties,
-          languages,
-          work_style: workStyle,
-          personality,
-          supplies_provided: suppliesProvided,
-          has_vehicle: hasVehicle,
-          pet_friendly: petFriendly,
-          bio_generated_at: aiBio ? new Date().toISOString() : undefined,
-        } as any)
+        .update(updateData as any)
         .eq("id", profile.id);
 
       if (error) throw error;
@@ -374,7 +375,14 @@ export default function CleanerProfile() {
             <CardDescription>Your photo is the first thing clients see — make it count!</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ProfilePhotoUpload userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"} />
+            <ProfilePhotoUpload
+              currentPhotoUrl={profile?.profile_photo_url}
+              userName={`${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || "Cleaner"}
+              onUploadComplete={async (url) => {
+                if (!profile?.id) return;
+                await supabase.from("cleaner_profiles").update({ profile_photo_url: url }).eq("id", profile.id);
+              }}
+            />
             {/* Photo tip */}
             <div className="flex items-start gap-3 p-4 rounded-xl bg-warning/5 border border-warning/30">
               <span className="text-2xl flex-shrink-0 mt-0.5">📸</span>
@@ -389,7 +397,7 @@ export default function CleanerProfile() {
         </Card>
 
         {/* Intro Video */}
-        <IntroVideoUpload cleanerId={profile?.id} />
+        <IntroVideoUpload cleanerId={profile?.id} currentVideoUrl={(profile as any)?.intro_video_url} />
 
 
         {/* Hourly Rate */}
