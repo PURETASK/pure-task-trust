@@ -264,25 +264,26 @@ export default function CleanerProfile() {
     if (!profile?.id) return;
     setSaving(true);
     try {
+      const updateData: Record<string, unknown> = {
+        hourly_rate_credits: hourlyRate,
+        travel_radius_km: travelRadius,
+        bio: bioText,
+        ai_bio: aiBio,
+        bio_score: bioScore,
+        years_experience: yearsExperience,
+        cleaning_types: cleaningTypes,
+        specialties,
+        languages,
+        work_style: workStyle,
+        personality,
+        supplies_provided: suppliesProvided,
+        pet_friendly: petFriendly,
+      };
+      if (aiBio) updateData.bio_generated_at = new Date().toISOString();
+
       const { error } = await supabase
         .from("cleaner_profiles")
-        .update({
-          hourly_rate_credits: hourlyRate,
-          travel_radius_km: travelRadius,
-          bio: bioText,
-          ai_bio: aiBio,
-          bio_score: bioScore,
-          years_experience: yearsExperience,
-          cleaning_types: cleaningTypes,
-          specialties,
-          languages,
-          work_style: workStyle,
-          personality,
-          supplies_provided: suppliesProvided,
-          has_vehicle: hasVehicle,
-          pet_friendly: petFriendly,
-          bio_generated_at: aiBio ? new Date().toISOString() : undefined,
-        } as any)
+        .update(updateData as any)
         .eq("id", profile.id);
 
       if (error) throw error;
