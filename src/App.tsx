@@ -65,7 +65,6 @@ const DeepCleaning = lazy(() => import("./pages/DeepCleaning"));
 const MoveOutCleaning = lazy(() => import("./pages/MoveOutCleaning"));
 const RecurringCleaning = lazy(() => import("./pages/RecurringCleaning"));
 const Notifications = lazy(() => import("./pages/Notifications"));
-const Notifications = lazy(() => import("./pages/Notifications"));
 
 // Cleaner pages
 const CleanerDashboard = lazy(() => import("./pages/cleaner/CleanerDashboard"));
