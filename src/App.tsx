@@ -60,6 +60,11 @@ const CostEstimator = lazy(() => import("./pages/CostEstimator"));
 const CleaningIndustryStats = lazy(() => import("./pages/CleaningIndustryStats"));
 const CleaningChecklists = lazy(() => import("./pages/CleaningChecklists"));
 const AISummary = lazy(() => import("./pages/AISummary"));
+const ResidentialCleaning = lazy(() => import("./pages/ResidentialCleaning"));
+const DeepCleaning = lazy(() => import("./pages/DeepCleaning"));
+const MoveOutCleaning = lazy(() => import("./pages/MoveOutCleaning"));
+const RecurringCleaning = lazy(() => import("./pages/RecurringCleaning"));
+const Notifications = lazy(() => import("./pages/Notifications"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 
 // Cleaner pages
