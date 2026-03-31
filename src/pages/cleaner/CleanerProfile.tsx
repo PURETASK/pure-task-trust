@@ -397,7 +397,7 @@ export default function CleanerProfile() {
         </Card>
 
         {/* Intro Video */}
-        <IntroVideoUpload cleanerId={profile?.id} />
+        <IntroVideoUpload cleanerId={profile?.id} currentVideoUrl={(profile as any)?.intro_video_url} />
 
 
         {/* Hourly Rate */}
