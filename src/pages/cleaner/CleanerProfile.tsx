@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -160,6 +161,7 @@ const LANGUAGE_OPTIONS = [
 
 export default function CleanerProfile() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const { profile } = useCleanerProfile();
   const [saving, setSaving] = useState(false);
   const [generatingBio, setGeneratingBio] = useState(false);
@@ -201,9 +203,9 @@ export default function CleanerProfile() {
     setLanguages(profile.languages || ["English"]);
     setWorkStyle(profile.work_style || []);
     setPersonality(profile.personality || []);
-    setSuppliesProvided((profile as any).supplies_provided ?? true);
-    setHasVehicle((profile as any).has_vehicle ?? false);
-    setPetFriendly((profile as any).pet_friendly ?? false);
+    setSuppliesProvided(profile.supplies_provided ?? true);
+    setHasVehicle(false);
+    setPetFriendly(profile.pet_friendly ?? false);
 
     const savedBio = profile.ai_bio || profile.bio || "";
     setAiBio(savedBio);
@@ -283,10 +285,11 @@ export default function CleanerProfile() {
 
       const { error } = await supabase
         .from("cleaner_profiles")
-        .update(updateData as any)
+        .update(updateData)
         .eq("id", profile.id);
 
       if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
       toast({ title: "Profile saved ✅", description: "Your profile has been updated." });
     } catch {
       toast({ title: "Error saving profile", description: "Please try again.", variant: "destructive" });
@@ -397,7 +400,7 @@ export default function CleanerProfile() {
         </Card>
 
         {/* Intro Video */}
-        <IntroVideoUpload cleanerId={profile?.id} currentVideoUrl={(profile as any)?.intro_video_url} />
+        <IntroVideoUpload cleanerId={profile?.id} currentVideoUrl={profile?.intro_video_url} />
 
 
         {/* Hourly Rate */}

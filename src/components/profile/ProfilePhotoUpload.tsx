@@ -50,6 +50,7 @@ export function ProfilePhotoUpload({
         title: 'Photo uploaded',
         description: 'Your profile photo has been updated.',
       });
+      queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       onUploadComplete?.(url);
       setPreviewUrl(null);
