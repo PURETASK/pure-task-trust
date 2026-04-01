@@ -96,6 +96,15 @@ const clientNavGroups: NavGroup[] = [
     ]
   },
   {
+    group: "Services",
+    items: [
+      { title: "Residential Cleaning", url: "/residential-cleaning", icon: House },
+      { title: "Deep Cleaning", url: "/deep-cleaning", icon: Sparkles },
+      { title: "Move-Out Cleaning", url: "/move-out-cleaning", icon: PackageSearch },
+      { title: "Recurring Cleaning", url: "/recurring-cleaning", icon: Repeat2 },
+    ]
+  },
+  {
     group: "My Bookings",
     items: [
       { title: "Properties", url: "/properties", icon: Building2 },

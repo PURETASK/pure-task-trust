@@ -281,13 +281,13 @@ export default function CleanerProfileView() {
             </div>
 
             {/* Dynamic cleaning types from structured profile */}
-            {((profile as any)?.cleaning_types?.length > 0 || (profile as any)?.specialties?.length > 0) ? (
+            {((profile?.cleaning_types?.length ?? 0) > 0 || (profile?.specialties?.length ?? 0) > 0) ? (
               <div className="space-y-3">
-                {(profile as any)?.cleaning_types?.length > 0 && (
+                {(profile?.cleaning_types?.length ?? 0) > 0 && (
                   <div>
                     <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Cleaning Types</p>
                     <div className="flex flex-wrap gap-2">
-                      {((profile as any).cleaning_types as string[]).map((t: string) => (
+                      {profile!.cleaning_types!.map((t) => (
                         <Badge key={t} variant="outline" className="gap-1.5 px-3 py-1 rounded-xl font-medium text-xs border bg-success/10 text-success border-success/30 capitalize">
                           {t.replace(/_/g, " ")}
                         </Badge>
@@ -295,11 +295,11 @@ export default function CleanerProfileView() {
                     </div>
                   </div>
                 )}
-                {(profile as any)?.specialties?.length > 0 && (
+                {(profile?.specialties?.length ?? 0) > 0 && (
                   <div>
                     <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Specialties</p>
                     <div className="flex flex-wrap gap-2">
-                      {((profile as any).specialties as string[]).map((s: string) => (
+                      {profile!.specialties!.map((s) => (
                         <Badge key={s} variant="outline" className="gap-1.5 px-3 py-1 rounded-xl font-medium text-xs border bg-warning/10 text-warning border-warning/30 capitalize">
                           {s}
                         </Badge>
@@ -308,10 +308,9 @@ export default function CleanerProfileView() {
                   </div>
                 )}
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {(profile as any)?.pet_friendly && <Badge variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-success/10 text-success border-success/30"><Dog className="h-3 w-3" />Pet Friendly</Badge>}
-                  {(profile as any)?.supplies_provided && <Badge variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-primary/10 text-primary border-primary/30"><Package className="h-3 w-3" />Own Supplies</Badge>}
-                  {(profile as any)?.has_vehicle && <Badge variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-muted text-muted-foreground border-border/50">🚗 Has Vehicle</Badge>}
-                  {(profile as any)?.languages?.length > 0 && ((profile as any).languages as string[]).map((l: string) => (
+                  {profile?.pet_friendly && <Badge variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-success/10 text-success border-success/30"><Dog className="h-3 w-3" />Pet Friendly</Badge>}
+                  {profile?.supplies_provided && <Badge variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-primary/10 text-primary border-primary/30"><Package className="h-3 w-3" />Own Supplies</Badge>}
+                  {(profile?.languages?.length ?? 0) > 0 && profile!.languages!.map((l) => (
                     <Badge key={l} variant="outline" className="gap-1.5 px-3 py-1 rounded-xl text-xs border bg-[hsl(var(--pt-purple)/0.1)] text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple)/0.3)]">
                       💬 {l}
                     </Badge>
