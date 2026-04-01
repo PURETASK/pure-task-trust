@@ -160,6 +160,7 @@ const LANGUAGE_OPTIONS = [
 
 export default function CleanerProfile() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const { profile } = useCleanerProfile();
   const [saving, setSaving] = useState(false);
   const [generatingBio, setGeneratingBio] = useState(false);
