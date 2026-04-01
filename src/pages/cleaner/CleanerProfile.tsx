@@ -201,9 +201,9 @@ export default function CleanerProfile() {
     setLanguages(profile.languages || ["English"]);
     setWorkStyle(profile.work_style || []);
     setPersonality(profile.personality || []);
-    setSuppliesProvided((profile as any).supplies_provided ?? true);
-    setHasVehicle((profile as any).has_vehicle ?? false);
-    setPetFriendly((profile as any).pet_friendly ?? false);
+    setSuppliesProvided(profile.supplies_provided ?? true);
+    setHasVehicle(false);
+    setPetFriendly(profile.pet_friendly ?? false);
 
     const savedBio = profile.ai_bio || profile.bio || "";
     setAiBio(savedBio);
