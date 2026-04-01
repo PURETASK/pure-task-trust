@@ -60,6 +60,15 @@ const guestNavGroups: NavGroup[] = [
     ]
   },
   {
+    group: "Services",
+    items: [
+      { title: "Residential Cleaning", url: "/residential-cleaning", icon: House },
+      { title: "Deep Cleaning", url: "/deep-cleaning", icon: Sparkles },
+      { title: "Move-Out Cleaning", url: "/move-out-cleaning", icon: PackageSearch },
+      { title: "Recurring Cleaning", url: "/recurring-cleaning", icon: Repeat2 },
+    ]
+  },
+  {
     group: "Resources",
     items: [
       { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
@@ -84,6 +93,15 @@ const clientNavGroups: NavGroup[] = [
       { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
       { title: "Find Cleaners", url: "/discover", icon: SearchCheck },
       { title: "Book Cleaning", url: "/book", icon: Sparkles, badge: "Book" },
+    ]
+  },
+  {
+    group: "Services",
+    items: [
+      { title: "Residential Cleaning", url: "/residential-cleaning", icon: House },
+      { title: "Deep Cleaning", url: "/deep-cleaning", icon: Sparkles },
+      { title: "Move-Out Cleaning", url: "/move-out-cleaning", icon: PackageSearch },
+      { title: "Recurring Cleaning", url: "/recurring-cleaning", icon: Repeat2 },
     ]
   },
   {
