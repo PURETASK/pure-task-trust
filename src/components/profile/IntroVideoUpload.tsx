@@ -49,7 +49,7 @@ export function IntroVideoUpload({ cleanerId, currentVideoUrl }: IntroVideoUploa
       if (cleanerId) {
         await supabase
           .from("cleaner_profiles")
-          .update({ intro_video_url: publicUrl } as any)
+          .update({ intro_video_url: publicUrl })
           .eq("id", cleanerId);
       }
 
