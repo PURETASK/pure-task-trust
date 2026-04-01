@@ -283,10 +283,11 @@ export default function CleanerProfile() {
 
       const { error } = await supabase
         .from("cleaner_profiles")
-        .update(updateData as any)
+        .update(updateData)
         .eq("id", profile.id);
 
       if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ['cleaner-profile'] });
       toast({ title: "Profile saved ✅", description: "Your profile has been updated." });
     } catch {
       toast({ title: "Error saving profile", description: "Please try again.", variant: "destructive" });
