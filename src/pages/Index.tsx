@@ -311,14 +311,20 @@ export default function Index() {
               whileHover={{ y: -4 }}>
               
                 <Card
-                  className="h-full transition-all duration-300"
+                  className="h-full transition-all duration-300 overflow-hidden relative"
                   style={{
                     border: `2px solid ${p.borderColor}`,
                     borderRadius: '1rem',
                     boxShadow: `0 4px 24px 0 ${p.shadowColor}, 0 1.5px 6px 0 ${p.shadowColor}`,
                   }}
                 >
-                  <CardContent className="p-5 sm:p-8">
+                  <img
+                    src={p.bgImage}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
+                  />
+                  <CardContent className="p-5 sm:p-8 relative z-10">
                     <div
                       className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}
                       style={{ border: `1px solid ${p.borderColor}`, borderRadius: '0.875rem' }}
