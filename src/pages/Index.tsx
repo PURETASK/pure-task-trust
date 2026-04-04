@@ -11,6 +11,10 @@ import { LiveActivityStrip } from "@/components/home/LiveActivityStrip";
 import heroImg from "@/assets/hero-landing.jpg";
 import cleanerImg from "@/assets/cleaner-hero.jpg";
 import clientImg from "@/assets/client-hero.jpg";
+import trustBgCheck from "@/assets/trust-bg-background-check.jpg";
+import trustBgPhoto from "@/assets/trust-bg-photo-docs.jpg";
+import trustBgGps from "@/assets/trust-bg-gps.jpg";
+import trustBgEscrow from "@/assets/trust-bg-escrow.jpg";
 import {
   Shield, Star, Camera, MapPin, Clock, CreditCard, ArrowRight,
   CheckCircle, Sparkles, Users, TrendingUp, Heart, Repeat, Zap,
@@ -19,10 +23,10 @@ import {
 import { useRef } from "react";
 
 const TRUST_PILLARS = [
-{ icon: Shield, title: "Background Checked", desc: "Every cleaner undergoes a comprehensive third-party background check — including criminal history, identity verification, and sex offender registry screening — before their first job. Checks are renewed annually.", color: "text-primary", bg: "bg-primary/10", borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.2)" },
-{ icon: Camera, title: "Photo Documentation", desc: "Cleaners take timestamped before-and-after photos of every room. Photos upload to your private job record so you can verify quality from anywhere. Only you and your cleaner can see them.", color: "text-success", bg: "bg-success/10", borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.2)" },
-{ icon: MapPin, title: "GPS Verified", desc: "Cleaners check in and out via GPS on arrival and departure. You get a timestamped notification with their exact location — so you always know when work starts and ends, even if you're not home.", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]", borderColor: "hsl(var(--pt-purple))", shadowColor: "hsl(var(--pt-purple) / 0.2)" },
-{ icon: Lock, title: "Escrow Protection", desc: "Credits are placed on hold when you book — not charged. After the job, you have a 24-hour review window to inspect photos and approve. Credits release only when you say so. Problems? Open a dispute and your funds stay protected.", color: "text-warning", bg: "bg-warning/10", borderColor: "hsl(var(--warning))", shadowColor: "hsl(var(--warning) / 0.2)" }];
+{ icon: Shield, title: "Background Checked", desc: "Every cleaner undergoes a comprehensive third-party background check — including criminal history, identity verification, and sex offender registry screening — before their first job. Checks are renewed annually.", color: "text-primary", bg: "bg-primary/10", borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.2)", bgImage: trustBgCheck },
+{ icon: Camera, title: "Photo Documentation", desc: "Cleaners take timestamped before-and-after photos of every room. Photos upload to your private job record so you can verify quality from anywhere. Only you and your cleaner can see them.", color: "text-success", bg: "bg-success/10", borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.2)", bgImage: trustBgPhoto },
+{ icon: MapPin, title: "GPS Verified", desc: "Cleaners check in and out via GPS on arrival and departure. You get a timestamped notification with their exact location — so you always know when work starts and ends, even if you're not home.", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]", borderColor: "hsl(var(--pt-purple))", shadowColor: "hsl(var(--pt-purple) / 0.2)", bgImage: trustBgGps },
+{ icon: Lock, title: "Escrow Protection", desc: "Credits are placed on hold when you book — not charged. After the job, you have a 24-hour review window to inspect photos and approve. Credits release only when you say so. Problems? Open a dispute and your funds stay protected.", color: "text-warning", bg: "bg-warning/10", borderColor: "hsl(var(--warning))", shadowColor: "hsl(var(--warning) / 0.2)", bgImage: trustBgEscrow }];
 
 
 const AUDIENCE = [
@@ -307,14 +311,20 @@ export default function Index() {
               whileHover={{ y: -4 }}>
               
                 <Card
-                  className="h-full transition-all duration-300"
+                  className="h-full transition-all duration-300 overflow-hidden relative"
                   style={{
                     border: `2px solid ${p.borderColor}`,
                     borderRadius: '1rem',
                     boxShadow: `0 4px 24px 0 ${p.shadowColor}, 0 1.5px 6px 0 ${p.shadowColor}`,
                   }}
                 >
-                  <CardContent className="p-5 sm:p-8">
+                  <img
+                    src={p.bgImage}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
+                  />
+                  <CardContent className="p-5 sm:p-8 relative z-10">
                     <div
                       className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}
                       style={{ border: `1px solid ${p.borderColor}`, borderRadius: '0.875rem' }}
