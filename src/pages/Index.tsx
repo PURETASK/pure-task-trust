@@ -322,7 +322,7 @@ export default function Index() {
                     src={p.bgImage}
                     alt=""
                     loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
+                    className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none"
                   />
                   <CardContent className="p-5 sm:p-8 relative z-10">
                     <div
