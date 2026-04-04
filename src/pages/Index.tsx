@@ -11,6 +11,10 @@ import { LiveActivityStrip } from "@/components/home/LiveActivityStrip";
 import heroImg from "@/assets/hero-landing.jpg";
 import cleanerImg from "@/assets/cleaner-hero.jpg";
 import clientImg from "@/assets/client-hero.jpg";
+import trustBgCheck from "@/assets/trust-bg-background-check.jpg";
+import trustBgPhoto from "@/assets/trust-bg-photo-docs.jpg";
+import trustBgGps from "@/assets/trust-bg-gps.jpg";
+import trustBgEscrow from "@/assets/trust-bg-escrow.jpg";
 import {
   Shield, Star, Camera, MapPin, Clock, CreditCard, ArrowRight,
   CheckCircle, Sparkles, Users, TrendingUp, Heart, Repeat, Zap,
