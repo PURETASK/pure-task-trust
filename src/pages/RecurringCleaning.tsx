@@ -24,8 +24,12 @@ export default function RecurringCleaning() {
         keywords="recurring cleaning, weekly cleaning service, bi-weekly cleaning, monthly cleaning, regular house cleaning, cleaning subscription"
       />
 
-      <section className="py-20 sm:py-28 bg-gradient-to-br from-success/5 via-background to-background">
-        <div className="container text-center">
+      <section className="relative py-20 sm:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroRecurring} alt="Cozy home with recurring cleaning schedule" className="w-full h-full object-cover" loading="eager" width={1920} height={1080} />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/50" />
+        </div>
+        <div className="container text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <Badge className="mb-4 bg-success/10 text-success border-success/20">Recurring Plans</Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5">

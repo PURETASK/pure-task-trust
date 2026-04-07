@@ -39,8 +39,12 @@ export default function ResidentialCleaning() {
       />
 
       {/* Hero */}
-      <section className="py-20 sm:py-28 bg-gradient-to-br from-primary/5 via-background to-background">
-        <div className="container text-center">
+      <section className="relative py-20 sm:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroResidential} alt="Clean modern living room" className="w-full h-full object-cover" loading="eager" width={1920} height={1080} />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/50" />
+        </div>
+        <div className="container text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Residential Cleaning</Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5 leading-tight">
