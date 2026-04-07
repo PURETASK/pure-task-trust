@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff, Calendar, MapPin, CreditCard, ExternalLink, Wallet } from "lucide-react";
+import heroBooking from "@/assets/hero-booking.jpg";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -237,9 +238,20 @@ export default function Book() {
     return missing;
   };
   return (
-    <main className="flex-1 py-6 sm:py-12">
+    <main className="flex-1 py-0">
       <Helmet><title>Book a Cleaning Service | PureTask</title></Helmet>
-      <div className="container px-4 sm:px-6 max-w-2xl">
+      {/* Hero banner */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-background border-b-2 border-border/50">
+        <div className="absolute inset-0 opacity-20">
+          <img src={heroBooking} alt="" className="w-full h-full object-cover" loading="eager" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/80" />
+        <div className="relative container px-4 sm:px-6 pt-8 pb-4 text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1">Book a Cleaning</h1>
+          <p className="text-muted-foreground text-sm">Verified cleaners · GPS tracked · Photo proof</p>
+        </div>
+      </div>
+      <div className="container px-4 sm:px-6 max-w-2xl py-6 sm:py-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -788,6 +800,7 @@ export default function Book() {
           </>}
           </motion.div>
         </div>
+      </div>
     </main>
   );
 }
