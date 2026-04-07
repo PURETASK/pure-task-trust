@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff, Calendar, MapPin, CreditCard, ExternalLink, Wallet } from "lucide-react";
+import heroBooking from "@/assets/hero-booking.jpg";
 import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
