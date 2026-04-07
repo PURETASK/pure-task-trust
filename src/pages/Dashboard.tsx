@@ -82,7 +82,7 @@ export default function Dashboard() {
 
       {/* ── HERO BANNER ──────────────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/12 via-background to-[hsl(var(--pt-aqua)/0.06)] border-b-2 border-border/50">
-        <div className="absolute inset-0 opacity-[0.03]">
+        <div className="absolute inset-0 opacity-20">
           <img src={clientHeroImg} alt="" className="w-full h-full object-cover" loading="lazy" />
         </div>
         {/* Glow orbs */}
