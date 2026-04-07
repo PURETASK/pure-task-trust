@@ -800,6 +800,7 @@ export default function Book() {
           </>}
           </motion.div>
         </div>
+      </div>
     </main>
   );
 }
