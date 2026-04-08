@@ -17,6 +17,8 @@ export interface CleanerListing {
   tier: string;
   backgroundCheckStatus: string | null;
   verified: boolean;
+  profilePhotoUrl: string | null;
+  professionalHeadline: string | null;
   // Computed fields
   services: string[];
   distance?: string;
@@ -46,21 +48,22 @@ export function useCleaners(options: UseCleanersOptions = {}) {
     queryKey: ['cleaners', options],
     queryFn: async (): Promise<CleanerListing[]> => {
       let query = supabase
-        .from('cleaner_profiles')
+        .from('cleaner_public_profiles')
         .select(`
           id,
           user_id,
           first_name,
           last_name,
           bio,
+          professional_headline,
+          profile_photo_url,
           hourly_rate_credits,
           avg_rating,
           reliability_score,
           jobs_completed,
           travel_radius_km,
           is_available,
-          tier,
-          background_check_status
+          tier
         `)
         .order('avg_rating', { ascending: false, nullsFirst: false });
 
@@ -81,10 +84,6 @@ export function useCleaners(options: UseCleanersOptions = {}) {
         query = query.gte('hourly_rate_credits', minRate);
       }
 
-      if (onlyVerified) {
-        query = query.eq('background_check_status', 'completed');
-      }
-
       const { data, error } = await query;
 
       if (error) throw error;
@@ -96,8 +95,8 @@ export function useCleaners(options: UseCleanersOptions = {}) {
         const name = `${firstName} ${lastName}`.trim() || 'Unnamed Cleaner';
         
         return {
-          id: cleaner.id,
-          userId: cleaner.user_id,
+          id: cleaner.id!,
+          userId: cleaner.user_id!,
           firstName: cleaner.first_name,
           lastName: cleaner.last_name,
           name,
@@ -109,8 +108,10 @@ export function useCleaners(options: UseCleanersOptions = {}) {
           travelRadius: cleaner.travel_radius_km,
           isAvailable: cleaner.is_available ?? true,
           tier: cleaner.tier || 'standard',
-          backgroundCheckStatus: cleaner.background_check_status,
-          verified: cleaner.background_check_status === 'completed',
+          backgroundCheckStatus: null, // not exposed in public view
+          verified: false, // not available in public view
+          profilePhotoUrl: cleaner.profile_photo_url,
+          professionalHeadline: cleaner.professional_headline,
           services: getServicesFromTier(cleaner.tier || 'standard'),
           distance: cleaner.travel_radius_km ? `${cleaner.travel_radius_km} km radius` : undefined,
         };
@@ -118,22 +119,25 @@ export function useCleaners(options: UseCleanersOptions = {}) {
 
       // Client-side search filter
       if (searchQuery) {
-        const query = searchQuery.toLowerCase();
+        const q = searchQuery.toLowerCase();
         cleaners = cleaners.filter(
           (c) =>
-            c.name.toLowerCase().includes(query) ||
-            c.bio?.toLowerCase().includes(query) ||
-            c.services.some((s) => s.toLowerCase().includes(query))
+            c.name.toLowerCase().includes(q) ||
+            c.bio?.toLowerCase().includes(q) ||
+            c.services.some((s) => s.toLowerCase().includes(q))
         );
       }
 
+      // Client-side verified filter (not available in public view)
+      // onlyVerified filter is a no-op on the public view since background_check_status isn't exposed
+
       return cleaners;
     },
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    staleTime: 1000 * 60 * 2,
   });
 }
 
-// Helper to derive services from tier (can be enhanced with cleaner_preferences later)
+// Helper to derive services from tier
 function getServicesFromTier(tier: string): string[] {
   const baseServices = ['Standard Clean'];
   
@@ -154,21 +158,22 @@ export function useCleaner(cleanerId: string) {
       if (!cleanerId) return null;
       
       const { data, error } = await supabase
-        .from('cleaner_profiles')
+        .from('cleaner_public_profiles')
         .select(`
           id,
           user_id,
           first_name,
           last_name,
           bio,
+          professional_headline,
+          profile_photo_url,
           hourly_rate_credits,
           avg_rating,
           reliability_score,
           jobs_completed,
           travel_radius_km,
           is_available,
-          tier,
-          background_check_status
+          tier
         `)
         .eq('id', cleanerId)
         .maybeSingle();
@@ -181,8 +186,8 @@ export function useCleaner(cleanerId: string) {
       const name = `${firstName} ${lastName}`.trim() || 'Unnamed Cleaner';
 
       return {
-        id: data.id,
-        userId: data.user_id,
+        id: data.id!,
+        userId: data.user_id!,
         firstName: data.first_name,
         lastName: data.last_name,
         name,
@@ -194,13 +199,15 @@ export function useCleaner(cleanerId: string) {
         travelRadius: data.travel_radius_km,
         isAvailable: data.is_available ?? true,
         tier: data.tier || 'standard',
-        backgroundCheckStatus: data.background_check_status,
-        verified: data.background_check_status === 'completed',
+        backgroundCheckStatus: null,
+        verified: false,
+        profilePhotoUrl: data.profile_photo_url,
+        professionalHeadline: data.professional_headline,
         services: getServicesFromTier(data.tier || 'standard'),
         distance: data.travel_radius_km ? `${data.travel_radius_km} km radius` : undefined,
       };
     },
     enabled: !!cleanerId,
-    staleTime: 1000 * 60 * 5, // 5 minutes - profile data doesn't change frequently
+    staleTime: 1000 * 60 * 5,
   });
 }
