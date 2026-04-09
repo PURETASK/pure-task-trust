@@ -9,8 +9,8 @@ import {
   User, Briefcase, Mail, Lock, ArrowRight, Loader2,
   Gift, Sparkles, CheckCircle, Eye, EyeOff, Shield, Star, Camera
 } from "lucide-react";
+import { toast } from "@/components/ui/sonner";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
