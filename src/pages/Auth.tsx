@@ -41,7 +41,6 @@ export default function AuthPage() {
   const [signupEmail, setSignupEmail] = useState("");
 
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
 
