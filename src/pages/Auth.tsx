@@ -59,12 +59,12 @@ export default function AuthPage() {
     try {
       if (isSignUp) {
         if (!role) {
-          toast({ title: "Select a role first", variant: "destructive" });
+          toast.error("Select a role first");
           return;
         }
         const result = await signup(email, password, role, fullName);
         if (result.error) {
-          toast({ title: "Sign up failed", description: result.error, variant: "destructive" });
+          toast.error(`Sign up failed: ${result.error}`);
         } else {
           if (referralCode) {
             const { data: { user: newUser } } = await supabase.auth.getUser();
@@ -76,7 +76,7 @@ export default function AuthPage() {
       } else {
         const result = await login(email, password);
         if (result.error) {
-          toast({ title: "Sign in failed", description: result.error, variant: "destructive" });
+          toast.error(`Sign in failed: ${result.error}`);
         }
         // Navigation is handled by the useEffect watching isAuthenticated + user
       }
@@ -87,13 +87,13 @@ export default function AuthPage() {
 
   const handleGoogleLogin = async () => {
     if (isSignUp && !role) {
-      toast({ title: "Select a role first", variant: "destructive" });
+      toast.error("Select a role first");
       return;
     }
     setIsSubmitting(true);
     try {
       const result = await loginWithGoogle(isSignUp ? role : undefined);
-      if (result.error) toast({ title: "Google Sign-In Failed", description: result.error, variant: "destructive" });
+      if (result.error) toast.error(`Google Sign-In Failed: ${result.error}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +101,7 @@ export default function AuthPage() {
 
   const handleAppleLogin = async () => {
     if (isSignUp && !role) {
-      toast({ title: "Select a role first", variant: "destructive" });
+      toast.error("Select a role first");
       return;
     }
     setIsSubmitting(true);
@@ -109,7 +109,7 @@ export default function AuthPage() {
       const result = await lovable.auth.signInWithOAuth("apple", {
         redirect_uri: window.location.origin,
       });
-      if (result.error) toast({ title: "Apple Sign-In Failed", description: String(result.error), variant: "destructive" });
+      if (result.error) toast.error(`Apple Sign-In Failed: ${String(result.error)}`);
     } finally {
       setIsSubmitting(false);
     }
