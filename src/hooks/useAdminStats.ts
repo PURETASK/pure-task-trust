@@ -197,16 +197,29 @@ export function useAdminGrowthStats() {
         weeklyAcq.push({ week: `W${4 - i}`, organic: Math.max(0, wClients - wReferrals), referral: wReferrals, total: wClients });
       }
 
-      // Funnel
-      const totalVisitors = 0; // Analytics events if tracked
+      // Funnel — use real data
       const totalSignups = clients.data?.length || 0;
-      const totalJobs = (await supabase.from('jobs').select('client_id', { count: 'exact' }).not('client_id', 'is', null)).count || 0;
-      const repeatClients = clients.data?.length || 0;
+
+      // Clients who have at least one job
+      const { data: clientsWithJobs } = await supabase
+        .from('jobs')
+        .select('client_id')
+        .not('client_id', 'is', null)
+        .not('status', 'eq', 'cancelled');
+
+      const uniqueBookers = new Set((clientsWithJobs || []).map(j => j.client_id)).size;
+
+      // Clients with 2+ jobs (repeat customers)
+      const clientJobCounts: Record<string, number> = {};
+      (clientsWithJobs || []).forEach(j => {
+        if (j.client_id) clientJobCounts[j.client_id] = (clientJobCounts[j.client_id] || 0) + 1;
+      });
+      const repeatCustomers = Object.values(clientJobCounts).filter(c => c >= 2).length;
 
       const funnelData = [
         { stage: 'Registered Clients', count: totalSignups },
-        { stage: 'Made First Booking', count: Math.round(totalSignups * 0.6) },
-        { stage: 'Repeat Customer', count: Math.round(totalSignups * 0.3) },
+        { stage: 'Made First Booking', count: uniqueBookers },
+        { stage: 'Repeat Customer', count: repeatCustomers },
         { stage: 'Active Subscriber', count: subscriptions.data?.filter(s => s.status === 'active').length || 0 },
       ];
 
