@@ -46,7 +46,8 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {
-      navigate(user.role === "cleaner" ? "/cleaner/dashboard" : "/dashboard", { replace: true });
+      const dest = user.role === "admin" ? "/admin/hub" : user.role === "cleaner" ? "/cleaner/dashboard" : "/dashboard";
+      navigate(dest, { replace: true });
     }
   }, [isAuthenticated, user, isLoading, navigate]);
 
