@@ -38,25 +38,57 @@ const AdminGeoInsights = () => {
           .limit(200),
       ]);
 
-      const demandPoints = (jobs.data || [])
-        .map(() => ({
-          lat: 40.7128 + (Math.random() - 0.5) * 0.2,
-          lng: -74.006 + (Math.random() - 0.5) * 0.3,
-          weight: 1,
-        }));
+      // Get real job addresses for demand points
+      const jobIds = (jobs.data || []).map(j => j.id);
+      const { data: jobAddresses } = await supabase
+        .from("addresses")
+        .select("lat, lng, city")
+        .not("lat", "is", null)
+        .not("lng", "is", null)
+        .limit(500);
+
+      const demandPoints = (jobAddresses || [])
+        .filter(a => a.lat && a.lng)
+        .map(a => ({ lat: a.lat!, lng: a.lng!, weight: 1 }));
 
       const supplyPoints = (cleaners.data || [])
         .filter(c => c.latitude && c.longitude)
         .map(c => ({ lat: c.latitude!, lng: c.longitude!, name: c.first_name || "Cleaner", available: c.is_available }));
 
-      // Gap score: areas with high demand but low supply (simplified)
-      const gapAreas = [
-        { area: "Downtown Core", demandScore: 87, supplyScore: 34, gap: 53 },
-        { area: "East Side", demandScore: 72, supplyScore: 28, gap: 44 },
-        { area: "North Heights", demandScore: 65, supplyScore: 30, gap: 35 },
-        { area: "West Village", demandScore: 58, supplyScore: 40, gap: 18 },
-        { area: "Midtown", demandScore: 45, supplyScore: 38, gap: 7 },
-      ].sort((a, b) => b.gap - a.gap);
+      // Compute gap scores by grouping into geographic cells
+      const cellSize = 0.05; // ~5km grid cells
+      const demandCells: Record<string, { lat: number; lng: number; demand: number; supply: number; city: string }> = {};
+
+      demandPoints.forEach(p => {
+        const key = `${Math.round(p.lat / cellSize)}_${Math.round(p.lng / cellSize)}`;
+        if (!demandCells[key]) demandCells[key] = { lat: Math.round(p.lat / cellSize) * cellSize, lng: Math.round(p.lng / cellSize) * cellSize, demand: 0, supply: 0, city: `Area ${key}` };
+        demandCells[key].demand++;
+      });
+
+      // Match city names from addresses
+      (jobAddresses || []).forEach(a => {
+        if (!a.lat || !a.lng || !a.city) return;
+        const key = `${Math.round(a.lat / cellSize)}_${Math.round(a.lng / cellSize)}`;
+        if (demandCells[key]) demandCells[key].city = a.city;
+      });
+
+      supplyPoints.forEach(p => {
+        const key = `${Math.round(p.lat / cellSize)}_${Math.round(p.lng / cellSize)}`;
+        if (demandCells[key]) demandCells[key].supply++;
+      });
+
+      const maxDemand = Math.max(1, ...Object.values(demandCells).map(c => c.demand));
+      const maxSupply = Math.max(1, ...Object.values(demandCells).map(c => c.supply));
+
+      const gapAreas = Object.values(demandCells)
+        .map(cell => {
+          const demandScore = Math.round((cell.demand / maxDemand) * 100);
+          const supplyScore = Math.round((cell.supply / maxSupply) * 100);
+          return { area: cell.city, demandScore, supplyScore, gap: Math.max(0, demandScore - supplyScore) };
+        })
+        .filter(g => g.demandScore > 10)
+        .sort((a, b) => b.gap - a.gap)
+        .slice(0, 8);
 
       return { demandPoints, supplyPoints, gapAreas, totalJobs: jobs.data?.length || 0, totalCleaners: cleaners.data?.length || 0 };
     },
