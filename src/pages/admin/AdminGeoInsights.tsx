@@ -98,7 +98,7 @@ const AdminGeoInsights = () => {
   // Init map
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    const map = L.map(containerRef.current).setView([40.7128, -74.006], 11);
+    const map = L.map(containerRef.current).setView([39.8283, -98.5795], 4); // US center, will auto-fit
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
@@ -111,11 +111,13 @@ const AdminGeoInsights = () => {
   useEffect(() => {
     if (!mapRef.current || !circleLayerRef.current || !data) return;
     circleLayerRef.current.clearLayers();
+    const allPoints: L.LatLng[] = [];
 
     if (layer === "demand" || layer === "both") {
-      data.demandPoints.slice(0, 100).forEach((p) => {
+      data.demandPoints.slice(0, 200).forEach((p) => {
         L.circleMarker([p.lat, p.lng], { radius: 6, color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.5, weight: 1 })
           .addTo(circleLayerRef.current!);
+        allPoints.push(L.latLng(p.lat, p.lng));
       });
     }
     if (layer === "supply" || layer === "both") {
@@ -124,7 +126,14 @@ const AdminGeoInsights = () => {
         L.circleMarker([p.lat, p.lng], { radius: 8, color, fillColor: color, fillOpacity: 0.7, weight: 2 })
           .bindTooltip(p.name)
           .addTo(circleLayerRef.current!);
+        allPoints.push(L.latLng(p.lat, p.lng));
       });
+    }
+
+    // Auto-fit map to data points
+    if (allPoints.length > 0) {
+      const bounds = L.latLngBounds(allPoints);
+      mapRef.current.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
     }
   }, [data, layer]);
 
