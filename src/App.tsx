@@ -12,6 +12,7 @@ import { ExitIntentPopup } from "@/components/conversion";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePostSignup } from "@/hooks/usePostSignup";
+import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 
 // Eagerly load the most critical pages
@@ -139,9 +140,10 @@ function PageLoader() {
   );
 }
 
-// Thin component so usePostSignup runs inside AuthProvider
+// Thin component so usePostSignup and useCleaningRequestSync run inside AuthProvider
 function PostSignupRunner() {
   usePostSignup();
+  useCleaningRequestSync();
   return null;
 }
 
