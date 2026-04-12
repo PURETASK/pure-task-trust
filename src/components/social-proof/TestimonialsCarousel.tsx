@@ -97,6 +97,7 @@ export function TestimonialsCarousel() {
                     quote={testimonial.quote}
                     rating={testimonial.rating}
                     avatarUrl={testimonial.avatar_url}
+                    colorIndex={index}
                   />
                 </CarouselItem>
               ))}
