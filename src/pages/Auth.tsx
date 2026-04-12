@@ -183,17 +183,6 @@ export default function AuthPage() {
         <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
           <img src="/images/auth-bg.png" alt="PureTask Spring Cleaning" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/10 to-background/40" />
-          <div className="absolute bottom-12 left-12 right-12">
-            <div className="bg-background/80 backdrop-blur-md rounded-2xl p-6 border border-border/50">
-              <p className="text-lg font-bold mb-3">Trusted by thousands</p>
-              {TRUST_POINTS.map((p, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground mb-1.5">
-                  <p.icon className="h-4 w-4 text-primary flex-shrink-0" />
-                  {p.text}
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Right: role select */}
@@ -286,20 +275,6 @@ export default function AuthPage() {
             </div>
             <span className="font-bold text-lg">PureTask</span>
           </Link>
-        </div>
-        <div className="absolute bottom-12 left-12 right-12">
-          <div className="bg-background/80 backdrop-blur-md rounded-2xl p-6 border border-border/50 shadow-elevated">
-            <p className="font-bold mb-3">{role === "cleaner" ? "Why cleaners love PureTask" : "Why clients love PureTask"}</p>
-            {(role === "cleaner"
-              ? ["Set your own hourly rate", "Weekly or instant payouts", "Build your reputation & tier"]
-              : ["Verified, background-checked cleaners", "GPS tracking & photo proof", "Pay only when you approve"]
-            ).map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground mb-1.5">
-                <CheckCircle className="h-4 w-4 text-success flex-shrink-0" />
-                {item}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
