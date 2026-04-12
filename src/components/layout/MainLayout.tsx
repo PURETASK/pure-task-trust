@@ -75,11 +75,15 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-hidden">
+        {/* Skip to main content — WCAG 2.4.1 */}
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-semibold">
+          Skip to main content
+        </a>
         <AppSidebar />
 
         <div className="flex-1 flex flex-col min-h-dvh min-w-0">
           {/* ── HEADER ───────────────────────────────────────────────────── */}
-          <header className={cn(
+          <header role="banner" className={cn(
             "sticky top-0 z-40 h-12 sm:h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-safe",
             headerAccentClass
           )}>
@@ -225,7 +229,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </header>
 
           {/* ── MAIN CONTENT ─────────────────────────────────────────────── */}
-          <main className="flex-1 overflow-x-hidden min-w-0 pb-14 md:pb-0">
+          <main id="main-content" role="main" className="flex-1 overflow-x-hidden min-w-0 pb-14 md:pb-0">
             <PageTransition>{children ?? <Outlet />}</PageTransition>
           </main>
 
