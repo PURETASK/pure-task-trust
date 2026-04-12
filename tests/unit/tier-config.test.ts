@@ -188,12 +188,12 @@ describe('tier-config utilities', () => {
       expect(getPlatformFee('bronze')).toBe(20);
     });
 
-    it('returns 18% for silver', () => {
-      expect(getPlatformFee('silver')).toBe(18);
+    it('returns 22% for silver', () => {
+      expect(getPlatformFee('silver')).toBe(22);
     });
 
-    it('returns 17% for gold', () => {
-      expect(getPlatformFee('gold')).toBe(17);
+    it('returns 18% for gold', () => {
+      expect(getPlatformFee('gold')).toBe(18);
     });
 
     it('returns 15% for platinum', () => {
