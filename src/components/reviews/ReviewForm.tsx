@@ -35,7 +35,7 @@ function StarRow({ value, hover, onChange, onHover, onLeave }: {
           onMouseLeave={onLeave}
           className="p-0.5 transition-transform hover:scale-110"
         >
-          <Star className={cn('h-7 w-7 transition-colors', (hover || value) >= star ? 'fill-warning text-warning' : 'text-border')} />
+          <Star className={cn('h-8 w-8 transition-colors drop-shadow-sm stroke-[1.5]', (hover || value) >= star ? 'fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)]' : 'text-border')} />
         </button>
       ))}
     </div>
