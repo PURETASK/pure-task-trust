@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRateLimiter } from "@/hooks/useRateLimiter";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +44,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
+  const { checkLimit, isLocked, remainingSeconds } = useRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 30_000 });
 
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {
@@ -55,6 +57,10 @@ export default function AuthPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!checkLimit()) {
+      toast.error(`Too many attempts. Please wait ${remainingSeconds} seconds.`);
+      return;
+    }
     setIsSubmitting(true);
     try {
       if (isSignUp) {
