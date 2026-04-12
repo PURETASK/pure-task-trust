@@ -476,8 +476,8 @@ describe('Job Lifecycle Integration', () => {
         .single();
 
       expect(earnings?.gross_credits).toBe(55);
-      expect(earnings?.platform_fee_credits).toBe(11); // 20% of 55
-      expect(earnings?.net_credits).toBe(44); // 55 - 11
+      expect(earnings?.platform_fee_credits).toBe(13); // 25% of 55 (rounded)
+      expect(earnings?.net_credits).toBe(42); // 55 - 13
     });
   });
 
