@@ -98,6 +98,7 @@ export function TestimonialsCarousel() {
                     rating={testimonial.rating}
                     avatarUrl={testimonial.avatar_url}
                     colorIndex={index}
+                    animationKey={current}
                   />
                 </CarouselItem>
               ))}

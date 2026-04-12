@@ -20,11 +20,12 @@ interface TestimonialCardProps {
   avatarUrl?: string | null;
   variant?: "default" | "compact";
   colorIndex?: number;
+  animationKey?: number;
 }
 
 export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
   function TestimonialCard(
-    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default", colorIndex = 0 }: TestimonialCardProps,
+    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default", colorIndex = 0, animationKey = 0 }: TestimonialCardProps,
     _ref
   ) {
     const colors = CARD_COLORS[colorIndex % CARD_COLORS.length];
@@ -41,7 +42,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
           <CardContent className="p-4">
             <div className="flex gap-1 mb-2 justify-center">
               {Array.from({ length: rating }).map((_, i) => (
-                <motion.div key={i} initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: [0, 1.6, 1], opacity: 1 }} viewport={{ once: false, amount: 0.5 }} transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}>
+                <motion.div key={`${animationKey}-${i}`} initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.6, 1], opacity: 1 }} transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}>
                   <Star className="h-5 w-5 fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5] drop-shadow-sm" />
                 </motion.div>
               ))}
@@ -69,10 +70,9 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
           <div className="flex gap-1.5 mb-4 justify-center">
             {Array.from({ length: 5 }).map((_, i) => (
               <motion.div
-                key={i}
+                key={`${animationKey}-${i}`}
                 initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: [0, 1.6, 1], opacity: 1 }}
-                viewport={{ once: false, amount: 0.5 }}
+                animate={{ scale: [0, 1.6, 1], opacity: 1 }}
                 transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}
               >
                 <Star
