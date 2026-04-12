@@ -88,6 +88,8 @@ const CleanerProfileView = lazy(() => import("./pages/cleaner/CleanerProfileView
 const CleanerAIAssistant = lazy(() => import("./pages/cleaner/CleanerAIAssistant"));
 const CleanerOnboarding = lazy(() => import("./pages/cleaner/CleanerOnboarding"));
 const CleanerSettings = lazy(() => import("./pages/cleaner/CleanerSettings"));
+const CleanerCertifications = lazy(() => import("./pages/cleaner/CleanerCertifications"));
+const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientNotes"));
 
 // Admin pages
 const TrustSafetyDashboard = lazy(() => import("./pages/admin/TrustSafetyDashboard"));
@@ -113,6 +115,17 @@ const AdminBulkComms = lazy(() => import("./pages/admin/AdminBulkComms"));
 const AdminPlatformConfig = lazy(() => import("./pages/admin/AdminPlatformConfig"));
 const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminHub = lazy(() => import("./pages/admin/AdminHub"));
+const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
+const AdminRefundQueue = lazy(() => import("./pages/admin/AdminRefundQueue"));
+const AdminWebhookLog = lazy(() => import("./pages/admin/AdminWebhookLog"));
+const AdminHealthDashboard = lazy(() => import("./pages/admin/AdminHealthDashboard"));
+
+// New feature pages
+const SessionManagement = lazy(() => import("./pages/SessionManagement"));
+const SpendingAnalytics = lazy(() => import("./pages/SpendingAnalytics"));
+const PropertyProfilesPage = lazy(() => import("./pages/PropertyProfiles"));
+const CleanerComparisonPage = lazy(() => import("./pages/CleanerComparison"));
+const DataExportPage = lazy(() => import("./pages/DataExport"));
 
 function PageLoader() {
   return (
@@ -225,6 +238,10 @@ const App = () => (
                     <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                     <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
                     <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
+                    <Route path="/admin/audit-log" element={<RequireAdmin><AdminAuditLog /></RequireAdmin>} />
+                    <Route path="/admin/refund-queue" element={<RequireAdmin><AdminRefundQueue /></RequireAdmin>} />
+                    <Route path="/admin/webhook-log" element={<RequireAdmin><AdminWebhookLog /></RequireAdmin>} />
+                    <Route path="/admin/health" element={<RequireAdmin><AdminHealthDashboard /></RequireAdmin>} />
 
                     {/* Client routes */}
                     <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
@@ -248,6 +265,11 @@ const App = () => (
                     <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
                     <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
                     <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
+                    <Route path="/spending" element={<RequireClient><SpendingAnalytics /></RequireClient>} />
+                    <Route path="/property-profiles" element={<RequireClient><PropertyProfilesPage /></RequireClient>} />
+                    <Route path="/compare-cleaners" element={<RequireClient><CleanerComparisonPage /></RequireClient>} />
+                    <Route path="/sessions" element={<RequireAuth><SessionManagement /></RequireAuth>} />
+                    <Route path="/data-export" element={<RequireAuth><DataExportPage /></RequireAuth>} />
 
                     {/* Cleaner routes */}
                     <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
@@ -271,6 +293,8 @@ const App = () => (
                     <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
                     <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
                     <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
+                    <Route path="/cleaner/certifications" element={<RequireCleaner><CleanerCertifications /></RequireCleaner>} />
+                    <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
                     
 
                     <Route path="*" element={<NotFound />} />
