@@ -283,11 +283,17 @@ body {
 
   /* Colored card backgrounds */
   .bg-cyan-soft { background: linear-gradient(135deg, #E0F7FA 0%, #E8F5FC 100%); }
+  .dark .bg-cyan-soft { background: linear-gradient(135deg, hsl(190 40% 15%) 0%, hsl(195 30% 18%) 100%); }
   .bg-green-soft { background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); }
+  .dark .bg-green-soft { background: linear-gradient(135deg, hsl(145 30% 14%) 0%, hsl(140 25% 17%) 100%); }
   .bg-amber-soft { background: linear-gradient(135deg, #FFF8E1 0%, #FFFDE7 100%); }
+  .dark .bg-amber-soft { background: linear-gradient(135deg, hsl(38 40% 14%) 0%, hsl(42 35% 16%) 100%); }
   .bg-orange-soft { background: linear-gradient(135deg, #FFF3E0 0%, #FBE9E7 100%); }
+  .dark .bg-orange-soft { background: linear-gradient(135deg, hsl(25 40% 14%) 0%, hsl(20 30% 16%) 100%); }
   .bg-purple-soft { background: linear-gradient(135deg, #F3E5F5 0%, #EDE7F6 100%); }
+  .dark .bg-purple-soft { background: linear-gradient(135deg, hsl(280 30% 16%) 0%, hsl(270 25% 18%) 100%); }
   .bg-red-soft { background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%); }
+  .dark .bg-red-soft { background: linear-gradient(135deg, hsl(0 30% 16%) 0%, hsl(340 25% 18%) 100%); }
 
   /* Colored borders */
   .border-cyan-accent { border-color: #00BCD4; }
