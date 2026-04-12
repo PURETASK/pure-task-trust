@@ -259,6 +259,9 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
+      <CleaningRequestForm />
+
       {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="container">
