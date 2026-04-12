@@ -23,9 +23,10 @@ interface TestimonialCardProps {
 
 export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
   function TestimonialCard(
-    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default" }: TestimonialCardProps,
+    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default", colorIndex = 0 }: TestimonialCardProps,
     _ref
   ) {
+    const colors = CARD_COLORS[colorIndex % CARD_COLORS.length];
     const initials = authorName
       .split(" ")
       .map((n) => n[0])
