@@ -113,7 +113,7 @@ export default function EarningsCalculator() {
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Earnings Calculator', url: '/earnings-calculator' }]} />
       <FAQSchema faqs={[
         { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Top earners working 40h/week at Platinum can make $100k+/year.' },
-        { question: 'What is the platform fee?', answer: 'Bronze 20%, Silver 18%, Gold 17%, Platinum 15%.' },
+        { question: 'What is the platform fee?', answer: 'Bronze 25%, Silver 22%, Gold 18%, Platinum 15%.' },
       ]} />
 
       {/* ── HERO ── */}

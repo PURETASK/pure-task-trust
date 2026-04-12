@@ -212,14 +212,14 @@ export function useJobActions(jobId: string) {
           .eq('id', job.cleaner_id)
           .maybeSingle();
         
-        // Tier-based platform fee: Bronze 20%, Silver 18%, Gold 16%, Platinum 15%
+        // Tier-based platform fee: Bronze 25%, Silver 22%, Gold 18%, Platinum 15%
         const tierFeeMap: Record<string, number> = {
           platinum: 0.15,
-          gold: 0.16,
-          silver: 0.18,
-          bronze: 0.20,
+          gold: 0.18,
+          silver: 0.22,
+          bronze: 0.25,
         };
-        const feeRate = tierFeeMap[cleanerProfile?.tier || 'bronze'] ?? 0.20;
+        const feeRate = tierFeeMap[cleanerProfile?.tier || 'bronze'] ?? 0.25;
         const platformFee = Math.round(creditsCharged * feeRate);
         const netCredits = creditsCharged - platformFee;
 

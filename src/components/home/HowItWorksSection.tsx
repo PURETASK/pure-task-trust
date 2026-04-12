@@ -15,7 +15,7 @@ const cleanerFeatures = [
   "Get verified & approved",
   "Set your own rates & schedule",
   "Accept jobs you want",
-  "Earn 80-85% of every booking",
+  "Earn 75-85% of every booking",
   "Get paid weekly or instantly",
 ];
 
