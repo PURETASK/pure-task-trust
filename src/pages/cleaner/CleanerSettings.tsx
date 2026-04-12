@@ -5,10 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { NotificationPreferencesForm } from "@/components/notifications/NotificationPreferencesForm";
 import { PushNotificationSetup } from "@/components/notifications/PushNotificationSetup";
+import { MFASetup } from "@/components/security/MFASetup";
 import {
   Bell, User, MapPin, Calendar, Shield, CreditCard,
   Link2, Users, AlertTriangle, ChevronRight, Settings, Palette,
-  ExternalLink, Award, FileText, Download
+  ExternalLink, Award, FileText, Download, Lock
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -143,6 +144,11 @@ export default function CleanerSettings() {
               <PushNotificationSetup />
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Two-Factor Authentication */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+          <MFASetup />
         </motion.div>
       </div>
     </CleanerLayout>
