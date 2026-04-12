@@ -85,7 +85,7 @@ export function TestimonialsCarousel() {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {testimonials.map((testimonial) => (
+              {testimonials.map((testimonial, index) => (
                 <CarouselItem
                   key={testimonial.id}
                   className="pl-4 basis-full md:basis-1/2 lg:basis-1/3"
