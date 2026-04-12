@@ -8,7 +8,7 @@ import { PushNotificationSetup } from "@/components/notifications/PushNotificati
 import {
   Bell, User, MapPin, Calendar, Shield, CreditCard,
   Link2, Users, AlertTriangle, ChevronRight, Settings, Palette,
-  ExternalLink
+  ExternalLink, Award, FileText, Download
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -21,6 +21,7 @@ const SETTINGS_LINKS = [
     items: [
       { icon: User, label: "Edit Profile", desc: "Update rates, bio, and photo", href: "/cleaner/profile" },
       { icon: ExternalLink, label: "Public Profile", desc: "Preview how clients see you", href: "/cleaner/profile/view" },
+      { icon: Award, label: "Certifications", desc: "Upload and manage credentials", href: "/cleaner/certifications" },
     ],
   },
   {
@@ -43,6 +44,17 @@ const SETTINGS_LINKS = [
       { icon: CreditCard, label: "Earnings & Payouts", desc: "Bank account & payout history", href: "/cleaner/earnings" },
       { icon: Shield, label: "Verification Center", desc: "ID and background check status", href: "/cleaner/verification" },
       { icon: Users, label: "My Team", desc: "Manage team members", href: "/cleaner/team" },
+    ],
+  },
+  {
+    group: "Tools",
+    icon: Settings,
+    color: "text-[hsl(var(--pt-aqua))]",
+    bg: "bg-[hsl(var(--pt-aqua))]/10",
+    items: [
+      { icon: FileText, label: "Client Notes", desc: "Private notes about client preferences", href: "/cleaner/client-notes" },
+      { icon: Shield, label: "Active Sessions", desc: "Manage logged-in devices", href: "/sessions" },
+      { icon: Download, label: "Data Export", desc: "Download all your data", href: "/data-export" },
     ],
   },
   {
