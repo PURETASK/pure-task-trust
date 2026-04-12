@@ -74,7 +74,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-hidden">
+      <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-clip">
         {/* Skip to main content — WCAG 2.4.1 */}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-semibold">
           Skip to main content
