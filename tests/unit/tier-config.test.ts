@@ -137,7 +137,7 @@ describe('tier-config utilities', () => {
       
       expect(config.platformFeePercent).toBe(20);
       expect(config.hourlyRateRange.min).toBe(20);
-      expect(config.hourlyRateRange.max).toBe(35);
+      expect(config.hourlyRateRange.max).toBe(30);
       expect(config.minScore).toBe(0);
       expect(config.maxScore).toBe(49);
     });
@@ -146,24 +146,24 @@ describe('tier-config utilities', () => {
       const config = getTierConfig('silver');
       
       expect(config.platformFeePercent).toBe(18);
-      expect(config.hourlyRateRange.min).toBe(30);
-      expect(config.hourlyRateRange.max).toBe(50);
+      expect(config.hourlyRateRange.min).toBe(20);
+      expect(config.hourlyRateRange.max).toBe(40);
     });
 
     it('returns correct gold configuration', () => {
       const config = getTierConfig('gold');
       
       expect(config.platformFeePercent).toBe(17);
-      expect(config.hourlyRateRange.min).toBe(40);
-      expect(config.hourlyRateRange.max).toBe(65);
+      expect(config.hourlyRateRange.min).toBe(20);
+      expect(config.hourlyRateRange.max).toBe(50);
     });
 
     it('returns correct platinum configuration', () => {
       const config = getTierConfig('platinum');
       
       expect(config.platformFeePercent).toBe(15);
-      expect(config.hourlyRateRange.min).toBe(50);
-      expect(config.hourlyRateRange.max).toBe(100);
+      expect(config.hourlyRateRange.min).toBe(20);
+      expect(config.hourlyRateRange.max).toBe(65);
       expect(config.minScore).toBe(90);
       expect(config.maxScore).toBe(100);
     });
@@ -205,13 +205,13 @@ describe('tier-config utilities', () => {
     it('returns correct range for bronze', () => {
       const range = getHourlyRateRange('bronze');
       expect(range.min).toBe(20);
-      expect(range.max).toBe(35);
+      expect(range.max).toBe(30);
     });
 
     it('returns correct range for platinum', () => {
       const range = getHourlyRateRange('platinum');
-      expect(range.min).toBe(50);
-      expect(range.max).toBe(100);
+      expect(range.min).toBe(20);
+      expect(range.max).toBe(65);
     });
   });
 
@@ -244,7 +244,7 @@ describe('tier-config utilities', () => {
 
     it('accepts exact boundary values for bronze', () => {
       expect(isValidHourlyRate('bronze', 20)).toBe(true);
-      expect(isValidHourlyRate('bronze', 35)).toBe(true);
+      expect(isValidHourlyRate('bronze', 30)).toBe(true);
     });
 
     it('rejects rate below bronze minimum', () => {
@@ -253,14 +253,14 @@ describe('tier-config utilities', () => {
     });
 
     it('rejects rate above bronze maximum', () => {
-      expect(isValidHourlyRate('bronze', 36)).toBe(false);
+      expect(isValidHourlyRate('bronze', 31)).toBe(false);
       expect(isValidHourlyRate('bronze', 50)).toBe(false);
     });
 
     it('accepts platinum rate range', () => {
-      expect(isValidHourlyRate('platinum', 50)).toBe(true);
-      expect(isValidHourlyRate('platinum', 75)).toBe(true);
-      expect(isValidHourlyRate('platinum', 100)).toBe(true);
+      expect(isValidHourlyRate('platinum', 20)).toBe(true);
+      expect(isValidHourlyRate('platinum', 40)).toBe(true);
+      expect(isValidHourlyRate('platinum', 65)).toBe(true);
     });
 
     it('prevents bronze cleaner from charging platinum rates', () => {
@@ -269,8 +269,8 @@ describe('tier-config utilities', () => {
     });
 
     it('prevents platinum cleaner from undercharging', () => {
-      expect(isValidHourlyRate('platinum', 49)).toBe(false);
-      expect(isValidHourlyRate('platinum', 30)).toBe(false);
+      expect(isValidHourlyRate('platinum', 19)).toBe(false);
+      expect(isValidHourlyRate('platinum', 66)).toBe(false);
     });
   });
 
