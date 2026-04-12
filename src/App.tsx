@@ -90,6 +90,7 @@ const CleanerOnboarding = lazy(() => import("./pages/cleaner/CleanerOnboarding")
 const CleanerSettings = lazy(() => import("./pages/cleaner/CleanerSettings"));
 const CleanerCertifications = lazy(() => import("./pages/cleaner/CleanerCertifications"));
 const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientNotes"));
+const CleanerEarningsForecast = lazy(() => import("./pages/cleaner/CleanerEarningsForecast"));
 
 // Admin pages
 const TrustSafetyDashboard = lazy(() => import("./pages/admin/TrustSafetyDashboard"));
@@ -295,7 +296,7 @@ const App = () => (
                     <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
                     <Route path="/cleaner/certifications" element={<RequireCleaner><CleanerCertifications /></RequireCleaner>} />
                     <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
-                    
+                    <Route path="/cleaner/earnings-forecast" element={<RequireCleaner><CleanerEarningsForecast /></RequireCleaner>} />
 
                     <Route path="*" element={<NotFound />} />
                   </Route>
