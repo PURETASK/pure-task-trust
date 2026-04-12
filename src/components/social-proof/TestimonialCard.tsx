@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { Star, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
 
 const CARD_COLORS = [
   { bg: "bg-[hsl(211,100%,50%)]/20", border: "border-[hsl(211,100%,50%)]/50", quote: "text-[hsl(211,100%,50%)]/40", avatar: "bg-[hsl(211,100%,50%)]/25 text-[hsl(211,100%,50%)]" },   // Blue
@@ -63,14 +64,20 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
         <CardContent className="p-6 flex flex-col h-full">
           <Quote className={`h-8 w-8 ${colors.quote} mb-4 flex-shrink-0`} />
 
-          <div className="flex gap-1.5 mb-4">
+          <div className="flex gap-1.5 mb-4 justify-center">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Star
+              <motion.div
                 key={i}
-                className={`h-6 w-6 drop-shadow-sm ${
-                  i < rating ? "fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5]" : "fill-muted/40 text-muted-foreground/20 stroke-[1.5]"
-                }`}
-              />
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: [0.6, 1.3, 1], opacity: 1 }}
+                transition={{ delay: i * 0.12, duration: 0.4, ease: "easeOut" }}
+              >
+                <Star
+                  className={`h-6 w-6 drop-shadow-sm ${
+                    i < rating ? "fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5]" : "fill-muted/40 text-muted-foreground/20 stroke-[1.5]"
+                  }`}
+                />
+              </motion.div>
             ))}
           </div>
 
