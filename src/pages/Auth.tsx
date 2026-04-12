@@ -181,7 +181,7 @@ export default function AuthPage() {
       <div className="min-h-screen flex">
         {/* Left: image panel */}
         <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
-          <img src={authSplitImg} alt="PureTask verified cleaner in a spotless modern home" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+          <img src="/images/auth-bg.png" alt="PureTask Spring Cleaning" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/10 to-background/40" />
           <div className="absolute bottom-12 left-12 right-12">
             <div className="bg-background/80 backdrop-blur-md rounded-2xl p-6 border border-border/50">
@@ -269,7 +269,7 @@ export default function AuthPage() {
   }
 
   // ── Main auth form ─────────────────────────────────────────────────────────
-  const panelBg = role === "cleaner" ? cleanerHeroImg : authSplitImg;
+  const panelBg = "/images/auth-bg.png";
   const accentColor = role === "cleaner" ? "text-success" : "text-primary";
   const accentBg = role === "cleaner" ? "bg-success/10" : "bg-primary/10";
 
