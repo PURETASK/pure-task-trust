@@ -238,6 +238,10 @@ const App = () => (
                     <Route path="/admin/platform-config" element={<RequireAdmin><AdminPlatformConfig /></RequireAdmin>} />
                     <Route path="/admin/users" element={<RequireAdmin><AdminUsersPage /></RequireAdmin>} />
                     <Route path="/admin/hub" element={<RequireAdmin><AdminHub /></RequireAdmin>} />
+                    <Route path="/admin/audit-log" element={<RequireAdmin><AdminAuditLog /></RequireAdmin>} />
+                    <Route path="/admin/refund-queue" element={<RequireAdmin><AdminRefundQueue /></RequireAdmin>} />
+                    <Route path="/admin/webhook-log" element={<RequireAdmin><AdminWebhookLog /></RequireAdmin>} />
+                    <Route path="/admin/health" element={<RequireAdmin><AdminHealthDashboard /></RequireAdmin>} />
 
                     {/* Client routes */}
                     <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
@@ -261,6 +265,11 @@ const App = () => (
                     <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
                     <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
                     <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
+                    <Route path="/spending" element={<RequireClient><SpendingAnalytics /></RequireClient>} />
+                    <Route path="/property-profiles" element={<RequireClient><PropertyProfilesPage /></RequireClient>} />
+                    <Route path="/compare-cleaners" element={<RequireClient><CleanerComparisonPage /></RequireClient>} />
+                    <Route path="/sessions" element={<RequireAuth><SessionManagement /></RequireAuth>} />
+                    <Route path="/data-export" element={<RequireAuth><DataExportPage /></RequireAuth>} />
 
                     {/* Cleaner routes */}
                     <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
@@ -284,6 +293,8 @@ const App = () => (
                     <Route path="/cleaner/reliability" element={<RequireCleaner><CleanerReliability /></RequireCleaner>} />
                     <Route path="/cleaner/ai-assistant" element={<RequireCleaner><CleanerAIAssistant /></RequireCleaner>} />
                     <Route path="/cleaner/settings" element={<RequireCleaner><CleanerSettings /></RequireCleaner>} />
+                    <Route path="/cleaner/certifications" element={<RequireCleaner><CleanerCertifications /></RequireCleaner>} />
+                    <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
                     
 
                     <Route path="*" element={<NotFound />} />
