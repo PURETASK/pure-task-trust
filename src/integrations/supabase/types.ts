@@ -2131,6 +2131,84 @@ export type Database = {
         }
         Relationships: []
       }
+      cleaning_requests: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          cleaning_type: string
+          created_at: string
+          custom_description: string | null
+          email: string
+          estimated_hours: number | null
+          first_name: string
+          has_pets: boolean | null
+          id: string
+          last_name: string | null
+          notes: string | null
+          number_of_bathrooms: number | null
+          number_of_bedrooms: number | null
+          phone: string | null
+          postal_code: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          state: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          cleaning_type: string
+          created_at?: string
+          custom_description?: string | null
+          email: string
+          estimated_hours?: number | null
+          first_name: string
+          has_pets?: boolean | null
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          number_of_bathrooms?: number | null
+          number_of_bedrooms?: number | null
+          phone?: string | null
+          postal_code?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          cleaning_type?: string
+          created_at?: string
+          custom_description?: string | null
+          email?: string
+          estimated_hours?: number | null
+          first_name?: string
+          has_pets?: boolean | null
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          number_of_bathrooms?: number | null
+          number_of_bedrooms?: number | null
+          phone?: string | null
+          postal_code?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cleaning_subscriptions: {
         Row: {
           address: string
