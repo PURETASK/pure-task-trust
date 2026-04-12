@@ -227,7 +227,7 @@ export default function Index() {
 
       {/* ── HOW IT WORKS — 4 STEPS ────────────────────────────────────── */}
       <section className="py-16 sm:py-24 relative" style={{ backgroundImage: 'url(/images/how-it-works-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-        <div className="absolute inset-0 bg-background/85 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-background/70" />
         <div className="container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
