@@ -4,10 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const CARD_COLORS = [
-  { bg: "bg-[hsl(211,100%,50%)]/8", quote: "text-[hsl(211,100%,50%)]/30", avatar: "bg-[hsl(211,100%,50%)]/15 text-[hsl(211,100%,50%)]" },   // Blue
-  { bg: "bg-[hsl(152,63%,48%)]/8",  quote: "text-[hsl(152,63%,48%)]/30",  avatar: "bg-[hsl(152,63%,48%)]/15 text-[hsl(152,63%,48%)]" },    // Green
-  { bg: "bg-[hsl(30,100%,50%)]/8",   quote: "text-[hsl(30,100%,50%)]/30",  avatar: "bg-[hsl(30,100%,50%)]/15 text-[hsl(30,100%,50%)]" },    // Orange
-  { bg: "bg-[hsl(291,76%,42%)]/8",   quote: "text-[hsl(291,76%,42%)]/30",  avatar: "bg-[hsl(291,76%,42%)]/15 text-[hsl(291,76%,42%)]" },    // Purple
+  { bg: "bg-[hsl(211,100%,50%)]/20", quote: "text-[hsl(211,100%,50%)]/40", avatar: "bg-[hsl(211,100%,50%)]/25 text-[hsl(211,100%,50%)]" },   // Blue
+  { bg: "bg-[hsl(152,63%,48%)]/20",  quote: "text-[hsl(152,63%,48%)]/40",  avatar: "bg-[hsl(152,63%,48%)]/25 text-[hsl(152,63%,48%)]" },    // Green
+  { bg: "bg-[hsl(30,100%,50%)]/20",   quote: "text-[hsl(30,100%,50%)]/40",  avatar: "bg-[hsl(30,100%,50%)]/25 text-[hsl(30,100%,50%)]" },    // Orange
+  { bg: "bg-[hsl(291,76%,42%)]/20",   quote: "text-[hsl(291,76%,42%)]/40",  avatar: "bg-[hsl(291,76%,42%)]/25 text-[hsl(291,76%,42%)]" },    // Purple
 ] as const;
 
 interface TestimonialCardProps {
