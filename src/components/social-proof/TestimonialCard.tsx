@@ -59,9 +59,9 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
     }
 
     return (
-      <Card className="bg-card border-border/50 h-full shadow-soft hover:shadow-md transition-shadow duration-300">
+      <Card className={`${colors.bg} border-border/50 h-full shadow-soft hover:shadow-md transition-shadow duration-300`}>
         <CardContent className="p-6 flex flex-col h-full">
-          <Quote className="h-8 w-8 text-primary/20 mb-4 flex-shrink-0" />
+          <Quote className={`h-8 w-8 ${colors.quote} mb-4 flex-shrink-0`} />
 
           <div className="flex gap-1 mb-4">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -81,7 +81,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
           <div className="flex items-center gap-3 pt-4 border-t border-border/50">
             <Avatar className="h-10 w-10">
               <AvatarImage src={avatarUrl ?? undefined} alt={authorName} />
-              <AvatarFallback className="bg-primary/10 text-primary font-medium">
+              <AvatarFallback className={`${colors.avatar} font-medium`}>
                 {initials}
               </AvatarFallback>
             </Avatar>
