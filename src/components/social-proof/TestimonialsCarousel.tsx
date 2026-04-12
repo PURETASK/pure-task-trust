@@ -65,7 +65,7 @@ export function TestimonialsCarousel() {
             Loved by Clients & Cleaners
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust PureTask for their cleaning needs
+            See why clients and cleaners love the PureTask experience
           </p>
         </motion.div>
 
