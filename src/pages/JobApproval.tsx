@@ -19,6 +19,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { PostJobFlow } from "@/components/job/PostJobFlow";
+import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
 
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
@@ -261,6 +262,11 @@ export default function JobApproval() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Quick Satisfaction Pulse */}
+            <div className="rounded-xl border border-border/40 p-4 mb-3">
+              <SatisfactionPulse jobId={id!} />
+            </div>
 
             {/* Approve */}
             <Button variant="success" size="lg" className="w-full mb-3" onClick={handleApprove} disabled={isApproving}>

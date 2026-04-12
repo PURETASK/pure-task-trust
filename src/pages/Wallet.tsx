@@ -9,8 +9,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, Search, X, Zap, ChevronDown, ChevronUp, Shield, TrendingUp, CreditCard, Sparkles } from "lucide-react";
+import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, Search, X, Zap, ChevronDown, ChevronUp, Shield, TrendingUp, CreditCard, Sparkles, FileText } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
+import { useReceipt } from "@/hooks/useReceipt";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -38,6 +39,7 @@ export default function Wallet() {
   const [topUpThreshold, setTopUpThreshold] = useState('20');
   const [topUpAmount, setTopUpAmount] = useState('50');
   const { account, isLoadingAccount, ledger, isLoadingLedger, purchaseCredits, isPurchasing, refetch } = useWallet();
+  const { generateReceipt, isGenerating } = useReceipt();
   const { toast } = useToast();
 
   const availableCredits = account?.current_balance || 0;
@@ -251,6 +253,7 @@ export default function Wallet() {
                 <div className="space-y-1">
                   {filteredLedger.map((entry, i) => {
                     const isPositive = entry.delta_credits > 0;
+                    const isPurchaseEntry = entry.reason === 'purchase';
                     return (
                       <motion.div
                         key={entry.id}
@@ -266,9 +269,21 @@ export default function Wallet() {
                           <p className="font-bold text-sm truncate">{reasonLabels[entry.reason] || entry.reason}</p>
                           <p className="text-xs text-muted-foreground">{format(new Date(entry.created_at), 'MMM d, yyyy · h:mm a')}</p>
                         </div>
-                        <p className={cn("font-black tabular-nums", isPositive ? "text-success" : "text-foreground")}>
-                          {isPositive ? '+' : '-'}${Math.abs(entry.delta_credits)}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          {isPurchaseEntry && (
+                            <button
+                              onClick={() => generateReceipt({ type: 'credit_purchase', transactionId: entry.id })}
+                              disabled={isGenerating}
+                              className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                              title="Download receipt"
+                            >
+                              <FileText className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          <p className={cn("font-black tabular-nums", isPositive ? "text-success" : "text-foreground")}>
+                            {isPositive ? '+' : '-'}${Math.abs(entry.delta_credits)}
+                          </p>
+                        </div>
                       </motion.div>
                     );
                   })}

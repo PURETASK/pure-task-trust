@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { InviteFriendsCTA } from "@/components/referral";
 import { LoyaltyTracker } from "@/components/loyalty/LoyaltyTracker";
+import { OnboardingTooltips, CLIENT_ONBOARDING_STEPS } from "@/components/onboarding/OnboardingTooltips";
 import { Skeleton } from "@/components/ui/skeleton";
 import clientHeroImg from "@/assets/client-hero.jpg";
 import { useClientDashboard } from "@/hooks/useClientDashboard";
@@ -510,6 +511,9 @@ export default function Dashboard() {
           </AnimatePresence>
         </motion.section>
       </div>
+
+      {/* Client Onboarding Tooltips */}
+      <OnboardingTooltips steps={CLIENT_ONBOARDING_STEPS} storageKey="client-onboarding-seen" />
     </main>
   );
 }
