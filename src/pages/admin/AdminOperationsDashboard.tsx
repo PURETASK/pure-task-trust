@@ -2,12 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, XCircle, AlertTriangle, CheckCircle, Clock, TrendingDown, ArrowRight, RefreshCw, Activity } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Calendar, XCircle, AlertTriangle, CheckCircle, Clock, TrendingDown, ArrowRight, RefreshCw, Activity, Gauge } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { useAdminOpsStats } from "@/hooks/useAdminStats";
+import { useCleanerUtilization } from "@/hooks/useCleanerUtilization";
 
 const chartConfig = {
   count: { label: "Count", color: "hsl(var(--primary))" },
@@ -31,6 +33,7 @@ const QUICK_LINKS = [
 
 const AdminOperationsDashboard = () => {
   const { data, isLoading, refetch } = useAdminOpsStats();
+  const { data: utilizationData } = useCleanerUtilization();
 
   const KPI_CARDS = [
     { label: 'Total Bookings', value: data?.totalBookings || 0, icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', border: 'border-success/25' },
@@ -146,6 +149,36 @@ const AdminOperationsDashboard = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Cleaner Utilization */}
+        {utilizationData && (
+          <Card className="border-border/60 mt-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Gauge className="h-5 w-5 text-primary" />Cleaner Utilization Rates
+              </CardTitle>
+              <CardDescription>Average: {utilizationData.avgRate}% of available hours booked</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {utilizationData.cleaners.slice(0, 8).map(c => (
+                  <div key={c.cleanerId} className="flex items-center gap-3">
+                    <div className="w-32 truncate text-sm font-medium">{c.cleanerName}</div>
+                    <div className="flex-1">
+                      <Progress value={c.utilizationRate} className="h-2" />
+                    </div>
+                    <div className="w-20 text-right">
+                      <span className={`text-sm font-bold ${c.utilizationRate >= 70 ? 'text-success' : c.utilizationRate >= 40 ? 'text-warning' : 'text-destructive'}`}>
+                        {c.utilizationRate}%
+                      </span>
+                    </div>
+                    <Badge variant="outline" className="text-xs capitalize">{c.tier}</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="mt-8">
           <Button variant="outline" asChild><Link to="/admin/analytics">← Back to Analytics</Link></Button>

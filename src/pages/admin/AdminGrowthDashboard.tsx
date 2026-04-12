@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, UserPlus, TrendingUp, Target, Zap, ArrowUpRight, Repeat, Gift, RefreshCw } from "lucide-react";
+import { Users, UserPlus, TrendingUp, Target, Zap, ArrowUpRight, Repeat, Gift, RefreshCw, Link2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell } from "recharts";
 import { useAdminGrowthStats } from "@/hooks/useAdminStats";
+import { useReferralAttribution } from "@/hooks/useReferralAttribution";
 
 const chartConfig = {
   organic: { label: "Direct", color: "hsl(var(--chart-1))" },
@@ -25,6 +27,7 @@ const FUNNEL_COLORS = [
 
 const AdminGrowthDashboard = () => {
   const { data, isLoading, refetch } = useAdminGrowthStats();
+  const { data: referralData } = useReferralAttribution();
 
   // Build funnel bar-chart data from funnelData
   const funnelChartData = (data?.funnelData || []).map((stage, i) => ({
@@ -179,6 +182,46 @@ const AdminGrowthDashboard = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Referral Attribution */}
+        {referralData && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base"><Link2 className="h-5 w-5 text-primary" />Referral Attribution</CardTitle>
+              <CardDescription>Conversion from referral signup to first paid job</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
+                  <p className="text-2xl font-black">{referralData.summary.totalReferralSignups}</p>
+                  <p className="text-xs text-muted-foreground">Total Signups</p>
+                </div>
+                <div className="text-center p-3 bg-success/5 rounded-xl border border-success/20">
+                  <p className="text-2xl font-black text-success">{referralData.summary.totalConverted}</p>
+                  <p className="text-xs text-muted-foreground">Converted</p>
+                </div>
+                <div className="text-center p-3 bg-primary/5 rounded-xl border border-primary/20">
+                  <p className="text-2xl font-black text-primary">{referralData.summary.overallRate}%</p>
+                  <p className="text-xs text-muted-foreground">Conversion Rate</p>
+                </div>
+              </div>
+              {referralData.attributions.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Top Referrers</p>
+                  {referralData.attributions.slice(0, 5).map(a => (
+                    <div key={a.code} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/20">
+                      <div>
+                        <p className="font-semibold text-sm">{a.referrerName}</p>
+                        <p className="text-xs text-muted-foreground">{a.totalSignups} signups · {a.convertedToPaying} converted</p>
+                      </div>
+                      <Badge variant="outline" className="text-xs">{a.totalRevenueGenerated.toLocaleString()} cr revenue</Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <div className="mt-8">
           <Button variant="outline" asChild><Link to="/admin/analytics">← Back to Analytics</Link></Button>

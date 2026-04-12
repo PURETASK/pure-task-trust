@@ -11,7 +11,8 @@ export function useChurnPrediction() {
       // Find clients with no bookings in 14+ days
       const { data: clients } = await supabase
         .from('client_profiles')
-        .select('id, user_id, first_name, created_at');
+        .select('id, user_id, first_name, created_at')
+        .is('deleted_at', null);
 
       const { data: recentJobs } = await supabase
         .from('jobs')
@@ -24,7 +25,8 @@ export function useChurnPrediction() {
       // Find cleaners with no jobs in 14+ days
       const { data: cleaners } = await supabase
         .from('cleaner_profiles')
-        .select('id, user_id, first_name, created_at');
+        .select('id, user_id, first_name, created_at')
+        .is('deleted_at', null);
 
       const { data: recentCleanerJobs } = await supabase
         .from('jobs')
