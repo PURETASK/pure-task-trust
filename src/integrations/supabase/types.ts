@@ -5536,6 +5536,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_settings: {
+        Row: {
+          compact_mode: boolean
+          created_at: string
+          currency: string
+          email_marketing_opt_in: boolean
+          id: string
+          language: string
+          reduce_animations: boolean
+          theme: string
+          timezone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          compact_mode?: boolean
+          created_at?: string
+          currency?: string
+          email_marketing_opt_in?: boolean
+          id?: string
+          language?: string
+          reduce_animations?: boolean
+          theme?: string
+          timezone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          compact_mode?: boolean
+          created_at?: string
+          currency?: string
+          email_marketing_opt_in?: boolean
+          id?: string
+          language?: string
+          reduce_animations?: boolean
+          theme?: string
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       cleaner_public_profiles: {
