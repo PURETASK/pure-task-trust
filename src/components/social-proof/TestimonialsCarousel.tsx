@@ -54,20 +54,6 @@ export function TestimonialsCarousel() {
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-background to-muted/30 overflow-x-hidden">
       <div className="container px-4 sm:px-6 overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Loved by Clients & Cleaners
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            See why clients and cleaners love the PureTask experience
-          </p>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,6 +108,21 @@ export function TestimonialsCarousel() {
               />
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center mt-10"
+          >
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3">
+              Loved by Clients &amp; Cleaners
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              See why clients and cleaners love the PureTask experience
+            </p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
