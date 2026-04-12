@@ -97,7 +97,7 @@ export default function Pricing() {
       }} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
       <FAQSchema faqs={[
-        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum). The platform fee is 15–20% paid by the cleaner, not added to your bill.' },
+        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum). The platform fee is 15–25% paid by the cleaner, not added to your bill.' },
         { question: 'What is a credit?', answer: '1 credit equals $1 USD. You purchase credits upfront and use them to book cleanings. Unused credits never expire.' },
         { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras. The price shown is the price you pay.' },
         { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job. If you\'re unhappy, you can dispute the job and credits may be returned.' },
@@ -125,12 +125,12 @@ export default function Pricing() {
                 Transparent,<br /><span className="text-primary">Fair Pricing</span>
               </h1>
               <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
-                Pay for quality. 1 credit = $1 USD. Platform fee of 15–20% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 80–85% of every booking.
+                Pay for quality. 1 credit = $1 USD. Platform fee of 15–25% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 75–85% of every booking.
               </p>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
                 {[
                   { value: "1 credit", label: "= $1 USD" },
-                  { value: "15–20%", label: "Platform fee" },
+                  { value: "15–25%", label: "Platform fee" },
                   { value: "100%", label: "Verified cleaners" },
                 ].map(({ value, label }) => (
                   <div key={label} className="text-center">
@@ -254,9 +254,9 @@ export default function Pricing() {
                       <Shield className="h-7 w-7 text-primary" />
                     </div>
                   <div>
-                      <h3 className="text-xl font-bold mb-3">What the 15–20% Platform Fee Covers</h3>
+                      <h3 className="text-xl font-bold mb-3">What the 15–25% Platform Fee Covers</h3>
                       <p className="text-sm text-muted-foreground mb-3">
-                        Bronze cleaners pay 20%; Silver 18%; Gold 17%; Platinum 15%.{" "}
+                        Bronze cleaners pay 25%; Silver 22%; Gold 18%; Platinum 15%.{" "}
                         <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-2 font-medium">
                           See what's included in every clean
                         </Link>{" "}and{" "}
@@ -287,7 +287,7 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Keep 80–85% of every booking. Grow your tier (Bronze → Platinum) to reduce your platform fee.</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Keep 75–85% of every booking. Grow your tier (Bronze → Platinum) to reduce your platform fee.</p>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
                 {TIERS.map((tier, i) => (

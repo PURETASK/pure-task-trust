@@ -36,7 +36,7 @@ export function CleanerCTA() {
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-6 mt-6 sm:mt-10 text-white/90">
             <div className="flex items-center justify-center gap-2">
               <Check className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-sm sm:text-base">Earn 80-85%</span>
+              <span className="text-sm sm:text-base">Earn 75-85%</span>
             </div>
             <div className="flex items-center justify-center gap-2">
               <Check className="h-4 w-4 sm:h-5 sm:w-5" />

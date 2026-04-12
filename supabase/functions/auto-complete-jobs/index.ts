@@ -97,7 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
           const hoursWorked = job.actual_hours || job.estimated_hours || 0;
           const hourlyRate = job.escrow_credits_reserved / (job.estimated_hours || 1);
           const grossCredits = Math.round(hoursWorked * hourlyRate);
-          const platformFee = Math.round(grossCredits * 0.20); // default bronze fee
+          const platformFee = Math.round(grossCredits * 0.25); // default bronze fee
           await supabase.from("cleaner_earnings").insert({
             cleaner_id: job.cleaner_id,
             job_id: job.id,
