@@ -23,6 +23,7 @@ export function useJobReview(jobId: string) {
         .from('reviews')
         .select('*')
         .eq('job_id', jobId)
+        .is('deleted_at', null)
         .maybeSingle();
 
       if (error) throw error;
@@ -42,6 +43,7 @@ export function useCleanerReviews(cleanerId: string) {
         .from('reviews')
         .select('*')
         .eq('cleaner_id', cleanerId)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
