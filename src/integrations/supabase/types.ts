@@ -4247,6 +4247,63 @@ export type Database = {
           },
         ]
       }
+      mfa_challenges: {
+        Row: {
+          code_hash: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          method: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          code_hash?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          method: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          code_hash?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          method?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      mfa_settings: {
+        Row: {
+          created_at: string
+          id: string
+          is_enabled: boolean
+          method: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          method?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          method?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_failures: {
         Row: {
           channel: string
@@ -5811,6 +5868,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      totp_secrets: {
+        Row: {
+          created_at: string
+          encrypted_secret: string
+          id: string
+          recovery_codes: string[]
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          encrypted_secret: string
+          id?: string
+          recovery_codes?: string[]
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          encrypted_secret?: string
+          id?: string
+          recovery_codes?: string[]
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
       }
       user_credits: {
         Row: {
