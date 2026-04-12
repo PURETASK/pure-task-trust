@@ -432,7 +432,7 @@ describe('Job Lifecycle Integration', () => {
   describe('Step 7: Cleaner earnings created', () => {
     it('should create cleaner_earnings record after job approval', async () => {
       const chargedCredits = 55;
-      const platformFeePercent = 20;
+      const platformFeePercent = 25;
       const platformFee = chargedCredits * (platformFeePercent / 100);
       const cleanerEarnings = chargedCredits - platformFee;
 

@@ -135,7 +135,7 @@ describe('tier-config utilities', () => {
     it('returns correct bronze configuration', () => {
       const config = getTierConfig('bronze');
       
-      expect(config.platformFeePercent).toBe(20);
+      expect(config.platformFeePercent).toBe(25);
       expect(config.hourlyRateRange.min).toBe(20);
       expect(config.hourlyRateRange.max).toBe(30);
       expect(config.minScore).toBe(0);
@@ -184,8 +184,8 @@ describe('tier-config utilities', () => {
   });
 
   describe('getPlatformFee', () => {
-    it('returns 20% for bronze', () => {
-      expect(getPlatformFee('bronze')).toBe(20);
+    it('returns 25% for bronze', () => {
+      expect(getPlatformFee('bronze')).toBe(25);
     });
 
     it('returns 22% for silver', () => {
