@@ -93,6 +93,7 @@ export type Database = {
           city: string
           country: string
           created_at: string
+          deleted_at: string | null
           id: string
           is_default: boolean
           label: string | null
@@ -109,6 +110,7 @@ export type Database = {
           city: string
           country?: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           is_default?: boolean
           label?: string | null
@@ -125,6 +127,7 @@ export type Database = {
           city?: string
           country?: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           is_default?: boolean
           label?: string | null
@@ -1058,6 +1061,75 @@ export type Database = {
           },
         ]
       }
+      cleaner_certifications: {
+        Row: {
+          cleaner_id: string
+          created_at: string
+          description: string | null
+          document_url: string | null
+          id: string
+          is_verified: boolean
+          name: string
+          updated_at: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          cleaner_id: string
+          created_at?: string
+          description?: string | null
+          document_url?: string | null
+          id?: string
+          is_verified?: boolean
+          name: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          cleaner_id?: string
+          created_at?: string
+          description?: string | null
+          document_url?: string | null
+          id?: string
+          is_verified?: boolean
+          name?: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
+      cleaner_client_notes: {
+        Row: {
+          cleaner_id: string
+          client_id: string
+          created_at: string
+          id: string
+          notes: string
+          property_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cleaner_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          notes?: string
+          property_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cleaner_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          notes?: string
+          property_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cleaner_custom_services: {
         Row: {
           cleaner_id: string
@@ -1508,6 +1580,7 @@ export type Database = {
           cleaning_types: string[] | null
           created_at: string
           deep_addon_cph: number | null
+          deleted_at: string | null
           first_name: string | null
           hourly_rate_credits: number
           id: string
@@ -1562,6 +1635,7 @@ export type Database = {
           cleaning_types?: string[] | null
           created_at?: string
           deep_addon_cph?: number | null
+          deleted_at?: string | null
           first_name?: string | null
           hourly_rate_credits?: number
           id?: string
@@ -1616,6 +1690,7 @@ export type Database = {
           cleaning_types?: string[] | null
           created_at?: string
           deep_addon_cph?: number | null
+          deleted_at?: string | null
           first_name?: string | null
           hourly_rate_credits?: number
           id?: string
@@ -2023,6 +2098,39 @@ export type Database = {
         }
         Relationships: []
       }
+      cleaning_presets: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          property_id: string | null
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          property_id?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          property_id?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cleaning_subscriptions: {
         Row: {
           address: string
@@ -2166,6 +2274,7 @@ export type Database = {
         Row: {
           created_at: string
           default_address: string | null
+          deleted_at: string | null
           first_name: string | null
           grace_cancellations_total: number | null
           grace_cancellations_used: number | null
@@ -2180,6 +2289,7 @@ export type Database = {
         Insert: {
           created_at?: string
           default_address?: string | null
+          deleted_at?: string | null
           first_name?: string | null
           grace_cancellations_total?: number | null
           grace_cancellations_used?: number | null
@@ -2194,6 +2304,7 @@ export type Database = {
         Update: {
           created_at?: string
           default_address?: string | null
+          deleted_at?: string | null
           first_name?: string | null
           grace_cancellations_total?: number | null
           grace_cancellations_used?: number | null
@@ -2606,6 +2717,36 @@ export type Database = {
           state?: string | null
           user_id?: string | null
           zipcode?: string | null
+        }
+        Relationships: []
+      }
+      data_export_requests: {
+        Row: {
+          completed_at: string | null
+          expires_at: string | null
+          file_url: string | null
+          id: string
+          requested_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          expires_at?: string | null
+          file_url?: string | null
+          id?: string
+          requested_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          expires_at?: string | null
+          file_url?: string | null
+          id?: string
+          requested_at?: string
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -3086,6 +3227,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      health_check_logs: {
+        Row: {
+          checked_at: string
+          error_message: string | null
+          function_name: string
+          id: string
+          latency_ms: number | null
+          metadata: Json | null
+          status: string
+        }
+        Insert: {
+          checked_at?: string
+          error_message?: string | null
+          function_name: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          status: string
+        }
+        Update: {
+          checked_at?: string
+          error_message?: string | null
+          function_name?: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          status?: string
+        }
+        Relationships: []
       }
       id_verifications: {
         Row: {
@@ -3617,6 +3788,7 @@ export type Database = {
           client_id: string
           created_at: string | null
           credit_charge_credits: number | null
+          deleted_at: string | null
           discount_cents: number | null
           escrow_credits_reserved: number
           estimated_hours: number | null
@@ -3666,6 +3838,7 @@ export type Database = {
           client_id: string
           created_at?: string | null
           credit_charge_credits?: number | null
+          deleted_at?: string | null
           discount_cents?: number | null
           escrow_credits_reserved?: number
           estimated_hours?: number | null
@@ -3715,6 +3888,7 @@ export type Database = {
           client_id?: string
           created_at?: string | null
           credit_charge_credits?: number | null
+          deleted_at?: string | null
           discount_cents?: number | null
           escrow_credits_reserved?: number
           estimated_hours?: number | null
@@ -4835,6 +5009,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          deleted_at: string | null
           email: string | null
           full_name: string | null
           id: string
@@ -4846,6 +5021,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          deleted_at?: string | null
           email?: string | null
           full_name?: string | null
           id: string
@@ -4857,6 +5033,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          deleted_at?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
@@ -4959,6 +5136,65 @@ export type Database = {
             columns: ["service_area_id"]
             isOneToOne: false
             referencedRelation: "platform_service_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_profiles: {
+        Row: {
+          access_instructions: string | null
+          address_id: string | null
+          bathrooms: number | null
+          bedrooms: number | null
+          client_id: string
+          created_at: string
+          has_pets: boolean
+          id: string
+          name: string
+          parking_notes: string | null
+          pet_info: string | null
+          special_notes: string | null
+          sq_ft: number | null
+          updated_at: string
+        }
+        Insert: {
+          access_instructions?: string | null
+          address_id?: string | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          client_id: string
+          created_at?: string
+          has_pets?: boolean
+          id?: string
+          name?: string
+          parking_notes?: string | null
+          pet_info?: string | null
+          special_notes?: string | null
+          sq_ft?: number | null
+          updated_at?: string
+        }
+        Update: {
+          access_instructions?: string | null
+          address_id?: string | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          client_id?: string
+          created_at?: string
+          has_pets?: boolean
+          id?: string
+          name?: string
+          parking_notes?: string | null
+          pet_info?: string | null
+          special_notes?: string | null
+          sq_ft?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_profiles_address_id_fkey"
+            columns: ["address_id"]
+            isOneToOne: false
+            referencedRelation: "addresses"
             referencedColumns: ["id"]
           },
         ]
@@ -5082,6 +5318,56 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      refund_requests: {
+        Row: {
+          admin_notes: string | null
+          amount_credits: number
+          client_id: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          id: string
+          job_id: string | null
+          reason: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount_credits: number
+          client_id: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          job_id?: string | null
+          reason: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount_credits?: number
+          client_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          job_id?: string | null
+          reason?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refund_requests_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reliability_history: {
         Row: {
@@ -5306,6 +5592,7 @@ export type Database = {
           cleaner_id: string
           client_id: string
           created_at: string
+          deleted_at: string | null
           id: string
           job_id: string
           rating: number
@@ -5315,6 +5602,7 @@ export type Database = {
           cleaner_id: string
           client_id: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           job_id: string
           rating: number
@@ -5324,6 +5612,7 @@ export type Database = {
           cleaner_id?: string
           client_id?: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           job_id?: string
           rating?: number
@@ -5346,6 +5635,38 @@ export type Database = {
           },
           {
             foreignKeyName: "reviews_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      satisfaction_pulses: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          job_id: string
+          rating: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          rating: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          rating?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "satisfaction_pulses_job_id_fkey"
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
@@ -5536,6 +5857,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          browser: string | null
+          created_at: string
+          device_name: string | null
+          id: string
+          ip_address: string | null
+          is_current: boolean
+          last_active_at: string
+          revoked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          device_name?: string | null
+          id?: string
+          ip_address?: string | null
+          is_current?: boolean
+          last_active_at?: string
+          revoked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          device_name?: string | null
+          id?: string
+          ip_address?: string | null
+          is_current?: boolean
+          last_active_at?: string
+          revoked_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_settings: {
         Row: {
           compact_mode: boolean
@@ -5575,6 +5932,39 @@ export type Database = {
           timezone?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_event_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string | null
+          event_type: string
+          id: string
+          payload: Json
+          provider: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          event_type: string
+          id?: string
+          payload?: Json
+          provider?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json
+          provider?: string
+          status?: string
         }
         Relationships: []
       }
