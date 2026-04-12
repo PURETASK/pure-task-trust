@@ -41,7 +41,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
           <CardContent className="p-4">
             <div className="flex gap-1 mb-2 justify-center">
               {Array.from({ length: rating }).map((_, i) => (
-                <motion.div key={i} initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: [0.6, 1.3, 1], opacity: 1 }} viewport={{ once: false, amount: 0.5 }} transition={{ delay: i * 0.12, duration: 0.4, ease: "easeOut" }}>
+                <motion.div key={i} initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: [0, 1.6, 1], opacity: 1 }} viewport={{ once: false, amount: 0.5 }} transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}>
                   <Star className="h-5 w-5 fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5] drop-shadow-sm" />
                 </motion.div>
               ))}
@@ -70,10 +70,10 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
             {Array.from({ length: 5 }).map((_, i) => (
               <motion.div
                 key={i}
-                initial={{ scale: 0.6, opacity: 0 }}
-                whileInView={{ scale: [0.6, 1.3, 1], opacity: 1 }}
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: [0, 1.6, 1], opacity: 1 }}
                 viewport={{ once: false, amount: 0.5 }}
-                transition={{ delay: i * 0.12, duration: 0.4, ease: "easeOut" }}
+                transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}
               >
                 <Star
                   className={`h-6 w-6 drop-shadow-sm ${
