@@ -259,9 +259,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
-      <CleaningRequestForm />
-
       {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="container">
@@ -277,6 +274,9 @@ export default function Index() {
           <TestimonialsCarousel />
         </div>
       </section>
+
+      {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
+      <CleaningRequestForm />
 
       {/* ── FOUNDER NOTE ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24 bg-muted/30">
