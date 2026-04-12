@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SEO, JsonLdGraph, BreadcrumbSchema } from "@/components/seo";
 import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
-import { usePlatformStats } from "@/hooks/usePlatformStats";
+
 import { TestimonialsCarousel } from "@/components/social-proof";
 import { LiveActivityStrip } from "@/components/home/LiveActivityStrip";
 import heroImg from "@/assets/hero-landing.jpg";
