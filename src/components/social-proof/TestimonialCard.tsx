@@ -39,9 +39,11 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
       return (
         <Card className="bg-card border-border/50 h-full">
           <CardContent className="p-4">
-            <div className="flex gap-1 mb-2">
+            <div className="flex gap-1 mb-2 justify-center">
               {Array.from({ length: rating }).map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5] drop-shadow-sm" />
+                <motion.div key={i} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: [0.6, 1.3, 1], opacity: 1 }} transition={{ delay: i * 0.12, duration: 0.4, ease: "easeOut" }}>
+                  <Star className="h-5 w-5 fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5] drop-shadow-sm" />
+                </motion.div>
               ))}
             </div>
             <p className="text-sm text-muted-foreground line-clamp-3 mb-3">"{quote}"</p>
