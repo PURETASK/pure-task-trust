@@ -59,7 +59,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
     }
 
     return (
-      <Card className={`${colors.bg} border-border/50 h-full shadow-soft hover:shadow-md transition-shadow duration-300`}>
+      <Card className={`${colors.bg} ${colors.border} border-2 rounded-3xl h-full shadow-soft hover:shadow-md transition-shadow duration-300`}>
         <CardContent className="p-6 flex flex-col h-full">
           <Quote className={`h-8 w-8 ${colors.quote} mb-4 flex-shrink-0`} />
 
