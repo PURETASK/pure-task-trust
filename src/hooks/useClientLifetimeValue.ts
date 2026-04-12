@@ -18,7 +18,7 @@ export function useClientLifetimeValue() {
     queryKey: ['client-lifetime-value'],
     queryFn: async (): Promise<{ clients: ClientCLV[]; avgCLV: number; totalRevenue: number }> => {
       const [clientsRes, jobsRes] = await Promise.all([
-        supabase.from('client_profiles').select('id, first_name, last_name, created_at').limit(500),
+        supabase.from('client_profiles').select('id, first_name, last_name, created_at').is('deleted_at', null).limit(500),
         supabase.from('jobs').select('client_id, escrow_credits_reserved, created_at, status')
           .not('status', 'eq', 'cancelled'),
       ]);

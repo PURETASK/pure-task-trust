@@ -18,7 +18,7 @@ export function useCleanerUtilization() {
       weekStart.setDate(weekStart.getDate() - 28); // Last 4 weeks
 
       const [cleanersRes, blocksRes, jobsRes] = await Promise.all([
-        supabase.from('cleaner_profiles').select('id, first_name, last_name, tier').limit(200),
+        supabase.from('cleaner_profiles').select('id, first_name, last_name, tier').is('deleted_at', null).limit(200),
         supabase.from('availability_blocks').select('cleaner_id, start_time, end_time, is_active').eq('is_active', true),
         supabase.from('jobs').select('cleaner_id, estimated_hours, status')
           .gte('scheduled_start_at', weekStart.toISOString())
