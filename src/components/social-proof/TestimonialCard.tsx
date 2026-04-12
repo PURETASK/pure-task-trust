@@ -3,6 +3,13 @@ import { Star, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+const CARD_COLORS = [
+  { bg: "bg-[hsl(211,100%,50%)]/8", quote: "text-[hsl(211,100%,50%)]/30", avatar: "bg-[hsl(211,100%,50%)]/15 text-[hsl(211,100%,50%)]" },   // Blue
+  { bg: "bg-[hsl(152,63%,48%)]/8",  quote: "text-[hsl(152,63%,48%)]/30",  avatar: "bg-[hsl(152,63%,48%)]/15 text-[hsl(152,63%,48%)]" },    // Green
+  { bg: "bg-[hsl(30,100%,50%)]/8",   quote: "text-[hsl(30,100%,50%)]/30",  avatar: "bg-[hsl(30,100%,50%)]/15 text-[hsl(30,100%,50%)]" },    // Orange
+  { bg: "bg-[hsl(291,76%,42%)]/8",   quote: "text-[hsl(291,76%,42%)]/30",  avatar: "bg-[hsl(291,76%,42%)]/15 text-[hsl(291,76%,42%)]" },    // Purple
+] as const;
+
 interface TestimonialCardProps {
   authorName: string;
   authorRole?: string | null;
@@ -11,13 +18,15 @@ interface TestimonialCardProps {
   rating: number;
   avatarUrl?: string | null;
   variant?: "default" | "compact";
+  colorIndex?: number;
 }
 
 export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
   function TestimonialCard(
-    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default" }: TestimonialCardProps,
+    { authorName, authorRole, authorLocation, quote, rating, avatarUrl, variant = "default", colorIndex = 0 }: TestimonialCardProps,
     _ref
   ) {
+    const colors = CARD_COLORS[colorIndex % CARD_COLORS.length];
     const initials = authorName
       .split(" ")
       .map((n) => n[0])
@@ -50,9 +59,9 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
     }
 
     return (
-      <Card className="bg-card border-border/50 h-full shadow-soft hover:shadow-md transition-shadow duration-300">
+      <Card className={`${colors.bg} border-border/50 h-full shadow-soft hover:shadow-md transition-shadow duration-300`}>
         <CardContent className="p-6 flex flex-col h-full">
-          <Quote className="h-8 w-8 text-primary/20 mb-4 flex-shrink-0" />
+          <Quote className={`h-8 w-8 ${colors.quote} mb-4 flex-shrink-0`} />
 
           <div className="flex gap-1 mb-4">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -72,7 +81,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
           <div className="flex items-center gap-3 pt-4 border-t border-border/50">
             <Avatar className="h-10 w-10">
               <AvatarImage src={avatarUrl ?? undefined} alt={authorName} />
-              <AvatarFallback className="bg-primary/10 text-primary font-medium">
+              <AvatarFallback className={`${colors.avatar} font-medium`}>
                 {initials}
               </AvatarFallback>
             </Avatar>
