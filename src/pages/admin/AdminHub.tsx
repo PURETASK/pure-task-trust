@@ -72,6 +72,10 @@ const SECTIONS: DashSection[] = [
       { icon: Package, title: "Pricing Mgmt", desc: "Bundle offers & tiers", href: "/admin/pricing" },
       { icon: MessageSquare, title: "Bulk Comms", desc: "Targeted notifications", href: "/admin/bulk-comms" },
       { icon: Settings, title: "Platform Config", desc: "Live fees & feature flags", href: "/admin/platform-config" },
+      { icon: FileText, title: "Audit Trail", desc: "Searchable action timeline", href: "/admin/audit-log", badge: "New" },
+      { icon: DollarSign, title: "Refund Queue", desc: "Review refund requests", href: "/admin/refund-queue", badge: "New" },
+      { icon: Zap, title: "Webhook Log", desc: "Stripe event debugging", href: "/admin/webhook-log", badge: "New" },
+      { icon: Activity, title: "System Health", desc: "Function success & latency", href: "/admin/health", badge: "New" },
     ],
   },
 ];
