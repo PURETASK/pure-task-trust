@@ -20,9 +20,9 @@ export default function SpendingAnalytics() {
       const twelveMonthsAgo = subMonths(new Date(), 12).toISOString();
       const { data: ledger, error } = await supabase
         .from('credit_ledger')
-        .select('amount, description, created_at')
+        .select('delta_credits, reason, created_at')
         .eq('user_id', user!.id)
-        .lt('amount', 0) // spending only
+        .lt('delta_credits', 0) // spending only
         .gte('created_at', twelveMonthsAgo)
         .order('created_at', { ascending: true });
       
@@ -34,17 +34,18 @@ export default function SpendingAnalytics() {
       
       (ledger || []).forEach(entry => {
         const month = format(new Date(entry.created_at), 'MMM yyyy');
-        byMonth[month] = (byMonth[month] || 0) + Math.abs(entry.amount);
+        byMonth[month] = (byMonth[month] || 0) + Math.abs(entry.delta_credits);
         
-        const type = entry.description?.includes('deep') ? 'Deep Clean' :
-                     entry.description?.includes('move') ? 'Move Out' :
-                     entry.description?.includes('recurring') ? 'Recurring' : 'Standard';
-        byType[type] = (byType[type] || 0) + Math.abs(entry.amount);
+        const reason = entry.reason || 'other';
+        const type = reason.includes('deep') ? 'Deep Clean' :
+                     reason.includes('move') ? 'Move Out' :
+                     reason.includes('recurring') ? 'Recurring' : 'Standard';
+        byType[type] = (byType[type] || 0) + Math.abs(entry.delta_credits);
       });
 
       const monthlyData = Object.entries(byMonth).map(([month, total]) => ({ month, total }));
       const typeData = Object.entries(byType).map(([name, value]) => ({ name, value }));
-      const totalSpent = (ledger || []).reduce((sum, e) => sum + Math.abs(e.amount), 0);
+      const totalSpent = (ledger || []).reduce((sum, e) => sum + Math.abs(e.delta_credits), 0);
 
       return { monthlyData, typeData, totalSpent, transactionCount: ledger?.length || 0 };
     },
