@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { TrendingUp, DollarSign, Users, Calendar, ArrowUpRight, ArrowDownRight, BarChart3, Activity, RefreshCw, ChevronRight, Target } from "lucide-react";
+import { TrendingUp, DollarSign, Users, Calendar, ArrowUpRight, ArrowDownRight, BarChart3, Activity, RefreshCw, ChevronRight, Target, AlertTriangle, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, AreaChart, Area } from "recharts";
 import { useAdminCEOStats } from "@/hooks/useAdminStats";
 import { RevenueTicker } from "@/components/admin/RevenueTicker";
+import { useClientLifetimeValue } from "@/hooks/useClientLifetimeValue";
+import { useChurnPrediction } from "@/hooks/useChurnPrediction";
 import adminHeroImg from "@/assets/admin-hero.jpg";
 
 const chartConfig = {
@@ -27,6 +29,8 @@ const KPI_CONFIG = [
 
 const AdminCEODashboard = () => {
   const { data, isLoading, refetch } = useAdminCEOStats();
+  const { data: clvData } = useClientLifetimeValue();
+  const { churnData } = useChurnPrediction();
 
   const getKpiValue = (key: string) => {
     if (!data) return 0;
@@ -191,6 +195,84 @@ const AdminCEODashboard = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* CLV & Churn Insights */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base"><Crown className="h-5 w-5 text-warning" />Client Lifetime Value</CardTitle>
+              <CardDescription>Top clients by predicted annual value</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!clvData ? <Skeleton className="h-40" /> : (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
+                      <p className="text-2xl font-black">{clvData.avgCLV}</p>
+                      <p className="text-xs text-muted-foreground">Avg CLV (cr)</p>
+                    </div>
+                    <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
+                      <p className="text-2xl font-black">{clvData.totalRevenue.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Total Revenue</p>
+                    </div>
+                    <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
+                      <p className="text-2xl font-black">{clvData.clients.filter(c => c.segment === 'whale').length}</p>
+                      <p className="text-xs text-muted-foreground">Whale Clients</p>
+                    </div>
+                  </div>
+                  {clvData.clients.slice(0, 5).map(c => (
+                    <div key={c.clientId} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/20">
+                      <div>
+                        <p className="font-semibold text-sm">{c.name}</p>
+                        <p className="text-xs text-muted-foreground">{c.jobCount} jobs · {c.totalSpent} cr spent</p>
+                      </div>
+                      <Badge className={`text-xs ${c.segment === 'whale' ? 'bg-warning/15 text-warning border-warning/30' : c.segment === 'high' ? 'bg-success/15 text-success border-success/30' : 'bg-muted text-muted-foreground'}`}>
+                        {c.predictedAnnualValue} cr/yr
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base"><AlertTriangle className="h-5 w-5 text-destructive" />Churn Risk</CardTitle>
+              <CardDescription>Users inactive for 14+ days</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!churnData ? <Skeleton className="h-40" /> : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center p-3 bg-destructive/5 rounded-xl border border-destructive/20">
+                      <p className="text-2xl font-black text-destructive">{churnData.totalAtRisk}</p>
+                      <p className="text-xs text-muted-foreground">Total At Risk</p>
+                    </div>
+                    <div className="text-center p-3 bg-warning/5 rounded-xl border border-warning/20">
+                      <p className="text-2xl font-black text-warning">{churnData.atRiskClients.length}</p>
+                      <p className="text-xs text-muted-foreground">Clients</p>
+                    </div>
+                    <div className="text-center p-3 bg-primary/5 rounded-xl border border-primary/20">
+                      <p className="text-2xl font-black text-primary">{churnData.atRiskCleaners.length}</p>
+                      <p className="text-xs text-muted-foreground">Cleaners</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">At-Risk Clients (top 5)</p>
+                    {churnData.atRiskClients.slice(0, 5).map(c => (
+                      <div key={c.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
+                        <span className="text-sm">{c.first_name || 'Unknown'}</span>
+                        <Badge variant="outline" className="text-xs text-destructive border-destructive/30">Inactive</Badge>
+                      </div>
+                    ))}
+                    {churnData.atRiskClients.length === 0 && <p className="text-sm text-muted-foreground text-center py-4">No at-risk clients 🎉</p>}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         <div className="flex gap-3">
           <Button variant="outline" asChild className="rounded-xl">

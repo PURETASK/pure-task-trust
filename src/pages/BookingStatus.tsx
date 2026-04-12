@@ -2,15 +2,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2, AlertTriangle, Shield, CreditCard, CheckCircle, Zap } from "lucide-react";
+import { Clock, Check, X, Calendar, MapPin, Star, MessageCircle, Loader2, AlertTriangle, Shield, CreditCard, CheckCircle, Zap, RotateCcw, FileText } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/useJob";
 import { format } from "date-fns";
 import { CancelAlternativesModal } from "@/components/booking/CancelAlternativesModal";
 import { NoShowDecisionCard } from "@/components/booking/NoShowDecisionCard";
+import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAutoRebook } from "@/hooks/useAutoRebook";
+import { useReceipt } from "@/hooks/useReceipt";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
@@ -49,6 +52,8 @@ export default function BookingStatus() {
   const { data: job, isLoading, error } = useJob(id || "");
   const [showCancelModal, setShowCancelModal] = useState(false);
   const queryClient = useQueryClient();
+  const { rebook, isRebooking } = useAutoRebook();
+  const { generateReceipt, isGenerating } = useReceipt();
 
   if (isLoading) {
     return (
@@ -263,9 +268,22 @@ export default function BookingStatus() {
               </>
             )}
             {statusKey === "completed" && (
-              <Button variant="success" className="w-full h-12 rounded-xl gap-2" asChild>
-                <Link to={`/job/${id}/approve`}><Check className="h-5 w-5" />Review Photos & Approve</Link>
-              </Button>
+              <>
+                <div className="rounded-2xl border-2 border-border/40 p-4 mb-2">
+                  <SatisfactionPulse jobId={id!} />
+                </div>
+                <Button variant="success" className="w-full h-12 rounded-xl gap-2" asChild>
+                  <Link to={`/job/${id}/approve`}><Check className="h-5 w-5" />Review Photos & Approve</Link>
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1 rounded-xl gap-2" onClick={() => rebook(id!)} disabled={isRebooking}>
+                    <RotateCcw className="h-4 w-4" />{isRebooking ? "Rebooking..." : "Rebook Same"}
+                  </Button>
+                  <Button variant="outline" className="flex-1 rounded-xl gap-2" onClick={() => generateReceipt({ type: 'job_completion', jobId: id })} disabled={isGenerating}>
+                    <FileText className="h-4 w-4" />{isGenerating ? "Generating..." : "Receipt"}
+                  </Button>
+                </div>
+              </>
             )}
             {statusKey === "declined" && (
               <>

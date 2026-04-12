@@ -9,11 +9,13 @@ import { TierBadge } from "@/components/gamification/TierBadge";
 import { InviteFriendsCTA } from "@/components/referral";
 import { TierProgressMap } from "@/components/cleaner/TierProgressMap";
 import { ProfileCompletion } from "@/components/cleaner/ProfileCompletion";
+import { OnboardingTooltips, CLEANER_ONBOARDING_STEPS } from "@/components/onboarding/OnboardingTooltips";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useSmartScheduling } from "@/hooks/useSmartScheduling";
 import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,7 +28,7 @@ import type { CleanerTier } from "@/lib/tier-config";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import {
   Briefcase, Clock, DollarSign, MessageSquare, Search,
-  TrendingUp, ArrowRight, Lightbulb, Timer, Shield, Award,
+  TrendingUp, ArrowRight, Lightbulb, Timer, Shield, Award, Zap,
 } from "lucide-react";
 
 function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["jobs"] }) {
@@ -71,6 +73,7 @@ export default function CleanerDashboard() {
   const { profile, isLoading: isLoadingProfile } = useCleanerProfile();
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
   const { jobs } = useCleanerJobs();
+  const { data: scheduleSuggestions } = useSmartScheduling();
 
   const displayName = profile?.first_name || user?.name?.split(" ")[0] || "Cleaner";
   const tier = (profile?.tier || "bronze") as CleanerTier;
@@ -202,6 +205,34 @@ export default function CleanerDashboard() {
             </div>
           </section>
 
+          {/* Smart Scheduling Suggestions */}
+          {scheduleSuggestions && scheduleSuggestions.length > 0 && (
+            <motion.section initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
+                <Zap className="h-5 w-5 text-warning" />Schedule Suggestions
+              </h2>
+              <div className="space-y-2">
+                {scheduleSuggestions.slice(0, 3).map(s => (
+                  <Card key={s.dayOfWeek} className="border-warning/20 bg-warning/5">
+                    <CardContent className="p-3 sm:p-4 flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-warning/15 flex items-center justify-center flex-shrink-0">
+                        <Zap className="h-5 w-5 text-warning" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm">{s.dayName} · {s.startTime}–{s.endTime}</p>
+                        <p className="text-xs text-muted-foreground">{s.reason}</p>
+                      </div>
+                      <Badge variant="outline" className="text-xs border-warning/30 text-warning">{s.demandScore}% demand</Badge>
+                    </CardContent>
+                  </Card>
+                ))}
+                <Button variant="outline" size="sm" asChild className="w-full rounded-xl mt-2">
+                  <Link to="/cleaner/availability">Manage Availability</Link>
+                </Button>
+              </div>
+            </motion.section>
+          )}
+
           {/* Referral */}
           <InviteFriendsCTA linkTo="/cleaner/referral" />
 
@@ -234,6 +265,9 @@ export default function CleanerDashboard() {
           ))}
         </div>
       </CleanerLayout>
+
+      {/* Onboarding Tooltips */}
+      <OnboardingTooltips steps={CLEANER_ONBOARDING_STEPS} storageKey="cleaner-onboarding-seen" />
     </main>
   );
 }
