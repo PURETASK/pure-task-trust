@@ -226,7 +226,7 @@ export default function Index() {
       </section>
 
       {/* ── HOW IT WORKS — 4 STEPS ────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 relative" style={{ backgroundImage: 'url(/images/how-it-works-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
