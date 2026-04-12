@@ -21,7 +21,7 @@ export function useAuditLog() {
         .limit(200);
 
       if (filters.action) query = query.eq('action', filters.action);
-      if (filters.actorType) query = query.eq('actor_type', filters.actorType);
+      if (filters.actorType) query = query.eq('actor_type', filters.actorType as any);
       if (filters.dateFrom) query = query.gte('created_at', filters.dateFrom);
       if (filters.dateTo) query = query.lte('created_at', filters.dateTo);
 
