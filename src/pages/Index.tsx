@@ -1,234 +1,149 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SEO, JsonLdGraph, BreadcrumbSchema } from "@/components/seo";
 import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
-
 import { TestimonialsCarousel } from "@/components/social-proof";
-import { LiveActivityStrip } from "@/components/home/LiveActivityStrip";
 import heroImg from "@/assets/hero-landing.jpg";
-import cleanerImg from "@/assets/cleaner-hero.jpg";
-import clientImg from "@/assets/client-hero.jpg";
-import trustBgCheck from "@/assets/trust-bg-background-check.jpg";
-import trustBgPhoto from "@/assets/trust-bg-photo-docs.jpg";
-import trustBgGps from "@/assets/trust-bg-gps.jpg";
-import trustBgEscrow from "@/assets/trust-bg-escrow.jpg";
 import {
-  Shield, Star, Camera, MapPin, Clock, CreditCard, ArrowRight,
-  CheckCircle, Sparkles, Users, TrendingUp, Heart, Repeat, Zap,
-  ChevronDown, Quote, Award, Lock, Phone, Calendar } from
-"lucide-react";
-import { useRef } from "react";
+  Shield, Camera, MapPin, Lock, ArrowRight,
+  CheckCircle, Calendar, Users, Heart, Quote,
+  Eye, Clock, Smartphone, Fingerprint
+} from "lucide-react";
 
-const TRUST_PILLARS = [
-{ icon: Shield, title: "Background Checked", desc: "Every cleaner undergoes a comprehensive third-party background check — including criminal history, identity verification, and sex offender registry screening — before their first job. Checks are renewed annually.", color: "text-primary", bg: "bg-primary/10", borderColor: "hsl(var(--primary))", shadowColor: "hsl(var(--primary) / 0.2)", bgImage: trustBgCheck },
-{ icon: Camera, title: "Photo Documentation", desc: "Cleaners take timestamped before-and-after photos of every room. Photos upload to your private job record so you can verify quality from anywhere. Only you and your cleaner can see them.", color: "text-success", bg: "bg-success/10", borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.2)", bgImage: trustBgPhoto },
-{ icon: MapPin, title: "GPS Verified", desc: "Cleaners check in and out via GPS on arrival and departure. You get a timestamped notification with their exact location — so you always know when work starts and ends, even if you're not home.", color: "text-[hsl(var(--pt-purple))]", bg: "bg-[hsl(var(--pt-purple)/0.1)]", borderColor: "hsl(var(--pt-purple))", shadowColor: "hsl(var(--pt-purple) / 0.2)", bgImage: trustBgGps },
-{ icon: Lock, title: "Escrow Protection", desc: "Credits are placed on hold when you book — not charged. After the job, you have a 24-hour review window to inspect photos and approve. Credits release only when you say so. Problems? Open a dispute and your funds stay protected.", color: "text-warning", bg: "bg-warning/10", borderColor: "hsl(var(--warning))", shadowColor: "hsl(var(--warning) / 0.2)", bgImage: trustBgEscrow }];
+const PROOF_BAR = [
+  { icon: Shield, label: "Background-Checked" },
+  { icon: MapPin, label: "GPS Verified" },
+  { icon: Camera, label: "Photo Documented" },
+  { icon: CheckCircle, label: "Approval Before Payment" },
+];
 
-
-const AUDIENCE = [
-{ emoji: "🏠", label: "Homeowners", href: "/for-families", desc: "Spotless home, every time" },
-{ emoji: "✈️", label: "Airbnb Hosts", href: "/for-airbnb-hosts", desc: "Turnover-ready in hours" },
-{ emoji: "💼", label: "Professionals", href: "/for-professionals", desc: "Reclaim your weekends" },
-{ emoji: "👴", label: "Seniors", href: "/for-retirees", desc: "Safe, trusted, reliable" }];
-
+const WHY_SAFER = [
+  {
+    icon: Eye,
+    title: "You see everything",
+    desc: "Before & after photos, GPS timestamps, and real-time status updates — no black box.",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    borderColor: "hsl(var(--primary))",
+  },
+  {
+    icon: Lock,
+    title: "Your money stays protected",
+    desc: "Credits are held in escrow and only released when you approve the work. Disputes keep your funds safe.",
+    color: "text-success",
+    bg: "bg-success/10",
+    borderColor: "hsl(var(--success))",
+  },
+  {
+    icon: Fingerprint,
+    title: "Every cleaner is vetted",
+    desc: "Comprehensive background checks, identity verification, and annual renewals — before they ever enter your home.",
+    color: "text-[hsl(var(--pt-purple))]",
+    bg: "bg-[hsl(var(--pt-purple)/0.1)]",
+    borderColor: "hsl(var(--pt-purple))",
+  },
+  {
+    icon: Smartphone,
+    title: "Built with modern tech",
+    desc: "AI-powered matching, smart scheduling, and an app designed from the ground up — not bolted onto legacy systems.",
+    color: "text-warning",
+    bg: "bg-warning/10",
+    borderColor: "hsl(var(--warning))",
+  },
+];
 
 const STEPS = [
-{ step: "01", icon: Calendar, title: "Book in 60 seconds", desc: "Pick type, hours, date. Done." },
-{ step: "02", icon: Users, title: "Get matched", desc: "We find the best verified cleaner for your job." },
-{ step: "03", icon: CheckCircle, title: "They clean", desc: "GPS tracked with photo proof throughout." },
-{ step: "04", icon: Heart, title: "You approve & pay", desc: "Release payment only when you're 100% happy." }];
-
-
-const STATS = [
-{ value: "AI-Powered", label: "Smart Matching" },
-{ value: "100%", label: "Verified Cleaners" },
-{ value: "24/7", label: "AI Assistant" },
-{ value: "Zero", label: "Hidden Fees" }];
-
+  { step: "01", icon: Calendar, title: "Book in 60 seconds", desc: "Pick your cleaning type, hours, and date. That's it." },
+  { step: "02", icon: Users, title: "Get matched", desc: "We pair you with a verified cleaner based on your needs and location." },
+  { step: "03", icon: Camera, title: "They clean & document", desc: "GPS check-in, before & after photos — full transparency throughout." },
+  { step: "04", icon: Heart, title: "You approve & pay", desc: "Review the results. Payment releases only when you're satisfied." },
+];
 
 export default function Index() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
   return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
-
-      {/* ── SCHEMA: Consolidated @graph — one <script> tag for the homepage ── */}
       <AggregateRatingSchema />
       <JsonLdGraph nodes={[
-      {
-        '@type': 'Organization',
-        '@id': 'https://puretask.co/#organization',
-        name: 'PureTask',
-        url: 'https://puretask.co',
-        logo: 'https://puretask.co/icons/icon-192x192.png',
-        description: 'PureTask is a trusted cleaning services marketplace connecting clients with verified, background-checked independent cleaners. GPS check-ins, before/after photo documentation, and escrow payment protection are built into every booking.',
-        contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service', availableLanguage: 'English' },
-        sameAs: ['https://twitter.com/puretask', 'https://facebook.com/puretask', 'https://instagram.com/puretask'],
-        foundingDate: '2024',
-        areaServed: { '@type': 'Country', name: 'United States' }
-      },
-      {
-        '@type': 'LocalBusiness',
-        '@id': 'https://puretask.co/#business',
-        name: 'PureTask',
-        url: 'https://puretask.co',
-        image: 'https://puretask.co/og/puretask-og.png',
-        description: 'Professional cleaning services marketplace with GPS verification and photo documentation.',
-        priceRange: '$$',
-        address: { '@type': 'PostalAddress', addressCountry: 'US' },
-        areaServed: { '@type': 'Country', name: 'United States' },
-        serviceType: ['House Cleaning', 'Deep Cleaning', 'Move-out Cleaning', 'Airbnb Turnover Cleaning'],
-        currenciesAccepted: 'USD',
-        paymentAccepted: 'Credit Card, Debit Card',
-        openingHours: 'Mo-Su 00:00-23:59'
-      },
-      {
-        '@type': 'WebSite',
-        '@id': 'https://puretask.co/#website',
-        url: 'https://puretask.co',
-        name: 'PureTask',
-        description: 'Book verified cleaners online with transparent pricing and escrow payment.',
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: { '@type': 'EntryPoint', urlTemplate: 'https://puretask.co/discover?q={search_term_string}' },
-          'query-input': 'required name=search_term_string'
+        {
+          '@type': 'Organization',
+          '@id': 'https://puretask.co/#organization',
+          name: 'PureTask',
+          url: 'https://puretask.co',
+          logo: 'https://puretask.co/icons/icon-192x192.png',
+          description: 'PureTask is a trusted cleaning services marketplace connecting clients with verified, background-checked independent cleaners.',
+          contactPoint: { '@type': 'ContactPoint', email: 'support@puretask.com', contactType: 'customer service', availableLanguage: 'English' },
+          foundingDate: '2024',
+          areaServed: { '@type': 'Country', name: 'United States' }
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://puretask.co/#website',
+          url: 'https://puretask.co',
+          name: 'PureTask',
+          description: 'Book verified cleaners online with transparent pricing and escrow payment.',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: { '@type': 'EntryPoint', urlTemplate: 'https://puretask.co/discover?q={search_term_string}' },
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@type': 'HowTo',
+          '@id': 'https://puretask.co/#howto',
+          name: 'How to Book a Cleaning on PureTask',
+          description: 'Book a verified, background-checked cleaner in four simple steps.',
+          totalTime: 'PT2M',
+          step: [
+            { '@type': 'HowToStep', position: 1, name: 'Book in 60 seconds', text: 'Select your cleaning type, choose the number of hours, and pick your preferred date and time.' },
+            { '@type': 'HowToStep', position: 2, name: 'Get matched to a verified cleaner', text: 'PureTask matches you with a background-checked, GPS-verified cleaner available in your area.' },
+            { '@type': 'HowToStep', position: 3, name: 'Cleaner arrives and cleans', text: 'Your cleaner checks in via GPS on arrival. Before-and-after photos are taken throughout the job.' },
+            { '@type': 'HowToStep', position: 4, name: 'You approve and pay', text: 'Review the photo proof and approve the work. Credits are only released when you are satisfied.' }
+          ]
         }
-      },
-      {
-        '@type': 'Service',
-        '@id': 'https://puretask.co/#service',
-        name: 'PureTask Cleaning Services',
-        serviceType: 'House Cleaning',
-        description: 'Book background-checked, GPS-verified, independently insured cleaners for standard, deep, move-out, or Airbnb turnover cleans. Credits-based pricing: 1 credit = $1 USD. Cleaners earn 80–85% of each booking.',
-        provider: { '@type': 'Organization', '@id': 'https://puretask.co/#organization' },
-        areaServed: { '@type': 'Country', name: 'United States' },
-        hasOfferCatalog: {
-          '@type': 'OfferCatalog',
-          name: 'Cleaning Service Types',
-          itemListElement: [
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Standard Clean', description: 'Regular maintenance cleaning — dusting, vacuuming, mopping, kitchen and bathroom surfaces.' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Deep Clean', description: 'Thorough top-to-bottom cleaning including inside appliances, baseboards, light fixtures, and all surfaces.' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Move-Out Clean', description: 'Comprehensive cleaning for end-of-tenancy or property handover, including inside cabinets, walls, and fixtures.' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Airbnb Turnover Clean', description: 'Fast turnaround cleaning between guest stays with linen change, restocking, and photo documentation.' } }]
-
-        }
-      },
-      {
-        '@type': 'HowTo',
-        '@id': 'https://puretask.co/#howto',
-        name: 'How to Book a Cleaning on PureTask',
-        description: 'Book a verified, background-checked cleaner in four simple steps using the PureTask platform.',
-        totalTime: 'PT2M',
-        step: [
-        { '@type': 'HowToStep', position: 1, name: 'Book in 60 seconds', text: 'Select your cleaning type (standard, deep, move-out, or Airbnb turnover), choose the number of hours, and pick your preferred date and time.' },
-        { '@type': 'HowToStep', position: 2, name: 'Get matched to a verified cleaner', text: 'PureTask matches you with a background-checked, GPS-verified cleaner available in your area. View cleaner profiles and ratings before confirming.' },
-        { '@type': 'HowToStep', position: 3, name: 'Cleaner arrives and cleans', text: 'Your cleaner checks in via GPS on arrival. Before-and-after photos are taken throughout the job for full documentation.' },
-        { '@type': 'HowToStep', position: 4, name: 'You approve and pay', text: 'Review the photo proof and approve the work. Credits are only deducted from your escrow hold when you are 100% satisfied.' }]
-
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': 'https://puretask.co/#faq',
-        mainEntity: [
-        { '@type': 'Question', name: 'How much does a cleaning cost on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'PureTask uses a credits system where 1 credit = $1 USD. Cleaners set their own hourly rate, typically ranging from $25–$60/hour depending on their tier. You only pay for actual hours worked, and unused credits never expire.' } },
-        { '@type': 'Question', name: 'Are PureTask cleaners background checked?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every cleaner on PureTask undergoes a thorough background check and identity verification before their first job. Cleaners also maintain a reliability score based on punctuality, photo compliance, and client ratings.' } },
-        { '@type': 'Question', name: 'What is escrow payment protection?', acceptedAnswer: { '@type': 'Answer', text: 'When you book, credits are placed on hold (not charged). After the job is complete, you review the photo documentation and approve the work. Credits are only released to the cleaner once you are satisfied. If there is an issue, you can dispute the charge.' } },
-        { '@type': 'Question', name: 'Can I cancel or reschedule a booking?', acceptedAnswer: { '@type': 'Answer', text: 'You can cancel or reschedule for free up to 24 hours before your appointment. Cancellations within 24 hours may incur a fee. The full cancellation policy is available at puretask.co/cancellation-policy.' } },
-        { '@type': 'Question', name: 'How do cleaners earn money on PureTask?', acceptedAnswer: { '@type': 'Answer', text: 'Cleaners keep 80–85% of each booking depending on their tier. They set their own rates and schedule, receive weekly automatic payouts or opt for instant payouts. Top-tier cleaners earn higher commissions and get priority job matching.' } }]
-
-      }]
-      } />
+      ]} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }]} />
 
-      {/* ── AI-READABLE FACT BLOCK (visually hidden, crawlable by AI & search engines) ── */}
-      <div className="sr-only" aria-hidden="false" role="complementary" aria-label="About PureTask — key facts">
-        <h2>About PureTask</h2>
-        <p>PureTask is a cleaning services marketplace operating in the United States. We connect homeowners, Airbnb hosts, professionals, and retirees with verified, background-checked independent cleaners.</p>
-        <h3>What PureTask offers</h3>
-        <ul>
-          <li>Standard home cleaning</li>
-          <li>Deep cleaning</li>
-          <li>Move-out cleaning</li>
-          <li>Airbnb turnover cleaning</li>
-        </ul>
-        <h3>How PureTask works</h3>
-        <ol>
-          <li>Book online in under 60 seconds — choose cleaning type, hours, and date.</li>
-          <li>Get matched with a background-checked, GPS-verified cleaner in your area.</li>
-          <li>Cleaner arrives with GPS check-in and documents the job with before and after photos.</li>
-          <li>Review photo proof and approve payment — credits are only released when you are satisfied.</li>
-        </ol>
-        <h3>Pricing</h3>
-        <p>PureTask uses a credits system. 1 credit equals 1 US dollar. Cleaners set hourly rates typically between $25 and $60 per hour. You only pay for actual hours worked. Unused credits never expire.</p>
-        <h3>Trust and safety features</h3>
-        <ul>
-          <li>All cleaners are background checked and identity verified.</li>
-          <li>GPS check-in and check-out tracking on every job.</li>
-          <li>Before and after photo documentation for every cleaning.</li>
-          <li>Escrow payment protection — pay only when you approve the work.</li>
-          <li>Reliability score system rating cleaner punctuality, photo compliance, and client satisfaction.</li>
-        </ul>
-        <h3>For cleaners</h3>
-        <p>Cleaners keep 80 to 85 percent of each booking depending on their tier. They set their own schedule and rates. Weekly automatic payouts or instant payouts are available.</p>
-        <h3>Contact</h3>
-        <address>Email: support@puretask.com. Emergency line: 1-800-PURETASK, available 24/7.</address>
-      </div>
-
-      {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section ref={heroRef} aria-label="Hero — book verified cleaning services" className="relative min-h-[100dvh] flex items-center overflow-hidden">
-        <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
+      {/* ── HERO ──────────────────────────────────────────────────────── */}
+      <section className="relative min-h-[90dvh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <img
             src={heroImg}
             alt="Pristine clean home"
             className="w-full h-full object-cover"
-            width="1920"
-            height="1080"
-            loading="eager"
-            fetchPriority="high"
-            decoding="sync" />
-          
+            width="1920" height="1080"
+            loading="eager" fetchPriority="high" decoding="sync"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
-        </motion.div>
+        </div>
 
         <div className="relative z-10 w-full px-4 sm:px-6 py-20 sm:py-32 pt-28 sm:pt-32">
           <div className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold mb-5 sm:mb-6 backdrop-blur-sm">
-                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                Pay Only When You're Happy
-              </div>
-            </motion.div>
-
             <motion.h1
-              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6">
-              
-              Cleaning you can{" "}
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6"
+            >
+              Book trusted cleaners{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
-                actually trust.
+                in minutes.
               </span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0">
-              
-              Background-checked cleaners. GPS check-ins. Photo proof. Escrow payment — released only when you approve.
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
+              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0"
+            >
+              GPS check-in/out, before &amp; after photos, and payment released only after you approve.
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-center sm:items-start">
-              
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+              className="flex flex-col xs:flex-row gap-3 mb-10 items-center sm:items-start"
+            >
               <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
@@ -238,151 +153,99 @@ export default function Index() {
                 <Link to="/discover">Browse Cleaners</Link>
               </Button>
             </motion.div>
-
-            {/* Live Activity Strip */}
-            <div className="mb-6 sm:mb-8">
-              <LiveActivityStrip />
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 text-sm">
-              
-              {["GPS Verified Check-ins", "Escrow Protection", "Photo Proof"].map((t) =>
-              <div key={t} className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground text-xs sm:text-sm">
-                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-success flex-shrink-0" />
-                  {t}
-                </div>
-              )}
-            </motion.div>
           </div>
         </div>
-
-        {/* Scroll cue */}
-        <motion.div
-          style={{ opacity: heroOpacity }}
-          className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground hidden sm:flex"
-          animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-          
-          <span className="text-xs font-medium">Scroll to explore</span>
-          <ChevronDown className="h-5 w-5" />
-        </motion.div>
       </section>
 
-      {/* ── WHY WE'RE DIFFERENT BAR ─────────────────────────────────────── */}
-      <section aria-label="Platform differentiators" className="cv-auto bg-primary py-8 sm:py-10">
+      {/* ── PROOF BAR ─────────────────────────────────────────────────── */}
+      <section className="bg-primary py-5 sm:py-6">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {STATS.map((s, i) =>
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="text-center">
-              
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground">{s.value}</p>
-                <p className="text-xs sm:text-sm text-primary-foreground/70 mt-1">{s.label}</p>
+            {PROOF_BAR.map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                className="flex items-center justify-center gap-2 sm:gap-3 text-primary-foreground"
+              >
+                <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-semibold">{item.label}</span>
               </motion.div>
-            )}
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── TRUST PILLARS ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="trust-heading" className="cv-auto py-16 sm:py-24 bg-background">
+      {/* ── WHY PURETASK FEELS SAFER ──────────────────────────────────── */}
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
-            
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
+          >
             <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
-            <h2 id="trust-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built on trust. Verified at every step.</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+              Why PureTask feels safer than traditional booking
+            </h2>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-              We designed every part of the platform to give you complete confidence.
+              We rebuilt the cleaning experience from scratch — transparency, accountability, and your protection come first.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {TRUST_PILLARS.map((p, i) =>
-            <motion.div
-              key={p.title}
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -4 }}>
-              
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {WHY_SAFER.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -4 }}
+              >
                 <Card
-                  className="h-full transition-all duration-300 overflow-hidden relative"
+                  className="h-full transition-all duration-300"
                   style={{
-                    border: `2px solid ${p.borderColor}`,
-                    borderRadius: '1rem',
-                    boxShadow: `0 4px 24px 0 ${p.shadowColor}, 0 1.5px 6px 0 ${p.shadowColor}`,
+                    border: `2px solid ${item.borderColor}`,
+                    boxShadow: `0 4px 24px 0 ${item.borderColor.replace(')', ' / 0.15)')}, 0 1px 6px 0 ${item.borderColor.replace(')', ' / 0.1)')}`,
                   }}
                 >
-                  <img
-                    src={p.bgImage}
-                    alt=""
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover opacity-80 pointer-events-none"
-                  />
-                  <CardContent className="p-5 sm:p-8 relative z-10">
+                  <CardContent className="p-6 sm:p-8">
                     <div
-                      className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${p.bg} flex items-center justify-center mb-4 sm:mb-5`}
-                      style={{ border: `1px solid ${p.borderColor}`, borderRadius: '0.875rem' }}
+                      className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl ${item.bg} flex items-center justify-center mb-4 sm:mb-5`}
+                      style={{ border: `1px solid ${item.borderColor}` }}
                     >
-                      <p.icon className={`h-6 w-6 sm:h-7 sm:w-7 ${p.color}`} />
+                      <item.icon className={`h-6 w-6 sm:h-7 sm:w-7 ${item.color}`} />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold mb-2">{p.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{p.desc}</p>
+                    <h3 className="text-lg sm:text-xl font-bold mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{item.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
-            )}
+            ))}
           </div>
-
-          {/* Contextual links to key trust pages */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-10 sm:mt-14 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm">
-            
-            <Link to="/reliability-score" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
-              <Award className="h-4 w-4" /> How our cleaner reliability score works
-            </Link>
-            <Link to="/pricing" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
-              <CreditCard className="h-4 w-4" /> View transparent pricing &amp; tiers
-            </Link>
-            <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
-              <CheckCircle className="h-4 w-4" /> See exactly what's included in every clean
-            </Link>
-            <Link to="/reviews" className="text-primary hover:underline underline-offset-4 font-medium flex items-center gap-1.5">
-              <Star className="h-4 w-4" /> Read verified customer reviews
-            </Link>
-          </motion.div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section aria-labelledby="how-it-works-heading" className="cv-auto py-16 sm:py-24 bg-muted/30">
+      {/* ── HOW IT WORKS — 4 STEPS ────────────────────────────────────── */}
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
-            
+            viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
+          >
             <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
-            <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Book to clean in 4 steps</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">How it works in 4 steps</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {STEPS.map((s, i) =>
-            <motion.div
-              key={s.step}
-              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-              className="relative text-center sm:text-left">
-              
-                {i < STEPS.length - 1 &&
-              <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
-              }
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.12 }}
+                className="relative text-center sm:text-left"
+              >
+                {i < STEPS.length - 1 && (
+                  <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
+                )}
                 <div className="text-5xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
                 <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -390,140 +253,60 @@ export default function Index() {
                 <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
                 <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{s.desc}</p>
               </motion.div>
-            )}
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── SPLIT SECTION: CLIENT + CLEANER ───────────────────────────────── */}
-      <section aria-label="For clients and cleaners" className="py-16 sm:py-24 bg-background">
+      {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Built for two sides of trust</h2>
-            <p className="text-base sm:text-xl text-muted-foreground">Whether you're booking or cleaning, PureTask has you covered.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
-            {/* Client card */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group">
-              
-              <img src={clientImg} alt="Happy homeowner inspecting a freshly cleaned living space" className="w-full h-80 sm:h-[400px] object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="400" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-2 border-primary rounded-2xl sm:rounded-3xl" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 text-center sm:text-left flex flex-col items-center sm:items-start">
-                <Badge className="mb-2 sm:mb-3 bg-primary/40 text-primary-foreground border-2 border-white/80 rounded-full text-sm px-4 py-1 font-semibold">For Clients</Badge>
-                <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Book with confidence</h3>
-                <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Verified cleaners, photo proof, and escrow protection. Pay only when you're happy.</p>
-                <Button asChild className="rounded-xl h-10 sm:h-11 border-2 border-white">
-                  <Link to="/auth?role=client">Get Started Free <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                </Button>
-              </div>
-            </motion.div>
-
-            {/* Cleaner card */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} whileHover={{ y: -4 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl group">
-              
-              <img src={cleanerImg} alt="Professional PureTask cleaner ready to start a verified cleaning job" className="w-full h-80 sm:h-[400px] object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width="800" height="400" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent border-2 border-success rounded-2xl sm:rounded-3xl" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 text-center sm:text-left flex flex-col items-center sm:items-start">
-                <Badge className="mb-2 sm:mb-3 bg-success/20 text-success border-success/30">For Cleaners</Badge>
-                <h3 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2">Earn on your terms</h3>
-                <p className="text-muted-foreground mb-3 sm:mb-4 text-sm">Set your own schedule and rates. Get paid weekly or instantly. Grow your reputation.</p>
-                <Button asChild variant="outline" className="rounded-xl border-success/40 text-success hover:bg-success/10 h-10 sm:h-11">
-                  <Link to="/auth?role=cleaner">Join as a Cleaner <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHO IS IT FOR ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="audience-heading" className="py-16 sm:py-24 bg-muted/30">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-8 sm:mb-12">
-            
-            <h2 id="audience-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Perfect for everyone</h2>
-            <p className="text-base sm:text-xl text-muted-foreground">No matter your lifestyle, we've built for you.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {AUDIENCE.map((a, i) => {
-              const audienceColors = [
-                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
-                { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
-                { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
-                { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.18)" },
-              ];
-              const c = audienceColors[i];
-              return (
-                <motion.div
-                  key={a.label}
-                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}>
-                  <Link to={a.href}>
-                    <div
-                      className="bg-card text-center rounded-2xl cursor-pointer h-full transition-all duration-300"
-                      style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 20px 0 ${c.shadow}` }}
-                    >
-                      <div className="p-4 sm:p-8">
-                        <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{a.emoji}</div>
-                        <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">{a.label}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground">{a.desc}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ──────────────────────────────────────────────────── */}
-      <section aria-labelledby="testimonials-heading" className="py-16 sm:py-24 bg-background">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-8 sm:mb-12">
-            
+            viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
+          >
             <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
-              <Star className="h-3 w-3 mr-1" /> Real Reviews
+              What People Say
             </Badge>
-            <h2 id="testimonials-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold">What our community says</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">Hear from our community</h2>
           </motion.div>
           <TestimonialsCarousel />
         </div>
       </section>
 
-      {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
-      {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
-      <section aria-label="Call to action — get started" className="py-16 sm:py-24 relative overflow-hidden">
+      {/* ── FOUNDER NOTE ──────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-24 bg-muted/30">
+        <div className="container max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Quote className="h-10 w-10 sm:h-12 sm:w-12 text-primary/30 mx-auto mb-6" />
+            <p className="text-lg sm:text-xl md:text-2xl text-foreground leading-relaxed mb-6 sm:mb-8 italic">
+              We built PureTask because we were tired of the same old booking experience — no transparency, no accountability, and no way to know if the job was actually done well. So we started from scratch. GPS tracking, photo proof, escrow payments. Every feature exists because we asked: "Would this make us trust a stranger in our home?"
+            </p>
+            <div className="flex flex-col items-center gap-1">
+              <p className="font-bold text-foreground text-base sm:text-lg">The PureTask Team</p>
+              <p className="text-sm text-muted-foreground">Building a cleaning platform we'd actually want to use.</p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-[hsl(var(--pt-aqua)/0.05)]" />
         <div className="container relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}>
-            
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-4 sm:mb-6">
-              Your clean home is{" "}
+              Ready to try a{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
-                one tap away.
+                better way to book?
               </span>
             </h2>
             <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Join thousands of clients who trust PureTask for reliable, verified cleaning — every single time.
+              Transparent, verified, and built around your peace of mind.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 justify-center">
               <Button size="lg" asChild className="text-base px-6 sm:px-10 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
@@ -534,11 +317,11 @@ export default function Index() {
               </Button>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6">
-              No credit card required · Background-checked pros · Pay only when you're satisfied
+              No credit card required · Background-checked cleaners · Pay only when you approve
             </p>
           </motion.div>
         </div>
       </section>
-    </main>);
-
+    </main>
+  );
 }
