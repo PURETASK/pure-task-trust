@@ -44,10 +44,10 @@ const STEPS = [
 
 
 const STATS = [
-{ value: "10K+", label: "Happy Clients" },
-{ value: "4.9★", label: "Average Rating" },
-{ value: "98%", label: "Satisfaction Rate" },
-{ value: "2,400+", label: "Verified Cleaners" }];
+{ value: "AI-Powered", label: "Smart Matching" },
+{ value: "100%", label: "Verified Cleaners" },
+{ value: "24/7", label: "AI Assistant" },
+{ value: "Zero", label: "Hidden Fees" }];
 
 
 export default function Index() {
@@ -269,8 +269,8 @@ export default function Index() {
         </motion.div>
       </section>
 
-      {/* ── STATS BAR ─────────────────────────────────────────────────────── */}
-      <section aria-label="Platform statistics" className="cv-auto bg-primary py-8 sm:py-10">
+      {/* ── WHY WE'RE DIFFERENT BAR ─────────────────────────────────────── */}
+      <section aria-label="Platform differentiators" className="cv-auto bg-primary py-8 sm:py-10">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {STATS.map((s, i) =>
