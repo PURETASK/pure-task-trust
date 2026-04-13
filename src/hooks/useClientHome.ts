@@ -49,8 +49,8 @@ const LOW_BALANCE_THRESHOLD = 50;
 
 export function useClientHome(): ClientHomeData {
   const { user } = useAuth();
-  const { data: jobs, isLoading: jobsLoading, isFetching: jobsFetching } = useClientJobs();
-  const { account, isLoadingAccount } = useWallet();
+  const { data: jobs, isLoading: jobsLoading, isFetching: jobsFetching, isError: jobsError } = useClientJobs();
+  const { account, isLoadingAccount, isLoadingLedger } = useWallet();
   const { data: threads } = useMessageThreads();
 
   const availableBalance = account?.current_balance ?? 0;
