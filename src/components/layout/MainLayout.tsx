@@ -11,6 +11,7 @@ import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { MessageInbox } from "@/components/layout/MessageInbox";
 import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
 import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
 import {
@@ -131,6 +132,11 @@ export function MainLayout({ children }: MainLayoutProps) {
                         <CreditChip />
                       </div>
                     )}
+
+                    {/* Messages inbox */}
+                    <div className="hidden sm:flex">
+                      <MessageInbox />
+                    </div>
 
                     {/* Notifications bell */}
                     <div className="hidden sm:flex">
