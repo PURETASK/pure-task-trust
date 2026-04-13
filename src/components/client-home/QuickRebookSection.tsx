@@ -50,7 +50,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
             : "Cleaner";
           const rating = job.cleaner?.avg_rating;
           const type = (job.cleaning_type || "standard").replace("_", " ");
-          const address = job.address || null;
+          const address = (job as any).address_line1 || (job as any).address || null;
 
           return (
             <motion.div

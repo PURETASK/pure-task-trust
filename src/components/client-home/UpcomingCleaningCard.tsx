@@ -36,6 +36,11 @@ function serviceLabel(type: string | null) {
   return (type || "standard").replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function getJobAddress(job: JobWithDetails): string | null {
+  // Jobs may have address_line1 on related property or inline fields
+  return (job as any).address_line1 || (job as any).address || null;
+}
+
 function statusPill(label: string, variant: "default" | "warning" | "success" | "destructive") {
   const styles = {
     default: "bg-primary/10 text-primary border-primary/30",
@@ -51,7 +56,7 @@ function statusPill(label: string, variant: "default" | "warning" | "success" | 
 }
 
 function addressLine(job: JobWithDetails) {
-  return job.address || null;
+  return getJobAddress(job);
 }
 
 /* ── EMPTY ─────────────────────────────────────────────────────── */
