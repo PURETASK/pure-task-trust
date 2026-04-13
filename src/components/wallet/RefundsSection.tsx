@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, Clock, CheckCircle2, XCircle, ChevronRight, Shield } from "lucide-react";
+import { RotateCcw, Clock, CheckCircle2, XCircle, Shield } from "lucide-react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 
@@ -15,12 +14,11 @@ interface RefundEntry {
   resolved_at?: string;
 }
 
-// Placeholder data — will be replaced with real hook
 const mockRefunds: RefundEntry[] = [];
 
 const statusConfig = {
-  pending: { label: "Pending", icon: Clock, class: "bg-warning/10 text-warning border-warning/30" },
-  approved: { label: "Approved", icon: CheckCircle2, class: "bg-success/10 text-success border-success/30" },
+  pending: { label: "Pending", icon: Clock, class: "palette-pill-amber" },
+  approved: { label: "Approved", icon: CheckCircle2, class: "palette-pill-green" },
   denied: { label: "Denied", icon: XCircle, class: "bg-destructive/10 text-destructive border-destructive/30" },
 };
 
@@ -28,12 +26,12 @@ export function RefundsSection() {
   const refunds = mockRefunds;
 
   return (
-    <div className="rounded-3xl border-2 border-border/40 overflow-hidden">
+    <div className="palette-card palette-card-amber overflow-hidden">
       <div className="p-5 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-              <RotateCcw className="h-5 w-5 text-primary" />
+            <div className="palette-icon palette-icon-amber h-10 w-10">
+              <RotateCcw className="h-5 w-5" />
             </div>
             <div>
               <h2 className="text-lg font-black">Refunds</h2>
@@ -44,8 +42,8 @@ export function RefundsSection() {
 
         {refunds.length === 0 ? (
           <div className="py-10 text-center">
-            <div className="h-14 w-14 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <RotateCcw className="h-7 w-7 text-muted-foreground/30" />
+            <div className="palette-icon palette-icon-amber h-14 w-14 mx-auto mb-4">
+              <RotateCcw className="h-7 w-7" />
             </div>
             <p className="font-bold text-muted-foreground">No refund requests</p>
             <p className="text-sm text-muted-foreground mt-1">
@@ -65,8 +63,8 @@ export function RefundsSection() {
                   transition={{ delay: i * 0.03 }}
                   className="flex items-center gap-4 p-3 rounded-2xl hover:bg-muted/50 transition-colors"
                 >
-                  <div className="h-11 w-11 rounded-xl border-2 border-border/40 bg-muted/50 flex items-center justify-center flex-shrink-0">
-                    <StatusIcon className="h-5 w-5 text-muted-foreground" />
+                  <div className="palette-icon palette-icon-amber h-11 w-11">
+                    <StatusIcon className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{refund.reason}</p>
@@ -75,7 +73,7 @@ export function RefundsSection() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className={`text-[10px] font-semibold border ${config.class}`}>
+                    <Badge variant="outline" className={`text-[10px] font-semibold border-2 ${config.class}`}>
                       {config.label}
                     </Badge>
                     <p className="font-black tabular-nums">${refund.amount}</p>

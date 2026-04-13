@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { UserCircle2, Building2, Bell, Gift, Shield, CircleHelp, ChevronRight, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,42 +12,42 @@ const sections = [
     title: "Personal Info",
     description: "Name, phone, email, and avatar",
     href: "/profile/edit",
-    color: "bg-primary/10 text-primary border-primary/30",
+    palette: "blue" as const,
   },
   {
     icon: Building2,
     title: "Saved Properties",
     description: "Manage addresses and access notes",
     href: "/properties",
-    color: "bg-[hsl(var(--pt-aqua))]/10 text-[hsl(var(--pt-aqua))] border-[hsl(var(--pt-aqua))]/30",
+    palette: "green" as const,
   },
   {
     icon: Bell,
     title: "Notifications",
     description: "Push, SMS, and email preferences",
     href: "/settings/notifications",
-    color: "bg-warning/10 text-warning border-warning/30",
+    palette: "amber" as const,
   },
   {
     icon: Gift,
     title: "Referral Program",
     description: "Invite friends, earn credits",
     href: "/referral",
-    color: "bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple))]/30",
+    palette: "purple" as const,
   },
   {
     icon: Shield,
     title: "Security",
     description: "Password, sessions, and login activity",
     href: "/sessions",
-    color: "bg-success/10 text-success border-success/30",
+    palette: "green" as const,
   },
   {
     icon: CircleHelp,
     title: "Help & Support",
     description: "FAQ, contact support, and policies",
     href: "/help",
-    color: "bg-muted text-muted-foreground border-border/40",
+    palette: "blue" as const,
   },
 ];
 
@@ -75,8 +74,8 @@ export default function Account() {
         {/* ── PROFILE HEADER ──────────────────────────────────────── */}
         <motion.div {...f(0)} className="mb-8">
           <div className="flex items-center gap-3 mb-1">
-            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-primary/15 border-2 border-primary/30 flex items-center justify-center flex-shrink-0">
-              <Settings className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <div className="palette-icon palette-icon-blue h-10 w-10 sm:h-12 sm:w-12">
+              <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-black">Account</h1>
@@ -87,8 +86,8 @@ export default function Account() {
 
         {/* ── USER CARD ───────────────────────────────────────────── */}
         <motion.div {...f(0.04)} className="mb-6">
-          <div className="rounded-3xl border-2 border-primary/20 bg-primary/[0.03] p-5 sm:p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-xl font-black text-primary flex-shrink-0">
+          <div className="palette-card palette-card-blue p-5 sm:p-6 flex items-center gap-4">
+            <div className="palette-icon palette-icon-blue h-14 w-14 text-xl font-black">
               {initial}
             </div>
             <div className="flex-1 min-w-0">
@@ -106,8 +105,8 @@ export default function Account() {
           {sections.map((section, i) => (
             <motion.div key={section.href} {...f(0.06 + i * 0.03)}>
               <Link to={section.href}>
-                <div className="flex items-center gap-4 p-4 sm:p-5 rounded-3xl border-2 border-border/40 hover:border-primary/20 hover:shadow-card bg-card transition-all cursor-pointer group">
-                  <div className={`h-11 w-11 rounded-xl border-2 flex items-center justify-center flex-shrink-0 ${section.color}`}>
+                <div className={`palette-card palette-card-${section.palette} flex items-center gap-4 p-4 sm:p-5 hover:shadow-elevated transition-all cursor-pointer group`}>
+                  <div className={`palette-icon palette-icon-${section.palette} h-11 w-11`}>
                     <section.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
