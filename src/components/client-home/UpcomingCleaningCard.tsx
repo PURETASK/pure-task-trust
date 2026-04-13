@@ -43,9 +43,9 @@ function getJobAddress(job: JobWithDetails): string | null {
 
 function statusPill(label: string, variant: "default" | "warning" | "success" | "destructive") {
   const styles = {
-    default: "bg-primary/10 text-primary border-primary/30",
-    warning: "bg-warning/10 text-warning border-warning/30",
-    success: "bg-success/10 text-success border-success/30",
+    default: "palette-pill palette-pill-blue",
+    warning: "palette-pill palette-pill-amber",
+    success: "palette-pill palette-pill-green",
     destructive: "bg-destructive/10 text-destructive border-destructive/30",
   };
   return (
@@ -68,10 +68,10 @@ function EmptyState() {
   ];
 
   return (
-    <Card className="overflow-hidden border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/[0.02] to-transparent">
+    <Card className="overflow-hidden palette-card palette-card-blue palette-card-dashed rounded-3xl">
       <CardContent className="p-6 sm:p-10 text-center">
-        <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-          <Sparkles className="h-8 w-8 text-primary/60" />
+        <div className="h-16 w-16 rounded-2xl palette-icon palette-icon-blue mx-auto mb-5">
+          <Sparkles className="h-8 w-8" />
         </div>
         <h2 className="text-xl sm:text-2xl font-bold mb-2">No cleaning booked yet</h2>
         <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
@@ -80,9 +80,9 @@ function EmptyState() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
           {services.map((s) => (
             <Link key={s.label} to={s.href}>
-              <div className="rounded-xl border border-border/60 bg-card p-4 hover:shadow-card hover:border-primary/30 transition-all text-center group">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 group-hover:bg-primary/15 flex items-center justify-center mx-auto mb-2 transition-colors">
-                  <s.icon className="h-5 w-5 text-primary" />
+                <div className={`rounded-3xl border-2 bg-card p-4 transition-all text-center group ${s.label === "Standard Clean" ? "palette-card palette-card-blue" : s.label === "Deep Clean" ? "palette-card palette-card-green" : "palette-card palette-card-amber"}`}>
+                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center mx-auto mb-2 transition-colors ${s.label === "Standard Clean" ? "palette-icon palette-icon-blue" : s.label === "Deep Clean" ? "palette-icon palette-icon-green" : "palette-icon palette-icon-amber"}`}>
+                    <s.icon className="h-5 w-5" />
                 </div>
                 <p className="font-semibold text-sm">{s.label}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{s.desc}</p>
@@ -100,7 +100,7 @@ function FutureState({ job }: { job: JobWithDetails }) {
   const address = addressLine(job);
 
   return (
-    <Card className="hover:shadow-elevated transition-all border-primary/20 hover:border-primary/40 overflow-hidden">
+    <Card className="hover:shadow-elevated transition-all palette-card palette-card-blue overflow-hidden rounded-3xl">
       <div className="h-1 w-full gradient-brand" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
@@ -142,7 +142,7 @@ function UrgentState({ job }: { job: JobWithDetails }) {
   const address = addressLine(job);
 
   return (
-    <Card className="hover:shadow-elevated transition-all border-warning/30 overflow-hidden">
+    <Card className="hover:shadow-elevated transition-all palette-card palette-card-amber overflow-hidden rounded-3xl">
       <div className="h-1 w-full bg-warning" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
@@ -150,9 +150,9 @@ function UrgentState({ job }: { job: JobWithDetails }) {
           {statusPill("Confirmed", "warning")}
         </div>
 
-        <div className="rounded-xl bg-warning/10 border border-warning/20 px-4 py-3 mb-5 flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-lg bg-warning/20 flex items-center justify-center flex-shrink-0">
-            <Clock className="h-4 w-4 text-warning" />
+        <div className="rounded-2xl bg-warning/10 border-2 border-warning px-4 py-3 mb-5 flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-lg palette-icon palette-icon-amber flex-shrink-0">
+            <Clock className="h-4 w-4" />
           </div>
           <p className="text-sm font-semibold">
             {isToday
@@ -187,7 +187,7 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
   const address = addressLine(job);
 
   return (
-    <Card className="border-destructive/30 overflow-hidden">
+    <Card className="rounded-3xl border-2 border-destructive overflow-hidden bg-destructive/5">
       <div className="h-1 w-full bg-destructive" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
@@ -195,8 +195,8 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
           {statusPill("Needs Top-Up", "destructive")}
         </div>
 
-        <div className="rounded-xl bg-destructive/10 border border-destructive/20 px-4 py-3 mb-5 flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-lg bg-destructive/20 flex items-center justify-center flex-shrink-0">
+        <div className="rounded-2xl bg-destructive/10 border-2 border-destructive px-4 py-3 mb-5 flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-lg border-2 border-destructive bg-destructive/20 flex items-center justify-center flex-shrink-0">
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </div>
           <div>
@@ -226,7 +226,7 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
 /* ── ON THE WAY ────────────────────────────────────────────────── */
 function OnTheWayState({ job }: { job: JobWithDetails }) {
   return (
-    <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/[0.03] to-transparent">
+    <Card className="palette-card palette-card-blue overflow-hidden rounded-3xl">
       <div className="h-1 w-full gradient-brand" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-4">
@@ -289,7 +289,7 @@ function InProgressState({ job }: { job: JobWithDetails }) {
   const mins = elapsed % 60;
 
   return (
-    <Card className="border-success/30 overflow-hidden bg-gradient-to-br from-success/[0.03] to-transparent">
+    <Card className="palette-card palette-card-green overflow-hidden rounded-3xl">
       <div className="h-1 w-full bg-success" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-4">
@@ -349,7 +349,7 @@ function InProgressState({ job }: { job: JobWithDetails }) {
 /* ── AWAITING APPROVAL ─────────────────────────────────────────── */
 function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
   return (
-    <Card className="border-warning/40 ring-2 ring-warning/15 overflow-hidden">
+    <Card className="palette-card palette-card-amber ring-2 ring-warning/15 overflow-hidden rounded-3xl">
       <div className="h-1.5 w-full bg-warning" />
       <CardContent className="p-5 sm:p-8">
         <div className="flex items-center justify-between mb-4">
@@ -358,8 +358,8 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
         </div>
 
         <div className="flex items-center gap-3 mb-2">
-          <div className="h-12 w-12 rounded-xl bg-warning/15 flex items-center justify-center">
-            <Camera className="h-6 w-6 text-warning" />
+          <div className="h-12 w-12 rounded-xl palette-icon palette-icon-amber flex items-center justify-center">
+            <Camera className="h-6 w-6" />
           </div>
           <div>
             <h2 className="font-bold text-lg">Cleaning Complete — Approval Needed</h2>
@@ -370,8 +370,8 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
         </div>
 
         {/* Cleaner summary */}
-        <div className="flex items-center gap-3 my-5 p-4 rounded-xl bg-muted/50 border border-border/50">
-          <div className="h-11 w-11 rounded-full bg-warning/10 border border-warning/20 flex items-center justify-center font-bold text-warning text-sm">
+        <div className="flex items-center gap-3 my-5 p-4 rounded-2xl bg-muted/50 border-2 border-warning">
+          <div className="h-11 w-11 rounded-full palette-icon palette-icon-amber flex items-center justify-center font-bold text-sm">
             {cleanerName(job).charAt(0)}
           </div>
           <div className="flex-1 min-w-0">
@@ -407,13 +407,13 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
 function JobDetails({ job, address }: { job: JobWithDetails; address: string | null }) {
   return (
     <div className="flex items-start gap-3.5">
-      <div className="h-12 w-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+      <div className="h-12 w-12 rounded-full palette-icon palette-icon-blue flex items-center justify-center font-bold text-sm flex-shrink-0">
         {cleanerName(job).charAt(0)}
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-base">{cleanerName(job)}</p>
         <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap mt-1">
-          <Badge variant="outline" className="text-[10px] h-5 px-2 font-medium capitalize">
+          <Badge variant="outline" className="text-[10px] h-5 px-2 font-medium capitalize palette-pill palette-pill-blue">
             {serviceLabel(job.cleaning_type)}
           </Badge>
           {job.scheduled_start_at && (
