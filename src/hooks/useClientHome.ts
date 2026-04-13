@@ -56,11 +56,8 @@ export function useClientHome(): ClientHomeData {
   const availableBalance = account?.current_balance ?? 0;
   const heldBalance = account?.held_balance ?? 0;
 
-  // Never block render with loading skeleton — show content immediately
+  // Never block render — show content immediately, data fills in progressively
   const isLoading = false;
-
-  // Only show loading if user is authenticated AND queries are actively fetching
-  const isLoading = !!user?.id && (jobsFetching || isLoadingAccount);
 
   const { heroState, heroJob } = useMemo(() => {
     if (!jobs?.length) return { heroState: "empty" as HeroState, heroJob: null };
