@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, Plus, Trash2, Star, Shield } from "lucide-react";
@@ -13,26 +12,22 @@ interface PaymentMethod {
   is_default: boolean;
 }
 
-// Placeholder — will be wired to Stripe customer payment methods
 const mockMethods: PaymentMethod[] = [];
 
 const brandIcons: Record<string, string> = {
-  visa: "💳",
-  mastercard: "💳",
-  amex: "💳",
-  discover: "💳",
+  visa: "💳", mastercard: "💳", amex: "💳", discover: "💳",
 };
 
 export function FundingMethods() {
   const methods = mockMethods;
 
   return (
-    <div className="rounded-3xl border-2 border-border/40 overflow-hidden">
+    <div className="palette-card palette-card-purple overflow-hidden">
       <div className="p-5 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-[hsl(var(--pt-aqua))]/10 border-2 border-[hsl(var(--pt-aqua))]/30 flex items-center justify-center">
-              <CreditCard className="h-5 w-5 text-[hsl(var(--pt-aqua))]" />
+            <div className="palette-icon palette-icon-purple h-10 w-10">
+              <CreditCard className="h-5 w-5" />
             </div>
             <div>
               <h2 className="text-lg font-black">Funding Methods</h2>
@@ -46,8 +41,8 @@ export function FundingMethods() {
 
         {methods.length === 0 ? (
           <div className="py-10 text-center">
-            <div className="h-14 w-14 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <CreditCard className="h-7 w-7 text-muted-foreground/30" />
+            <div className="palette-icon palette-icon-purple h-14 w-14 mx-auto mb-4">
+              <CreditCard className="h-7 w-7" />
             </div>
             <p className="font-bold text-muted-foreground">No payment methods saved</p>
             <p className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
@@ -66,37 +61,33 @@ export function FundingMethods() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
               >
-                <Card className="hover:shadow-card transition-all">
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className="h-11 w-11 rounded-xl bg-muted border-2 border-border/40 flex items-center justify-center text-lg flex-shrink-0">
-                      {brandIcons[method.brand.toLowerCase()] || "💳"}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="font-bold text-sm capitalize">{method.brand}</p>
-                        <span className="text-sm text-muted-foreground">•••• {method.last4}</span>
-                        {method.is_default && (
-                          <Badge className="bg-primary/10 text-primary border-primary/30 text-[10px] h-5 px-2 font-bold">
-                            Default
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Expires {method.exp_month.toString().padStart(2, "0")}/{method.exp_year}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {!method.is_default && (
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-primary" title="Set as default">
-                          <Star className="h-3.5 w-3.5" />
-                        </Button>
+                <div className="flex items-center gap-4 p-4 rounded-2xl hover:bg-muted/50 transition-all">
+                  <div className="palette-icon palette-icon-purple h-11 w-11 text-lg">
+                    {brandIcons[method.brand.toLowerCase()] || "💳"}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-sm capitalize">{method.brand}</p>
+                      <span className="text-sm text-muted-foreground">•••• {method.last4}</span>
+                      {method.is_default && (
+                        <Badge className="palette-pill-blue text-[10px] h-5 px-2 font-bold">Default</Badge>
                       )}
-                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive" title="Remove">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                    <p className="text-xs text-muted-foreground">
+                      Expires {method.exp_month.toString().padStart(2, "0")}/{method.exp_year}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {!method.is_default && (
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-primary" title="Set as default">
+                        <Star className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive" title="Remove">
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
