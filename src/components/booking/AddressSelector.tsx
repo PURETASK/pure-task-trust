@@ -16,7 +16,7 @@ interface AddressSelectorProps {
 }
 
 export function AddressSelector({ selectedAddressId, onSelect }: AddressSelectorProps) {
-  const { data: addresses, isLoading } = useAddresses();
+  const { data: addresses, isLoading, isFetching, isError } = useAddresses();
   const { createAddress, isCreating, deleteAddress, isDeleting } = useAddressActions();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newAddress, setNewAddress] = useState({
@@ -52,7 +52,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     }
   };
 
-  if (isLoading) {
+  // Show loading only when actually fetching, not when query is disabled
+  if (isLoading || isFetching) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
