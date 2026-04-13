@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import cleaningPattern from "@/assets/hero-cleaning-pattern.jpg";
 import { useClientHome } from "@/hooks/useClientHome";
 import { UpcomingCleaningCard } from "@/components/client-home/UpcomingCleaningCard";
 import { QuickRebookSection } from "@/components/client-home/QuickRebookSection";
@@ -33,13 +34,17 @@ export default function Dashboard() {
   const firstName = user?.name?.split(" ")[0] || "there";
 
   return (
-    <main className="flex-1 bg-background min-h-screen">
+    <main className="flex-1 min-h-screen relative">
+      <div className="absolute inset-0 z-0">
+        <img src={cleaningPattern} alt="" className="w-full h-full object-cover" aria-hidden="true" />
+        <div className="absolute inset-0 bg-background/60" />
+      </div>
       <Helmet>
         <title>Home | PureTask</title>
         <meta name="description" content="Your PureTask client command center — manage cleanings, wallet, and messages." />
       </Helmet>
 
-      <div className="container px-4 sm:px-6 py-5 sm:py-8 max-w-5xl">
+      <div className="container px-4 sm:px-6 py-5 sm:py-8 max-w-5xl relative z-10">
 
         {/* ── GREETING ─────────────────────────────────────────────────── */}
         <motion.div {...fade(0)} className="mb-6 sm:mb-8">
