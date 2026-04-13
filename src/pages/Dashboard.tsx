@@ -34,27 +34,6 @@ export default function Dashboard() {
 
   const firstName = user?.name?.split(" ")[0] || "there";
 
-  if (isLoading) {
-    return (
-      <main className="flex-1 bg-background min-h-screen">
-        <div className="container px-4 sm:px-6 py-6 max-w-5xl space-y-6">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-8 w-56" />
-          </div>
-          <Skeleton className="h-48 w-full rounded-2xl" />
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <Skeleton className="h-44 rounded-2xl md:col-span-3" />
-            <Skeleton className="h-44 rounded-2xl md:col-span-2" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Skeleton className="h-32 rounded-2xl" />
-            <Skeleton className="h-32 rounded-2xl" />
-          </div>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="flex-1 bg-background min-h-screen">
