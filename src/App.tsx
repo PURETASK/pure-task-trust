@@ -27,6 +27,8 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const RoleSelection = lazy(() => import("./pages/RoleSelection"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const MyCleanings = lazy(() => import("./pages/MyCleanings"));
+const AccountPage = lazy(() => import("./pages/Account"));
 const Discover = lazy(() => import("./pages/Discover"));
 const CleanerProfile = lazy(() => import("./pages/CleanerProfile"));
 const Book = lazy(() => import("./pages/Book"));
@@ -246,9 +248,23 @@ const App = () => (
                     <Route path="/admin/webhook-log" element={<RequireAdmin><AdminWebhookLog /></RequireAdmin>} />
                     <Route path="/admin/health" element={<RequireAdmin><AdminHealthDashboard /></RequireAdmin>} />
 
-                    {/* Client routes */}
-                    <Route path="/dashboard" element={<RequireClient><Dashboard /></RequireClient>} />
-                    <Route path="/discover" element={<Discover />} />
+                    {/* Client routes — new 5-tab IA */}
+                    <Route path="/home" element={<RequireClient><Dashboard /></RequireClient>} />
+                    <Route path="/my-cleanings" element={<RequireClient><MyCleanings /></RequireClient>} />
+                    <Route path="/my-cleanings/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
+                    <Route path="/account" element={<RequireClient><AccountPage /></RequireClient>} />
+
+                    {/* Legacy redirects → new routes */}
+                    <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+                    <Route path="/discover" element={<Navigate to="/book" replace />} />
+                    <Route path="/favorites" element={<Navigate to="/book" replace />} />
+                    <Route path="/profile" element={<Navigate to="/account" replace />} />
+                    <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
+                    <Route path="/recurring-plans" element={<Navigate to="/my-cleanings" replace />} />
+                    <Route path="/reschedule-requests" element={<Navigate to="/my-cleanings" replace />} />
+                    <Route path="/properties" element={<RequireClient><Properties /></RequireClient>} />
+
+                    {/* Preserved client routes */}
                     <Route path="/cleaner/:id" element={<RequireAuth><CleanerProfile /></RequireAuth>} />
                     <Route path="/book" element={<RequireClient><Book /></RequireClient>} />
                     <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
@@ -261,13 +277,7 @@ const App = () => (
                     <Route path="/help" element={<Help />} />
                     <Route path="/settings/notifications" element={<RequireAuth><NotificationSettings /></RequireAuth>} />
                     <Route path="/notifications" element={<RequireAuth requireRole={false}><Notifications /></RequireAuth>} />
-                    <Route path="/properties" element={<RequireClient><Properties /></RequireClient>} />
-                    <Route path="/reschedule-requests" element={<RequireClient><RescheduleRequests /></RequireClient>} />
                     <Route path="/referral" element={<RequireClient><Referral /></RequireClient>} />
-                    <Route path="/recurring-plans" element={<RequireClient><RecurringPlans /></RequireClient>} />
-                    <Route path="/favorites" element={<RequireClient><FavoriteCleaners /></RequireClient>} />
-                    <Route path="/profile" element={<RequireClient><ClientProfilePage /></RequireClient>} />
-                    <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
                     <Route path="/spending" element={<RequireClient><SpendingAnalytics /></RequireClient>} />
                     <Route path="/property-profiles" element={<RequireClient><PropertyProfilesPage /></RequireClient>} />
                     <Route path="/compare-cleaners" element={<RequireClient><CleanerComparisonPage /></RequireClient>} />

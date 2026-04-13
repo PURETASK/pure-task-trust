@@ -23,13 +23,13 @@ const guestItems: NavItem[] = [
   { icon: LogIn,        label: "Sign In", path: "/auth" },
 ];
 
-// ─── CLIENT (5 tabs — most important actions) ─────────────────────────────────
+// ─── CLIENT (5 tabs — task-based IA) ──────────────────────────────────────────
 const clientItems: NavItem[] = [
-  { icon: LayoutDashboard, label: "Home",     path: "/dashboard" },
-  { icon: Search,          label: "Find",     path: "/discover" },
-  { icon: Sparkles,        label: "Book",     path: "/book" },
-  { icon: MessageSquare,   label: "Messages", path: "/messages" },
-  { icon: User,            label: "Profile",  path: "/profile" },
+  { icon: Home,            label: "Home",         path: "/home" },
+  { icon: Sparkles,        label: "Book",         path: "/book" },
+  { icon: Calendar,        label: "Cleanings",    path: "/my-cleanings" },
+  { icon: Wallet,          label: "Wallet",       path: "/wallet" },
+  { icon: User,            label: "Account",      path: "/account" },
 ];
 
 // ─── CLEANER (5 tabs — core work flow) ────────────────────────────────────────
@@ -76,7 +76,7 @@ export function MobileBottomNav() {
   if (hiddenPaths.some((p) => location.pathname.startsWith(p))) return null;
 
   const isActive = (item: NavItem) => {
-    const exact = ["/", "/dashboard", "/cleaner/dashboard", "/admin/hub"];
+    const exact = ["/", "/home", "/cleaner/dashboard", "/admin/hub"];
     if (exact.includes(item.path)) return location.pathname === item.path;
     return location.pathname === item.path ||
       location.pathname.startsWith(item.path + "/");
