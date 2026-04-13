@@ -25,6 +25,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     city: '',
     state: '',
     postalCode: '',
+    lat: undefined as number | undefined,
+    lng: undefined as number | undefined,
   });
 
   const handleAddAddress = async () => {
@@ -37,6 +39,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
         city: newAddress.city,
         state: newAddress.state || undefined,
         postalCode: newAddress.postalCode || undefined,
+        lat: newAddress.lat,
+        lng: newAddress.lng,
         isDefault: !addresses || addresses.length === 0,
       });
       
@@ -45,7 +49,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
         onSelect(createdAddress as Address);
       }
       
-      setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '' });
+      setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '', lat: undefined, lng: undefined });
       setIsAddDialogOpen(false);
     } catch (error) {
       console.error('handleAddAddress error:', error);
@@ -150,7 +154,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                 id="label"
                 placeholder="e.g., Home, Office"
                 value={newAddress.label}
-                onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
+                onChange={(e) => setNewAddress((prev) => ({ ...prev, label: e.target.value }))}
               />
             </div>
             <div>
@@ -158,15 +162,17 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
               <AddressAutocompleteInput
                 id="line1"
                 value={newAddress.line1}
-                onChange={(value) => setNewAddress({ ...newAddress, line1: value })}
+                onChange={(value) => setNewAddress((prev) => ({ ...prev, line1: value, lat: undefined, lng: undefined }))}
                 onSelect={(suggestion: AddressSuggestion) => {
-                  setNewAddress({
-                    ...newAddress,
+                  setNewAddress((prev) => ({
+                    ...prev,
                     line1: suggestion.line1,
                     city: suggestion.city,
                     state: suggestion.state,
                     postalCode: suggestion.postalCode,
-                  });
+                    lat: suggestion.lat,
+                    lng: suggestion.lng,
+                  }));
                 }}
                 placeholder="Start typing an address..."
               />
@@ -178,7 +184,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                   id="city"
                   placeholder="City"
                   value={newAddress.city}
-                  onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                  onChange={(e) => setNewAddress((prev) => ({ ...prev, city: e.target.value }))}
                 />
               </div>
               <div>
@@ -187,7 +193,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                   id="state"
                   placeholder="State"
                   value={newAddress.state}
-                  onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                  onChange={(e) => setNewAddress((prev) => ({ ...prev, state: e.target.value }))}
                 />
               </div>
             </div>
@@ -197,7 +203,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                 id="postalCode"
                 placeholder="12345"
                 value={newAddress.postalCode}
-                onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                onChange={(e) => setNewAddress((prev) => ({ ...prev, postalCode: e.target.value }))}
               />
             </div>
             <Button

@@ -54,6 +54,8 @@ interface CreateAddressData {
   city: string;
   state?: string;
   postalCode?: string;
+  lat?: number;
+  lng?: number;
   isDefault?: boolean;
 }
 
@@ -65,12 +67,6 @@ export function useAddressActions() {
   const createMutation = useMutation({
     mutationFn: async (data: CreateAddressData) => {
       if (!user?.id) throw new Error('Not authenticated');
-
-      // Verify we have an active session before making DB calls
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        throw new Error('No active session. Please sign in again.');
-      }
 
       // If setting as default, unset other defaults first
       if (data.isDefault) {
@@ -91,6 +87,9 @@ export function useAddressActions() {
         city: data.city,
         state: data.state || null,
         postal_code: data.postalCode || null,
+        country: 'US',
+        lat: data.lat ?? null,
+        lng: data.lng ?? null,
         is_default: data.isDefault || false,
       }).select().single();
 
@@ -104,8 +103,11 @@ export function useAddressActions() {
       toast({ title: 'Address Added' });
       // Update cache immediately instead of invalidating
       queryClient.setQueryData(['addresses', user?.id], (old: Address[] | undefined) => {
-        if (!old) return [newAddress];
-        return [newAddress, ...old];
+        const existingAddresses = (old || []).map((address) =>
+          newAddress.is_default ? { ...address, is_default: false } : address
+        );
+
+        return [newAddress as Address, ...existingAddresses];
       });
     },
     onError: (error: Error) => {
