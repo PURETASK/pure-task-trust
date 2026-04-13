@@ -3,6 +3,26 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
+const ADDRESS_MUTATION_TIMEOUT_MS = 10000;
+
+function withTimeout<T>(promise: Promise<T>, action: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = window.setTimeout(() => {
+      reject(new Error(`${action} is taking too long. Please try again.`));
+    }, ADDRESS_MUTATION_TIMEOUT_MS);
+
+    promise
+      .then((result) => {
+        window.clearTimeout(timeoutId);
+        resolve(result);
+      })
+      .catch((error) => {
+        window.clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
+}
+
 export interface Address {
   id: string;
   user_id: string;
@@ -65,21 +85,13 @@ export function useAddressActions() {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: async (data: CreateAddressData) => {
+    mutationFn: async (data: CreateAddressData): Promise<Address> => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      // If setting as default, unset other defaults first
-      if (data.isDefault) {
-        const { error: updateError } = await supabase
-          .from('addresses')
-          .update({ is_default: false })
-          .eq('user_id', user.id);
-        if (updateError) {
-          console.error('Failed to unset default addresses:', updateError);
-        }
-      }
-
-      const { data: insertedData, error } = await supabase.from('addresses').insert({
+      const addressId = crypto.randomUUID();
+      const createdAt = new Date().toISOString();
+      const nextAddress: Address = {
+        id: addressId,
         user_id: user.id,
         label: data.label || null,
         line1: data.line1,
@@ -88,16 +100,53 @@ export function useAddressActions() {
         state: data.state || null,
         postal_code: data.postalCode || null,
         country: 'US',
+        is_default: Boolean(data.isDefault),
         lat: data.lat ?? null,
         lng: data.lng ?? null,
-        is_default: data.isDefault || false,
-      }).select().single();
+        created_at: createdAt,
+      };
+
+      // If setting as default, unset other defaults first
+      if (nextAddress.is_default) {
+        const { error: updateError } = await withTimeout(
+          supabase
+            .from('addresses')
+            .update({ is_default: false })
+            .eq('user_id', user.id)
+            .is('deleted_at', null),
+          'Updating saved addresses'
+        );
+
+        if (updateError) {
+          console.error('Failed to unset default addresses:', updateError);
+        }
+      }
+
+      const { error } = await withTimeout(
+        supabase.from('addresses').insert({
+          id: nextAddress.id,
+          user_id: nextAddress.user_id,
+          label: nextAddress.label,
+          line1: nextAddress.line1,
+          line2: nextAddress.line2,
+          city: nextAddress.city,
+          state: nextAddress.state,
+          postal_code: nextAddress.postal_code,
+          country: nextAddress.country,
+          lat: nextAddress.lat,
+          lng: nextAddress.lng,
+          is_default: nextAddress.is_default,
+          created_at: nextAddress.created_at,
+        }),
+        'Saving address'
+      );
 
       if (error) {
         console.error('Address insert error:', error);
         throw error;
       }
-      return insertedData;
+
+      return nextAddress;
     },
     onSuccess: (newAddress) => {
       toast({ title: 'Address Added' });
