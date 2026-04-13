@@ -83,20 +83,20 @@ export default function Messages() {
           
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-11 w-11 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
-              <MessageCircle className="h-5 w-5 text-primary-foreground" />
+            <div className="h-11 w-11 rounded-2xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 text-[hsl(var(--pt-purple))]" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Messages</h1>
+              <h1 className="text-2xl font-black">Messages</h1>
               {totalUnread > 0 && <p className="text-sm text-muted-foreground">{totalUnread} unread message{totalUnread !== 1 ? 's' : ''}</p>}
             </div>
           </div>
 
           {!filteredThreads || filteredThreads.length === 0 && !search ? (
-            <Card className="py-12 sm:py-16">
+            <Card className="py-12 sm:py-16 border-2 border-[hsl(var(--pt-purple))]/20 rounded-3xl">
               <CardContent className="text-center">
-                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto mb-4 sm:mb-5">
-                  <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-3xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center mx-auto mb-4 sm:mb-5">
+                  <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">No conversations yet</h3>
                 <p className="text-muted-foreground text-sm max-w-sm mx-auto">Messages from your booked cleaners will appear here.</p>
