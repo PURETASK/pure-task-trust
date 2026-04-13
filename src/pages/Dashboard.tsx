@@ -34,20 +34,6 @@ export default function Dashboard() {
 
   const firstName = user?.name?.split(" ")[0] || "there";
 
-  if (isLoading) {
-    return (
-      <main className="flex-1 bg-background min-h-screen">
-        <div className="container px-4 sm:px-6 py-6 max-w-5xl space-y-6">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-48 w-full rounded-2xl" />
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <Skeleton className="h-40 rounded-2xl md:col-span-3" />
-            <Skeleton className="h-40 rounded-2xl md:col-span-2" />
-          </div>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="flex-1 bg-background min-h-screen">
@@ -56,56 +42,67 @@ export default function Dashboard() {
         <meta name="description" content="Your PureTask client command center — manage cleanings, wallet, and messages." />
       </Helmet>
 
-      <div className="container px-4 sm:px-6 py-5 sm:py-8 max-w-5xl space-y-6 sm:space-y-8">
+      <div className="container px-4 sm:px-6 py-5 sm:py-8 max-w-5xl">
 
-        {/* ── GREETING ───────────────────────────────────────────── */}
-        <motion.div {...fade(0)}>
-          <p className="text-sm text-muted-foreground">Welcome back 👋</p>
-          <h1 className="text-xl sm:text-2xl font-bold">Hello, {firstName}!</h1>
+        {/* ── GREETING ─────────────────────────────────────────────────── */}
+        <motion.div {...fade(0)} className="mb-6 sm:mb-8">
+          <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Hello, <span className="gradient-brand-text">{firstName}</span>!
+          </h1>
         </motion.div>
 
-        {/* ── ROW 1: HERO CARD (Full Width) ───────────────────── */}
-        <motion.div {...fade(0.05)}>
+        {/* ── ROW 1: HERO CARD (Full Width) ────────────────────────────── */}
+        <motion.div {...fade(0.05)} className="mb-6 sm:mb-8">
           <UpcomingCleaningCard heroState={heroState} heroJob={heroJob} />
         </motion.div>
 
-        {/* ── NEW USER FLOW ───────────────────────────────────── */}
+        {/* ── MOBILE: ALERTS RIGHT AFTER HERO ──────────────────────────── */}
+        <motion.div {...fade(0.08)} className="md:hidden mb-6">
+          <AlertsSection alerts={alerts} />
+        </motion.div>
+
+        {/* ── NEW USER ONBOARDING ──────────────────────────────────────── */}
         {isNewUser && (
-          <motion.div {...fade(0.1)}>
+          <motion.div {...fade(0.1)} className="mb-6 sm:mb-8">
             <NewUserWelcome />
           </motion.div>
         )}
 
-        {/* ── ROW 2: REBOOK (60%) + WALLET (40%) ─────────────── */}
-        {!isNewUser && (
-          <motion.div {...fade(0.1)}>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-6">
-              <div className="md:col-span-3">
+        {/* ── ROW 2: REBOOK (60%) + WALLET (40%) ──────────────────────── */}
+        <motion.div {...fade(0.1)} className="mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-5 sm:gap-6">
+            <div className="md:col-span-3">
+              {!isNewUser && rebookCandidates.length > 0 ? (
                 <QuickRebookSection candidates={rebookCandidates} />
-              </div>
-              <div className="md:col-span-2">
-                <WalletSnapshotCard
-                  availableBalance={availableBalance}
-                  heldBalance={heldBalance}
-                  walletState={walletState}
-                />
-              </div>
+              ) : !isNewUser ? (
+                <QuickRebookSection candidates={[]} />
+              ) : null}
             </div>
-          </motion.div>
-        )}
-
-        {/* ── ROW 3: ALERTS (50%) + MESSAGES (50%) ───────────── */}
-        {/* On mobile: Alerts come right after hero (before rebook) */}
-        <motion.div {...fade(0.15)} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div className="order-first md:order-none">
-            <AlertsSection alerts={alerts} />
-          </div>
-          <div>
-            <RecentMessagesPreview threads={recentThreads} />
+            <div className="md:col-span-2">
+              <WalletSnapshotCard
+                availableBalance={availableBalance}
+                heldBalance={heldBalance}
+                walletState={walletState}
+              />
+            </div>
           </div>
         </motion.div>
 
-        {/* ── ROW 4: RECENT ACTIVITY (Full Width) ────────────── */}
+        {/* ── ROW 3: ALERTS (desktop) + MESSAGES ──────────────────────── */}
+        <motion.div {...fade(0.15)} className="mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {/* Alerts - desktop only (mobile already shown above) */}
+            <div className="hidden md:block">
+              <AlertsSection alerts={alerts} />
+            </div>
+            <div>
+              <RecentMessagesPreview threads={recentThreads} />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── ROW 4: RECENT ACTIVITY (Full Width) ─────────────────────── */}
         {!isNewUser && (
           <motion.div {...fade(0.2)}>
             <RecentActivityFeed limit={5} showTitle />
