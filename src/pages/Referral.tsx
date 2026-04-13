@@ -98,10 +98,10 @@ export default function Referral() {
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {[
-              { icon: Users, value: stats.totalReferrals, label: "Total Referrals", bgClass: "bg-purple-500/10 border-purple-500/20", iconClass: "text-purple-500" },
-              { icon: Clock, value: stats.pendingReferrals, label: "Pending", bgClass: "bg-amber-500/10 border-amber-500/20", iconClass: "text-amber-500" },
-              { icon: CheckCircle, value: stats.completedReferrals, label: "Completed", bgClass: "bg-emerald-500/10 border-emerald-500/20", iconClass: "text-emerald-500" },
-              { icon: DollarSign, value: stats.totalCreditsEarned, label: "Credits Earned", bgClass: "bg-cyan-500/10 border-cyan-500/20", iconClass: "text-cyan-500" },
+              { icon: Users, value: stats.totalReferrals, label: "Total Referrals", bgClass: "bg-[hsl(var(--pt-purple))]/10 border-[hsl(var(--pt-purple))]/30", iconClass: "text-[hsl(var(--pt-purple))]" },
+              { icon: Clock, value: stats.pendingReferrals, label: "Pending", bgClass: "bg-warning/10 border-warning/30", iconClass: "text-warning" },
+              { icon: CheckCircle, value: stats.completedReferrals, label: "Completed", bgClass: "bg-success/10 border-success/30", iconClass: "text-success" },
+              { icon: DollarSign, value: stats.totalCreditsEarned, label: "Credits Earned", bgClass: "bg-primary/10 border-primary/30", iconClass: "text-primary" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -109,7 +109,7 @@ export default function Referral() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 + index * 0.05 }}
               >
-                <Card className={`${stat.bgClass} border-2`}>
+                <Card className={`${stat.bgClass} border-2 rounded-3xl`}>
                   <CardContent className="p-5 text-center">
                     <stat.icon className={`h-8 w-8 ${stat.iconClass} mx-auto mb-2`} />
                     {isLoadingReferrals ? (
