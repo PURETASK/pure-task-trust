@@ -88,52 +88,15 @@ const guestNavGroups: NavGroup[] = [
 // ─── CLIENT ───────────────────────────────────────────────────────────────────
 const clientNavGroups: NavGroup[] = [
   {
-    group: "Overview",
+    group: "Main",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "Find Cleaners", url: "/discover", icon: SearchCheck },
-      { title: "Book Cleaning", url: "/book", icon: Sparkles, badge: "Book" },
+      { title: "Home", url: "/home", icon: House },
+      { title: "Book", url: "/book", icon: Sparkles, badge: "Book" },
+      { title: "My Cleanings", url: "/my-cleanings", icon: CalendarDays },
+      { title: "Wallet", url: "/wallet", icon: WalletCards },
+      { title: "Account", url: "/account", icon: UserCircle2 },
     ]
   },
-  {
-    group: "Services",
-    items: [
-      { title: "Residential Cleaning", url: "/residential-cleaning", icon: House },
-      { title: "Deep Cleaning", url: "/deep-cleaning", icon: Sparkles },
-      { title: "Move-Out Cleaning", url: "/move-out-cleaning", icon: PackageSearch },
-      { title: "Recurring Cleaning", url: "/recurring-cleaning", icon: Repeat2 },
-    ]
-  },
-  {
-    group: "My Bookings",
-    items: [
-      { title: "Properties", url: "/properties", icon: Building2 },
-      { title: "Recurring Plans", url: "/recurring-plans", icon: Repeat2 },
-      { title: "Reschedule Requests", url: "/reschedule-requests", icon: CalendarClock },
-      { title: "Favorite Cleaners", url: "/favorites", icon: HeartHandshake },
-      { title: "Reviews", url: "/reviews", icon: StarHalf },
-    ]
-  },
-  {
-    group: "Account",
-    items: [
-      { title: "My Profile", url: "/profile", icon: UserCircle2 },
-      { title: "Wallet & Credits", url: "/wallet", icon: WalletCards },
-      { title: "Messages", url: "/messages", icon: MessagesSquare },
-      { title: "Notifications", url: "/notifications", icon: BellDot },
-      { title: "Referral Program", url: "/referral", icon: Gift as any, badge: "Earn" },
-      { title: "Notification Settings", url: "/settings/notifications", icon: SlidersHorizontal },
-    ]
-  },
-  {
-    group: "Help",
-    items: [
-      { title: "Help & Support", url: "/help", icon: CircleHelp },
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
-      { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
-      { title: "Legal Center", url: "/legal", icon: Scale },
-    ]
-  }
 ];
 
 // ─── CLEANER ──────────────────────────────────────────────────────────────────
