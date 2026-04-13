@@ -37,6 +37,45 @@ const SERVICE_CHARGE_PCT = 0.15;
 
 const STEPS = ["Service", "Property", "Date & Time", "Cleaner", "Extras", "Review"];
 
+const STEP_PALETTES = [
+  {
+    card: "palette-card palette-card-blue",
+    icon: "palette-icon palette-icon-blue",
+    step: "palette-step palette-step-blue",
+    line: "palette-line-blue",
+    label: "palette-label-blue",
+    input: "palette-input palette-input-blue",
+    pill: "palette-pill palette-pill-blue",
+  },
+  {
+    card: "palette-card palette-card-green",
+    icon: "palette-icon palette-icon-green",
+    step: "palette-step palette-step-green",
+    line: "palette-line-green",
+    label: "palette-label-green",
+    input: "palette-input palette-input-green",
+    pill: "palette-pill palette-pill-green",
+  },
+  {
+    card: "palette-card palette-card-amber",
+    icon: "palette-icon palette-icon-amber",
+    step: "palette-step palette-step-amber",
+    line: "palette-line-amber",
+    label: "palette-label-amber",
+    input: "palette-input palette-input-amber",
+    pill: "palette-pill palette-pill-amber",
+  },
+  {
+    card: "palette-card palette-card-purple",
+    icon: "palette-icon palette-icon-purple",
+    step: "palette-step palette-step-purple",
+    line: "palette-line-purple",
+    label: "palette-label-purple",
+    input: "palette-input palette-input-purple",
+    pill: "palette-pill palette-pill-purple",
+  },
+];
+
 const cleaningTypes = [
   { id: "basic" as CleaningType, name: "Standard Cleaning", description: "Regular maintenance cleaning for a tidy home", baseCredits: 35, icon: Home, estimate: "$35–$140" },
   { id: "deep" as CleaningType, name: "Deep Cleaning", description: "Thorough cleaning including hard-to-reach areas", baseCredits: 55, icon: Sparkles, estimate: "$55–$220" },
@@ -145,6 +184,7 @@ export default function Book() {
   const favCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
 
   const [isDirectPaying, setIsDirectPaying] = useState(false);
+  const currentPalette = STEP_PALETTES[(step - 1) % STEP_PALETTES.length];
 
   const handleConfirmWithCredits = async () => {
     if (!selectedType || !user) return;
@@ -192,17 +232,16 @@ export default function Book() {
           <div className="flex items-center gap-1">
             {STEPS.map((label, i) => {
               const s = i + 1;
+              const palette = STEP_PALETTES[i % STEP_PALETTES.length];
               return (
                 <div key={s} className="flex items-center flex-1 last:flex-none">
                   <div className="flex flex-col items-center gap-1.5">
-                    <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                      s < step ? "bg-primary text-primary-foreground" :
-                      s === step ? "bg-primary text-primary-foreground ring-4 ring-primary/20" :
-                      "bg-muted text-muted-foreground"
+                    <div className={`${s <= step ? palette.step : "palette-step border-border bg-muted text-muted-foreground"} ${
+                      s === step ? "ring-4 ring-ring/10" : ""
                     }`}>{s < step ? <Check className="h-4 w-4" /> : s}</div>
-                    <span className={`text-[10px] sm:text-xs font-medium hidden sm:block ${s <= step ? "text-primary" : "text-muted-foreground"}`}>{label}</span>
+                    <span className={`text-[10px] sm:text-xs font-medium hidden sm:block ${s <= step ? palette.label : "text-muted-foreground"}`}>{label}</span>
                   </div>
-                  {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-2 rounded-full ${s < step ? "bg-primary" : "bg-border"}`} />}
+                  {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-2 rounded-full ${s < step ? palette.line : "bg-border"}`} />}
                 </div>
               );
             })}
@@ -220,20 +259,20 @@ export default function Book() {
                   <p className="text-sm text-muted-foreground mb-6">Choose the service that fits your needs</p>
                   <div className="space-y-3">
                     {cleaningTypes.map(type => (
-                      <Card key={type.id} className={`cursor-pointer transition-all ${selectedType === type.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedType(type.id)}>
+                      <Card key={type.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedType === type.id ? `${STEP_PALETTES[0].card} ring-2 ring-ring/10` : `${STEP_PALETTES[0].card} hover:shadow-elevated`}`} onClick={() => setSelectedType(type.id)}>
                         <CardContent className="flex items-center gap-4 p-4 sm:p-5">
-                          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <type.icon className="h-6 w-6 text-primary" />
+                          <div className={`h-12 w-12 ${STEP_PALETTES[0].icon}`}>
+                            <type.icon className="h-6 w-6" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold">{type.name}</h3>
                             <p className="text-sm text-muted-foreground">{type.description}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-bold text-primary">{type.estimate}</p>
+                            <p className={`font-bold ${STEP_PALETTES[0].label}`}>{type.estimate}</p>
                             <p className="text-[10px] text-muted-foreground">est. range</p>
                           </div>
-                          {selectedType === type.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                          {selectedType === type.id && <div className={`h-6 w-6 ${STEP_PALETTES[0].step} flex-shrink-0`}><Check className="h-4 w-4" /></div>}
                         </CardContent>
                       </Card>
                     ))}
@@ -272,7 +311,7 @@ export default function Book() {
                     }} onTimeChange={setSelectedTime} />
 
                     {/* Hours selector */}
-                    <Card>
+                    <Card className="palette-card palette-card-amber">
                       <CardContent className="p-5">
                         <p className="font-semibold mb-4">Estimated hours</p>
                         <div className="flex items-center justify-center gap-6">
@@ -304,7 +343,7 @@ export default function Book() {
                   <p className="text-sm text-muted-foreground mb-6">Select a cleaner or let us auto-match</p>
 
                   <Tabs value={cleanerTab} onValueChange={setCleanerTab} className="mb-4">
-                    <TabsList className="w-full bg-muted/50 p-1 rounded-xl">
+                      <TabsList className="w-full bg-muted/50 p-1 rounded-3xl border-2 border-[hsl(var(--pt-purple-deep))]">
                       <TabsTrigger value="all" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> All</TabsTrigger>
                       <TabsTrigger value="favorites" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Heart className="h-3.5 w-3.5" /> Favorites</TabsTrigger>
                       <TabsTrigger value="again" className="gap-1.5 rounded-lg text-xs sm:text-sm"><RotateCcw className="h-3.5 w-3.5" /> Book Again</TabsTrigger>
@@ -316,11 +355,11 @@ export default function Book() {
                       ) : (
                         <div className="space-y-2">
                           {/* Auto-match option */}
-                          <Card className={`cursor-pointer transition-all ${!selectedCleanerId ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(null)}>
+                          <Card className={`cursor-pointer transition-all rounded-3xl border-2 ${!selectedCleanerId ? `${STEP_PALETTES[3].card} ring-2 ring-ring/10` : `${STEP_PALETTES[3].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(null)}>
                             <CardContent className="p-4 flex items-center gap-4">
-                              <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center"><Zap className="h-5 w-5 text-primary" /></div>
+                              <div className={`h-11 w-11 ${STEP_PALETTES[3].icon} rounded-full`}><Zap className="h-5 w-5" /></div>
                               <div className="flex-1"><p className="font-semibold text-sm">Auto-Match Me</p><p className="text-xs text-muted-foreground">We'll find the best available cleaner for you</p></div>
-                              {!selectedCleanerId && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                              {!selectedCleanerId && <div className={`h-6 w-6 ${STEP_PALETTES[3].step}`}><Check className="h-4 w-4" /></div>}
                             </CardContent>
                           </Card>
                           {allCleaners?.map(c => <CleanerCard key={c.id} cleaner={c} selected={selectedCleanerId === c.id} onSelect={() => setSelectedCleanerId(c.id)} isFav={favCleanerIds.has(c.id)} />)}
@@ -330,7 +369,7 @@ export default function Book() {
 
                     <TabsContent value="favorites" className="mt-4">
                       {!favorites?.length ? (
-                        <Card className="border-dashed"><CardContent className="p-8 text-center">
+                        <Card className="palette-card palette-card-green palette-card-dashed"><CardContent className="p-8 text-center">
                           <Heart className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
                           <p className="text-sm font-medium">No favorites yet</p>
                           <p className="text-xs text-muted-foreground mt-1">Heart cleaners to save them here</p>
@@ -342,9 +381,9 @@ export default function Book() {
                             const c = fav.cleaner;
                             const name = `${c.first_name || ''} ${c.last_name || ''}`.trim() || 'Cleaner';
                             return (
-                              <Card key={fav.id} className={`cursor-pointer transition-all ${selectedCleanerId === c.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(c.id)}>
+                              <Card key={fav.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedCleanerId === c.id ? `${STEP_PALETTES[1].card} ring-2 ring-ring/10` : `${STEP_PALETTES[1].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(c.id)}>
                                 <CardContent className="p-4 flex items-center gap-4">
-                                  <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">{name.charAt(0)}</div>
+                                  <div className={`h-11 w-11 rounded-full ${STEP_PALETTES[1].icon} font-bold text-sm`}>{name.charAt(0)}</div>
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2"><p className="font-semibold text-sm truncate">{name}</p><Heart className="h-3.5 w-3.5 text-destructive fill-destructive" /></div>
                                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -353,7 +392,7 @@ export default function Book() {
                                       <span>{c.jobs_completed} jobs</span>
                                     </div>
                                   </div>
-                                  {selectedCleanerId === c.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                                  {selectedCleanerId === c.id && <div className={`h-6 w-6 ${STEP_PALETTES[1].step}`}><Check className="h-4 w-4" /></div>}
                                 </CardContent>
                               </Card>
                             );
@@ -364,7 +403,7 @@ export default function Book() {
 
                     <TabsContent value="again" className="mt-4">
                       {!bookAgainCleaners.length ? (
-                        <Card className="border-dashed"><CardContent className="p-8 text-center">
+                        <Card className="palette-card palette-card-amber palette-card-dashed"><CardContent className="p-8 text-center">
                           <RotateCcw className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
                           <p className="text-sm font-medium">No past cleaners</p>
                           <p className="text-xs text-muted-foreground mt-1">Complete a booking to see cleaners here</p>
@@ -372,9 +411,9 @@ export default function Book() {
                       ) : (
                         <div className="space-y-2">
                           {bookAgainCleaners.map(c => (
-                            <Card key={c.id} className={`cursor-pointer transition-all ${selectedCleanerId === c.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(c.id)}>
+                            <Card key={c.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedCleanerId === c.id ? `${STEP_PALETTES[2].card} ring-2 ring-ring/10` : `${STEP_PALETTES[2].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(c.id)}>
                               <CardContent className="p-4 flex items-center gap-4">
-                                <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">{c.name.charAt(0)}</div>
+                                <div className={`h-11 w-11 rounded-full ${STEP_PALETTES[2].icon} font-bold text-sm`}>{c.name.charAt(0)}</div>
                                 <div className="flex-1 min-w-0">
                                   <p className="font-semibold text-sm truncate">{c.name}</p>
                                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -382,7 +421,7 @@ export default function Book() {
                                     <span>Last: {format(new Date(c.lastBooking), 'MMM d')}</span>
                                   </div>
                                 </div>
-                                {selectedCleanerId === c.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                                {selectedCleanerId === c.id && <div className={`h-6 w-6 ${STEP_PALETTES[2].step}`}><Check className="h-4 w-4" /></div>}
                               </CardContent>
                             </Card>
                           ))}
@@ -413,13 +452,13 @@ export default function Book() {
                   <p className="text-sm text-muted-foreground mb-6">Optional add-ons and special instructions</p>
                   <div className="space-y-3 mb-6">
                     {addOns.map(addOn => (
-                      <Card key={addOn.id} className={`cursor-pointer transition-all ${selectedAddOns.includes(addOn.id) ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => toggleAddOn(addOn.id)}>
+                      <Card key={addOn.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedAddOns.includes(addOn.id) ? `${currentPalette.card} ring-2 ring-ring/10` : `${currentPalette.card} hover:shadow-elevated`}`} onClick={() => toggleAddOn(addOn.id)}>
                         <CardContent className="flex items-center gap-4 p-4">
                           <span className="text-2xl">{addOn.icon}</span>
                           <div className="flex-1"><p className="font-medium">{addOn.name}</p></div>
                           <span className="text-sm text-muted-foreground">+${addOn.credits}</span>
-                          <div className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center ${selectedAddOns.includes(addOn.id) ? "bg-primary border-primary" : "border-border"}`}>
-                            {selectedAddOns.includes(addOn.id) && <Check className="h-4 w-4 text-primary-foreground" />}
+                          <div className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center ${selectedAddOns.includes(addOn.id) ? currentPalette.step : "border-border bg-background"}`}>
+                            {selectedAddOns.includes(addOn.id) && <Check className="h-4 w-4" />}
                           </div>
                         </CardContent>
                       </Card>
@@ -427,7 +466,7 @@ export default function Book() {
                   </div>
                   <div className="mb-6">
                     <label className="text-sm font-medium mb-2 block">Special instructions</label>
-                    <Textarea placeholder="Any notes for your cleaner? (e.g., alarm code, pet info)" value={specialInstructions} onChange={e => setSpecialInstructions(e.target.value)} className="min-h-[80px]" />
+                    <Textarea placeholder="Any notes for your cleaner? (e.g., alarm code, pet info)" value={specialInstructions} onChange={e => setSpecialInstructions(e.target.value)} className={`min-h-[80px] ${currentPalette.input}`} />
                   </div>
                   <div className="flex gap-3">
                     <Button variant="outline" size="lg" onClick={() => setStep(4)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
@@ -442,7 +481,7 @@ export default function Book() {
                   <h2 className="text-xl sm:text-2xl font-bold mb-1">Review & confirm</h2>
                   <p className="text-sm text-muted-foreground mb-6">You only pay for time actually worked. Unused held credits are returned automatically.</p>
 
-                  <Card className="mb-4">
+                    <Card className="mb-4 palette-card palette-card-green">
                     <CardContent className="p-5 space-y-4">
                       <SummaryRow label="Service" value={selectedCleaningType?.name || ''} />
                       <SummaryRow label="Duration" value={`${hours} hours`} />
@@ -456,11 +495,11 @@ export default function Book() {
                           {selectedAddOns.map(id => { const a = addOns.find(x => x.id === id); return a ? <SummaryRow key={id} label={a.name} value={`+$${a.credits}`} small /> : null; })}
                         </div>
                       )}
-                      {isSameDay && rushFee > 0 && <SummaryRow label="Same-Day Rush Fee" value={`+$${rushFee}`} highlight />}
+                        {isSameDay && rushFee > 0 && <SummaryRow label="Same-Day Rush Fee" value={`+$${rushFee}`} highlight paletteClass="palette-pill palette-pill-amber" />}
                       {specialInstructions && <SummaryRow label="Notes" value={specialInstructions} small />}
                       <div className="border-t-2 border-border pt-4 flex items-center justify-between">
                         <span className="font-bold text-lg">Estimated Total</span>
-                        <span className="text-2xl font-black text-primary">${totalCredits}</span>
+                          <span className="text-2xl font-black palette-label-green">${totalCredits}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -473,12 +512,12 @@ export default function Book() {
 
                   {/* Payment options */}
                   <div className="space-y-3 mb-4">
-                    <Card className={`border-2 ${hasEnoughCredits ? 'border-primary/40 bg-primary/5' : 'border-border opacity-60'}`}>
+                    <Card className={`border-2 rounded-3xl ${hasEnoughCredits ? 'palette-card palette-card-blue' : 'border-border opacity-60 bg-card'}`}>
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3 mb-3">
                           <Wallet className="h-5 w-5 text-primary" />
                           <div className="flex-1"><p className="font-semibold text-sm">Pay with Credits</p>
-                            {!isLoadingAccount && <p className="text-xs text-muted-foreground">Balance: <span className={hasEnoughCredits ? 'text-primary font-medium' : 'text-destructive font-medium'}>${availableCredits}</span>
+                            {!isLoadingAccount && <p className="text-xs text-muted-foreground">Balance: <span className={hasEnoughCredits ? 'palette-label-blue font-medium' : 'text-destructive font-medium'}>${availableCredits}</span>
                               {!hasEnoughCredits && <Button variant="link" className="p-0 h-auto text-xs ml-1" asChild><Link to="/wallet">Top up →</Link></Button>}
                             </p>}
                           </div>
@@ -490,7 +529,7 @@ export default function Book() {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-2 border-border">
+                    <Card className="palette-card palette-card-purple">
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3 mb-3">
                           <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -515,7 +554,7 @@ export default function Book() {
           {/* ── STICKY SUMMARY PANEL (Desktop) ───────────────────────── */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <Card className="border-2 border-border/50">
+                <Card className="palette-card palette-card-purple">
                 <CardContent className="p-5">
                   <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Booking Summary</h3>
                   <div className="space-y-3 text-sm">
@@ -525,9 +564,9 @@ export default function Book() {
                     <SummaryRow label="Duration" value={`${hours}h`} small />
                     <SummaryRow label="Cleaner" value={selectedCleaner?.name || (selectedCleanerId ? '—' : 'Auto-Match')} small />
                     {selectedAddOns.length > 0 && <SummaryRow label="Extras" value={`${selectedAddOns.length} add-on${selectedAddOns.length > 1 ? 's' : ''}`} small />}
-                    <div className="border-t border-border pt-3 flex justify-between font-bold">
+                      <div className="border-t border-border pt-3 flex justify-between font-bold">
                       <span>Est. Total</span>
-                      <span className="text-primary">${totalCredits || 0}</span>
+                        <span className="palette-label-purple">${totalCredits || 0}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -542,30 +581,31 @@ export default function Book() {
 
 // ── Helper Components ──────────────────────────────────────────────
 
-function SummaryRow({ label, value, small, highlight, badge }: { label: string; value: string; small?: boolean; highlight?: boolean; badge?: string }) {
+function SummaryRow({ label, value, small, highlight, badge, paletteClass }: { label: string; value: string; small?: boolean; highlight?: boolean; badge?: string; paletteClass?: string }) {
   return (
     <div className={`flex items-start justify-between gap-2 ${small ? 'text-xs' : 'text-sm'}`}>
       <span className="text-muted-foreground">{label}</span>
       <span className={`text-right ${highlight ? 'text-warning font-medium' : 'font-medium'}`}>
         {value}
-        {badge && <Badge variant="outline" className="ml-2 text-[10px] bg-warning/20 text-warning border-warning/30">{badge}</Badge>}
+        {badge && <Badge variant="outline" className={`ml-2 text-[10px] ${paletteClass || 'bg-warning/20 text-warning border-warning/30'}`}>{badge}</Badge>}
       </span>
     </div>
   );
 }
 
 function CleanerCard({ cleaner, selected, onSelect, isFav }: { cleaner: CleanerListing; selected: boolean; onSelect: () => void; isFav: boolean }) {
+  const palette = STEP_PALETTES[3];
   return (
-    <Card className={`cursor-pointer transition-all ${selected ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={onSelect}>
+    <Card className={`cursor-pointer transition-all rounded-3xl border-2 ${selected ? `${palette.card} ring-2 ring-ring/10` : `${palette.card} hover:shadow-elevated`}`} onClick={onSelect}>
       <CardContent className="p-4 flex items-center gap-4">
-        <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+        <div className={`h-11 w-11 rounded-full ${palette.icon} font-bold text-sm flex-shrink-0`}>
           {cleaner.name.charAt(0)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <p className="font-semibold text-sm truncate">{cleaner.name}</p>
             {isFav && <Heart className="h-3 w-3 text-destructive fill-destructive flex-shrink-0" />}
-            {cleaner.tier !== 'standard' && <Badge variant="outline" className="text-[10px] h-4 capitalize">{cleaner.tier}</Badge>}
+            {cleaner.tier !== 'standard' && <Badge variant="outline" className={`text-[10px] h-4 capitalize ${palette.pill}`}>{cleaner.tier}</Badge>}
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
             {cleaner.avgRating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{cleaner.avgRating.toFixed(1)}</span>}
@@ -574,7 +614,7 @@ function CleanerCard({ cleaner, selected, onSelect, isFav }: { cleaner: CleanerL
             <span className="flex items-center gap-0.5"><Shield className="h-3 w-3" />{cleaner.reliabilityScore}%</span>
           </div>
         </div>
-        {selected && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+        {selected && <div className={`h-6 w-6 ${palette.step} flex-shrink-0`}><Check className="h-4 w-4" /></div>}
       </CardContent>
     </Card>
   );
