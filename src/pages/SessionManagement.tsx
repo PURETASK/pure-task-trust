@@ -84,7 +84,7 @@ export default function SessionManagement() {
               ) : (
                 <div className="space-y-2">
                   {sessions.map((session, i) => {
-                    const DeviceIcon = getDeviceIcon(session.device_type);
+                    const DeviceIcon = getDeviceIcon(session.device_name);
                     return (
                       <motion.div key={session.id} {...f(0.1 + i * 0.03)}>
                         <div className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border/40 bg-card">
@@ -93,10 +93,10 @@ export default function SessionManagement() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="font-bold text-sm truncate">{session.device_type || 'Unknown Device'}</p>
+                              <p className="font-bold text-sm truncate">{session.device_name || 'Unknown Device'}</p>
                               {session.is_current && <Badge className="bg-success/10 text-success border-success/30 text-[10px] h-5 font-bold">Current</Badge>}
                             </div>
-                            <p className="text-xs text-muted-foreground truncate">{session.browser || 'Unknown browser'} · {session.os || 'Unknown OS'}</p>
+                            <p className="text-xs text-muted-foreground truncate">{session.browser || 'Unknown browser'}</p>
                             {session.last_active_at && (
                               <p className="text-xs text-muted-foreground">Last active: {format(new Date(session.last_active_at), "MMM d, h:mm a")}</p>
                             )}
