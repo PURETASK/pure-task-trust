@@ -54,7 +54,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     if (!isAuthenticated) return "/";
     if (user?.role === "cleaner") return "/cleaner/dashboard";
     if (user?.role === "admin") return "/admin/hub";
-    return "/dashboard";
+    return "/home";
   };
 
   const headerAccentClass = !isAuthenticated
