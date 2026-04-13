@@ -252,7 +252,7 @@ const App = () => (
                     {/* Client routes — new 5-tab IA */}
                     <Route path="/home" element={<RequireClient><Dashboard /></RequireClient>} />
                     <Route path="/my-cleanings" element={<RequireClient><MyCleanings /></RequireClient>} />
-                    <Route path="/my-cleanings/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
+                    <Route path="/my-cleanings/:id" element={<RequireClient><CleaningDetail /></RequireClient>} />
                     <Route path="/account" element={<RequireClient><AccountPage /></RequireClient>} />
 
                     {/* Legacy redirects → new routes */}
