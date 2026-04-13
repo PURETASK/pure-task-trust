@@ -195,9 +195,9 @@ export function useClientHome(): ClientHomeData {
   }, [jobs]);
 
   const isNewUser = useMemo(() => {
-    if (jobsLoading || jobsFetching) return false;
+    if (jobsFetching) return false;
     return !jobs?.length;
-  }, [jobs, jobsLoading, jobsFetching]);
+  }, [jobs, jobsFetching]);
 
   return {
     heroState,
