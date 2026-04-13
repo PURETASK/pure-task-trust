@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isToday, isTomorrow, differenceInHours } from "date-fns";
+import { isToday, differenceInHours } from "date-fns";
 import { useClientJobs, type JobWithDetails } from "@/hooks/useJob";
 import { useWallet } from "@/hooks/useWallet";
 import { useMessageThreads } from "@/hooks/useMessages";
@@ -15,14 +15,11 @@ export type HeroState =
   | "awaiting_approval";
 
 export interface ClientHomeData {
-  // Hero
   heroState: HeroState;
   heroJob: JobWithDetails | null;
-  // Wallet
   availableBalance: number;
   heldBalance: number;
   walletState: "normal" | "low_balance" | "payment_issue";
-  // Messages
   unreadCount: number;
   recentThreads: Array<{
     id: string;
@@ -31,11 +28,8 @@ export interface ClientHomeData {
     timestamp: string;
     unread: boolean;
   }>;
-  // Alerts
   alerts: Alert[];
-  // Rebook
   rebookCandidates: JobWithDetails[];
-  // Flags
   isNewUser: boolean;
   isLoading: boolean;
 }
@@ -55,14 +49,16 @@ const LOW_BALANCE_THRESHOLD = 50;
 
 export function useClientHome(): ClientHomeData {
   const { user } = useAuth();
-  const { data: jobs, isLoading: jobsLoading } = useClientJobs();
+  const { data: jobs, isLoading: jobsLoading, isFetching: jobsFetching } = useClientJobs();
   const { account, isLoadingAccount } = useWallet();
-  const { data: threads, isLoading: threadsLoading } = useMessageThreads();
+  const { data: threads } = useMessageThreads();
 
   const availableBalance = account?.current_balance ?? 0;
   const heldBalance = account?.held_balance ?? 0;
 
-  // Determine hero state and job
+  // Only show loading if user is authenticated AND queries are actively fetching
+  const isLoading = !!user?.id && (jobsFetching || isLoadingAccount);
+
   const { heroState, heroJob } = useMemo(() => {
     if (!jobs?.length) return { heroState: "empty" as HeroState, heroJob: null };
 
@@ -72,11 +68,9 @@ export function useClientHome(): ClientHomeData {
     );
     if (awaitingApproval) return { heroState: "awaiting_approval" as HeroState, heroJob: awaitingApproval };
 
-    // In progress
     const inProgress = jobs.find((j) => j.status === "in_progress");
     if (inProgress) return { heroState: "in_progress" as HeroState, heroJob: inProgress };
 
-    // On the way (confirmed + today + within 1 hour)
     const onTheWay = jobs.find((j) => {
       if (j.status !== "confirmed" || !j.scheduled_start_at) return false;
       const start = new Date(j.scheduled_start_at);
@@ -84,7 +78,6 @@ export function useClientHome(): ClientHomeData {
     });
     if (onTheWay) return { heroState: "on_the_way" as HeroState, heroJob: onTheWay };
 
-    // Upcoming jobs
     const upcoming = jobs
       .filter((j) => ["created", "pending", "confirmed"].includes(j.status))
       .sort((a, b) => {
@@ -96,13 +89,11 @@ export function useClientHome(): ClientHomeData {
     const nextJob = upcoming[0];
     if (!nextJob) return { heroState: "empty" as HeroState, heroJob: null };
 
-    // Check if balance is too low for upcoming job
     const escrow = nextJob.escrow_credits_reserved ?? 0;
     if (escrow > 0 && availableBalance < escrow) {
       return { heroState: "needs_topup" as HeroState, heroJob: nextJob };
     }
 
-    // Urgent if within 24 hours
     if (nextJob.scheduled_start_at) {
       const hoursUntil = differenceInHours(new Date(nextJob.scheduled_start_at), new Date());
       if (hoursUntil <= 24) return { heroState: "urgent" as HeroState, heroJob: nextJob };
@@ -111,19 +102,15 @@ export function useClientHome(): ClientHomeData {
     return { heroState: "future" as HeroState, heroJob: nextJob };
   }, [jobs, availableBalance]);
 
-  // Wallet state
   const walletState = useMemo(() => {
     if (availableBalance <= 0 && heldBalance > 0) return "payment_issue" as const;
     if (availableBalance < LOW_BALANCE_THRESHOLD) return "low_balance" as const;
     return "normal" as const;
   }, [availableBalance, heldBalance]);
 
-  // Recent message threads (active bookings only)
   const { unreadCount, recentThreads } = useMemo(() => {
     if (!threads?.length) return { unreadCount: 0, recentThreads: [] };
-
     const totalUnread = threads.reduce((sum, t) => sum + (t.unreadCount || 0), 0);
-
     const recent = threads.slice(0, 3).map((t) => ({
       id: t.id,
       otherPartyName: t.otherParty
@@ -133,15 +120,12 @@ export function useClientHome(): ClientHomeData {
       timestamp: t.lastMessage?.created_at || t.updated_at,
       unread: (t.unreadCount || 0) > 0,
     }));
-
     return { unreadCount: totalUnread, recentThreads: recent };
   }, [threads]);
 
-  // Alerts (prioritized, max 5)
   const alerts = useMemo(() => {
     const items: Alert[] = [];
 
-    // 1. Approval needed
     const awaitingApprovalJobs = jobs?.filter(
       (j) => j.status === "completed" && j.final_charge_credits == null
     ) ?? [];
@@ -158,7 +142,6 @@ export function useClientHome(): ClientHomeData {
       });
     });
 
-    // 2. Payment/wallet warnings
     if (walletState === "payment_issue") {
       items.push({
         id: "payment-issue",
@@ -181,7 +164,6 @@ export function useClientHome(): ClientHomeData {
       });
     }
 
-    // 3. Unread messages
     if (unreadCount > 0) {
       items.push({
         id: "unread-messages",
@@ -197,7 +179,6 @@ export function useClientHome(): ClientHomeData {
     return items.sort((a, b) => a.priority - b.priority).slice(0, 5);
   }, [jobs, walletState, unreadCount]);
 
-  // Rebook candidates (last 3 completed jobs with cleaners)
   const rebookCandidates = useMemo(() => {
     if (!jobs?.length) return [];
     const completed = jobs.filter(
@@ -213,11 +194,10 @@ export function useClientHome(): ClientHomeData {
       .slice(0, 3);
   }, [jobs]);
 
-  // New user detection
   const isNewUser = useMemo(() => {
-    if (jobsLoading) return false;
+    if (jobsLoading || jobsFetching) return false;
     return !jobs?.length;
-  }, [jobs, jobsLoading]);
+  }, [jobs, jobsLoading, jobsFetching]);
 
   return {
     heroState,
@@ -230,6 +210,6 @@ export function useClientHome(): ClientHomeData {
     alerts,
     rebookCandidates,
     isNewUser,
-    isLoading: jobsLoading || isLoadingAccount,
+    isLoading,
   };
 }
