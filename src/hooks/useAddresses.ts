@@ -35,10 +35,15 @@ export function useAddresses() {
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Failed to fetch addresses:', error);
+        throw error;
+      }
       return (data || []) as Address[];
     },
     enabled: !!user?.id,
+    retry: 1,
+    staleTime: 30_000,
   });
 }
 
