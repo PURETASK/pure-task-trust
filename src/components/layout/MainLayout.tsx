@@ -11,13 +11,14 @@ import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { MessageInbox } from "@/components/layout/MessageInbox";
 import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
 import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, HelpCircle, Shield, Bell } from "lucide-react";
+import { LogOut, HelpCircle, Shield, Bell, MessageCircle } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { CreditChip } from "@/components/layout/header/CreditChip";
 import { CleanerAvailabilityToggle } from "@/components/layout/header/CleanerAvailabilityToggle";
@@ -53,7 +54,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     if (!isAuthenticated) return "/";
     if (user?.role === "cleaner") return "/cleaner/dashboard";
     if (user?.role === "admin") return "/admin/hub";
-    return "/dashboard";
+    return "/home";
   };
 
   const headerAccentClass = !isAuthenticated
@@ -132,10 +133,22 @@ export function MainLayout({ children }: MainLayoutProps) {
                       </div>
                     )}
 
+                    {/* Messages inbox */}
+                    <div className="hidden sm:flex">
+                      <MessageInbox />
+                    </div>
+
                     {/* Notifications bell */}
                     <div className="hidden sm:flex">
                       <NotificationBell />
                     </div>
+
+                    {/* Help */}
+                    <Button variant="ghost" size="icon" className="hidden sm:flex touch-target" asChild>
+                      <Link to="/help" aria-label="Help & Support">
+                        <HelpCircle className="h-5 w-5" />
+                      </Link>
+                    </Button>
 
                     {/* Avatar dropdown */}
                     <DropdownMenu>

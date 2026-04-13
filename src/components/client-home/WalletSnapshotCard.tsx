@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Wallet, AlertTriangle, Info, CreditCard, Zap } from "lucide-react";
+import { Wallet, AlertTriangle, Info, CreditCard, Zap, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,7 +46,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
           <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
             <p className="text-xs font-medium text-destructive">
-              Your last payment failed. Update your payment method.
+              Payment method needs attention.
             </p>
           </div>
         )}
@@ -54,7 +54,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
           <div className="rounded-lg bg-warning/10 border border-warning/20 px-3 py-2.5 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-3.5 w-3.5 text-warning flex-shrink-0" />
             <p className="text-xs font-medium text-warning">
-              Your balance is low. Top up to avoid booking interruptions.
+              Low balance — top up before your next cleaning.
             </p>
           </div>
         )}
@@ -64,8 +64,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
           <div className="mb-1">
             <span className="text-xs text-muted-foreground font-medium">Available</span>
             <p className="text-3xl font-bold tracking-tight">
-              {availableBalance.toLocaleString()}
-              <span className="text-sm font-medium text-muted-foreground ml-1">cr</span>
+              ${availableBalance.toLocaleString()}
             </p>
           </div>
 
@@ -80,12 +79,12 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
                     <p className="text-xs max-w-[200px]">
-                      Held for upcoming cleaning. Released after approval.
+                      Held credits are only finalized after job completion.
                     </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <span className="text-sm font-medium text-muted-foreground">{heldBalance.toLocaleString()} cr</span>
+              <span className="text-sm font-medium text-muted-foreground">${heldBalance.toLocaleString()}</span>
             </div>
           )}
         </div>
@@ -94,12 +93,21 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
           Unused held credits are returned automatically.
         </p>
 
-        <Button size="sm" variant="outline" asChild className="w-full gap-2">
-          <Link to="/wallet">
-            <CreditCard className="h-3.5 w-3.5" />
-            Add Credits
-          </Link>
-        </Button>
+        {/* Actions: Add Credits + View Wallet */}
+        <div className="flex gap-2">
+          <Button size="sm" variant="default" asChild className="flex-1 gap-1.5 h-9 text-xs rounded-xl">
+            <Link to="/wallet">
+              <CreditCard className="h-3.5 w-3.5" />
+              Add Credits
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" asChild className="gap-1.5 h-9 text-xs rounded-xl">
+            <Link to="/wallet">
+              <Eye className="h-3.5 w-3.5" />
+              View Wallet
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

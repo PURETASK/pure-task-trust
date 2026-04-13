@@ -4,7 +4,7 @@ import { format, differenceInMinutes } from "date-fns";
 import {
   Calendar, Clock, Sparkles, Navigation, Timer,
   Camera, CreditCard, AlertTriangle, ChevronRight,
-  Brush, Home, Truck
+  Brush, Home, Truck, MessageCircle, MapPin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,17 +36,27 @@ function serviceLabel(type: string | null) {
   return (type || "standard").replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function CleanerAvatar({ name, size = "md", color = "primary" }: { name: string; size?: "sm" | "md" | "lg"; color?: string }) {
-  const sizeClasses = {
-    sm: "h-9 w-9 text-sm",
-    md: "h-11 w-11 text-base",
-    lg: "h-14 w-14 text-lg",
+function getJobAddress(job: JobWithDetails): string | null {
+  // Jobs may have address_line1 on related property or inline fields
+  return (job as any).address_line1 || (job as any).address || null;
+}
+
+function statusPill(label: string, variant: "default" | "warning" | "success" | "destructive") {
+  const styles = {
+    default: "bg-primary/10 text-primary border-primary/30",
+    warning: "bg-warning/10 text-warning border-warning/30",
+    success: "bg-success/10 text-success border-success/30",
+    destructive: "bg-destructive/10 text-destructive border-destructive/30",
   };
   return (
-    <div className={`${sizeClasses[size]} rounded-full bg-${color}/10 border-2 border-${color}/20 flex items-center justify-center font-bold text-${color} flex-shrink-0`}>
-      {name.charAt(0).toUpperCase()}
-    </div>
+    <Badge className={`${styles[variant]} border text-xs font-semibold px-3`}>
+      {label}
+    </Badge>
   );
+}
+
+function addressLine(job: JobWithDetails) {
+  return getJobAddress(job);
 }
 
 /* ── EMPTY ─────────────────────────────────────────────────────── */
@@ -63,9 +73,9 @@ function EmptyState() {
         <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
           <Sparkles className="h-8 w-8 text-primary/60" />
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold mb-2">No upcoming cleanings</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-2">No cleaning booked yet</h2>
         <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-          You don't have any upcoming cleanings. Ready to book one?
+          Book a trusted cleaner in minutes.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
           {services.map((s) => (
@@ -87,29 +97,39 @@ function EmptyState() {
 
 /* ── FUTURE (>24h) ─────────────────────────────────────────────── */
 function FutureState({ job }: { job: JobWithDetails }) {
+  const address = addressLine(job);
+
   return (
-    <Link to={`/booking/${job.id}`}>
-      <Card className="hover:shadow-elevated transition-all border-primary/20 hover:border-primary/40 overflow-hidden">
-        <div className="h-1 w-full gradient-brand" />
-        <CardContent className="p-5 sm:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <Badge className="bg-primary/10 text-primary border border-primary/30 text-xs font-semibold px-3">
-              Upcoming
-            </Badge>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <JobDetails job={job} />
-          <div className="flex gap-2 mt-5 pt-4 border-t border-border/50">
-            <Button size="sm" variant="outline" className="text-xs h-8 rounded-lg" asChild onClick={(e) => e.stopPropagation()}>
-              <Link to={`/booking/${job.id}`}>Reschedule</Link>
-            </Button>
-            <Button size="sm" variant="ghost" className="text-xs h-8 rounded-lg text-muted-foreground" asChild onClick={(e) => e.stopPropagation()}>
-              <Link to={`/booking/${job.id}`}>Cancel</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+    <Card className="hover:shadow-elevated transition-all border-primary/20 hover:border-primary/40 overflow-hidden">
+      <div className="h-1 w-full gradient-brand" />
+      <CardContent className="p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          {statusPill("Confirmed", "default")}
+        </div>
+        <p className="text-sm text-muted-foreground mb-5">Your next cleaning is booked and ready.</p>
+
+        <JobDetails job={job} address={address} />
+
+        <div className="flex flex-wrap gap-2 mt-5 pt-4 border-t border-border/50">
+          <Button size="sm" variant="default" className="text-xs h-9 rounded-xl" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>View Details</Link>
+          </Button>
+          <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl gap-1.5" asChild>
+            <Link to={`/messages`}>
+              <MessageCircle className="h-3 w-3" />
+              Message Cleaner
+            </Link>
+          </Button>
+          <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>Reschedule</Link>
+          </Button>
+          <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl text-muted-foreground" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>Cancel</Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -117,52 +137,87 @@ function FutureState({ job }: { job: JobWithDetails }) {
 function UrgentState({ job }: { job: JobWithDetails }) {
   const startDate = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
   const timeLabel = startDate ? format(startDate, "h:mm a") : "";
-  const dayLabel = startDate
-    ? (startDate.toDateString() === new Date().toDateString() ? "today" : "tomorrow")
-    : "";
+  const isToday = startDate?.toDateString() === new Date().toDateString();
+  const dayLabel = isToday ? "today" : "tomorrow";
+  const address = addressLine(job);
 
   return (
-    <Link to={`/booking/${job.id}`}>
-      <Card className="hover:shadow-elevated transition-all border-warning/30 overflow-hidden">
-        <div className="h-1 w-full bg-warning" />
-        <CardContent className="p-5 sm:p-6">
-          <div className="rounded-xl bg-warning/10 border border-warning/20 px-4 py-3 mb-4 flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-warning/20 flex items-center justify-center flex-shrink-0">
-              <Clock className="h-4 w-4 text-warning" />
-            </div>
-            <p className="text-sm font-semibold">
-              Your cleaning is {dayLabel} at {timeLabel}
-            </p>
+    <Card className="hover:shadow-elevated transition-all border-warning/30 overflow-hidden">
+      <div className="h-1 w-full bg-warning" />
+      <CardContent className="p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          {statusPill("Confirmed", "warning")}
+        </div>
+
+        <div className="rounded-xl bg-warning/10 border border-warning/20 px-4 py-3 mb-5 flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-lg bg-warning/20 flex items-center justify-center flex-shrink-0">
+            <Clock className="h-4 w-4 text-warning" />
           </div>
-          <JobDetails job={job} />
-        </CardContent>
-      </Card>
-    </Link>
+          <p className="text-sm font-semibold">
+            {isToday
+              ? `Cleaner arrives today at ${timeLabel}`
+              : `Cleaner arrives ${dayLabel} at ${timeLabel}`}
+          </p>
+        </div>
+
+        <JobDetails job={job} address={address} />
+
+        <div className="flex flex-wrap gap-2 mt-5 pt-4 border-t border-border/50">
+          <Button size="sm" variant="default" className="text-xs h-9 rounded-xl" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>View Details</Link>
+          </Button>
+          <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl gap-1.5" asChild>
+            <Link to="/messages">
+              <MessageCircle className="h-3 w-3" />
+              Message Cleaner
+            </Link>
+          </Button>
+          <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>Reschedule</Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 /* ── NEEDS TOP-UP ──────────────────────────────────────────────── */
 function NeedsTopUpState({ job }: { job: JobWithDetails }) {
+  const address = addressLine(job);
+
   return (
     <Card className="border-destructive/30 overflow-hidden">
       <div className="h-1 w-full bg-destructive" />
-      <CardContent className="p-5 sm:p-6">
-        <div className="rounded-xl bg-destructive/10 border border-destructive/20 px-4 py-3 mb-4 flex items-center gap-2.5">
+      <CardContent className="p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          {statusPill("Needs Top-Up", "destructive")}
+        </div>
+
+        <div className="rounded-xl bg-destructive/10 border border-destructive/20 px-4 py-3 mb-5 flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-lg bg-destructive/20 flex items-center justify-center flex-shrink-0">
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </div>
           <div>
             <p className="text-sm font-semibold text-destructive">Insufficient balance</p>
-            <p className="text-xs text-muted-foreground">Top up to keep your booking confirmed</p>
+            <p className="text-xs text-muted-foreground">Top up to keep your booking confirmed.</p>
           </div>
         </div>
-        <JobDetails job={job} />
-        <Button asChild className="mt-5 w-full sm:w-auto">
-          <Link to="/wallet">
-            <CreditCard className="h-4 w-4 mr-2" />
-            Top Up Now
-          </Link>
-        </Button>
+
+        <JobDetails job={job} address={address} />
+
+        <div className="flex flex-wrap gap-2 mt-5 pt-4 border-t border-border/50">
+          <Button asChild className="text-xs h-9 rounded-xl gap-1.5">
+            <Link to="/wallet">
+              <CreditCard className="h-3.5 w-3.5" />
+              Top Up Now
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>View Details</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -171,37 +226,58 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
 /* ── ON THE WAY ────────────────────────────────────────────────── */
 function OnTheWayState({ job }: { job: JobWithDetails }) {
   return (
-    <Link to={`/booking/${job.id}`}>
-      <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/[0.03] to-transparent">
-        <div className="h-1 w-full gradient-brand" />
-        <CardContent className="p-5 sm:p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <motion.div
-              animate={{ scale: [1, 1.12, 1] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="relative"
-            >
-              <div className="h-12 w-12 rounded-full bg-primary/15 border-2 border-primary/30 flex items-center justify-center">
-                <Navigation className="h-6 w-6 text-primary" />
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-success border-2 border-card flex items-center justify-center">
-                <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              </div>
-            </motion.div>
-            <div>
-              <p className="font-bold text-lg">{cleanerName(job)} is on the way</p>
-              <p className="text-sm text-muted-foreground">Arriving soon • {serviceLabel(job.cleaning_type)}</p>
+    <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/[0.03] to-transparent">
+      <div className="h-1 w-full gradient-brand" />
+      <CardContent className="p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-muted-foreground font-medium">Active Cleaning</p>
+          {statusPill("On The Way", "default")}
+        </div>
+
+        <div className="flex items-center gap-4 mb-4">
+          <motion.div
+            animate={{ scale: [1, 1.12, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="relative"
+          >
+            <div className="h-14 w-14 rounded-full bg-primary/15 border-2 border-primary/30 flex items-center justify-center">
+              <Navigation className="h-7 w-7 text-primary" />
             </div>
+            <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-success border-2 border-card flex items-center justify-center">
+              <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+            </div>
+          </motion.div>
+          <div>
+            <p className="font-bold text-lg">{cleanerName(job)} is on the way</p>
+            <p className="text-sm text-muted-foreground">
+              Arriving soon • {serviceLabel(job.cleaning_type)}
+            </p>
           </div>
-          {job.scheduled_start_at && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground pl-16">
-              <Clock className="h-3 w-3" />
-              Scheduled for {format(new Date(job.scheduled_start_at), "h:mm a")}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+
+        {job.scheduled_start_at && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 pl-[74px]">
+            <Clock className="h-3 w-3" />
+            Scheduled for {format(new Date(job.scheduled_start_at), "h:mm a")}
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
+          <Button size="sm" variant="default" className="text-xs h-9 rounded-xl gap-1.5" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>
+              <Navigation className="h-3 w-3" />
+              Track Arrival
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl gap-1.5" asChild>
+            <Link to="/messages">
+              <MessageCircle className="h-3 w-3" />
+              Message Cleaner
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -213,41 +289,60 @@ function InProgressState({ job }: { job: JobWithDetails }) {
   const mins = elapsed % 60;
 
   return (
-    <Link to={`/booking/${job.id}`}>
-      <Card className="border-success/30 overflow-hidden bg-gradient-to-br from-success/[0.03] to-transparent">
-        <div className="h-1 w-full bg-success" />
-        <CardContent className="p-5 sm:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="h-12 w-12 rounded-full bg-success/15 border-2 border-success/30 flex items-center justify-center"
-              >
-                <Timer className="h-6 w-6 text-success" />
-              </motion.div>
-              <div>
-                <p className="font-bold text-lg">Cleaning in progress</p>
-                <p className="text-sm text-muted-foreground">
-                  {cleanerName(job)} is currently on-site
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <Badge className="bg-success/10 text-success border border-success/30 font-mono text-base px-3 py-1">
-                {hours > 0 ? `${hours}h ` : ""}{mins}m
-              </Badge>
+    <Card className="border-success/30 overflow-hidden bg-gradient-to-br from-success/[0.03] to-transparent">
+      <div className="h-1 w-full bg-success" />
+      <CardContent className="p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-muted-foreground font-medium">Active Cleaning</p>
+          {statusPill("In Progress", "success")}
+        </div>
+
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="h-14 w-14 rounded-full bg-success/15 border-2 border-success/30 flex items-center justify-center"
+            >
+              <Timer className="h-7 w-7 text-success" />
+            </motion.div>
+            <div>
+              <p className="font-bold text-lg">Your cleaner is currently on-site</p>
+              <p className="text-sm text-muted-foreground">
+                {cleanerName(job)} • {serviceLabel(job.cleaning_type)}
+              </p>
             </div>
           </div>
-          {job.escrow_credits_reserved != null && (
-            <div className="mt-3 pl-16 flex items-center gap-2 text-xs text-muted-foreground">
-              <CreditCard className="h-3 w-3" />
-              <span>{job.escrow_credits_reserved} credits held for this job</span>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </Link>
+          <div className="text-right">
+            <Badge className="bg-success/10 text-success border border-success/30 font-mono text-base px-3 py-1">
+              {hours > 0 ? `${hours}h ` : ""}{mins}m
+            </Badge>
+          </div>
+        </div>
+
+        {job.escrow_credits_reserved != null && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 pl-[74px]">
+            <CreditCard className="h-3 w-3" />
+            <span>${job.escrow_credits_reserved} held for this job</span>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
+          <Button size="sm" variant="default" className="text-xs h-9 rounded-xl gap-1.5 bg-success hover:bg-success/90" asChild>
+            <Link to={`/my-cleanings/${job.id}`}>
+              <Timer className="h-3 w-3" />
+              View Live Job
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl gap-1.5" asChild>
+            <Link to="/messages">
+              <MessageCircle className="h-3 w-3" />
+              Message Cleaner
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -256,23 +351,27 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
   return (
     <Card className="border-warning/40 ring-2 ring-warning/15 overflow-hidden">
       <div className="h-1.5 w-full bg-warning" />
-      <CardContent className="p-5 sm:p-7">
+      <CardContent className="p-5 sm:p-8">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-muted-foreground font-medium">Action Required</p>
+          {statusPill("Awaiting Approval", "warning")}
+        </div>
+
         <div className="flex items-center gap-3 mb-2">
-          <div className="h-10 w-10 rounded-xl bg-warning/15 flex items-center justify-center">
-            <Camera className="h-5 w-5 text-warning" />
+          <div className="h-12 w-12 rounded-xl bg-warning/15 flex items-center justify-center">
+            <Camera className="h-6 w-6 text-warning" />
           </div>
           <div>
-            <h2 className="font-bold text-lg">Cleaning Complete</h2>
-            <p className="text-sm text-muted-foreground">Review required</p>
+            <h2 className="font-bold text-lg">Cleaning Complete — Approval Needed</h2>
+            <p className="text-sm text-muted-foreground">
+              Your cleaning is complete. Review photos before payment is released.
+            </p>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground mb-5">
-          Your cleaning is complete. Review the details and release payment.
-        </p>
 
         {/* Cleaner summary */}
-        <div className="flex items-center gap-3 mb-5 p-4 rounded-xl bg-muted/50 border border-border/50">
-          <div className="h-10 w-10 rounded-full bg-warning/10 border border-warning/20 flex items-center justify-center font-bold text-warning">
+        <div className="flex items-center gap-3 my-5 p-4 rounded-xl bg-muted/50 border border-border/50">
+          <div className="h-11 w-11 rounded-full bg-warning/10 border border-warning/20 flex items-center justify-center font-bold text-warning text-sm">
             {cleanerName(job).charAt(0)}
           </div>
           <div className="flex-1 min-w-0">
@@ -281,19 +380,22 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
           </div>
           {job.escrow_credits_reserved != null && (
             <div className="text-right">
-              <p className="text-lg font-bold">{job.escrow_credits_reserved}</p>
-              <p className="text-[10px] text-muted-foreground">credits</p>
+              <p className="text-lg font-bold">${job.escrow_credits_reserved}</p>
+              <p className="text-[10px] text-muted-foreground">credits held</p>
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
-          <Button asChild size="lg" className="flex-1">
-            <Link to={`/booking/${job.id}`}>Approve & Release Payment</Link>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild size="lg" className="flex-1 min-w-[200px]">
+            <Link to={`/my-cleanings/${job.id}`}>
+              <Camera className="h-4 w-4 mr-2" />
+              Review & Approve
+            </Link>
           </Button>
           <Button variant="outline" size="lg" asChild>
-            <Link to={`/booking/${job.id}`}>Dispute</Link>
+            <Link to={`/my-cleanings/${job.id}`}>Report an Issue</Link>
           </Button>
         </div>
       </CardContent>
@@ -302,15 +404,18 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
 }
 
 /* ── SHARED: Job Details Row ───────────────────────────────────── */
-function JobDetails({ job }: { job: JobWithDetails }) {
+function JobDetails({ job, address }: { job: JobWithDetails; address: string | null }) {
   return (
-    <div className="flex items-center gap-3.5">
-      <div className="h-11 w-11 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+    <div className="flex items-start gap-3.5">
+      <div className="h-12 w-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
         {cleanerName(job).charAt(0)}
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-base">{cleanerName(job)}</p>
         <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap mt-1">
+          <Badge variant="outline" className="text-[10px] h-5 px-2 font-medium capitalize">
+            {serviceLabel(job.cleaning_type)}
+          </Badge>
           {job.scheduled_start_at && (
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
@@ -323,10 +428,19 @@ function JobDetails({ job }: { job: JobWithDetails }) {
               {format(new Date(job.scheduled_start_at), "h:mm a")}
             </span>
           )}
-          <Badge variant="outline" className="text-[10px] h-5 px-2 font-medium capitalize">
-            {serviceLabel(job.cleaning_type)}
-          </Badge>
         </div>
+        {address && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1.5">
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{address}</span>
+          </div>
+        )}
+        {job.escrow_credits_reserved != null && job.escrow_credits_reserved > 0 && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+            <CreditCard className="h-3 w-3" />
+            <span>${job.escrow_credits_reserved} credits held</span>
+          </div>
+        )}
       </div>
     </div>
   );
