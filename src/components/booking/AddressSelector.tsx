@@ -52,8 +52,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     }
   };
 
-  // Show loading only when actually fetching, not when query is disabled
-  if (isLoading || isFetching) {
+  // Only show spinner when actively fetching and no data yet
+  if (isFetching && !addresses) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
