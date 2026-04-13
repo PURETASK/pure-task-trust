@@ -106,7 +106,7 @@ export default function Account() {
           {sections.map((section, i) => (
             <motion.div key={section.href} {...f(0.06 + i * 0.03)}>
               <Link to={section.href}>
-                <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border-2 border-border/40 hover:border-primary/20 hover:shadow-card bg-card transition-all cursor-pointer group">
+                <div className="flex items-center gap-4 p-4 sm:p-5 rounded-3xl border-2 border-border/40 hover:border-primary/20 hover:shadow-card bg-card transition-all cursor-pointer group">
                   <div className={`h-11 w-11 rounded-xl border-2 flex items-center justify-center flex-shrink-0 ${section.color}`}>
                     <section.icon className="h-5 w-5" />
                   </div>

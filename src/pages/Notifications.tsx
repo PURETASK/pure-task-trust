@@ -54,14 +54,19 @@ export default function Notifications() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-3">
-                Notifications
-                {unreadCount > 0 && (
-                  <Badge className="bg-primary text-primary-foreground font-bold text-sm px-2.5 py-1 rounded-full">{unreadCount}</Badge>
-                )}
-              </h1>
-              <p className="text-muted-foreground mt-1">Stay on top of everything happening</p>
+            <div className="flex items-center gap-3">
+              <div className="h-11 w-11 rounded-2xl bg-warning/10 border-2 border-warning/30 flex items-center justify-center">
+                <Bell className="h-5 w-5 text-warning" />
+              </div>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-3">
+                  Notifications
+                  {unreadCount > 0 && (
+                    <Badge className="bg-primary text-primary-foreground font-bold text-sm px-2.5 py-1 rounded-full">{unreadCount}</Badge>
+                  )}
+                </h1>
+                <p className="text-muted-foreground text-sm">Stay on top of everything happening</p>
+              </div>
             </div>
             {unreadCount > 0 && (
               <Button variant="outline" size="sm" onClick={() => markAllRead()} className="gap-1.5">
@@ -94,9 +99,11 @@ export default function Notifications() {
             <div className="space-y-3">{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}</div>
           ) : filtered.length === 0 ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-dashed border-2">
+              <Card className="border-2 border-dashed border-warning/20 rounded-3xl">
                 <CardContent className="py-16 text-center">
-                  <Sparkles className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
+                  <div className="h-14 w-14 rounded-2xl bg-warning/10 border-2 border-warning/30 flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="h-7 w-7 text-warning" />
+                  </div>
                   <h3 className="font-bold text-lg mb-1">{filter === "all" ? "All caught up!" : `No ${filter} notifications`}</h3>
                   <p className="text-sm text-muted-foreground">
                     {filter === "all" ? "We'll notify you about bookings, payments, and more" : "Nothing here yet — check back soon"}
@@ -111,10 +118,10 @@ export default function Notifications() {
                   <motion.div key={n.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: i * 0.03 }}>
                     <div
                       onClick={() => handleClick(n)}
-                      className={`relative flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer group ${
+                      className={`relative flex items-start gap-4 p-4 rounded-3xl border-2 transition-all cursor-pointer group ${
                         !n.is_read
-                          ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
-                          : "bg-card border-border/40 hover:bg-muted/40"
+                          ? "bg-primary/5 border-primary/30 hover:bg-primary/10"
+                          : "bg-card border-border/40 hover:border-primary/20"
                       }`}
                     >
                       {/* Unread dot */}
@@ -123,7 +130,7 @@ export default function Notifications() {
                       )}
 
                       {/* Icon */}
-                      <div className={`h-11 w-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
+                      <div className={`h-11 w-11 rounded-xl border-2 border-border/40 flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
                         {typeEmoji[n.type] || "🔔"}
                       </div>
 

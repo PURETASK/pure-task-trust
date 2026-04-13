@@ -61,8 +61,8 @@ export default function MyCleanings() {
         </motion.div>
 
         <Tabs value={tab} onValueChange={v => setTab(v as TabValue)}>
-          <TabsList className="w-full justify-start overflow-x-auto gap-1 bg-muted/50 p-1 rounded-xl mb-6">
-            <TabsTrigger value="upcoming" className="gap-1.5 text-xs sm:text-sm rounded-lg">
+          <TabsList className="w-full justify-start overflow-x-auto gap-1 bg-muted/50 p-1.5 rounded-2xl mb-6 border-2 border-border/40">
+            <TabsTrigger value="upcoming" className="gap-1.5 text-xs sm:text-sm rounded-xl">
               <CalendarDays className="h-3.5 w-3.5" /> Upcoming
               {upcoming.length > 0 && <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{upcoming.length}</Badge>}
             </TabsTrigger>
@@ -140,8 +140,22 @@ function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, e
         return (
           <motion.div key={job.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
             <Link to={`/my-cleanings/${job.id}`}>
-              <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border-2 border-border/40 hover:border-primary/20 hover:shadow-card bg-card transition-all cursor-pointer group">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+              <div className={`flex items-center gap-4 p-4 sm:p-5 rounded-3xl border-2 ${
+                [
+                  "border-primary/30 hover:border-primary/50",
+                  "border-success/30 hover:border-success/50",
+                  "border-warning/30 hover:border-warning/50",
+                  "border-[hsl(var(--pt-purple))]/30 hover:border-[hsl(var(--pt-purple))]/50",
+                ][i % 4]
+              } hover:shadow-card bg-card transition-all cursor-pointer group`}>
+                <div className={`h-12 w-12 rounded-2xl border-2 flex items-center justify-center font-bold text-sm flex-shrink-0 ${
+                  [
+                    "bg-primary/10 border-primary/20 text-primary",
+                    "bg-success/10 border-success/20 text-success",
+                    "bg-warning/10 border-warning/20 text-warning",
+                    "bg-[hsl(var(--pt-purple))]/10 border-[hsl(var(--pt-purple))]/20 text-[hsl(var(--pt-purple))]",
+                  ][i % 4]
+                }`}>
                   {cleanerName.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -276,9 +290,9 @@ function EmptyState({ icon: Icon, message, description, action, actionLabel }: {
   icon: any; message: string; description?: string; action?: string; actionLabel?: string;
 }) {
   return (
-    <div className="py-16 text-center rounded-3xl border-2 border-dashed border-border/40">
-      <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-        <Icon className="h-8 w-8 text-muted-foreground/30" />
+    <div className="py-16 text-center rounded-3xl border-2 border-dashed border-primary/20">
+      <div className="h-16 w-16 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center mx-auto mb-4">
+        <Icon className="h-8 w-8 text-primary/40" />
       </div>
       <p className="font-bold text-lg">{message}</p>
       {description && <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">{description}</p>}

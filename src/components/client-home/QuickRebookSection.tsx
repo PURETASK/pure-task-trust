@@ -11,27 +11,32 @@ interface Props {
   isNewUser?: boolean;
 }
 
+const cardColors = [
+  { border: "border-primary/30", hover: "hover:border-primary/50", iconBg: "bg-primary/10", iconBorder: "border-primary/20", iconText: "text-primary" },
+  { border: "border-success/30", hover: "hover:border-success/50", iconBg: "bg-success/10", iconBorder: "border-success/20", iconText: "text-success" },
+  { border: "border-warning/30", hover: "hover:border-warning/50", iconBg: "bg-warning/10", iconBorder: "border-warning/20", iconText: "text-warning" },
+  { border: "border-[hsl(var(--pt-purple))]/30", hover: "hover:border-[hsl(var(--pt-purple))]/50", iconBg: "bg-[hsl(var(--pt-purple))]/10", iconBorder: "border-[hsl(var(--pt-purple))]/20", iconText: "text-[hsl(var(--pt-purple))]" },
+];
+
 export function QuickRebookSection({ candidates, isNewUser }: Props) {
-  // New user: show "Popular ways to book"
   if (isNewUser || (!candidates.length && isNewUser !== false)) {
     return <PopularWaysToBook />;
   }
 
-  // Returning user with no rebook candidates
   if (!candidates.length) {
     return (
       <section>
         <SectionHeader />
-        <Card className="border-dashed">
+        <Card className="border-2 border-dashed border-primary/20 rounded-3xl">
           <CardContent className="p-5 flex flex-col items-center gap-3 text-center">
-            <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-              <Search className="h-5 w-5 text-muted-foreground" />
+            <div className="h-10 w-10 rounded-xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+              <Search className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-medium">No recent cleaners yet</p>
+              <p className="text-sm font-bold">No recent cleaners yet</p>
               <p className="text-xs text-muted-foreground">Complete a booking to see quick rebook options.</p>
             </div>
-            <Button size="sm" variant="outline" asChild className="mt-1">
+            <Button size="sm" variant="outline" asChild className="mt-1 rounded-xl border-2">
               <Link to="/book">Browse Cleaners</Link>
             </Button>
           </CardContent>
@@ -51,6 +56,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
           const rating = job.cleaner?.avg_rating;
           const type = (job.cleaning_type || "standard").replace("_", " ");
           const address = (job as any).address_line1 || (job as any).address || null;
+          const color = cardColors[i % cardColors.length];
 
           return (
             <motion.div
@@ -61,14 +67,14 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
               className="flex-shrink-0 snap-start"
             >
               <Link to={`/book?cleaner=${job.cleaner_id}&type=${job.cleaning_type}`}>
-                <div className="w-52 sm:w-60 rounded-2xl border border-border/60 bg-card p-4 sm:p-5 hover:shadow-card hover:border-primary/30 transition-all group">
+                <div className={`w-52 sm:w-60 rounded-3xl border-2 ${color.border} ${color.hover} bg-card p-4 sm:p-5 hover:shadow-card transition-all group`}>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="h-11 w-11 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-base group-hover:bg-primary/15 transition-colors flex-shrink-0">
+                    <div className={`h-11 w-11 rounded-xl ${color.iconBg} border-2 ${color.iconBorder} flex items-center justify-center font-bold ${color.iconText} text-base group-hover:scale-105 transition-transform flex-shrink-0`}>
                       {name.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm truncate">{name}</p>
+                      <p className="font-bold text-sm truncate">{name}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         {rating != null && (
                           <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
@@ -108,7 +114,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-9 text-xs rounded-xl px-3"
+                      className="h-9 text-xs rounded-xl px-3 border-2"
                       onClick={(e) => e.stopPropagation()}
                       asChild
                     >
@@ -130,9 +136,14 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
 function SectionHeader() {
   return (
     <div className="flex items-center justify-between mb-3">
-      <div>
-        <h2 className="text-base sm:text-lg font-bold">Quick Rebook</h2>
-        <p className="text-xs text-muted-foreground">Book your usual cleaning in seconds.</p>
+      <div className="flex items-center gap-2">
+        <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+          <RotateCcw className="h-3.5 w-3.5 text-primary" />
+        </div>
+        <div>
+          <h2 className="text-base sm:text-lg font-bold">Quick Rebook</h2>
+          <p className="text-xs text-muted-foreground">Book your usual cleaning in seconds.</p>
+        </div>
       </div>
       <Link to="/book" className="text-xs text-primary font-semibold hover:underline">
         Find new →
@@ -143,9 +154,9 @@ function SectionHeader() {
 
 function PopularWaysToBook() {
   const ways = [
-    { label: "Book Standard Cleaning", icon: Brush, href: "/book?type=standard", desc: "Weekly or bi-weekly maintenance" },
-    { label: "Book Deep Cleaning", icon: Home, href: "/book?type=deep", desc: "Thorough top-to-bottom clean" },
-    { label: "Find a Cleaner", icon: Search, href: "/book", desc: "Browse verified professionals" },
+    { label: "Book Standard Cleaning", icon: Brush, href: "/book?type=standard", desc: "Weekly or bi-weekly maintenance", color: "border-primary/30 hover:border-primary/50", iconBg: "bg-primary/10 border-primary/30", iconColor: "text-primary" },
+    { label: "Book Deep Cleaning", icon: Home, href: "/book?type=deep", desc: "Thorough top-to-bottom clean", color: "border-success/30 hover:border-success/50", iconBg: "bg-success/10 border-success/30", iconColor: "text-success" },
+    { label: "Find a Cleaner", icon: Search, href: "/book", desc: "Browse verified professionals", color: "border-[hsl(var(--pt-purple))]/30 hover:border-[hsl(var(--pt-purple))]/50", iconBg: "bg-[hsl(var(--pt-purple))]/10 border-[hsl(var(--pt-purple))]/30", iconColor: "text-[hsl(var(--pt-purple))]" },
   ];
 
   return (
@@ -157,13 +168,13 @@ function PopularWaysToBook() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {ways.map((w) => (
           <Link key={w.label} to={w.href}>
-            <Card className="hover:shadow-card hover:border-primary/30 transition-all h-full">
+            <Card className={`hover:shadow-card transition-all h-full border-2 ${w.color} rounded-2xl`}>
               <CardContent className="p-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <w.icon className="h-5 w-5 text-primary" />
+                <div className={`h-10 w-10 rounded-xl ${w.iconBg} border-2 flex items-center justify-center flex-shrink-0`}>
+                  <w.icon className={`h-5 w-5 ${w.iconColor}`} />
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-sm">{w.label}</p>
+                  <p className="font-bold text-sm">{w.label}</p>
                   <p className="text-xs text-muted-foreground">{w.desc}</p>
                 </div>
               </CardContent>

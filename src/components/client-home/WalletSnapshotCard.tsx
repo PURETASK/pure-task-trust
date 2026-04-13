@@ -19,23 +19,23 @@ interface Props {
 export function WalletSnapshotCard({ availableBalance, heldBalance, walletState }: Props) {
   const borderClass =
     walletState === "payment_issue"
-      ? "border-destructive/30"
+      ? "border-destructive/50"
       : walletState === "low_balance"
-      ? "border-warning/30"
-      : "border-border/60";
+      ? "border-warning/50"
+      : "border-success/50";
 
   return (
-    <Card className={`${borderClass} h-full`}>
+    <Card className={`border-2 ${borderClass} rounded-3xl h-full`}>
       <CardContent className="p-5 sm:p-6 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Wallet className="h-4 w-4 text-primary" />
+            <div className="h-9 w-9 rounded-xl bg-success/10 border-2 border-success/30 flex items-center justify-center">
+              <Wallet className="h-4 w-4 text-success" />
             </div>
-            <h3 className="font-semibold text-sm">Wallet</h3>
+            <h3 className="font-bold text-sm">Wallet</h3>
           </div>
-          <Badge variant="outline" className="text-[10px] font-medium gap-1">
+          <Badge variant="outline" className="text-[10px] font-bold gap-1 border-2 border-[hsl(var(--pt-purple))]/30 text-[hsl(var(--pt-purple))]">
             <Zap className="h-2.5 w-2.5" />
             Auto Top-Up: Off
           </Badge>
@@ -43,17 +43,17 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
 
         {/* Warning banners */}
         {walletState === "payment_issue" && (
-          <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 mb-4 flex items-center gap-2">
+          <div className="rounded-xl bg-destructive/10 border-2 border-destructive/30 px-3 py-2.5 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
-            <p className="text-xs font-medium text-destructive">
+            <p className="text-xs font-bold text-destructive">
               Payment method needs attention.
             </p>
           </div>
         )}
         {walletState === "low_balance" && (
-          <div className="rounded-lg bg-warning/10 border border-warning/20 px-3 py-2.5 mb-4 flex items-center gap-2">
+          <div className="rounded-xl bg-warning/10 border-2 border-warning/30 px-3 py-2.5 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-3.5 w-3.5 text-warning flex-shrink-0" />
-            <p className="text-xs font-medium text-warning">
+            <p className="text-xs font-bold text-warning">
               Low balance — top up before your next cleaning.
             </p>
           </div>
@@ -63,13 +63,13 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
         <div className="flex-1">
           <div className="mb-1">
             <span className="text-xs text-muted-foreground font-medium">Available</span>
-            <p className="text-3xl font-bold tracking-tight">
+            <p className="text-3xl font-black tracking-tight">
               ${availableBalance.toLocaleString()}
             </p>
           </div>
 
           {heldBalance > 0 && (
-            <div className="flex items-center justify-between mt-2 py-2 border-t border-border/50">
+            <div className="flex items-center justify-between mt-2 py-2 border-t-2 border-border/50">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -84,7 +84,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <span className="text-sm font-medium text-muted-foreground">${heldBalance.toLocaleString()}</span>
+              <span className="text-sm font-bold text-muted-foreground">${heldBalance.toLocaleString()}</span>
             </div>
           )}
         </div>
@@ -101,7 +101,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
               Add Credits
             </Link>
           </Button>
-          <Button size="sm" variant="outline" asChild className="gap-1.5 h-9 text-xs rounded-xl">
+          <Button size="sm" variant="outline" asChild className="gap-1.5 h-9 text-xs rounded-xl border-2">
             <Link to="/wallet">
               <Eye className="h-3.5 w-3.5" />
               View Wallet
