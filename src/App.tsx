@@ -28,6 +28,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const RoleSelection = lazy(() => import("./pages/RoleSelection"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const MyCleanings = lazy(() => import("./pages/MyCleanings"));
+const CleaningDetail = lazy(() => import("./pages/CleaningDetail"));
 const AccountPage = lazy(() => import("./pages/Account"));
 const Discover = lazy(() => import("./pages/Discover"));
 const CleanerProfile = lazy(() => import("./pages/CleanerProfile"));
