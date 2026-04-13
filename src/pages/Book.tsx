@@ -3,803 +3,579 @@ import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft, Loader2, AlertCircle, Zap, CalendarOff, Calendar, MapPin, CreditCard, ExternalLink, Wallet } from "lucide-react";
-import heroBooking from "@/assets/hero-booking.jpg";
-import { BookingServicesPicker } from "@/components/booking/BookingServicesPicker";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft,
+  Loader2, AlertCircle, Zap, Calendar, MapPin, CreditCard, ExternalLink, Wallet,
+  Star, Users, Heart, RotateCcw, User, Search, CalendarOff
+} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBooking, CleaningType } from "@/hooks/useBooking";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
-import { useCleaner } from "@/hooks/useCleaners";
-import { Link } from "react-router-dom";
+import { useCleaners, useCleaner, CleanerListing } from "@/hooks/useCleaners";
+import { useFavorites } from "@/hooks/useFavorites";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
-import { AddressVerification } from "@/components/booking/AddressVerification";
 import { Address, useAddresses } from "@/hooks/useAddresses";
-import { setHours as setDateHours, setMinutes as setDateMinutes, getDay } from "date-fns";
-import { 
-  isSameDayBooking, 
-  isCleaningTypeAllowedSameDay, 
+import { setHours as setDateHours, setMinutes as setDateMinutes, getDay, format } from "date-fns";
+import {
+  isSameDayBooking,
+  isCleaningTypeAllowedSameDay,
   calculateRushFee,
   validateSameDayBooking,
-  SAME_DAY_CONFIG 
 } from "@/lib/same-day-booking";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useClientJobs } from "@/hooks/useJob";
 
 const SERVICE_CHARGE_PCT = 0.15;
 
+const STEPS = ["Service", "Property", "Date & Time", "Cleaner", "Extras", "Review"];
+
 const cleaningTypes = [
-  {
-    id: "basic" as CleaningType,
-    name: "Standard Clean",
-    description: "Regular maintenance cleaning for a tidy home",
-    baseCredits: 35,
-    icon: Home,
-  },
-  {
-    id: "deep" as CleaningType,
-    name: "Deep Clean",
-    description: "Thorough cleaning including hard-to-reach areas",
-    baseCredits: 55,
-    icon: Sparkles,
-  },
-  {
-    id: "move_out" as CleaningType,
-    name: "Move-out Clean",
-    description: "Complete cleaning for end of lease",
-    baseCredits: 75,
-    icon: Building,
-  },
+  { id: "basic" as CleaningType, name: "Standard Cleaning", description: "Regular maintenance cleaning for a tidy home", baseCredits: 35, icon: Home, estimate: "$35–$140" },
+  { id: "deep" as CleaningType, name: "Deep Cleaning", description: "Thorough cleaning including hard-to-reach areas", baseCredits: 55, icon: Sparkles, estimate: "$55–$220" },
+  { id: "move_out" as CleaningType, name: "Move-Out Cleaning", description: "Complete cleaning for end of lease", baseCredits: 75, icon: Building, estimate: "$75–$300" },
 ];
 
 const addOns = [
-  { id: "fridge", name: "Inside Fridge", credits: 15 },
-  { id: "oven", name: "Inside Oven", credits: 20 },
-  { id: "windows", name: "Interior Windows", credits: 25 },
-  { id: "laundry", name: "Laundry (wash & fold)", credits: 20 },
-  { id: "organizing", name: "Closet Organizing", credits: 30 },
+  { id: "fridge", name: "Inside Fridge", credits: 15, icon: "🧊" },
+  { id: "oven", name: "Inside Oven", credits: 20, icon: "🔥" },
+  { id: "windows", name: "Interior Windows", credits: 25, icon: "🪟" },
+  { id: "laundry", name: "Laundry (wash & fold)", credits: 20, icon: "👕" },
+  { id: "pet_hair", name: "Pet Hair Treatment", credits: 15, icon: "🐾" },
+  { id: "supplies", name: "Cleaning Supplies Needed", credits: 10, icon: "🧹" },
 ];
 
 export default function Book() {
   const [searchParams] = useSearchParams();
-  const cleanerId = searchParams.get('cleaner');
-  
+  const preselectedCleanerId = searchParams.get('cleaner');
+
   const [step, setStep] = useState(1);
-  // Note: Booking confirmation is shown on /booking/:id after useBooking navigates there
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const [selectedAddress, setSelectedAddress] = useState<Address | undefined>();
+  const [selectedCleanerId, setSelectedCleanerId] = useState<string | null>(preselectedCleanerId);
+  const [cleanerTab, setCleanerTab] = useState<string>("all");
+  const [specialInstructions, setSpecialInstructions] = useState("");
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const { createBooking, isCreating } = useBooking();
   const { account, isLoadingAccount } = useWallet();
-  const { data: selectedCleaner } = useCleaner(cleanerId || '');
+  const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
+  const { data: favorites } = useFavorites();
+  const { data: pastJobs } = useClientJobs();
+  const { data: selectedCleaner } = useCleaner(selectedCleanerId || '');
   const { data: savedAddresses } = useAddresses();
 
-  // Fetch cleaner's availability blocks for validation
+  // Fetch cleaner availability blocks
   const { data: availabilityBlocks } = useQuery({
-    queryKey: ['cleaner-availability-blocks', cleanerId],
+    queryKey: ['cleaner-availability-blocks', selectedCleanerId],
     queryFn: async () => {
-      if (!cleanerId) return [];
+      if (!selectedCleanerId) return [];
       const { data } = await supabase
         .from('availability_blocks')
         .select('day_of_week, start_time, end_time, is_active')
-        .eq('cleaner_id', cleanerId)
+        .eq('cleaner_id', selectedCleanerId)
         .eq('is_active', true);
       return data || [];
     },
-    enabled: !!cleanerId,
+    enabled: !!selectedCleanerId,
   });
 
-  // Auto-select default or first address when addresses load
   useEffect(() => {
-    if (savedAddresses && savedAddresses.length > 0 && !selectedAddress) {
-      const defaultAddress = savedAddresses.find(a => a.is_default) || savedAddresses[0];
-      setSelectedAddress(defaultAddress);
+    if (savedAddresses?.length && !selectedAddress) {
+      setSelectedAddress(savedAddresses.find(a => a.is_default) || savedAddresses[0]);
     }
   }, [savedAddresses, selectedAddress]);
 
-  const selectedCleaningType = cleaningTypes.find((t) => t.id === selectedType);
-  const addOnCredits = selectedAddOns.reduce((sum, id) => {
-    const addOn = addOns.find((a) => a.id === id);
-    return sum + (addOn?.credits || 0);
-  }, 0);
-  
-  // Calculate rush fee for same-day bookings
+  const selectedCleaningType = cleaningTypes.find(t => t.id === selectedType);
+  const addOnCredits = selectedAddOns.reduce((sum, id) => sum + (addOns.find(a => a.id === id)?.credits || 0), 0);
   const rushFee = calculateRushFee(selectedDate);
   const isSameDay = selectedDate ? isSameDayBooking(selectedDate) : false;
-  
   const baseCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
   const totalCredits = baseCredits + rushFee;
-
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
-  
-  // Check if the selected date/time is blocked by the cleaner's availability
-  const isDateBlockedByCleaner = (() => {
-    if (!selectedDate || !cleanerId || !availabilityBlocks || availabilityBlocks.length === 0) return false;
-    // day_of_week: 0=Sun, 1=Mon … 6=Sat (same as getDay)
-    const dayOfWeek = getDay(selectedDate);
-    const hasBlockForDay = availabilityBlocks.some(b => b.day_of_week === dayOfWeek);
-    // If cleaner has blocks and none match this day, day is unavailable
-    return !hasBlockForDay;
-  })();
-  
-  // Check if selected cleaning type is allowed for same-day booking
-  const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
-
-  // Combine date and time into a single datetime
-  const getScheduledDateTime = () => {
-    if (!selectedDate || !selectedTime) return undefined;
-    const [hourStr, minuteStr] = selectedTime.split(':');
-    let dt = setDateHours(selectedDate, parseInt(hourStr));
-    dt = setDateMinutes(dt, parseInt(minuteStr));
-    return dt.toISOString();
-  };
-
-  const [isDirectPaying, setIsDirectPaying] = useState(false);
-
   const serviceCharge = Math.round(totalCredits * SERVICE_CHARGE_PCT);
   const directPayTotal = totalCredits + serviceCharge;
 
+  const isDateBlockedByCleaner = (() => {
+    if (!selectedDate || !selectedCleanerId || !availabilityBlocks?.length) return false;
+    const dayOfWeek = getDay(selectedDate);
+    return !availabilityBlocks.some(b => b.day_of_week === dayOfWeek);
+  })();
+
+  const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
+
+  const getScheduledDateTime = () => {
+    if (!selectedDate || !selectedTime) return undefined;
+    const [h, m] = selectedTime.split(':');
+    return setDateMinutes(setDateHours(selectedDate, parseInt(h)), parseInt(m)).toISOString();
+  };
+
+  // Book Again cleaners (unique cleaners from past completed jobs)
+  const bookAgainCleaners = (() => {
+    if (!pastJobs?.length) return [];
+    const seen = new Set<string>();
+    return pastJobs
+      .filter(j => j.status === "completed" && j.cleaner_id && j.cleaner)
+      .filter(j => { if (seen.has(j.cleaner_id!)) return false; seen.add(j.cleaner_id!); return true; })
+      .slice(0, 10)
+      .map(j => ({
+        id: j.cleaner_id!,
+        name: `${j.cleaner?.first_name || ''} ${j.cleaner?.last_name || ''}`.trim() || 'Cleaner',
+        rating: j.cleaner?.avg_rating,
+        reliability: j.cleaner?.reliability_score || 100,
+        lastBooking: j.scheduled_start_at || j.created_at,
+      }));
+  })();
+
+  // Favorite cleaners mapped to listing format
+  const favCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
+
+  const [isDirectPaying, setIsDirectPaying] = useState(false);
+
   const handleConfirmWithCredits = async () => {
-    if (!selectedType) {
-      toast({ title: "Please select a cleaning type", variant: "destructive" });
-      return;
-    }
-    if (!user) {
-      toast({ title: "Please sign in to book", variant: "destructive" });
-      navigate('/auth');
-      return;
-    }
-    if (!hasEnoughCredits) {
-      toast({ title: "Insufficient credits", description: "Please add more credits to your wallet", variant: "destructive" });
-      return;
-    }
+    if (!selectedType || !user) return;
+    if (!hasEnoughCredits) { toast({ title: "Insufficient credits", variant: "destructive" }); return; }
     try {
       await createBooking({
-        cleaningType: selectedType,
-        hours,
-        addOns: selectedAddOns,
-        totalCredits,
-        cleanerId: cleanerId || undefined,
+        cleaningType: selectedType, hours, addOns: selectedAddOns, totalCredits,
+        cleanerId: selectedCleanerId || undefined,
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
+        notes: specialInstructions || undefined,
       });
-      // useBooking.onSuccess navigates to /booking/:id automatically
     } catch (error: any) {
-      toast({ 
-        title: "Booking failed", 
-        description: error?.message || "Something went wrong. Please try again.",
-        variant: "destructive" 
-      });
+      toast({ title: "Booking failed", description: error?.message, variant: "destructive" });
     }
   };
 
   const handlePayDirectly = async () => {
     if (!selectedType || !user) return;
-    if (!cleanerId) {
-      toast({ title: "Please select a cleaner before booking", variant: "destructive" });
-      return;
-    }
     setIsDirectPaying(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-direct-payment', {
         body: {
-          baseCredits: totalCredits,
-          hours,
-          cleaningType: selectedType,
-          addOns: selectedAddOns,
-          rushFee,
-          cleanerId: cleanerId || null,
-          scheduledDate: getScheduledDateTime(),
-          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null,
-          notes: null,
+          baseCredits: totalCredits, hours, cleaningType: selectedType, addOns: selectedAddOns, rushFee,
+          cleanerId: selectedCleanerId || null, scheduledDate: getScheduledDateTime(),
+          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null, notes: specialInstructions || null,
         },
       });
       if (error) throw error;
-      if (data?.url) {
-        window.open(data.url, '_blank');
-        toast({
-          title: "Redirecting to checkout",
-          description: `Total: $${data.totalAmount} (includes $${data.serviceCharge} service charge). Complete payment in the new tab.`,
-        });
-      } else {
-        throw new Error('No checkout URL returned');
-      }
+      if (data?.url) { window.open(data.url, '_blank'); }
     } catch (error: any) {
-      toast({ title: "Payment failed", description: error.message || "Could not start checkout", variant: "destructive" });
-    } finally {
-      setIsDirectPaying(false);
-    }
+      toast({ title: "Payment failed", description: error.message, variant: "destructive" });
+    } finally { setIsDirectPaying(false); }
   };
 
-  const toggleAddOn = (id: string) => {
-    setSelectedAddOns((prev) =>
-      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
-    );
-  };
+  const toggleAddOn = (id: string) => setSelectedAddOns(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]);
 
-  const canProceedToVerification = selectedDate && selectedTime && selectedAddress;
-  
-  // Helper to show what's missing
-  const getMissingRequirements = () => {
-    const missing = [];
-    if (!selectedDate) missing.push('date');
-    if (!selectedTime) missing.push('time');
-    if (!selectedAddress) missing.push('address');
-    return missing;
-  };
   return (
     <main className="flex-1 py-0">
-      <Helmet><title>Book a Cleaning Service | PureTask</title></Helmet>
-      {/* Hero banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-background border-b-2 border-border/50">
-        <div className="absolute inset-0 opacity-20">
-          <img src={heroBooking} alt="" className="w-full h-full object-cover" loading="eager" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/80" />
-        <div className="relative container px-4 sm:px-6 pt-8 pb-4 text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-1">Book a Cleaning</h1>
-          <p className="text-muted-foreground text-sm">Verified cleaners · GPS tracked · Photo proof</p>
-        </div>
-      </div>
-      <div className="container px-4 sm:px-6 max-w-2xl py-6 sm:py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Booking form */}
-            {<>
+      <Helmet><title>Book a Cleaning | PureTask</title></Helmet>
 
-            {/* Selected Cleaner Banner */}
-            {selectedCleaner && (
-              <Card className="mb-4 sm:mb-6 bg-primary/5 border-primary/20">
-                <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center font-semibold text-primary text-sm sm:text-base flex-shrink-0">
-                    {selectedCleaner.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm sm:text-base truncate">Booking with {selectedCleaner.name}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">${selectedCleaner.hourlyRate}/hr</p>
-                  </div>
-                  <Badge variant="secondary" className="flex-shrink-0">Selected</Badge>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Progress Stepper */}
-            {(() => {
-              const steps = ["Type", "Hours", "Add-ons", "Schedule", "Address", "Confirm"];
+      <div className="container px-4 sm:px-6 max-w-4xl py-6 sm:py-10">
+        {/* ── STEPPER ────────────────────────────────────────────────── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-1">
+            {STEPS.map((label, i) => {
+              const s = i + 1;
               return (
-                <div className="mb-6 sm:mb-8">
-                  <div className="flex items-center gap-1 mb-2">
-                    {steps.map((label, i) => {
-                      const s = i + 1;
-                      return (
-                        <div key={s} className="flex items-center flex-1 last:flex-none">
-                          <div className="flex flex-col items-center gap-1">
-                            <div className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                              s < step ? "bg-primary scale-100" :
-                              s === step ? "bg-primary ring-2 ring-primary/30 scale-125" :
-                              "bg-border"
-                            }`} />
-                            <span className={`text-[9px] sm:text-[10px] font-medium hidden xs:block transition-colors ${
-                              s <= step ? "text-primary" : "text-muted-foreground"
-                            }`}>{label}</span>
-                          </div>
-                          {i < steps.length - 1 && (
-                            <div className={`h-0.5 flex-1 mx-1 rounded-full transition-colors duration-300 ${
-                              s < step ? "bg-primary" : "bg-border"
-                            }`} />
-                          )}
-                        </div>
-                      );
-                    })}
+                <div key={s} className="flex items-center flex-1 last:flex-none">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      s < step ? "bg-primary text-primary-foreground" :
+                      s === step ? "bg-primary text-primary-foreground ring-4 ring-primary/20" :
+                      "bg-muted text-muted-foreground"
+                    }`}>{s < step ? <Check className="h-4 w-4" /> : s}</div>
+                    <span className={`text-[10px] sm:text-xs font-medium hidden sm:block ${s <= step ? "text-primary" : "text-muted-foreground"}`}>{label}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">Step {step} of {steps.length}</p>
+                  {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-2 rounded-full ${s < step ? "bg-primary" : "bg-border"}`} />}
                 </div>
               );
-            })()}
+            })}
+          </div>
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* ── MAIN STEP CONTENT ─────────────────────────────────────── */}
+          <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
-              {/* Step 1: Cleaning Type */}
+              {/* STEP 1: SERVICE TYPE */}
               {step === 1 && (
-                <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">What type of cleaning?</h1>
-                  <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">Choose the service that fits your needs</p>
-
-                  <div className="space-y-3 sm:space-y-4">
-                    {cleaningTypes.map((type) => (
-                      <Card
-                        key={type.id}
-                        className={`cursor-pointer transition-all ${
-                          selectedType === type.id
-                            ? "border-primary ring-2 ring-primary/20"
-                            : "hover:border-primary/30"
-                        }`}
-                        onClick={() => setSelectedType(type.id)}
-                      >
-                        <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
-                          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <type.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">What type of cleaning?</h2>
+                  <p className="text-sm text-muted-foreground mb-6">Choose the service that fits your needs</p>
+                  <div className="space-y-3">
+                    {cleaningTypes.map(type => (
+                      <Card key={type.id} className={`cursor-pointer transition-all ${selectedType === type.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedType(type.id)}>
+                        <CardContent className="flex items-center gap-4 p-4 sm:p-5">
+                          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <type.icon className="h-6 w-6 text-primary" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-sm sm:text-base">{type.name}</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{type.description}</p>
+                            <h3 className="font-semibold">{type.name}</h3>
+                            <p className="text-sm text-muted-foreground">{type.description}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-semibold text-sm sm:text-base">${type.baseCredits}</p>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground">/hour</p>
+                            <p className="font-bold text-primary">{type.estimate}</p>
+                            <p className="text-[10px] text-muted-foreground">est. range</p>
                           </div>
-                          {selectedType === type.id && (
-                            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                              <Check className="h-3 w-3 sm:h-4 sm:w-4 text-primary-foreground" />
-                            </div>
-                          )}
+                          {selectedType === type.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><Check className="h-4 w-4 text-primary-foreground" /></div>}
                         </CardContent>
                       </Card>
                     ))}
                   </div>
-
-                  <Button
-                    className="w-full mt-6"
-                    size="lg"
-                    disabled={!selectedType}
-                    onClick={() => setStep(2)}
-                  >
-                    Continue
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button className="w-full mt-6" size="lg" disabled={!selectedType} onClick={() => setStep(2)}>
+                    Continue <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </motion.div>
               )}
 
-              {/* Step 2: Hours */}
+              {/* STEP 2: PROPERTY */}
               {step === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <h1 className="text-2xl font-bold mb-2">How many hours?</h1>
-                  <p className="text-muted-foreground mb-6">Estimate the time needed for your space</p>
-
-                  <Card className="mb-6">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-center gap-6">
-                      <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-12 w-12 touch-target rounded-xl"
-                          onClick={() => setHours(Math.max(1, hours - 1))}
-                          disabled={hours <= 1}
-                          aria-label="Decrease hours"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <div className="text-center">
-                          <p className="text-5xl font-bold">{hours}</p>
-                          <p className="text-muted-foreground">hours</p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-12 w-12 touch-target rounded-xl"
-                          onClick={() => setHours(Math.min(8, hours + 1))}
-                          disabled={hours >= 8}
-                          aria-label="Increase hours"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="flex items-center justify-center gap-2 mt-4">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
-                          Typical {selectedCleaningType?.name.toLowerCase()}: 2-4 hours
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(1)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button className="flex-1" size="lg" onClick={() => setStep(3)}>
-                      Continue
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Where should we clean?</h2>
+                  <p className="text-sm text-muted-foreground mb-6">Select your property or add a new one</p>
+                  <AddressSelector selectedAddressId={selectedAddress?.id} onSelect={setSelectedAddress} />
+                  <div className="flex gap-3 mt-6">
+                    <Button variant="outline" size="lg" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                    <Button className="flex-1" size="lg" disabled={!selectedAddress} onClick={() => setStep(3)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
                   </div>
                 </motion.div>
               )}
 
-              {/* Step 3: Add-ons */}
+              {/* STEP 3: DATE & TIME */}
               {step === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <h1 className="text-2xl font-bold mb-2">Any add-ons?</h1>
-                  <p className="text-muted-foreground mb-6">Optional extras for a more thorough clean</p>
+                <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">When do you need it?</h2>
+                  <p className="text-sm text-muted-foreground mb-6">Pick a date, time, and duration</p>
+                  <div className="space-y-6">
+                    <DateTimePicker selectedDate={selectedDate} selectedTime={selectedTime} onDateChange={(date) => {
+                      setSelectedDate(date);
+                      if (date && isSameDayBooking(date) && selectedTime && selectedType) {
+                        const { valid } = validateSameDayBooking(date, selectedTime, selectedType);
+                        if (!valid) setSelectedTime(undefined);
+                      }
+                    }} onTimeChange={setSelectedTime} />
 
-                  <div className="space-y-3 mb-6">
-                    {addOns.map((addOn) => (
-                      <Card
-                        key={addOn.id}
-                        className={`cursor-pointer transition-all ${
-                          selectedAddOns.includes(addOn.id)
-                            ? "border-primary ring-2 ring-primary/20"
-                            : "hover:border-primary/30"
-                        }`}
-                        onClick={() => toggleAddOn(addOn.id)}
-                      >
-                        <CardContent className="flex items-center gap-4 p-4">
-                          <div
-                            className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center transition-colors ${
-                              selectedAddOns.includes(addOn.id)
-                                ? "bg-primary border-primary"
-                                : "border-border"
-                            }`}
-                          >
-                            {selectedAddOns.includes(addOn.id) && (
-                              <Check className="h-4 w-4 text-primary-foreground" />
-                            )}
-                          </div>
-                          <span className="flex-1 font-medium">{addOn.name}</span>
-                          <span className="text-muted-foreground">+{addOn.credits} credits</span>
-                        </CardContent>
-                      </Card>
-                    ))}
+                    {/* Hours selector */}
+                    <Card>
+                      <CardContent className="p-5">
+                        <p className="font-semibold mb-4">Estimated hours</p>
+                        <div className="flex items-center justify-center gap-6">
+                          <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl" onClick={() => setHours(Math.max(1, hours - 1))} disabled={hours <= 1}><Minus className="h-4 w-4" /></Button>
+                          <div className="text-center"><p className="text-4xl font-bold">{hours}</p><p className="text-muted-foreground text-sm">hours</p></div>
+                          <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl" onClick={() => setHours(Math.min(8, hours + 1))} disabled={hours >= 8}><Plus className="h-4 w-4" /></Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {isSameDay && !isCleaningTypeAllowed && (
+                      <Card className="bg-destructive/10 border-destructive/30"><CardContent className="p-4 flex items-start gap-3">
+                        <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                        <div><p className="font-medium text-sm text-destructive">Move-Out not available same-day</p><p className="text-xs text-muted-foreground mt-1">Please select a future date.</p></div>
+                      </CardContent></Card>
+                    )}
                   </div>
-
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(2)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button className="flex-1" size="lg" onClick={() => setStep(4)}>
-                      Continue
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                  <div className="flex gap-3 mt-6">
+                    <Button variant="outline" size="lg" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                    <Button className="flex-1" size="lg" disabled={!selectedDate || !selectedTime || !isCleaningTypeAllowed} onClick={() => setStep(4)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
                   </div>
                 </motion.div>
               )}
 
-              {/* Step 4: Date, Time & Address */}
+              {/* STEP 4: CLEANER */}
               {step === 4 && (
-                <motion.div
-                  key="step4"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <h1 className="text-2xl font-bold mb-2">When and where?</h1>
-                  <p className="text-muted-foreground mb-6">Choose your preferred date, time and location</p>
+                <motion.div key="s4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Choose your cleaner</h2>
+                  <p className="text-sm text-muted-foreground mb-6">Select a cleaner or let us auto-match</p>
 
-                  <div className="space-y-8 mb-6">
-                    <DateTimePicker
-                      selectedDate={selectedDate}
-                      selectedTime={selectedTime}
-                      onDateChange={(date) => {
-                        setSelectedDate(date);
-                        // Reset time if becoming same-day and time slot may be invalid
-                        if (date && isSameDayBooking(date) && selectedTime) {
-                          const availableSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-                          const { valid } = selectedType ? validateSameDayBooking(date, selectedTime, selectedType) : { valid: true };
-                          if (!valid) {
-                            setSelectedTime(undefined);
-                          }
-                        }
-                      }}
-                      onTimeChange={setSelectedTime}
-                    />
+                  <Tabs value={cleanerTab} onValueChange={setCleanerTab} className="mb-4">
+                    <TabsList className="w-full bg-muted/50 p-1 rounded-xl">
+                      <TabsTrigger value="all" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> All</TabsTrigger>
+                      <TabsTrigger value="favorites" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Heart className="h-3.5 w-3.5" /> Favorites</TabsTrigger>
+                      <TabsTrigger value="again" className="gap-1.5 rounded-lg text-xs sm:text-sm"><RotateCcw className="h-3.5 w-3.5" /> Book Again</TabsTrigger>
+                    </TabsList>
 
-                    {/* Same-day restriction warning for move-out cleaning */}
-                    {selectedType && isSameDay && !isCleaningTypeAllowed && (
-                      <Card className="bg-destructive/10 border-destructive/30">
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                            <div>
-                              <p className="font-medium text-sm text-destructive">Move-Out Cleaning Not Available Same-Day</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Move-out cleaning requires at least 1 day advance notice. Please select a future date or choose a different cleaning type.
-                              </p>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="mt-3"
-                                onClick={() => setStep(1)}
-                              >
-                                Change Cleaning Type
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
+                    <TabsContent value="all" className="mt-4">
+                      {cleanersLoading ? (
+                        <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 rounded-2xl" />)}</div>
+                      ) : (
+                        <div className="space-y-2">
+                          {/* Auto-match option */}
+                          <Card className={`cursor-pointer transition-all ${!selectedCleanerId ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(null)}>
+                            <CardContent className="p-4 flex items-center gap-4">
+                              <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center"><Zap className="h-5 w-5 text-primary" /></div>
+                              <div className="flex-1"><p className="font-semibold text-sm">Auto-Match Me</p><p className="text-xs text-muted-foreground">We'll find the best available cleaner for you</p></div>
+                              {!selectedCleanerId && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                            </CardContent>
+                          </Card>
+                          {allCleaners?.map(c => <CleanerCard key={c.id} cleaner={c} selected={selectedCleanerId === c.id} onSelect={() => setSelectedCleanerId(c.id)} isFav={favCleanerIds.has(c.id)} />)}
+                        </div>
+                      )}
+                    </TabsContent>
 
-                    {/* Cleaner availability warning */}
-                    {cleanerId && selectedDate && isDateBlockedByCleaner && (
-                      <Card className="bg-warning/10 border-warning/30">
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <CalendarOff className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
-                            <div>
-                              <p className="font-medium text-sm">Cleaner Unavailable on This Day</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {selectedCleaner?.name || 'This cleaner'} doesn't work on {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}s. Please choose a different date.
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
-
-                    <AddressSelector
-                      selectedAddressId={selectedAddress?.id}
-                      onSelect={setSelectedAddress}
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    {!canProceedToVerification && getMissingRequirements().length > 0 && (
-                      <p className="text-xs text-muted-foreground text-center">
-                        Please select: {getMissingRequirements().join(', ')}
-                      </p>
-                    )}
-                    <div className="flex gap-3">
-                      <Button variant="outline" size="lg" onClick={() => setStep(3)}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back
-                      </Button>
-                      <Button 
-                        className="flex-1" 
-                        size="lg" 
-                        onClick={() => setStep(5)}
-                        disabled={!canProceedToVerification || !isCleaningTypeAllowed || isDateBlockedByCleaner}
-                      >
-                        Continue
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Step 5: Address Verification */}
-              {step === 5 && selectedAddress && (
-                <motion.div
-                  key="step5"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <AddressVerification
-                    address={selectedAddress}
-                    onConfirm={() => setStep(6)}
-                    onBack={() => setStep(4)}
-                  />
-                </motion.div>
-              )}
-
-              {/* Step 6: Summary */}
-              {step === 6 && (
-                <motion.div
-                  key="step6"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  <h1 className="text-2xl font-bold mb-2">Confirm your booking</h1>
-                  <p className="text-muted-foreground mb-6">Review and place your credit hold</p>
-
-                  <Card className="mb-6">
-                    <CardContent className="p-6 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">{selectedCleaningType?.name}</span>
-                        <span>{selectedCleaningType?.baseCredits} × {hours} hrs = {(selectedCleaningType?.baseCredits || 0) * hours}</span>
-                      </div>
-                      {selectedAddOns.length > 0 && (
-                        <div className="border-t border-border pt-4 space-y-2">
-                          {selectedAddOns.map((id) => {
-                            const addOn = addOns.find((a) => a.id === id);
+                    <TabsContent value="favorites" className="mt-4">
+                      {!favorites?.length ? (
+                        <Card className="border-dashed"><CardContent className="p-8 text-center">
+                          <Heart className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
+                          <p className="text-sm font-medium">No favorites yet</p>
+                          <p className="text-xs text-muted-foreground mt-1">Heart cleaners to save them here</p>
+                        </CardContent></Card>
+                      ) : (
+                        <div className="space-y-2">
+                          {favorites.map(fav => {
+                            if (!fav.cleaner) return null;
+                            const c = fav.cleaner;
+                            const name = `${c.first_name || ''} ${c.last_name || ''}`.trim() || 'Cleaner';
                             return (
-                              <div key={id} className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">{addOn?.name}</span>
-                                <span>+{addOn?.credits} credits</span>
-                              </div>
+                              <Card key={fav.id} className={`cursor-pointer transition-all ${selectedCleanerId === c.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(c.id)}>
+                                <CardContent className="p-4 flex items-center gap-4">
+                                  <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">{name.charAt(0)}</div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2"><p className="font-semibold text-sm truncate">{name}</p><Heart className="h-3.5 w-3.5 text-destructive fill-destructive" /></div>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                      {c.avg_rating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{c.avg_rating.toFixed(1)}</span>}
+                                      <span>${c.hourly_rate_credits}/hr</span>
+                                      <span>{c.jobs_completed} jobs</span>
+                                    </div>
+                                  </div>
+                                  {selectedCleanerId === c.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                                </CardContent>
+                              </Card>
                             );
                           })}
                         </div>
                       )}
-                      
-                      {/* Rush Fee for Same-Day Booking */}
-                      {isSameDay && rushFee > 0 && (
-                        <div className="border-t border-border pt-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground flex items-center gap-2">
-                              <Zap className="h-4 w-4 text-warning" />
-                              Same-Day Rush Fee
-                            </span>
-                            <span className="text-warning font-medium">+{rushFee} credits</span>
-                          </div>
+                    </TabsContent>
+
+                    <TabsContent value="again" className="mt-4">
+                      {!bookAgainCleaners.length ? (
+                        <Card className="border-dashed"><CardContent className="p-8 text-center">
+                          <RotateCcw className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
+                          <p className="text-sm font-medium">No past cleaners</p>
+                          <p className="text-xs text-muted-foreground mt-1">Complete a booking to see cleaners here</p>
+                        </CardContent></Card>
+                      ) : (
+                        <div className="space-y-2">
+                          {bookAgainCleaners.map(c => (
+                            <Card key={c.id} className={`cursor-pointer transition-all ${selectedCleanerId === c.id ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => setSelectedCleanerId(c.id)}>
+                              <CardContent className="p-4 flex items-center gap-4">
+                                <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">{c.name.charAt(0)}</div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-semibold text-sm truncate">{c.name}</p>
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    {c.rating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{c.rating.toFixed(1)}</span>}
+                                    <span>Last: {format(new Date(c.lastBooking), 'MMM d')}</span>
+                                  </div>
+                                </div>
+                                {selectedCleanerId === c.id && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                              </CardContent>
+                            </Card>
+                          ))}
                         </div>
                       )}
-                      
+                    </TabsContent>
+                  </Tabs>
+
+                  {selectedCleanerId && isDateBlockedByCleaner && selectedDate && (
+                    <Card className="bg-warning/10 border-warning/30 mt-3"><CardContent className="p-4 flex items-start gap-3">
+                      <CalendarOff className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
+                      <div><p className="font-medium text-sm">Cleaner unavailable on {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Go back to change the date or pick a different cleaner.</p></div>
+                    </CardContent></Card>
+                  )}
+
+                  <div className="flex gap-3 mt-6">
+                    <Button variant="outline" size="lg" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                    <Button className="flex-1" size="lg" disabled={selectedCleanerId ? isDateBlockedByCleaner : false} onClick={() => setStep(5)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 5: EXTRAS */}
+              {step === 5 && (
+                <motion.div key="s5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Add extras</h2>
+                  <p className="text-sm text-muted-foreground mb-6">Optional add-ons and special instructions</p>
+                  <div className="space-y-3 mb-6">
+                    {addOns.map(addOn => (
+                      <Card key={addOn.id} className={`cursor-pointer transition-all ${selectedAddOns.includes(addOn.id) ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={() => toggleAddOn(addOn.id)}>
+                        <CardContent className="flex items-center gap-4 p-4">
+                          <span className="text-2xl">{addOn.icon}</span>
+                          <div className="flex-1"><p className="font-medium">{addOn.name}</p></div>
+                          <span className="text-sm text-muted-foreground">+${addOn.credits}</span>
+                          <div className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center ${selectedAddOns.includes(addOn.id) ? "bg-primary border-primary" : "border-border"}`}>
+                            {selectedAddOns.includes(addOn.id) && <Check className="h-4 w-4 text-primary-foreground" />}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="mb-6">
+                    <label className="text-sm font-medium mb-2 block">Special instructions</label>
+                    <Textarea placeholder="Any notes for your cleaner? (e.g., alarm code, pet info)" value={specialInstructions} onChange={e => setSpecialInstructions(e.target.value)} className="min-h-[80px]" />
+                  </div>
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="lg" onClick={() => setStep(4)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                    <Button className="flex-1" size="lg" onClick={() => setStep(6)}>Review Booking <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 6: REVIEW & PAY */}
+              {step === 6 && (
+                <motion.div key="s6" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Review & confirm</h2>
+                  <p className="text-sm text-muted-foreground mb-6">You only pay for time actually worked. Unused held credits are returned automatically.</p>
+
+                  <Card className="mb-4">
+                    <CardContent className="p-5 space-y-4">
+                      <SummaryRow label="Service" value={selectedCleaningType?.name || ''} />
+                      <SummaryRow label="Duration" value={`${hours} hours`} />
+                      {selectedAddress && <SummaryRow label="Property" value={`${selectedAddress.line1}, ${selectedAddress.city}`} />}
                       {selectedDate && selectedTime && (
-                        <div className="border-t border-border pt-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Scheduled</span>
-                            <div className="flex items-center gap-2">
-                              <span>
-                                {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {selectedTime}
-                              </span>
-                              {isSameDay && (
-                                <Badge variant="outline" className="bg-warning/20 text-warning border-warning/30 text-xs">
-                                  Today
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
+                        <SummaryRow label="Date & Time" value={`${format(selectedDate, 'EEE, MMM d')} at ${selectedTime}`} badge={isSameDay ? "Today" : undefined} />
+                      )}
+                      <SummaryRow label="Cleaner" value={selectedCleaner?.name || "Auto-Match"} />
+                      {selectedAddOns.length > 0 && (
+                        <div className="border-t border-border pt-3 space-y-1.5">
+                          {selectedAddOns.map(id => { const a = addOns.find(x => x.id === id); return a ? <SummaryRow key={id} label={a.name} value={`+$${a.credits}`} small /> : null; })}
                         </div>
                       )}
-                      {selectedAddress && (
-                        <div className="border-t border-border pt-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Location</span>
-                            <span className="text-right">{selectedAddress.line1}, {selectedAddress.city}</span>
-                          </div>
-                          <Badge variant="outline" className="mt-2 text-xs gap-1">
-                            <Check className="h-3 w-3" />
-                            Address Verified
-                          </Badge>
-                        </div>
-                      )}
-                      
-                      {/* Subtotal breakdown */}
-                      {(rushFee > 0 || selectedAddOns.length > 0) && (
-                        <div className="border-t border-border pt-4 space-y-2 text-sm">
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <span>Base ({selectedCleaningType?.name} × {hours}h)</span>
-                            <span>${(selectedCleaningType?.baseCredits || 0) * hours}</span>
-                          </div>
-                          {selectedAddOns.length > 0 && (
-                            <div className="flex items-center justify-between text-muted-foreground">
-                              <span>Add-ons</span>
-                              <span>+${addOnCredits}</span>
-                            </div>
-                          )}
-                          {rushFee > 0 && (
-                             <div className="flex items-center justify-between text-warning">
-                               <span>Rush fee</span>
-                               <span>+{rushFee} credits</span>
-                             </div>
-                          )}
-                        </div>
-                      )}
-                      
-                      <div className="border-t border-border pt-4 flex items-center justify-between">
-                        <span className="font-semibold">Total</span>
-                        <span className="text-2xl font-bold">${totalCredits}</span>
+                      {isSameDay && rushFee > 0 && <SummaryRow label="Same-Day Rush Fee" value={`+$${rushFee}`} highlight />}
+                      {specialInstructions && <SummaryRow label="Notes" value={specialInstructions} small />}
+                      <div className="border-t-2 border-border pt-4 flex items-center justify-between">
+                        <span className="font-bold text-lg">Estimated Total</span>
+                        <span className="text-2xl font-black text-primary">${totalCredits}</span>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Payment Path Selection */}
-                  <div className="space-y-3 mb-6">
-                    <p className="text-sm font-semibold text-foreground">Choose how to pay</p>
+                  {/* Escrow trust message */}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6 p-3 rounded-xl bg-success/5 border border-success/20">
+                    <Shield className="h-4 w-4 text-success flex-shrink-0" />
+                    <span>Credits held in escrow — released only after you approve the work. Protected by 24-Hour Review.</span>
+                  </div>
 
-                    {/* Path 1 — Use wallet credits */}
-                    <Card
-                      className={`border-2 transition-all ${hasEnoughCredits ? 'border-primary/40 bg-primary/5' : 'border-border opacity-60'}`}
-                    >
+                  {/* Payment options */}
+                  <div className="space-y-3 mb-4">
+                    <Card className={`border-2 ${hasEnoughCredits ? 'border-primary/40 bg-primary/5' : 'border-border opacity-60'}`}>
                       <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <Wallet className="h-5 w-5 text-primary" />
+                        <div className="flex items-center gap-3 mb-3">
+                          <Wallet className="h-5 w-5 text-primary" />
+                          <div className="flex-1"><p className="font-semibold text-sm">Pay with Credits</p>
+                            {!isLoadingAccount && <p className="text-xs text-muted-foreground">Balance: <span className={hasEnoughCredits ? 'text-primary font-medium' : 'text-destructive font-medium'}>${availableCredits}</span>
+                              {!hasEnoughCredits && <Button variant="link" className="p-0 h-auto text-xs ml-1" asChild><Link to="/wallet">Top up →</Link></Button>}
+                            </p>}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between">
-                              <p className="font-semibold text-sm">Pay with Wallet Credits</p>
-                              <span className="text-lg font-bold">${totalCredits}</span>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              Credits held in escrow — released only after you approve the work.
-                            </p>
-                            {!isLoadingAccount && (
-                              <p className="text-xs mt-1">
-                                Balance: <span className={hasEnoughCredits ? 'text-primary font-medium' : 'text-destructive font-medium'}>${availableCredits} available</span>
-                                {!hasEnoughCredits && (
-                                  <Button variant="link" className="p-0 h-auto text-xs ml-2" asChild>
-                                    <Link to="/wallet">Top up →</Link>
-                                  </Button>
-                                )}
-                              </p>
-                            )}
-                          </div>
+                          <span className="text-lg font-bold">${totalCredits}</span>
                         </div>
-                        <Button
-                          className="w-full mt-4"
-                          size="sm"
-                          onClick={handleConfirmWithCredits}
-                          disabled={isCreating || !hasEnoughCredits}
-                        >
-                          {isCreating ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating Booking...</>
-                          ) : (
-                            <><Check className="mr-2 h-4 w-4" />Confirm with Credits</>
-                          )}
+                        <Button className="w-full" onClick={handleConfirmWithCredits} disabled={isCreating || !hasEnoughCredits}>
+                          {isCreating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating...</> : <><Check className="mr-2 h-4 w-4" />Confirm Booking</>}
                         </Button>
                       </CardContent>
                     </Card>
 
-                    {/* Path 2 — Pay directly with card (+15% service charge) */}
-                    <Card className="border-2 border-border hover:border-secondary transition-all">
+                    <Card className="border-2 border-border">
                       <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="h-10 w-10 rounded-lg bg-secondary/40 flex items-center justify-center flex-shrink-0">
-                            <CreditCard className="h-5 w-5 text-foreground" />
+                        <div className="flex items-center gap-3 mb-3">
+                          <CreditCard className="h-5 w-5 text-muted-foreground" />
+                          <div className="flex-1"><p className="font-semibold text-sm">Pay with Card</p>
+                            <p className="text-xs text-muted-foreground">Includes 15% service charge (${serviceCharge})</p>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between">
-                              <p className="font-semibold text-sm">Pay Now with Card</p>
-                              <div className="text-right">
-                                <span className="text-lg font-bold">${directPayTotal}</span>
-                              </div>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              No pre-purchase needed. Includes a <span className="font-medium">15% service charge</span> (${serviceCharge}).
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              Base ${totalCredits} + service charge ${serviceCharge} = <span className="font-medium">${directPayTotal} total</span>
-                            </p>
-                          </div>
+                          <span className="text-lg font-bold">${directPayTotal}</span>
                         </div>
-                        <Button
-                          variant="outline"
-                          className="w-full mt-4"
-                          size="sm"
-                          onClick={handlePayDirectly}
-                          disabled={isDirectPaying || isCreating}
-                        >
-                          {isDirectPaying ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Opening Checkout...</>
-                          ) : (
-                            <><ExternalLink className="mr-2 h-4 w-4" />Pay ${directPayTotal} with Stripe</>
-                          )}
+                        <Button variant="outline" className="w-full" onClick={handlePayDirectly} disabled={isDirectPaying || isCreating}>
+                          {isDirectPaying ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Opening Checkout...</> : <><ExternalLink className="mr-2 h-4 w-4" />Pay ${directPayTotal} with Stripe</>}
                         </Button>
                       </CardContent>
                     </Card>
                   </div>
 
-                  <Button variant="ghost" size="sm" className="w-full" onClick={() => setStep(5)}>
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                  </Button>
+                  <Button variant="ghost" size="sm" className="w-full" onClick={() => setStep(5)}><ArrowLeft className="mr-2 h-4 w-4" /> Edit Booking</Button>
                 </motion.div>
               )}
             </AnimatePresence>
-          </>}
-          </motion.div>
+          </div>
+
+          {/* ── STICKY SUMMARY PANEL (Desktop) ───────────────────────── */}
+          <div className="hidden lg:block">
+            <div className="sticky top-24">
+              <Card className="border-2 border-border/50">
+                <CardContent className="p-5">
+                  <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Booking Summary</h3>
+                  <div className="space-y-3 text-sm">
+                    <SummaryRow label="Service" value={selectedCleaningType?.name || '—'} small />
+                    <SummaryRow label="Property" value={selectedAddress ? selectedAddress.line1 : '—'} small />
+                    <SummaryRow label="When" value={selectedDate && selectedTime ? `${format(selectedDate, 'MMM d')} · ${selectedTime}` : '—'} small />
+                    <SummaryRow label="Duration" value={`${hours}h`} small />
+                    <SummaryRow label="Cleaner" value={selectedCleaner?.name || (selectedCleanerId ? '—' : 'Auto-Match')} small />
+                    {selectedAddOns.length > 0 && <SummaryRow label="Extras" value={`${selectedAddOns.length} add-on${selectedAddOns.length > 1 ? 's' : ''}`} small />}
+                    <div className="border-t border-border pt-3 flex justify-between font-bold">
+                      <span>Est. Total</span>
+                      <span className="text-primary">${totalCredits || 0}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
+  );
+}
+
+// ── Helper Components ──────────────────────────────────────────────
+
+function SummaryRow({ label, value, small, highlight, badge }: { label: string; value: string; small?: boolean; highlight?: boolean; badge?: string }) {
+  return (
+    <div className={`flex items-start justify-between gap-2 ${small ? 'text-xs' : 'text-sm'}`}>
+      <span className="text-muted-foreground">{label}</span>
+      <span className={`text-right ${highlight ? 'text-warning font-medium' : 'font-medium'}`}>
+        {value}
+        {badge && <Badge variant="outline" className="ml-2 text-[10px] bg-warning/20 text-warning border-warning/30">{badge}</Badge>}
+      </span>
+    </div>
+  );
+}
+
+function CleanerCard({ cleaner, selected, onSelect, isFav }: { cleaner: CleanerListing; selected: boolean; onSelect: () => void; isFav: boolean }) {
+  return (
+    <Card className={`cursor-pointer transition-all ${selected ? "border-primary ring-2 ring-primary/20" : "hover:border-primary/30"}`} onClick={onSelect}>
+      <CardContent className="p-4 flex items-center gap-4">
+        <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+          {cleaner.name.charAt(0)}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="font-semibold text-sm truncate">{cleaner.name}</p>
+            {isFav && <Heart className="h-3 w-3 text-destructive fill-destructive flex-shrink-0" />}
+            {cleaner.tier !== 'standard' && <Badge variant="outline" className="text-[10px] h-4 capitalize">{cleaner.tier}</Badge>}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+            {cleaner.avgRating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{cleaner.avgRating.toFixed(1)}</span>}
+            <span>${cleaner.hourlyRate}/hr</span>
+            <span>{cleaner.jobsCompleted} jobs</span>
+            <span className="flex items-center gap-0.5"><Shield className="h-3 w-3" />{cleaner.reliabilityScore}%</span>
+          </div>
+        </div>
+        {selected && <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+      </CardContent>
+    </Card>
   );
 }
