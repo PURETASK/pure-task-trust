@@ -49,12 +49,15 @@ const LOW_BALANCE_THRESHOLD = 50;
 
 export function useClientHome(): ClientHomeData {
   const { user } = useAuth();
-  const { data: jobs, isLoading: jobsLoading, isFetching: jobsFetching, isError: jobsError } = useClientJobs();
-  const { account, isLoadingAccount, isLoadingLedger } = useWallet();
+  const { data: jobs, isFetching: jobsFetching } = useClientJobs();
+  const { account } = useWallet();
   const { data: threads } = useMessageThreads();
 
   const availableBalance = account?.current_balance ?? 0;
   const heldBalance = account?.held_balance ?? 0;
+
+  // Never block render with loading skeleton — show content immediately
+  const isLoading = false;
 
   // Only show loading if user is authenticated AND queries are actively fetching
   const isLoading = !!user?.id && (jobsFetching || isLoadingAccount);
