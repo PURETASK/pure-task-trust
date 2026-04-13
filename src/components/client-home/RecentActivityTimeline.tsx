@@ -12,7 +12,8 @@ import { formatDistanceToNow } from "date-fns";
 interface ActivityItem {
   id: string;
   icon: React.ComponentType<{ className?: string }>;
-  iconColor: string;
+  cardClass: string;
+  iconWrapClass: string;
   text: string;
   timestamp: string;
 }
@@ -30,7 +31,8 @@ export function RecentActivityTimeline() {
         items.push({
           id: `completed-${job.id}`,
           icon: CheckCircle2,
-          iconColor: "text-success",
+          cardClass: "palette-card palette-card-green",
+          iconWrapClass: "palette-icon palette-icon-green",
           text: `Cleaning completed${job.cleaner ? ` with ${job.cleaner.first_name || "cleaner"}` : ""}`,
           timestamp: job.check_out_at || job.updated_at || job.created_at,
         });
@@ -39,7 +41,8 @@ export function RecentActivityTimeline() {
         items.push({
           id: `confirmed-${job.id}`,
           icon: CalendarCheck,
-          iconColor: "text-primary",
+          cardClass: "palette-card palette-card-blue",
+          iconWrapClass: "palette-icon palette-icon-blue",
           text: `Booking confirmed for ${new Date(job.scheduled_start_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
           timestamp: job.created_at,
         });
@@ -48,7 +51,8 @@ export function RecentActivityTimeline() {
         items.push({
           id: `hold-${job.id}`,
           icon: Clock,
-          iconColor: "text-warning",
+          cardClass: "palette-card palette-card-amber",
+          iconWrapClass: "palette-icon palette-icon-amber",
           text: `$${job.escrow_credits_reserved} credits placed on hold`,
           timestamp: job.created_at,
         });
@@ -61,7 +65,8 @@ export function RecentActivityTimeline() {
         items.push({
           id: `purchase-${entry.id}`,
           icon: CreditCard,
-          iconColor: "text-primary",
+          cardClass: "palette-card palette-card-blue",
+          iconWrapClass: "palette-icon palette-icon-blue",
           text: `$${entry.delta_credits} credits purchased`,
           timestamp: entry.created_at,
         });
@@ -70,7 +75,8 @@ export function RecentActivityTimeline() {
         items.push({
           id: `refund-${entry.id}`,
           icon: ArrowDownLeft,
-          iconColor: "text-success",
+          cardClass: "palette-card palette-card-green",
+          iconWrapClass: "palette-icon palette-icon-green",
           text: `$${Math.abs(entry.delta_credits)} unused credits returned`,
           timestamp: entry.created_at,
         });
@@ -88,7 +94,7 @@ export function RecentActivityTimeline() {
   return (
     <section>
       <h3 className="text-base sm:text-lg font-bold mb-3">Recent Activity</h3>
-      <Card>
+      <Card className="palette-card palette-card-blue">
         <CardContent className="p-4 sm:p-5">
           <div className="space-y-0">
             {activities.map((activity, i) => {
@@ -101,14 +107,14 @@ export function RecentActivityTimeline() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="flex items-start gap-3 relative"
+                  className={`flex items-start gap-3 relative rounded-3xl px-3 py-3 ${activity.cardClass}`}
                 >
                   {/* Timeline line */}
                   {!isLast && (
-                    <div className="absolute left-[13px] top-8 w-px h-[calc(100%-8px)] bg-border/60" />
+                    <div className="absolute left-[25px] top-12 w-px h-[calc(100%-20px)] bg-border/60" />
                   )}
-                  <div className={`h-7 w-7 rounded-full bg-muted/80 flex items-center justify-center flex-shrink-0 z-10 ${activity.iconColor}`}>
-                    <Icon className="h-3.5 w-3.5" />
+                  <div className={`h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 z-10 ${activity.iconWrapClass}`}>
+                    <Icon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0 pb-4">
                     <p className="text-sm text-foreground">{activity.text}</p>

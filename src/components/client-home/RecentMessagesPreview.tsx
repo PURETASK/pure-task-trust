@@ -20,8 +20,8 @@ export function RecentMessagesPreview({ threads }: Props) {
     <section>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-[hsl(var(--pt-purple))]/10 flex items-center justify-center">
-            <MessageCircle className="h-3.5 w-3.5 text-[hsl(var(--pt-purple))]" />
+          <div className="h-7 w-7 palette-icon palette-icon-purple rounded-lg">
+            <MessageCircle className="h-3.5 w-3.5" />
           </div>
           <h3 className="font-bold text-sm">Messages</h3>
         </div>
@@ -30,10 +30,10 @@ export function RecentMessagesPreview({ threads }: Props) {
         </Link>
       </div>
       {threads.length === 0 ? (
-        <Card className="border-2 border-dashed border-[hsl(var(--pt-purple))]/20 rounded-3xl">
+        <Card className="palette-card palette-card-purple palette-card-dashed rounded-3xl">
           <CardContent className="p-5 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center">
-              <MessageCircle className="h-4 w-4 text-[hsl(var(--pt-purple))]" />
+            <div className="h-9 w-9 palette-icon palette-icon-purple rounded-xl">
+              <MessageCircle className="h-4 w-4" />
             </div>
             <div>
               <p className="text-sm font-bold">No active conversations.</p>
@@ -45,14 +45,14 @@ export function RecentMessagesPreview({ threads }: Props) {
         <div className="space-y-2">
           {threads.map((thread) => (
             <Link key={thread.id} to="/messages">
-              <Card className="hover:shadow-card transition-all cursor-pointer border-2 border-[hsl(var(--pt-purple))]/20 hover:border-[hsl(var(--pt-purple))]/40 rounded-2xl">
+              <Card className="palette-card palette-card-purple cursor-pointer rounded-3xl">
                 <CardContent className="p-3.5 flex items-center gap-3">
                   <div className="relative flex-shrink-0">
-                    <div className="h-10 w-10 rounded-xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/20 flex items-center justify-center font-bold text-[hsl(var(--pt-purple))] text-sm">
+                    <div className="h-10 w-10 palette-icon palette-icon-purple rounded-xl font-bold text-sm">
                       {thread.otherPartyName.charAt(0)}
                     </div>
                     {thread.unread && (
-                      <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-[hsl(var(--pt-purple))] border-2 border-card" />
+                      <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-[hsl(var(--pt-purple-deep))] border-2 border-card" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
