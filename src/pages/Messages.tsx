@@ -106,7 +106,7 @@ export default function Messages() {
             <div className="flex flex-col md:grid md:grid-cols-5 gap-3 sm:gap-4 h-auto md:h-[680px]">
               
               {/* Thread List */}
-              <Card className={cn("md:col-span-2 overflow-hidden flex flex-col", selectedThread ? 'hidden md:flex' : 'flex')}>
+              <Card className={cn("md:col-span-2 overflow-hidden flex flex-col border-2 border-[hsl(var(--pt-purple))]/20 rounded-3xl", selectedThread ? 'hidden md:flex' : 'flex')}>
                 {/* Search */}
                 <div className="p-3 border-b">
                   <div className="relative">
@@ -164,7 +164,7 @@ export default function Messages() {
               </Card>
 
               {/* Chat Area */}
-              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[420px] sm:min-h-[500px] md:min-h-0", !selectedThread && 'hidden md:flex')}>
+              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[420px] sm:min-h-[500px] md:min-h-0 border-2 border-primary/20 rounded-3xl", !selectedThread && 'hidden md:flex')}>
                 {selectedThread ? (
                   <>
                     {/* Chat Header */}
