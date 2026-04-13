@@ -20,7 +20,7 @@ const sections = [
 const f = (delay = 0) => ({ initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.3 } });
 
 export default function Account() {
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const name = user?.name || user?.email?.split("@")[0] || "Your Account";
   const email = user?.email || "";
   const initial = name.charAt(0).toUpperCase();
@@ -75,7 +75,7 @@ export default function Account() {
 
         {/* Sign out */}
         <motion.div {...f(0.2)}>
-          <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" onClick={() => signOut()}>
+          <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" onClick={() => logout()}>>
             <LogOut className="h-4 w-4" /> Sign Out
           </Button>
         </motion.div>

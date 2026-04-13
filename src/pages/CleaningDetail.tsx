@@ -205,4 +205,4 @@ function DetailItem({ icon, label, value }: { icon: React.ReactNode; label: stri
   );
 }
 
-function Sparkle() { return <Sparkles className="h-4 w-4" />; }
+function Sparkle() { return <Star className="h-4 w-4" />; }
