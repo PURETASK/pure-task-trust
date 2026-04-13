@@ -52,20 +52,14 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     }
   };
 
-  // Only show spinner when actively fetching and no data yet
-  if (isFetching && !addresses) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  const showLoading = isLoading && !isError && !addresses;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="h-5 w-5 text-primary" />
         <h3 className="font-semibold">Select Address</h3>
+        {showLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
       </div>
 
       {addresses && addresses.length > 0 ? (
