@@ -143,6 +143,13 @@ export function MainLayout({ children }: MainLayoutProps) {
                       <NotificationBell />
                     </div>
 
+                    {/* Help */}
+                    <Button variant="ghost" size="icon" className="hidden sm:flex touch-target" asChild>
+                      <Link to="/help" aria-label="Help & Support">
+                        <HelpCircle className="h-5 w-5" />
+                      </Link>
+                    </Button>
+
                     {/* Avatar dropdown */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
