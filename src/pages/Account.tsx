@@ -75,7 +75,7 @@ export default function Account() {
 
         {/* Sign out */}
         <motion.div {...f(0.2)}>
-          <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" onClick={() => logout()}>>
+          <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/5 gap-2" onClick={() => logout()}>
             <LogOut className="h-4 w-4" /> Sign Out
           </Button>
         </motion.div>
