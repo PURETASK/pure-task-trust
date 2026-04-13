@@ -5,9 +5,14 @@ export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Use requestAnimationFrame for smoother scroll and better timing
+    // Double-RAF ensures the new page DOM is rendered before scrolling
     requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        // Fallback: also scroll documentElement and body directly
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      });
     });
   }, [pathname]);
 
