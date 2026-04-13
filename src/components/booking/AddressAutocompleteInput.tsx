@@ -47,7 +47,6 @@ export function AddressAutocompleteInput({
 
   const handleSelect = (suggestion: AddressSuggestion) => {
     onSelect(suggestion);
-    onChange(suggestion.line1);
     setIsOpen(false);
     clearSuggestions();
   };

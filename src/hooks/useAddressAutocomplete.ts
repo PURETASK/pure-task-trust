@@ -12,6 +12,7 @@ export interface NominatimResult {
     state?: string;
     postcode?: string;
     country?: string;
+    'ISO3166-2-lvl4'?: string;
   };
   lat: string;
   lon: string;
@@ -30,7 +31,17 @@ export interface AddressSuggestion {
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 const DEBOUNCE_MS = 400;
-const MIN_QUERY_LENGTH = 3;
+const MIN_QUERY_LENGTH = 2;
+
+function getStateCode(address: NominatimResult['address']) {
+  const isoSubdivision = address['ISO3166-2-lvl4'];
+
+  if (isoSubdivision?.startsWith('US-')) {
+    return isoSubdivision.replace('US-', '');
+  }
+
+  return address.state || '';
+}
 
 function parseNominatimResult(result: NominatimResult): AddressSuggestion {
   const address = result.address;
@@ -38,7 +49,7 @@ function parseNominatimResult(result: NominatimResult): AddressSuggestion {
   const road = address.road || '';
   const line1 = [houseNumber, road].filter(Boolean).join(' ');
   const city = address.city || address.town || address.village || '';
-  const state = address.state || '';
+  const state = getStateCode(address);
   const postalCode = address.postcode || '';
 
   return {
@@ -58,12 +69,14 @@ export function useAddressAutocomplete(query: string) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const normalizedQuery = query.trim();
 
   useEffect(() => {
     // Clear suggestions if query is too short
-    if (query.length < MIN_QUERY_LENGTH) {
+    if (normalizedQuery.length < MIN_QUERY_LENGTH) {
       setSuggestions([]);
       setIsLoading(false);
+      setError(null);
       return;
     }
 
@@ -79,7 +92,7 @@ export function useAddressAutocomplete(query: string) {
 
       try {
         const params = new URLSearchParams({
-          q: query,
+          q: normalizedQuery,
           format: 'json',
           addressdetails: '1',
           limit: '5',
@@ -120,7 +133,7 @@ export function useAddressAutocomplete(query: string) {
         abortControllerRef.current.abort();
       }
     };
-  }, [query]);
+  }, [normalizedQuery]);
 
   const clearSuggestions = () => {
     setSuggestions([]);
