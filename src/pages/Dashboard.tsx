@@ -6,9 +6,8 @@ import { QuickRebookSection } from "@/components/client-home/QuickRebookSection"
 import { WalletSnapshotCard } from "@/components/client-home/WalletSnapshotCard";
 import { AlertsSection } from "@/components/client-home/AlertsSection";
 import { RecentMessagesPreview } from "@/components/client-home/RecentMessagesPreview";
-import { RecentActivityFeed } from "@/components/social-proof/RecentActivityFeed";
+import { RecentActivityTimeline } from "@/components/client-home/RecentActivityTimeline";
 import { NewUserWelcome } from "@/components/client-home/NewUserWelcome";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
 
 const fade = (delay = 0) => ({
@@ -29,11 +28,9 @@ export default function Dashboard() {
     alerts,
     rebookCandidates,
     isNewUser,
-    isLoading,
   } = useClientHome();
 
   const firstName = user?.name?.split(" ")[0] || "there";
-
 
   return (
     <main className="flex-1 bg-background min-h-screen">
@@ -48,7 +45,7 @@ export default function Dashboard() {
         <motion.div {...fade(0)} className="mb-6 sm:mb-8">
           <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Hello, <span className="gradient-brand-text">{firstName}</span>!
+            Hello, <span className="gradient-brand-text">{firstName}</span>
           </h1>
         </motion.div>
 
@@ -73,11 +70,7 @@ export default function Dashboard() {
         <motion.div {...fade(0.1)} className="mb-6 sm:mb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-5 sm:gap-6">
             <div className="md:col-span-3">
-              {!isNewUser && rebookCandidates.length > 0 ? (
-                <QuickRebookSection candidates={rebookCandidates} />
-              ) : !isNewUser ? (
-                <QuickRebookSection candidates={[]} />
-              ) : null}
+              <QuickRebookSection candidates={rebookCandidates} isNewUser={isNewUser} />
             </div>
             <div className="md:col-span-2">
               <WalletSnapshotCard
@@ -92,7 +85,6 @@ export default function Dashboard() {
         {/* ── ROW 3: ALERTS (desktop) + MESSAGES ──────────────────────── */}
         <motion.div {...fade(0.15)} className="mb-6 sm:mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            {/* Alerts - desktop only (mobile already shown above) */}
             <div className="hidden md:block">
               <AlertsSection alerts={alerts} />
             </div>
@@ -105,7 +97,7 @@ export default function Dashboard() {
         {/* ── ROW 4: RECENT ACTIVITY (Full Width) ─────────────────────── */}
         {!isNewUser && (
           <motion.div {...fade(0.2)}>
-            <RecentActivityFeed limit={5} showTitle />
+            <RecentActivityTimeline />
           </motion.div>
         )}
       </div>
