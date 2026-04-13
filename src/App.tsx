@@ -28,6 +28,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const RoleSelection = lazy(() => import("./pages/RoleSelection"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const MyCleanings = lazy(() => import("./pages/MyCleanings"));
+const CleaningDetail = lazy(() => import("./pages/CleaningDetail"));
 const AccountPage = lazy(() => import("./pages/Account"));
 const Discover = lazy(() => import("./pages/Discover"));
 const CleanerProfile = lazy(() => import("./pages/CleanerProfile"));
@@ -251,7 +252,7 @@ const App = () => (
                     {/* Client routes — new 5-tab IA */}
                     <Route path="/home" element={<RequireClient><Dashboard /></RequireClient>} />
                     <Route path="/my-cleanings" element={<RequireClient><MyCleanings /></RequireClient>} />
-                    <Route path="/my-cleanings/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
+                    <Route path="/my-cleanings/:id" element={<RequireClient><CleaningDetail /></RequireClient>} />
                     <Route path="/account" element={<RequireClient><AccountPage /></RequireClient>} />
 
                     {/* Legacy redirects → new routes */}
