@@ -13,6 +13,8 @@ import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, Refresh
 import { useWallet } from "@/hooks/useWallet";
 import { useReceipt } from "@/hooks/useReceipt";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
+import { RefundsSection } from "@/components/wallet/RefundsSection";
+import { FundingMethods } from "@/components/wallet/FundingMethods";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
