@@ -13,6 +13,8 @@ import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, Clock, Refresh
 import { useWallet } from "@/hooks/useWallet";
 import { useReceipt } from "@/hooks/useReceipt";
 import { BuyCreditsDialog } from "@/components/wallet/BuyCreditsDialog";
+import { RefundsSection } from "@/components/wallet/RefundsSection";
+import { FundingMethods } from "@/components/wallet/FundingMethods";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -291,6 +293,16 @@ export default function Wallet() {
               )}
             </div>
           </div>
+        </motion.div>
+
+        {/* Refunds */}
+        <motion.div {...f(0.22)} className="mt-6">
+          <RefundsSection />
+        </motion.div>
+
+        {/* Funding Methods */}
+        <motion.div {...f(0.26)} className="mt-6">
+          <FundingMethods />
         </motion.div>
 
         <p className="text-xs text-muted-foreground text-center mt-6 flex items-center justify-center gap-1.5">
