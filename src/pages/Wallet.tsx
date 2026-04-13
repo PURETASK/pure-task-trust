@@ -295,6 +295,16 @@ export default function Wallet() {
           </div>
         </motion.div>
 
+        {/* Refunds */}
+        <motion.div {...f(0.22)} className="mt-6">
+          <RefundsSection />
+        </motion.div>
+
+        {/* Funding Methods */}
+        <motion.div {...f(0.26)} className="mt-6">
+          <FundingMethods />
+        </motion.div>
+
         <p className="text-xs text-muted-foreground text-center mt-6 flex items-center justify-center gap-1.5">
           <Shield className="h-3 w-3" />
           Credits are non-refundable to cash. Used exclusively for PureTask bookings.
