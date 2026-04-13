@@ -258,7 +258,7 @@ export function AppSidebar() {
     user?.role === "admin"   ? "bg-destructive" :
     user?.role === "cleaner" ? "bg-success"     : "bg-primary";
 
-  const exactMatchUrls = ["/", "/dashboard", "/cleaner/dashboard", "/admin/hub"];
+  const exactMatchUrls = ["/", "/home", "/cleaner/dashboard", "/admin/hub"];
   const isEnd = (url: string) => exactMatchUrls.includes(url);
 
   const isActive = (url: string) =>

@@ -76,7 +76,7 @@ export function MobileBottomNav() {
   if (hiddenPaths.some((p) => location.pathname.startsWith(p))) return null;
 
   const isActive = (item: NavItem) => {
-    const exact = ["/", "/dashboard", "/cleaner/dashboard", "/admin/hub"];
+    const exact = ["/", "/home", "/cleaner/dashboard", "/admin/hub"];
     if (exact.includes(item.path)) return location.pathname === item.path;
     return location.pathname === item.path ||
       location.pathname.startsWith(item.path + "/");
