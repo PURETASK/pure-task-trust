@@ -12,10 +12,10 @@ interface Props {
 }
 
 const cardColors = [
-  { border: "border-primary/30", hover: "hover:border-primary/50", iconBg: "bg-primary/10", iconBorder: "border-primary/20", iconText: "text-primary" },
-  { border: "border-success/30", hover: "hover:border-success/50", iconBg: "bg-success/10", iconBorder: "border-success/20", iconText: "text-success" },
-  { border: "border-warning/30", hover: "hover:border-warning/50", iconBg: "bg-warning/10", iconBorder: "border-warning/20", iconText: "text-warning" },
-  { border: "border-[hsl(var(--pt-purple))]/30", hover: "hover:border-[hsl(var(--pt-purple))]/50", iconBg: "bg-[hsl(var(--pt-purple))]/10", iconBorder: "border-[hsl(var(--pt-purple))]/20", iconText: "text-[hsl(var(--pt-purple))]" },
+  { card: "palette-card palette-card-blue", icon: "palette-icon palette-icon-blue", pill: "palette-pill palette-pill-blue" },
+  { card: "palette-card palette-card-green", icon: "palette-icon palette-icon-green", pill: "palette-pill palette-pill-green" },
+  { card: "palette-card palette-card-amber", icon: "palette-icon palette-icon-amber", pill: "palette-pill palette-pill-amber" },
+  { card: "palette-card palette-card-purple", icon: "palette-icon palette-icon-purple", pill: "palette-pill palette-pill-purple" },
 ];
 
 export function QuickRebookSection({ candidates, isNewUser }: Props) {
@@ -27,10 +27,10 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
     return (
       <section>
         <SectionHeader />
-        <Card className="border-2 border-dashed border-primary/20 rounded-3xl">
+        <Card className="palette-card palette-card-blue palette-card-dashed rounded-3xl">
           <CardContent className="p-5 flex flex-col items-center gap-3 text-center">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-              <Search className="h-5 w-5 text-primary" />
+            <div className="h-10 w-10 palette-icon palette-icon-blue rounded-xl">
+              <Search className="h-5 w-5" />
             </div>
             <div>
               <p className="text-sm font-bold">No recent cleaners yet</p>
@@ -67,10 +67,10 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
               className="flex-shrink-0 snap-start"
             >
               <Link to={`/book?cleaner=${job.cleaner_id}&type=${job.cleaning_type}`}>
-                <div className={`w-52 sm:w-60 rounded-3xl border-2 ${color.border} ${color.hover} bg-card p-4 sm:p-5 hover:shadow-card transition-all group`}>
+                <div className={`w-52 sm:w-60 rounded-3xl ${color.card} p-4 sm:p-5 group`}>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-3">
-                    <div className={`h-11 w-11 rounded-xl ${color.iconBg} border-2 ${color.iconBorder} flex items-center justify-center font-bold ${color.iconText} text-base group-hover:scale-105 transition-transform flex-shrink-0`}>
+                    <div className={`h-11 w-11 rounded-xl ${color.icon} font-bold text-base group-hover:scale-105 transition-transform flex-shrink-0`}>
                       {name.charAt(0)}
                     </div>
                     <div className="min-w-0">
@@ -82,7 +82,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
                             {rating.toFixed(1)}
                           </span>
                         )}
-                        <span className="text-xs text-muted-foreground capitalize">• {type}</span>
+                        <span className={`text-[10px] capitalize ${color.pill}`}>{type}</span>
                       </div>
                     </div>
                   </div>
@@ -137,8 +137,8 @@ function SectionHeader() {
   return (
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
-          <RotateCcw className="h-3.5 w-3.5 text-primary" />
+          <div className="h-7 w-7 palette-icon palette-icon-blue rounded-lg">
+          <RotateCcw className="h-3.5 w-3.5" />
         </div>
         <div>
           <h2 className="text-base sm:text-lg font-bold">Quick Rebook</h2>
@@ -154,9 +154,9 @@ function SectionHeader() {
 
 function PopularWaysToBook() {
   const ways = [
-    { label: "Book Standard Cleaning", icon: Brush, href: "/book?type=standard", desc: "Weekly or bi-weekly maintenance", color: "border-primary/30 hover:border-primary/50", iconBg: "bg-primary/10 border-primary/30", iconColor: "text-primary" },
-    { label: "Book Deep Cleaning", icon: Home, href: "/book?type=deep", desc: "Thorough top-to-bottom clean", color: "border-success/30 hover:border-success/50", iconBg: "bg-success/10 border-success/30", iconColor: "text-success" },
-    { label: "Find a Cleaner", icon: Search, href: "/book", desc: "Browse verified professionals", color: "border-[hsl(var(--pt-purple))]/30 hover:border-[hsl(var(--pt-purple))]/50", iconBg: "bg-[hsl(var(--pt-purple))]/10 border-[hsl(var(--pt-purple))]/30", iconColor: "text-[hsl(var(--pt-purple))]" },
+    { label: "Book Standard Cleaning", icon: Brush, href: "/book?type=standard", desc: "Weekly or bi-weekly maintenance", card: "palette-card palette-card-blue", iconClass: "palette-icon palette-icon-blue" },
+    { label: "Book Deep Cleaning", icon: Home, href: "/book?type=deep", desc: "Thorough top-to-bottom clean", card: "palette-card palette-card-green", iconClass: "palette-icon palette-icon-green" },
+    { label: "Find a Cleaner", icon: Search, href: "/book", desc: "Browse verified professionals", card: "palette-card palette-card-purple", iconClass: "palette-icon palette-icon-purple" },
   ];
 
   return (
@@ -168,10 +168,10 @@ function PopularWaysToBook() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {ways.map((w) => (
           <Link key={w.label} to={w.href}>
-            <Card className={`hover:shadow-card transition-all h-full border-2 ${w.color} rounded-2xl`}>
+            <Card className={`${w.card} h-full rounded-3xl`}>
               <CardContent className="p-4 flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-xl ${w.iconBg} border-2 flex items-center justify-center flex-shrink-0`}>
-                  <w.icon className={`h-5 w-5 ${w.iconColor}`} />
+                <div className={`h-10 w-10 rounded-xl ${w.iconClass} flex items-center justify-center flex-shrink-0`}>
+                  <w.icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-sm">{w.label}</p>
