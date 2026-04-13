@@ -85,6 +85,27 @@ export function useJob(jobId: string) {
 
 export function useClientJobs() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Subscribe to realtime job updates so the dashboard hero card stays live
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('client-jobs-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'jobs' },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['client-jobs', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
 
   return useQuery({
     queryKey: ['client-jobs', user?.id],
