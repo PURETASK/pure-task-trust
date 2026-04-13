@@ -37,7 +37,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
         city: newAddress.city,
         state: newAddress.state || undefined,
         postalCode: newAddress.postalCode || undefined,
-        isDefault: addresses?.length === 0,
+        isDefault: !addresses || addresses.length === 0,
       });
       
       // Auto-select the newly created address
@@ -48,7 +48,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
       setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '' });
       setIsAddDialogOpen(false);
     } catch (error) {
-      // Error is handled in the hook
+      console.error('handleAddAddress error:', error);
+      // Error toast is handled in the hook, but ensure dialog stays open so user can retry
     }
   };
 

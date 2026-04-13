@@ -66,12 +66,21 @@ export function useAddressActions() {
     mutationFn: async (data: CreateAddressData) => {
       if (!user?.id) throw new Error('Not authenticated');
 
+      // Verify we have an active session before making DB calls
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        throw new Error('No active session. Please sign in again.');
+      }
+
       // If setting as default, unset other defaults first
       if (data.isDefault) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('addresses')
           .update({ is_default: false })
           .eq('user_id', user.id);
+        if (updateError) {
+          console.error('Failed to unset default addresses:', updateError);
+        }
       }
 
       const { data: insertedData, error } = await supabase.from('addresses').insert({
@@ -85,7 +94,10 @@ export function useAddressActions() {
         is_default: data.isDefault || false,
       }).select().single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Address insert error:', error);
+        throw error;
+      }
       return insertedData;
     },
     onSuccess: (newAddress) => {
