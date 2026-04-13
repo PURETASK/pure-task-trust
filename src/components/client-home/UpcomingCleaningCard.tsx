@@ -172,7 +172,7 @@ function OnTheWayState({ job }: { job: JobWithDetails }) {
 
 /* ── IN PROGRESS ───────────────────────────────────────────────── */
 function InProgressState({ job }: { job: JobWithDetails }) {
-  const startTime = job.checked_in_at || job.scheduled_start_at;
+  const startTime = job.check_in_at || job.scheduled_start_at;
   const elapsed = startTime ? differenceInMinutes(new Date(), new Date(startTime)) : 0;
   const hours = Math.floor(elapsed / 60);
   const mins = elapsed % 60;
