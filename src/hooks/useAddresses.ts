@@ -5,13 +5,13 @@ import { useToast } from '@/hooks/use-toast';
 
 const ADDRESS_MUTATION_TIMEOUT_MS = 10000;
 
-function withTimeout<T>(promise: Promise<T>, action: string): Promise<T> {
+function withTimeout<T>(promiseLike: PromiseLike<T>, action: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const timeoutId = window.setTimeout(() => {
       reject(new Error(`${action} is taking too long. Please try again.`));
     }, ADDRESS_MUTATION_TIMEOUT_MS);
 
-    promise
+    Promise.resolve(promiseLike)
       .then((result) => {
         window.clearTimeout(timeoutId);
         resolve(result);
