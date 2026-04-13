@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/hero-spring-cleaning.png";
+import heroImage from "@/assets/hero-cleaning-pattern.jpg";
 
 export function Hero() {
   return (
@@ -19,7 +19,7 @@ export function Hero() {
           fetchPriority="high"
           decoding="sync"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/98 via-white/95 to-white/85 sm:from-white/95 sm:via-white/80 sm:to-white/40" />
+        <div className="absolute inset-0 bg-white/80" />
       </div>
 
       <div className="w-full relative z-10 py-8 sm:py-20 px-4 sm:px-6 box-border">
