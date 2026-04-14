@@ -81,10 +81,20 @@ export function useCleanerServiceAreas() {
         .select()
         .single();
       if (error) throw error;
+
+      // Also update the cleaner profile's lat/lng if we have coordinates
+      if (input.latitude && input.longitude) {
+        await supabase
+          .from("cleaner_profiles")
+          .update({ latitude: input.latitude, longitude: input.longitude })
+          .eq("id", cleanerId);
+      }
+
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cleaner-service-areas", cleanerId] });
+      queryClient.invalidateQueries({ queryKey: ["cleaner-profile", user?.id] });
       toast.success("Service area added");
     },
     onError: (error) => {
