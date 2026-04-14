@@ -140,7 +140,7 @@ export function useAvailabilityBlocks() {
 }
 
 export function useTimeOff() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
 
   const { data: timeOffRequests, isLoading } = useQuery({
