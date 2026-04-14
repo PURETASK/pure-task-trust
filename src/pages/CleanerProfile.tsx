@@ -146,6 +146,55 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
   const [parking, setParking] = useState("");
   const [entry, setEntry] = useState("");
 
+  // Fetch cleaner's availability blocks (weekly recurring schedule)
+  const { data: availabilityBlocks } = useQuery({
+    queryKey: ['cleaner-availability-blocks', cleaner.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('availability_blocks')
+        .select('*')
+        .eq('cleaner_id', cleaner.id)
+        .eq('is_active', true);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!cleaner.id,
+  });
+
+  // Fetch blackout periods
+  const { data: blackouts } = useQuery({
+    queryKey: ['cleaner-blackouts', cleaner.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('blackout_periods')
+        .select('*')
+        .eq('cleaner_id', cleaner.id);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!cleaner.id,
+  });
+
+  // Fetch scheduled jobs for this cleaner in the visible month range
+  const monthStart = new Date(currentYear, currentMonth, 1).toISOString();
+  const monthEnd = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59).toISOString();
+
+  const { data: scheduledJobs } = useQuery({
+    queryKey: ['cleaner-scheduled-jobs', cleaner.id, currentMonth, currentYear],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('id, scheduled_start_at, scheduled_end_at, status')
+        .eq('cleaner_id', cleaner.id)
+        .gte('scheduled_start_at', monthStart)
+        .lte('scheduled_start_at', monthEnd)
+        .in('status', ['pending', 'confirmed', 'in_progress']);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!cleaner.id,
+  });
+
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -159,6 +208,40 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
     return days;
   }, [firstDay, daysInMonth]);
 
+  // Build sets for calendar highlighting
+  const availableDaysOfWeek = useMemo(() => {
+    if (!availabilityBlocks) return new Set<number>();
+    return new Set(availabilityBlocks.map((b: any) => b.day_of_week));
+  }, [availabilityBlocks]);
+
+  const bookedDates = useMemo(() => {
+    if (!scheduledJobs) return new Set<string>();
+    const set = new Set<string>();
+    scheduledJobs.forEach((j: any) => {
+      if (j.scheduled_start_at) {
+        const d = new Date(j.scheduled_start_at);
+        set.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`);
+      }
+    });
+    return set;
+  }, [scheduledJobs]);
+
+  const blackoutDates = useMemo(() => {
+    if (!blackouts) return new Set<string>();
+    const set = new Set<string>();
+    blackouts.forEach((b: any) => {
+      const start = new Date(b.start_ts);
+      const end = new Date(b.end_ts);
+      const cursor = new Date(start);
+      cursor.setHours(0, 0, 0, 0);
+      while (cursor <= end) {
+        set.add(`${cursor.getFullYear()}-${cursor.getMonth()}-${cursor.getDate()}`);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    });
+    return set;
+  }, [blackouts]);
+
   const isToday = (day: number) => {
     return day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
   };
@@ -170,6 +253,22 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
   const isSelected = (day: number) => {
     if (!selectedDate) return false;
     return day === selectedDate.getDate() && currentMonth === selectedDate.getMonth() && currentYear === selectedDate.getFullYear();
+  };
+  const isAvailableDay = (day: number) => {
+    const dow = new Date(currentYear, currentMonth, day).getDay();
+    const dateKey = `${currentYear}-${currentMonth}-${day}`;
+    if (blackoutDates.has(dateKey)) return false;
+    // If no availability blocks are set, assume all days available
+    if (availabilityBlocks && availabilityBlocks.length > 0) {
+      return availableDaysOfWeek.has(dow);
+    }
+    return true;
+  };
+  const hasBooking = (day: number) => {
+    return bookedDates.has(`${currentYear}-${currentMonth}-${day}`);
+  };
+  const isBlackedOut = (day: number) => {
+    return blackoutDates.has(`${currentYear}-${currentMonth}-${day}`);
   };
 
   const prevMonth = () => {
@@ -220,29 +319,58 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
-              {calendarDays.map((day, i) => (
-                <button
-                  key={i}
-                  disabled={day === null || isPast(day)}
-                  onClick={() => day && setSelectedDate(new Date(currentYear, currentMonth, day))}
-                  className={`
-                    h-10 rounded-lg text-sm font-medium transition-all
-                    ${day === null ? "invisible" : ""}
-                    ${day && isPast(day) ? "text-muted-foreground/30 cursor-not-allowed" : ""}
-                    ${day && isSelected(day) ? "bg-primary text-primary-foreground shadow-md" : ""}
-                    ${day && isToday(day) && !isSelected(day) ? "bg-primary/10 text-primary font-bold" : ""}
-                    ${day && !isPast(day) && !isSelected(day) && !isToday(day) ? "hover:bg-muted text-foreground" : ""}
-                  `}
-                >
-                  {day}
-                </button>
-              ))}
+              {calendarDays.map((day, i) => {
+                if (day === null) return <div key={i} className="h-10" />;
+                const past = isPast(day);
+                const selected = isSelected(day);
+                const todayDay = isToday(day);
+                const available = !past && isAvailableDay(day);
+                const booked = hasBooking(day);
+                const blacked = isBlackedOut(day);
+                const unavailable = !past && !available;
+
+                return (
+                  <button
+                    key={i}
+                    disabled={past || blacked}
+                    onClick={() => setSelectedDate(new Date(currentYear, currentMonth, day))}
+                    className={`
+                      relative h-10 rounded-lg text-sm font-medium transition-all
+                      ${past ? "text-muted-foreground/30 cursor-not-allowed" : ""}
+                      ${blacked && !past ? "bg-destructive/10 text-destructive/40 cursor-not-allowed line-through" : ""}
+                      ${selected ? "bg-primary text-primary-foreground shadow-md" : ""}
+                      ${todayDay && !selected ? "bg-primary/10 text-primary font-bold ring-2 ring-primary/30" : ""}
+                      ${available && !selected && !todayDay ? "bg-success/8 hover:bg-success/20 text-foreground" : ""}
+                      ${unavailable && !blacked && !selected ? "text-muted-foreground/50" : ""}
+                    `}
+                  >
+                    {day}
+                    {/* Availability dot */}
+                    {!past && !selected && available && !blacked && (
+                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-success" />
+                    )}
+                    {/* Booked dot */}
+                    {booked && !selected && (
+                      <span className="absolute top-0.5 right-1 h-1.5 w-1.5 rounded-full bg-warning" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
             {/* Legend */}
-            <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-primary" /> Basic Clean</span>
-              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-warning" /> Deep Clean</span>
-              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--pt-purple))]" /> Move-Out</span>
+            <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-success" /> Available
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-warning" /> Has Booking
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-destructive/40" /> Unavailable
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded ring-2 ring-primary/30 bg-primary/10" /> Today
+              </span>
             </div>
           </CardContent>
         </Card>
