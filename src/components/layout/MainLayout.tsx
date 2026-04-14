@@ -14,6 +14,7 @@ import { NotificationBell } from "@/components/layout/NotificationBell";
 import { MessageInbox } from "@/components/layout/MessageInbox";
 import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
 import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
+import { LiveJobActionBar } from "@/components/cleaner/LiveJobActionBar";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
