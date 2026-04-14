@@ -255,14 +255,14 @@ export default function AboutUs() {
       {/* ── TWO SIDES ─────────────────────────────────────────────────────── */}
       <section className="py-24 bg-muted/30 relative overflow-hidden">
         {/* Heart pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.05] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
           <pattern id="hearts-two-sides" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <path d="M50 30 C50 20 40 15 35 20 C30 25 30 35 50 50 C70 35 70 25 65 20 C60 15 50 20 50 30Z" fill="hsl(var(--primary))" opacity="0.3" />
+            <path d="M50 30 C50 20 40 15 35 20 C30 25 30 35 50 50 C70 35 70 25 65 20 C60 15 50 20 50 30Z" fill="hsl(var(--primary))" opacity="0.4" />
           </pattern>
           <rect width="100%" height="100%" fill="url(#hearts-two-sides)" />
         </svg>
-        <div className="absolute -top-10 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-10 right-1/4 w-56 h-56 bg-success/5 rounded-full blur-3xl" />
+        <div className="absolute -top-10 left-1/4 w-64 h-64 bg-primary/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-10 right-1/4 w-56 h-56 bg-success/12 rounded-full blur-3xl" />
         <div className="container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">Built for both sides</h2>
