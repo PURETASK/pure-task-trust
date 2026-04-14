@@ -176,14 +176,14 @@ export default function AboutUs() {
       {/* ── THE PROBLEMS ─────────────────────────────────────────────────── */}
       <section className="py-24 bg-muted/30 relative overflow-hidden">
         {/* Wavy pattern background */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
           <pattern id="waves-problem" x="0" y="0" width="120" height="60" patternUnits="userSpaceOnUse">
             <path d="M0 30 Q30 0 60 30 Q90 60 120 30" fill="none" stroke="hsl(var(--destructive))" strokeWidth="1.5" />
           </pattern>
           <rect width="100%" height="100%" fill="url(#waves-problem)" />
         </svg>
-        <div className="absolute top-10 right-20 w-48 h-48 bg-destructive/4 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-56 h-56 bg-warning/4 rounded-full blur-3xl" />
+        <div className="absolute top-10 right-20 w-48 h-48 bg-destructive/12 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-56 h-56 bg-warning/12 rounded-full blur-3xl" />
         <div className="container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <Badge className="mb-4 bg-destructive/10 border-destructive/20 text-destructive hover:bg-destructive/10">
