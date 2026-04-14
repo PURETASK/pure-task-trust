@@ -131,6 +131,7 @@ export function useAvailabilityBlocks() {
     blocks,
     blocksByDay,
     isLoading: isLoading || profileLoading,
+    profileReady: !!profile?.id,
     addBlock,
     updateBlock,
     deleteBlock,
