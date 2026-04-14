@@ -140,7 +140,7 @@ export function useAvailabilityBlocks() {
 }
 
 export function useTimeOff() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
 
   const { data: timeOffRequests, isLoading } = useQuery({
@@ -211,14 +211,14 @@ export function useTimeOff() {
     timeOffRequests,
     upcomingTimeOff,
     pastTimeOff,
-    isLoading,
+    isLoading: isLoading || profileLoading,
     addTimeOff,
     deleteTimeOff,
   };
 }
 
 export function useBlackoutPeriods() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
 
   const { data: blackouts, isLoading } = useQuery({
@@ -282,7 +282,7 @@ export function useBlackoutPeriods() {
 
   return {
     blackouts,
-    isLoading,
+    isLoading: isLoading || profileLoading,
     addBlackout,
     deleteBlackout,
   };
