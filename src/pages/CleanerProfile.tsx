@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
 import {
   Star, Shield, MessageCircle, Heart, Loader2, AlertCircle,
-  MapPin, Award, CheckCircle, Calendar, ChevronRight,
-  Clock, Camera, TrendingUp, Zap, Quote, ArrowLeft
+  MapPin, Award, CheckCircle, Calendar, ChevronRight, ChevronLeft,
+  Clock, Camera, TrendingUp, Zap, Quote, ArrowLeft, Home, Bath, Maximize, PawPrint, Car, DoorOpen
 } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useCleaner } from "@/hooks/useCleaners";
