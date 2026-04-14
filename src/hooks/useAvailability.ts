@@ -130,7 +130,7 @@ export function useAvailabilityBlocks() {
   return {
     blocks,
     blocksByDay,
-    isLoading,
+    isLoading: isLoading || profileLoading,
     addBlock,
     updateBlock,
     deleteBlock,
