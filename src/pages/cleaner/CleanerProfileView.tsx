@@ -95,8 +95,6 @@ export default function CleanerProfileView() {
     <CleanerLayout>
       <div className="max-w-3xl space-y-5">
 
-        {/* Tabs: Public Profile vs Private Settings */}
-        <Tabs defaultValue="public" className="space-y-5">
         {/* ── HERO BANNER ── */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div
