@@ -32,13 +32,13 @@ const clientItems: NavItem[] = [
   { icon: User,            label: "Account",      path: "/account" },
 ];
 
-// ─── CLEANER (5 tabs — core work flow) ────────────────────────────────────────
+// ─── CLEANER (5 tabs — task-based IA) ─────────────────────────────────────────
 const cleanerItems: NavItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/cleaner/dashboard" },
-  { icon: Briefcase,       label: "Jobs",      path: "/cleaner/jobs" },
-  { icon: Calendar,        label: "Schedule",  path: "/cleaner/schedule" },
-  { icon: DollarSign,      label: "Earnings",  path: "/cleaner/earnings" },
-  { icon: User,            label: "Profile",   path: "/cleaner/profile/view" },
+  { icon: Home,            label: "Home",         path: "/cleaner/dashboard" },
+  { icon: Briefcase,       label: "Jobs",         path: "/cleaner/jobs" },
+  { icon: Calendar,        label: "Availability", path: "/cleaner/availability" },
+  { icon: DollarSign,      label: "Earnings",     path: "/cleaner/earnings" },
+  { icon: User,            label: "Profile",      path: "/cleaner/profile/view" },
 ];
 
 // ─── ADMIN (5 tabs — command shortcuts) ───────────────────────────────────────
