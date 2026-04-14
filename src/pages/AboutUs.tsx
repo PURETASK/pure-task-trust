@@ -310,7 +310,16 @@ export default function AboutUs() {
       </section>
 
       {/* ── VALUES ────────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background relative overflow-hidden">
+        {/* Star pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.06] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="stars-values" x="0" y="0" width="90" height="90" patternUnits="userSpaceOnUse">
+            <polygon points="45,10 50,35 75,35 55,50 62,75 45,60 28,75 35,50 15,35 40,35" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.6" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#stars-values)" />
+        </svg>
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[hsl(var(--pt-purple)/0.04)] rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-60 h-60 bg-warning/4 rounded-full blur-3xl" />
         <div className="container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <Badge className="mb-4 bg-[hsl(var(--pt-purple)/0.1)] border-[hsl(var(--pt-purple)/0.3)] text-[hsl(var(--pt-purple))] hover:bg-[hsl(var(--pt-purple)/0.1)]">
