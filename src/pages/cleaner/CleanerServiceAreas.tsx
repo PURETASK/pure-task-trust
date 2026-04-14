@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import RadiusMap from "@/components/booking/RadiusMap";
+import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 
 function getRadiusLabel(r: number) {
   if (r <= 5)  return "Hyper local";
