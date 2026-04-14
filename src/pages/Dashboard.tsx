@@ -35,9 +35,14 @@ export default function Dashboard() {
 
   return (
     <main className="flex-1 min-h-screen relative">
-      <div className="absolute inset-0 z-0">
-        <img src={cleaningPattern} alt="" className="w-full h-full object-cover" aria-hidden="true" />
-        <div className="absolute inset-0 bg-background/60" />
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <img 
+          src={cleaningPattern} 
+          alt="" 
+          className="w-full h-full object-contain opacity-30" 
+          aria-hidden="true" 
+        />
+        <div className="absolute inset-0 bg-background/70" />
       </div>
       <Helmet>
         <title>Home | PureTask</title>
