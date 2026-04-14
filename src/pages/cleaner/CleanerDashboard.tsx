@@ -9,12 +9,12 @@ import { TierBadge } from "@/components/gamification/TierBadge";
 import { InviteFriendsCTA } from "@/components/referral";
 import { TierProgressMap } from "@/components/cleaner/TierProgressMap";
 import { ProfileCompletion } from "@/components/cleaner/ProfileCompletion";
+import { DynamicHeroCard } from "@/components/cleaner/DynamicHeroCard";
 import { OnboardingTooltips, CLEANER_ONBOARDING_STEPS } from "@/components/onboarding/OnboardingTooltips";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
-import { useCountdown } from "@/hooks/useCountdown";
 import { useSmartScheduling } from "@/hooks/useSmartScheduling";
 import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,42 +31,8 @@ import {
   TrendingUp, ArrowRight, Lightbulb, Timer, Shield, Award, Zap,
 } from "lucide-react";
 
-function TodayJobBanner({ jobs }: { jobs: ReturnType<typeof useCleanerJobs>["jobs"] }) {
-  const todayJobs = jobs
-    .filter(j => j.scheduled_start_at && isToday(new Date(j.scheduled_start_at)) && ["confirmed", "in_progress"].includes(j.status))
-    .sort((a, b) => new Date(a.scheduled_start_at!).getTime() - new Date(b.scheduled_start_at!).getTime());
-  const nextJob = todayJobs[0];
-  const countdown = useCountdown(nextJob?.scheduled_start_at ? new Date(nextJob.scheduled_start_at) : null);
-  if (!nextJob) return null;
-  const isInProgress = nextJob.status === "in_progress";
-  return (
-    <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
-      <Card className={`border-2 ${isInProgress ? "border-primary/40 bg-primary/5" : "border-success/40 bg-success/5"}`}>
-        <CardContent className="p-4 sm:p-5 flex items-center gap-4">
-          <div className={`h-14 w-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${isInProgress ? "bg-primary/15" : "bg-success/15"}`}>
-            <Timer className={`h-7 w-7 ${isInProgress ? "text-primary animate-pulse" : "text-success"}`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-0.5">
-              {isInProgress ? "🟢 Job In Progress" : "📅 Today's Next Job"}
-            </p>
-            <p className="font-bold text-lg capitalize">
-              {nextJob.cleaning_type?.replace("_", " ") || "Standard"} Clean
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {isInProgress ? "You're on the clock — keep going!" : `Starts in ${countdown} · ${format(new Date(nextJob.scheduled_start_at!), "h:mm a")}`}
-            </p>
-          </div>
-          <Button size="sm" asChild className="flex-shrink-0 rounded-xl">
-            <Link to={`/cleaner/jobs/${nextJob.id}`}>
-              {isInProgress ? "Continue" : "View"} <ArrowRight className="h-4 w-4 ml-1" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+
+
 
 export default function CleanerDashboard() {
   const { user } = useAuth();
@@ -125,9 +91,8 @@ export default function CleanerDashboard() {
 
       <CleanerLayout>
         <div className="space-y-5 sm:space-y-8">
-
-          {/* Today's job */}
-          <TodayJobBanner jobs={jobs} />
+          {/* Dynamic Hero — changes based on job state */}
+          <DynamicHeroCard jobs={jobs} />
 
           {/* Stats Grid */}
           <section>

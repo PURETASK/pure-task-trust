@@ -99,60 +99,18 @@ const clientNavGroups: NavGroup[] = [
   },
 ];
 
-// ─── CLEANER ──────────────────────────────────────────────────────────────────
+// ─── CLEANER (5 items — task-based IA) ────────────────────────────────────────
 const cleanerNavGroups: NavGroup[] = [
   {
-    group: "Overview",
+    group: "Main",
     items: [
-      { title: "Home", url: "/", icon: House },
-      { title: "Dashboard", url: "/cleaner/dashboard", icon: LayoutDashboard },
-      { title: "My Schedule", url: "/cleaner/schedule", icon: CalendarDays },
-    ]
-  },
-  {
-    group: "Jobs",
-    items: [
-      { title: "Active Jobs", url: "/cleaner/jobs", icon: BriefcaseBusiness },
-      { title: "Messages", url: "/cleaner/messages", icon: MessagesSquare },
-    ]
-  },
-  {
-    group: "Earnings & Growth",
-    items: [
-      { title: "Earnings", url: "/cleaner/earnings", icon: Banknote },
-      { title: "Analytics", url: "/cleaner/analytics", icon: ChartNoAxesCombined },
-      { title: "Referral & Earn", url: "/cleaner/referral", icon: Gift as any, badge: "Earn" },
-      { title: "AI Assistant", url: "/cleaner/ai-assistant", icon: BotMessageSquare, badge: "New" },
-    ]
-  },
-  {
-    group: "Profile & Setup",
-    items: [
-      { title: "Onboarding", url: "/cleaner/onboarding", icon: UserRoundCheck, badge: "Setup" },
-      { title: "My Public Profile", url: "/cleaner/profile/view", icon: UserCircle2 },
-      { title: "Profile Settings", url: "/cleaner/profile", icon: SlidersHorizontal },
+      { title: "Home", url: "/cleaner/dashboard", icon: House },
+      { title: "Jobs", url: "/cleaner/jobs", icon: BriefcaseBusiness },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
-      { title: "Service Areas", url: "/cleaner/service-areas", icon: MapPinned },
-      { title: "Calendar Sync", url: "/cleaner/calendar-sync", icon: Cable },
-      { title: "Team Management", url: "/cleaner/team", icon: Users },
+      { title: "Earnings", url: "/cleaner/earnings", icon: Banknote },
+      { title: "Profile", url: "/cleaner/profile/view", icon: UserCircle2 },
     ]
   },
-  {
-    group: "Trust & Compliance",
-    items: [
-      { title: "Verification", url: "/cleaner/verification", icon: ScanFace },
-      { title: "Reliability Score", url: "/cleaner/reliability", icon: Gauge },
-      { title: "Cancellation Policy", url: "/cleaner/cancellation-policy", icon: AlertTriangle },
-    ]
-  },
-  {
-    group: "Support",
-    items: [
-      { title: "Resources & Guides", url: "/cleaner/resources", icon: BookOpenCheck },
-      { title: "Account Settings", url: "/cleaner/settings", icon: SlidersHorizontal },
-      { title: "Notifications", url: "/notifications", icon: BellDot },
-    ]
-  }
 ];
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────

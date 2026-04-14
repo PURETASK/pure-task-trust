@@ -287,7 +287,7 @@ const App = () => (
 
                     {/* Cleaner routes */}
                     <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
-                    <Route path="/cleaner/schedule" element={<RequireCleaner><CleanerSchedule /></RequireCleaner>} />
+                    <Route path="/cleaner/schedule" element={<Navigate to="/cleaner/availability" replace />} />
                     <Route path="/cleaner/earnings" element={<RequireCleaner><CleanerEarnings /></RequireCleaner>} />
                     <Route path="/cleaner/referral" element={<RequireCleaner><CleanerReferral /></RequireCleaner>} />
                     <Route path="/cleaner/messages" element={<RequireCleaner><CleanerMessages /></RequireCleaner>} />

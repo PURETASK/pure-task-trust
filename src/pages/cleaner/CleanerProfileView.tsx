@@ -3,6 +3,7 @@ import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -162,6 +163,18 @@ export default function CleanerProfileView() {
           </div>
         </motion.div>
 
+        {/* ── PROFILE TABS: Public Performance vs Private Settings ── */}
+        <Tabs defaultValue="performance" className="space-y-5">
+          <TabsList className="w-full grid grid-cols-2 h-auto p-1">
+            <TabsTrigger value="performance" className="text-sm py-2.5 gap-1.5 data-[state=active]:bg-success/10 data-[state=active]:text-success">
+              <TrendingUp className="h-4 w-4" /> Performance & Public
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="text-sm py-2.5 gap-1.5">
+              <Settings className="h-4 w-4" /> Account Settings
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="performance" className="space-y-5">
         {/* ── STATS ROW ── */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <div className="grid grid-cols-4 gap-3">
@@ -380,33 +393,30 @@ export default function CleanerProfileView() {
           </div>
         </motion.div>
 
-        {/* ── QUICK LINKS ── */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
-          <div
-            className="rounded-3xl overflow-hidden bg-card"
-            style={{
-              border: `2px solid hsl(var(--success))`,
-              boxShadow: `0 4px 20px 0 hsl(var(--success) / 0.12)`,
-            }}
-          >
-            <div className="px-5 pt-5 pb-3 flex items-center gap-2">
-              <div className="h-8 w-8 rounded-xl bg-success/10 flex items-center justify-center">
-                <ChevronRight className="h-4 w-4 text-success" />
+          </TabsContent>
+
+          {/* ── PRIVATE SETTINGS TAB ── */}
+          <TabsContent value="settings" className="space-y-4">
+            <div
+              className="rounded-3xl overflow-hidden bg-card"
+              style={{
+                border: `2px solid hsl(var(--success))`,
+                boxShadow: `0 4px 20px 0 hsl(var(--success) / 0.12)`,
+              }}
+            >
+              <div className="px-5 pt-5 pb-3 flex items-center gap-2">
+                <div className="h-8 w-8 rounded-xl bg-success/10 flex items-center justify-center">
+                  <Settings className="h-4 w-4 text-success" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Account & Settings</h3>
+                  <p className="text-xs text-muted-foreground">Manage your private settings</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-sm">Account Features</h3>
-                <p className="text-xs text-muted-foreground">Quick access to your tools</p>
-              </div>
-            </div>
-            <div className="divide-y divide-border/40">
-              {QUICK_LINKS.map((link, i) => (
-                <motion.div
-                  key={link.to}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.04 }}
-                >
+              <div className="divide-y divide-border/40">
+                {QUICK_LINKS.map((link, i) => (
                   <Link
+                    key={link.to}
                     to={link.to}
                     className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/30 transition-colors group"
                   >
@@ -424,26 +434,26 @@ export default function CleanerProfileView() {
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                   </Link>
-                </motion.div>
-              ))}
-            </div>
-            <Separator />
-            <div className="p-4">
-              <Link to="/cleaner/referral" className="flex items-center justify-between px-4 py-3 rounded-2xl bg-gradient-to-r from-success/10 to-success/5 border border-success/20 hover:from-success/15 transition-all group">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-xl bg-success/15 flex items-center justify-center">
-                    <Heart className="h-4 w-4 text-success" />
+                ))}
+              </div>
+              <Separator />
+              <div className="p-4">
+                <Link to="/cleaner/referral" className="flex items-center justify-between px-4 py-3 rounded-2xl bg-gradient-to-r from-success/10 to-success/5 border border-success/20 hover:from-success/15 transition-all group">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-success/15 flex items-center justify-center">
+                      <Heart className="h-4 w-4 text-success" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm">Refer & Earn $25</p>
+                      <p className="text-xs text-muted-foreground">Invite friends, earn cash rewards</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-sm">Refer & Earn $25</p>
-                    <p className="text-xs text-muted-foreground">Invite friends, earn cash rewards</p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-success group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+                  <ChevronRight className="h-4 w-4 text-success group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </TabsContent>
+        </Tabs>
 
       </div>
     </CleanerLayout>
