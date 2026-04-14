@@ -70,22 +70,40 @@ export default function CleanerServiceAreas() {
     setRadiusDirty(true);
   };
 
+  const geocodeLocation = async (cityName: string, stateName: string, zip: string): Promise<{ lat: number; lng: number } | null> => {
+    const query = [cityName, stateName, zip].filter(Boolean).join(", ");
+    if (!query) return null;
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`
+      );
+      const results = await res.json();
+      if (results.length > 0) {
+        return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+      }
+    } catch (e) {
+      console.warn("Geocoding failed:", e);
+    }
+    return null;
+  };
+
   const handleSaveAll = async () => {
-    // Save radius
     const km = Math.round(globalRadius / 0.621371);
     try {
       await updateTravelRadius.mutateAsync(km);
       setRadiusDirty(false);
 
-      // If there's a location entered, also save it as a service area
       if (city.trim() || zipCode.trim()) {
+        // Geocode city/state/zip to get coordinates
+        const coords = await geocodeLocation(city.trim(), state.trim(), zipCode.trim());
+
         await addServiceArea.mutateAsync({
           city: city.trim() || null,
           state: state.trim() || null,
           zip_code: zipCode.trim() || null,
           radius_miles: globalRadius,
-          latitude: null,
-          longitude: null,
+          latitude: coords?.lat ?? null,
+          longitude: coords?.lng ?? null,
         });
         setCity(""); setState(""); setZipCode("");
         toast({ title: "Service area saved!", description: `${city.trim() || zipCode.trim()} with ${globalRadius}-mile radius` });
