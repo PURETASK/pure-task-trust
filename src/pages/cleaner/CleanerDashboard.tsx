@@ -16,7 +16,6 @@ import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useCleanerStats } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useSmartScheduling } from "@/hooks/useSmartScheduling";
-import { useSmartScheduling } from "@/hooks/useSmartScheduling";
 import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
