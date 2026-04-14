@@ -255,6 +255,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </div>
 
+      {/* Persistent Live Job Bar for cleaners */}
+      <LiveJobActionBar />
+
       {/* Mobile Bottom Nav */}
       <MobileBottomNav />
     </SidebarProvider>
