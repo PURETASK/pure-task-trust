@@ -37,7 +37,7 @@ export interface PlatformServiceArea {
 }
 
 export function useCleanerServiceAreas() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: cleanerProfile } = useQuery({
@@ -52,7 +52,7 @@ export function useCleanerServiceAreas() {
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && !authLoading,
   });
 
   const cleanerId = cleanerProfile?.id;
