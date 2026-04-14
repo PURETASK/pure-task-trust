@@ -118,9 +118,15 @@ export default function AboutUs() {
 
       {/* ── FOUNDER ──────────────────────────────────────────────────────── */}
       <section className="py-24 bg-background relative overflow-hidden">
-        {/* Soft corner blobs */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/4 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-success/4 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-success/12 rounded-full blur-3xl" />
+        {/* Circle pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.25] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="circles-founder" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+            <circle cx="30" cy="30" r="12" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#circles-founder)" />
+        </svg>
         <div className="container px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
