@@ -40,24 +40,39 @@ export function useCleanerServiceAreas() {
   const { user, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: cleanerProfile } = useQuery({
+  const fetchCleanerProfile = async () => {
+    if (!user?.id) return null;
+
+    const { data, error } = await supabase
+      .from("cleaner_profiles")
+      .select("id, travel_radius_km")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  };
+
+  const getCleanerProfileOrThrow = async () => {
+    const profile = await fetchCleanerProfile();
+
+    if (!profile?.id) {
+      throw new Error("Cleaner profile not found");
+    }
+
+    return profile;
+  };
+
+  const cleanerProfileQuery = useQuery({
     queryKey: ["cleaner-profile", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from("cleaner_profiles")
-        .select("id, travel_radius_km")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
+    queryFn: fetchCleanerProfile,
     enabled: !!user?.id && !authLoading,
   });
 
+  const cleanerProfile = cleanerProfileQuery.data;
   const cleanerId = cleanerProfile?.id;
 
-  const { data: serviceAreas = [], isLoading } = useQuery({
+  const serviceAreasQuery = useQuery({
     queryKey: ["cleaner-service-areas", cleanerId],
     queryFn: async () => {
       if (!cleanerId) return [];
@@ -69,31 +84,33 @@ export function useCleanerServiceAreas() {
       if (error) throw error;
       return data as CleanerServiceArea[];
     },
-    enabled: !!cleanerId,
+    enabled: !!cleanerId && !cleanerProfileQuery.isLoading,
   });
 
   const addServiceArea = useMutation({
     mutationFn: async (input: Omit<CleanerServiceArea, "id" | "cleaner_id" | "created_at">) => {
-      if (!cleanerId) throw new Error("No cleaner profile");
+      const profile = cleanerProfile?.id ? cleanerProfile : await getCleanerProfileOrThrow();
+
       const { data, error } = await supabase
         .from("cleaner_service_areas")
-        .insert({ ...input, cleaner_id: cleanerId })
+        .insert({ ...input, cleaner_id: profile.id })
         .select()
         .single();
       if (error) throw error;
 
-      // Also update the cleaner profile's lat/lng if we have coordinates
-      if (input.latitude && input.longitude) {
-        await supabase
+      if (input.latitude != null && input.longitude != null) {
+        const { error: profileError } = await supabase
           .from("cleaner_profiles")
           .update({ latitude: input.latitude, longitude: input.longitude })
-          .eq("id", cleanerId);
+          .eq("id", profile.id);
+
+        if (profileError) throw profileError;
       }
 
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cleaner-service-areas", cleanerId] });
+      queryClient.invalidateQueries({ queryKey: ["cleaner-service-areas"] });
       queryClient.invalidateQueries({ queryKey: ["cleaner-profile", user?.id] });
       toast.success("Service area added");
     },
@@ -108,7 +125,7 @@ export function useCleanerServiceAreas() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cleaner-service-areas", cleanerId] });
+      queryClient.invalidateQueries({ queryKey: ["cleaner-service-areas"] });
       toast.success("Service area removed");
     },
     onError: (error) => {
@@ -118,11 +135,12 @@ export function useCleanerServiceAreas() {
 
   const updateTravelRadius = useMutation({
     mutationFn: async (radiusKm: number) => {
-      if (!cleanerId) throw new Error("No cleaner profile");
+      const profile = cleanerProfile?.id ? cleanerProfile : await getCleanerProfileOrThrow();
+
       const { error } = await supabase
         .from("cleaner_profiles")
         .update({ travel_radius_km: radiusKm })
-        .eq("id", cleanerId);
+        .eq("id", profile.id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -135,8 +153,8 @@ export function useCleanerServiceAreas() {
   });
 
   return {
-    serviceAreas,
-    isLoading,
+    serviceAreas: serviceAreasQuery.data ?? [],
+    isLoading: authLoading || cleanerProfileQuery.isLoading || serviceAreasQuery.isLoading,
     travelRadius: cleanerProfile?.travel_radius_km,
     addServiceArea,
     removeServiceArea,
