@@ -36,11 +36,20 @@ function getRadiusColor(r: number) {
 
 export default function CleanerServiceAreas() {
   const { toast } = useToast();
+  const { profile } = useCleanerProfile();
   const {
     serviceAreas, isLoading,
     addServiceArea, removeServiceArea,
     travelRadius, updateTravelRadius
   } = useCleanerServiceAreas();
+
+  // Determine map center: cleaner profile coords > first service area coords > default Austin
+  const mapLat = profile?.latitude
+    ?? serviceAreas.find(a => a.latitude)?.latitude
+    ?? 30.2672;
+  const mapLng = profile?.longitude
+    ?? serviceAreas.find(a => a.longitude)?.longitude
+    ?? -97.7431;
 
   const isAdding   = addServiceArea.isPending;
   const isRemoving = removeServiceArea.isPending;
