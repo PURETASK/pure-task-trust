@@ -14,7 +14,7 @@ import {
   Save, Radio
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import RadiusMap from "@/components/booking/RadiusMap";
+import RadiusMap, { type MapZone } from "@/components/booking/RadiusMap";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 
 function getRadiusLabel(r: number) {
@@ -107,6 +107,16 @@ export default function CleanerServiceAreas() {
   };
 
   const rc = getRadiusColor(globalRadius);
+
+  // Build zones from saved service areas that have coordinates
+  const savedZones: MapZone[] = serviceAreas
+    .filter(a => a.latitude != null && a.longitude != null)
+    .map(a => ({
+      lat: a.latitude!,
+      lng: a.longitude!,
+      radiusMiles: a.radius_miles || 10,
+      label: a.city && a.state ? `${a.city}, ${a.state}` : a.zip_code ? `ZIP ${a.zip_code}` : "Saved Zone",
+    }));
 
   return (
     <CleanerLayout>
@@ -226,7 +236,7 @@ export default function CleanerServiceAreas() {
                   <Label className="text-xs text-muted-foreground">Coverage preview — shaded area = your {globalRadius}-mile zone</Label>
                 </div>
                 <div className={`rounded-2xl overflow-hidden border-2 ${rc.border}`} style={{ height: 280 }}>
-                  <RadiusMap lat={mapLat} lng={mapLng} radiusMiles={globalRadius} className="h-full" />
+                  <RadiusMap lat={mapLat} lng={mapLng} radiusMiles={globalRadius} zones={savedZones} className="h-full" />
                 </div>
               </div>
 

@@ -2,8 +2,15 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+export interface MapZone {
+  lat: number;
+  lng: number;
+  radiusMiles: number;
+  label?: string;
+}
+
 interface RadiusMapProps {
-  /** Centre of the circle. Defaults to a US central point when not yet geocoded. */
+  /** Centre of the primary circle. Defaults to a US central point when not yet geocoded. */
   lat?: number;
   lng?: number;
   /** Radius in miles */
@@ -12,6 +19,8 @@ interface RadiusMapProps {
   className?: string;
   /** Dark overlay for onboarding dark backgrounds */
   dark?: boolean;
+  /** Additional saved zones to display on the map */
+  zones?: MapZone[];
 }
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -21,7 +30,6 @@ const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">Open
 const MILES_TO_METRES = 1609.344;
 
 function radiusToZoom(radiusMiles: number): number {
-  // approximate: zoom so the circle fills ~60% of the viewport
   if (radiusMiles <= 5) return 12;
   if (radiusMiles <= 10) return 11;
   if (radiusMiles <= 20) return 10;
@@ -30,16 +38,18 @@ function radiusToZoom(radiusMiles: number): number {
 }
 
 export default function RadiusMap({
-  lat = 30.2672,  // Austin, TX as default
+  lat = 30.2672,
   lng = -97.7431,
   radiusMiles,
   className = 'h-64',
   dark = false,
+  zones = [],
 }: RadiusMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const circleRef = useRef<L.Circle | null>(null);
   const markerRef = useRef<L.CircleMarker | null>(null);
+  const zoneLayersRef = useRef<L.LayerGroup | null>(null);
 
   // Fix Leaflet default icon paths under Vite
   useEffect(() => {
@@ -92,16 +102,19 @@ export default function RadiusMap({
     }).addTo(map);
     markerRef.current = marker;
 
+    zoneLayersRef.current = L.layerGroup().addTo(map);
+
     return () => {
       map.remove();
       mapRef.current = null;
       circleRef.current = null;
       markerRef.current = null;
+      zoneLayersRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update circle radius & zoom when radiusMiles changes
+  // Update circle radius & position when props change
   useEffect(() => {
     const map = mapRef.current;
     const circle = circleRef.current;
@@ -110,9 +123,56 @@ export default function RadiusMap({
 
     const radiusMetres = radiusMiles * MILES_TO_METRES;
     circle.setRadius(radiusMetres);
-    map.setView([lat, lng], radiusToZoom(radiusMiles), { animate: true });
+    circle.setLatLng([lat, lng]);
     marker.setLatLng([lat, lng]);
-  }, [radiusMiles, lat, lng]);
+
+    // If zones exist, fit bounds to include all zones + primary circle
+    if (zones.length > 0) {
+      const allBounds = L.latLngBounds([L.latLng(lat, lng)]);
+      allBounds.extend(circle.getBounds());
+      zones.forEach(z => {
+        const zBounds = L.latLng(z.lat, z.lng).toBounds(z.radiusMiles * MILES_TO_METRES * 2);
+        allBounds.extend(zBounds);
+      });
+      map.fitBounds(allBounds, { padding: [30, 30], animate: true });
+    } else {
+      map.setView([lat, lng], radiusToZoom(radiusMiles), { animate: true });
+    }
+  }, [radiusMiles, lat, lng, zones]);
+
+  // Render additional saved zones
+  useEffect(() => {
+    const layerGroup = zoneLayersRef.current;
+    if (!layerGroup) return;
+
+    layerGroup.clearLayers();
+
+    zones.forEach(zone => {
+      const radiusMetres = zone.radiusMiles * MILES_TO_METRES;
+
+      L.circle([zone.lat, zone.lng], {
+        radius: radiusMetres,
+        color: 'hsl(145,65%,47%)',
+        fillColor: 'hsl(145,65%,47%)',
+        fillOpacity: 0.10,
+        weight: 2,
+        opacity: 0.6,
+        dashArray: '6 4',
+      }).addTo(layerGroup);
+
+      const dot = L.circleMarker([zone.lat, zone.lng], {
+        radius: 5,
+        color: 'hsl(145,65%,47%)',
+        fillColor: 'hsl(145,65%,47%)',
+        fillOpacity: 1,
+        weight: 2,
+      }).addTo(layerGroup);
+
+      if (zone.label) {
+        dot.bindTooltip(zone.label, { permanent: false, direction: 'top' });
+      }
+    });
+  }, [zones]);
 
   return (
     <div
