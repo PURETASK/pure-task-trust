@@ -63,7 +63,7 @@ const VALUES = [
 
 export default function AboutUs() {
   return (
-    <main className="bg-background overflow-x-hidden">
+    <main className="bg-background overflow-x-hidden relative">
       <SEO
         title="About PureTask – The Trust-First Cleaning Marketplace"
         description="PureTask was founded by Nathan Chiaratti, a former cleaner who saw the industry's broken trust and built a better way — for both clients and cleaners."
