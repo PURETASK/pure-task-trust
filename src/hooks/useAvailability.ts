@@ -218,7 +218,7 @@ export function useTimeOff() {
 }
 
 export function useBlackoutPeriods() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
 
   const { data: blackouts, isLoading } = useQuery({
