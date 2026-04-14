@@ -226,7 +226,7 @@ export default function CleanerServiceAreas() {
                   <Label className="text-xs text-muted-foreground">Coverage preview — shaded area = your {globalRadius}-mile zone</Label>
                 </div>
                 <div className={`rounded-2xl overflow-hidden border-2 ${rc.border}`} style={{ height: 280 }}>
-                  <RadiusMap radiusMiles={globalRadius} className="h-full" />
+                  <RadiusMap lat={mapLat} lng={mapLng} radiusMiles={globalRadius} className="h-full" />
                 </div>
               </div>
 
