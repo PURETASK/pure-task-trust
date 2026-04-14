@@ -145,7 +145,7 @@ function BlockRow({ block, onUpdate, onDelete }: {
 }
 
 export function AvailabilityEditor() {
-  const { blocksByDay, isLoading, addBlock, updateBlock, deleteBlock, DAYS_OF_WEEK } = useAvailabilityBlocks();
+  const { blocksByDay, isLoading, addBlock, updateBlock, deleteBlock, DAYS_OF_WEEK, profileReady } = useAvailabilityBlocks();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newBlock, setNewBlock] = useState({
     day_of_week: 0,
