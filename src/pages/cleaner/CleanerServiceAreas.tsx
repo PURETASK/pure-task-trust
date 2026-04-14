@@ -38,7 +38,7 @@ export default function CleanerServiceAreas() {
   const { toast } = useToast();
   const { profile } = useCleanerProfile();
   const {
-    serviceAreas, isLoading,
+    serviceAreas, isLoading, hasCleanerProfile,
     addServiceArea, removeServiceArea,
     travelRadius, updateTravelRadius
   } = useCleanerServiceAreas();
@@ -266,11 +266,13 @@ export default function CleanerServiceAreas() {
                     : "bg-muted/60 text-muted-foreground hover:bg-muted border-0"
                 }`}
                 onClick={handleSaveAll}
-                disabled={isLoading || isSavingRadius || isAdding || (!radiusDirty && !city.trim() && !zipCode.trim())}
+                disabled={isLoading || !hasCleanerProfile || isSavingRadius || isAdding || (!radiusDirty && !city.trim() && !zipCode.trim())}
               >
                 {(isLoading || isSavingRadius || isAdding)
                   ? <><Loader2 className="h-4 w-4 animate-spin" />{isLoading ? "Loading profile…" : "Saving…"}</>
-                  : <><Save className="h-4 w-4" />{(radiusDirty || city.trim() || zipCode.trim()) ? "Save Service Area" : "Saved ✓"}</>
+                  : !hasCleanerProfile
+                    ? <><Save className="h-4 w-4" />Cleaner profile missing</>
+                    : <><Save className="h-4 w-4" />{(radiusDirty || city.trim() || zipCode.trim()) ? "Save Service Area" : "Saved ✓"}</>
                 }
               </Button>
             </div>
