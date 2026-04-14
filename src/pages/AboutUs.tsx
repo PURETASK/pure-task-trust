@@ -75,14 +75,14 @@ export default function AboutUs() {
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'About Us', url: '/about' }]} />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden min-h-[60vh] flex items-center bg-gradient-to-br from-primary/5 via-background to-success/5">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.08),transparent_60%)]" />
-        {/* Cute floating blobs */}
-        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-success/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-[hsl(var(--pt-aqua)/0.06)] rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center bg-gradient-to-br from-primary/10 via-background to-success/10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.15),transparent_60%)]" />
+        {/* Floating blobs */}
+        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-success/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-[hsl(var(--pt-aqua)/0.15)] rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
         {/* Sparkle dots */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-[0.35] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
           <pattern id="sparkles-hero" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
             <circle cx="40" cy="40" r="1.5" fill="hsl(var(--primary))" />
             <circle cx="10" cy="10" r="1" fill="hsl(var(--success))" />
