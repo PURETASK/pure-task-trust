@@ -207,7 +207,16 @@ export default function AboutUs() {
       </section>
 
       {/* ── WHAT WE BUILT ────────────────────────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background relative overflow-hidden">
+        {/* Cute diamond pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.06] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="diamonds-solution" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M30 5 L55 30 L30 55 L5 30 Z" fill="none" stroke="hsl(var(--success))" strokeWidth="0.8" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#diamonds-solution)" />
+        </svg>
+        <div className="absolute top-1/4 -left-10 w-60 h-60 bg-success/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-10 w-72 h-72 bg-primary/4 rounded-full blur-3xl" />
         <div className="container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <Badge className="mb-4 bg-success/10 border-success/20 text-success hover:bg-success/10">
