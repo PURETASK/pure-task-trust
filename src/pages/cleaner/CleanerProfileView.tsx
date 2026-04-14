@@ -163,6 +163,18 @@ export default function CleanerProfileView() {
           </div>
         </motion.div>
 
+        {/* ── PROFILE TABS: Public Performance vs Private Settings ── */}
+        <Tabs defaultValue="performance" className="space-y-5">
+          <TabsList className="w-full grid grid-cols-2 h-auto p-1">
+            <TabsTrigger value="performance" className="text-sm py-2.5 gap-1.5 data-[state=active]:bg-success/10 data-[state=active]:text-success">
+              <TrendingUp className="h-4 w-4" /> Performance & Public
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="text-sm py-2.5 gap-1.5">
+              <Settings className="h-4 w-4" /> Account Settings
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="performance" className="space-y-5">
         {/* ── STATS ROW ── */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <div className="grid grid-cols-4 gap-3">
