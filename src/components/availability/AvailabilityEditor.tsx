@@ -262,7 +262,7 @@ export function AvailabilityEditor() {
               <Button
                 onClick={handleAddBlock}
                 className="w-full rounded-xl h-11 font-bold border-2 border-primary"
-                disabled={addBlock.isPending || newBlock.end_time <= newBlock.start_time}
+                disabled={addBlock.isPending || newBlock.end_time <= newBlock.start_time || !profileReady}
               >
                 {addBlock.isPending ? "Saving…" : "Save Hours"}
               </Button>
