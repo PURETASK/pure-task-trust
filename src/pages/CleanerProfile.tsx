@@ -124,6 +124,264 @@ function StarRow({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }
   );
 }
 
+// ── Inline Booking Section ────────────────────────────────────────────────────
+function InlineBookingSection({ cleaner }: { cleaner: any }) {
+  const navigate = useNavigate();
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const [serviceType, setServiceType] = useState("basic");
+  const [time, setTime] = useState("9:00 AM");
+  const [hours, setHours] = useState("3");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zip, setZip] = useState("");
+  const [beds, setBeds] = useState("1");
+  const [baths, setBaths] = useState("1");
+  const [sqft, setSqft] = useState("1000");
+  const [homeType, setHomeType] = useState("apartment");
+  const [pets, setPets] = useState("no");
+  const [parking, setParking] = useState("");
+  const [entry, setEntry] = useState("");
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+
+  const calendarDays = useMemo(() => {
+    const days: (number | null)[] = [];
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(i);
+    return days;
+  }, [firstDay, daysInMonth]);
+
+  const isToday = (day: number) => {
+    return day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+  };
+  const isPast = (day: number) => {
+    const d = new Date(currentYear, currentMonth, day);
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    return d < t;
+  };
+  const isSelected = (day: number) => {
+    if (!selectedDate) return false;
+    return day === selectedDate.getDate() && currentMonth === selectedDate.getMonth() && currentYear === selectedDate.getFullYear();
+  };
+
+  const prevMonth = () => {
+    if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); }
+    else setCurrentMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); }
+    else setCurrentMonth(m => m + 1);
+  };
+
+  const serviceRates: Record<string, number> = {
+    basic: cleaner.hourlyRate || 25,
+    deep: Math.round((cleaner.hourlyRate || 25) * 1.5),
+    moveout: Math.round((cleaner.hourlyRate || 25) * 1.8),
+  };
+  const rate = serviceRates[serviceType] || cleaner.hourlyRate || 25;
+  const total = rate * parseInt(hours);
+
+  const handleBook = () => {
+    const params = new URLSearchParams({
+      cleaner: cleaner.id,
+      ...(selectedDate && { date: selectedDate.toISOString().split("T")[0] }),
+      service: serviceType,
+      hours,
+    });
+    navigate(`/book?${params.toString()}`);
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Calendar */}
+        <Card className="rounded-2xl border-border/60 overflow-hidden">
+          <div className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
+            <button onClick={prevMonth} className="p-1 hover:bg-primary-foreground/10 rounded-lg transition-colors">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <h3 className="font-bold text-lg">{monthNames[currentMonth]} {currentYear}</h3>
+            <button onClick={nextMonth} className="p-1 hover:bg-primary-foreground/10 rounded-lg transition-colors">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+          <CardContent className="p-4">
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {dayNames.map(d => (
+                <div key={d} className="text-center text-xs font-semibold text-muted-foreground py-1">{d}</div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {calendarDays.map((day, i) => (
+                <button
+                  key={i}
+                  disabled={day === null || isPast(day)}
+                  onClick={() => day && setSelectedDate(new Date(currentYear, currentMonth, day))}
+                  className={`
+                    h-10 rounded-lg text-sm font-medium transition-all
+                    ${day === null ? "invisible" : ""}
+                    ${day && isPast(day) ? "text-muted-foreground/30 cursor-not-allowed" : ""}
+                    ${day && isSelected(day) ? "bg-primary text-primary-foreground shadow-md" : ""}
+                    ${day && isToday(day) && !isSelected(day) ? "bg-primary/10 text-primary font-bold" : ""}
+                    ${day && !isPast(day) && !isSelected(day) && !isToday(day) ? "hover:bg-muted text-foreground" : ""}
+                  `}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
+            {/* Legend */}
+            <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-primary" /> Basic Clean</span>
+              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-warning" /> Deep Clean</span>
+              <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--pt-purple))]" /> Move-Out</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Booking Form */}
+        <Card className="rounded-2xl border-border/60 overflow-hidden">
+          <div className="bg-primary text-primary-foreground p-4 flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            <h3 className="font-bold text-lg">Book Your Cleaning</h3>
+          </div>
+          <CardContent className="p-4 space-y-4">
+            <div>
+              <Label className="text-sm font-semibold">Service Type</Label>
+              <Select value={serviceType} onValueChange={setServiceType}>
+                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="basic">Basic Clean (${serviceRates.basic}/hr)</SelectItem>
+                  <SelectItem value="deep">Deep Clean (${serviceRates.deep}/hr)</SelectItem>
+                  <SelectItem value="moveout">Move-Out (${serviceRates.moveout}/hr)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-sm font-semibold">Date</Label>
+                <Input className="mt-1" value={selectedDate ? selectedDate.toISOString().split("T")[0] : ""} placeholder="Select on calendar" readOnly />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold">Time</Label>
+                <Select value={time} onValueChange={setTime}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"].map(t => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-semibold">Hours Needed</Label>
+              <Select value={hours} onValueChange={setHours}>
+                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["2", "3", "4", "5", "6", "7", "8"].map(h => (
+                    <SelectItem key={h} value={h}>{h} hours</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-semibold">Your Address <span className="text-destructive">*</span></Label>
+              <Input className="mt-1" placeholder="Start typing your address..." value={address} onChange={e => setAddress(e.target.value)} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-sm font-semibold">City</Label>
+                <Input className="mt-1" placeholder="City" value={city} onChange={e => setCity(e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold">Zip Code</Label>
+                <Input className="mt-1" placeholder="12345" value={zip} onChange={e => setZip(e.target.value)} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <Label className="text-sm font-semibold flex items-center gap-1"><Home className="h-3 w-3" /> Beds</Label>
+                <Input className="mt-1" type="number" min={1} value={beds} onChange={e => setBeds(e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold flex items-center gap-1"><Bath className="h-3 w-3" /> Baths</Label>
+                <Input className="mt-1" type="number" min={1} value={baths} onChange={e => setBaths(e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold flex items-center gap-1"><Maximize className="h-3 w-3" /> Sq Ft</Label>
+                <Input className="mt-1" type="number" min={100} value={sqft} onChange={e => setSqft(e.target.value)} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-sm font-semibold">Home Type</Label>
+                <Select value={homeType} onValueChange={setHomeType}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="apartment">Apartment</SelectItem>
+                    <SelectItem value="house">House</SelectItem>
+                    <SelectItem value="condo">Condo</SelectItem>
+                    <SelectItem value="townhouse">Townhouse</SelectItem>
+                    <SelectItem value="studio">Studio</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-sm font-semibold">Pets?</Label>
+                <Select value={pets} onValueChange={setPets}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-semibold">Parking Instructions</Label>
+              <Textarea className="mt-1" placeholder="Where should the cleaner park?" value={parking} onChange={e => setParking(e.target.value)} rows={2} />
+            </div>
+
+            <div>
+              <Label className="text-sm font-semibold">Entry Instructions</Label>
+              <Textarea className="mt-1" placeholder="How should the cleaner enter?" value={entry} onChange={e => setEntry(e.target.value)} rows={2} />
+            </div>
+
+            {/* Estimated Total */}
+            <div className="flex items-center justify-between pt-3 border-t border-border">
+              <div>
+                <p className="text-sm font-semibold text-muted-foreground">Estimated Total:</p>
+                <p className="text-xs text-muted-foreground">{hours} hours × ${rate}/hr</p>
+              </div>
+              <p className="text-3xl font-black">${total}</p>
+            </div>
+
+            <Button onClick={handleBook} className="w-full h-12 rounded-2xl font-bold text-base gap-2">
+              <CheckCircle className="h-5 w-5" /> Request Booking
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </motion.div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function CleanerProfile() {
   const { id } = useParams<{ id: string }>();
