@@ -39,20 +39,15 @@ function getHeroState(jobs: CleanerJobWithClient[], hasNewOffers?: boolean, rece
   // Check for in-progress job
   const inProgress = jobs.find(j => j.status === "in_progress");
   if (inProgress) {
-    // Determine sub-state based on photos/checkin
     return { state: "in_progress", job: inProgress };
   }
 
-  // Check for "on_way" status
-  const onWay = jobs.find(j => j.status === "on_my_way" || j.status === "on_way");
-  if (onWay) return { state: "drive_now", job: onWay };
-
-  // Check for new offers (requested status)
-  const offers = jobs.filter(j => j.status === "requested");
+  // Check for new offers (pending status)
+  const offers = jobs.filter(j => j.status === "pending" || j.status === "created");
   if (offers.length > 0 || hasNewOffers) return { state: "new_offer", job: offers[0] };
 
-  // Check for awaiting approval (completed but not approved)
-  const awaitingApproval = jobs.find(j => j.status === "completed" || j.status === "awaiting_approval");
+  // Check for awaiting approval (completed)
+  const awaitingApproval = jobs.find(j => j.status === "completed");
   if (awaitingApproval) return { state: "awaiting_approval", job: awaitingApproval };
 
   // Check for upcoming confirmed job
