@@ -7,7 +7,7 @@ import { SEO, JsonLdGraph, BreadcrumbSchema } from "@/components/seo";
 import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
 import { TestimonialsCarousel } from "@/components/social-proof";
 import { CleaningRequestForm } from "@/components/home/CleaningRequestForm";
-import heroImg from "@/assets/hero-landing.jpg";
+import heroImg from "@/assets/spring-cleaning-hero.png";
 import {
   Shield, Camera, MapPin, Lock, ArrowRight,
   CheckCircle, Calendar, Users, Heart, Quote,
