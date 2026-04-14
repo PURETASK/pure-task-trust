@@ -38,7 +38,7 @@ export interface BlackoutPeriod {
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export function useAvailabilityBlocks() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading: profileLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
 
   const { data: blocks, isLoading } = useQuery({
@@ -130,7 +130,8 @@ export function useAvailabilityBlocks() {
   return {
     blocks,
     blocksByDay,
-    isLoading,
+    isLoading: isLoading || profileLoading,
+    profileReady: !!profile?.id,
     addBlock,
     updateBlock,
     deleteBlock,

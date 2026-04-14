@@ -145,7 +145,7 @@ function BlockRow({ block, onUpdate, onDelete }: {
 }
 
 export function AvailabilityEditor() {
-  const { blocksByDay, isLoading, addBlock, updateBlock, deleteBlock, DAYS_OF_WEEK } = useAvailabilityBlocks();
+  const { blocksByDay, isLoading, addBlock, updateBlock, deleteBlock, DAYS_OF_WEEK, profileReady } = useAvailabilityBlocks();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newBlock, setNewBlock] = useState({
     day_of_week: 0,
@@ -262,7 +262,7 @@ export function AvailabilityEditor() {
               <Button
                 onClick={handleAddBlock}
                 className="w-full rounded-xl h-11 font-bold border-2 border-primary"
-                disabled={addBlock.isPending || newBlock.end_time <= newBlock.start_time}
+                disabled={addBlock.isPending || newBlock.end_time <= newBlock.start_time || !profileReady}
               >
                 {addBlock.isPending ? "Saving…" : "Save Hours"}
               </Button>
