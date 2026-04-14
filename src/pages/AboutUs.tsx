@@ -81,14 +81,18 @@ export default function AboutUs() {
         <div className="absolute top-10 left-10 w-72 h-72 bg-primary/15 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-success/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-[hsl(var(--pt-aqua)/0.15)] rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
-        {/* Sparkle dots */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.35] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="sparkles-hero" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            <circle cx="40" cy="40" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="10" cy="10" r="1" fill="hsl(var(--success))" />
-            <circle cx="70" cy="20" r="1" fill="hsl(var(--primary))" />
+        {/* Floating bubbles */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.20] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="bubbles-hero" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <circle cx="25" cy="25" r="10" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.8" />
+            <circle cx="25" cy="25" r="3" fill="hsl(var(--primary))" opacity="0.15" />
+            <circle cx="70" cy="60" r="14" fill="none" stroke="hsl(var(--success))" strokeWidth="0.6" />
+            <circle cx="70" cy="60" r="5" fill="hsl(var(--success))" opacity="0.1" />
+            <circle cx="50" cy="90" r="6" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+            <circle cx="85" cy="15" r="8" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.7" />
+            <circle cx="85" cy="15" r="2" fill="hsl(var(--primary))" opacity="0.12" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#sparkles-hero)" />
+          <rect width="100%" height="100%" fill="url(#bubbles-hero)" />
         </svg>
         <div className="relative container px-4 sm:px-6 py-24">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center">
@@ -120,12 +124,17 @@ export default function AboutUs() {
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/15 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-success/12 rounded-full blur-3xl" />
-        {/* Circle pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.25] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="circles-founder" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-            <circle cx="30" cy="30" r="12" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+        {/* Spray droplet pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="spray-founder" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <circle cx="20" cy="50" r="3" fill="hsl(var(--primary))" opacity="0.3" />
+            <circle cx="40" cy="20" r="2" fill="hsl(var(--primary))" opacity="0.25" />
+            <circle cx="60" cy="55" r="4" fill="hsl(var(--primary))" opacity="0.2" />
+            <circle cx="35" cy="70" r="2.5" fill="hsl(var(--success))" opacity="0.2" />
+            <circle cx="70" cy="30" r="1.5" fill="hsl(var(--primary))" opacity="0.35" />
+            <circle cx="15" cy="25" r="1.8" fill="hsl(var(--success))" opacity="0.25" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#circles-founder)" />
+          <rect width="100%" height="100%" fill="url(#spray-founder)" />
         </svg>
         <div className="container px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
@@ -175,12 +184,18 @@ export default function AboutUs() {
 
       {/* ── THE PROBLEMS ─────────────────────────────────────────────────── */}
       <section className="py-24 bg-muted/30 relative overflow-hidden">
-        {/* Wavy pattern background */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="waves-problem" x="0" y="0" width="120" height="60" patternUnits="userSpaceOnUse">
-            <path d="M0 30 Q30 0 60 30 Q90 60 120 30" fill="none" stroke="hsl(var(--destructive))" strokeWidth="1.5" />
+        {/* Dust / grime specks pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="dust-problem" x="0" y="0" width="90" height="90" patternUnits="userSpaceOnUse">
+            <circle cx="15" cy="30" r="3" fill="hsl(var(--destructive))" opacity="0.3" />
+            <circle cx="50" cy="15" r="5" fill="hsl(var(--warning))" opacity="0.15" />
+            <circle cx="75" cy="60" r="4" fill="hsl(var(--destructive))" opacity="0.2" />
+            <circle cx="30" cy="70" r="6" fill="hsl(var(--warning))" opacity="0.1" />
+            <circle cx="65" cy="35" r="2" fill="hsl(var(--destructive))" opacity="0.25" />
+            <path d="M10 80 Q20 75 25 85" fill="none" stroke="hsl(var(--destructive))" strokeWidth="0.8" opacity="0.2" />
+            <path d="M60 80 Q70 70 80 78" fill="none" stroke="hsl(var(--warning))" strokeWidth="0.6" opacity="0.15" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#waves-problem)" />
+          <rect width="100%" height="100%" fill="url(#dust-problem)" />
         </svg>
         <div className="absolute top-10 right-20 w-48 h-48 bg-destructive/12 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-56 h-56 bg-warning/12 rounded-full blur-3xl" />
@@ -214,12 +229,19 @@ export default function AboutUs() {
 
       {/* ── WHAT WE BUILT ────────────────────────────────────────────────── */}
       <section className="py-24 bg-background relative overflow-hidden">
-        {/* Cute diamond pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.2] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="diamonds-solution" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M30 5 L55 30 L30 55 L5 30 Z" fill="none" stroke="hsl(var(--success))" strokeWidth="0.8" />
+        {/* Sparkle-clean stars pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="sparkle-clean" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            {/* 4-point sparkle */}
+            <path d="M40 28 L42 38 L52 40 L42 42 L40 52 L38 42 L28 40 L38 38 Z" fill="none" stroke="hsl(var(--success))" strokeWidth="0.8" />
+            <circle cx="40" cy="40" r="1.5" fill="hsl(var(--success))" opacity="0.3" />
+            {/* Small sparkle */}
+            <path d="M15 15 L16 19 L20 20 L16 21 L15 25 L14 21 L10 20 L14 19 Z" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+            {/* Tiny bubble */}
+            <circle cx="65" cy="65" r="5" fill="none" stroke="hsl(var(--success))" strokeWidth="0.5" />
+            <circle cx="65" cy="65" r="1.5" fill="hsl(var(--success))" opacity="0.15" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#diamonds-solution)" />
+          <rect width="100%" height="100%" fill="url(#sparkle-clean)" />
         </svg>
         <div className="absolute top-1/4 -left-10 w-60 h-60 bg-success/15 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 -right-10 w-72 h-72 bg-primary/12 rounded-full blur-3xl" />
@@ -254,12 +276,17 @@ export default function AboutUs() {
 
       {/* ── TWO SIDES ─────────────────────────────────────────────────────── */}
       <section className="py-24 bg-muted/30 relative overflow-hidden">
-        {/* Heart pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="hearts-two-sides" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <path d="M50 30 C50 20 40 15 35 20 C30 25 30 35 50 50 C70 35 70 25 65 20 C60 15 50 20 50 30Z" fill="hsl(var(--primary))" opacity="0.4" />
+        {/* Soap suds / foam pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="suds-sides" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+            <circle cx="30" cy="30" r="16" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.6" />
+            <circle cx="50" cy="25" r="12" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+            <circle cx="40" cy="45" r="10" fill="none" stroke="hsl(var(--success))" strokeWidth="0.5" />
+            <circle cx="85" cy="80" r="14" fill="none" stroke="hsl(var(--success))" strokeWidth="0.6" />
+            <circle cx="100" cy="70" r="10" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+            <circle cx="90" cy="95" r="8" fill="none" stroke="hsl(var(--success))" strokeWidth="0.4" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#hearts-two-sides)" />
+          <rect width="100%" height="100%" fill="url(#suds-sides)" />
         </svg>
         <div className="absolute -top-10 left-1/4 w-64 h-64 bg-primary/15 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 right-1/4 w-56 h-56 bg-success/12 rounded-full blur-3xl" />
@@ -317,12 +344,15 @@ export default function AboutUs() {
 
       {/* ── VALUES ────────────────────────────────────────────────────────── */}
       <section className="py-24 bg-background relative overflow-hidden">
-        {/* Star pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="stars-values" x="0" y="0" width="90" height="90" patternUnits="userSpaceOnUse">
-            <polygon points="45,10 50,35 75,35 55,50 62,75 45,60 28,75 35,50 15,35 40,35" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.6" />
+        {/* Water ripple rings pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.14] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="ripples-values" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <circle cx="50" cy="50" r="8" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+            <circle cx="50" cy="50" r="16" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+            <circle cx="50" cy="50" r="24" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.3" />
+            <circle cx="50" cy="50" r="1.5" fill="hsl(var(--primary))" opacity="0.25" />
           </pattern>
-          <rect width="100%" height="100%" fill="url(#stars-values)" />
+          <rect width="100%" height="100%" fill="url(#ripples-values)" />
         </svg>
         <div className="absolute top-0 right-0 w-80 h-80 bg-[hsl(var(--pt-purple)/0.12)] rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-60 h-60 bg-warning/12 rounded-full blur-3xl" />
