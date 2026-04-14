@@ -419,6 +419,9 @@ export default function CleanerProfile() {
           </motion.div>
         )}
 
+        {/* ── INLINE BOOKING FORM + CALENDAR ────────────────────────── */}
+        <InlineBookingSection cleaner={cleaner} />
+
         {/* ── RELIABILITY RINGS ─────────────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div className="bg-card border border-border/60 rounded-2xl p-5 sm:p-6">
