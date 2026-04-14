@@ -134,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         options: {
+          emailRedirectTo: window.location.origin,
           data: {
             role,
             full_name: fullName || email.split('@')[0],
