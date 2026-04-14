@@ -110,11 +110,11 @@ export default function Index() {
 
       {/* ── HERO ──────────────────────────────────────────────────────── */}
       <section className="relative min-h-[90dvh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0 flex items-end justify-center">
+        <div className="absolute inset-0 z-0">
           <img
             src={heroImg}
             alt="Pristine clean home"
-            className="w-[70%] h-[70%] object-cover object-top"
+            className="w-full h-full object-contain object-right-bottom"
             loading="eager" fetchPriority="high" decoding="sync"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
