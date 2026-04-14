@@ -14,7 +14,7 @@ import {
   Save, Radio
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import RadiusMap from "@/components/booking/RadiusMap";
+import RadiusMap, { type MapZone } from "@/components/booking/RadiusMap";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 
 function getRadiusLabel(r: number) {
