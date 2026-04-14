@@ -65,6 +65,14 @@ const STEPS = [
 ];
 
 export default function Index() {
+  const { user, isAuthenticated, isLoading } = useAuth();
+
+  // Redirect authenticated users to their role-appropriate dashboard
+  if (!isLoading && isAuthenticated && user) {
+    const dest = user.role === 'admin' ? '/admin/hub' : user.role === 'cleaner' ? '/cleaner/dashboard' : '/home';
+    return <Navigate to={dest} replace />;
+  }
+
   return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
