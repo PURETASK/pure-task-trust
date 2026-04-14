@@ -77,6 +77,19 @@ export default function AboutUs() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[60vh] flex items-center bg-gradient-to-br from-primary/5 via-background to-success/5">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.08),transparent_60%)]" />
+        {/* Cute floating blobs */}
+        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-success/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-[hsl(var(--pt-aqua)/0.06)] rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+        {/* Sparkle dots */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <pattern id="sparkles-hero" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <circle cx="40" cy="40" r="1.5" fill="hsl(var(--primary))" />
+            <circle cx="10" cy="10" r="1" fill="hsl(var(--success))" />
+            <circle cx="70" cy="20" r="1" fill="hsl(var(--primary))" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#sparkles-hero)" />
+        </svg>
         <div className="relative container px-4 sm:px-6 py-24">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center">
             <Badge className="mb-5 bg-success/10 border-success/20 text-success">
