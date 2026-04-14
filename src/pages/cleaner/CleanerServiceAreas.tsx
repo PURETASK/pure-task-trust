@@ -266,10 +266,10 @@ export default function CleanerServiceAreas() {
                     : "bg-muted/60 text-muted-foreground hover:bg-muted border-0"
                 }`}
                 onClick={handleSaveAll}
-                disabled={isSavingRadius || isAdding || (!radiusDirty && !city.trim() && !zipCode.trim())}
+                disabled={isLoading || isSavingRadius || isAdding || (!radiusDirty && !city.trim() && !zipCode.trim())}
               >
-                {(isSavingRadius || isAdding)
-                  ? <><Loader2 className="h-4 w-4 animate-spin" />Saving…</>
+                {(isLoading || isSavingRadius || isAdding)
+                  ? <><Loader2 className="h-4 w-4 animate-spin" />{isLoading ? "Loading profile…" : "Saving…"}</>
                   : <><Save className="h-4 w-4" />{(radiusDirty || city.trim() || zipCode.trim()) ? "Save Service Area" : "Saved ✓"}</>
                 }
               </Button>
