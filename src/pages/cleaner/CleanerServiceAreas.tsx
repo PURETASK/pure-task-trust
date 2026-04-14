@@ -108,6 +108,16 @@ export default function CleanerServiceAreas() {
 
   const rc = getRadiusColor(globalRadius);
 
+  // Build zones from saved service areas that have coordinates
+  const savedZones: MapZone[] = serviceAreas
+    .filter(a => a.latitude != null && a.longitude != null)
+    .map(a => ({
+      lat: a.latitude!,
+      lng: a.longitude!,
+      radiusMiles: a.radius_miles || 10,
+      label: a.city && a.state ? `${a.city}, ${a.state}` : a.zip_code ? `ZIP ${a.zip_code}` : "Saved Zone",
+    }));
+
   return (
     <CleanerLayout>
       <div className="space-y-6 max-w-3xl">
