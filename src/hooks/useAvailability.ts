@@ -211,7 +211,7 @@ export function useTimeOff() {
     timeOffRequests,
     upcomingTimeOff,
     pastTimeOff,
-    isLoading,
+    isLoading: isLoading || profileLoading,
     addTimeOff,
     deleteTimeOff,
   };
