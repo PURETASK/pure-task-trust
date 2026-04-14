@@ -117,7 +117,10 @@ export default function AboutUs() {
       </section>
 
       {/* ── FOUNDER ──────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background relative overflow-hidden">
+        {/* Soft corner blobs */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/4 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-success/4 rounded-full blur-3xl" />
         <div className="container px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
