@@ -282,7 +282,7 @@ export function useBlackoutPeriods() {
 
   return {
     blackouts,
-    isLoading,
+    isLoading: isLoading || profileLoading,
     addBlackout,
     deleteBlackout,
   };
