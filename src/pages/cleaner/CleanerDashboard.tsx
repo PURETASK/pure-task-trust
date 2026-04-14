@@ -91,9 +91,8 @@ export default function CleanerDashboard() {
 
       <CleanerLayout>
         <div className="space-y-5 sm:space-y-8">
-
-          {/* Today's job */}
-          <TodayJobBanner jobs={jobs} />
+          {/* Dynamic Hero — changes based on job state */}
+          <DynamicHeroCard jobs={jobs} />
 
           {/* Stats Grid */}
           <section>
