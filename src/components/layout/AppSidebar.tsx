@@ -51,32 +51,6 @@ const guestNavGroups: NavGroup[] = [
     ]
   },
   {
-    group: "Use Cases",
-    items: [
-      { title: "Airbnb Hosts", url: "/for-airbnb-hosts", icon: MapPinHouse, badge: "Popular" },
-      { title: "Families", url: "/for-families", icon: HeartHandshake },
-      { title: "Professionals", url: "/for-professionals", icon: BriefcaseBusiness },
-      { title: "Retirees", url: "/for-retirees", icon: Trophy },
-    ]
-  },
-  {
-    group: "Services",
-    items: [
-      { title: "Residential Cleaning", url: "/residential-cleaning", icon: House },
-      { title: "Deep Cleaning", url: "/deep-cleaning", icon: Sparkles },
-      { title: "Move-Out Cleaning", url: "/move-out-cleaning", icon: PackageSearch },
-      { title: "Recurring Cleaning", url: "/recurring-cleaning", icon: Repeat2 },
-    ]
-  },
-  {
-    group: "Resources",
-    items: [
-      { title: "Cleaning Scope", url: "/cleaning-scope", icon: ClipboardList },
-      { title: "Cancellation Policy", url: "/cancellationpolicy", icon: AlertTriangle },
-      { title: "Reliability Score", url: "/reliability-score", icon: Gauge },
-    ]
-  },
-  {
     group: "Support",
     items: [
       { title: "Help Center", url: "/help", icon: CircleHelp },
