@@ -335,24 +335,17 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
                     disabled={past || blacked}
                     onClick={() => setSelectedDate(new Date(currentYear, currentMonth, day))}
                     className={`
-                      relative h-10 rounded-lg text-sm font-medium transition-all
-                      ${past ? "text-muted-foreground/30 cursor-not-allowed" : ""}
-                      ${blacked && !past ? "bg-destructive/10 text-destructive/40 cursor-not-allowed line-through" : ""}
-                      ${selected ? "bg-primary text-primary-foreground shadow-md" : ""}
-                      ${todayDay && !selected ? "bg-primary/10 text-primary font-bold ring-2 ring-primary/30" : ""}
-                      ${available && !selected && !todayDay ? "bg-success/8 hover:bg-success/20 text-foreground" : ""}
-                      ${unavailable && !blacked && !selected ? "text-muted-foreground/50" : ""}
+                      relative h-10 rounded-lg text-sm font-medium transition-all border-2
+                      ${past ? "text-muted-foreground/30 cursor-not-allowed border-transparent" : ""}
+                      ${blacked && !past ? "border-destructive/50 text-destructive/40 cursor-not-allowed line-through bg-destructive/5" : ""}
+                      ${selected ? "bg-primary text-primary-foreground shadow-md border-primary" : ""}
+                      ${todayDay && !selected ? "border-primary text-primary font-bold bg-primary/5" : ""}
+                      ${booked && !selected && !blacked && !past ? "border-warning bg-warning/5 hover:bg-warning/10 text-foreground" : ""}
+                      ${available && !selected && !todayDay && !booked && !blacked && !past ? "border-success bg-success/5 hover:bg-success/10 text-foreground" : ""}
+                      ${unavailable && !blacked && !selected && !past ? "border-transparent text-muted-foreground/50" : ""}
                     `}
                   >
                     {day}
-                    {/* Availability dot */}
-                    {!past && !selected && available && !blacked && (
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-success" />
-                    )}
-                    {/* Booked dot */}
-                    {booked && !selected && (
-                      <span className="absolute top-0.5 right-1 h-1.5 w-1.5 rounded-full bg-warning" />
-                    )}
                   </button>
                 );
               })}
@@ -360,16 +353,16 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
             {/* Legend */}
             <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-success" /> Available
+                <span className="h-3 w-3 rounded border-2 border-success bg-success/10" /> Available
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-warning" /> Has Booking
+                <span className="h-3 w-3 rounded border-2 border-warning bg-warning/10" /> Has Booking
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-destructive/40" /> Unavailable
+                <span className="h-3 w-3 rounded border-2 border-destructive/50 bg-destructive/5" /> Unavailable
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded ring-2 ring-primary/30 bg-primary/10" /> Today
+                <span className="h-3 w-3 rounded border-2 border-primary bg-primary/5" /> Today
               </span>
             </div>
           </CardContent>
