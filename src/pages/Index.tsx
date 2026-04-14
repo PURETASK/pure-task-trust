@@ -64,6 +64,7 @@ const STEPS = [
 ];
 
 export default function Index() {
+  const { useAuth } = require('@/contexts/AuthContext');
   return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
