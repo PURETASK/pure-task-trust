@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +7,6 @@ import { SEO, JsonLdGraph, BreadcrumbSchema } from "@/components/seo";
 import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
 import { TestimonialsCarousel } from "@/components/social-proof";
 import { CleaningRequestForm } from "@/components/home/CleaningRequestForm";
-import { useAuth } from "@/contexts/AuthContext";
 import heroImg from "@/assets/spring-cleaning-hero.png";
 import {
   Shield, Camera, MapPin, Lock, ArrowRight,
@@ -29,6 +28,43 @@ const WHY_SAFER = [
     desc: "Before & after photos, GPS timestamps, and real-time status updates — no black box.",
     color: "text-primary",
     bg: "bg-primary/10",
+    borderColor: "hsl(var(--primary))",
+  },
+  {
+    icon: Lock,
+    title: "Your money stays protected",
+    desc: "Credits are held in escrow and only released when you approve the work. Disputes keep your funds safe.",
+    color: "text-success",
+    bg: "bg-success/10",
+    borderColor: "hsl(var(--success))",
+  },
+  {
+    icon: Fingerprint,
+    title: "Every cleaner is vetted",
+    desc: "Comprehensive background checks, identity verification, and annual renewals — before they ever enter your home.",
+    color: "text-[hsl(var(--pt-purple))]",
+    bg: "bg-[hsl(var(--pt-purple)/0.1)]",
+    borderColor: "hsl(var(--pt-purple))",
+  },
+  {
+    icon: Smartphone,
+    title: "Built with modern tech",
+    desc: "AI-powered matching, smart scheduling, and an app designed from the ground up — not bolted onto legacy systems.",
+    color: "text-warning",
+    bg: "bg-warning/10",
+    borderColor: "hsl(var(--warning))",
+  },
+];
+
+const STEPS = [
+  { step: "01", icon: Calendar, title: "Book in 60 seconds", desc: "Pick your cleaning type, hours, and date. That's it." },
+  { step: "02", icon: Users, title: "Get matched", desc: "We pair you with a verified cleaner based on your needs and location." },
+  { step: "03", icon: Camera, title: "They clean & document", desc: "GPS check-in, before & after photos — full transparency throughout." },
+  { step: "04", icon: Heart, title: "You approve & pay", desc: "Review the results. Payment releases only when you're satisfied." },
+];
+
+export default function Index() {
+  return (
     <main className="overflow-x-hidden">
       <SEO title="Verified House Cleaning Services" description="Book background-checked cleaners with GPS check-ins, photo proof, and escrow protection. Transparent pricing, no hidden fees. Book online in minutes." url="/" keywords="cleaning services, house cleaning, professional cleaners, background checked cleaners, verified cleaners" />
       <AggregateRatingSchema />
