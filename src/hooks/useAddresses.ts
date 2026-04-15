@@ -26,7 +26,7 @@ function normalizeAddressField(value?: string | null) {
   return value?.trim().replace(/\s+/g, ' ').toLowerCase() ?? '';
 }
 
-async function runWithTimeout<T>(operation: Promise<T>): Promise<T> {
+async function runWithTimeout<T>(operation: PromiseLike<T>): Promise<T> {
   let timeoutId: number | undefined;
 
   const timeoutPromise = new Promise<never>((_, reject) => {
@@ -36,9 +36,9 @@ async function runWithTimeout<T>(operation: Promise<T>): Promise<T> {
   });
 
   try {
-    return await Promise.race([operation, timeoutPromise]);
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
   } finally {
-    if (timeoutId) {
+    if (timeoutId !== undefined) {
       window.clearTimeout(timeoutId);
     }
   }
