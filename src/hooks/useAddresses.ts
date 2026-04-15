@@ -86,24 +86,21 @@ export function useAddressActions() {
         created_at: createdAt,
       };
 
-      // If setting as default, unset other defaults first
+      // If setting as default, unset other defaults first (non-blocking)
       if (nextAddress.is_default) {
-        const { error: updateError } = await withTimeout(
-          supabase
+        try {
+          await supabase
             .from('addresses')
             .update({ is_default: false })
             .eq('user_id', user.id)
-            .is('deleted_at', null),
-          'Updating saved addresses'
-        );
-
-        if (updateError) {
+            .is('deleted_at', null);
+        } catch (updateError) {
           console.error('Failed to unset default addresses:', updateError);
+          // Continue anyway — inserting the new address is more important
         }
       }
 
-      const { error } = await withTimeout(
-        supabase.from('addresses').insert({
+      const { error } = await supabase.from('addresses').insert({
           id: nextAddress.id,
           user_id: nextAddress.user_id,
           label: nextAddress.label,
