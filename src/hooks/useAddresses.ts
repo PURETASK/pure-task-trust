@@ -3,26 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
-const ADDRESS_MUTATION_TIMEOUT_MS = 10000;
-
-function withTimeout<T>(promiseLike: PromiseLike<T>, action: string): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeoutId = window.setTimeout(() => {
-      reject(new Error(`${action} is taking too long. Please try again.`));
-    }, ADDRESS_MUTATION_TIMEOUT_MS);
-
-    Promise.resolve(promiseLike)
-      .then((result) => {
-        window.clearTimeout(timeoutId);
-        resolve(result);
-      })
-      .catch((error) => {
-        window.clearTimeout(timeoutId);
-        reject(error);
-      });
-  });
-}
-
 export interface Address {
   id: string;
   user_id: string;
