@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import RadiusMap, { type MapZone } from "@/components/booking/RadiusMap";
-import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 
 function getRadiusLabel(r: number) {
   if (r <= 5)  return "Hyper local";
@@ -36,18 +35,17 @@ function getRadiusColor(r: number) {
 
 export default function CleanerServiceAreas() {
   const { toast } = useToast();
-  const { profile } = useCleanerProfile();
   const {
-    serviceAreas, isLoading, hasCleanerProfile,
+    cleanerProfile, serviceAreas, isLoading, isServiceAreasLoading, hasCleanerProfile,
     addServiceArea, removeServiceArea,
     travelRadius, updateTravelRadius
   } = useCleanerServiceAreas();
 
   // Determine map center: cleaner profile coords > first service area coords > default Austin
-  const mapLat = profile?.latitude
+  const mapLat = cleanerProfile?.latitude
     ?? serviceAreas.find(a => a.latitude)?.latitude
     ?? 30.2672;
-  const mapLng = profile?.longitude
+  const mapLng = cleanerProfile?.longitude
     ?? serviceAreas.find(a => a.longitude)?.longitude
     ?? -97.7431;
 
@@ -280,7 +278,7 @@ export default function CleanerServiceAreas() {
         </motion.div>
 
         {/* ── YOUR SAVED ZONES ──────────────────────── */}
-        {!isLoading && serviceAreas.length > 0 && (
+        {!isServiceAreasLoading && serviceAreas.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
             <h2 className="font-bold text-lg flex items-center gap-2 mb-4">
               <MapPin className="h-5 w-5 text-primary" /> Saved Zones
@@ -338,7 +336,7 @@ export default function CleanerServiceAreas() {
           </motion.div>
         )}
 
-        {isLoading && (
+        {isServiceAreasLoading && (
           <div className="grid sm:grid-cols-2 gap-3">
             {[1, 2, 3].map(i => <Skeleton key={i} className="h-28 rounded-2xl" />)}
           </div>

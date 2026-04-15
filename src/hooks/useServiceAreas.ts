@@ -44,6 +44,7 @@ export function useCleanerServiceAreas() {
 
   const cleanerId = cleanerProfile?.id;
   const hasCleanerProfile = !!cleanerId;
+  const isProfileLoading = profileLoading && !cleanerProfile;
 
   const serviceAreasQuery = useQuery({
     queryKey: ["cleaner-service-areas", cleanerId],
@@ -126,8 +127,10 @@ export function useCleanerServiceAreas() {
   });
 
   return {
+    cleanerProfile: cleanerProfile ?? null,
     serviceAreas: serviceAreasQuery.data ?? [],
-    isLoading: profileLoading || (hasCleanerProfile && serviceAreasQuery.isLoading),
+    isLoading: isProfileLoading,
+    isServiceAreasLoading: hasCleanerProfile && serviceAreasQuery.isLoading,
     hasCleanerProfile,
     travelRadius: cleanerProfile?.travel_radius_km,
     addServiceArea,
