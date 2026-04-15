@@ -26,20 +26,21 @@ function normalizeAddressField(value?: string | null) {
   return value?.trim().replace(/\s+/g, ' ').toLowerCase() ?? '';
 }
 
-async function runWithAbortTimeout<T>(operation: (signal: AbortSignal) => Promise<T>): Promise<T> {
-  const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), ADDRESS_MUTATION_TIMEOUT_MS);
+async function runWithTimeout<T>(operation: Promise<T>): Promise<T> {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error('Address save timed out. Checking whether it still went through...'));
+    }, ADDRESS_MUTATION_TIMEOUT_MS);
+  });
 
   try {
-    return await operation(controller.signal);
-  } catch (error: any) {
-    if (error?.name === 'AbortError') {
-      throw new Error('Address save timed out. Checking whether it still went through...');
-    }
-
-    throw error;
+    return await Promise.race([operation, timeoutPromise]);
   } finally {
-    window.clearTimeout(timeoutId);
+    if (timeoutId) {
+      window.clearTimeout(timeoutId);
+    }
   }
 }
 
@@ -136,16 +137,16 @@ export function useAddressActions() {
       // If setting as default, unset other defaults first (non-blocking)
       if (insertPayload.is_default) {
         try {
-          await runWithAbortTimeout(async (signal) => {
-            const { error } = await supabase
+          await runWithTimeout(
+            supabase
               .from('addresses')
               .update({ is_default: false })
               .eq('user_id', user.id)
               .is('deleted_at', null)
-              .abortSignal(signal);
-
-            if (error) throw error;
-          });
+              .then(({ error }) => {
+                if (error) throw error;
+              })
+          );
         } catch (updateError) {
           console.error('Failed to unset default addresses:', updateError);
           // Continue anyway — inserting the new address is more important
@@ -153,18 +154,18 @@ export function useAddressActions() {
       }
 
       try {
-        const insertedAddress = await runWithAbortTimeout(async (signal) => {
-          const { data: insertedRow, error } = await supabase
+        const insertedAddress = await runWithTimeout(
+          supabase
             .from('addresses')
             .insert(insertPayload)
             .select(ADDRESS_SELECT_FIELDS)
             .single()
-            .abortSignal(signal);
+            .then(({ data: insertedRow, error }) => {
+              if (error) throw error;
 
-          if (error) throw error;
-
-          return insertedRow as Address;
-        });
+              return insertedRow as Address;
+            })
+        );
 
         return insertedAddress;
       } catch (error: any) {
