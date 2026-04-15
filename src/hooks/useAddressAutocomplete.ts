@@ -103,8 +103,6 @@ export function useAddressAutocomplete(query: string) {
           signal: abortControllerRef.current.signal,
           headers: {
             'Accept': 'application/json',
-            // Nominatim requires a User-Agent for API usage policy
-            'User-Agent': 'CleaningApp/1.0',
           },
         });
 
