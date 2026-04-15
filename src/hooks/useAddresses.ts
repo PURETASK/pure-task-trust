@@ -169,11 +169,15 @@ export function useAddressActions() {
 
         return insertedAddress;
       } catch (error: any) {
-        const recoveredAddress = await findMatchingAddress(data);
+        try {
+          const recoveredAddress = await runWithTimeout(findMatchingAddress(data));
 
-        if (recoveredAddress) {
-          console.warn('Address insert response timed out, but the row was created successfully.');
-          return recoveredAddress;
+          if (recoveredAddress) {
+            console.warn('Address insert response timed out, but the row was created successfully.');
+            return recoveredAddress;
+          }
+        } catch (recoveryError) {
+          console.error('Address recovery check failed:', recoveryError);
         }
 
         console.error('Address insert error:', error);
