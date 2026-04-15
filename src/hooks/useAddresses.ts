@@ -3,6 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
+const ADDRESS_SELECT_FIELDS = 'id, user_id, label, line1, line2, city, state, postal_code, country, is_default, lat, lng, created_at';
+const ADDRESS_MUTATION_TIMEOUT_MS = 8000;
+
 export interface Address {
   id: string;
   user_id: string;
@@ -17,6 +20,28 @@ export interface Address {
   lat: number | null;
   lng: number | null;
   created_at: string;
+}
+
+function normalizeAddressField(value?: string | null) {
+  return value?.trim().replace(/\s+/g, ' ').toLowerCase() ?? '';
+}
+
+async function runWithTimeout<T>(operation: PromiseLike<T>): Promise<T> {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error('Address save timed out. Checking whether it still went through...'));
+    }, ADDRESS_MUTATION_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+  }
 }
 
 export function useAddresses() {
@@ -64,14 +89,38 @@ export function useAddressActions() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const findMatchingAddress = async (criteria: CreateAddressData) => {
+    if (!user?.id) return null;
+
+    const { data, error } = await supabase
+      .from('addresses')
+      .select(ADDRESS_SELECT_FIELDS)
+      .eq('user_id', user.id)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error) {
+      throw error;
+    }
+
+    return (
+      (data as Address[] | null)?.find((address) => {
+        const sameLine1 = normalizeAddressField(address.line1) === normalizeAddressField(criteria.line1);
+        const sameCity = normalizeAddressField(address.city) === normalizeAddressField(criteria.city);
+        const sameState = normalizeAddressField(address.state) === normalizeAddressField(criteria.state);
+        const samePostalCode = normalizeAddressField(address.postal_code) === normalizeAddressField(criteria.postalCode);
+
+        return sameLine1 && sameCity && sameState && samePostalCode;
+      }) ?? null
+    );
+  };
+
   const createMutation = useMutation({
     mutationFn: async (data: CreateAddressData): Promise<Address> => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      const addressId = crypto.randomUUID();
-      const createdAt = new Date().toISOString();
-      const nextAddress: Address = {
-        id: addressId,
+      const insertPayload = {
         user_id: user.id,
         label: data.label || null,
         line1: data.line1,
@@ -83,45 +132,53 @@ export function useAddressActions() {
         is_default: Boolean(data.isDefault),
         lat: data.lat ?? null,
         lng: data.lng ?? null,
-        created_at: createdAt,
       };
 
       // If setting as default, unset other defaults first (non-blocking)
-      if (nextAddress.is_default) {
+      if (insertPayload.is_default) {
         try {
-          await supabase
-            .from('addresses')
-            .update({ is_default: false })
-            .eq('user_id', user.id)
-            .is('deleted_at', null);
+          await runWithTimeout(
+            supabase
+              .from('addresses')
+              .update({ is_default: false })
+              .eq('user_id', user.id)
+              .is('deleted_at', null)
+              .then(({ error }) => {
+                if (error) throw error;
+              })
+          );
         } catch (updateError) {
           console.error('Failed to unset default addresses:', updateError);
           // Continue anyway — inserting the new address is more important
         }
       }
 
-      const { error } = await supabase.from('addresses').insert({
-        id: nextAddress.id,
-        user_id: nextAddress.user_id,
-        label: nextAddress.label,
-        line1: nextAddress.line1,
-        line2: nextAddress.line2,
-        city: nextAddress.city,
-        state: nextAddress.state,
-        postal_code: nextAddress.postal_code,
-        country: nextAddress.country,
-        lat: nextAddress.lat,
-        lng: nextAddress.lng,
-        is_default: nextAddress.is_default,
-        created_at: nextAddress.created_at,
-      });
+      try {
+        const insertedAddress = await runWithTimeout(
+          supabase
+            .from('addresses')
+            .insert(insertPayload)
+            .select(ADDRESS_SELECT_FIELDS)
+            .single()
+            .then(({ data: insertedRow, error }) => {
+              if (error) throw error;
 
-      if (error) {
+              return insertedRow as Address;
+            })
+        );
+
+        return insertedAddress;
+      } catch (error: any) {
+        const recoveredAddress = await findMatchingAddress(data);
+
+        if (recoveredAddress) {
+          console.warn('Address insert response timed out, but the row was created successfully.');
+          return recoveredAddress;
+        }
+
         console.error('Address insert error:', error);
         throw error;
       }
-
-      return nextAddress;
     },
     onSuccess: (newAddress) => {
       toast({ title: 'Address Added' });
