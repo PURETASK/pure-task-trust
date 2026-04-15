@@ -32,6 +32,23 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
   });
 
   const canSave = newAddress.line1.trim().length > 0 && newAddress.city.trim().length > 0;
+  const shouldSetAsDefault = Array.isArray(addresses) && addresses.length === 0;
+
+  const buildLocalAddress = (): Address => ({
+    id: `temp-${Date.now()}`,
+    user_id: 'temporary-booking-address',
+    label: newAddress.label.trim() || null,
+    line1: newAddress.line1.trim(),
+    line2: null,
+    city: newAddress.city.trim(),
+    state: newAddress.state.trim() || null,
+    postal_code: newAddress.postalCode.trim() || null,
+    country: 'US',
+    is_default: false,
+    lat: newAddress.lat ?? null,
+    lng: newAddress.lng ?? null,
+    created_at: new Date().toISOString(),
+  });
 
   const handleAddAddress = async () => {
     if (!canSave) return;
@@ -46,7 +63,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
         postalCode: newAddress.postalCode.trim() || undefined,
         lat: newAddress.lat,
         lng: newAddress.lng,
-        isDefault: !addresses || addresses.length === 0,
+        isDefault: shouldSetAsDefault,
       });
 
       if (createdAddress) {
@@ -59,6 +76,19 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     } catch (error: any) {
       console.error('handleAddAddress error:', error);
       const msg = error?.message || 'Failed to save address. Please try again.';
+
+      if (msg.toLowerCase().includes('timed out')) {
+        const localAddress = buildLocalAddress();
+        onSelect(localAddress);
+        setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '', lat: undefined, lng: undefined });
+        setIsAddDialogOpen(false);
+        setSaveError(null);
+        toast.success('Using this address for your booking now', {
+          description: 'We could not save it to your account yet, but you can continue to the next step.',
+        });
+        return;
+      }
+
       setSaveError(msg);
       toast.error('Failed to save address', { description: msg });
     }
