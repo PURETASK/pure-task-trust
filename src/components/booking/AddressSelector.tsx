@@ -9,6 +9,7 @@ import { MapPin, Plus, Check, Star, Trash2, Loader2 } from 'lucide-react';
 import { AddressAutocompleteInput } from './AddressAutocompleteInput';
 import { AddressSuggestion } from '@/hooks/useAddressAutocomplete';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface AddressSelectorProps {
   selectedAddressId: string | undefined;
@@ -16,9 +17,10 @@ interface AddressSelectorProps {
 }
 
 export function AddressSelector({ selectedAddressId, onSelect }: AddressSelectorProps) {
-  const { data: addresses, isLoading, isFetching, isError } = useAddresses();
+  const { data: addresses, isLoading, isError } = useAddresses();
   const { createAddress, isCreating, deleteAddress, isDeleting } = useAddressActions();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [newAddress, setNewAddress] = useState({
     label: '',
     line1: '',
@@ -29,32 +31,49 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
     lng: undefined as number | undefined,
   });
 
+  const canSave = newAddress.line1.trim().length > 0 && newAddress.city.trim().length > 0;
+
   const handleAddAddress = async () => {
-    if (!newAddress.line1 || !newAddress.city) return;
-    
+    if (!canSave) return;
+    setSaveError(null);
+
     try {
       const createdAddress = await createAddress({
-        label: newAddress.label || undefined,
-        line1: newAddress.line1,
-        city: newAddress.city,
-        state: newAddress.state || undefined,
-        postalCode: newAddress.postalCode || undefined,
+        label: newAddress.label.trim() || undefined,
+        line1: newAddress.line1.trim(),
+        city: newAddress.city.trim(),
+        state: newAddress.state.trim() || undefined,
+        postalCode: newAddress.postalCode.trim() || undefined,
         lat: newAddress.lat,
         lng: newAddress.lng,
         isDefault: !addresses || addresses.length === 0,
       });
-      
-      // Auto-select the newly created address
+
       if (createdAddress) {
         onSelect(createdAddress as Address);
       }
-      
+
       setNewAddress({ label: '', line1: '', city: '', state: '', postalCode: '', lat: undefined, lng: undefined });
       setIsAddDialogOpen(false);
-    } catch (error) {
+      setSaveError(null);
+    } catch (error: any) {
       console.error('handleAddAddress error:', error);
-      // Error toast is handled in the hook, but ensure dialog stays open so user can retry
+      const msg = error?.message || 'Failed to save address. Please try again.';
+      setSaveError(msg);
+      toast.error('Failed to save address', { description: msg });
     }
+  };
+
+  const handleAutocompleteSelect = (suggestion: AddressSuggestion) => {
+    setNewAddress((prev) => ({
+      ...prev,
+      line1: suggestion.line1 || prev.line1,
+      city: suggestion.city || prev.city,
+      state: suggestion.state || prev.state,
+      postalCode: suggestion.postalCode || prev.postalCode,
+      lat: suggestion.lat,
+      lng: suggestion.lng,
+    }));
   };
 
   const showLoading = isLoading && !isError && !addresses;
@@ -136,7 +155,10 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
       )}
 
       {/* Add New Address Dialog */}
-      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+      <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
+        setIsAddDialogOpen(open);
+        if (!open) setSaveError(null);
+      }}>
         <DialogTrigger asChild>
           <Button variant="outline" className="w-full">
             <Plus className="h-4 w-4 mr-2" />
@@ -158,34 +180,30 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
               />
             </div>
             <div>
-              <Label htmlFor="line1">Street Address *</Label>
+              <Label htmlFor="line1">Street Address <span className="text-destructive">*</span></Label>
               <AddressAutocompleteInput
                 id="line1"
                 value={newAddress.line1}
                 onChange={(value) => setNewAddress((prev) => ({ ...prev, line1: value, lat: undefined, lng: undefined }))}
-                onSelect={(suggestion: AddressSuggestion) => {
-                  setNewAddress((prev) => ({
-                    ...prev,
-                    line1: suggestion.line1,
-                    city: suggestion.city,
-                    state: suggestion.state,
-                    postalCode: suggestion.postalCode,
-                    lat: suggestion.lat,
-                    lng: suggestion.lng,
-                  }));
-                }}
+                onSelect={handleAutocompleteSelect}
                 placeholder="Start typing an address..."
               />
+              {newAddress.line1.length > 0 && newAddress.line1.trim().length === 0 && (
+                <p className="text-xs text-destructive mt-1">Street address is required</p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="city">City *</Label>
+                <Label htmlFor="city">City <span className="text-destructive">*</span></Label>
                 <Input
                   id="city"
                   placeholder="City"
                   value={newAddress.city}
                   onChange={(e) => setNewAddress((prev) => ({ ...prev, city: e.target.value }))}
                 />
+                {!newAddress.city.trim() && newAddress.line1.trim().length > 0 && (
+                  <p className="text-xs text-destructive mt-1">City is required</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="state">State</Label>
@@ -206,10 +224,15 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                 onChange={(e) => setNewAddress((prev) => ({ ...prev, postalCode: e.target.value }))}
               />
             </div>
+
+            {saveError && (
+              <p className="text-sm text-destructive bg-destructive/10 rounded-md p-3">{saveError}</p>
+            )}
+
             <Button
               className="w-full"
               onClick={handleAddAddress}
-              disabled={!newAddress.line1 || !newAddress.city || isCreating}
+              disabled={!canSave || isCreating}
             >
               {isCreating ? (
                 <>
@@ -220,6 +243,12 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                 'Save Address'
               )}
             </Button>
+
+            {!canSave && (newAddress.line1.length > 0 || newAddress.city.length > 0) && (
+              <p className="text-xs text-muted-foreground text-center">
+                Please fill in both street address and city to save.
+              </p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
