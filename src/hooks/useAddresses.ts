@@ -3,26 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
-const ADDRESS_MUTATION_TIMEOUT_MS = 10000;
-
-function withTimeout<T>(promiseLike: PromiseLike<T>, action: string): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeoutId = window.setTimeout(() => {
-      reject(new Error(`${action} is taking too long. Please try again.`));
-    }, ADDRESS_MUTATION_TIMEOUT_MS);
-
-    Promise.resolve(promiseLike)
-      .then((result) => {
-        window.clearTimeout(timeoutId);
-        resolve(result);
-      })
-      .catch((error) => {
-        window.clearTimeout(timeoutId);
-        reject(error);
-      });
-  });
-}
-
 export interface Address {
   id: string;
   user_id: string;
@@ -106,40 +86,35 @@ export function useAddressActions() {
         created_at: createdAt,
       };
 
-      // If setting as default, unset other defaults first
+      // If setting as default, unset other defaults first (non-blocking)
       if (nextAddress.is_default) {
-        const { error: updateError } = await withTimeout(
-          supabase
+        try {
+          await supabase
             .from('addresses')
             .update({ is_default: false })
             .eq('user_id', user.id)
-            .is('deleted_at', null),
-          'Updating saved addresses'
-        );
-
-        if (updateError) {
+            .is('deleted_at', null);
+        } catch (updateError) {
           console.error('Failed to unset default addresses:', updateError);
+          // Continue anyway — inserting the new address is more important
         }
       }
 
-      const { error } = await withTimeout(
-        supabase.from('addresses').insert({
-          id: nextAddress.id,
-          user_id: nextAddress.user_id,
-          label: nextAddress.label,
-          line1: nextAddress.line1,
-          line2: nextAddress.line2,
-          city: nextAddress.city,
-          state: nextAddress.state,
-          postal_code: nextAddress.postal_code,
-          country: nextAddress.country,
-          lat: nextAddress.lat,
-          lng: nextAddress.lng,
-          is_default: nextAddress.is_default,
-          created_at: nextAddress.created_at,
-        }),
-        'Saving address'
-      );
+      const { error } = await supabase.from('addresses').insert({
+        id: nextAddress.id,
+        user_id: nextAddress.user_id,
+        label: nextAddress.label,
+        line1: nextAddress.line1,
+        line2: nextAddress.line2,
+        city: nextAddress.city,
+        state: nextAddress.state,
+        postal_code: nextAddress.postal_code,
+        country: nextAddress.country,
+        lat: nextAddress.lat,
+        lng: nextAddress.lng,
+        is_default: nextAddress.is_default,
+        created_at: nextAddress.created_at,
+      });
 
       if (error) {
         console.error('Address insert error:', error);
