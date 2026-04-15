@@ -36,6 +36,25 @@ export interface BlackoutPeriod {
 }
 
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const AVAILABILITY_QUERY_TIMEOUT_MS = 8000;
+
+async function withAvailabilityTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error(timeoutMessage));
+    }, AVAILABILITY_QUERY_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+  }
+}
 
 export function useAvailabilityBlocks() {
   const { profile, isLoading: profileLoading } = useCleanerProfile();
@@ -45,18 +64,22 @@ export function useAvailabilityBlocks() {
     queryKey: ['availability-blocks', profile?.id],
     queryFn: async () => {
       if (!profile?.id) return [];
-      
-      const { data, error } = await supabase
-        .from('availability_blocks')
-        .select('*')
-        .eq('cleaner_id', profile.id)
-        .order('day_of_week')
-        .order('start_time');
+
+      const { data, error } = await withAvailabilityTimeout(
+        supabase
+          .from('availability_blocks')
+          .select('*')
+          .eq('cleaner_id', profile.id)
+          .order('day_of_week')
+          .order('start_time'),
+        'Availability request timed out'
+      );
       
       if (error) throw error;
       return data as AvailabilityBlock[];
     },
     enabled: !!profile?.id,
+    retry: 1,
   });
 
   const addBlock = useMutation({
@@ -147,17 +170,21 @@ export function useTimeOff() {
     queryKey: ['time-off', profile?.id],
     queryFn: async () => {
       if (!profile?.id) return [];
-      
-      const { data, error } = await supabase
-        .from('cleaner_time_off')
-        .select('*')
-        .eq('cleaner_id', profile.id)
-        .order('start_date', { ascending: true });
+
+      const { data, error } = await withAvailabilityTimeout(
+        supabase
+          .from('cleaner_time_off')
+          .select('*')
+          .eq('cleaner_id', profile.id)
+          .order('start_date', { ascending: true }),
+        'Time off request timed out'
+      );
       
       if (error) throw error;
       return data as TimeOff[];
     },
     enabled: !!profile?.id,
+    retry: 1,
   });
 
   const addTimeOff = useMutation({
@@ -225,17 +252,21 @@ export function useBlackoutPeriods() {
     queryKey: ['blackout-periods', profile?.id],
     queryFn: async () => {
       if (!profile?.id) return [];
-      
-      const { data, error } = await supabase
-        .from('blackout_periods')
-        .select('*')
-        .eq('cleaner_id', profile.id)
-        .order('start_ts', { ascending: true });
+
+      const { data, error } = await withAvailabilityTimeout(
+        supabase
+          .from('blackout_periods')
+          .select('*')
+          .eq('cleaner_id', profile.id)
+          .order('start_ts', { ascending: true }),
+        'Blackout periods request timed out'
+      );
       
       if (error) throw error;
       return data as BlackoutPeriod[];
     },
     enabled: !!profile?.id,
+    retry: 1,
   });
 
   const addBlackout = useMutation({

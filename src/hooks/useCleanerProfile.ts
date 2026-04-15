@@ -7,6 +7,26 @@ import type { Database } from '@/integrations/supabase/types';
 type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
 type Job = Database['public']['Tables']['jobs']['Row'];
 
+const CLEANER_PROFILE_QUERY_TIMEOUT_MS = 8000;
+
+async function withQueryTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error(timeoutMessage));
+    }, CLEANER_PROFILE_QUERY_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+  }
+}
+
 export interface CleanerJobWithClient extends Job {
   client: {
     first_name: string | null;
@@ -22,11 +42,14 @@ export function useCleanerProfile() {
     queryFn: async () => {
       if (!user?.id) return null;
 
-      const { data, error } = await supabase
-        .from('cleaner_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      const { data, error } = await withQueryTimeout(
+        supabase
+          .from('cleaner_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle(),
+        'Cleaner profile request timed out'
+      );
 
       if (error) throw error;
       return data as CleanerProfile | null;
