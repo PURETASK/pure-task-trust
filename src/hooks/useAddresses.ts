@@ -101,22 +101,20 @@ export function useAddressActions() {
       }
 
       const { error } = await supabase.from('addresses').insert({
-          id: nextAddress.id,
-          user_id: nextAddress.user_id,
-          label: nextAddress.label,
-          line1: nextAddress.line1,
-          line2: nextAddress.line2,
-          city: nextAddress.city,
-          state: nextAddress.state,
-          postal_code: nextAddress.postal_code,
-          country: nextAddress.country,
-          lat: nextAddress.lat,
-          lng: nextAddress.lng,
-          is_default: nextAddress.is_default,
-          created_at: nextAddress.created_at,
-        }),
-        'Saving address'
-      );
+        id: nextAddress.id,
+        user_id: nextAddress.user_id,
+        label: nextAddress.label,
+        line1: nextAddress.line1,
+        line2: nextAddress.line2,
+        city: nextAddress.city,
+        state: nextAddress.state,
+        postal_code: nextAddress.postal_code,
+        country: nextAddress.country,
+        lat: nextAddress.lat,
+        lng: nextAddress.lng,
+        is_default: nextAddress.is_default,
+        created_at: nextAddress.created_at,
+      });
 
       if (error) {
         console.error('Address insert error:', error);
