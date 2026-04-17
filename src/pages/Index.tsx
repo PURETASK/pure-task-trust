@@ -9,7 +9,7 @@ import { AggregateRatingSchema } from "@/components/seo/AggregateRatingSchema";
 import { TestimonialsCarousel } from "@/components/social-proof";
 import { CleaningRequestForm } from "@/components/home/CleaningRequestForm";
 import heroImg from "@/assets/spring-cleaning-hero.png";
-import bubblesBg from "@/assets/reviews-bubbles-bg.png";
+import bubblesBg from "@/assets/home-sections-bg.jpg";
 import {
   Shield, Camera, MapPin, Lock, ArrowRight,
   CheckCircle, Calendar, Users, Heart, Quote,
