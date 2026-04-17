@@ -280,10 +280,6 @@ export default function Index() {
           </div>
         </div>
       </section>
-
-      {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
-      <CleaningRequestForm />
-
       {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24">
         <div className="container">
