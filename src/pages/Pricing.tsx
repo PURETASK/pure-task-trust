@@ -274,7 +274,7 @@ export default function Pricing() {
                 </Badge>
                 <h2 className="text-2xl sm:text-4xl font-bold mb-3">Keep More As You Grow</h2>
                 <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-                  Every cleaner starts at Bronze keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to Platinum where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
+                  Every cleaner starts as a Rising Pro keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to All-Star Expert where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
                 </p>
               </div>
 
