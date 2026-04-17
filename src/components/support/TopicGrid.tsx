@@ -42,16 +42,25 @@ export function TopicGrid({ role }: TopicGridProps) {
 
   const categories = Object.keys(byCategory);
 
+  // Cycle through brand colors used across the app
+  const PALETTE = [
+    { bg: "bg-[hsl(var(--pt-blue))]/10",   text: "text-[hsl(var(--pt-blue))]",   border: "border-[hsl(var(--pt-blue-deep))]",   hoverBg: "group-hover:bg-[hsl(var(--pt-blue))]" },
+    { bg: "bg-[hsl(var(--pt-green))]/10",  text: "text-[hsl(var(--pt-green))]",  border: "border-[hsl(var(--pt-green-deep))]",  hoverBg: "group-hover:bg-[hsl(var(--pt-green))]" },
+    { bg: "bg-[hsl(var(--pt-amber))]/10",  text: "text-[hsl(var(--pt-amber))]",  border: "border-[hsl(var(--pt-amber-deep))]",  hoverBg: "group-hover:bg-[hsl(var(--pt-amber))]" },
+    { bg: "bg-[hsl(var(--pt-purple))]/10", text: "text-[hsl(var(--pt-purple))]", border: "border-[hsl(var(--pt-purple-deep))]", hoverBg: "group-hover:bg-[hsl(var(--pt-purple))]" },
+  ];
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-      {categories.map(cat => {
+      {categories.map((cat, i) => {
         const Icon = ICONS[cat] || Sparkles;
         const items = byCategory[cat] || [];
+        const c = PALETTE[i % PALETTE.length];
         return (
           <Link to={`/help/category/${cat}`} key={cat}>
-            <Card className="p-4 h-full hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group">
+            <Card className={`p-4 h-full border-2 ${c.border} rounded-2xl hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group`}>
               <div className="flex items-start gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <div className={`h-10 w-10 rounded-xl ${c.bg} ${c.text} flex items-center justify-center ${c.hoverBg} group-hover:text-white transition-colors`}>
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
