@@ -115,7 +115,7 @@ export default function Wallet() {
         <motion.div {...fade(0)} className="mb-5 sm:mb-6">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="palette-icon palette-icon-blue h-10 w-10 sm:h-12 sm:w-12">
+              <div className="palette-icon palette-icon-green h-10 w-10 sm:h-12 sm:w-12">
                 <WalletIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
@@ -129,18 +129,18 @@ export default function Wallet() {
         {/* ── HERO BALANCE CARD ───────────────────────────────────────── */}
         <motion.div {...fade(0.05)}>
           <div
-            className="palette-card palette-card-blue mb-4 relative overflow-hidden"
+            className="palette-card palette-card-green mb-4 relative overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, hsl(var(--pt-blue)/0.20) 0%, hsl(var(--pt-blue)/0.08) 60%, hsl(var(--background)) 100%)",
-              boxShadow: "0 0 0 1px hsl(var(--pt-blue-deep)/0.15), 0 24px 60px -8px hsl(var(--pt-blue-deep)/0.20)",
+              background: "linear-gradient(135deg, hsl(var(--pt-green)/0.20) 0%, hsl(var(--pt-green)/0.08) 60%, hsl(var(--background)) 100%)",
+              boxShadow: "0 0 0 1px hsl(var(--pt-green-deep)/0.15), 0 24px 60px -8px hsl(var(--pt-green-deep)/0.20)",
             }}
           >
-            <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full blur-3xl pointer-events-none" style={{ background: "hsl(var(--pt-blue)/0.15)" }} />
+            <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full blur-3xl pointer-events-none" style={{ background: "hsl(var(--pt-green)/0.15)" }} />
 
             <div className="relative p-6 sm:p-8">
               {/* Available Balance */}
               <div className="flex items-center gap-2 mb-2">
-                <span className="palette-label-blue font-black text-xs uppercase tracking-widest">Available Balance</span>
+                <span className="palette-label-green font-black text-xs uppercase tracking-widest">Available Balance</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger><Info className="h-3 w-3 text-muted-foreground" /></TooltipTrigger>
@@ -153,10 +153,10 @@ export default function Wallet() {
                 <Skeleton className="h-16 w-48 rounded-2xl" />
               ) : (
                 <div className="flex items-end gap-1 leading-none mb-5">
-                  <span className="text-5xl sm:text-6xl font-black palette-label-blue tracking-tight">
+                  <span className="text-5xl sm:text-6xl font-black palette-label-green tracking-tight">
                     ${availableCredits.toFixed(0)}
                   </span>
-                  <span className="text-xl font-bold palette-label-blue opacity-50 mb-1.5">
+                  <span className="text-xl font-bold palette-label-green opacity-50 mb-1.5">
                     .{(availableCredits % 1).toFixed(2).slice(2)}
                   </span>
                 </div>
@@ -185,14 +185,24 @@ export default function Wallet() {
                       size="sm"
                       onClick={() => handleQuickTopUp(amt)}
                       disabled={isPurchasing}
-                      className="font-black h-10 rounded-xl border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                      className="font-black h-10 rounded-xl border-2 transition-all bg-background hover:text-white"
+                      style={{
+                        borderColor: "hsl(var(--pt-green-deep))",
+                        color: "hsl(var(--pt-green-deep))",
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "hsl(var(--pt-green-deep))"; e.currentTarget.style.color = "#fff"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; e.currentTarget.style.color = "hsl(var(--pt-green-deep))"; }}
                     >
                       ${amt}
                     </Button>
                   ))}
                 </div>
                 <Button
-                  className="w-full gap-2 h-11"
+                  className="w-full gap-2 h-11 text-white border-0"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--pt-green-deep)) 0%, hsl(var(--pt-green)) 100%)",
+                    boxShadow: "0 8px 24px -6px hsl(var(--pt-green-deep)/0.45)",
+                  }}
                   onClick={() => setBuyDialogOpen(true)}
                 >
                   <Plus className="h-4 w-4" />
