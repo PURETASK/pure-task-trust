@@ -38,18 +38,22 @@ export default function Reviews() {
   const ratingCounts = reviews?.reduce((acc, r) => { acc[r.rating] = (acc[r.rating] || 0) + 1; return acc; }, {} as Record<number, number>) || {};
 
   return (
-    <main className="min-h-screen bg-background">
+    <main
+      className="relative min-h-screen"
+      style={{
+        backgroundImage: `url(${reviewsHeroBg})`,
+        backgroundSize: '100% auto',
+        backgroundRepeat: 'repeat-y',
+        backgroundPosition: 'top center',
+      }}
+    >
+      <div className="absolute inset-0 bg-background/40 pointer-events-none" aria-hidden="true" />
+      <div className="relative">
       <SEO title="Customer Reviews" description="Read verified reviews from PureTask clients. See real ratings, honest feedback, and why thousands choose our background-checked cleaners again and again." url="/reviews" keywords="cleaning service reviews, PureTask reviews" />
       <AggregateRatingSchema />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${reviewsHeroBg})` }}
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-background/20" aria-hidden="true" />
         <div className="container relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto">
             {/* Badge — plain div to avoid framer-motion ref warning */}
@@ -89,12 +93,6 @@ export default function Reviews() {
 
       {/* Reviews Section */}
       <section className="relative py-16 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${reviewsBubblesBg})` }}
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-background/70" aria-hidden="true" />
         <div className="container relative">
           {/* Rating Distribution + Filter */}
           <div className="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-border/50">
@@ -180,6 +178,7 @@ export default function Reviews() {
           )}
         </div>
       </section>
+      </div>
     </main>
   );
 }
