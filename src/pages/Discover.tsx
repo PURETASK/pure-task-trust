@@ -301,32 +301,15 @@ export default function Discover() {
     } catch { toast({ title: "Error updating favourites", variant: "destructive" }); }
   };
 
-  // Show ZIP gate before anything else if no location yet
+  // Show ZIP gate as its own full-page experience before anything else
   if (!location) {
     return (
-      <main className="flex-1 bg-background min-h-screen">
+      <main className="flex-1 min-h-screen">
         <SEO
           title="Find Verified Cleaners Near You"
           description="Enter your ZIP code to find background-checked cleaners that serve your area."
           url="/discover"
         />
-        <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-12 sm:py-16">
-          <div className="absolute inset-0">
-            <img src={discoverBg} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[hsl(210,60%,10%)]" />
-          </div>
-          <div className="relative container px-4 sm:px-6 text-center">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
-              Find your perfect{" "}
-              <span className="bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] bg-clip-text text-transparent">
-                verified cleaner
-              </span>
-            </h1>
-            <p className="text-white/60 text-sm sm:text-base max-w-xl mx-auto">
-              Tell us where you are and we'll only show cleaners who serve your area.
-            </p>
-          </div>
-        </div>
         <ZipGate onResolved={handleResolved} />
       </main>
     );

@@ -254,8 +254,8 @@ const App = () => (
 
                     {/* Legacy redirects → new routes */}
                     <Route path="/dashboard" element={<Navigate to="/home" replace />} />
-                    <Route path="/discover" element={<Navigate to="/book" replace />} />
-                    <Route path="/favorites" element={<Navigate to="/book" replace />} />
+                    <Route path="/discover" element={<RequireClient><Discover /></RequireClient>} />
+                    <Route path="/favorites" element={<Navigate to="/discover" replace />} />
                     <Route path="/profile" element={<Navigate to="/account" replace />} />
                     <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
                     <Route path="/recurring-plans" element={<Navigate to="/my-cleanings" replace />} />
