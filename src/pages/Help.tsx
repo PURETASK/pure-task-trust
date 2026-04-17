@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Inbox, Mail, FileText } from "lucide-react";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { SEO } from "@/components/seo/SEO";
+import helpBg from "@/assets/help-bg.png";
 
 export default function Help() {
   const { user } = useAuth();
@@ -77,6 +78,7 @@ export default function Help() {
             </div>
           </div>
         </Card>
+        </div>
       </div>
     </>
   );
