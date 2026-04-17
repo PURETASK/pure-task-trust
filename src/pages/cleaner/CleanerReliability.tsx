@@ -37,25 +37,25 @@ const TIER_CONFIG: Record<string, {
   bronze:   {
     gradient: "from-[hsl(25,80%,20%)] via-[hsl(33,85%,28%)] to-[hsl(38,90%,32%)]",
     glow: "hsl(38,90%,45%)", ring: "hsl(38,90%,55%)", border: "border-[hsl(38,90%,45%)]/60",
-    label: "Bronze", emoji: "🥉", next: "Silver", nextScore: 50,
+    label: "Rising Pro", emoji: "📈", next: "Proven Specialist", nextScore: 50,
     tagBg: "bg-[hsl(38,90%,45%)]/20", tagText: "text-[hsl(38,90%,55%)]",
   },
   silver:   {
     gradient: "from-[hsl(220,15%,18%)] via-[hsl(220,15%,28%)] to-[hsl(220,20%,36%)]",
     glow: "hsl(220,15%,55%)", ring: "hsl(220,15%,65%)", border: "border-slate-400/60",
-    label: "Silver", emoji: "🥈", next: "Gold", nextScore: 70,
+    label: "Proven Specialist", emoji: "🛡️", next: "Top Performer", nextScore: 70,
     tagBg: "bg-slate-400/20", tagText: "text-slate-300",
   },
   gold:     {
     gradient: "from-[hsl(38,90%,22%)] via-[hsl(42,92%,30%)] to-[hsl(45,95%,38%)]",
     glow: "hsl(45,95%,55%)", ring: "hsl(45,95%,60%)", border: "border-warning/60",
-    label: "Gold", emoji: "🥇", next: "Platinum", nextScore: 90,
+    label: "Top Performer", emoji: "🏆", next: "All-Star Expert", nextScore: 90,
     tagBg: "bg-warning/20", tagText: "text-warning",
   },
   platinum: {
     gradient: "from-[hsl(280,65%,18%)] via-[hsl(280,68%,28%)] to-[hsl(280,70%,35%)]",
     glow: "hsl(280,70%,55%)", ring: "hsl(280,70%,65%)", border: "border-[hsl(280,70%,55%)]/60",
-    label: "Platinum", emoji: "💎", next: "", nextScore: 100,
+    label: "All-Star Expert", emoji: "⭐", next: "", nextScore: 100,
     tagBg: "bg-[hsl(280,70%,55%)]/20", tagText: "text-[hsl(280,70%,65%)]",
   },
 };
