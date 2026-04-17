@@ -183,7 +183,7 @@ function ChartCard({ data, currentScore, scoreDelta, hasHistory }: {
               <ReferenceLine y={90} stroke="hsl(var(--pt-purple)/0.4)" strokeDasharray="3 3"
                 label={{ value: "Plat", position: "insideTopRight", fontSize: 8, fill: "hsl(var(--muted-foreground))" }} />
               <ReferenceLine y={70} stroke="hsl(var(--warning)/0.4)" strokeDasharray="3 3"
-                label={{ value: "Gold", position: "insideTopRight", fontSize: 8, fill: "hsl(var(--muted-foreground))" }} />
+                label={{ value: "Top Performer", position: "insideTopRight", fontSize: 8, fill: "hsl(var(--muted-foreground))" }} />
               <ReferenceLine y={50} stroke="hsl(var(--muted-foreground)/0.4)" strokeDasharray="3 3"
                 label={{ value: "Silv", position: "insideTopRight", fontSize: 8, fill: "hsl(var(--muted-foreground))" }} />
 
