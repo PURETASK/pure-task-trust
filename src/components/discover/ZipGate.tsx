@@ -110,11 +110,11 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
     );
   }
 
-  // Full-page dedicated experience
+  // Full-page dedicated experience (rendered inside MainLayout's content area)
   return (
-    <div className="relative min-h-screen w-full overflow-y-auto">
-      {/* Background image */}
-      <div className="fixed inset-0 -z-10">
+    <div className="relative w-full min-h-[calc(100vh-4rem)] overflow-hidden isolate">
+      {/* Background image — absolute so it stays within this container */}
+      <div className="absolute inset-0 -z-10">
         <img
           src={zipGateBg}
           alt=""
@@ -122,11 +122,11 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
           loading="eager"
         />
         {/* Dark gradient overlay for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,60%,6%)]/85 via-[hsl(220,55%,8%)]/65 to-[hsl(220,60%,6%)]/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,60%,6%)]/85 via-[hsl(220,55%,8%)]/70 to-[hsl(220,60%,6%)]/95" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(220,60%,6%)/0.7_85%)]" />
       </div>
 
-      <div className="relative container mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col items-center justify-center min-h-screen">
+      <div className="relative w-full px-4 sm:px-6 py-10 sm:py-16 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
         {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
