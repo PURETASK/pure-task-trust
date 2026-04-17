@@ -28,6 +28,7 @@ import { FundingMethods } from "@/components/wallet/FundingMethods";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import walletBg from '@/assets/wallet-bg.png';
 
 const reasonLabels: Record<string, string> = {
   purchase: 'Credit Purchase', refund: 'Refund', job_payment: 'Job Payment', job_earned: 'Job Earned',
@@ -96,9 +97,19 @@ export default function Wallet() {
   };
 
   return (
-    <main className="flex-1 py-5 sm:py-10">
+    <main
+      className="flex-1 py-5 sm:py-10 relative bg-background"
+      style={{
+        backgroundImage: `url(${walletBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <Helmet><title>My Wallet & Credits | PureTask</title></Helmet>
-      <div className="container px-3 sm:px-4 lg:px-6 max-w-4xl">
+      <div className="absolute inset-0 bg-background/40 pointer-events-none" aria-hidden />
+      <div className="container px-3 sm:px-4 lg:px-6 max-w-4xl relative">
 
         {/* ── PAGE HEADER ─────────────────────────────────────────────── */}
         <motion.div {...fade(0)} className="mb-5 sm:mb-6">
