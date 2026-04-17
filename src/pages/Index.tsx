@@ -167,6 +167,19 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── SEAMLESS BUBBLES BG WRAPS EVERYTHING BELOW HERO ──────────── */}
+      <div
+        className="relative"
+        style={{
+          backgroundImage: `url(${bubblesBg})`,
+          backgroundSize: '100% auto',
+          backgroundRepeat: 'repeat-y',
+          backgroundPosition: 'top center',
+        }}
+      >
+        <div className="absolute inset-0 bg-background/55 pointer-events-none" aria-hidden="true" />
+        <div className="relative">
+
       {/* ── PROOF BAR ─────────────────────────────────────────────────── */}
       <section className="bg-primary py-5 sm:py-6">
         <div className="container">
@@ -187,17 +200,6 @@ export default function Index() {
       </section>
 
       {/* ── WHY PURETASK FEELS SAFER ──────────────────────────────────── */}
-      <div
-        className="relative"
-        style={{
-          backgroundImage: `url(${bubblesBg})`,
-          backgroundSize: '100% auto',
-          backgroundRepeat: 'repeat-y',
-          backgroundPosition: 'top center',
-        }}
-      >
-        <div className="absolute inset-0 bg-background/55 pointer-events-none" aria-hidden="true" />
-        <div className="relative">
       <section className="py-16 sm:py-24">
         <div className="container">
           <motion.div
@@ -244,13 +246,10 @@ export default function Index() {
           </div>
         </div>
       </section>
-        </div>
-      </div>
 
       {/* ── HOW IT WORKS — 4 STEPS ────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 relative" style={{ backgroundImage: 'url(/images/how-it-works-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="container relative z-10">
+      <section className="py-16 sm:py-24">
+        <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
@@ -285,18 +284,7 @@ export default function Index() {
       {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
       <CleaningRequestForm />
 
-      {/* ── TESTIMONIALS + FOUNDER + CTA (bubbles bg) ─────────────────── */}
-      <div
-        className="relative"
-        style={{
-          backgroundImage: `url(${bubblesBg})`,
-          backgroundSize: '100% auto',
-          backgroundRepeat: 'repeat-y',
-          backgroundPosition: 'top center',
-        }}
-      >
-        <div className="absolute inset-0 bg-background/55 pointer-events-none" aria-hidden="true" />
-        <div className="relative">
+      {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24">
         <div className="container">
           <motion.div
