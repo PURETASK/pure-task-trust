@@ -30,9 +30,13 @@ interface AISupportChatProps {
   contextPage?: string;
   contextBookingId?: string;
   compact?: boolean;
+  /** CSS variable name (without `--`) used to tint header, bubbles, and send button. e.g. "pt-blue" */
+  accentVar?: string;
 }
 
-export function AISupportChat({ contextPage, contextBookingId, compact }: AISupportChatProps) {
+export function AISupportChat({ contextPage, contextBookingId, compact, accentVar }: AISupportChatProps) {
+  const accent = accentVar ? `hsl(var(--${accentVar}))` : undefined;
+  const accentDeep = accentVar ? `hsl(var(--${accentVar}-deep))` : undefined;
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
