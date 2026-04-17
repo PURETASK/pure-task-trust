@@ -79,7 +79,7 @@ export default function Legal() {
       }}
     >
       <div className="absolute inset-0 bg-background/60 pointer-events-none" aria-hidden="true" />
-      <main className="container py-8 relative">
+      <main className="container py-6 sm:py-8 px-4 relative">
       <SEO 
         title="Terms of Service & Privacy Policy"
         description="Read PureTask's Privacy Policy, Terms of Service, Photo Consent, Cancellation, and Damage Claims policies. Updated and written in plain language."
@@ -90,43 +90,43 @@ export default function Legal() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <Scale className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mb-3 sm:mb-4">
+            <Scale className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold text-foreground mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 sm:mb-4">
             Legal Center
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto px-2">
             Your guide to PureTask policies, terms, and protections
           </p>
-          <Badge variant="secondary" className="mt-4">
+          <Badge variant="secondary" className="mt-3 sm:mt-4">
             Last updated: December 2024
           </Badge>
         </motion.div>
 
         {/* Quick Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12">
           {quickLinks.map((item, idx) => {
             const Icon = item.icon;
             const content = (
               <Card className="h-full hover:shadow-lg transition-all cursor-pointer border-border hover:border-primary/50">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-primary/10">
-                      <Icon className="w-6 h-6 text-primary" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="p-2.5 sm:p-3 rounded-xl bg-primary/10 flex-shrink-0">
+                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground mb-1">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-foreground mb-1 text-sm sm:text-base">
                         {item.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
                         {item.desc}
                       </p>
-                      <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
+                      <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-1">
                         Read More
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </span>
                     </div>
                   </div>
@@ -181,10 +181,10 @@ export default function Legal() {
         </div>
 
         {/* Tabbed Content Section */}
-        <Card className="mb-12">
+        <Card className="mb-8 sm:mb-12">
           {/* Tab Navigation */}
-          <div className="border-b border-border overflow-x-auto">
-            <div className="flex">
+          <div className="border-b border-border overflow-x-auto scrollbar-hide">
+            <div className="flex min-w-max">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -192,13 +192,13 @@ export default function Legal() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-6 py-4 font-semibold whitespace-nowrap transition-all border-b-2 ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-base font-semibold whitespace-nowrap transition-all border-b-2 ${
                       isActive 
                         ? 'border-primary text-primary bg-primary/5' 
                         : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                     {tab.label}
                   </button>
                 );
@@ -207,7 +207,7 @@ export default function Legal() {
           </div>
 
           {/* Tab Content */}
-          <CardContent className="p-6 md:p-8">
+          <CardContent className="p-4 sm:p-6 md:p-8">
             {activeTab === 'privacy' && <PrivacyContent />}
             {activeTab === 'terms' && <TermsContent />}
             {activeTab === 'photo' && <PhotoContent />}
