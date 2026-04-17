@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import reviewsHeroBg from "@/assets/reviews-hero-bg.png";
+import reviewsBubblesBg from "@/assets/reviews-bubbles-bg.png";
 
 interface Review { id: string; rating: number; review_text: string | null; created_at: string; }
 const RATINGS_FILTER = [5, 4, 3, 2, 1] as const;
@@ -48,7 +49,7 @@ export default function Reviews() {
           style={{ backgroundImage: `url(${reviewsHeroBg})` }}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-background/20" aria-hidden="true" />
         <div className="container relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto">
             {/* Badge — plain div to avoid framer-motion ref warning */}
@@ -87,8 +88,14 @@ export default function Reviews() {
       </section>
 
       {/* Reviews Section */}
-      <section className="py-16">
-        <div className="container">
+      <section className="relative py-16 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${reviewsBubblesBg})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-background/70" aria-hidden="true" />
+        <div className="container relative">
           {/* Rating Distribution + Filter */}
           <div className="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-border/50">
             <span className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5"><Filter className="h-4 w-4" />Filter:</span>
