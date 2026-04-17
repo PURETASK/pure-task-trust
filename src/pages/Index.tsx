@@ -187,7 +187,18 @@ export default function Index() {
       </section>
 
       {/* ── WHY PURETASK FEELS SAFER ──────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-background">
+      <div
+        className="relative"
+        style={{
+          backgroundImage: `url(${bubblesBg})`,
+          backgroundSize: '100% auto',
+          backgroundRepeat: 'repeat-y',
+          backgroundPosition: 'top center',
+        }}
+      >
+        <div className="absolute inset-0 bg-background/55 pointer-events-none" aria-hidden="true" />
+        <div className="relative">
+      <section className="py-16 sm:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -273,7 +284,7 @@ export default function Index() {
       <CleaningRequestForm />
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-background">
+      <section className="py-16 sm:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -289,7 +300,7 @@ export default function Index() {
       </section>
 
       {/* ── FOUNDER NOTE ──────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-muted/30">
+      <section className="py-16 sm:py-24">
         <div className="container max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -310,7 +321,7 @@ export default function Index() {
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-[hsl(var(--pt-aqua)/0.05)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-[hsl(var(--pt-aqua)/0.05)]" />
         <div className="container relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-4 sm:mb-6">
@@ -336,6 +347,8 @@ export default function Index() {
           </motion.div>
         </div>
       </section>
+        </div>
+      </div>
     </main>
   );
 }
