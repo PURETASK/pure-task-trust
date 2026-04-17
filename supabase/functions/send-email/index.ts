@@ -315,6 +315,36 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Authentication: require service-role JWT or internal function secret.
+    // This prevents anonymous abuse of the email-sending endpoint.
+    const authHeader = req.headers.get("Authorization") || "";
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+    const internalSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+    const providedInternal = req.headers.get("x-internal-secret");
+
+    let authorized = false;
+
+    if (internalSecret && providedInternal && providedInternal === internalSecret) {
+      authorized = true;
+    } else if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1] || ""));
+        if (payload?.role === "service_role") {
+          authorized = true;
+        }
+      } catch (_e) {
+        // invalid token format
+      }
+    }
+
+    if (!authorized) {
+      console.warn("send-email: unauthorized request rejected");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
     
     if (!sendgridApiKey) {

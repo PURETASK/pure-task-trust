@@ -46,6 +46,16 @@ serve(async (req) => {
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
+    // Ownership check: ensure the session belongs to the authenticated user
+    const sessionUserId = session.metadata?.user_id;
+    if (!sessionUserId || sessionUserId !== user.id) {
+      console.warn("[VERIFY-PAYMENT] Session ownership mismatch", { sessionUserId, userId: user.id });
+      return new Response(
+        JSON.stringify({ error: "Session does not belong to this user" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     if (session.payment_status !== "paid") {
       console.log("[VERIFY-PAYMENT] Payment not completed:", session.payment_status);
       return new Response(
