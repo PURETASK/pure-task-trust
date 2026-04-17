@@ -158,9 +158,7 @@ function ClientFooter() {
             <ul className="space-y-2">
               {[
                 { name: "Book Cleaning", path: "/book" },
-                { name: "My Properties", path: "/properties" },
-                { name: "Recurring Plans", path: "/recurring-plans" },
-                { name: "Reschedule Requests", path: "/reschedule-requests" },
+                { name: "My Cleanings", path: "/my-cleanings" },
                 { name: "Cancellation Policy", path: "/cancellation-policy" },
               ].map(l => (
                 <li key={l.path}>

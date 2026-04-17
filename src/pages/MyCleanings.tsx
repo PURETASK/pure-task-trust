@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, CheckCircle2, Repeat2, History, Star, Sparkles, ArrowRight, Pause, Play, X, Plus } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useClientJobs } from "@/hooks/useJob";
-import { useRecurringBookings, RecurringBooking } from "@/hooks/useRecurringBookings";
 import { motion } from "framer-motion";
 
-type TabValue = "upcoming" | "in_progress" | "completed" | "recurring" | "history";
+type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
 const PALETTES = ["blue", "green", "amber", "purple"] as const;
 
@@ -30,13 +29,11 @@ const f = (delay = 0) => ({ initial: { opacity: 0, y: 12 }, animate: { opacity: 
 export default function MyCleanings() {
   const [tab, setTab] = useState<TabValue>("upcoming");
   const { data: jobs, isLoading } = useClientJobs();
-  const { data: recurringPlans, isLoading: recurringLoading } = useRecurringBookings();
 
   const upcoming = jobs?.filter(j => ["created", "pending", "confirmed"].includes(j.status)) ?? [];
   const inProgress = jobs?.filter(j => j.status === "in_progress") ?? [];
   const completed = jobs?.filter(j => j.status === "completed") ?? [];
   const history = jobs ?? [];
-  const activeRecurring = recurringPlans?.filter(r => r.status === 'active') ?? [];
 
   return (
     <main className="flex-1 bg-background min-h-screen">
@@ -74,10 +71,6 @@ export default function MyCleanings() {
             <TabsTrigger value="completed" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
               <CheckCircle2 className="h-3.5 w-3.5" /> Completed
             </TabsTrigger>
-            <TabsTrigger value="recurring" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
-              <Repeat2 className="h-3.5 w-3.5" /> Recurring
-              {activeRecurring.length > 0 && <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{activeRecurring.length}</Badge>}
-            </TabsTrigger>
             <TabsTrigger value="history" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
               <History className="h-3.5 w-3.5" /> History
             </TabsTrigger>
@@ -95,9 +88,6 @@ export default function MyCleanings() {
               </TabsContent>
               <TabsContent value="completed">
                 <JobList jobs={completed} emptyIcon={CheckCircle2} emptyMessage="No completed cleanings yet" emptyDescription="Once a cleaner finishes, you'll review and approve here." emptyPalette="amber" />
-              </TabsContent>
-              <TabsContent value="recurring">
-                <RecurringPlansList plans={recurringPlans || []} isLoading={recurringLoading} />
               </TabsContent>
               <TabsContent value="history">
                 <JobList jobs={history} emptyIcon={History} emptyMessage="No cleaning history" emptyDescription="Your completed bookings and receipts will live here." emptyPalette="purple" />
@@ -171,105 +161,6 @@ function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, e
   );
 }
 
-/* ── RECURRING PLANS ───────────────────────────────────────────── */
-function RecurringPlansList({ plans, isLoading }: { plans: RecurringBooking[]; isLoading: boolean }) {
-  if (isLoading) {
-    return <div className="space-y-3">{[1, 2].map(i => <Skeleton key={i} className="h-32 rounded-3xl" />)}</div>;
-  }
-
-  if (!plans.length) {
-    return (
-      <EmptyState
-        icon={Repeat2}
-        message="No recurring plans yet"
-        description="Set up a recurring cleaning to save time and never miss a session."
-        action="/book"
-        actionLabel="Book Recurring Cleaning"
-        palette="purple"
-      />
-    );
-  }
-
-  const freqLabel: Record<string, string> = {
-    weekly: "Every week", biweekly: "Every 2 weeks", monthly: "Every month", every_4_weeks: "Every 4 weeks",
-  };
-
-  const dayLabel = (day: number | null) => {
-    if (day == null) return "";
-    return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][day] || "";
-  };
-
-  const statusStyles: Record<string, { label: string; pill: string }> = {
-    active: { label: "Active", pill: "palette-pill-green" },
-    paused: { label: "Paused", pill: "palette-pill-amber" },
-    cancelled: { label: "Cancelled", pill: "bg-destructive/10 text-destructive border-2 border-destructive/30" },
-  };
-
-  return (
-    <div className="space-y-3">
-      {plans.map((plan, i) => {
-        const cleanerName = plan.cleaner
-          ? `${plan.cleaner.first_name || ""} ${plan.cleaner.last_name || ""}`.trim() || "Cleaner"
-          : "Auto-matched";
-        const st = statusStyles[plan.status] || statusStyles.active;
-        const type = (plan.cleaning_type || "standard").replace("_", " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-        const palette = PALETTES[i % 4];
-
-        return (
-          <motion.div key={plan.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-            <div className={`palette-card palette-card-${palette} p-4 sm:p-5 hover:shadow-elevated transition-all`}>
-              <div className="flex items-start gap-4">
-                <div className={`palette-icon palette-icon-${palette} h-12 w-12`}>
-                  <Repeat2 className="h-5 w-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <p className="font-bold">{type}</p>
-                    <span className={`palette-pill ${st.pill} text-[10px] h-5 px-2`}>{st.label}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                    <span>{freqLabel[plan.frequency] || plan.frequency}</span>
-                    {plan.day_of_week != null && <span>{dayLabel(plan.day_of_week)}s</span>}
-                    {plan.preferred_time && <span>at {plan.preferred_time}</span>}
-                    <span>· {cleanerName}</span>
-                  </div>
-                  {plan.next_job_date && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Next: {format(new Date(plan.next_job_date), "EEE, MMM d")}
-                    </p>
-                  )}
-                  <p className="text-xs text-muted-foreground mt-0.5">{plan.address}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="font-black text-lg">${plan.credit_amount}</p>
-                  <p className="text-[10px] text-muted-foreground">per session</p>
-                </div>
-              </div>
-
-              <div className="flex gap-2 mt-4 pt-3 border-t-2 border-border/40">
-                {plan.status === 'active' && (
-                  <Button variant="outline" size="sm" className="gap-1.5 text-xs rounded-xl">
-                    <Pause className="h-3 w-3" /> Pause
-                  </Button>
-                )}
-                {plan.status === 'paused' && (
-                  <Button variant="outline" size="sm" className="gap-1.5 text-xs rounded-xl palette-label-green">
-                    <Play className="h-3 w-3" /> Resume
-                  </Button>
-                )}
-                {plan.status !== 'cancelled' && (
-                  <Button variant="ghost" size="sm" className="gap-1.5 text-xs rounded-xl text-destructive hover:text-destructive">
-                    <X className="h-3 w-3" /> Cancel Plan
-                  </Button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
 
 /* ── EMPTY STATE ───────────────────────────────────────────────── */
 function EmptyState({ icon: Icon, message, description, action, actionLabel, palette = "blue" }: {

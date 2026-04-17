@@ -7,14 +7,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useAddresses } from "@/hooks/useAddresses";
-import { Mail, Edit, MapPin, Home, Wallet, Bell, Heart, Building2, Shield, Key, Trash2, ChevronRight, CheckCircle, Repeat, Gift } from "lucide-react";
+import { Mail, Edit, MapPin, Home, Wallet, Bell, Heart, Building2, Shield, Key, Trash2, ChevronRight, CheckCircle, Gift } from "lucide-react";
 import { motion } from "framer-motion";
 
 const quickLinks = [
   { to: "/wallet", icon: Wallet, label: "Wallet & Credits", desc: "Manage your credits and payments", color: "text-success", border: "border-success/50 bg-success/10" },
   { to: "/favorites", icon: Heart, label: "Favorite Cleaners", desc: "Your saved professionals", color: "text-destructive", border: "border-destructive/40 bg-destructive/10" },
-  { to: "/properties", icon: Building2, label: "Properties", desc: "Manage your properties", color: "text-warning", border: "border-warning/50 bg-warning/10" },
-  { to: "/recurring-plans", icon: Repeat, label: "Recurring Plans", desc: "Set up scheduled cleanings", color: "text-primary", border: "border-primary/50 bg-primary/10" },
   { to: "/referral", icon: Gift, label: "Referral Program", desc: "Invite friends & earn credits", color: "text-[hsl(var(--pt-purple))]", border: "border-[hsl(var(--pt-purple))]/40 bg-[hsl(var(--pt-purple))]/10" },
   { to: "/settings/notifications", icon: Bell, label: "Notifications", desc: "Email, push & SMS preferences", color: "text-primary", border: "border-primary/40 bg-primary/10" },
 ];
