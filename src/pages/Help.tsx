@@ -19,7 +19,17 @@ export default function Help() {
   return (
     <>
       <SEO title="Support Center — PureTask" description="Get help with bookings, payments, and your account. Chat with our AI or talk to a human." />
-      <div className="container max-w-5xl mx-auto py-6 px-4 space-y-6">
+      <div
+        className="relative min-h-screen"
+        style={{
+          backgroundImage: `url(${helpBg})`,
+          backgroundSize: '100% auto',
+          backgroundRepeat: 'repeat-y',
+          backgroundPosition: 'top center',
+        }}
+      >
+        <div className="absolute inset-0 bg-background/60 pointer-events-none" aria-hidden="true" />
+        <div className="container max-w-5xl mx-auto py-6 px-4 space-y-6 relative">
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">
