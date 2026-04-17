@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, CheckCircle2, Repeat2, History, Star, Sparkles, ArrowRight, Pause, Play, X, Plus } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useClientJobs } from "@/hooks/useJob";
-import { useRecurringBookings, RecurringBooking } from "@/hooks/useRecurringBookings";
 import { motion } from "framer-motion";
 
-type TabValue = "upcoming" | "in_progress" | "completed" | "recurring" | "history";
+type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
 const PALETTES = ["blue", "green", "amber", "purple"] as const;
 
