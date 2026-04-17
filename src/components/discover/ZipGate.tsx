@@ -112,9 +112,9 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
 
   // Full-page dedicated experience
   return (
-    <div className="relative min-h-[100vh] w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-y-auto">
       {/* Background image */}
-      <div className="absolute inset-0 -z-10">
+      <div className="fixed inset-0 -z-10">
         <img
           src={zipGateBg}
           alt=""
@@ -126,15 +126,15 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(220,60%,6%)/0.7_85%)]" />
       </div>
 
-      <div className="relative container mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col items-center justify-center min-h-[100vh]">
+      <div className="relative container mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col items-center justify-center min-h-screen">
         {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mb-10 sm:mb-14"
+          className="text-center max-w-3xl mb-6 sm:mb-10"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 mb-4">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full rounded-full bg-[hsl(var(--pt-aqua))] opacity-75 animate-ping" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[hsl(var(--pt-aqua))]" />
@@ -144,7 +144,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
             Find cleaners{" "}
             <span className="bg-gradient-to-r from-[hsl(var(--pt-aqua))] via-[hsl(var(--pt-blue))] to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
               near you
@@ -213,7 +213,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-10 sm:mt-14 grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl w-full"
+          className="mt-8 sm:mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl w-full"
         >
           {[
             { icon: Shield, label: "Background checked" },
