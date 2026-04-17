@@ -1,27 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Check, Sparkles, Home, Building, Clock, Plus, Minus, Shield, ArrowRight, ArrowLeft,
-  Loader2, AlertCircle, Zap, Calendar, MapPin, CreditCard, ExternalLink, Wallet,
-  Star, Users, Heart, RotateCcw, User, Search, CalendarOff
+  Sparkles, Home, Building, Shield, AlertCircle, Zap, Wallet, CreditCard,
+  Users, Heart, RotateCcw, ExternalLink, Loader2, Check, CalendarOff,
+  ArrowLeft, ChevronRight,
 } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBooking, CleaningType } from "@/hooks/useBooking";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
-import { useCleaners, useCleaner, CleanerListing } from "@/hooks/useCleaners";
+import { useCleaners, useCleaner } from "@/hooks/useCleaners";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useClientJobs } from "@/hooks/useJob";
+import { Address, useAddresses } from "@/hooks/useAddresses";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { AddressSelector } from "@/components/booking/AddressSelector";
-import { Address, useAddresses } from "@/hooks/useAddresses";
+import { BookingStepper, StepDef } from "@/components/booking/BookingStepper";
+import { BookingSummary, SummaryLine } from "@/components/booking/BookingSummary";
+import { HoursSelector } from "@/components/booking/HoursSelector";
+import { ServiceTypeCard } from "@/components/booking/ServiceTypeCard";
+import { AddOnPill } from "@/components/booking/AddOnPill";
+import { BookingCleanerCard } from "@/components/booking/BookingCleanerCard";
+import { PaymentMethodCard } from "@/components/booking/PaymentMethodCard";
 import { setHours as setDateHours, setMinutes as setDateMinutes, getDay, format } from "date-fns";
 import {
   isSameDayBooking,
@@ -31,55 +37,22 @@ import {
 } from "@/lib/same-day-booking";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useClientJobs } from "@/hooks/useJob";
 
 const SERVICE_CHARGE_PCT = 0.15;
 
-const STEPS = ["Service", "Property", "Date & Time", "Cleaner", "Extras", "Review"];
-
-const STEP_PALETTES = [
-  {
-    card: "palette-card palette-card-blue",
-    icon: "palette-icon palette-icon-blue",
-    step: "palette-step palette-step-blue",
-    line: "palette-line-blue",
-    label: "palette-label-blue",
-    input: "palette-input palette-input-blue",
-    pill: "palette-pill palette-pill-blue",
-  },
-  {
-    card: "palette-card palette-card-green",
-    icon: "palette-icon palette-icon-green",
-    step: "palette-step palette-step-green",
-    line: "palette-line-green",
-    label: "palette-label-green",
-    input: "palette-input palette-input-green",
-    pill: "palette-pill palette-pill-green",
-  },
-  {
-    card: "palette-card palette-card-amber",
-    icon: "palette-icon palette-icon-amber",
-    step: "palette-step palette-step-amber",
-    line: "palette-line-amber",
-    label: "palette-label-amber",
-    input: "palette-input palette-input-amber",
-    pill: "palette-pill palette-pill-amber",
-  },
-  {
-    card: "palette-card palette-card-purple",
-    icon: "palette-icon palette-icon-purple",
-    step: "palette-step palette-step-purple",
-    line: "palette-line-purple",
-    label: "palette-label-purple",
-    input: "palette-input palette-input-purple",
-    pill: "palette-pill palette-pill-purple",
-  },
+const STEPS: StepDef[] = [
+  { label: "Service", palette: "blue" },
+  { label: "When & Where", palette: "green" },
+  { label: "Cleaner", palette: "amber" },
+  { label: "Review & Pay", palette: "purple" },
 ];
 
+const STEP_PALETTE_VAR = ["pt-blue", "pt-green", "pt-amber", "pt-purple"] as const;
+
 const cleaningTypes = [
-  { id: "basic" as CleaningType, name: "Standard Cleaning", description: "Regular maintenance cleaning for a tidy home", baseCredits: 35, icon: Home, estimate: "$35–$140" },
-  { id: "deep" as CleaningType, name: "Deep Cleaning", description: "Thorough cleaning including hard-to-reach areas", baseCredits: 55, icon: Sparkles, estimate: "$55–$220" },
-  { id: "move_out" as CleaningType, name: "Move-Out Cleaning", description: "Complete cleaning for end of lease", baseCredits: 75, icon: Building, estimate: "$75–$300" },
+  { id: "basic" as CleaningType, name: "Standard Cleaning", description: "Regular maintenance for a tidy home", baseCredits: 35, icon: Home, estimate: "$35–140" },
+  { id: "deep" as CleaningType, name: "Deep Cleaning", description: "Thorough cleaning, hard-to-reach areas", baseCredits: 55, icon: Sparkles, estimate: "$55–220" },
+  { id: "move_out" as CleaningType, name: "Move-Out Cleaning", description: "Complete end-of-lease cleaning", baseCredits: 75, icon: Building, estimate: "$75–300" },
 ];
 
 const addOns = [
@@ -88,12 +61,12 @@ const addOns = [
   { id: "windows", name: "Interior Windows", credits: 25, icon: "🪟" },
   { id: "laundry", name: "Laundry (wash & fold)", credits: 20, icon: "👕" },
   { id: "pet_hair", name: "Pet Hair Treatment", credits: 15, icon: "🐾" },
-  { id: "supplies", name: "Cleaning Supplies Needed", credits: 10, icon: "🧹" },
+  { id: "supplies", name: "Cleaning Supplies", credits: 10, icon: "🧹" },
 ];
 
 export default function Book() {
   const [searchParams] = useSearchParams();
-  const preselectedCleanerId = searchParams.get('cleaner');
+  const preselectedCleanerId = searchParams.get("cleaner");
 
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<CleaningType | null>(null);
@@ -105,6 +78,8 @@ export default function Book() {
   const [selectedCleanerId, setSelectedCleanerId] = useState<string | null>(preselectedCleanerId);
   const [cleanerTab, setCleanerTab] = useState<string>("all");
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"credits" | "card">("credits");
+  const [isDirectPaying, setIsDirectPaying] = useState(false);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -114,19 +89,18 @@ export default function Book() {
   const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
   const { data: favorites } = useFavorites();
   const { data: pastJobs } = useClientJobs();
-  const { data: selectedCleaner } = useCleaner(selectedCleanerId || '');
+  const { data: selectedCleaner } = useCleaner(selectedCleanerId || "");
   const { data: savedAddresses } = useAddresses();
 
-  // Fetch cleaner availability blocks
   const { data: availabilityBlocks } = useQuery({
-    queryKey: ['cleaner-availability-blocks', selectedCleanerId],
+    queryKey: ["cleaner-availability-blocks", selectedCleanerId],
     queryFn: async () => {
       if (!selectedCleanerId) return [];
       const { data } = await supabase
-        .from('availability_blocks')
-        .select('day_of_week, start_time, end_time, is_active')
-        .eq('cleaner_id', selectedCleanerId)
-        .eq('is_active', true);
+        .from("availability_blocks")
+        .select("day_of_week, start_time, end_time, is_active")
+        .eq("cleaner_id", selectedCleanerId)
+        .eq("is_active", true);
       return data || [];
     },
     enabled: !!selectedCleanerId,
@@ -134,12 +108,16 @@ export default function Book() {
 
   useEffect(() => {
     if (savedAddresses?.length && !selectedAddress) {
-      setSelectedAddress(savedAddresses.find(a => a.is_default) || savedAddresses[0]);
+      setSelectedAddress(savedAddresses.find((a) => a.is_default) || savedAddresses[0]);
     }
   }, [savedAddresses, selectedAddress]);
 
-  const selectedCleaningType = cleaningTypes.find(t => t.id === selectedType);
-  const addOnCredits = selectedAddOns.reduce((sum, id) => sum + (addOns.find(a => a.id === id)?.credits || 0), 0);
+  // ── Pricing math ──
+  const selectedCleaningType = cleaningTypes.find((t) => t.id === selectedType);
+  const addOnCredits = selectedAddOns.reduce(
+    (sum, id) => sum + (addOns.find((a) => a.id === id)?.credits || 0),
+    0,
+  );
   const rushFee = calculateRushFee(selectedDate);
   const isSameDay = selectedDate ? isSameDayBooking(selectedDate) : false;
   const baseCredits = selectedCleaningType ? selectedCleaningType.baseCredits * hours + addOnCredits : 0;
@@ -149,56 +127,72 @@ export default function Book() {
   const serviceCharge = Math.round(totalCredits * SERVICE_CHARGE_PCT);
   const directPayTotal = totalCredits + serviceCharge;
 
-  const isDateBlockedByCleaner = (() => {
+  const isDateBlockedByCleaner = useMemo(() => {
     if (!selectedDate || !selectedCleanerId || !availabilityBlocks?.length) return false;
-    const dayOfWeek = getDay(selectedDate);
-    return !availabilityBlocks.some(b => b.day_of_week === dayOfWeek);
-  })();
+    const dow = getDay(selectedDate);
+    return !availabilityBlocks.some((b) => b.day_of_week === dow);
+  }, [selectedDate, selectedCleanerId, availabilityBlocks]);
 
   const isCleaningTypeAllowed = !isSameDay || !selectedType || isCleaningTypeAllowedSameDay(selectedType);
 
   const getScheduledDateTime = () => {
     if (!selectedDate || !selectedTime) return undefined;
-    const [h, m] = selectedTime.split(':');
+    const [h, m] = selectedTime.split(":");
     return setDateMinutes(setDateHours(selectedDate, parseInt(h)), parseInt(m)).toISOString();
   };
 
-  // Book Again cleaners (unique cleaners from past completed jobs)
-  const bookAgainCleaners = (() => {
+  const bookAgainCleaners = useMemo(() => {
     if (!pastJobs?.length) return [];
     const seen = new Set<string>();
     return pastJobs
-      .filter(j => j.status === "completed" && j.cleaner_id && j.cleaner)
-      .filter(j => { if (seen.has(j.cleaner_id!)) return false; seen.add(j.cleaner_id!); return true; })
+      .filter((j) => j.status === "completed" && j.cleaner_id && j.cleaner)
+      .filter((j) => {
+        if (seen.has(j.cleaner_id!)) return false;
+        seen.add(j.cleaner_id!);
+        return true;
+      })
       .slice(0, 10)
-      .map(j => ({
+      .map((j) => ({
         id: j.cleaner_id!,
-        name: `${j.cleaner?.first_name || ''} ${j.cleaner?.last_name || ''}`.trim() || 'Cleaner',
-        rating: j.cleaner?.avg_rating,
-        reliability: j.cleaner?.reliability_score || 100,
+        name: `${j.cleaner?.first_name || ""} ${j.cleaner?.last_name || ""}`.trim() || "Cleaner",
+        rating: j.cleaner?.avg_rating ?? null,
         lastBooking: j.scheduled_start_at || j.created_at,
       }));
+  }, [pastJobs]);
+
+  const favCleanerIds = new Set(favorites?.map((f) => f.cleaner_id) || []);
+
+  const toggleAddOn = (id: string) =>
+    setSelectedAddOns((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
+
+  // ── Validation per step ──
+  const canContinue = (() => {
+    if (step === 1) return !!selectedType && hours >= 1;
+    if (step === 2) return !!selectedAddress && !!selectedDate && !!selectedTime && isCleaningTypeAllowed;
+    if (step === 3) return !!selectedCleanerId && !isDateBlockedByCleaner;
+    return true;
   })();
 
-  // Favorite cleaners mapped to listing format
-  const favCleanerIds = new Set(favorites?.map(f => f.cleaner_id) || []);
-
-  const [isDirectPaying, setIsDirectPaying] = useState(false);
-  const currentPalette = STEP_PALETTES[(step - 1) % STEP_PALETTES.length];
-
-  const handleConfirmWithCredits = async () => {
+  // ── Confirm handlers ──
+  const handleConfirmCredits = async () => {
     if (!selectedType || !user) return;
-    if (!hasEnoughCredits) { toast({ title: "Insufficient credits", variant: "destructive" }); return; }
+    if (!hasEnoughCredits) {
+      toast({ title: "Insufficient credits", variant: "destructive" });
+      return;
+    }
     try {
       await createBooking({
-        cleaningType: selectedType, hours, addOns: selectedAddOns, totalCredits,
+        cleaningType: selectedType,
+        hours,
+        addOns: selectedAddOns,
+        totalCredits,
         cleanerId: selectedCleanerId || undefined,
         scheduledDate: getScheduledDateTime(),
         address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : undefined,
         notes: specialInstructions || undefined,
       });
-    } catch (error: any) {
-      toast({ title: "Booking failed", description: error?.message, variant: "destructive" });
+    } catch (e: any) {
+      toast({ title: "Booking failed", description: e?.message, variant: "destructive" });
     }
   };
 
@@ -206,416 +200,526 @@ export default function Book() {
     if (!selectedType || !user) return;
     setIsDirectPaying(true);
     try {
-      const { data, error } = await supabase.functions.invoke('create-direct-payment', {
+      const { data, error } = await supabase.functions.invoke("create-direct-payment", {
         body: {
-          baseCredits: totalCredits, hours, cleaningType: selectedType, addOns: selectedAddOns, rushFee,
-          cleanerId: selectedCleanerId || null, scheduledDate: getScheduledDateTime(),
-          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null, notes: specialInstructions || null,
+          baseCredits: totalCredits,
+          hours,
+          cleaningType: selectedType,
+          addOns: selectedAddOns,
+          rushFee,
+          cleanerId: selectedCleanerId || null,
+          scheduledDate: getScheduledDateTime(),
+          address: selectedAddress ? `${selectedAddress.line1}, ${selectedAddress.city}` : null,
+          notes: specialInstructions || null,
         },
       });
       if (error) throw error;
-      if (data?.url) { window.open(data.url, '_blank'); }
-    } catch (error: any) {
-      toast({ title: "Payment failed", description: error.message, variant: "destructive" });
-    } finally { setIsDirectPaying(false); }
+      if (data?.url) window.open(data.url, "_blank");
+    } catch (e: any) {
+      toast({ title: "Payment failed", description: e.message, variant: "destructive" });
+    } finally {
+      setIsDirectPaying(false);
+    }
   };
 
-  const toggleAddOn = (id: string) => setSelectedAddOns(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]);
+  // ── Summary lines for sticky panel ──
+  const summaryLines: SummaryLine[] = [
+    { label: "Service", value: selectedCleaningType?.name || "—" },
+    { label: "Duration", value: `${hours}h` },
+    { label: "Property", value: selectedAddress ? selectedAddress.line1 : "—" },
+    {
+      label: "When",
+      value: selectedDate && selectedTime ? `${format(selectedDate, "MMM d")} · ${selectedTime}` : "—",
+    },
+    {
+      label: "Cleaner",
+      value: selectedCleaner?.name || (selectedCleanerId ? "—" : "Auto-Match"),
+    },
+    ...(selectedAddOns.length > 0
+      ? [{
+          label: "Extras",
+          value: `${selectedAddOns.length} add-on${selectedAddOns.length > 1 ? "s" : ""}`,
+        }]
+      : []),
+  ];
+
+  const advance = () => setStep((s) => Math.min(4, s + 1));
+  const back = () => setStep((s) => Math.max(1, s - 1));
+
+  const ctaLabel = step === 4 ? "Confirm Booking" : "Continue";
+  const ctaDisabled = step === 4
+    ? (paymentMethod === "credits" ? !hasEnoughCredits || isCreating : isDirectPaying)
+    : !canContinue;
+  const ctaLoading = step === 4 && (isCreating || isDirectPaying);
+  const onCta = () => {
+    if (step < 4) advance();
+    else if (paymentMethod === "credits") handleConfirmCredits();
+    else handlePayDirectly();
+  };
 
   return (
-    <main className="flex-1 py-0">
+    <main className="flex-1 pb-32 lg:pb-12">
       <Helmet><title>Book a Cleaning | PureTask</title></Helmet>
 
-      <div className="container px-4 sm:px-6 max-w-4xl py-6 sm:py-10">
-        {/* ── STEPPER ────────────────────────────────────────────────── */}
-        <div className="mb-8">
-          <div className="flex items-center gap-1">
-            {STEPS.map((label, i) => {
-              const s = i + 1;
-              const palette = STEP_PALETTES[i % STEP_PALETTES.length];
-              return (
-                <div key={s} className="flex items-center flex-1 last:flex-none">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className={`${s <= step ? palette.step : "palette-step border-border bg-muted text-muted-foreground"} ${
-                      s === step ? "ring-4 ring-ring/10" : ""
-                    }`}>{s < step ? <Check className="h-4 w-4" /> : s}</div>
-                    <span className={`text-[10px] sm:text-xs font-medium hidden sm:block ${s <= step ? palette.label : "text-muted-foreground"}`}>{label}</span>
-                  </div>
-                  {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-2 rounded-full ${s < step ? palette.line : "bg-border"}`} />}
-                </div>
-              );
-            })}
-          </div>
+      <div className="container px-3 sm:px-4 lg:px-6 max-w-6xl py-6 sm:py-10">
+        {/* ── Header ── */}
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-black mb-1">Book a Cleaning</h1>
+          <p className="text-sm text-muted-foreground">A few quick steps and you're done.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* ── MAIN STEP CONTENT ─────────────────────────────────────── */}
+        {/* ── Stepper ── */}
+        <div className="mb-8">
+          <BookingStepper steps={STEPS} current={step} onStepClick={(n) => setStep(n)} />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* ── Main column ── */}
           <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
-              {/* STEP 1: SERVICE TYPE */}
+              {/* STEP 1: SERVICE */}
               {step === 1 && (
-                <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">What type of cleaning?</h2>
-                  <p className="text-sm text-muted-foreground mb-6">Choose the service that fits your needs</p>
-                  <div className="space-y-3">
-                    {cleaningTypes.map(type => (
-                      <Card key={type.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedType === type.id ? `${STEP_PALETTES[0].card} ring-2 ring-ring/10` : `${STEP_PALETTES[0].card} hover:shadow-elevated`}`} onClick={() => setSelectedType(type.id)}>
-                        <CardContent className="flex items-center gap-4 p-4 sm:p-5">
-                          <div className={`h-12 w-12 ${STEP_PALETTES[0].icon}`}>
-                            <type.icon className="h-6 w-6" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold">{type.name}</h3>
-                            <p className="text-sm text-muted-foreground">{type.description}</p>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <p className={`font-bold ${STEP_PALETTES[0].label}`}>{type.estimate}</p>
-                            <p className="text-[10px] text-muted-foreground">est. range</p>
-                          </div>
-                          {selectedType === type.id && <div className={`h-6 w-6 ${STEP_PALETTES[0].step} flex-shrink-0`}><Check className="h-4 w-4" /></div>}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                  <Button className="w-full mt-6" size="lg" disabled={!selectedType} onClick={() => setStep(2)}>
-                    Continue <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </motion.div>
-              )}
+                <motion.div key="s1" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
+                  <SectionShell paletteVar="pt-blue" title="What type of cleaning?" subtitle="Pick a service and how long you'll need.">
+                    <div className="space-y-3">
+                      {cleaningTypes.map((t) => (
+                        <ServiceTypeCard
+                          key={t.id}
+                          id={t.id}
+                          name={t.name}
+                          description={t.description}
+                          estimate={t.estimate}
+                          icon={t.icon}
+                          selected={selectedType === t.id}
+                          onSelect={() => setSelectedType(t.id)}
+                          paletteVar="pt-blue"
+                        />
+                      ))}
+                    </div>
 
-              {/* STEP 2: PROPERTY */}
-              {step === 2 && (
-                <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Where should we clean?</h2>
-                  <p className="text-sm text-muted-foreground mb-6">Select your property or add a new one</p>
-                  <AddressSelector selectedAddressId={selectedAddress?.id} onSelect={setSelectedAddress} />
-                  <div className="flex gap-3 mt-6">
-                    <Button variant="outline" size="lg" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button className="flex-1" size="lg" disabled={!selectedAddress} onClick={() => setStep(3)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                  </div>
-                </motion.div>
-              )}
+                    <div className="mt-6">
+                      <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "hsl(var(--pt-blue-deep))" }}>
+                        How many hours?
+                      </p>
+                      <HoursSelector value={hours} onChange={setHours} paletteVar="pt-blue" />
+                    </div>
 
-              {/* STEP 3: DATE & TIME */}
-              {step === 3 && (
-                <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">When do you need it?</h2>
-                  <p className="text-sm text-muted-foreground mb-6">Pick a date, time, and duration</p>
-                  <div className="space-y-6">
-                    <DateTimePicker selectedDate={selectedDate} selectedTime={selectedTime} onDateChange={(date) => {
-                      setSelectedDate(date);
-                      if (date && isSameDayBooking(date) && selectedTime && selectedType) {
-                        const { valid } = validateSameDayBooking(date, selectedTime, selectedType);
-                        if (!valid) setSelectedTime(undefined);
-                      }
-                    }} onTimeChange={setSelectedTime} />
-
-                    {/* Hours selector */}
-                    <Card className="palette-card palette-card-amber">
-                      <CardContent className="p-5">
-                        <p className="font-semibold mb-4">Estimated hours</p>
-                        <div className="flex items-center justify-center gap-6">
-                          <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl" onClick={() => setHours(Math.max(1, hours - 1))} disabled={hours <= 1}><Minus className="h-4 w-4" /></Button>
-                          <div className="text-center"><p className="text-4xl font-bold">{hours}</p><p className="text-muted-foreground text-sm">hours</p></div>
-                          <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl" onClick={() => setHours(Math.min(8, hours + 1))} disabled={hours >= 8}><Plus className="h-4 w-4" /></Button>
+                    {selectedType && (
+                      <div className="mt-6">
+                        <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "hsl(var(--pt-blue-deep))" }}>
+                          Optional add-ons
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {addOns.map((a) => (
+                            <AddOnPill
+                              key={a.id}
+                              name={a.name}
+                              icon={a.icon}
+                              credits={a.credits}
+                              selected={selectedAddOns.includes(a.id)}
+                              onToggle={() => toggleAddOn(a.id)}
+                              paletteVar="pt-blue"
+                            />
+                          ))}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    )}
+                  </SectionShell>
+                </motion.div>
+              )}
+
+              {/* STEP 2: WHEN & WHERE */}
+              {step === 2 && (
+                <motion.div key="s2" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
+                  <SectionShell paletteVar="pt-green" title="When & where?" subtitle="Pick the property, date and time.">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "hsl(var(--pt-green-deep))" }}>
+                        Property
+                      </p>
+                      <AddressSelector selectedAddressId={selectedAddress?.id} onSelect={setSelectedAddress} />
+                    </div>
+
+                    <div className="mt-6">
+                      <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "hsl(var(--pt-green-deep))" }}>
+                        Date & Time
+                      </p>
+                      <DateTimePicker
+                        selectedDate={selectedDate}
+                        selectedTime={selectedTime}
+                        onDateChange={(date) => {
+                          setSelectedDate(date);
+                          if (date && isSameDayBooking(date) && selectedTime && selectedType) {
+                            const { valid } = validateSameDayBooking(date, selectedTime, selectedType);
+                            if (!valid) setSelectedTime(undefined);
+                          }
+                        }}
+                        onTimeChange={setSelectedTime}
+                      />
+                    </div>
+
+                    {isSameDay && rushFee > 0 && (
+                      <div
+                        className="mt-4 rounded-xl border-2 px-4 py-3 flex items-center gap-2 text-sm font-bold"
+                        style={{
+                          borderColor: "hsl(var(--pt-amber-deep))",
+                          backgroundColor: "hsl(var(--pt-amber)/0.10)",
+                          color: "hsl(var(--pt-amber-deep))",
+                        }}
+                      >
+                        <Zap className="h-4 w-4" />
+                        Same-day booking — +${rushFee} rush fee added
+                      </div>
+                    )}
 
                     {isSameDay && !isCleaningTypeAllowed && (
-                      <Card className="bg-destructive/10 border-destructive/30"><CardContent className="p-4 flex items-start gap-3">
-                        <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                        <div><p className="font-medium text-sm text-destructive">Move-Out not available same-day</p><p className="text-xs text-muted-foreground mt-1">Please select a future date.</p></div>
-                      </CardContent></Card>
+                      <div className="mt-4 rounded-xl border-2 border-destructive/40 bg-destructive/10 px-4 py-3 flex items-start gap-2">
+                        <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-sm font-bold text-destructive">Move-Out not available same-day</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Please pick a future date.</p>
+                        </div>
+                      </div>
                     )}
-                  </div>
-                  <div className="flex gap-3 mt-6">
-                    <Button variant="outline" size="lg" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button className="flex-1" size="lg" disabled={!selectedDate || !selectedTime || !isCleaningTypeAllowed} onClick={() => setStep(4)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                  </div>
+                  </SectionShell>
                 </motion.div>
               )}
 
-              {/* STEP 4: CLEANER */}
-              {step === 4 && (
-                <motion.div key="s4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Choose your cleaner</h2>
-                  <p className="text-sm text-muted-foreground mb-6">Select a cleaner or let us auto-match</p>
+              {/* STEP 3: CLEANER */}
+              {step === 3 && (
+                <motion.div key="s3" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
+                  <SectionShell paletteVar="pt-amber" title="Choose your cleaner" subtitle="Pick a pro you trust, or let us auto-match.">
+                    <Tabs value={cleanerTab} onValueChange={setCleanerTab}>
+                      <TabsList
+                        className="w-full grid grid-cols-3 h-auto p-1 rounded-2xl border-2 bg-background"
+                        style={{ borderColor: "hsl(var(--pt-amber-deep))" }}
+                      >
+                        <TabsTrigger value="all" className="gap-1.5 rounded-xl text-xs sm:text-sm py-2">
+                          <Users className="h-3.5 w-3.5" /> All
+                        </TabsTrigger>
+                        <TabsTrigger value="favorites" className="gap-1.5 rounded-xl text-xs sm:text-sm py-2">
+                          <Heart className="h-3.5 w-3.5" /> Favorites
+                        </TabsTrigger>
+                        <TabsTrigger value="again" className="gap-1.5 rounded-xl text-xs sm:text-sm py-2">
+                          <RotateCcw className="h-3.5 w-3.5" /> Book Again
+                        </TabsTrigger>
+                      </TabsList>
 
-                  <Tabs value={cleanerTab} onValueChange={setCleanerTab} className="mb-4">
-                      <TabsList className="w-full bg-muted/50 p-1 rounded-3xl border-2 border-[hsl(var(--pt-purple-deep))]">
-                      <TabsTrigger value="all" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> All</TabsTrigger>
-                      <TabsTrigger value="favorites" className="gap-1.5 rounded-lg text-xs sm:text-sm"><Heart className="h-3.5 w-3.5" /> Favorites</TabsTrigger>
-                      <TabsTrigger value="again" className="gap-1.5 rounded-lg text-xs sm:text-sm"><RotateCcw className="h-3.5 w-3.5" /> Book Again</TabsTrigger>
-                    </TabsList>
+                      <TabsContent value="all" className="mt-4 space-y-2">
+                        {cleanersLoading ? (
+                          <div className="space-y-3">{[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-2xl" />)}</div>
+                        ) : (
+                          <>
+                            {/* Auto-match */}
+                            <button
+                              type="button"
+                              onClick={() => setSelectedCleanerId(null)}
+                              className="w-full text-left rounded-2xl border-2 p-4 flex items-center gap-4 transition-all bg-background hover:shadow-md"
+                              style={{
+                                borderColor: "hsl(var(--pt-amber-deep))",
+                                backgroundColor: !selectedCleanerId ? "hsl(var(--pt-amber)/0.10)" : undefined,
+                              }}
+                            >
+                              <div
+                                className="h-11 w-11 rounded-full flex items-center justify-center"
+                                style={{ backgroundColor: "hsl(var(--pt-amber)/0.18)", color: "hsl(var(--pt-amber-deep))" }}
+                              >
+                                <Zap className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-bold text-sm">Auto-Match Me</p>
+                                <p className="text-xs text-muted-foreground">We'll find the best available cleaner</p>
+                              </div>
+                              {!selectedCleanerId && (
+                                <div
+                                  className="h-7 w-7 rounded-full flex items-center justify-center text-white"
+                                  style={{ backgroundColor: "hsl(var(--pt-amber-deep))" }}
+                                >
+                                  <Check className="h-4 w-4" />
+                                </div>
+                              )}
+                            </button>
+                            {allCleaners?.map((c) => (
+                              <BookingCleanerCard
+                                key={c.id}
+                                name={c.name}
+                                rating={c.avgRating}
+                                hourlyRate={c.hourlyRate}
+                                jobsCompleted={c.jobsCompleted}
+                                reliabilityScore={c.reliabilityScore}
+                                tier={c.tier}
+                                isFavorite={favCleanerIds.has(c.id)}
+                                selected={selectedCleanerId === c.id}
+                                onSelect={() => setSelectedCleanerId(c.id)}
+                                paletteVar="pt-amber"
+                              />
+                            ))}
+                          </>
+                        )}
+                      </TabsContent>
 
-                    <TabsContent value="all" className="mt-4">
-                      {cleanersLoading ? (
-                        <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 rounded-2xl" />)}</div>
-                      ) : (
-                        <div className="space-y-2">
-                          {/* Auto-match option */}
-                          <Card className={`cursor-pointer transition-all rounded-3xl border-2 ${!selectedCleanerId ? `${STEP_PALETTES[3].card} ring-2 ring-ring/10` : `${STEP_PALETTES[3].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(null)}>
-                            <CardContent className="p-4 flex items-center gap-4">
-                              <div className={`h-11 w-11 ${STEP_PALETTES[3].icon} rounded-full`}><Zap className="h-5 w-5" /></div>
-                              <div className="flex-1"><p className="font-semibold text-sm">Auto-Match Me</p><p className="text-xs text-muted-foreground">We'll find the best available cleaner for you</p></div>
-                              {!selectedCleanerId && <div className={`h-6 w-6 ${STEP_PALETTES[3].step}`}><Check className="h-4 w-4" /></div>}
-                            </CardContent>
-                          </Card>
-                          {allCleaners?.map(c => <CleanerCard key={c.id} cleaner={c} selected={selectedCleanerId === c.id} onSelect={() => setSelectedCleanerId(c.id)} isFav={favCleanerIds.has(c.id)} />)}
-                        </div>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="favorites" className="mt-4">
-                      {!favorites?.length ? (
-                        <Card className="palette-card palette-card-green palette-card-dashed"><CardContent className="p-8 text-center">
-                          <Heart className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
-                          <p className="text-sm font-medium">No favorites yet</p>
-                          <p className="text-xs text-muted-foreground mt-1">Heart cleaners to save them here</p>
-                        </CardContent></Card>
-                      ) : (
-                        <div className="space-y-2">
-                          {favorites.map(fav => {
+                      <TabsContent value="favorites" className="mt-4 space-y-2">
+                        {!favorites?.length ? (
+                          <EmptyState icon={Heart} title="No favorites yet" subtitle="Heart cleaners to save them here" paletteVar="pt-amber" />
+                        ) : (
+                          favorites.map((fav) => {
                             if (!fav.cleaner) return null;
                             const c = fav.cleaner;
-                            const name = `${c.first_name || ''} ${c.last_name || ''}`.trim() || 'Cleaner';
+                            const name = `${c.first_name || ""} ${c.last_name || ""}`.trim() || "Cleaner";
                             return (
-                              <Card key={fav.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedCleanerId === c.id ? `${STEP_PALETTES[1].card} ring-2 ring-ring/10` : `${STEP_PALETTES[1].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(c.id)}>
-                                <CardContent className="p-4 flex items-center gap-4">
-                                  <div className={`h-11 w-11 rounded-full ${STEP_PALETTES[1].icon} font-bold text-sm`}>{name.charAt(0)}</div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2"><p className="font-semibold text-sm truncate">{name}</p><Heart className="h-3.5 w-3.5 text-destructive fill-destructive" /></div>
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                      {c.avg_rating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{c.avg_rating.toFixed(1)}</span>}
-                                      <span>${c.hourly_rate_credits}/hr</span>
-                                      <span>{c.jobs_completed} jobs</span>
-                                    </div>
-                                  </div>
-                                  {selectedCleanerId === c.id && <div className={`h-6 w-6 ${STEP_PALETTES[1].step}`}><Check className="h-4 w-4" /></div>}
-                                </CardContent>
-                              </Card>
+                              <BookingCleanerCard
+                                key={fav.id}
+                                name={name}
+                                rating={c.avg_rating}
+                                hourlyRate={c.hourly_rate_credits}
+                                jobsCompleted={c.jobs_completed}
+                                isFavorite
+                                selected={selectedCleanerId === c.id}
+                                onSelect={() => setSelectedCleanerId(c.id)}
+                                paletteVar="pt-amber"
+                              />
                             );
+                          })
+                        )}
+                      </TabsContent>
+
+                      <TabsContent value="again" className="mt-4 space-y-2">
+                        {!bookAgainCleaners.length ? (
+                          <EmptyState icon={RotateCcw} title="No past cleaners" subtitle="Complete a booking to see cleaners here" paletteVar="pt-amber" />
+                        ) : (
+                          bookAgainCleaners.map((c) => (
+                            <BookingCleanerCard
+                              key={c.id}
+                              name={c.name}
+                              rating={c.rating}
+                              subtitle={`Last: ${format(new Date(c.lastBooking), "MMM d")}`}
+                              selected={selectedCleanerId === c.id}
+                              onSelect={() => setSelectedCleanerId(c.id)}
+                              paletteVar="pt-amber"
+                            />
+                          ))
+                        )}
+                      </TabsContent>
+                    </Tabs>
+
+                    {selectedCleanerId && isDateBlockedByCleaner && selectedDate && (
+                      <div className="mt-4 rounded-xl border-2 border-warning/40 bg-warning/10 px-4 py-3 flex items-start gap-2">
+                        <CalendarOff className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-sm font-bold">Cleaner unavailable on {selectedDate.toLocaleDateString("en-US", { weekday: "long" })}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Go back to change the date or pick a different cleaner.</p>
+                        </div>
+                      </div>
+                    )}
+                  </SectionShell>
+                </motion.div>
+              )}
+
+              {/* STEP 4: REVIEW & PAY */}
+              {step === 4 && (
+                <motion.div key="s4" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
+                  <SectionShell paletteVar="pt-purple" title="Review & confirm" subtitle="You only pay for time actually worked. Unused credits are returned automatically.">
+                    {/* Receipt */}
+                    <div
+                      className="rounded-2xl border-2 p-5 bg-background"
+                      style={{ borderColor: "hsl(var(--pt-purple-deep))", backgroundColor: "hsl(var(--pt-purple)/0.04)" }}
+                    >
+                      <ReceiptRow label="Service" value={selectedCleaningType?.name || "—"} />
+                      <ReceiptRow label="Duration" value={`${hours} hours`} />
+                      {selectedAddress && <ReceiptRow label="Property" value={`${selectedAddress.line1}, ${selectedAddress.city}`} />}
+                      {selectedDate && selectedTime && (
+                        <ReceiptRow
+                          label="Date & Time"
+                          value={`${format(selectedDate, "EEE, MMM d")} at ${selectedTime}`}
+                          badge={isSameDay ? "Today" : undefined}
+                        />
+                      )}
+                      <ReceiptRow label="Cleaner" value={selectedCleaner?.name || "Auto-Match"} />
+                      {selectedAddOns.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-border space-y-1">
+                          {selectedAddOns.map((id) => {
+                            const a = addOns.find((x) => x.id === id);
+                            return a ? <ReceiptRow key={id} label={a.name} value={`+$${a.credits}`} small /> : null;
                           })}
                         </div>
                       )}
-                    </TabsContent>
-
-                    <TabsContent value="again" className="mt-4">
-                      {!bookAgainCleaners.length ? (
-                        <Card className="palette-card palette-card-amber palette-card-dashed"><CardContent className="p-8 text-center">
-                          <RotateCcw className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
-                          <p className="text-sm font-medium">No past cleaners</p>
-                          <p className="text-xs text-muted-foreground mt-1">Complete a booking to see cleaners here</p>
-                        </CardContent></Card>
-                      ) : (
-                        <div className="space-y-2">
-                          {bookAgainCleaners.map(c => (
-                            <Card key={c.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedCleanerId === c.id ? `${STEP_PALETTES[2].card} ring-2 ring-ring/10` : `${STEP_PALETTES[2].card} hover:shadow-elevated`}`} onClick={() => setSelectedCleanerId(c.id)}>
-                              <CardContent className="p-4 flex items-center gap-4">
-                                <div className={`h-11 w-11 rounded-full ${STEP_PALETTES[2].icon} font-bold text-sm`}>{c.name.charAt(0)}</div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="font-semibold text-sm truncate">{c.name}</p>
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    {c.rating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{c.rating.toFixed(1)}</span>}
-                                    <span>Last: {format(new Date(c.lastBooking), 'MMM d')}</span>
-                                  </div>
-                                </div>
-                                {selectedCleanerId === c.id && <div className={`h-6 w-6 ${STEP_PALETTES[2].step}`}><Check className="h-4 w-4" /></div>}
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
+                      {isSameDay && rushFee > 0 && (
+                        <ReceiptRow label="Same-Day Rush" value={`+$${rushFee}`} highlight />
                       )}
-                    </TabsContent>
-                  </Tabs>
-
-                  {selectedCleanerId && isDateBlockedByCleaner && selectedDate && (
-                    <Card className="bg-warning/10 border-warning/30 mt-3"><CardContent className="p-4 flex items-start gap-3">
-                      <CalendarOff className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
-                      <div><p className="font-medium text-sm">Cleaner unavailable on {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Go back to change the date or pick a different cleaner.</p></div>
-                    </CardContent></Card>
-                  )}
-
-                  <div className="flex gap-3 mt-6">
-                    <Button variant="outline" size="lg" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button className="flex-1" size="lg" disabled={selectedCleanerId ? isDateBlockedByCleaner : false} onClick={() => setStep(5)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* STEP 5: EXTRAS */}
-              {step === 5 && (
-                <motion.div key="s5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Add extras</h2>
-                  <p className="text-sm text-muted-foreground mb-6">Optional add-ons and special instructions</p>
-                  <div className="space-y-3 mb-6">
-                    {addOns.map(addOn => (
-                      <Card key={addOn.id} className={`cursor-pointer transition-all rounded-3xl border-2 ${selectedAddOns.includes(addOn.id) ? `${currentPalette.card} ring-2 ring-ring/10` : `${currentPalette.card} hover:shadow-elevated`}`} onClick={() => toggleAddOn(addOn.id)}>
-                        <CardContent className="flex items-center gap-4 p-4">
-                          <span className="text-2xl">{addOn.icon}</span>
-                          <div className="flex-1"><p className="font-medium">{addOn.name}</p></div>
-                          <span className="text-sm text-muted-foreground">+${addOn.credits}</span>
-                          <div className={`h-6 w-6 rounded-lg border-2 flex items-center justify-center ${selectedAddOns.includes(addOn.id) ? currentPalette.step : "border-border bg-background"}`}>
-                            {selectedAddOns.includes(addOn.id) && <Check className="h-4 w-4" />}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                  <div className="mb-6">
-                    <label className="text-sm font-medium mb-2 block">Special instructions</label>
-                    <Textarea placeholder="Any notes for your cleaner? (e.g., alarm code, pet info)" value={specialInstructions} onChange={e => setSpecialInstructions(e.target.value)} className={`min-h-[80px] ${currentPalette.input}`} />
-                  </div>
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="lg" onClick={() => setStep(4)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button className="flex-1" size="lg" onClick={() => setStep(6)}>Review Booking <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* STEP 6: REVIEW & PAY */}
-              {step === 6 && (
-                <motion.div key="s6" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1">Review & confirm</h2>
-                  <p className="text-sm text-muted-foreground mb-6">You only pay for time actually worked. Unused held credits are returned automatically.</p>
-
-                    <Card className="mb-4 palette-card palette-card-green">
-                    <CardContent className="p-5 space-y-4">
-                      <SummaryRow label="Service" value={selectedCleaningType?.name || ''} />
-                      <SummaryRow label="Duration" value={`${hours} hours`} />
-                      {selectedAddress && <SummaryRow label="Property" value={`${selectedAddress.line1}, ${selectedAddress.city}`} />}
-                      {selectedDate && selectedTime && (
-                        <SummaryRow label="Date & Time" value={`${format(selectedDate, 'EEE, MMM d')} at ${selectedTime}`} badge={isSameDay ? "Today" : undefined} />
-                      )}
-                      <SummaryRow label="Cleaner" value={selectedCleaner?.name || "Auto-Match"} />
-                      {selectedAddOns.length > 0 && (
-                        <div className="border-t border-border pt-3 space-y-1.5">
-                          {selectedAddOns.map(id => { const a = addOns.find(x => x.id === id); return a ? <SummaryRow key={id} label={a.name} value={`+$${a.credits}`} small /> : null; })}
-                        </div>
-                      )}
-                        {isSameDay && rushFee > 0 && <SummaryRow label="Same-Day Rush Fee" value={`+$${rushFee}`} highlight paletteClass="palette-pill palette-pill-amber" />}
-                      {specialInstructions && <SummaryRow label="Notes" value={specialInstructions} small />}
-                      <div className="border-t-2 border-border pt-4 flex items-center justify-between">
-                        <span className="font-bold text-lg">Estimated Total</span>
-                          <span className="text-2xl font-black palette-label-green">${totalCredits}</span>
+                      <div className="mt-4 pt-4 border-t-2 border-dashed border-border flex items-center justify-between">
+                        <span className="font-bold text-base">Estimated Total</span>
+                        <span className="text-3xl font-black" style={{ color: "hsl(var(--pt-purple-deep))" }}>
+                          ${totalCredits}
+                        </span>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
 
-                  {/* Escrow trust message */}
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6 p-3 rounded-xl bg-success/5 border border-success/20">
-                    <Shield className="h-4 w-4 text-success flex-shrink-0" />
-                    <span>Credits held in escrow — released only after you approve the work. Protected by 24-Hour Review.</span>
-                  </div>
+                    {/* Special instructions */}
+                    <div className="mt-5">
+                      <label className="text-xs font-black uppercase tracking-widest mb-2 block" style={{ color: "hsl(var(--pt-purple-deep))" }}>
+                        Special instructions
+                      </label>
+                      <Textarea
+                        placeholder="Any notes for your cleaner? (alarm code, pets, parking…)"
+                        value={specialInstructions}
+                        onChange={(e) => setSpecialInstructions(e.target.value)}
+                        className="min-h-[80px] border-2 rounded-xl"
+                        style={{ borderColor: "hsl(var(--pt-purple-deep))" }}
+                      />
+                    </div>
 
-                  {/* Payment options */}
-                  <div className="space-y-3 mb-4">
-                    <Card className={`border-2 rounded-3xl ${hasEnoughCredits ? 'palette-card palette-card-blue' : 'border-border opacity-60 bg-card'}`}>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3 mb-3">
-                          <Wallet className="h-5 w-5 text-primary" />
-                          <div className="flex-1"><p className="font-semibold text-sm">Pay with Credits</p>
-                            {!isLoadingAccount && <p className="text-xs text-muted-foreground">Balance: <span className={hasEnoughCredits ? 'palette-label-blue font-medium' : 'text-destructive font-medium'}>${availableCredits}</span>
-                              {!hasEnoughCredits && <Button variant="link" className="p-0 h-auto text-xs ml-1" asChild><Link to="/wallet">Top up →</Link></Button>}
-                            </p>}
-                          </div>
-                          <span className="text-lg font-bold">${totalCredits}</span>
-                        </div>
-                        <Button className="w-full" onClick={handleConfirmWithCredits} disabled={isCreating || !hasEnoughCredits}>
-                          {isCreating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating...</> : <><Check className="mr-2 h-4 w-4" />Confirm Booking</>}
-                        </Button>
-                      </CardContent>
-                    </Card>
+                    {/* Trust */}
+                    <div
+                      className="mt-5 flex items-center gap-2 text-xs font-medium rounded-xl border-2 px-3 py-2.5"
+                      style={{
+                        borderColor: "hsl(var(--success)/0.5)",
+                        backgroundColor: "hsl(var(--success)/0.06)",
+                        color: "hsl(var(--success))",
+                      }}
+                    >
+                      <Shield className="h-4 w-4 flex-shrink-0" />
+                      <span>Credits held in escrow — released only after you approve the work.</span>
+                    </div>
 
-                    <Card className="palette-card palette-card-purple">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3 mb-3">
-                          <CreditCard className="h-5 w-5 text-muted-foreground" />
-                          <div className="flex-1"><p className="font-semibold text-sm">Pay with Card</p>
-                            <p className="text-xs text-muted-foreground">Includes 15% service charge (${serviceCharge})</p>
-                          </div>
-                          <span className="text-lg font-bold">${directPayTotal}</span>
-                        </div>
-                        <Button variant="outline" className="w-full" onClick={handlePayDirectly} disabled={isDirectPaying || isCreating}>
-                          {isDirectPaying ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Opening Checkout...</> : <><ExternalLink className="mr-2 h-4 w-4" />Pay ${directPayTotal} with Stripe</>}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <Button variant="ghost" size="sm" className="w-full" onClick={() => setStep(5)}><ArrowLeft className="mr-2 h-4 w-4" /> Edit Booking</Button>
+                    {/* Payment method */}
+                    <div className="mt-5">
+                      <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "hsl(var(--pt-purple-deep))" }}>
+                        Payment method
+                      </p>
+                      <div className="space-y-3">
+                        <PaymentMethodCard
+                          icon={Wallet}
+                          title="Pay with Credits"
+                          subtitle={
+                            !isLoadingAccount && (
+                              <span>
+                                Balance: <span className={hasEnoughCredits ? "font-bold" : "text-destructive font-bold"}>${availableCredits}</span>
+                                {!hasEnoughCredits && (
+                                  <Button variant="link" className="p-0 h-auto text-xs ml-1" asChild>
+                                    <Link to="/wallet">Top up →</Link>
+                                  </Button>
+                                )}
+                              </span>
+                            )
+                          }
+                          amount={totalCredits}
+                          selected={paymentMethod === "credits"}
+                          onSelect={() => setPaymentMethod("credits")}
+                          disabled={!hasEnoughCredits}
+                          paletteVar="pt-green"
+                          badge="No fee"
+                        />
+                        <PaymentMethodCard
+                          icon={CreditCard}
+                          title="Pay with Card"
+                          subtitle={`Includes 15% service charge ($${serviceCharge})`}
+                          amount={directPayTotal}
+                          selected={paymentMethod === "card"}
+                          onSelect={() => setPaymentMethod("card")}
+                          paletteVar="pt-purple"
+                        />
+                      </div>
+                      {paymentMethod === "card" && (
+                        <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
+                          <ExternalLink className="h-3 w-3" /> You'll be redirected to Stripe Checkout.
+                        </p>
+                      )}
+                    </div>
+                  </SectionShell>
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Mobile back/continue (visible only when summary bar is collapsed bottom on mobile) */}
+            <div className="flex gap-3 mt-6 lg:hidden">
+              {step > 1 && (
+                <Button variant="outline" size="lg" onClick={back} className="border-2">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              )}
+            </div>
+
+            {/* Desktop back link below content */}
+            {step > 1 && (
+              <div className="hidden lg:block mt-6">
+                <Button variant="ghost" size="sm" onClick={back}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back to {STEPS[step - 2].label}
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* ── STICKY SUMMARY PANEL (Desktop) ───────────────────────── */}
-          <div className="hidden lg:block">
-            <div className="sticky top-24">
-                <Card className="palette-card palette-card-purple">
-                <CardContent className="p-5">
-                  <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Booking Summary</h3>
-                  <div className="space-y-3 text-sm">
-                    <SummaryRow label="Service" value={selectedCleaningType?.name || '—'} small />
-                    <SummaryRow label="Property" value={selectedAddress ? selectedAddress.line1 : '—'} small />
-                    <SummaryRow label="When" value={selectedDate && selectedTime ? `${format(selectedDate, 'MMM d')} · ${selectedTime}` : '—'} small />
-                    <SummaryRow label="Duration" value={`${hours}h`} small />
-                    <SummaryRow label="Cleaner" value={selectedCleaner?.name || (selectedCleanerId ? '—' : 'Auto-Match')} small />
-                    {selectedAddOns.length > 0 && <SummaryRow label="Extras" value={`${selectedAddOns.length} add-on${selectedAddOns.length > 1 ? 's' : ''}`} small />}
-                      <div className="border-t border-border pt-3 flex justify-between font-bold">
-                      <span>Est. Total</span>
-                        <span className="palette-label-purple">${totalCredits || 0}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          {/* ── Sticky summary panel ── */}
+          <BookingSummary
+            lines={summaryLines}
+            subtotal={baseCredits}
+            rushFee={rushFee}
+            total={paymentMethod === "card" && step === 4 ? directPayTotal : totalCredits}
+            walletBalance={paymentMethod === "credits" ? availableCredits : undefined}
+            ctaLabel={ctaLabel}
+            onCta={onCta}
+            ctaDisabled={ctaDisabled}
+            ctaLoading={ctaLoading}
+          />
         </div>
       </div>
     </main>
   );
 }
 
-// ── Helper Components ──────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────
 
-function SummaryRow({ label, value, small, highlight, badge, paletteClass }: { label: string; value: string; small?: boolean; highlight?: boolean; badge?: string; paletteClass?: string }) {
+function SectionShell({
+  paletteVar, title, subtitle, children,
+}: { paletteVar: string; title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className={`flex items-start justify-between gap-2 ${small ? 'text-xs' : 'text-sm'}`}>
+    <section
+      className="rounded-2xl border-2 p-5 sm:p-6 bg-background"
+      style={{
+        borderColor: `hsl(var(--${paletteVar}-deep))`,
+        backgroundColor: `hsl(var(--${paletteVar})/0.04)`,
+      }}
+    >
+      <h2 className="text-xl sm:text-2xl font-black mb-1" style={{ color: `hsl(var(--${paletteVar}-deep))` }}>
+        {title}
+      </h2>
+      {subtitle && <p className="text-sm text-muted-foreground mb-5">{subtitle}</p>}
+      {children}
+    </section>
+  );
+}
+
+function ReceiptRow({
+  label, value, small, highlight, badge,
+}: { label: string; value: string; small?: boolean; highlight?: boolean; badge?: string }) {
+  return (
+    <div className={`flex items-start justify-between gap-3 py-1 ${small ? "text-xs" : "text-sm"}`}>
       <span className="text-muted-foreground">{label}</span>
-      <span className={`text-right ${highlight ? 'text-warning font-medium' : 'font-medium'}`}>
+      <span className={`text-right font-semibold ${highlight ? "text-warning" : ""}`}>
         {value}
-        {badge && <Badge variant="outline" className={`ml-2 text-[10px] ${paletteClass || 'bg-warning/20 text-warning border-warning/30'}`}>{badge}</Badge>}
+        {badge && (
+          <span
+            className="ml-2 text-[10px] font-black px-2 py-0.5 rounded-full"
+            style={{ backgroundColor: "hsl(var(--pt-amber)/0.18)", color: "hsl(var(--pt-amber-deep))" }}
+          >
+            {badge}
+          </span>
+        )}
       </span>
     </div>
   );
 }
 
-function CleanerCard({ cleaner, selected, onSelect, isFav }: { cleaner: CleanerListing; selected: boolean; onSelect: () => void; isFav: boolean }) {
-  const palette = STEP_PALETTES[3];
+function EmptyState({
+  icon: Icon, title, subtitle, paletteVar,
+}: { icon: any; title: string; subtitle: string; paletteVar: string }) {
   return (
-    <Card className={`cursor-pointer transition-all rounded-3xl border-2 ${selected ? `${palette.card} ring-2 ring-ring/10` : `${palette.card} hover:shadow-elevated`}`} onClick={onSelect}>
-      <CardContent className="p-4 flex items-center gap-4">
-        <div className={`h-11 w-11 rounded-full ${palette.icon} font-bold text-sm flex-shrink-0`}>
-          {cleaner.name.charAt(0)}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <p className="font-semibold text-sm truncate">{cleaner.name}</p>
-            {isFav && <Heart className="h-3 w-3 text-destructive fill-destructive flex-shrink-0" />}
-            {cleaner.tier !== 'standard' && <Badge variant="outline" className={`text-[10px] h-4 capitalize ${palette.pill}`}>{cleaner.tier}</Badge>}
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
-            {cleaner.avgRating && <span className="flex items-center gap-0.5"><Star className="h-3 w-3 text-warning fill-warning" />{cleaner.avgRating.toFixed(1)}</span>}
-            <span>${cleaner.hourlyRate}/hr</span>
-            <span>{cleaner.jobsCompleted} jobs</span>
-            <span className="flex items-center gap-0.5"><Shield className="h-3 w-3" />{cleaner.reliabilityScore}%</span>
-          </div>
-        </div>
-        {selected && <div className={`h-6 w-6 ${palette.step} flex-shrink-0`}><Check className="h-4 w-4" /></div>}
-      </CardContent>
-    </Card>
+    <div
+      className="rounded-2xl border-2 border-dashed p-8 text-center bg-background"
+      style={{ borderColor: `hsl(var(--${paletteVar}-deep)/0.5)` }}
+    >
+      <Icon className="h-10 w-10 mx-auto mb-3 text-muted-foreground/40" />
+      <p className="text-sm font-bold">{title}</p>
+      <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+    </div>
   );
 }
