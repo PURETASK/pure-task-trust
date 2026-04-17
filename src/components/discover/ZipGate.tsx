@@ -179,7 +179,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
             value={zip}
             onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
             autoFocus
-            className="h-14 text-center text-2xl tracking-[0.4em] font-bold bg-white/5 border-2 border-white text-white placeholder:text-white/30 focus-visible:ring-[hsl(var(--pt-aqua))] focus-visible:border-white rounded-xl"
+            className="h-14 text-center text-2xl tracking-[0.4em] font-bold bg-white/5 border-0 text-white placeholder:text-white/30 focus-visible:ring-0 rounded-xl"
           />
           {error && (
             <p className="text-xs text-[hsl(var(--destructive))] text-center mt-3 font-medium">
