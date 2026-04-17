@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
+import legalBg from '@/assets/legal-hero-bg.png';
 
 export default function Legal() {
   const [activeTab, setActiveTab] = useState('privacy');
@@ -68,7 +69,17 @@ export default function Legal() {
   ];
 
   return (
-    <main className="container py-8">
+    <div
+      className="relative min-h-screen"
+      style={{
+        backgroundImage: `url(${legalBg})`,
+        backgroundSize: '100% auto',
+        backgroundRepeat: 'repeat-y',
+        backgroundPosition: 'top center',
+      }}
+    >
+      <div className="absolute inset-0 bg-background/60 pointer-events-none" aria-hidden="true" />
+      <main className="container py-8 relative">
       <SEO 
         title="Terms of Service & Privacy Policy"
         description="Read PureTask's Privacy Policy, Terms of Service, Photo Consent, Cancellation, and Damage Claims policies. Updated and written in plain language."
@@ -230,6 +241,7 @@ export default function Legal() {
           </CardContent>
         </Card>
     </main>
+    </div>
   );
 }
 
