@@ -450,7 +450,7 @@ export default function Pricing() {
             <div className="max-w-5xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
-                  <Trophy className="h-6 w-6 text-warning" /> How To Climb To Platinum
+                  <Trophy className="h-6 w-6 text-warning" /> How To Climb To All-Star Expert
                 </h2>
                 <p className="text-muted-foreground text-sm sm:text-base">
                   Your tier is set by your reliability score (0–100), updated after every job.
