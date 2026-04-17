@@ -1,45 +1,115 @@
 
-The user wants location-gated cleaner discovery: before showing any cleaner cards, ask for ZIP code, then filter cleaners to that area.
 
-Existing pieces I can leverage:
-- `useCleaners` hook fetches from `cleaner_public_profiles` (has `travel_radius_km`, no lat/lng exposed publicly).
-- `cleaner_service_areas` table stores per-cleaner ZIP/city/state/lat/lng/radius — this is the right matching surface.
-- `useAddressAutocomplete` (Nominatim) can geocode a ZIP to lat/lng for distance math.
-- `Discover.tsx` is the cleaner browsing page (need to confirm but it's the obvious target).
+# Support Center Redesign — Full Overhaul
 
-Matching strategy (simple, fast, no PostGIS needed):
-1. Exact ZIP match in `cleaner_service_areas.zip_code` → strongest signal.
-2. Fallback: geocode ZIP → lat/lng, then haversine distance vs each service area's lat/lng within its `radius_miles` (or cleaner's `travel_radius_km`).
+A complete rethink of `/help` into a modern support hub: AI-first deflection, role-aware experiences, threaded ticket conversations, and contextual entry points across the app.
 
-Persist ZIP in localStorage so we don't re-prompt every visit. Allow change anytime.
+## The 4 Pillars
 
-# Plan: ZIP-gated cleaner discovery
+**1. AI assistant first** — Every visit opens with a chat box. The AI answers from FAQs, policies (cancellation, pricing, reliability score), and the user's own data (recent bookings, wallet balance). If unresolved, "Talk to a human" converts the transcript into a ticket with full context.
 
-## 1. ZIP gate UI (Discover page)
-- Before any cleaner cards render, if no ZIP in localStorage (`puretask_client_zip`), show a centered card: "Find cleaners near you" with a 5-digit ZIP input + "Search" button.
-- Validate 5-digit US ZIP. On submit, geocode via Nominatim (`postalcode=XXXXX&country=us`) to get lat/lng + city/state.
-- Save `{ zip, lat, lng, city, state }` to localStorage and React state.
+**2. Role-aware** — Clients and cleaners see different categories, suggested articles, and quick actions. Detected automatically via `user_roles`.
 
-## 2. Location bar (after ZIP set)
-- Replace gate with a slim bar at top of Discover: "Showing cleaners near **{city}, {state} {zip}**" + "Change" button (reopens the ZIP modal).
+**3. Threaded tickets** — Real two-way conversations. Users see agent replies inline, get notified, can reply with attachments. No more email-only loop.
 
-## 3. New hook: `useCleanersByZip(zip, lat, lng)`
-- Query `cleaner_service_areas` joined with `cleaner_public_profiles`:
-  - First pass: rows where `zip_code = :zip` → mark as "Serves your ZIP".
-  - Second pass: rows with lat/lng where haversine distance ≤ `radius_miles` → mark as "In service radius" + show distance.
-- Dedupe by cleaner_id, sort: exact ZIP match → distance asc → rating desc.
-- Return enriched `CleanerListing[]` with `matchType` and `distanceMiles`.
+**4. Contextual support everywhere** — A floating "Help" launcher on key screens (booking, job, wallet) opens a sheet pre-filled with that context (booking ID, page, screenshot option). Replaces the standalone `JobSupportChat` with a unified component.
 
-## 4. Update Discover page
-- Swap `useCleaners` for `useCleanersByZip` once ZIP is set.
-- Add badge on each cleaner card: "Serves your area" or "{X} mi away".
-- Empty state: "No cleaners serve {zip} yet — try a nearby ZIP" with change button.
+## New Information Architecture
 
-## 5. Pass ZIP through to booking
-- When client clicks a cleaner → book, prefill the booking address ZIP with the saved ZIP (small UX win, easy via URL param or context).
+```text
+/help                         → Support Hub (landing)
+  ├─ AI chat (default view, full width)
+  ├─ Browse by topic (role-aware cards)
+  ├─ Quick actions (Cancel booking, Refund, etc.)
+  └─ Floating "My Tickets" badge (shows unread agent replies)
 
-## Technical notes
-- Nominatim is already used for autocomplete — same endpoint, just `postalcode` param. No new dependency.
-- Haversine in pure JS (~10 lines) — no PostGIS migration needed.
-- All filtering is client-side after one query, fine for current scale.
-- Files touched: `src/pages/Discover.tsx`, new `src/hooks/useCleanersByZip.ts`, new `src/components/discover/ZipGate.tsx`, new `src/components/discover/LocationBar.tsx`.
+/help/articles/:slug          → Help article reader (markdown)
+/help/tickets                 → My Tickets list
+/help/tickets/:id             → Threaded conversation view
+/help/contact                 → Manual ticket form (fallback)
+```
+
+The Hub replaces the current 3-tab page. Tabs are too flat — we need depth: hub → topic → article OR hub → AI → ticket.
+
+## UX Layout — `/help` Hub
+
+```text
+┌──────────────────────────────────────────────────────┐
+│  Hi {name}, how can we help?                         │
+│  ┌────────────────────────────────────────────────┐  │
+│  │ 💬 Ask anything... (AI replies in seconds)     │  │
+│  └────────────────────────────────────────────────┘  │
+│  Suggested: "Cancel my booking" "Refund" "No-show"   │
+├──────────────────────────────────────────────────────┤
+│  Browse help (role-aware grid of 6 topic cards)      │
+│  [Bookings] [Payments] [Cleaners] [Account] ...      │
+├──────────────────────────────────────────────────────┤
+│  Need a human? → [Open ticket]   📧 Email  📞 Phone  │
+└──────────────────────────────────────────────────────┘
+```
+
+## Database Changes
+
+**New tables:**
+- `help_articles` — markdown content, slug, category, role (`client`/`cleaner`/`both`), tags, view_count. Public read.
+- `ticket_messages` — `ticket_id`, `sender_id`, `sender_role` (user/agent/ai), `body`, `attachments jsonb`, `created_at`. RLS: user reads/writes for tickets they own; admins (via `has_role`) read/write all.
+- `support_conversations` — AI chat sessions: `user_id`, `messages jsonb[]`, `resolved boolean`, `escalated_ticket_id`. So we can convert AI chats → tickets.
+
+**Extend `support_tickets`:**
+- `last_agent_reply_at timestamptz` (drives unread badge)
+- `unread_by_user boolean default false`
+- `ai_transcript_id uuid` (links to originating AI chat)
+- `category text` (replaces freeform `issue_type`, FK-style enum)
+- `attachments jsonb default '[]'`
+
+**Realtime:** Enable on `ticket_messages` so users see agent replies live.
+
+## Backend (Edge Functions)
+
+- `support-ai-chat` (streaming) — Lovable AI Gateway, `google/gemini-3-flash-preview`. System prompt includes PureTask policies (escrow, cancellation tiers, reliability). Tools: `search_help_articles`, `lookup_user_booking`, `escalate_to_ticket`. Returns SSE stream.
+- `escalate-conversation` — Converts AI chat → ticket, attaches transcript, notifies support queue.
+- `notify-ticket-reply` — Triggered when agent replies; sends push + email + sets `unread_by_user=true`.
+
+## Components to Build
+
+```text
+src/components/support/
+  ├─ SupportHub.tsx              (landing, AI + browse + CTA)
+  ├─ AISupportChat.tsx           (streaming chat, escalate button)
+  ├─ TopicGrid.tsx               (role-aware topic cards)
+  ├─ ArticleReader.tsx           (markdown + helpful Y/N + related)
+  ├─ TicketList.tsx              (with unread badges)
+  ├─ TicketThread.tsx            (messages + reply composer + attachments)
+  ├─ ContactForm.tsx             (manual ticket fallback)
+  ├─ FloatingHelpLauncher.tsx    (contextual sheet — replaces JobSupportChat)
+  └─ HelpContext.tsx             (provider: current page/booking auto-attached)
+```
+
+## Pages
+
+- Rewrite `src/pages/Help.tsx` → `SupportHub` shell with nested routes
+- Add `src/pages/HelpArticle.tsx`, `src/pages/HelpTickets.tsx`, `src/pages/HelpTicket.tsx`, `src/pages/HelpContact.tsx`
+- Update `src/App.tsx` routes
+- Replace `src/components/cleaner/JobSupportChat.tsx` usage with `FloatingHelpLauncher` (keep the file as a thin re-export for back-compat)
+
+## Cross-App Integration
+
+Mount `<FloatingHelpLauncher />` in `MainLayout` for authenticated users. Auto-attaches current route + visible booking/job ID. A "?" button bottom-right; click → contextual sheet (AI chat scoped to that page's content).
+
+Update `NotificationBell` and `MobileBottomNav` to surface unread ticket replies.
+
+## Content Seeding
+
+Seed ~20 starter `help_articles` covering the existing FAQ content + cancellation policy + reliability score + credits, split by role. Future articles editable via an admin page (out of scope for v1).
+
+## Rollout
+
+Single PR, feature-complete. Old `JobSupportChat` re-exports new component so cleaner job pages keep working without edits. FAQ tab content migrates into seeded articles.
+
+## Out of Scope (Future)
+
+- Admin reply UI (agents reply via DB/dashboard for v1)
+- Live agent chat (handoff)
+- Multilingual articles
+- Article admin editor
+
