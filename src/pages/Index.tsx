@@ -119,23 +119,24 @@ export default function Index() {
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }]} />
 
       {/* ── HERO ──────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90dvh] flex items-center overflow-hidden">
+      <section className="relative min-h-[88dvh] sm:min-h-[90dvh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src={heroImg}
             alt="Pristine clean home"
-            className="w-full h-full object-contain object-right-bottom"
+            className="w-full h-full object-cover sm:object-contain object-right-bottom opacity-60 sm:opacity-100"
             loading="eager" fetchPriority="high" decoding="sync"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/85 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+          {/* Mobile: stronger overlay for text legibility over full-bleed image */}
+          <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-background/95 via-background/80 sm:via-background/85 to-background/60 sm:to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 sm:from-background/70 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full px-4 sm:px-6 py-20 sm:py-32 pt-28 sm:pt-32">
+        <div className="relative z-10 w-full px-4 sm:px-6 py-16 sm:py-32 pt-24 sm:pt-32">
           <div className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left">
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-              className="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5 sm:mb-6"
+              className="text-[2.25rem] xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] sm:leading-[1.05] mb-4 sm:mb-6 tracking-tight"
             >
               Book trusted cleaners{" "}
               <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
@@ -145,21 +146,21 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-base sm:text-xl text-muted-foreground mb-7 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0"
+              className="text-[15px] sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0"
             >
               GPS check-in/out, before &amp; after photos, and payment released only after you approve.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-              className="flex flex-col xs:flex-row gap-3 mb-10 items-center sm:items-start"
+              className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-stretch xs:items-center sm:items-start"
             >
-              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
+              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-12 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl border-border/60 w-full xs:w-auto">
+              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-2xl border-border/60 w-full xs:w-auto bg-background/80 backdrop-blur-sm">
                 <Link to="/discover">Browse Cleaners</Link>
               </Button>
             </motion.div>
