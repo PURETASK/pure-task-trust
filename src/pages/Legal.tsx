@@ -241,6 +241,7 @@ export default function Legal() {
           </CardContent>
         </Card>
     </main>
+    </div>
   );
 }
 
