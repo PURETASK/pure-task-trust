@@ -2,67 +2,97 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import pricingHero from '@/assets/pricing-hero.jpg';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import {
-  CheckCircle, Award, Shield, Star, Zap, Clock, Info,
-  TrendingUp, DollarSign, ArrowRight, Sparkles, Users
+  CheckCircle, Award, Shield, Star, Zap, Clock,
+  TrendingUp, DollarSign, ArrowRight, Sparkles, Users,
+  Wallet, Calendar, Target, Trophy, ChevronRight, PiggyBank,
 } from 'lucide-react';
 import { SEO, JsonLd, BreadcrumbSchema, FAQSchema } from '@/components/seo';
 import { motion } from 'framer-motion';
 
+// Unified payout split — Bronze 75% → Platinum 85%
 const TIERS = [
   {
     tier: 'Bronze',
+    emoji: '🥉',
     score: '0–49',
     rate: '$20–30/hr',
-    earnRate: '80%',
+    keepPct: 75,
+    feePct: 25,
     popular: false,
-    colorBg: 'bg-muted/50',
+    colorBg: 'bg-amber-500/5',
     colorBadge: 'border-amber-700/30 text-amber-700',
+    accent: 'hsl(var(--warning))',
     icon: Star,
     features: ['ID verified & background checked', 'GPS tracking & photo proof', 'Building their reputation', 'Great value for basic cleans'],
   },
   {
     tier: 'Silver',
+    emoji: '🥈',
     score: '50–69',
     rate: '$20–40/hr',
-    earnRate: '82%',
+    keepPct: 78,
+    feePct: 22,
     popular: false,
-    colorBg: 'bg-success/5',
-    colorBadge: 'border-success/30 text-success',
+    colorBg: 'bg-slate-400/5',
+    colorBadge: 'border-slate-400/40 text-slate-500',
+    accent: 'hsl(var(--success))',
     icon: TrendingUp,
     features: ['All Bronze features', 'Proven reliability (50–69)', 'Priority scheduling available', 'Specialty services offered'],
   },
   {
     tier: 'Gold',
+    emoji: '🥇',
     score: '70–89',
     rate: '$20–50/hr',
-    earnRate: '83%',
+    keepPct: 82,
+    feePct: 18,
     popular: true,
-    colorBg: 'bg-primary/5',
-    colorBadge: 'border-primary/40 text-primary',
+    colorBg: 'bg-yellow-400/5',
+    colorBadge: 'border-yellow-400/40 text-yellow-600',
+    accent: 'hsl(var(--primary))',
     icon: Sparkles,
     features: ['All Silver features', 'High reliability (70–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
   },
   {
     tier: 'Platinum',
+    emoji: '💎',
     score: '90–100',
     rate: '$20–65/hr',
-    earnRate: '85%',
+    keepPct: 85,
+    feePct: 15,
     popular: false,
-    colorBg: 'bg-amber-500/5',
-    colorBadge: 'border-amber-500/40 text-amber-600',
+    colorBg: 'bg-[hsl(280,70%,55%)]/5',
+    colorBadge: 'border-[hsl(280,70%,55%)]/40 text-[hsl(280,70%,45%)]',
+    accent: 'hsl(var(--pt-purple))',
     icon: Award,
     features: ['All Gold features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
   },
 ];
 
 const EXAMPLES = [
-  { title: 'Standard Clean', label: 'Silver · 3h', total: 115, cleaner: 94, platform: 21 },
-  { title: 'Deep Clean', label: 'Gold · 4h', total: 210, cleaner: 174, platform: 36, popular: true },
-  { title: 'Move-Out', label: 'Platinum · 5h', total: 375, cleaner: 319, platform: 56 },
+  { title: 'Standard Clean', label: 'Silver · 3h @ $32/hr', total: 96, cleaner: 75, platform: 21 },
+  { title: 'Deep Clean', label: 'Gold · 4h @ $45/hr', total: 180, cleaner: 148, platform: 32, popular: true },
+  { title: 'Move-Out', label: 'Platinum · 5h @ $60/hr', total: 300, cleaner: 255, platform: 45 },
+];
+
+// What cleaners actually earn per hour by tier (mid-range rate × keep %)
+const CLEANER_NET = TIERS.map(t => {
+  const midRate = t.tier === 'Bronze' ? 25 : t.tier === 'Silver' ? 30 : t.tier === 'Gold' ? 35 : 50;
+  const net = +(midRate * (t.keepPct / 100)).toFixed(2);
+  return { ...t, midRate, net };
+});
+
+// How the 15–25% platform fee is allocated
+const FEE_ALLOCATION = [
+  { label: 'Trust & Safety (verification, background, GPS)', pct: 35, icon: Shield },
+  { label: 'Payment processing & escrow protection', pct: 25, icon: Wallet },
+  { label: '24/7 customer support & dispute resolution', pct: 20, icon: Users },
+  { label: 'Platform development, hosting & operations', pct: 20, icon: Sparkles },
 ];
 
 export default function Pricing() {
@@ -71,12 +101,11 @@ export default function Pricing() {
   return (
     <main className="py-0">
       <SEO
-        title="Transparent Cleaning Prices"
-        description="No hidden fees, ever. Cleaner rates from $20–65/hr based on reliability tier. See exactly what you pay before booking any cleaning service."
+        title="Transparent Cleaning Prices & Cleaner Payouts"
+        description="No hidden fees. Cleaners keep 75–85% of every job — Bronze 75%, Silver 78%, Gold 82%, Platinum 85%. See full pricing and earnings before you book or sign up."
         image="/og/og-pricing.jpg"
         url="/pricing"
       />
-      {/* Service schema — one tag with full offer details matching visible tier table */}
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'Service',
@@ -87,32 +116,29 @@ export default function Pricing() {
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: 'Cleaning Service Tiers',
-          itemListElement: [
-            { '@type': 'Offer', name: 'Bronze Tier Cleaning', description: 'Entry-level verified cleaner — building their reputation.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–30', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Silver Tier Cleaning', description: 'Proven reliability score 50–69. Priority scheduling.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–40', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Gold Tier Cleaning', description: 'High reliability score 70–89. Same-day booking available.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–50', priceCurrency: 'USD', unitText: 'per hour' } },
-            { '@type': 'Offer', name: 'Platinum Tier Cleaning', description: 'Elite reliability score 90–100. White-glove service.', price: '20', priceCurrency: 'USD', priceSpecification: { '@type': 'UnitPriceSpecification', price: '20–65', priceCurrency: 'USD', unitText: 'per hour' } },
-          ],
+          itemListElement: TIERS.map(t => ({
+            '@type': 'Offer',
+            name: `${t.tier} Tier Cleaning`,
+            description: `Reliability score ${t.score}. Cleaner keeps ${t.keepPct}%.`,
+            price: '20',
+            priceCurrency: 'USD',
+            priceSpecification: { '@type': 'UnitPriceSpecification', price: t.rate.replace('/hr', '').replace('$', ''), priceCurrency: 'USD', unitText: 'per hour' },
+          })),
         },
       }} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
       <FAQSchema faqs={[
-        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum). The platform fee is 15–25% paid by the cleaner, not added to your bill.' },
+        { question: 'How much do cleaners actually keep?', answer: 'Bronze keeps 75%, Silver 78%, Gold 82%, Platinum 85%. The rest is the platform fee covering trust, safety, payments, and support.' },
+        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum).' },
         { question: 'What is a credit?', answer: '1 credit equals $1 USD. You purchase credits upfront and use them to book cleanings. Unused credits never expire.' },
-        { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras. The price shown is the price you pay.' },
-        { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job. If you\'re unhappy, you can dispute the job and credits may be returned.' },
+        { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras.' },
+        { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job.' },
       ]} />
 
       {/* Hero */}
       <section className="relative py-12 sm:py-20 overflow-hidden">
-        {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img
-            src={pricingHero}
-            alt="Professional cleaning service"
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
+          <img src={pricingHero} alt="Professional cleaning service" className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/90 to-background/60" />
         </div>
         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
@@ -125,12 +151,12 @@ export default function Pricing() {
                 Transparent,<br /><span className="text-primary">Fair Pricing</span>
               </h1>
               <p className="text-base sm:text-xl text-muted-foreground max-w-xl mx-auto mb-8 sm:mb-10">
-                Pay for quality. 1 credit = $1 USD. Platform fee of 15–25% covers verification, GPS, photo storage, and 24/7 support. Cleaners keep 75–85% of every booking.
+                1 credit = $1 USD. Cleaners keep <strong className="text-foreground">75–85%</strong> of every booking. The platform fee covers verification, GPS, photo storage, and 24/7 support.
               </p>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-10">
                 {[
                   { value: "1 credit", label: "= $1 USD" },
-                  { value: "15–25%", label: "Platform fee" },
+                  { value: "75–85%", label: "Cleaner keeps" },
                   { value: "100%", label: "Verified cleaners" },
                 ].map(({ value, label }) => (
                   <div key={label} className="text-center">
@@ -167,50 +193,39 @@ export default function Pricing() {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                {TIERS.map((tier, i) => {
-                  const tierColors = [
-                    { border: "hsl(var(--warning))", shadow: "hsl(var(--warning) / 0.18)" },
-                    { border: "hsl(var(--success))", shadow: "hsl(var(--success) / 0.18)" },
-                    { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.22)" },
-                    { border: "hsl(var(--pt-purple))", shadow: "hsl(var(--pt-purple) / 0.18)" },
-                  ];
-                  const c = tier.popular ? { border: "hsl(var(--primary))", shadow: "hsl(var(--primary) / 0.28)" } : tierColors[i];
-                  return (
-                    <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
-                      <div
-                        className={`relative bg-card rounded-2xl h-full transition-all duration-300 ${tier.popular ? 'scale-105' : ''}`}
-                        style={{ border: `2px solid ${c.border}`, boxShadow: `0 4px 24px 0 ${c.shadow}` }}
-                      >
-                        {tier.popular && (
-                          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                            <Badge className="bg-primary text-primary-foreground shadow-md">⭐ Most Popular</Badge>
-                          </div>
-                        )}
-                        <div className="pb-4 pt-6 text-center px-6">
-                          <div className={`h-12 w-12 rounded-2xl bg-background border ${tier.colorBadge} flex items-center justify-center mx-auto mb-3`}>
-                            <tier.icon className="h-6 w-6" />
-                          </div>
-                          <h3 className="text-lg font-semibold">{tier.tier}</h3>
-                          <div className="text-3xl font-bold mt-2">{tier.rate}</div>
-                          <Badge variant="outline" className={`mt-1 text-xs ${tier.colorBadge}`}>Score: {tier.score}</Badge>
+                {TIERS.map((tier, i) => (
+                  <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                    <div
+                      className={`relative bg-card rounded-2xl h-full transition-all duration-300 ${tier.popular ? 'scale-105' : ''}`}
+                      style={{ border: `2px solid ${tier.accent}`, boxShadow: `0 4px 24px 0 ${tier.accent}33` }}
+                    >
+                      {tier.popular && (
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                          <Badge className="bg-primary text-primary-foreground shadow-md">⭐ Most Popular</Badge>
                         </div>
-                        <div className="px-6 pb-6">
-                          <ul className="space-y-2.5 mb-6">
-                            {tier.features.map(f => (
-                              <li key={f} className="flex items-start gap-2 text-sm">
-                                <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                {f}
-                              </li>
-                            ))}
-                          </ul>
-                          <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
-                            <Link to="/discover">Browse {tier.tier} <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
-                          </Button>
-                        </div>
+                      )}
+                      <div className="pb-4 pt-6 text-center px-6">
+                        <div className="text-4xl mb-2">{tier.emoji}</div>
+                        <h3 className="text-lg font-semibold">{tier.tier}</h3>
+                        <div className="text-3xl font-bold mt-2">{tier.rate}</div>
+                        <Badge variant="outline" className={`mt-1 text-xs ${tier.colorBadge}`}>Score: {tier.score}</Badge>
                       </div>
-                    </motion.div>
-                  );
-                })}
+                      <div className="px-6 pb-6">
+                        <ul className="space-y-2.5 mb-6">
+                          {tier.features.map(f => (
+                            <li key={f} className="flex items-start gap-2 text-sm">
+                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                        <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                          <Link to="/discover">Browse {tier.tier} <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </section>
@@ -224,9 +239,9 @@ export default function Pricing() {
               </div>
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {EXAMPLES.map(({ title, label, total, cleaner, platform, popular }) => (
-                  <Card key={title} className={popular ? 'border-primary shadow-lg ring-1 ring-primary/20' : ''}>
+                  <Card key={title} className={popular ? 'border-primary shadow-lg ring-1 ring-primary/20 relative' : 'relative'}>
                     {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="bg-primary">Most Booked</Badge></div>}
-                    <CardContent className="p-6 relative">
+                    <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-1">{title}</h3>
                       <p className="text-sm text-muted-foreground mb-5">{label}</p>
                       <div className="space-y-2.5 mb-5">
@@ -243,66 +258,84 @@ export default function Pricing() {
               </div>
             </div>
           </section>
-
-          {/* Platform Fee Explainer */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-3xl mx-auto px-4">
-              <Card className="border-primary/20 bg-primary/5">
-                <CardContent className="p-5 sm:p-8">
-                  <div className="flex items-start gap-5">
-                    <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Shield className="h-7 w-7 text-primary" />
-                    </div>
-                  <div>
-                      <h3 className="text-xl font-bold mb-3">What the 15–25% Platform Fee Covers</h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Bronze cleaners pay 25%; Silver 22%; Gold 18%; Platinum 15%.{" "}
-                        <Link to="/cleaning-scope" className="text-primary hover:underline underline-offset-2 font-medium">
-                          See what's included in every clean
-                        </Link>{" "}and{" "}
-                        <Link to="/cancellation-policy" className="text-primary hover:underline underline-offset-2 font-medium">
-                          review the cancellation policy
-                        </Link>.
-                      </p>
-                      <div className="grid sm:grid-cols-2 gap-2.5">
-                        {['Identity & background verification', 'GPS tracking & geolocation', 'Before/after photo storage', 'Secure escrow payments', '24/7 customer support', 'Dispute resolution services', 'Trust & safety monitoring', 'Platform development & ops'].map(item => (
-                          <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />{item}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </section>
         </motion.div>
       )}
 
-      {/* Cleaner View */}
+      {/* Cleaner View — REDESIGNED */}
       {userType === 'cleaner' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <section className="py-10 sm:py-20 bg-background">
+
+          {/* 1. Payout Split Hero — the headline answer */}
+          <section className="py-10 sm:py-16 bg-background">
             <div className="max-w-6xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-12">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Your Earning Potential</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Keep 75–85% of every booking. Grow your tier (Bronze → Platinum) to reduce your platform fee.</p>
+                <Badge variant="outline" className="mb-3 border-success/40 text-success">
+                  <PiggyBank className="h-3.5 w-3.5 mr-1.5" /> Your Payout
+                </Badge>
+                <h2 className="text-2xl sm:text-4xl font-bold mb-3">Keep More As You Grow</h2>
+                <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+                  Every cleaner starts at Bronze keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to Platinum where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
+                </p>
               </div>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-10 sm:mb-16">
+
+              {/* Visual payout bars */}
+              <Card className="mb-10">
+                <CardContent className="p-6 sm:p-8">
+                  <div className="space-y-5">
+                    {TIERS.map((tier) => (
+                      <div key={tier.tier}>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-2xl">{tier.emoji}</span>
+                            <div>
+                              <p className="font-semibold text-sm sm:text-base">{tier.tier}</p>
+                              <p className="text-xs text-muted-foreground">Score {tier.score}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl sm:text-3xl font-bold text-success">{tier.keepPct}%</p>
+                            <p className="text-xs text-muted-foreground">{tier.feePct}% platform fee</p>
+                          </div>
+                        </div>
+                        <div className="relative h-8 rounded-lg overflow-hidden bg-muted">
+                          <div
+                            className="absolute inset-y-0 left-0 flex items-center justify-end px-3 text-xs font-semibold text-white transition-all"
+                            style={{ width: `${tier.keepPct}%`, background: tier.accent }}
+                          >
+                            You keep ${tier.keepPct}
+                          </div>
+                          <div
+                            className="absolute inset-y-0 right-0 flex items-center justify-center text-xs font-medium text-muted-foreground"
+                            style={{ width: `${tier.feePct}%` }}
+                          >
+                            ${tier.feePct} fee
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center mt-5 pt-5 border-t">
+                    Per $100 earned. Tier promotion is automatic when you hit the score threshold.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Tier cards with rates */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
                 {TIERS.map((tier, i) => (
                   <motion.div key={tier.tier} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-                    <Card className={`${tier.colorBg} ${tier.popular ? 'border-primary border-2 shadow-xl shadow-primary/10 scale-105' : 'border-border'} h-full`}>
-                      <CardContent className="p-6 text-center">
-                        <div className={`h-10 w-10 rounded-xl border ${tier.colorBadge} bg-background flex items-center justify-center mx-auto mb-3`}>
-                          <tier.icon className="h-5 w-5" />
-                        </div>
-                        <h3 className="font-bold text-lg mb-1">{tier.tier} Tier</h3>
+                    <Card
+                      className={`${tier.colorBg} h-full ${tier.popular ? 'scale-105' : ''}`}
+                      style={{ border: `2px solid ${tier.accent}`, boxShadow: tier.popular ? `0 4px 24px 0 ${tier.accent}40` : undefined }}
+                    >
+                      <CardContent className="p-5 text-center">
+                        <div className="text-3xl mb-2">{tier.emoji}</div>
+                        <h3 className="font-bold text-base mb-1">{tier.tier}</h3>
                         <Badge variant="outline" className={`text-xs mb-3 ${tier.colorBadge}`}>Score {tier.score}</Badge>
-                        <div className="text-3xl font-bold mb-1">{tier.rate}</div>
-                        <p className="text-muted-foreground text-sm mb-4">per hour to client</p>
-                        <div className="p-3 bg-success/10 rounded-xl">
-                          <p className="text-success font-bold text-xl">{tier.earnRate}</p>
+                        <div className="text-2xl font-bold mb-1">{tier.rate}</div>
+                        <p className="text-muted-foreground text-xs mb-4">client pays</p>
+                        <div className="p-3 bg-success/10 rounded-xl border border-success/20">
+                          <p className="text-success font-bold text-2xl">{tier.keepPct}%</p>
                           <p className="text-xs text-muted-foreground">you keep</p>
                         </div>
                       </CardContent>
@@ -310,32 +343,162 @@ export default function Pricing() {
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </section>
 
-              <Card className="bg-gradient-to-r from-success/5 to-primary/5 border-success/20">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Zap className="h-5 w-5 text-success" />Monthly Earnings Scenario</h3>
-                  <div className="grid sm:grid-cols-3 gap-6">
-                    {[
-                      { label: "20 jobs/month", hours: "60 total hrs", tier: "Silver ($40/hr)", earning: "$1,872/mo", keep: "82%" },
-                      { label: "30 jobs/month", hours: "90 total hrs", tier: "Gold ($52/hr)", earning: "$4,089/mo", keep: "83%", popular: true },
-                      { label: "40 jobs/month", hours: "120 total hrs", tier: "Platinum ($75/hr)", earning: "$7,650/mo", keep: "85%" },
-                    ].map(({ label, hours, tier, earning, keep, popular }) => (
-                      <div key={label} className={`p-5 rounded-2xl border-2 text-center ${popular ? 'border-primary bg-primary/5' : 'border-border bg-background/80'}`}>
-                        {popular && <Badge className="mb-3 text-xs">Achievable Goal</Badge>}
-                        <p className="font-semibold mb-1">{label}</p>
-                        <p className="text-xs text-muted-foreground mb-3">{hours} · {tier}</p>
-                        <p className="text-3xl font-bold text-success mb-1">{earning}</p>
-                        <p className="text-xs text-muted-foreground">keeping {keep}</p>
+          {/* 2. What you actually earn per hour */}
+          <section className="py-10 sm:py-16 bg-muted/30">
+            <div className="max-w-5xl mx-auto px-4">
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Your Real Take-Home, Per Hour</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">After the platform fee — the number that actually hits your wallet.</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                {CLEANER_NET.map((t) => (
+                  <Card key={t.tier} className="relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1" style={{ background: t.accent }} />
+                    <CardContent className="p-5 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">{t.emoji} {t.tier} @ ${t.midRate}/hr</p>
+                      <p className="text-3xl sm:text-4xl font-bold mb-1" style={{ color: t.accent }}>${t.net}</p>
+                      <p className="text-xs text-muted-foreground">net per hour</p>
+                      <div className="mt-3 pt-3 border-t text-xs text-muted-foreground">
+                        Set your own rate within the {t.rate} range
                       </div>
-                    ))}
-                  </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 3. Monthly earnings scenarios — recalculated with new splits */}
+          <section className="py-10 sm:py-16 bg-background">
+            <div className="max-w-5xl mx-auto px-4">
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                  <Calendar className="h-6 w-6 text-primary" /> Monthly Earnings Scenarios
+                </h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Based on the actual payout splits above.</p>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
+                {[
+                  { tier: 'Silver', emoji: '🥈', jobs: 20, hours: 60, rate: 32, keep: 0.78, accent: 'hsl(var(--success))' },
+                  { tier: 'Gold', emoji: '🥇', jobs: 30, hours: 90, rate: 42, keep: 0.82, popular: true, accent: 'hsl(var(--primary))' },
+                  { tier: 'Platinum', emoji: '💎', jobs: 40, hours: 120, rate: 55, keep: 0.85, accent: 'hsl(var(--pt-purple))' },
+                ].map(({ tier, emoji, jobs, hours, rate, keep, popular, accent }) => {
+                  const gross = hours * rate;
+                  const net = Math.round(gross * keep);
+                  return (
+                    <Card
+                      key={tier}
+                      className={`relative ${popular ? 'scale-105' : ''}`}
+                      style={{ border: `2px solid ${popular ? accent : 'hsl(var(--border))'}`, boxShadow: popular ? `0 8px 32px 0 ${accent}33` : undefined }}
+                    >
+                      {popular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                          <Badge className="bg-primary text-primary-foreground shadow-md">🎯 Achievable Goal</Badge>
+                        </div>
+                      )}
+                      <CardContent className="p-6 text-center">
+                        <div className="text-3xl mb-2">{emoji}</div>
+                        <p className="font-semibold mb-1">{tier} Cleaner</p>
+                        <p className="text-xs text-muted-foreground mb-4">{jobs} jobs · {hours} hrs · ${rate}/hr</p>
+                        <p className="text-4xl font-bold text-success mb-1">${net.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground mb-4">take-home / month</p>
+                        <div className="text-xs text-muted-foreground space-y-1 pt-3 border-t">
+                          <div className="flex justify-between"><span>Gross</span><span className="font-medium text-foreground">${gross.toLocaleString()}</span></div>
+                          <div className="flex justify-between"><span>Platform fee ({Math.round((1 - keep) * 100)}%)</span><span>−${(gross - net).toLocaleString()}</span></div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* 4. How the platform fee is spent */}
+          <section className="py-10 sm:py-16 bg-muted/30">
+            <div className="max-w-4xl mx-auto px-4">
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Where Your Platform Fee Goes</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Every dollar reinvested in keeping you safe, paid, and supported.</p>
+              </div>
+              <Card>
+                <CardContent className="p-6 sm:p-8 space-y-5">
+                  {FEE_ALLOCATION.map(({ label, pct, icon: Icon }) => (
+                    <div key={label}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Icon className="h-4 w-4 text-primary" />
+                          </div>
+                          <p className="text-sm font-medium">{label}</p>
+                        </div>
+                        <span className="text-sm font-bold text-primary">{pct}%</span>
+                      </div>
+                      <Progress value={pct} className="h-2" />
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
+            </div>
+          </section>
 
-              <div className="text-center mt-12">
-                <h3 className="text-2xl font-bold mb-4">Ready to start earning?</h3>
+          {/* 5. How to climb tiers */}
+          <section className="py-10 sm:py-16 bg-background">
+            <div className="max-w-5xl mx-auto px-4">
+              <div className="text-center mb-8 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                  <Trophy className="h-6 w-6 text-warning" /> How To Climb To Platinum
+                </h2>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  Your tier is set by your reliability score (0–100), updated after every job.
+                </p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 sm:gap-5">
+                {[
+                  { icon: Clock, title: 'Show up on time', desc: 'GPS check-in within 5 min of scheduled start.' },
+                  { icon: CheckCircle, title: 'Complete every step', desc: 'Photo proof before/after, full checklist done.' },
+                  { icon: Star, title: 'Earn 5-star reviews', desc: 'Communication, quality, and professionalism count.' },
+                  { icon: Shield, title: 'Avoid cancellations', desc: 'Late cancels and no-shows cost reliability points.' },
+                  { icon: Target, title: 'Stay consistent', desc: '20+ jobs at high quality typically reaches Gold.' },
+                  { icon: Zap, title: 'Accept reasonable jobs', desc: 'Strong acceptance rate boosts your visibility & score.' },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <Card key={title} className="hover:border-primary/40 transition-colors">
+                    <CardContent className="p-5 flex gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">{title}</p>
+                        <p className="text-sm text-muted-foreground">{desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Button asChild variant="outline">
+                  <Link to="/reliability-score">See full reliability formula <ChevronRight className="h-4 w-4 ml-1" /></Link>
+                </Button>
+              </div>
+            </div>
+          </section>
+
+          {/* 6. Final CTA */}
+          <section className="py-10 sm:py-16 bg-gradient-to-r from-primary/5 via-background to-success/5">
+            <div className="max-w-3xl mx-auto px-4 text-center">
+              <h3 className="text-2xl sm:text-3xl font-bold mb-3">Ready to start earning?</h3>
+              <p className="text-muted-foreground mb-6 text-sm sm:text-base">
+                Join free. Set your own schedule. Get paid weekly with instant payout options.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg" className="gap-2 shadow-lg shadow-primary/20">
                   <Link to="/auth?mode=signup&role=cleaner">Join as Cleaner <ArrowRight className="h-4 w-4" /></Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/earnings-calculator">Earnings Calculator</Link>
                 </Button>
               </div>
             </div>
