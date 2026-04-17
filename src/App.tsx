@@ -40,8 +40,6 @@ const Wallet = lazy(() => import("./pages/Wallet"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Help = lazy(() => import("./pages/Help"));
 const NotificationSettings = lazy(() => import("./pages/NotificationSettings"));
-const Properties = lazy(() => import("./pages/Properties"));
-const RescheduleRequests = lazy(() => import("./pages/RescheduleRequests"));
 const FavoriteCleaners = lazy(() => import("./pages/FavoriteCleaners"));
 const ClientProfilePage = lazy(() => import("./pages/ClientProfile"));
 const ClientProfileEdit = lazy(() => import("./pages/ClientProfileEdit"));
@@ -57,7 +55,6 @@ const CleaningScope = lazy(() => import("./pages/CleaningScope"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Referral = lazy(() => import("./pages/Referral"));
-const RecurringPlans = lazy(() => import("./pages/RecurringPlans"));
 const Reviews = lazy(() => import("./pages/Reviews"));
 const EarningsCalculator = lazy(() => import("./pages/EarningsCalculator"));
 const CostEstimator = lazy(() => import("./pages/CostEstimator"));
@@ -263,7 +260,7 @@ const App = () => (
                     <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
                     <Route path="/recurring-plans" element={<Navigate to="/my-cleanings" replace />} />
                     <Route path="/reschedule-requests" element={<Navigate to="/my-cleanings" replace />} />
-                    <Route path="/properties" element={<RequireClient><Properties /></RequireClient>} />
+                    <Route path="/properties" element={<Navigate to="/account" replace />} />
 
                     {/* Preserved client routes */}
                     <Route path="/cleaner/:id" element={<RequireAuth><CleanerProfile /></RequireAuth>} />

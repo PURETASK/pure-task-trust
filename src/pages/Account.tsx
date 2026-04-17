@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { UserCircle2, Building2, Bell, Gift, Shield, CircleHelp, ChevronRight, LogOut, Settings } from "lucide-react";
+import { UserCircle2, Bell, Gift, Shield, CircleHelp, ChevronRight, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
@@ -13,13 +13,6 @@ const sections = [
     description: "Name, phone, email, and avatar",
     href: "/profile/edit",
     palette: "blue" as const,
-  },
-  {
-    icon: Building2,
-    title: "Saved Properties",
-    description: "Manage addresses and access notes",
-    href: "/properties",
-    palette: "green" as const,
   },
   {
     icon: Bell,
