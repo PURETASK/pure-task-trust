@@ -15,6 +15,8 @@ import { MessageInbox } from "@/components/layout/MessageInbox";
 import { AdminAlertsBadge } from "@/components/admin/AdminAlertsBadge";
 import { AdminCommandPalette } from "@/components/admin/AdminCommandPalette";
 import { LiveJobActionBar } from "@/components/cleaner/LiveJobActionBar";
+import { HelpProvider } from "@/components/support/HelpContext";
+import { FloatingHelpLauncher } from "@/components/support/FloatingHelpLauncher";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -75,6 +77,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     : "ring-primary/40";
 
   return (
+    <HelpProvider>
     <SidebarProvider>
       <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-clip">
         {/* Skip to main content — WCAG 2.4.1 */}
@@ -260,6 +263,10 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       {/* Mobile Bottom Nav */}
       <MobileBottomNav />
+
+      {/* Contextual Help Launcher (auth-only, hides on /help) */}
+      <FloatingHelpLauncher />
     </SidebarProvider>
+    </HelpProvider>
   );
 }

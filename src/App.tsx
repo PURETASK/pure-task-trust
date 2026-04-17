@@ -39,6 +39,11 @@ const JobApproval = lazy(() => import("./pages/JobApproval"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Help = lazy(() => import("./pages/Help"));
+const HelpArticle = lazy(() => import("./pages/HelpArticle"));
+const HelpCategory = lazy(() => import("./pages/HelpCategory"));
+const HelpTickets = lazy(() => import("./pages/HelpTickets"));
+const HelpTicket = lazy(() => import("./pages/HelpTicket"));
+const HelpContact = lazy(() => import("./pages/HelpContact"));
 const NotificationSettings = lazy(() => import("./pages/NotificationSettings"));
 const FavoriteCleaners = lazy(() => import("./pages/FavoriteCleaners"));
 const ClientProfilePage = lazy(() => import("./pages/ClientProfile"));
@@ -273,6 +278,11 @@ const App = () => (
                     <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
                     <Route path="/messages" element={<RequireClient><Messages /></RequireClient>} />
                     <Route path="/help" element={<Help />} />
+                    <Route path="/help/articles/:slug" element={<HelpArticle />} />
+                    <Route path="/help/category/:category" element={<HelpCategory />} />
+                    <Route path="/help/tickets" element={<RequireAuth><HelpTickets /></RequireAuth>} />
+                    <Route path="/help/tickets/:id" element={<RequireAuth><HelpTicket /></RequireAuth>} />
+                    <Route path="/help/contact" element={<RequireAuth><HelpContact /></RequireAuth>} />
                     <Route path="/settings/notifications" element={<RequireAuth><NotificationSettings /></RequireAuth>} />
                     <Route path="/notifications" element={<RequireAuth requireRole={false}><Notifications /></RequireAuth>} />
                     <Route path="/referral" element={<RequireClient><Referral /></RequireClient>} />
