@@ -150,9 +150,9 @@ export default function Wallet() {
               </div>
 
               {isLoadingAccount ? (
-                <Skeleton className="h-16 w-48 rounded-2xl" />
+                <Skeleton className="h-16 w-48 rounded-2xl border-2 border-black" />
               ) : (
-                <div className="flex items-end gap-1 leading-none mb-5">
+                <div className="inline-flex items-end gap-1 leading-none mb-5 rounded-2xl border-2 border-black px-4 py-2 bg-background/40">
                   <span className="text-5xl sm:text-6xl font-black palette-label-green tracking-tight">
                     ${availableCredits.toFixed(0)}
                   </span>
