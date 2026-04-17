@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -11,14 +11,19 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useCleaners } from "@/hooks/useCleaners";
+import { useCleanersByZip } from "@/hooks/useCleanersByZip";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { SEO } from "@/components/seo";
+import { ZipGate, type ResolvedLocation } from "@/components/discover/ZipGate";
+import { LocationBar } from "@/components/discover/LocationBar";
 import discoverBg from "@/assets/discover-bg.jpg";
+
+const ZIP_STORAGE_KEY = "puretask_client_zip";
 
 // ── Tier config ──────────────────────────────────────────────────────────────
 const TIER_MAP: Record<string, {
@@ -211,7 +216,7 @@ function CleanerCard({
                 className="flex-1 h-9 rounded-xl text-xs font-bold shadow-md shadow-primary/20 gap-1.5"
                 onClick={e => e.stopPropagation()}
               >
-                <Link to={`/book?cleaner=${cleaner.id}`}>
+                <Link to={`/book?cleaner=${cleaner.id}${cleaner.__zip ? `&zip=${cleaner.__zip}` : ""}`}>
                   <Zap className="h-3.5 w-3.5" /> Book Now
                 </Link>
               </Button>
@@ -240,12 +245,34 @@ export default function Discover() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100);
+  const [location, setLocation] = useState<ResolvedLocation | null>(null);
+  const [zipModalOpen, setZipModalOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { data: cleaners, isLoading, error } = useCleaners({
-    searchQuery, onlyAvailable,
+  // Hydrate ZIP from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(ZIP_STORAGE_KEY);
+      if (raw) setLocation(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const handleResolved = (loc: ResolvedLocation) => {
+    setLocation(loc);
+    setZipModalOpen(false);
+    try {
+      localStorage.setItem(ZIP_STORAGE_KEY, JSON.stringify(loc));
+    } catch {}
+  };
+
+  const { data: cleaners, isLoading, error } = useCleanersByZip({
+    zip: location?.zip ?? null,
+    lat: location?.lat ?? null,
+    lng: location?.lng ?? null,
+    searchQuery,
+    onlyAvailable,
     minRating: minRating > 0 ? minRating : undefined,
     maxRate: maxPrice < 100 ? maxPrice : undefined,
   });
@@ -253,15 +280,14 @@ export default function Discover() {
   const { toggleFavorite, isToggling } = useFavoriteActions();
   const favoriteCleanerIds = new Set(favorites?.map((f: any) => f.cleaner_id) || []);
 
-  const filteredCleaners = cleaners
-    ? smartMatch
-      ? [...cleaners].sort((a, b) => {
-          const sa = ((a.avgRating || 0) / 5) * 0.5 + (a.reliabilityScore / 100) * 0.5;
-          const sb = ((b.avgRating || 0) / 5) * 0.5 + (b.reliabilityScore / 100) * 0.5;
-          return sb - sa;
-        })
-      : cleaners
-    : [];
+  const filteredCleaners = (cleaners ?? []).map((c) => ({ ...c, __zip: location?.zip }));
+  const sortedCleaners = smartMatch
+    ? [...filteredCleaners].sort((a, b) => {
+        const sa = ((a.avgRating || 0) / 5) * 0.5 + (a.reliabilityScore / 100) * 0.5;
+        const sb = ((b.avgRating || 0) / 5) * 0.5 + (b.reliabilityScore / 100) * 0.5;
+        return sb - sa;
+      })
+    : filteredCleaners;
 
   const activeFiltersCount = (minRating > 0 ? 1 : 0) + (maxPrice < 100 ? 1 : 0);
 
@@ -275,6 +301,37 @@ export default function Discover() {
     } catch { toast({ title: "Error updating favourites", variant: "destructive" }); }
   };
 
+  // Show ZIP gate before anything else if no location yet
+  if (!location) {
+    return (
+      <main className="flex-1 bg-background min-h-screen">
+        <SEO
+          title="Find Verified Cleaners Near You"
+          description="Enter your ZIP code to find background-checked cleaners that serve your area."
+          url="/discover"
+        />
+        <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-12 sm:py-16">
+          <div className="absolute inset-0">
+            <img src={discoverBg} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[hsl(210,60%,10%)]" />
+          </div>
+          <div className="relative container px-4 sm:px-6 text-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
+              Find your perfect{" "}
+              <span className="bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] bg-clip-text text-transparent">
+                verified cleaner
+              </span>
+            </h1>
+            <p className="text-white/60 text-sm sm:text-base max-w-xl mx-auto">
+              Tell us where you are and we'll only show cleaners who serve your area.
+            </p>
+          </div>
+        </div>
+        <ZipGate onResolved={handleResolved} />
+      </main>
+    );
+  }
+
   return (
     <main className="flex-1 bg-background min-h-screen">
       <SEO
@@ -283,6 +340,18 @@ export default function Discover() {
         url="/discover"
         keywords="find cleaners, verified cleaners near me, book cleaning service, background checked cleaners"
       />
+
+      <LocationBar location={location} onChange={() => setZipModalOpen(true)} />
+
+      <Dialog open={zipModalOpen} onOpenChange={setZipModalOpen}>
+        <DialogContent className="sm:max-w-md p-0 bg-transparent border-0 shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Change ZIP code</DialogTitle>
+          </DialogHeader>
+          <ZipGate onResolved={handleResolved} initialZip={location.zip} variant="modal" />
+        </DialogContent>
+      </Dialog>
+
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-10 sm:py-16 lg:py-20">
@@ -420,20 +489,27 @@ export default function Discover() {
           </div>
         )}
 
-        {!isLoading && filteredCleaners.length === 0 && (
+        {!isLoading && sortedCleaners.length === 0 && (
           <div className="text-center py-16">
             <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <Search className="h-8 w-8 text-muted-foreground" />
+              <MapPin className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-bold mb-2">No cleaners found</h3>
-            <p className="text-muted-foreground text-sm">{searchQuery ? `No results for "${searchQuery}".` : "No cleaners available right now."}</p>
+            <h3 className="text-xl font-bold mb-2">No cleaners serve {location.zip} yet</h3>
+            <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
+              {searchQuery
+                ? `No matches for "${searchQuery}" in your area.`
+                : "We couldn't find cleaners covering your ZIP. Try a nearby ZIP."}
+            </p>
+            <Button onClick={() => setZipModalOpen(true)} variant="outline" className="rounded-xl gap-2">
+              <MapPin className="h-4 w-4" /> Try a different ZIP
+            </Button>
           </div>
         )}
 
         <AnimatePresence>
-          {!isLoading && filteredCleaners.length > 0 && (
+          {!isLoading && sortedCleaners.length > 0 && (
             <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredCleaners.map((cleaner, i) => (
+              {sortedCleaners.map((cleaner, i) => (
                 <CleanerCard
                   key={cleaner.id}
                   cleaner={cleaner}
