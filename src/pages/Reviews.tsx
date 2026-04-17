@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
+import reviewsHeroBg from "@/assets/reviews-hero-bg.png";
 
 interface Review { id: string; rating: number; review_text: string | null; created_at: string; }
 const RATINGS_FILTER = [5, 4, 3, 2, 1] as const;
@@ -42,9 +43,12 @@ export default function Reviews() {
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-primary/3 to-transparent" />
-        <div className="absolute top-20 left-1/4 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-20 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${reviewsHeroBg})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" aria-hidden="true" />
         <div className="container relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto">
             {/* Badge — plain div to avoid framer-motion ref warning */}
