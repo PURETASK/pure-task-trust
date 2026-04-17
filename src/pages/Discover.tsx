@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -11,14 +11,19 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useCleaners } from "@/hooks/useCleaners";
+import { useCleanersByZip } from "@/hooks/useCleanersByZip";
 import { useFavorites, useFavoriteActions } from "@/hooks/useFavorites";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { SEO } from "@/components/seo";
+import { ZipGate, type ResolvedLocation } from "@/components/discover/ZipGate";
+import { LocationBar } from "@/components/discover/LocationBar";
 import discoverBg from "@/assets/discover-bg.jpg";
+
+const ZIP_STORAGE_KEY = "puretask_client_zip";
 
 // ── Tier config ──────────────────────────────────────────────────────────────
 const TIER_MAP: Record<string, {
