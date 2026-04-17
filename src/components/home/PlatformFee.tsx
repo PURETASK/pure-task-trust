@@ -32,7 +32,7 @@ export function PlatformFee() {
                 Platform Fee: 15–25%
               </h2>
               <p className="text-muted-foreground text-sm sm:text-base">
-                Our platform fee (25% Bronze → 15% Platinum) covers everything that makes PureTask the safest, most transparent cleaning marketplace:
+                Our platform fee (25% Rising Pro → 15% All-Star Expert) covers everything that makes PureTask the safest, most transparent cleaning marketplace:
               </p>
             </div>
           </div>
