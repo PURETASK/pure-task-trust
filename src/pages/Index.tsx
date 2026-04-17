@@ -182,9 +182,9 @@ export default function Index() {
         <div className="relative">
 
       {/* ── PROOF BAR ─────────────────────────────────────────────────── */}
-      <section className="bg-primary py-5 sm:py-6">
+      <section className="bg-primary py-4 sm:py-6">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-3 sm:gap-6">
             {PROOF_BAR.map((item, i) => (
               <motion.div
                 key={item.label}
@@ -193,7 +193,7 @@ export default function Index() {
                 className="flex items-center justify-center gap-2 sm:gap-3 text-primary-foreground"
               >
                 <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-semibold">{item.label}</span>
+                <span className="text-[11px] sm:text-sm font-semibold leading-tight text-center sm:text-left">{item.label}</span>
               </motion.div>
             ))}
           </div>
@@ -270,7 +270,7 @@ export default function Index() {
                 {i < STEPS.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
                 )}
-                <div className="text-5xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
+                <div className="text-4xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
                 <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
@@ -331,11 +331,11 @@ export default function Index() {
             <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
               Transparent, verified, and built around your peace of mind.
             </p>
-            <div className="flex flex-col xs:flex-row gap-3 justify-center">
-              <Button size="lg" asChild className="text-base px-6 sm:px-10 h-13 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
+            <div className="flex flex-col xs:flex-row gap-3 justify-center items-stretch xs:items-center">
+              <Button size="lg" asChild className="text-base px-6 sm:px-10 h-12 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
                 <Link to="/book">Book Your First Clean <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-13 sm:h-14 rounded-2xl w-full xs:w-auto border-2 border-success text-success hover:bg-success/10">
+              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-2xl w-full xs:w-auto border-2 border-success text-success hover:bg-success/10">
                 <Link to="/auth?role=cleaner">Earn as a Cleaner</Link>
               </Button>
             </div>
