@@ -120,7 +120,7 @@ const ALL_TIER_ADDITIONAL_SERVICES = {
 export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   bronze: {
     name: 'bronze',
-    label: 'Bronze',
+    label: 'Rising Pro',
     minScore: 0,
     maxScore: 49,
     platformFeePercent: 25,
@@ -129,7 +129,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   silver: {
     name: 'silver',
-    label: 'Silver',
+    label: 'Proven Specialist',
     minScore: 50,
     maxScore: 69,
     platformFeePercent: 22,
@@ -138,7 +138,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   gold: {
     name: 'gold',
-    label: 'Gold',
+    label: 'Top Performer',
     minScore: 70,
     maxScore: 89,
     platformFeePercent: 18,
@@ -147,7 +147,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   platinum: {
     name: 'platinum',
-    label: 'Platinum',
+    label: 'All-Star Expert',
     minScore: 90,
     maxScore: 100,
     platformFeePercent: 15,
