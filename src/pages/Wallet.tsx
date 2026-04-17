@@ -190,15 +190,15 @@ export default function Wallet() {
                         borderColor: "hsl(var(--pt-green-deep))",
                         color: "hsl(var(--pt-green-deep))",
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "hsl(var(--pt-green-deep))"; e.currentTarget.style.color = "#fff"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; e.currentTarget.style.color = "hsl(var(--pt-green-deep))"; }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "hsl(var(--pt-green-deep))"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "#fff"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; e.currentTarget.style.color = "hsl(var(--pt-green-deep))"; e.currentTarget.style.borderColor = "hsl(var(--pt-green-deep))"; }}
                     >
                       ${amt}
                     </Button>
                   ))}
                 </div>
                 <Button
-                  className="w-full gap-2 h-11 text-white border-0"
+                  className="w-full gap-2 h-11 text-white border-2 border-white"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--pt-green-deep)) 0%, hsl(var(--pt-green)) 100%)",
                     boxShadow: "0 8px 24px -6px hsl(var(--pt-green-deep)/0.45)",
