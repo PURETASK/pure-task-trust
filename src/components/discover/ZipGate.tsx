@@ -179,7 +179,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
             value={zip}
             onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
             autoFocus
-            className="h-14 text-center text-2xl tracking-[0.4em] font-bold bg-white/5 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-[hsl(var(--pt-aqua))] focus-visible:border-[hsl(var(--pt-aqua))]"
+            className="h-14 text-center text-2xl tracking-[0.4em] font-bold bg-white/5 border-2 border-white text-white placeholder:text-white/30 focus-visible:ring-[hsl(var(--pt-aqua))] focus-visible:border-white rounded-xl"
           />
           {error && (
             <p className="text-xs text-[hsl(var(--destructive))] text-center mt-3 font-medium">
@@ -188,7 +188,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
           )}
           <Button
             type="submit"
-            className="w-full h-13 mt-4 rounded-xl gap-2 text-base font-semibold bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] hover:opacity-90 text-white border-0 shadow-lg shadow-[hsl(var(--pt-aqua))]/30"
+            className="w-full h-13 mt-4 rounded-xl gap-2 text-base font-semibold bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] hover:opacity-90 text-white border-2 border-white shadow-lg shadow-[hsl(var(--pt-aqua))]/30"
             disabled={loading}
           >
             {loading ? (
