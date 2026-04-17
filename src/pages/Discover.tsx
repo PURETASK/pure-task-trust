@@ -301,6 +301,37 @@ export default function Discover() {
     } catch { toast({ title: "Error updating favourites", variant: "destructive" }); }
   };
 
+  // Show ZIP gate before anything else if no location yet
+  if (!location) {
+    return (
+      <main className="flex-1 bg-background min-h-screen">
+        <SEO
+          title="Find Verified Cleaners Near You"
+          description="Enter your ZIP code to find background-checked cleaners that serve your area."
+          url="/discover"
+        />
+        <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-12 sm:py-16">
+          <div className="absolute inset-0">
+            <img src={discoverBg} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[hsl(210,60%,10%)]" />
+          </div>
+          <div className="relative container px-4 sm:px-6 text-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
+              Find your perfect{" "}
+              <span className="bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] bg-clip-text text-transparent">
+                verified cleaner
+              </span>
+            </h1>
+            <p className="text-white/60 text-sm sm:text-base max-w-xl mx-auto">
+              Tell us where you are and we'll only show cleaners who serve your area.
+            </p>
+          </div>
+        </div>
+        <ZipGate onResolved={handleResolved} />
+      </main>
+    );
+  }
+
   return (
     <main className="flex-1 bg-background min-h-screen">
       <SEO
@@ -309,6 +340,18 @@ export default function Discover() {
         url="/discover"
         keywords="find cleaners, verified cleaners near me, book cleaning service, background checked cleaners"
       />
+
+      <LocationBar location={location} onChange={() => setZipModalOpen(true)} />
+
+      <Dialog open={zipModalOpen} onOpenChange={setZipModalOpen}>
+        <DialogContent className="sm:max-w-md p-0 bg-transparent border-0 shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Change ZIP code</DialogTitle>
+          </DialogHeader>
+          <ZipGate onResolved={handleResolved} initialZip={location.zip} variant="modal" />
+        </DialogContent>
+      </Dialog>
+
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-10 sm:py-16 lg:py-20">
@@ -446,20 +489,27 @@ export default function Discover() {
           </div>
         )}
 
-        {!isLoading && filteredCleaners.length === 0 && (
+        {!isLoading && sortedCleaners.length === 0 && (
           <div className="text-center py-16">
             <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <Search className="h-8 w-8 text-muted-foreground" />
+              <MapPin className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-bold mb-2">No cleaners found</h3>
-            <p className="text-muted-foreground text-sm">{searchQuery ? `No results for "${searchQuery}".` : "No cleaners available right now."}</p>
+            <h3 className="text-xl font-bold mb-2">No cleaners serve {location.zip} yet</h3>
+            <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
+              {searchQuery
+                ? `No matches for "${searchQuery}" in your area.`
+                : "We couldn't find cleaners covering your ZIP. Try a nearby ZIP."}
+            </p>
+            <Button onClick={() => setZipModalOpen(true)} variant="outline" className="rounded-xl gap-2">
+              <MapPin className="h-4 w-4" /> Try a different ZIP
+            </Button>
           </div>
         )}
 
         <AnimatePresence>
-          {!isLoading && filteredCleaners.length > 0 && (
+          {!isLoading && sortedCleaners.length > 0 && (
             <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredCleaners.map((cleaner, i) => (
+              {sortedCleaners.map((cleaner, i) => (
                 <CleanerCard
                   key={cleaner.id}
                   cleaner={cleaner}
