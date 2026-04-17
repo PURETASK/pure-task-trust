@@ -273,6 +273,8 @@ export default function Pricing() {
             <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})`, transform: 'scaleX(-1)' }} aria-hidden="true" />
             <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
             <div className="max-w-6xl mx-auto px-4 relative z-10">
+              <div className="text-center mb-8 sm:mb-12">
+                <Badge variant="outline" className="mb-3 border-success/40 text-success">
                   <PiggyBank className="h-3.5 w-3.5 mr-1.5" /> Your Payout
                 </Badge>
                 <h2 className="text-2xl sm:text-4xl font-bold mb-3">Keep More As You Grow</h2>
