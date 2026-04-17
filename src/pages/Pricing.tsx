@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import pricingHero from '@/assets/pricing-hero.jpg';
+import pricingHero from '@/assets/pricing-hero-bg.png';
 import bgSupplies from '@/assets/pricing-bg-supplies.jpg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -140,7 +140,7 @@ export default function Pricing() {
       <section className="relative py-12 sm:py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img src={pricingHero} alt="Professional cleaning service" className="w-full h-full object-cover" loading="eager" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/90 to-background/60" />
+          <div className="absolute inset-0 bg-background/30" />
         </div>
         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
