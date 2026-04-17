@@ -274,7 +274,7 @@ export default function Pricing() {
                 </Badge>
                 <h2 className="text-2xl sm:text-4xl font-bold mb-3">Keep More As You Grow</h2>
                 <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-                  Every cleaner starts at Bronze keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to Platinum where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
+                  Every cleaner starts as a Rising Pro keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to All-Star Expert where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
                 </p>
               </div>
 
@@ -450,7 +450,7 @@ export default function Pricing() {
             <div className="max-w-5xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
-                  <Trophy className="h-6 w-6 text-warning" /> How To Climb To Platinum
+                  <Trophy className="h-6 w-6 text-warning" /> How To Climb To All-Star Expert
                 </h2>
                 <p className="text-muted-foreground text-sm sm:text-base">
                   Your tier is set by your reliability score (0–100), updated after every job.
