@@ -308,7 +308,7 @@ export default function AboutUs() {
               {
                 badge: "For Cleaners", badgeCls: "bg-success/15 text-success border-success/30",
                 title: "A career you control", cta: "Join as a Cleaner", href: "/auth?role=cleaner",
-                points: ["Set your own hourly rate", "Bronze → Platinum tier progression", "Weekly or instant payouts", "AI assistant & job support tools"],
+                points: ["Set your own hourly rate", "Rising Pro → All-Star Expert tier progression", "Weekly or instant payouts", "AI assistant & job support tools"],
                 iconColor: "text-success", iconBg: "bg-success/10",
                 borderColor: "hsl(var(--success))", shadowColor: "hsl(var(--success) / 0.18)",
               },

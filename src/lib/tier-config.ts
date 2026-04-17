@@ -1,17 +1,38 @@
 // Tier configuration for reliability score system
 // Defines price ranges, platform fees, and additional service pricing per tier
 //
-// Tier boundaries (unified with recalculate-reliability-scores edge function):
-//   Bronze   0 – 49
-//   Silver  50 – 69
-//   Gold    70 – 89
-//   Platinum 90 – 100
+// Internal IDs are kept as bronze/silver/gold/platinum for DB compatibility.
+// User-facing labels follow a career-progression theme:
+//   bronze   → Rising Pro       (0–49)
+//   silver   → Proven Specialist (50–69)
+//   gold     → Top Performer    (70–89)
+//   platinum → All-Star Expert  (90–100)
 
 export type CleanerTier = 'bronze' | 'silver' | 'gold' | 'platinum';
 
+// ── Display labels (single source of truth for user-facing tier names) ──────
+export const TIER_LABELS: Record<CleanerTier, string> = {
+  bronze: 'Rising Pro',
+  silver: 'Proven Specialist',
+  gold: 'Top Performer',
+  platinum: 'All-Star Expert',
+};
+
+// Short labels (for tight UI like badges, mobile, table cells)
+export const TIER_LABELS_SHORT: Record<CleanerTier, string> = {
+  bronze: 'Rising',
+  silver: 'Proven',
+  gold: 'Top Performer',
+  platinum: 'All-Star',
+};
+
+export function getTierLabel(tier: CleanerTier): string {
+  return TIER_LABELS[tier] ?? tier;
+}
+
 // ── SINGLE SOURCE OF TRUTH for tier visual styles ──────────────────────────
 // Use these across ALL components to ensure visual consistency.
-// Platinum = purple (--pt-purple), Gold = amber/yellow, Silver = slate, Bronze = orange
+// All-Star = purple, Top Performer = amber/yellow, Proven = slate, Rising = orange
 export const TIER_VISUAL: Record<CleanerTier, {
   emoji: string;
   gradient: string;        // Tailwind gradient for card headers / backgrounds
@@ -25,7 +46,7 @@ export const TIER_VISUAL: Record<CleanerTier, {
   nextMin: number;
 }> = {
   bronze: {
-    emoji: '🥉',
+    emoji: '📈',
     gradient: 'from-amber-600 to-amber-800',
     badge: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
     border: 'border-amber-500/40',
@@ -33,11 +54,11 @@ export const TIER_VISUAL: Record<CleanerTier, {
     text: 'text-amber-600',
     bg: 'bg-amber-500/5',
     glow: '0 4px 20px 0 hsl(25 95% 55% / 0.2)',
-    next: 'Silver',
+    next: 'Proven Specialist',
     nextMin: 50,
   },
   silver: {
-    emoji: '🥈',
+    emoji: '🛡️',
     gradient: 'from-slate-400 to-slate-600',
     badge: 'bg-slate-400/10 text-slate-500 border-slate-400/30',
     border: 'border-slate-400/40',
@@ -45,11 +66,11 @@ export const TIER_VISUAL: Record<CleanerTier, {
     text: 'text-slate-500',
     bg: 'bg-slate-400/5',
     glow: '0 4px 20px 0 hsl(220 10% 45% / 0.2)',
-    next: 'Gold',
+    next: 'Top Performer',
     nextMin: 70,
   },
   gold: {
-    emoji: '🥇',
+    emoji: '🏆',
     gradient: 'from-yellow-400 to-amber-500',
     badge: 'bg-yellow-400/10 text-yellow-600 border-yellow-400/30',
     border: 'border-yellow-400/40',
@@ -57,11 +78,11 @@ export const TIER_VISUAL: Record<CleanerTier, {
     text: 'text-yellow-600',
     bg: 'bg-yellow-400/5',
     glow: '0 4px 20px 0 hsl(38 95% 55% / 0.25)',
-    next: 'Platinum',
+    next: 'All-Star Expert',
     nextMin: 90,
   },
   platinum: {
-    emoji: '💎',
+    emoji: '⭐',
     gradient: 'from-[hsl(280,70%,45%)] to-[hsl(280,70%,30%)]',
     badge: 'bg-[hsl(280,70%,55%)]/10 text-[hsl(280,70%,45%)] border-[hsl(280,70%,55%)]/30',
     border: 'border-[hsl(280,70%,55%)]/40',
@@ -99,7 +120,7 @@ const ALL_TIER_ADDITIONAL_SERVICES = {
 export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   bronze: {
     name: 'bronze',
-    label: 'Bronze',
+    label: 'Rising Pro',
     minScore: 0,
     maxScore: 49,
     platformFeePercent: 25,
@@ -108,7 +129,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   silver: {
     name: 'silver',
-    label: 'Silver',
+    label: 'Proven Specialist',
     minScore: 50,
     maxScore: 69,
     platformFeePercent: 22,
@@ -117,7 +138,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   gold: {
     name: 'gold',
-    label: 'Gold',
+    label: 'Top Performer',
     minScore: 70,
     maxScore: 89,
     platformFeePercent: 18,
@@ -126,7 +147,7 @@ export const TIER_CONFIGS: Record<CleanerTier, TierConfig> = {
   },
   platinum: {
     name: 'platinum',
-    label: 'Platinum',
+    label: 'All-Star Expert',
     minScore: 90,
     maxScore: 100,
     platformFeePercent: 15,

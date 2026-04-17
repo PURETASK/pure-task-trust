@@ -33,10 +33,10 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
   };
 
   const getScoreLabel = (value: number) => {
-    if (value >= 90) return 'Platinum — Excellent';
-    if (value >= 70) return 'Gold — Great';
-    if (value >= 50) return 'Silver — Building Up';
-    return 'Bronze — Needs Work';
+    if (value >= 90) return 'All-Star Expert — Excellent';
+    if (value >= 70) return 'Top Performer — Great';
+    if (value >= 50) return 'Proven Specialist — Building Up';
+    return 'Rising Pro — Needs Work';
   };
 
   // Metric 5: No-cancellations rate (inverse of no-show+cancel rate)

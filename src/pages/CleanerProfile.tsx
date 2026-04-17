@@ -30,7 +30,7 @@ const TIER: Record<string, {
   badge: string; ring: string; accent: string;
 }> = {
   platinum: {
-    label: "Platinum", icon: "💎",
+    label: "All-Star Expert", icon: "⭐",
     gradient: "from-violet-600 via-violet-500 to-purple-400",
     bar: "from-violet-500 to-purple-400",
     badge: "bg-violet-500/15 text-violet-600 border-violet-500/40",
@@ -38,7 +38,7 @@ const TIER: Record<string, {
     accent: "text-violet-500",
   },
   gold: {
-    label: "Gold", icon: "🥇",
+    label: "Top Performer", icon: "🏆",
     gradient: "from-yellow-600 via-amber-500 to-yellow-400",
     bar: "from-yellow-500 to-amber-400",
     badge: "bg-yellow-500/15 text-yellow-700 border-yellow-500/40",
@@ -46,7 +46,7 @@ const TIER: Record<string, {
     accent: "text-yellow-600",
   },
   silver: {
-    label: "Silver", icon: "🥈",
+    label: "Proven Specialist", icon: "🛡️",
     gradient: "from-slate-500 via-slate-400 to-slate-300",
     bar: "from-slate-400 to-slate-300",
     badge: "bg-slate-400/15 text-slate-600 border-slate-400/40",
@@ -54,7 +54,7 @@ const TIER: Record<string, {
     accent: "text-slate-500",
   },
   bronze: {
-    label: "Bronze", icon: "🥉",
+    label: "Rising Pro", icon: "📈",
     gradient: "from-amber-800 via-amber-700 to-amber-600",
     bar: "from-amber-700 to-amber-600",
     badge: "bg-amber-700/15 text-amber-700 border-amber-700/40",
@@ -833,10 +833,10 @@ export default function CleanerProfile() {
             {/* Score bar */}
             <div className="mt-5 sm:mt-6 space-y-1.5">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>0 Bronze</span>
-                <span>50 Silver</span>
-                <span>70 Gold</span>
-                <span>90 Platinum</span>
+                <span>0 Rising</span>
+                <span>50 Proven</span>
+                <span>70 Top</span>
+                <span>90 All-Star</span>
               </div>
               <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
                 {/* Zone coloring */}

@@ -7,10 +7,10 @@ import { SEO } from '@/components/seo';
 import React from 'react';
 
 const TIERS = [
-  { tier: "Bronze", range: "0–49", rate: "$20–30/hr", color: "from-amber-700 to-amber-500", icon: "🥉", features: ["Standard platform access", "Basic job matching", "Standard support", "Platform fee: 25%"] },
-  { tier: "Silver", range: "50–69", rate: "$20–40/hr", color: "from-slate-500 to-slate-400", icon: "🥈", features: ["Improved visibility", "Priority job matching", "Full platform access", "Platform fee: 22%"] },
-  { tier: "Gold", range: "70–89", rate: "$20–50/hr", color: "from-yellow-600 to-yellow-400", icon: "🥇", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 18%"] },
-  { tier: "Platinum", range: "90–100", rate: "$20–65/hr", color: "from-violet-600 to-violet-400", icon: "💎", features: ["VIP client access", "Premium positioning", "Maximum earnings", "Platform fee: 15%"] },
+  { tier: "Rising Pro", range: "0–49", rate: "$20–30/hr", color: "from-amber-700 to-amber-500", icon: "📈", features: ["Standard platform access", "Basic job matching", "Standard support", "Platform fee: 25%"] },
+  { tier: "Proven Specialist", range: "50–69", rate: "$20–40/hr", color: "from-slate-500 to-slate-400", icon: "🛡️", features: ["Improved visibility", "Priority job matching", "Full platform access", "Platform fee: 22%"] },
+  { tier: "Top Performer", range: "70–89", rate: "$20–50/hr", color: "from-yellow-600 to-yellow-400", icon: "🏆", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 18%"] },
+  { tier: "All-Star Expert", range: "90–100", rate: "$20–65/hr", color: "from-violet-600 to-violet-400", icon: "⭐", features: ["VIP client access", "Premium positioning", "Maximum earnings", "Platform fee: 15%"] },
 ];
 
 const SCORING_FACTORS = [
@@ -37,7 +37,7 @@ const QUICK_WINS = [
 export default function ReliabilityScoreExplained() {
   return (
     <main className="min-h-screen bg-background">
-      <SEO title="Reliability Score Explained — How PureTask Ranks Cleaners" description="Discover how PureTask's Reliability Score ranks cleaners on punctuality, photo compliance, and client ratings. Bronze to Platinum — higher score means better jobs and pay." url="/reliability-score" image="/og/og-reliability-score.jpg" />
+      <SEO title="Reliability Score Explained — How PureTask Ranks Cleaners" description="Discover how PureTask's Reliability Score ranks cleaners on punctuality, photo compliance, and client ratings. Rising Pro to All-Star Expert — higher score means better jobs and pay." url="/reliability-score" image="/og/og-reliability-score.jpg" />
 
       {/* Hero */}
       <section className="relative py-20 overflow-hidden">

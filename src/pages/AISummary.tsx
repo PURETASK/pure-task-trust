@@ -33,12 +33,12 @@ const FAQ_ITEMS = [
   {
     question: 'How is PureTask pricing structured?',
     answer:
-      'PureTask uses a credit-based escrow system. Clients purchase credits and pay per booking. Cleaners are paid in credits that convert to cash via weekly or instant payouts. Platform fees range from 15% (Platinum tier) to 25% (Bronze tier) of the booking value.',
+      'PureTask uses a credit-based escrow system. Clients purchase credits and pay per booking. Cleaners are paid in credits that convert to cash via weekly or instant payouts. Platform fees range from 15% (All-Star Expert tier) to 25% (Rising Pro tier) of the booking value.',
   },
   {
     question: 'What is the PureTask Reliability Score?',
     answer:
-      'The Reliability Score (0–100) ranks cleaners across four tiers: Bronze (0–49), Silver (50–69), Gold (70–89), and Platinum (90–100). It is calculated from job completion rate (35%), on-time GPS check-in (25%), photo compliance (20%), average client rating (15%), and cancellation rate (5%). Higher scores unlock better jobs, lower platform fees, and premium client access.',
+      'The Reliability Score (0–100) ranks cleaners across four tiers: Rising Pro (0–49), Proven Specialist (50–69), Top Performer (70–89), and All-Star Expert (90–100). It is calculated from job completion rate (35%), on-time GPS check-in (25%), photo compliance (20%), average client rating (15%), and cancellation rate (5%). Higher scores unlock better jobs, lower platform fees, and premium client access.',
   },
   {
     question: 'How does PureTask protect clients?',
@@ -48,7 +48,7 @@ const FAQ_ITEMS = [
   {
     question: 'How do cleaners get paid on PureTask?',
     answer:
-      'Cleaners receive credits when clients approve a completed job or automatically after the 24-hour review window if no dispute is raised. Credits can be withdrawn weekly or instantly (via Stripe Connect) to a linked bank account. Platinum-tier cleaners pay the lowest platform fee of 15%, while Bronze starts at 25%.',
+      'Cleaners receive credits when clients approve a completed job or automatically after the 24-hour review window if no dispute is raised. Credits can be withdrawn weekly or instantly (via Stripe Connect) to a linked bank account. All-Star Expert cleaners pay the lowest platform fee of 15%, while Rising Pro starts at 25%.',
   },
   {
     question: 'What is PureTask pricing for clients?',

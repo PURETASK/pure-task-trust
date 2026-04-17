@@ -32,28 +32,28 @@ const TIER_MAP: Record<string, {
   badge: string; dot: string;
 }> = {
   platinum: {
-    label: "Platinum", icon: "💎",
+    label: "All-Star Expert", icon: "⭐",
     bar: "from-violet-500 to-violet-400",
     glow: "shadow-violet-500/25",
     badge: "bg-violet-500/10 text-violet-600 border-violet-500/30",
     dot: "bg-violet-500",
   },
   gold: {
-    label: "Gold", icon: "🥇",
+    label: "Top Performer", icon: "🏆",
     bar: "from-yellow-500 to-amber-400",
     glow: "shadow-yellow-500/25",
     badge: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
     dot: "bg-yellow-500",
   },
   silver: {
-    label: "Silver", icon: "🥈",
+    label: "Proven Specialist", icon: "🛡️",
     bar: "from-slate-400 to-slate-300",
     glow: "shadow-slate-400/20",
     badge: "bg-slate-400/10 text-slate-600 border-slate-400/30",
     dot: "bg-slate-400",
   },
   bronze: {
-    label: "Bronze", icon: "🥉",
+    label: "Rising Pro", icon: "📈",
     bar: "from-amber-700 to-amber-600",
     glow: "shadow-amber-700/20",
     badge: "bg-amber-700/10 text-amber-700 border-amber-700/30",

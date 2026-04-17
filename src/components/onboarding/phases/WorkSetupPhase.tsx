@@ -41,10 +41,10 @@ const TEMPLATES = [
 const defaultSchedule = Object.fromEntries(DAYS.map(d => [d.key, { enabled: false, startTime: '09:00', endTime: '17:00' }]));
 
 const TIERS = [
-  { id: 'bronze', label: 'Bronze', range: '$20–30', emoji: '🥉', min: 20, max: 30 },
-  { id: 'silver', label: 'Silver', range: '$20–40', emoji: '🥈', min: 20, max: 40 },
-  { id: 'gold', label: 'Gold', range: '$20–50', emoji: '🥇', min: 20, max: 50 },
-  { id: 'platinum', label: 'Platinum', range: '$20–65', emoji: '💎', min: 20, max: 65 },
+  { id: 'bronze', label: 'Rising Pro', range: '$20–30', emoji: '📈', min: 20, max: 30 },
+  { id: 'silver', label: 'Proven Specialist', range: '$20–40', emoji: '🛡️', min: 20, max: 40 },
+  { id: 'gold', label: 'Top Performer', range: '$20–50', emoji: '🏆', min: 20, max: 50 },
+  { id: 'platinum', label: 'All-Star Expert', range: '$20–65', emoji: '⭐', min: 20, max: 65 },
 ];
 
 export function WorkSetupPhase({

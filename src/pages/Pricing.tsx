@@ -14,11 +14,11 @@ import {
 import { SEO, JsonLd, BreadcrumbSchema, FAQSchema } from '@/components/seo';
 import { motion } from 'framer-motion';
 
-// Unified payout split — Bronze 75% → Platinum 85%
+// Unified payout split — Rising Pro 75% → All-Star Expert 85%
 const TIERS = [
   {
-    tier: 'Bronze',
-    emoji: '🥉',
+    tier: 'Rising Pro',
+    emoji: '📈',
     score: '0–49',
     rate: '$20–30/hr',
     keepPct: 75,
@@ -31,8 +31,8 @@ const TIERS = [
     features: ['ID verified & background checked', 'GPS tracking & photo proof', 'Building their reputation', 'Great value for basic cleans'],
   },
   {
-    tier: 'Silver',
-    emoji: '🥈',
+    tier: 'Proven Specialist',
+    emoji: '🛡️',
     score: '50–69',
     rate: '$20–40/hr',
     keepPct: 78,
@@ -42,11 +42,11 @@ const TIERS = [
     colorBadge: 'border-slate-400/40 text-slate-500',
     accent: 'hsl(var(--success))',
     icon: TrendingUp,
-    features: ['All Bronze features', 'Proven reliability (50–69)', 'Priority scheduling available', 'Specialty services offered'],
+    features: ['All Rising Pro features', 'Proven reliability (50–69)', 'Priority scheduling available', 'Specialty services offered'],
   },
   {
-    tier: 'Gold',
-    emoji: '🥇',
+    tier: 'Top Performer',
+    emoji: '🏆',
     score: '70–89',
     rate: '$20–50/hr',
     keepPct: 82,
@@ -56,11 +56,11 @@ const TIERS = [
     colorBadge: 'border-yellow-400/40 text-yellow-600',
     accent: 'hsl(var(--primary))',
     icon: Sparkles,
-    features: ['All Silver features', 'High reliability (70–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
+    features: ['All Proven Specialist features', 'High reliability (70–89)', 'Same-day booking accepted', 'Guaranteed on-time arrival'],
   },
   {
-    tier: 'Platinum',
-    emoji: '💎',
+    tier: 'All-Star Expert',
+    emoji: '⭐',
     score: '90–100',
     rate: '$20–65/hr',
     keepPct: 85,
@@ -70,19 +70,19 @@ const TIERS = [
     colorBadge: 'border-[hsl(280,70%,55%)]/40 text-[hsl(280,70%,45%)]',
     accent: 'hsl(var(--pt-purple))',
     icon: Award,
-    features: ['All Gold features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
+    features: ['All Top Performer features', 'Elite reliability (90–100)', 'White-glove service', 'Highest priority scheduling'],
   },
 ];
 
 const EXAMPLES = [
-  { title: 'Standard Clean', label: 'Silver · 3h @ $32/hr', total: 96, cleaner: 75, platform: 21 },
-  { title: 'Deep Clean', label: 'Gold · 4h @ $45/hr', total: 180, cleaner: 148, platform: 32, popular: true },
-  { title: 'Move-Out', label: 'Platinum · 5h @ $60/hr', total: 300, cleaner: 255, platform: 45 },
+  { title: 'Standard Clean', label: 'Proven Specialist · 3h @ $32/hr', total: 96, cleaner: 75, platform: 21 },
+  { title: 'Deep Clean', label: 'Top Performer · 4h @ $45/hr', total: 180, cleaner: 148, platform: 32, popular: true },
+  { title: 'Move-Out', label: 'All-Star Expert · 5h @ $60/hr', total: 300, cleaner: 255, platform: 45 },
 ];
 
 // What cleaners actually earn per hour by tier (mid-range rate × keep %)
 const CLEANER_NET = TIERS.map(t => {
-  const midRate = t.tier === 'Bronze' ? 25 : t.tier === 'Silver' ? 30 : t.tier === 'Gold' ? 35 : 50;
+  const midRate = t.tier === 'Rising Pro' ? 25 : t.tier === 'Proven Specialist' ? 30 : t.tier === 'Top Performer' ? 35 : 50;
   const net = +(midRate * (t.keepPct / 100)).toFixed(2);
   return { ...t, midRate, net };
 });
@@ -102,7 +102,7 @@ export default function Pricing() {
     <main className="py-0">
       <SEO
         title="Transparent Cleaning Prices & Cleaner Payouts"
-        description="No hidden fees. Cleaners keep 75–85% of every job — Bronze 75%, Silver 78%, Gold 82%, Platinum 85%. See full pricing and earnings before you book or sign up."
+        description="No hidden fees. Cleaners keep 75–85% of every job — Rising Pro 75%, Proven Specialist 78%, Top Performer 82%, All-Star Expert 85%. See full pricing and earnings before you book or sign up."
         image="/og/og-pricing.jpg"
         url="/pricing"
       />
@@ -128,8 +128,8 @@ export default function Pricing() {
       }} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
       <FAQSchema faqs={[
-        { question: 'How much do cleaners actually keep?', answer: 'Bronze keeps 75%, Silver 78%, Gold 82%, Platinum 85%. The rest is the platform fee covering trust, safety, payments, and support.' },
-        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum).' },
+        { question: 'How much do cleaners actually keep?', answer: 'Rising Pro keeps 75%, Proven Specialist 78%, Top Performer 82%, All-Star Expert 85%. The rest is the platform fee covering trust, safety, payments, and support.' },
+        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Rising Pro), $40/hr (Proven Specialist), $50/hr (Top Performer), and $65/hr (All-Star Expert).' },
         { question: 'What is a credit?', answer: '1 credit equals $1 USD. You purchase credits upfront and use them to book cleanings. Unused credits never expire.' },
         { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras.' },
         { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job.' },
@@ -382,9 +382,9 @@ export default function Pricing() {
               </div>
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {[
-                  { tier: 'Silver', emoji: '🥈', jobs: 20, hours: 60, rate: 32, keep: 0.78, accent: 'hsl(var(--success))' },
-                  { tier: 'Gold', emoji: '🥇', jobs: 30, hours: 90, rate: 42, keep: 0.82, popular: true, accent: 'hsl(var(--primary))' },
-                  { tier: 'Platinum', emoji: '💎', jobs: 40, hours: 120, rate: 55, keep: 0.85, accent: 'hsl(var(--pt-purple))' },
+                  { tier: 'Proven Specialist', emoji: '🛡️', jobs: 20, hours: 60, rate: 32, keep: 0.78, accent: 'hsl(var(--success))' },
+                  { tier: 'Top Performer', emoji: '🏆', jobs: 30, hours: 90, rate: 42, keep: 0.82, popular: true, accent: 'hsl(var(--primary))' },
+                  { tier: 'All-Star Expert', emoji: '⭐', jobs: 40, hours: 120, rate: 55, keep: 0.85, accent: 'hsl(var(--pt-purple))' },
                 ].map(({ tier, emoji, jobs, hours, rate, keep, popular, accent }) => {
                   const gross = hours * rate;
                   const net = Math.round(gross * keep);
@@ -462,7 +462,7 @@ export default function Pricing() {
                   { icon: CheckCircle, title: 'Complete every step', desc: 'Photo proof before/after, full checklist done.' },
                   { icon: Star, title: 'Earn 5-star reviews', desc: 'Communication, quality, and professionalism count.' },
                   { icon: Shield, title: 'Avoid cancellations', desc: 'Late cancels and no-shows cost reliability points.' },
-                  { icon: Target, title: 'Stay consistent', desc: '20+ jobs at high quality typically reaches Gold.' },
+                  { icon: Target, title: 'Stay consistent', desc: '20+ jobs at high quality typically reaches Top Performer.' },
                   { icon: Zap, title: 'Accept reasonable jobs', desc: 'Strong acceptance rate boosts your visibility & score.' },
                 ].map(({ icon: Icon, title, desc }) => (
                   <Card key={title} className="hover:border-primary/40 transition-colors">

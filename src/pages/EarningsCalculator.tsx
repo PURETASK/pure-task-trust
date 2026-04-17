@@ -14,19 +14,19 @@ import { cn } from '@/lib/utils';
 
 /* ─── TIER DATA ─────────────────────────────────────────────── */
 const TIERS = [
-  { name: 'Bronze',   range: [0, 49],   fee: 0.20, icon: '🥉', keep: '80%',
+  { name: 'Rising Pro',   range: [0, 49],   fee: 0.20, icon: '📈', keep: '80%',
     accent: 'border-amber-500/40 bg-amber-500/8', dot: 'bg-amber-500',
     badge: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
     bar: 'from-amber-600 to-amber-400' },
-  { name: 'Silver',   range: [50, 69],  fee: 0.18, icon: '🥈', keep: '82%',
+  { name: 'Proven Specialist',   range: [50, 69],  fee: 0.18, icon: '🛡️', keep: '82%',
     accent: 'border-slate-400/40 bg-slate-400/8', dot: 'bg-slate-400',
     badge: 'bg-slate-400/10 text-slate-500 border-slate-400/30',
     bar: 'from-slate-500 to-slate-400' },
-  { name: 'Gold',     range: [70, 89],  fee: 0.17, icon: '🥇', keep: '83%',
+  { name: 'Top Performer',     range: [70, 89],  fee: 0.17, icon: '🏆', keep: '83%',
     accent: 'border-yellow-400/40 bg-yellow-400/8', dot: 'bg-yellow-400',
     badge: 'bg-yellow-400/10 text-yellow-600 border-yellow-400/30',
     bar: 'from-yellow-500 to-yellow-400' },
-  { name: 'Platinum', range: [90, 100], fee: 0.15, icon: '💎', keep: '85%',
+  { name: 'All-Star Expert', range: [90, 100], fee: 0.15, icon: '⭐', keep: '85%',
     accent: 'border-[hsl(280,70%,55%)]/40 bg-[hsl(280,70%,55%)]/8', dot: 'bg-[hsl(280,70%,50%)]',
     badge: 'bg-[hsl(280,70%,55%)]/10 text-[hsl(280,70%,45%)] border-[hsl(280,70%,55%)]/30',
     bar: 'from-[hsl(280,70%,50%)] to-[hsl(280,60%,65%)]' },
@@ -36,7 +36,7 @@ const SCENARIOS = [
   { label: '🌱 Side Hustle', hoursPerWeek: 10, rate: 25, score: 30, weeksPerYear: 40, desc: '~2 jobs/week' },
   { label: '⚡ Part-Time',   hoursPerWeek: 20, rate: 30, score: 55, weeksPerYear: 46, desc: '~4 jobs/week' },
   { label: '🔥 Full-Time',   hoursPerWeek: 32, rate: 40, score: 75, weeksPerYear: 48, desc: '~6 jobs/week' },
-  { label: '💎 Top Earner',  hoursPerWeek: 40, rate: 65, score: 92, weeksPerYear: 50, desc: 'Platinum tier' },
+  { label: '⭐ Top Earner',  hoursPerWeek: 40, rate: 65, score: 92, weeksPerYear: 50, desc: 'All-Star Expert tier' },
 ];
 
 function getTier(score: number) {
@@ -112,8 +112,8 @@ export default function EarningsCalculator() {
       />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Earnings Calculator', url: '/earnings-calculator' }]} />
       <FAQSchema faqs={[
-        { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Top earners working 40h/week at Platinum can make $100k+/year.' },
-        { question: 'What is the platform fee?', answer: 'Bronze 25%, Silver 22%, Gold 18%, Platinum 15%.' },
+        { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Top earners working 40h/week at All-Star Expert can make $100k+/year.' },
+        { question: 'What is the platform fee?', answer: 'Rising Pro 25%, Proven Specialist 22%, Top Performer 18%, All-Star Expert 15%.' },
       ]} />
 
       {/* ── HERO ── */}
@@ -186,7 +186,7 @@ export default function EarningsCalculator() {
               label="Rate per hour" icon={DollarSign} iconClass="text-success"
               value={ratePerHour} display={`$${ratePerHour}/hr`}
               min={20} max={65} step={1} onChange={setRatePerHour}
-              minLabel="$20 (entry)" maxLabel="$65 (Platinum max)"
+              minLabel="$20 (entry)" maxLabel="$65 (All-Star Expert max)"
             />
 
             <SliderRow
