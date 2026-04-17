@@ -39,29 +39,36 @@ export default function Help() {
           </Button>
         </div>
 
-        <div className="rounded-2xl border-2 border-[hsl(var(--pt-blue-deep))] bg-[hsl(var(--pt-blue))]/5 p-1">
-          <AISupportChat />
+        <div className="rounded-2xl border-2 border-[hsl(var(--pt-blue-deep))] bg-[hsl(var(--pt-blue))]/[0.04] p-2">
+          <AISupportChat accentVar="pt-blue" />
         </div>
 
-        <div className="rounded-2xl border-2 border-[hsl(var(--pt-green-deep))] bg-[hsl(var(--pt-green))]/5 p-5">
-          <h2 className="font-bold text-lg mb-3">Browse help</h2>
+        <div className="rounded-2xl border-2 border-[hsl(var(--pt-green-deep))] bg-[hsl(var(--pt-green))]/[0.04] p-5">
+          <h2 className="font-bold text-lg mb-3 text-[hsl(var(--pt-green-deep))]">Browse help</h2>
           <TopicGrid role={role} />
         </div>
 
-        <Card className="p-6 rounded-2xl border-2 border-[hsl(var(--pt-amber-deep))] bg-[hsl(var(--pt-amber))]/10">
+        <Card className="p-6 rounded-2xl border-2 border-[hsl(var(--pt-amber-deep))] bg-[hsl(var(--pt-amber))]/[0.05]">
           <div className="flex items-start gap-4 flex-wrap">
             <div className="flex-1 min-w-[200px]">
-              <h3 className="font-bold">Need a human?</h3>
+              <h3 className="font-bold text-[hsl(var(--pt-amber-deep))]">Need a human?</h3>
               <p className="text-sm text-muted-foreground mt-1">
                 Our support team replies within 2 hours during business days.
               </p>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <Button onClick={() => navigate("/help/contact")}>
+              <Button
+                onClick={() => navigate("/help/contact")}
+                className="bg-[hsl(var(--pt-amber))] hover:bg-[hsl(var(--pt-amber-deep))] text-white border-2 border-[hsl(var(--pt-amber-deep))]"
+              >
                 <FileText className="h-4 w-4 mr-2" />
                 Open ticket
               </Button>
-              <Button variant="outline" asChild className="border-2 border-[hsl(var(--pt-purple-deep))] text-[hsl(var(--pt-purple))] hover:bg-[hsl(var(--pt-purple))]/10">
+              <Button
+                variant="outline"
+                asChild
+                className="border-2 border-[hsl(var(--pt-purple-deep))] text-[hsl(var(--pt-purple-deep))] hover:bg-[hsl(var(--pt-purple))]/10"
+              >
                 <a href="mailto:support@puretask.co">
                   <Mail className="h-4 w-4 mr-2" />
                   Email

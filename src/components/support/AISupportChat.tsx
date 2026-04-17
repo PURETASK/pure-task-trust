@@ -30,9 +30,13 @@ interface AISupportChatProps {
   contextPage?: string;
   contextBookingId?: string;
   compact?: boolean;
+  /** CSS variable name (without `--`) used to tint header, bubbles, and send button. e.g. "pt-blue" */
+  accentVar?: string;
 }
 
-export function AISupportChat({ contextPage, contextBookingId, compact }: AISupportChatProps) {
+export function AISupportChat({ contextPage, contextBookingId, compact, accentVar }: AISupportChatProps) {
+  const accent = accentVar ? `hsl(var(--${accentVar}))` : undefined;
+  const accentDeep = accentVar ? `hsl(var(--${accentVar}-deep))` : undefined;
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -149,13 +153,24 @@ export function AISupportChat({ contextPage, contextBookingId, compact }: AISupp
 
   return (
     <div className={cn("flex flex-col bg-card border rounded-2xl overflow-hidden", compact ? "h-[500px]" : "h-[600px]")}>
-      <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+      <div
+        className="flex items-center justify-between px-4 py-3 border-b"
+        style={accent ? { backgroundColor: `color-mix(in srgb, ${accent} 8%, transparent)`, borderBottomColor: `color-mix(in srgb, ${accent} 25%, transparent)` } : undefined}
+      >
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">PureTask AI Assistant</span>
+          <Sparkles className="h-4 w-4" style={accent ? { color: accentDeep } : undefined} />
+          <span className="font-semibold text-sm" style={accent ? { color: accentDeep } : undefined}>
+            PureTask AI Assistant
+          </span>
         </div>
         {messages.length > 0 && (
-          <Button variant="outline" size="sm" onClick={handleEscalate} disabled={escalate.isPending}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleEscalate}
+            disabled={escalate.isPending}
+            style={accent ? { borderColor: accentDeep, color: accentDeep, borderWidth: 2 } : undefined}
+          >
             <LifeBuoy className="h-3.5 w-3.5 mr-1.5" />
             Talk to a human
           </Button>
@@ -165,8 +180,11 @@ export function AISupportChat({ contextPage, contextBookingId, compact }: AISupp
       <ScrollArea className="flex-1 px-4 py-4" ref={scrollRef as any}>
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center gap-4 py-8">
-            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-7 w-7 text-primary" />
+            <div
+              className="h-14 w-14 rounded-full flex items-center justify-center"
+              style={accent ? { backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)` } : { backgroundColor: "hsl(var(--primary) / 0.1)" }}
+            >
+              <Sparkles className="h-7 w-7" style={{ color: accent ?? "hsl(var(--primary))" }} />
             </div>
             <div>
               <p className="font-semibold">Hi {user?.name?.split(" ")[0] || "there"}, how can I help?</p>
@@ -174,7 +192,14 @@ export function AISupportChat({ contextPage, contextBookingId, compact }: AISupp
             </div>
             <div className="flex flex-wrap gap-2 justify-center max-w-md">
               {suggestions.map(s => (
-                <Button key={s} variant="outline" size="sm" className="rounded-full text-xs h-8" onClick={() => send(s)}>
+                <Button
+                  key={s}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full text-xs h-8"
+                  onClick={() => send(s)}
+                  style={accent ? { borderColor: accentDeep, color: accentDeep, borderWidth: 2 } : undefined}
+                >
                   {s}
                 </Button>
               ))}
@@ -184,16 +209,22 @@ export function AISupportChat({ contextPage, contextBookingId, compact }: AISupp
           <div className="space-y-4">
             {messages.map((m, i) => (
               <div key={i} className={cn("flex gap-3", m.role === "user" && "flex-row-reverse")}>
-                <div className={cn(
-                  "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                  m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
-                )}>
+                <div
+                  className={cn(
+                    "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
+                    m.role === "user" ? "text-white" : "bg-muted text-foreground"
+                  )}
+                  style={m.role === "user" && accent ? { backgroundColor: accent } : undefined}
+                >
                   {m.role === "user" ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                 </div>
-                <div className={cn(
-                  "rounded-2xl px-4 py-2.5 max-w-[80%] text-sm",
-                  m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                )}>
+                <div
+                  className={cn(
+                    "rounded-2xl px-4 py-2.5 max-w-[80%] text-sm",
+                    m.role === "user" ? "text-white" : "bg-muted"
+                  )}
+                  style={m.role === "user" && accent ? { backgroundColor: accent } : undefined}
+                >
                   {m.role === "assistant" ? (
                     <div className="prose prose-sm dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1">
                       <ReactMarkdown>{m.content || "…"}</ReactMarkdown>
@@ -232,7 +263,13 @@ export function AISupportChat({ contextPage, contextBookingId, compact }: AISupp
             }}
             disabled={isStreaming}
           />
-          <Button size="icon" onClick={() => send(input)} disabled={!input.trim() || isStreaming} className="h-11 w-11 shrink-0">
+          <Button
+            size="icon"
+            onClick={() => send(input)}
+            disabled={!input.trim() || isStreaming}
+            className="h-11 w-11 shrink-0 text-white"
+            style={accent ? { backgroundColor: accent } : undefined}
+          >
             {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>
         </div>
