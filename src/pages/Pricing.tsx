@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import pricingHero from '@/assets/pricing-hero.jpg';
+import bgSupplies from '@/assets/pricing-bg-supplies.jpg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -181,8 +182,10 @@ export default function Pricing() {
       {userType === 'client' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           {/* Tier Cards */}
-          <section className="py-10 sm:py-20 bg-background">
-            <div className="max-w-6xl mx-auto px-4">
+          <section className="relative py-10 sm:py-20 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})` }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-6xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
                 <p className="text-muted-foreground text-sm sm:text-base">
@@ -266,8 +269,10 @@ export default function Pricing() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
 
           {/* 1. Payout Split Hero — the headline answer */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-6xl mx-auto px-4">
+          <section className="relative py-10 sm:py-16 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})`, transform: 'scaleX(-1)' }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-6xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-12">
                 <Badge variant="outline" className="mb-3 border-success/40 text-success">
                   <PiggyBank className="h-3.5 w-3.5 mr-1.5" /> Your Payout
@@ -372,8 +377,10 @@ export default function Pricing() {
           </section>
 
           {/* 3. Monthly earnings scenarios — recalculated with new splits */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-5xl mx-auto px-4">
+          <section className="relative py-10 sm:py-16 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})` }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-5xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Calendar className="h-6 w-6 text-primary" /> Monthly Earnings Scenarios
@@ -446,8 +453,10 @@ export default function Pricing() {
           </section>
 
           {/* 5. How to climb tiers */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-5xl mx-auto px-4">
+          <section className="relative py-10 sm:py-16 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})`, transform: 'scaleX(-1)' }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-5xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Trophy className="h-6 w-6 text-warning" /> How To Climb To All-Star Expert
