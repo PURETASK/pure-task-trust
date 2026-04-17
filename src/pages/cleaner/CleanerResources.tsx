@@ -69,7 +69,7 @@ const CHECKLISTS = [
 
 const GROWTH_ITEMS = [
   {
-    title: "How to Reach Gold Tier",
+    title: "How to Reach Top Performer Tier",
     desc: "Step-by-step strategy to advance your tier and unlock higher earnings",
     icon: TrendingUp,
     time: "12 min read",

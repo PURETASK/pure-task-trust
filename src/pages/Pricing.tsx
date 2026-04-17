@@ -102,7 +102,7 @@ export default function Pricing() {
     <main className="py-0">
       <SEO
         title="Transparent Cleaning Prices & Cleaner Payouts"
-        description="No hidden fees. Cleaners keep 75–85% of every job — Bronze 75%, Silver 78%, Gold 82%, Platinum 85%. See full pricing and earnings before you book or sign up."
+        description="No hidden fees. Cleaners keep 75–85% of every job — Rising Pro 75%, Proven Specialist 78%, Top Performer 82%, All-Star Expert 85%. See full pricing and earnings before you book or sign up."
         image="/og/og-pricing.jpg"
         url="/pricing"
       />
@@ -128,8 +128,8 @@ export default function Pricing() {
       }} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
       <FAQSchema faqs={[
-        { question: 'How much do cleaners actually keep?', answer: 'Bronze keeps 75%, Silver 78%, Gold 82%, Platinum 85%. The rest is the platform fee covering trust, safety, payments, and support.' },
-        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Bronze), $40/hr (Silver), $50/hr (Gold), and $65/hr (Platinum).' },
+        { question: 'How much do cleaners actually keep?', answer: 'Rising Pro keeps 75%, Proven Specialist 78%, Top Performer 82%, All-Star Expert 85%. The rest is the platform fee covering trust, safety, payments, and support.' },
+        { question: 'How much does cleaning cost on PureTask?', answer: 'All tiers start at $20/hr. Rates go up to $30/hr (Rising Pro), $40/hr (Proven Specialist), $50/hr (Top Performer), and $65/hr (All-Star Expert).' },
         { question: 'What is a credit?', answer: '1 credit equals $1 USD. You purchase credits upfront and use them to book cleanings. Unused credits never expire.' },
         { question: 'Are there hidden fees?', answer: 'No. PureTask charges no booking fees, no surcharges, and no hidden extras.' },
         { question: 'Can I get a refund if I\'m not happy?', answer: 'Yes. Credits are held in escrow and only released after you approve the completed job.' },
@@ -462,7 +462,7 @@ export default function Pricing() {
                   { icon: CheckCircle, title: 'Complete every step', desc: 'Photo proof before/after, full checklist done.' },
                   { icon: Star, title: 'Earn 5-star reviews', desc: 'Communication, quality, and professionalism count.' },
                   { icon: Shield, title: 'Avoid cancellations', desc: 'Late cancels and no-shows cost reliability points.' },
-                  { icon: Target, title: 'Stay consistent', desc: '20+ jobs at high quality typically reaches Gold.' },
+                  { icon: Target, title: 'Stay consistent', desc: '20+ jobs at high quality typically reaches Top Performer.' },
                   { icon: Zap, title: 'Accept reasonable jobs', desc: 'Strong acceptance rate boosts your visibility & score.' },
                 ].map(({ icon: Icon, title, desc }) => (
                   <Card key={title} className="hover:border-primary/40 transition-colors">

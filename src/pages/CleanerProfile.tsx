@@ -833,10 +833,10 @@ export default function CleanerProfile() {
             {/* Score bar */}
             <div className="mt-5 sm:mt-6 space-y-1.5">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>0 Bronze</span>
-                <span>50 Silver</span>
-                <span>70 Gold</span>
-                <span>90 Platinum</span>
+                <span>0 Rising</span>
+                <span>50 Proven</span>
+                <span>70 Top</span>
+                <span>90 All-Star</span>
               </div>
               <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
                 {/* Zone coloring */}

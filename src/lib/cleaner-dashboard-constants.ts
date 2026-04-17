@@ -8,7 +8,7 @@ import {
 export const TIPS = [
   { icon: "📸", text: "Upload before & after photos — cleaners with photo proof get 23% more repeat bookings." },
   { icon: "⏰", text: "Respond to job offers within 15 mins to boost your acceptance rate and reliability score." },
-  { icon: "⭐", text: "5-star reviews unlock Gold tier. A friendly check-in message after every job goes a long way." },
+  { icon: "⭐", text: "5-star reviews unlock Top Performer tier. A friendly check-in message after every job goes a long way." },
   { icon: "💰", text: "Set your rate closer to your tier ceiling — clients associate higher rates with higher quality." },
   { icon: "📅", text: "Keep your availability calendar up to date so the system auto-assigns you the best matches." },
   { icon: "🤝", text: "Refer a cleaner friend and earn credits. Every referral counts toward your monthly goals." },
@@ -57,7 +57,7 @@ export const FEATURE_SECTIONS = [
       { icon: Shield,     label: "Verification",    desc: "ID, background & badges",  href: "/cleaner/verification" },
       { icon: TrendingUp, label: "Reliability Score", desc: "How your score works",   href: "/cleaner/reliability" },
       { icon: Star,       label: "Reviews",          desc: "Your ratings & feedback", href: "/reviews" },
-      { icon: Award,      label: "Tier Progress",    desc: "Bronze → Platinum path",  href: "/cleaner/dashboard" },
+      { icon: Award,      label: "Tier Progress",    desc: "Rising Pro → All-Star Expert path",  href: "/cleaner/dashboard" },
     ],
   },
   {

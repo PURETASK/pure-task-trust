@@ -36,7 +36,7 @@ const SCENARIOS = [
   { label: '🌱 Side Hustle', hoursPerWeek: 10, rate: 25, score: 30, weeksPerYear: 40, desc: '~2 jobs/week' },
   { label: '⚡ Part-Time',   hoursPerWeek: 20, rate: 30, score: 55, weeksPerYear: 46, desc: '~4 jobs/week' },
   { label: '🔥 Full-Time',   hoursPerWeek: 32, rate: 40, score: 75, weeksPerYear: 48, desc: '~6 jobs/week' },
-  { label: '💎 Top Earner',  hoursPerWeek: 40, rate: 65, score: 92, weeksPerYear: 50, desc: 'Platinum tier' },
+  { label: '⭐ Top Earner',  hoursPerWeek: 40, rate: 65, score: 92, weeksPerYear: 50, desc: 'All-Star Expert tier' },
 ];
 
 function getTier(score: number) {
@@ -112,8 +112,8 @@ export default function EarningsCalculator() {
       />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'Earnings Calculator', url: '/earnings-calculator' }]} />
       <FAQSchema faqs={[
-        { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Top earners working 40h/week at Platinum can make $100k+/year.' },
-        { question: 'What is the platform fee?', answer: 'Bronze 25%, Silver 22%, Gold 18%, Platinum 15%.' },
+        { question: 'How much can a cleaner earn on PureTask?', answer: 'Earnings vary by tier. Top earners working 40h/week at All-Star Expert can make $100k+/year.' },
+        { question: 'What is the platform fee?', answer: 'Rising Pro 25%, Proven Specialist 22%, Top Performer 18%, All-Star Expert 15%.' },
       ]} />
 
       {/* ── HERO ── */}
@@ -186,7 +186,7 @@ export default function EarningsCalculator() {
               label="Rate per hour" icon={DollarSign} iconClass="text-success"
               value={ratePerHour} display={`$${ratePerHour}/hr`}
               min={20} max={65} step={1} onChange={setRatePerHour}
-              minLabel="$20 (entry)" maxLabel="$65 (Platinum max)"
+              minLabel="$20 (entry)" maxLabel="$65 (All-Star Expert max)"
             />
 
             <SliderRow
