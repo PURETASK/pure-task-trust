@@ -247,6 +247,7 @@ export default function Index() {
         </div>
       </div>
 
+      {/* ── HOW IT WORKS — 4 STEPS ────────────────────────────────────── */}
       <section className="py-16 sm:py-24 relative" style={{ backgroundImage: 'url(/images/how-it-works-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
         <div className="absolute inset-0 bg-background/70" />
         <div className="container relative z-10">
@@ -284,7 +285,18 @@ export default function Index() {
       {/* ── CLEANING REQUEST FORM ─────────────────────────────────────── */}
       <CleaningRequestForm />
 
-      {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
+      {/* ── TESTIMONIALS + FOUNDER + CTA (bubbles bg) ─────────────────── */}
+      <div
+        className="relative"
+        style={{
+          backgroundImage: `url(${bubblesBg})`,
+          backgroundSize: '100% auto',
+          backgroundRepeat: 'repeat-y',
+          backgroundPosition: 'top center',
+        }}
+      >
+        <div className="absolute inset-0 bg-background/55 pointer-events-none" aria-hidden="true" />
+        <div className="relative">
       <section className="py-16 sm:py-24">
         <div className="container">
           <motion.div
