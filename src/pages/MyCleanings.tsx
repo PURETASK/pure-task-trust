@@ -30,13 +30,11 @@ const f = (delay = 0) => ({ initial: { opacity: 0, y: 12 }, animate: { opacity: 
 export default function MyCleanings() {
   const [tab, setTab] = useState<TabValue>("upcoming");
   const { data: jobs, isLoading } = useClientJobs();
-  const { data: recurringPlans, isLoading: recurringLoading } = useRecurringBookings();
 
   const upcoming = jobs?.filter(j => ["created", "pending", "confirmed"].includes(j.status)) ?? [];
   const inProgress = jobs?.filter(j => j.status === "in_progress") ?? [];
   const completed = jobs?.filter(j => j.status === "completed") ?? [];
   const history = jobs ?? [];
-  const activeRecurring = recurringPlans?.filter(r => r.status === 'active') ?? [];
 
   return (
     <main className="flex-1 bg-background min-h-screen">
@@ -74,10 +72,6 @@ export default function MyCleanings() {
             <TabsTrigger value="completed" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
               <CheckCircle2 className="h-3.5 w-3.5" /> Completed
             </TabsTrigger>
-            <TabsTrigger value="recurring" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
-              <Repeat2 className="h-3.5 w-3.5" /> Recurring
-              {activeRecurring.length > 0 && <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{activeRecurring.length}</Badge>}
-            </TabsTrigger>
             <TabsTrigger value="history" className="gap-1.5 text-xs sm:text-sm rounded-2xl">
               <History className="h-3.5 w-3.5" /> History
             </TabsTrigger>
@@ -95,9 +89,6 @@ export default function MyCleanings() {
               </TabsContent>
               <TabsContent value="completed">
                 <JobList jobs={completed} emptyIcon={CheckCircle2} emptyMessage="No completed cleanings yet" emptyDescription="Once a cleaner finishes, you'll review and approve here." emptyPalette="amber" />
-              </TabsContent>
-              <TabsContent value="recurring">
-                <RecurringPlansList plans={recurringPlans || []} isLoading={recurringLoading} />
               </TabsContent>
               <TabsContent value="history">
                 <JobList jobs={history} emptyIcon={History} emptyMessage="No cleaning history" emptyDescription="Your completed bookings and receipts will live here." emptyPalette="purple" />
