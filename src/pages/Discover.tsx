@@ -216,7 +216,7 @@ function CleanerCard({
                 className="flex-1 h-9 rounded-xl text-xs font-bold shadow-md shadow-primary/20 gap-1.5"
                 onClick={e => e.stopPropagation()}
               >
-                <Link to={`/book?cleaner=${cleaner.id}`}>
+                <Link to={`/book?cleaner=${cleaner.id}${cleaner.__zip ? `&zip=${cleaner.__zip}` : ""}`}>
                   <Zap className="h-3.5 w-3.5" /> Book Now
                 </Link>
               </Button>
@@ -245,12 +245,34 @@ export default function Discover() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100);
+  const [location, setLocation] = useState<ResolvedLocation | null>(null);
+  const [zipModalOpen, setZipModalOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { data: cleaners, isLoading, error } = useCleaners({
-    searchQuery, onlyAvailable,
+  // Hydrate ZIP from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(ZIP_STORAGE_KEY);
+      if (raw) setLocation(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const handleResolved = (loc: ResolvedLocation) => {
+    setLocation(loc);
+    setZipModalOpen(false);
+    try {
+      localStorage.setItem(ZIP_STORAGE_KEY, JSON.stringify(loc));
+    } catch {}
+  };
+
+  const { data: cleaners, isLoading, error } = useCleanersByZip({
+    zip: location?.zip ?? null,
+    lat: location?.lat ?? null,
+    lng: location?.lng ?? null,
+    searchQuery,
+    onlyAvailable,
     minRating: minRating > 0 ? minRating : undefined,
     maxRate: maxPrice < 100 ? maxPrice : undefined,
   });
@@ -258,15 +280,14 @@ export default function Discover() {
   const { toggleFavorite, isToggling } = useFavoriteActions();
   const favoriteCleanerIds = new Set(favorites?.map((f: any) => f.cleaner_id) || []);
 
-  const filteredCleaners = cleaners
-    ? smartMatch
-      ? [...cleaners].sort((a, b) => {
-          const sa = ((a.avgRating || 0) / 5) * 0.5 + (a.reliabilityScore / 100) * 0.5;
-          const sb = ((b.avgRating || 0) / 5) * 0.5 + (b.reliabilityScore / 100) * 0.5;
-          return sb - sa;
-        })
-      : cleaners
-    : [];
+  const filteredCleaners = (cleaners ?? []).map((c) => ({ ...c, __zip: location?.zip }));
+  const sortedCleaners = smartMatch
+    ? [...filteredCleaners].sort((a, b) => {
+        const sa = ((a.avgRating || 0) / 5) * 0.5 + (a.reliabilityScore / 100) * 0.5;
+        const sb = ((b.avgRating || 0) / 5) * 0.5 + (b.reliabilityScore / 100) * 0.5;
+        return sb - sa;
+      })
+    : filteredCleaners;
 
   const activeFiltersCount = (minRating > 0 ? 1 : 0) + (maxPrice < 100 ? 1 : 0);
 
