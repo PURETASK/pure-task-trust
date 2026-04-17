@@ -377,8 +377,10 @@ export default function Pricing() {
           </section>
 
           {/* 3. Monthly earnings scenarios — recalculated with new splits */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-5xl mx-auto px-4">
+          <section className="relative py-10 sm:py-16 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})` }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-5xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Calendar className="h-6 w-6 text-primary" /> Monthly Earnings Scenarios
@@ -451,8 +453,10 @@ export default function Pricing() {
           </section>
 
           {/* 5. How to climb tiers */}
-          <section className="py-10 sm:py-16 bg-background">
-            <div className="max-w-5xl mx-auto px-4">
+          <section className="relative py-10 sm:py-16 bg-background overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${bgSupplies})`, transform: 'scaleX(-1)' }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" aria-hidden="true" />
+            <div className="max-w-5xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Trophy className="h-6 w-6 text-warning" /> How To Climb To All-Star Expert
