@@ -39,14 +39,16 @@ export default function Help() {
           </Button>
         </div>
 
-        <AISupportChat />
+        <div className="rounded-2xl border-2 border-[hsl(var(--pt-blue-deep))] bg-[hsl(var(--pt-blue))]/5 p-1">
+          <AISupportChat />
+        </div>
 
-        <div>
+        <div className="rounded-2xl border-2 border-[hsl(var(--pt-green-deep))] bg-[hsl(var(--pt-green))]/5 p-5">
           <h2 className="font-bold text-lg mb-3">Browse help</h2>
           <TopicGrid role={role} />
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/10 border-primary/20">
+        <Card className="p-6 rounded-2xl border-2 border-[hsl(var(--pt-amber-deep))] bg-[hsl(var(--pt-amber))]/10">
           <div className="flex items-start gap-4 flex-wrap">
             <div className="flex-1 min-w-[200px]">
               <h3 className="font-bold">Need a human?</h3>
@@ -59,7 +61,7 @@ export default function Help() {
                 <FileText className="h-4 w-4 mr-2" />
                 Open ticket
               </Button>
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="border-2 border-[hsl(var(--pt-purple-deep))] text-[hsl(var(--pt-purple))] hover:bg-[hsl(var(--pt-purple))]/10">
                 <a href="mailto:support@puretask.co">
                   <Mail className="h-4 w-4 mr-2" />
                   Email
