@@ -3336,6 +3336,51 @@ export type Database = {
         }
         Relationships: []
       }
+      help_articles: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          id: string
+          is_published: boolean
+          role: string
+          slug: string
+          summary: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          body: string
+          category: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          role?: string
+          slug: string
+          summary?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          role?: string
+          slug?: string
+          summary?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       id_verifications: {
         Row: {
           cleaner_id: string
@@ -5809,43 +5854,99 @@ export type Database = {
           },
         ]
       }
-      support_tickets: {
+      support_conversations: {
         Row: {
-          booking_id: string | null
+          context: Json | null
           created_at: string
-          description: string
+          escalated_ticket_id: string | null
           id: string
-          issue_type: string
-          priority: string
-          resolved_at: string | null
-          status: string
-          subject: string
+          messages: Json
+          resolved: boolean
           updated_at: string
           user_id: string
         }
         Insert: {
-          booking_id?: string | null
+          context?: Json | null
           created_at?: string
-          description: string
+          escalated_ticket_id?: string | null
           id?: string
-          issue_type: string
-          priority?: string
-          resolved_at?: string | null
-          status?: string
-          subject: string
+          messages?: Json
+          resolved?: boolean
           updated_at?: string
           user_id: string
         }
         Update: {
+          context?: Json | null
+          created_at?: string
+          escalated_ticket_id?: string | null
+          id?: string
+          messages?: Json
+          resolved?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_conversations_escalated_ticket_id_fkey"
+            columns: ["escalated_ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          ai_transcript_id: string | null
+          attachments: Json
+          booking_id: string | null
+          category: string | null
+          created_at: string
+          description: string
+          id: string
+          issue_type: string
+          last_agent_reply_at: string | null
+          priority: string
+          resolved_at: string | null
+          status: string
+          subject: string
+          unread_by_user: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_transcript_id?: string | null
+          attachments?: Json
           booking_id?: string | null
+          category?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          issue_type: string
+          last_agent_reply_at?: string | null
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject: string
+          unread_by_user?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_transcript_id?: string | null
+          attachments?: Json
+          booking_id?: string | null
+          category?: string | null
           created_at?: string
           description?: string
           id?: string
           issue_type?: string
+          last_agent_reply_at?: string | null
           priority?: string
           resolved_at?: string | null
           status?: string
           subject?: string
+          unread_by_user?: boolean
           updated_at?: string
           user_id?: string
         }
@@ -5943,6 +6044,44 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "cleaner_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_messages: {
+        Row: {
+          attachments: Json
+          body: string
+          created_at: string
+          id: string
+          sender_id: string | null
+          sender_role: string
+          ticket_id: string
+        }
+        Insert: {
+          attachments?: Json
+          body: string
+          created_at?: string
+          id?: string
+          sender_id?: string | null
+          sender_role: string
+          ticket_id: string
+        }
+        Update: {
+          attachments?: Json
+          body?: string
+          created_at?: string
+          id?: string
+          sender_id?: string | null
+          sender_role?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
             referencedColumns: ["id"]
           },
         ]
