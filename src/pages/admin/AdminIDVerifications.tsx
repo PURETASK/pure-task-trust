@@ -188,50 +188,83 @@ export default function AdminIDVerifications() {
                 <p className="text-muted-foreground">No verifications found</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Cleaner</TableHead>
-                      <TableHead>Document Type</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Submitted</TableHead>
-                      <TableHead>Expires</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredVerifications.map((v) => (
-                      <TableRow key={v.id} className="hover:bg-muted/30">
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            {v.cleaner_profiles?.profile_photo_url ? (
-                              <img src={v.cleaner_profiles.profile_photo_url} alt="Profile" className="h-8 w-8 rounded-full object-cover" />
-                            ) : (
-                              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                                <User className="h-4 w-4 text-muted-foreground" />
-                              </div>
-                            )}
-                            <div>
-                              <p className="font-medium text-sm">{v.cleaner_profiles?.first_name || 'Unknown'} {v.cleaner_profiles?.last_name || ''}</p>
-                              <p className="text-xs text-muted-foreground font-mono">{v.cleaner_id.slice(0, 8)}…</p>
-                            </div>
+              <>
+                {/* Mobile cards */}
+                <div className="md:hidden space-y-3">
+                  {filteredVerifications.map((v) => (
+                    <div key={v.id} className="rounded-2xl border border-border bg-card p-4 space-y-3">
+                      <div className="flex items-center gap-3">
+                        {v.cleaner_profiles?.profile_photo_url ? (
+                          <img src={v.cleaner_profiles.profile_photo_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                            <User className="h-5 w-5 text-muted-foreground" />
                           </div>
-                        </TableCell>
-                        <TableCell><Badge variant="outline" className="capitalize text-xs">{v.document_type.replace(/_/g, ' ')}</Badge></TableCell>
-                        <TableCell>{getStatusBadge(v.status)}</TableCell>
-                        <TableCell className="text-sm text-muted-foreground">{format(new Date(v.created_at), 'MMM d, yyyy')}</TableCell>
-                        <TableCell className="text-sm text-muted-foreground">{v.expires_at ? format(new Date(v.expires_at), 'MMM d, yyyy') : '—'}</TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm" onClick={() => handleViewDocument(v)} disabled={!v.document_url} className="text-xs gap-1">
-                            <Eye className="h-3.5 w-3.5" /> Review
-                          </Button>
-                        </TableCell>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{v.cleaner_profiles?.first_name || 'Unknown'} {v.cleaner_profiles?.last_name || ''}</p>
+                          <p className="text-xs text-muted-foreground font-mono">{v.cleaner_id.slice(0, 8)}…</p>
+                        </div>
+                        {getStatusBadge(v.status)}
+                      </div>
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        <Badge variant="outline" className="capitalize">{v.document_type.replace(/_/g, ' ')}</Badge>
+                        <span className="text-muted-foreground">Submitted: {format(new Date(v.created_at), 'MMM d, yyyy')}</span>
+                        {v.expires_at && <span className="text-muted-foreground">Expires: {format(new Date(v.expires_at), 'MMM d, yyyy')}</span>}
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => handleViewDocument(v)} disabled={!v.document_url} className="w-full gap-1">
+                        <Eye className="h-3.5 w-3.5" /> Review
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Cleaner</TableHead>
+                        <TableHead>Document Type</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Submitted</TableHead>
+                        <TableHead>Expires</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredVerifications.map((v) => (
+                        <TableRow key={v.id} className="hover:bg-muted/30">
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              {v.cleaner_profiles?.profile_photo_url ? (
+                                <img src={v.cleaner_profiles.profile_photo_url} alt="Profile" className="h-8 w-8 rounded-full object-cover" />
+                              ) : (
+                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                  <User className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                              )}
+                              <div>
+                                <p className="font-medium text-sm">{v.cleaner_profiles?.first_name || 'Unknown'} {v.cleaner_profiles?.last_name || ''}</p>
+                                <p className="text-xs text-muted-foreground font-mono">{v.cleaner_id.slice(0, 8)}…</p>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell><Badge variant="outline" className="capitalize text-xs">{v.document_type.replace(/_/g, ' ')}</Badge></TableCell>
+                          <TableCell>{getStatusBadge(v.status)}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{format(new Date(v.created_at), 'MMM d, yyyy')}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{v.expires_at ? format(new Date(v.expires_at), 'MMM d, yyyy') : '—'}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="outline" size="sm" onClick={() => handleViewDocument(v)} disabled={!v.document_url} className="text-xs gap-1">
+                              <Eye className="h-3.5 w-3.5" /> Review
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>

@@ -98,46 +98,88 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Fee</TableHead>
-          <TableHead>Net</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-3">
         {payouts.map((payout) => {
           const fee = payout.fee_credits || 0;
-          const grossAmount = payout.amount_credits;
-          const net = grossAmount - fee;
-          
+          const net = payout.amount_credits - fee;
           return (
-            <TableRow key={payout.id}>
-              <TableCell className="font-medium">
-                {format(new Date(payout.requested_at), 'MMM d, yyyy')}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
+            <div key={payout.id} className="rounded-2xl border border-border bg-card p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   {getTypeIcon(payout.payout_type)}
-                  <span className="capitalize">{payout.payout_type || 'Weekly'}</span>
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm capitalize truncate">{payout.payout_type || 'Weekly'}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {format(new Date(payout.requested_at), 'MMM d, yyyy')}
+                    </p>
+                  </div>
                 </div>
-              </TableCell>
-              <TableCell>${grossAmount.toFixed(2)}</TableCell>
-              <TableCell className="text-muted-foreground">
-                {fee > 0 ? `-$${fee.toFixed(2)}` : '-'}
-              </TableCell>
-              <TableCell className="font-semibold text-success">
-                ${net.toFixed(2)}
-              </TableCell>
-              <TableCell>{getStatusBadge(payout.status)}</TableCell>
-            </TableRow>
+                {getStatusBadge(payout.status)}
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm pt-2 border-t border-border">
+                <div>
+                  <p className="text-[10px] text-muted-foreground uppercase">Amount</p>
+                  <p className="font-medium">${payout.amount_credits.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-muted-foreground uppercase">Fee</p>
+                  <p className="text-muted-foreground">{fee > 0 ? `-$${fee.toFixed(2)}` : '—'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-muted-foreground uppercase">Net</p>
+                  <p className="font-semibold text-success">${net.toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
           );
         })}
-      </TableBody>
-    </Table>
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Date</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Fee</TableHead>
+              <TableHead>Net</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {payouts.map((payout) => {
+              const fee = payout.fee_credits || 0;
+              const grossAmount = payout.amount_credits;
+              const net = grossAmount - fee;
+              return (
+                <TableRow key={payout.id}>
+                  <TableCell className="font-medium">
+                    {format(new Date(payout.requested_at), 'MMM d, yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {getTypeIcon(payout.payout_type)}
+                      <span className="capitalize">{payout.payout_type || 'Weekly'}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>${grossAmount.toFixed(2)}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {fee > 0 ? `-$${fee.toFixed(2)}` : '-'}
+                  </TableCell>
+                  <TableCell className="font-semibold text-success">
+                    ${net.toFixed(2)}
+                  </TableCell>
+                  <TableCell>{getStatusBadge(payout.status)}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
