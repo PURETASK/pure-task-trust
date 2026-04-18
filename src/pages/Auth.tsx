@@ -343,7 +343,7 @@ export default function AuthPage() {
                 <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" value={email} onChange={e => setEmail(e.target.value)} required />
+                  <Input id="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
               </div>
 
@@ -351,7 +351,7 @@ export default function AuthPage() {
                 <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="password" type={showPass ? "text" : "password"} placeholder="••••••••" className="pl-10 pr-10 h-12 rounded-xl" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} />
+                  <Input id="password" type={showPass ? "text" : "password"} autoComplete={isSignUp ? "new-password" : "current-password"} placeholder="••••••••" className="pl-10 pr-10 h-12 rounded-xl" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} />
                   <button type="button" onClick={() => setShowPass(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>

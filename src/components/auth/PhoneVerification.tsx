@@ -155,6 +155,8 @@ export function PhoneVerification({ onVerified, showSkip, onSkip }: PhoneVerific
               <Input
                 id="phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel-national"
                 placeholder="(555) 123-4567"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
