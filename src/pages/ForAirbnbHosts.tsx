@@ -134,7 +134,7 @@ export default function ForAirbnbHosts() {
       </section>
 
       {/* ── FEATURES EDITORIAL GRID ──────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -186,7 +186,7 @@ export default function ForAirbnbHosts() {
       </section>
 
       {/* ── HOW IT WORKS — TIMELINE ──────────────────── */}
-      <section className="py-28 relative overflow-hidden">
+      <section className="py-14 md:py-28 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--pt-amber)) 1.5px, transparent 0)', backgroundSize: '32px 32px' }}
@@ -229,14 +229,14 @@ export default function ForAirbnbHosts() {
       </section>
 
       {/* ── TRUST LIST + VISUAL ──────────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             >
               <div
-                className="rounded-3xl p-10 relative overflow-hidden"
+                className="rounded-3xl p-6 md:p-10 relative overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, hsl(var(--pt-amber)/0.2) 0%, hsl(var(--pt-amber)/0.05) 100%)' }}
               >
                 <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-[hsl(var(--pt-amber)/0.15)] blur-3xl" />
@@ -305,11 +305,11 @@ export default function ForAirbnbHosts() {
       </section>
 
       {/* ── FINAL CTA STRIP ──────────────────────────── */}
-      <section className="py-24">
+      <section className="py-12 md:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-3xl relative overflow-hidden text-center py-20 px-8"
+            className="rounded-3xl relative overflow-hidden text-center py-12 md:py-20 px-6 md:px-8"
             style={{ background: 'linear-gradient(135deg, hsl(var(--pt-amber)/0.22) 0%, hsl(var(--primary)/0.12) 50%, hsl(var(--pt-cyan)/0.12) 100%)' }}
           >
             <div
