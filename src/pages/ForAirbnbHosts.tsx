@@ -213,7 +213,7 @@ export default function ForAirbnbHosts() {
                   className="text-center relative"
                 >
                   <div
-                    className="h-20 w-20 rounded-3xl mx-auto mb-6 flex flex-col items-center justify-center shadow-lg relative z-10"
+                    className="h-14 w-14 md:h-20 md:w-20 rounded-3xl mx-auto mb-4 md:mb-6 flex flex-col items-center justify-center shadow-lg relative z-10"
                     style={{ background: i % 2 === 0 ? 'hsl(var(--pt-amber))' : 'hsl(var(--foreground))', color: 'hsl(var(--background))' }}
                   >
                     <step.icon className="h-7 w-7" />

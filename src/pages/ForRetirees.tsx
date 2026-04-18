@@ -196,7 +196,7 @@ export default function ForRetirees() {
                 )}
                 <div className="relative z-10 text-center">
                   <div
-                    className="h-20 w-20 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg"
+                    className="h-14 w-14 md:h-20 md:w-20 rounded-3xl mx-auto mb-4 md:mb-6 flex items-center justify-center shadow-lg"
                     style={{ background: i % 2 === 0 ? 'hsl(var(--pt-purple))' : 'hsl(var(--foreground))', color: 'hsl(var(--background))' }}
                   >
                     <step.icon className="h-8 w-8" />
@@ -275,7 +275,7 @@ export default function ForRetirees() {
             >
               <div className="absolute -bottom-8 -right-8 h-48 w-48 rounded-full bg-[hsl(var(--pt-purple)/0.1)] blur-3xl" />
               <div className="relative z-10">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center mb-6">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center mb-6">
                   <Shield className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <h3 className="text-3xl font-black mb-4">Our Promise to You</h3>
@@ -358,7 +358,7 @@ export default function ForRetirees() {
             />
             <div className="relative z-10 max-w-2xl mx-auto">
               <div className="flex justify-center mb-5">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center">
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
               </div>

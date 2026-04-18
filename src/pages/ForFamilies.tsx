@@ -272,7 +272,7 @@ export default function ForFamilies() {
               >
                 <div className="absolute -bottom-8 -right-8 h-48 w-48 rounded-full bg-[hsl(var(--pt-green)/0.12)] blur-3xl" />
                 <div className="relative z-10">
-                  <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center mb-6">
+                  <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center mb-6">
                     <Leaf className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                   </div>
                   <h3 className="text-2xl font-black mb-3">The Family-First Guarantee</h3>
@@ -315,7 +315,7 @@ export default function ForFamilies() {
             />
             <div className="relative z-10 max-w-2xl mx-auto">
               <div className="flex justify-center mb-5">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center">
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                 </div>
               </div>
