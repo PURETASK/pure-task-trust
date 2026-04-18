@@ -117,7 +117,7 @@ export default function ForProfessionals() {
       </section>
 
       {/* ── FEATURE STAT CARDS ───────────────────────── */}
-      <section className="py-20">
+      <section className="py-10 md:py-20">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {features.map((f, i) => (
@@ -150,7 +150,7 @@ export default function ForProfessionals() {
       </section>
 
       {/* ── PROBLEM → SOLUTION CARDS ─────────────────── */}
-      <section className="py-28 relative">
+      <section className="py-14 md:py-28 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--pt-cyan)/0.04)] to-transparent" />
         <div className="relative container">
           <motion.div
@@ -197,7 +197,7 @@ export default function ForProfessionals() {
       </section>
 
       {/* ── TIME SAVINGS ─────────────────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
@@ -233,14 +233,14 @@ export default function ForProfessionals() {
               className="relative"
             >
               <div
-                className="rounded-3xl p-10 relative overflow-hidden text-center"
+                className="rounded-3xl p-6 md:p-10 relative overflow-hidden text-center"
                 style={{ background: 'linear-gradient(135deg, hsl(var(--pt-cyan)/0.18) 0%, hsl(var(--primary)/0.08) 100%)' }}
               >
                 <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-[hsl(var(--pt-cyan)/0.12)] blur-3xl" />
                 <div className="relative z-10">
-                  <p className="text-[12rem] font-black leading-none text-[hsl(var(--pt-cyan))] opacity-20 absolute top-0 left-0 right-0 pointer-events-none">4</p>
+                  <p className="text-[6rem] md:text-[12rem] font-black leading-none text-[hsl(var(--pt-cyan))] opacity-20 absolute top-0 left-0 right-0 pointer-events-none">4</p>
                   <div className="relative pt-8">
-                    <p className="text-8xl font-black text-[hsl(var(--pt-cyan))] mb-2">4+</p>
+                    <p className="text-6xl md:text-8xl font-black text-[hsl(var(--pt-cyan))] mb-2">4+</p>
                     <p className="text-2xl font-bold mb-1">Hours Saved</p>
                     <p className="text-muted-foreground mb-8">Every single week</p>
                     <div className="grid grid-cols-3 gap-3 text-center">
@@ -264,11 +264,11 @@ export default function ForProfessionals() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-12 md:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-3xl relative overflow-hidden text-center py-20 px-8"
+            className="rounded-3xl relative overflow-hidden text-center py-12 md:py-20 px-6 md:px-8"
             style={{ background: 'linear-gradient(135deg, hsl(var(--pt-cyan)/0.2) 0%, hsl(var(--primary)/0.14) 50%, hsl(var(--pt-green)/0.1) 100%)' }}
           >
             <div

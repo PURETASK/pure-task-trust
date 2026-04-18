@@ -128,7 +128,7 @@ export default function ForFamilies() {
       </section>
 
       {/* ── SAFETY PILLARS — NUMBERED GRID ───────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -183,7 +183,7 @@ export default function ForFamilies() {
       </section>
 
       {/* ── TESTIMONIALS ─────────────────────────────── */}
-      <section className="py-28 relative overflow-hidden">
+      <section className="py-14 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-green)/0.08)] to-transparent" />
         <div className="relative container">
           <motion.div
@@ -234,7 +234,7 @@ export default function ForFamilies() {
       </section>
 
       {/* ── PEACE OF MIND SPLIT ──────────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
@@ -267,12 +267,12 @@ export default function ForFamilies() {
 
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <div
-                className="rounded-3xl p-10 relative overflow-hidden"
+                className="rounded-3xl p-6 md:p-10 relative overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, hsl(var(--pt-green)/0.18) 0%, hsl(var(--pt-cyan)/0.08) 100%)' }}
               >
                 <div className="absolute -bottom-8 -right-8 h-48 w-48 rounded-full bg-[hsl(var(--pt-green)/0.12)] blur-3xl" />
                 <div className="relative z-10">
-                  <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center mb-6">
+                  <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center mb-6">
                     <Leaf className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                   </div>
                   <h3 className="text-2xl font-black mb-3">The Family-First Guarantee</h3>
@@ -303,11 +303,11 @@ export default function ForFamilies() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-12 md:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-3xl relative overflow-hidden text-center py-20 px-8"
+            className="rounded-3xl relative overflow-hidden text-center py-12 md:py-20 px-6 md:px-8"
             style={{ background: 'linear-gradient(135deg, hsl(var(--pt-green)/0.2) 0%, hsl(var(--pt-cyan)/0.12) 50%, hsl(var(--primary)/0.08) 100%)' }}
           >
             <div className="absolute inset-0 opacity-[0.04]"
@@ -315,7 +315,7 @@ export default function ForFamilies() {
             />
             <div className="relative z-10 max-w-2xl mx-auto">
               <div className="flex justify-center mb-5">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center">
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                 </div>
               </div>

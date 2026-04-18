@@ -117,7 +117,7 @@ export default function ForRetirees() {
       </section>
 
       {/* ── TRUST PILLARS ────────────────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -148,7 +148,7 @@ export default function ForRetirees() {
                   }}
                 >
                   <div
-                    className="absolute top-5 right-6 text-7xl font-black leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
+                    className="absolute top-5 right-6 text-5xl md:text-7xl font-black leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
                     style={{ color: `hsl(var(--${pillar.accent}))` }}
                   >
                     {pillar.number}
@@ -169,7 +169,7 @@ export default function ForRetirees() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────── */}
-      <section className="py-28 relative overflow-hidden">
+      <section className="py-14 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--pt-purple)/0.08)] to-transparent" />
         <div className="relative container">
           <motion.div
@@ -196,7 +196,7 @@ export default function ForRetirees() {
                 )}
                 <div className="relative z-10 text-center">
                   <div
-                    className="h-20 w-20 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg"
+                    className="h-14 w-14 md:h-20 md:w-20 rounded-3xl mx-auto mb-4 md:mb-6 flex items-center justify-center shadow-lg"
                     style={{ background: i % 2 === 0 ? 'hsl(var(--pt-purple))' : 'hsl(var(--foreground))', color: 'hsl(var(--background))' }}
                   >
                     <step.icon className="h-8 w-8" />
@@ -212,7 +212,7 @@ export default function ForRetirees() {
       </section>
 
       {/* ── TESTIMONIALS ─────────────────────────────── */}
-      <section className="py-28">
+      <section className="py-14 md:py-28">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -265,17 +265,17 @@ export default function ForRetirees() {
       </section>
 
       {/* ── GUARANTEE BLOCK ──────────────────────────── */}
-      <section className="py-28 relative">
+      <section className="py-14 md:py-28 relative">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="rounded-3xl p-10 relative overflow-hidden"
+              className="rounded-3xl p-6 md:p-10 relative overflow-hidden"
               style={{ background: 'linear-gradient(135deg, hsl(var(--pt-purple)/0.18) 0%, hsl(var(--pt-green)/0.08) 100%)' }}
             >
               <div className="absolute -bottom-8 -right-8 h-48 w-48 rounded-full bg-[hsl(var(--pt-purple)/0.1)] blur-3xl" />
               <div className="relative z-10">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center mb-6">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center mb-6">
                   <Shield className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <h3 className="text-3xl font-black mb-4">Our Promise to You</h3>
@@ -345,11 +345,11 @@ export default function ForRetirees() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────── */}
-      <section className="py-24">
+      <section className="py-12 md:py-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-3xl relative overflow-hidden text-center py-20 px-8"
+            className="rounded-3xl relative overflow-hidden text-center py-12 md:py-20 px-6 md:px-8"
             style={{ background: 'linear-gradient(135deg, hsl(var(--pt-purple)/0.2) 0%, hsl(var(--pt-green)/0.12) 50%, hsl(var(--primary)/0.08) 100%)' }}
           >
             <div
@@ -358,7 +358,7 @@ export default function ForRetirees() {
             />
             <div className="relative z-10 max-w-2xl mx-auto">
               <div className="flex justify-center mb-5">
-                <div className="h-16 w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center">
+                <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center">
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
               </div>
