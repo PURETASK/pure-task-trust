@@ -55,13 +55,13 @@ export default function ForgotPassword() {
                     <p className="text-muted-foreground">Enter your email and we'll send you a reset link</p>
                   </div>
 
-                  <div className="bg-card border border-border/60 rounded-2xl p-8 shadow-soft">
+                  <div className="bg-card border border-border/60 rounded-2xl p-6 sm:p-8 shadow-soft">
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-sm font-semibold">Email Address</Label>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input id="email" type="email" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                          <Input id="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </div>
                       </div>
                       <Button type="submit" className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-primary/80 rounded-xl shadow-lg shadow-primary/25" disabled={isLoading}>
@@ -77,7 +77,7 @@ export default function ForgotPassword() {
                 </motion.div>
               ) : (
                 <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
-                  <div className="bg-card border border-success/30 rounded-2xl p-10 text-center shadow-soft">
+                  <div className="bg-card border border-success/30 rounded-2xl p-6 sm:p-10 text-center shadow-soft">
                     <div className="h-24 w-24 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="h-12 w-12 text-success" />
                     </div>
