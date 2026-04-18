@@ -392,37 +392,61 @@ export default function CancellationPolicy() {
       >
         <h2 className="text-2xl font-bold text-foreground mb-4">Quick Reference</h2>
         <Card className="border-border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
-                <TableHead className="font-bold text-foreground">Notice Given</TableHead>
-                <TableHead className="font-bold text-foreground">Cancellation Fee</TableHead>
-                <TableHead className="font-bold text-foreground">Grace Available?</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">More than 48 hours</TableCell>
-                <TableCell className="text-green-600 font-medium">0% (Free)</TableCell>
-                <TableCell className="text-muted-foreground">N/A</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">24-48 hours</TableCell>
-                <TableCell className="text-amber-600 font-medium">50%</TableCell>
-                <TableCell className="text-green-600">Yes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">Less than 24 hours</TableCell>
-                <TableCell className="text-red-500 font-medium">100%</TableCell>
-                <TableCell className="text-green-600">Yes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">No-Show</TableCell>
-                <TableCell className="text-red-500 font-medium">100%</TableCell>
-                <TableCell className="text-red-500">No</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          {/* Mobile cards */}
+          <div className="sm:hidden divide-y divide-border">
+            {[
+              { notice: 'More than 48 hours', fee: '0% (Free)', feeClass: 'text-green-600', grace: 'N/A', graceClass: 'text-muted-foreground' },
+              { notice: '24-48 hours', fee: '50%', feeClass: 'text-amber-600', grace: 'Yes', graceClass: 'text-green-600' },
+              { notice: 'Less than 24 hours', fee: '100%', feeClass: 'text-red-500', grace: 'Yes', graceClass: 'text-green-600' },
+              { notice: 'No-Show', fee: '100%', feeClass: 'text-red-500', grace: 'No', graceClass: 'text-red-500' },
+            ].map((row) => (
+              <div key={row.notice} className="p-4 space-y-2">
+                <p className="font-semibold text-sm">{row.notice}</p>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Fee</span>
+                  <span className={`font-medium ${row.feeClass}`}>{row.fee}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Grace Available?</span>
+                  <span className={row.graceClass}>{row.grace}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Desktop table */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="font-bold text-foreground">Notice Given</TableHead>
+                  <TableHead className="font-bold text-foreground">Cancellation Fee</TableHead>
+                  <TableHead className="font-bold text-foreground">Grace Available?</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">More than 48 hours</TableCell>
+                  <TableCell className="text-green-600 font-medium">0% (Free)</TableCell>
+                  <TableCell className="text-muted-foreground">N/A</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">24-48 hours</TableCell>
+                  <TableCell className="text-amber-600 font-medium">50%</TableCell>
+                  <TableCell className="text-green-600">Yes</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Less than 24 hours</TableCell>
+                  <TableCell className="text-red-500 font-medium">100%</TableCell>
+                  <TableCell className="text-green-600">Yes</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">No-Show</TableCell>
+                  <TableCell className="text-red-500 font-medium">100%</TableCell>
+                  <TableCell className="text-red-500">No</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
         </Card>
       </motion.section>
     </main>

@@ -304,7 +304,52 @@ export default function AdminClientJobs() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
+              {/* Mobile cards */}
+              <div className="md:hidden space-y-3">
+                {filteredJobs.map((job) => (
+                  <div key={job.id} className="rounded-2xl border border-border bg-card p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="font-mono text-xs text-muted-foreground">#{job.id.slice(0, 8)}</p>
+                        <p className="text-sm font-medium">
+                          {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM dd, yyyy') : 'N/A'}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className={getStatusColor(job.status)}>
+                        {job.status.replace('_', ' ')}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <User className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                        <span className="truncate">{job.client?.first_name || 'Unknown'} {job.client?.last_name || ''}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <User className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                        <span className="truncate">{job.cleaner?.first_name || 'Unassigned'} {job.cleaner?.last_name || ''}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
+                      <div className="flex items-center gap-2 text-xs">
+                        <Badge variant="secondary">{job.cleaning_type.replace('_', ' ')}</Badge>
+                        <span>{job.estimated_hours || 0}h</span>
+                        <span className="font-medium">{job.credit_charge_credits || 0} cr</span>
+                      </div>
+                      <Button size="sm" variant="ghost" onClick={() => setSelectedJob(job)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {filteredJobs.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">No jobs found</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -369,7 +414,6 @@ export default function AdminClientJobs() {
                     ))}
                   </TableBody>
                 </Table>
-
                 {filteredJobs.length === 0 && (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground">No jobs found</p>
