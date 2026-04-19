@@ -37,11 +37,26 @@ export default {
         "pt-aqua": "#40E8E0",        // Clean Aqua
         "pt-cyan": "#40E8E0",        // aligned to Clean Aqua
         "pt-trust": "#0A3B78",       // Deep Trust Blue
+        "pt-navy": "#072A55",        // V2.1 Anchor — Navy-950
         "pt-green": "#28C76F",
         "pt-amber": "#FFC107",
         "pt-orange": "#FF9800",
         "pt-purple": "#9C27B0",
         "pt-red": "#F44336",
+
+        // V2.1 neutral ramp
+        neutral: {
+          50:  "hsl(var(--neutral-50))",
+          100: "hsl(var(--neutral-100))",
+          200: "hsl(var(--neutral-200))",
+          300: "hsl(var(--neutral-300))",
+          400: "hsl(var(--neutral-400))",
+          500: "hsl(var(--neutral-500))",
+          600: "hsl(var(--neutral-600))",
+          700: "hsl(var(--neutral-700))",
+          800: "hsl(var(--neutral-800))",
+          900: "hsl(var(--neutral-900))",
+        },
         
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
