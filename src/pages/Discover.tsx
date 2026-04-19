@@ -116,7 +116,7 @@ function CleanerCard({
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <div className={`h-20 w-20 rounded-2xl bg-gradient-to-br ${tier.bar} flex items-center justify-center shadow-lg`}>
-                  <span className="text-3xl font-black text-white">{getInitials(cleaner.name)}</span>
+                  <span className="text-3xl font-poppins font-bold text-white">{getInitials(cleaner.name)}</span>
                 </div>
               </div>
             )}
@@ -155,7 +155,7 @@ function CleanerCard({
 
             {/* ── RATE pinned at bottom-right ── */}
             <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm border border-border/60 rounded-xl px-2.5 py-1 shadow-md">
-              <span className="text-base font-black text-primary">${cleaner.hourlyRate}</span>
+              <span className="text-base font-poppins font-bold text-primary">${cleaner.hourlyRate}</span>
               <span className="text-[10px] text-muted-foreground">/hr</span>
             </div>
           </div>

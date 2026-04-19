@@ -108,7 +108,7 @@ export default function CleanerReferral() {
                 ) : (
                   <div className="relative mb-4">
                     <div className="bg-primary/10 border-2 border-dashed border-primary/50 rounded-xl py-4 text-center">
-                      <span className="text-3xl font-black tracking-[0.25em] text-primary">
+                      <span className="text-3xl font-poppins font-bold tracking-[0.25em] text-primary">
                         {referralCode?.code || '——'}
                       </span>
                     </div>
@@ -163,7 +163,7 @@ export default function CleanerReferral() {
                   <s.icon className={`h-5 w-5 ${s.icon_c}`} />
                 </div>
                 <div>
-                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-black font-mono ${s.val_c}`}>{s.value}</p>}
+                  {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-poppins font-bold font-mono ${s.val_c}`}>{s.value}</p>}
                   <p className="text-xs text-muted-foreground">{s.label}</p>
                 </div>
               </div>

@@ -248,7 +248,7 @@ export default function CostEstimator() {
               <div>
                 <div className="flex justify-between items-end mb-3">
                   <label className="font-semibold text-sm text-muted-foreground">Bedrooms</label>
-                  <span className="text-3xl font-black text-primary leading-none">{bedrooms}</span>
+                  <span className="text-3xl font-poppins font-bold text-primary leading-none">{bedrooms}</span>
                 </div>
                 <div className="rounded-2xl bg-primary/5 border-2 border-primary/20 p-4">
                   <Slider min={0} max={7} step={1} value={[bedrooms]} onValueChange={([v]) => setBedrooms(v)} className="py-1" />
@@ -260,7 +260,7 @@ export default function CostEstimator() {
               <div>
                 <div className="flex justify-between items-end mb-3">
                   <label className="font-semibold text-sm text-muted-foreground">Bathrooms</label>
-                  <span className="text-3xl font-black text-success leading-none">{bathrooms}</span>
+                  <span className="text-3xl font-poppins font-bold text-success leading-none">{bathrooms}</span>
                 </div>
                 <div className="rounded-2xl bg-success/5 border-2 border-success/20 p-4">
                   <Slider min={1} max={5} step={1} value={[bathrooms]} onValueChange={([v]) => setBathrooms(v)} className="py-1" />
@@ -272,7 +272,7 @@ export default function CostEstimator() {
               <div>
                 <div className="flex justify-between items-end mb-3">
                   <label className="font-semibold text-sm text-muted-foreground">Home size</label>
-                  <span className="text-3xl font-black text-warning leading-none">{sqft.toLocaleString()} <span className="text-base font-semibold text-muted-foreground">sqft</span></span>
+                  <span className="text-3xl font-poppins font-bold text-warning leading-none">{sqft.toLocaleString()} <span className="text-base font-semibold text-muted-foreground">sqft</span></span>
                 </div>
                 <div className="rounded-2xl bg-warning/5 border-2 border-warning/20 p-4">
                   <Slider min={300} max={4000} step={50} value={[sqft]} onValueChange={([v]) => setSqft(v)} className="py-1" />
@@ -356,7 +356,7 @@ export default function CostEstimator() {
                   initial={{ scale: 0.88, opacity: 0.5 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: 'spring', stiffness: 300 }}
-                  className={`text-6xl font-black leading-none mb-1 ${config.iconClass}`}
+                  className={`text-6xl font-poppins font-bold leading-none mb-1 ${config.iconClass}`}
                 >
                   ${Math.round(results.total).toLocaleString()}
                 </motion.p>
@@ -389,7 +389,7 @@ export default function CostEstimator() {
                       <span>−${Math.round(results.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-black text-base border-t-2 border-border/40 pt-2 mt-2">
+                  <div className="flex justify-between font-poppins font-bold text-base border-t-2 border-border/40 pt-2 mt-2">
                     <span>Total per clean</span>
                     <span className={config.iconClass}>${Math.round(results.total)}</span>
                   </div>

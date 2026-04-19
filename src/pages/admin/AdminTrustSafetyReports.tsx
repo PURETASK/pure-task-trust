@@ -88,7 +88,7 @@ const AdminTrustSafetyReports = () => {
                   <div className={`h-11 w-11 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
                     <Icon className={`h-5 w-5 ${color}`} />
                   </div>
-                  <p className="text-2xl font-black">{value}</p>
+                  <p className="text-2xl font-poppins font-bold">{value}</p>
                   <p className="text-xs font-medium text-foreground mt-1">{label}</p>
                   <div className={`flex items-center gap-1 text-xs mt-1 ${trend === 'up' && label !== 'Total Alerts (30d)' ? 'text-success' : trend === 'down' ? 'text-success' : 'text-destructive'}`}>
                     {trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}

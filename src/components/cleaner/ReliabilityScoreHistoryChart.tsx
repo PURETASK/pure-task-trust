@@ -57,7 +57,7 @@ function CustomTooltip({ active, payload }: any) {
   return (
     <div className="bg-card border border-border rounded-xl p-2.5 sm:p-3 shadow-elevated text-sm min-w-[140px]">
       <p className="font-semibold text-foreground mb-0.5 text-xs sm:text-sm">{data.dateLabel}</p>
-      <p className="text-xl sm:text-2xl font-black text-foreground">{data.score}</p>
+      <p className="text-xl sm:text-2xl font-poppins font-bold text-foreground">{data.score}</p>
       <p className="text-[10px] sm:text-xs text-muted-foreground capitalize">{data.tier || "—"} tier</p>
       {data.event && (
         <p className="text-[10px] sm:text-xs mt-1.5 pt-1.5 border-t border-border">

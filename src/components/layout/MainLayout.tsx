@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, HelpCircle, Shield, Bell, MessageCircle } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/brand/puretask-mark.png";
 import { CreditChip } from "@/components/layout/header/CreditChip";
 import { CleanerAvailabilityToggle } from "@/components/layout/header/CleanerAvailabilityToggle";
 import { RoleBadge } from "@/components/layout/header/RoleBadge";
@@ -61,20 +61,20 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   const headerAccentClass = !isAuthenticated
-    ? ""
+    ? "border-b-aero"
     : user?.role === "admin"
     ? "border-b-destructive/30"
     : user?.role === "cleaner"
     ? "border-b-success/30"
-    : "border-b-primary/30";
+    : "border-b-aero";
 
   const avatarRingClass = !isAuthenticated
-    ? ""
+    ? "ring-aero-cyan/40"
     : user?.role === "admin"
     ? "ring-destructive/40"
     : user?.role === "cleaner"
     ? "ring-success/40"
-    : "ring-primary/40";
+    : "ring-aero-cyan/40";
 
   return (
     <HelpProvider>
@@ -101,10 +101,10 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Link to={getHomePath()} className="flex items-center gap-2 group">
                   <img
                     src={logo}
-                    alt="PureTask logo"
-                    className="h-7 w-7 sm:h-8 sm:w-8 object-contain transition-transform group-hover:scale-105"
+                    alt="PureTask"
+                    className="h-8 w-8 sm:h-9 sm:w-9 object-contain transition-transform group-hover:scale-105"
                   />
-                  <span className="font-bold text-base sm:text-lg text-foreground">PureTask</span>
+                  <span className="font-poppins font-bold text-base sm:text-lg tracking-tight text-aero-trust">PureTask</span>
                   {isAuthenticated && user?.role === "admin" && (
                     <span className="hidden sm:block text-xs font-bold text-destructive bg-destructive/10 px-2 py-0.5 rounded-full border border-destructive/20">
                       Admin
@@ -167,7 +167,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                               "text-xs sm:text-sm font-bold",
                               user.role === "admin" ? "bg-destructive/10 text-destructive" :
                               user.role === "cleaner" ? "bg-success/10 text-success" :
-                              "bg-primary/10 text-primary"
+                              "bg-aero-cyan/15 text-aero-trust"
                             )}>
                               {getInitials(user.name)}
                             </AvatarFallback>
@@ -192,7 +192,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                                 "font-bold text-sm",
                                 user.role === "admin" ? "bg-destructive/10 text-destructive" :
                                 user.role === "cleaner" ? "bg-success/10 text-success" :
-                                "bg-primary/10 text-primary"
+                                "bg-aero-cyan/15 text-aero-trust"
                               )}>
                                 {getInitials(user.name)}
                               </AvatarFallback>
@@ -236,7 +236,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                     <Button variant="ghost" size="sm" asChild className="h-9 hidden sm:flex font-medium">
                       <Link to="/auth">Sign In</Link>
                     </Button>
-                    <Button size="sm" asChild className="h-9 font-semibold rounded-full px-4">
+                    <Button size="sm" asChild className="h-9 font-semibold rounded-full px-4 bg-gradient-aero hover:opacity-95 border-0 shadow-aero">
                       <Link to="/auth?mode=signup">Get Started</Link>
                     </Button>
                   </nav>

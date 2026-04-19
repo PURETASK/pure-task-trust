@@ -49,7 +49,7 @@ export default function ResidentialCleaning() {
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Residential Cleaning</Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5 leading-tight">
               Professional house cleaning{" "}
-              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">you can trust</span>
+              <span className="text-gradient-aero">you can trust</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Verified cleaners, GPS-tracked arrivals, photo documentation, and escrow protection on every booking. Pay only when you're satisfied.

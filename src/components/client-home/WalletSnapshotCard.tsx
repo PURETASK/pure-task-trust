@@ -63,7 +63,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
         <div className="flex-1">
           <div className="mb-1">
             <span className="text-xs text-muted-foreground font-medium">Available</span>
-            <p className="text-3xl font-black tracking-tight">
+            <p className="text-3xl font-poppins font-bold tracking-tight">
               ${availableBalance.toLocaleString()}
             </p>
           </div>

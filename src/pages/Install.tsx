@@ -108,10 +108,10 @@ export default function Install() {
         >
           {/* App icon */}
           <div className="h-24 w-24 rounded-[28px] gradient-brand flex items-center justify-center mb-5 shadow-elevated">
-            <span className="text-white font-black text-4xl">P</span>
+            <span className="text-white font-poppins font-bold text-4xl">P</span>
           </div>
 
-          <h1 className="text-4xl font-black tracking-tight mb-2">PureTask</h1>
+          <h1 className="text-4xl font-poppins font-bold tracking-tight mb-2">PureTask</h1>
           <p className="text-muted-foreground text-base max-w-xs mb-1">
             Professional cleaning, right on your home screen
           </p>
@@ -135,7 +135,7 @@ export default function Install() {
               onClick={handleInstall}
               disabled={installing}
               className={cn(
-                "relative w-full h-16 rounded-2xl font-black text-xl text-white shadow-elevated",
+                "relative w-full h-16 rounded-2xl font-poppins font-bold text-xl text-white shadow-elevated",
                 "gradient-brand overflow-hidden",
                 "active:scale-95 transition-transform duration-100",
                 "flex items-center justify-center gap-3",

@@ -197,7 +197,7 @@ function ConnectedCalendarCard({
           ].map(s => (
             <div key={s.label} className="flex-1 rounded-xl bg-card/40 border border-white/10 p-2 text-center backdrop-blur-sm">
               <s.icon className={`h-3.5 w-3.5 mx-auto mb-1 ${s.color}`} />
-              <p className="text-base font-black leading-none">{s.value}</p>
+              <p className="text-base font-poppins font-bold leading-none">{s.value}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{s.label}</p>
             </div>
           ))}
@@ -300,7 +300,7 @@ export default function CleanerCalendarSync() {
                 <CalendarDays className="h-4 w-4 text-white/60" />
                 <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Integrations</span>
               </div>
-              <h1 className="text-4xl font-black text-white mb-1">Calendar Sync</h1>
+              <h1 className="text-4xl font-poppins font-bold text-white mb-1">Calendar Sync</h1>
               <p className="text-white/60 text-sm max-w-sm">
                 Connect your calendar so your schedule always reflects your real availability — no double-bookings, no missed jobs.
               </p>
@@ -432,7 +432,7 @@ export default function CleanerCalendarSync() {
                     <div className={`h-9 w-9 rounded-xl bg-card flex items-center justify-center border-2 border-current ${item.color}`}>
                       <item.icon className={`h-4 w-4 ${item.iconColor}`} />
                     </div>
-                    <span className={`text-3xl font-black ${item.numColor}`}>{item.step}</span>
+                    <span className={`text-3xl font-poppins font-bold ${item.numColor}`}>{item.step}</span>
                   </div>
                   <h4 className="font-bold mb-1">{item.title}</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>

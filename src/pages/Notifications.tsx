@@ -59,7 +59,7 @@ export default function Notifications() {
                 <Bell className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-poppins font-bold flex items-center gap-3">
                   Notifications
                   {unreadCount > 0 && (
                     <Badge className="bg-primary text-primary-foreground font-bold text-sm px-2.5 py-1 rounded-full">{unreadCount}</Badge>

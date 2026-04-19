@@ -105,7 +105,7 @@ function MetricRing({
         </div>
       </div>
       <div className="text-center">
-        <p className="text-sm sm:text-base font-black">{value}%</p>
+        <p className="text-sm sm:text-base font-poppins font-bold">{value}%</p>
         <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight text-center">{label}</p>
       </div>
     </motion.div>
@@ -490,7 +490,7 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
                 <p className="text-sm font-semibold text-muted-foreground">Estimated Total:</p>
                 <p className="text-xs text-muted-foreground">{hours} hours × ${rate}/hr</p>
               </div>
-              <p className="text-3xl font-black">${total}</p>
+              <p className="text-3xl font-poppins font-bold">${total}</p>
             </div>
 
             <Button onClick={handleBook} className="w-full h-12 rounded-2xl font-bold text-base gap-2">
@@ -639,7 +639,7 @@ export default function CleanerProfile() {
                   />
                 ) : (
                   <div className={`h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${tier.gradient} flex items-center justify-center`}>
-                    <span className="text-3xl sm:text-4xl font-black text-white">{getInitials(cleaner.name)}</span>
+                    <span className="text-3xl sm:text-4xl font-poppins font-bold text-white">{getInitials(cleaner.name)}</span>
                   </div>
                 )}
                 {/* Verified badge */}
@@ -674,7 +674,7 @@ export default function CleanerProfile() {
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-1">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-poppins font-bold text-white leading-tight mb-1">
                 {cleaner.name}
               </h1>
 
@@ -746,7 +746,7 @@ export default function CleanerProfile() {
         <div className="container px-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-4 sm:gap-8 justify-between">
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl sm:text-4xl font-black text-white">${cleaner.hourlyRate}</span>
+              <span className="text-3xl sm:text-4xl font-poppins font-bold text-white">${cleaner.hourlyRate}</span>
               <span className="text-white/70 text-sm">/hr</span>
             </div>
             <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-white/90 text-xs sm:text-sm">
@@ -813,7 +813,7 @@ export default function CleanerProfile() {
               </div>
               {/* Big score badge */}
               <div className={`flex flex-col items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br ${tier.gradient} shadow-lg`}>
-                <span className="text-xl sm:text-2xl font-black text-white">{score}</span>
+                <span className="text-xl sm:text-2xl font-poppins font-bold text-white">{score}</span>
                 <span className="text-white/70 text-[10px]">/ 100</span>
               </div>
             </div>
@@ -939,7 +939,7 @@ export default function CleanerProfile() {
             <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <p className="text-white/80 text-xs font-semibold uppercase tracking-widest mb-1">Ready to Book?</p>
-                <h3 className="text-xl sm:text-2xl font-black text-white">
+                <h3 className="text-xl sm:text-2xl font-poppins font-bold text-white">
                   Book {cleaner.name.split(" ")[0]} Today
                 </h3>
                 <p className="text-white/70 text-sm mt-1">

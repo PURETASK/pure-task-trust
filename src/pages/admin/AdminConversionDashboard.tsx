@@ -102,7 +102,7 @@ export default function AdminConversionDashboard() {
                   <div className={`h-11 w-11 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
                     <Icon className={`h-5 w-5 ${color}`} />
                   </div>
-                  {eventsLoading ? <Skeleton className="h-8 w-20 mb-1" /> : <p className="text-2xl font-black">{value}</p>}
+                  {eventsLoading ? <Skeleton className="h-8 w-20 mb-1" /> : <p className="text-2xl font-poppins font-bold">{value}</p>}
                   <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
                 </CardContent>
               </Card>
@@ -149,7 +149,7 @@ export default function AdminConversionDashboard() {
               <Card className="border-border/60">
                 <CardHeader><CardTitle className="text-base">Total Leads</CardTitle></CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-black">{leadsLoading ? <Skeleton className="h-9 w-20 inline-block" /> : leadStats?.total || 0}</p>
+                  <p className="text-3xl font-poppins font-bold">{leadsLoading ? <Skeleton className="h-9 w-20 inline-block" /> : leadStats?.total || 0}</p>
                   <p className="text-sm text-muted-foreground">Last {dateRange} days</p>
                 </CardContent>
               </Card>

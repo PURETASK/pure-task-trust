@@ -39,7 +39,7 @@ export function BookingSummary({
             className="rounded-2xl border-2 p-5 bg-background"
             style={{ borderColor: "hsl(var(--pt-green-deep))", backgroundColor: "hsl(var(--pt-green)/0.04)" }}
           >
-            <h3 className="text-xs uppercase tracking-widest font-black mb-4" style={{ color: "hsl(var(--pt-green-deep))" }}>
+            <h3 className="text-xs uppercase tracking-widest font-poppins font-bold mb-4" style={{ color: "hsl(var(--pt-green-deep))" }}>
               Booking Summary
             </h3>
             <div className="space-y-2.5 text-sm">
@@ -68,7 +68,7 @@ export function BookingSummary({
             <div className="my-3 border-t-2 border-dashed border-border" />
             <div className="flex items-end justify-between mb-1">
               <span className="text-sm font-bold">Total</span>
-              <span className="text-3xl font-black tabular-nums" style={{ color: "hsl(var(--pt-green-deep))" }}>
+              <span className="text-3xl font-poppins font-bold tabular-nums" style={{ color: "hsl(var(--pt-green-deep))" }}>
                 ${total}
               </span>
             </div>
@@ -131,7 +131,7 @@ export function BookingSummary({
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
               Total {mobileOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
             </span>
-            <span className="text-2xl font-black tabular-nums" style={{ color: "hsl(var(--pt-green-deep))" }}>
+            <span className="text-2xl font-poppins font-bold tabular-nums" style={{ color: "hsl(var(--pt-green-deep))" }}>
               ${total}
             </span>
           </button>

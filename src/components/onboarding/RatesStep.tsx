@@ -47,7 +47,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
           <span className="text-green-400 text-xs font-semibold uppercase tracking-wide">Estimated weekly earnings</span>
         </div>
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-black text-white">${weeklyLow}–${weeklyHigh}</span>
+          <span className="text-3xl font-poppins font-bold text-white">${weeklyLow}–${weeklyHigh}</span>
           <span className="text-sm text-white/50">/ week</span>
         </div>
         <p className="text-xs text-white/35 mt-0.5">Based on 2–4 jobs/day at ${hourlyRate}/hr × 2hr avg</p>
@@ -57,7 +57,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Your hourly rate</Label>
-          <span className="text-3xl font-black text-green-400">${hourlyRate}</span>
+          <span className="text-3xl font-poppins font-bold text-green-400">${hourlyRate}</span>
         </div>
         <Slider value={[hourlyRate]} onValueChange={(v) => setHourlyRate(v[0])} min={20} max={65} step={1} className={`py-2 ${sliderClass}`} />
         <div className="flex justify-between text-xs text-white/30"><span>$20/hr</span><span>$65/hr</span></div>
@@ -72,7 +72,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span>{tier.emoji}</span>
                 <span className={`text-sm font-semibold ${active ? 'text-green-400' : 'text-white/60'}`}>{tier.label}</span>
-                {active && <span className="ml-auto text-[10px] font-black text-green-400 uppercase">You</span>}
+                {active && <span className="ml-auto text-[10px] font-poppins font-bold text-green-400 uppercase">You</span>}
               </div>
               <div className={`text-xs font-bold ${active ? 'text-white' : 'text-white/40'}`}>{tier.range}/hr</div>
             </div>
@@ -84,7 +84,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       <div className="p-4 rounded-2xl space-y-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className="flex items-center justify-between">
           <Label className="flex items-center gap-2 text-white/70 text-sm font-medium"><MapPin className="h-4 w-4" />Travel radius</Label>
-          <span className="text-xl font-black text-white">{travelRadius}<span className="text-sm font-normal text-white/50"> mi</span></span>
+          <span className="text-xl font-poppins font-bold text-white">{travelRadius}<span className="text-sm font-normal text-white/50"> mi</span></span>
         </div>
         <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className={`py-1 ${sliderClass}`} />
         <div className="flex justify-between text-xs text-white/30"><span>5 mi</span><span>50 mi</span></div>

@@ -69,7 +69,7 @@ export default function BookingStatus() {
     return (
       <main className="flex-1 flex items-center justify-center py-20">
         <div className="text-center">
-          <h1 className="text-2xl font-black mb-2">Booking not found</h1>
+          <h1 className="text-2xl font-poppins font-bold mb-2">Booking not found</h1>
           <p className="text-muted-foreground mb-4">This booking doesn't exist or has been removed.</p>
           <Button asChild><Link to="/dashboard">Back to Dashboard</Link></Button>
         </div>
@@ -124,7 +124,7 @@ export default function BookingStatus() {
               >
                 <StatusIcon className={`h-10 w-10 ${config.color} ${statusKey === "active" ? "animate-pulse" : ""}`} />
               </motion.div>
-              <h1 className="text-2xl font-black mb-2">{config.label}</h1>
+              <h1 className="text-2xl font-poppins font-bold mb-2">{config.label}</h1>
               <p className="text-muted-foreground max-w-xs mx-auto">{config.desc}</p>
             </div>
           )}
@@ -139,7 +139,7 @@ export default function BookingStatus() {
                   return (
                     <div key={step.status} className="flex items-center flex-1 last:flex-none">
                       <div className="flex flex-col items-center gap-1">
-                        <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center text-xs font-black transition-all ${
+                        <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center text-xs font-poppins font-bold transition-all ${
                           isCompleted ? "bg-primary border-primary/50 text-primary-foreground" : "bg-muted border-border text-muted-foreground"
                         } ${isActive ? "ring-2 ring-primary ring-offset-2" : ""}`}>
                           {isCompleted && i < timelineStep ? "✓" : i + 1}
@@ -172,7 +172,7 @@ export default function BookingStatus() {
           {/* Booking Details Card */}
           <div className="rounded-3xl border-2 border-border/40 overflow-hidden">
             <div className="p-5 pb-3">
-              <h2 className="text-base font-black flex items-center gap-2">
+              <h2 className="text-base font-poppins font-bold flex items-center gap-2">
                 Booking Details
                 <Badge className={`${config.bg} ${config.color} border-2 ${config.border} text-xs font-bold`}>
                   {config.label}
@@ -182,11 +182,11 @@ export default function BookingStatus() {
             <div className="p-5 pt-0 space-y-4">
               {/* Cleaner Info */}
               <div className="flex items-center gap-3 pb-4 border-b-2 border-border/30">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-black text-primary text-lg flex-shrink-0">
+                <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-poppins font-bold text-primary text-lg flex-shrink-0">
                   {cleanerName.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <p className="font-black">{cleanerName}</p>
+                  <p className="font-poppins font-bold">{cleanerName}</p>
                   {job.cleaner?.avg_rating && (
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Star className="h-3.5 w-3.5 fill-warning text-warning" />
@@ -232,7 +232,7 @@ export default function BookingStatus() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Credits in escrow</p>
-                  <p className="font-black text-primary text-lg">{job.escrow_credits_reserved || 0}</p>
+                  <p className="font-poppins font-bold text-primary text-lg">{job.escrow_credits_reserved || 0}</p>
                 </div>
               </div>
 
@@ -240,7 +240,7 @@ export default function BookingStatus() {
               <div className="rounded-2xl border-2 border-success/30 bg-success/5 p-3 flex items-start gap-2">
                 <Shield className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-black text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within 24 hours, or payment releases automatically.
+                  <span className="font-poppins font-bold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within 24 hours, or payment releases automatically.
                 </p>
               </div>
             </div>

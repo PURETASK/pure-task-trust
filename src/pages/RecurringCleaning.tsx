@@ -79,7 +79,7 @@ export default function RecurringCleaning() {
               "Need to skip or reschedule? Change any individual visit with 24 hours notice — no penalty.",
             ].map((step, i) => (
               <li key={i} className="flex gap-4 items-start">
-                <span className="text-2xl font-black text-success/40 leading-none mt-0.5">{i + 1}.</span>
+                <span className="text-2xl font-poppins font-bold text-success/40 leading-none mt-0.5">{i + 1}.</span>
                 <p className="text-muted-foreground">{step}</p>
               </li>
             ))}

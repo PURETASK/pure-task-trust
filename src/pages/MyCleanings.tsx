@@ -49,7 +49,7 @@ export default function MyCleanings() {
               <CalendarDays className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black">My Cleanings</h1>
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold">My Cleanings</h1>
               <p className="text-sm text-muted-foreground">Manage all your bookings in one place.</p>
             </div>
           </div>

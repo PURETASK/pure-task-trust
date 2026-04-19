@@ -30,7 +30,7 @@ export function FundingMethods() {
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black">Funding Methods</h2>
+              <h2 className="text-lg font-poppins font-bold">Funding Methods</h2>
               <p className="text-xs text-muted-foreground">Manage your saved payment methods</p>
             </div>
           </div>

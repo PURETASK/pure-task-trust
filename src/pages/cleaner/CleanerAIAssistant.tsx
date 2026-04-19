@@ -107,7 +107,7 @@ export default function CleanerAIAssistant() {
               <Bot className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-foreground tracking-tight">AI Business Advisor</h1>
+              <h1 className="text-2xl font-poppins font-bold text-foreground tracking-tight">AI Business Advisor</h1>
               <p className="text-sm text-muted-foreground">Personalized insights powered by your real data</p>
             </div>
           </div>

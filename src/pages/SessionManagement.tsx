@@ -37,7 +37,7 @@ export default function SessionManagement() {
               <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black">Security</h1>
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold">Security</h1>
               <p className="text-muted-foreground text-sm">Manage sessions, MFA, and login activity</p>
             </div>
           </div>
@@ -58,7 +58,7 @@ export default function SessionManagement() {
                     <Key className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black">Active Sessions</h2>
+                    <h2 className="text-lg font-poppins font-bold">Active Sessions</h2>
                     <p className="text-xs text-muted-foreground">Devices currently logged in</p>
                   </div>
                 </div>

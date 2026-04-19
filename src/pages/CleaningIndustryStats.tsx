@@ -233,7 +233,7 @@ export default function CleaningIndustryStats() {
                     <div className={`h-12 w-12 rounded-2xl border-2 ${s.iconBg} flex items-center justify-center mb-4`}>
                       <Icon className={`h-6 w-6 ${s.iconColor}`} />
                     </div>
-                    <p className={`text-4xl font-black mb-1 ${s.valueColor}`}>{s.value}</p>
+                    <p className={`text-4xl font-poppins font-bold mb-1 ${s.valueColor}`}>{s.value}</p>
                     <p className="font-bold text-sm mb-3">{s.label}</p>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-3">{s.context}</p>
                     <p className="text-xs text-muted-foreground/60 italic">Source: {s.source}</p>
@@ -324,7 +324,7 @@ export default function CleaningIndustryStats() {
             {BOOKING_INSIGHTS.map((b) => (
               <div key={b.stat} className={`flex items-start gap-3 p-4 rounded-2xl border-2 ${b.borderClass} ${b.bgClass}`}>
                 <div className="flex-1">
-                  <p className={`text-3xl font-black mb-1 ${b.statColor}`}>{b.stat}</p>
+                  <p className={`text-3xl font-poppins font-bold mb-1 ${b.statColor}`}>{b.stat}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
                   <p className="text-xs text-muted-foreground/50 italic mt-2">{b.source}</p>
                 </div>

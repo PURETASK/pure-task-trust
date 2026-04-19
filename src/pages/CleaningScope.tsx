@@ -364,7 +364,7 @@ export default function CleaningScope() {
               <Sparkles className="h-3.5 w-3.5" /> Scope of Work
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-poppins font-bold tracking-tight mb-3 leading-tight">
               What's Included in<br />
               <span className="text-primary">Your Cleaning</span>
             </h1>
@@ -426,7 +426,7 @@ export default function CleaningScope() {
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{active.emoji}</span>
                   <div>
-                    <h2 className="font-black text-xl text-foreground">{active.label}</h2>
+                    <h2 className="font-poppins font-bold text-xl text-foreground">{active.label}</h2>
                     <p className="text-sm text-muted-foreground">{active.tagline}</p>
                   </div>
                 </div>
@@ -497,7 +497,7 @@ export default function CleaningScope() {
       <section className="py-12">
         <div className="container max-w-4xl">
           <div className="gradient-brand rounded-3xl p-8 text-center text-white">
-            <h2 className="text-2xl font-black mb-2">Ready to Book?</h2>
+            <h2 className="text-2xl font-poppins font-bold mb-2">Ready to Book?</h2>
             <p className="text-white/85 mb-6 max-w-sm mx-auto text-sm">
               Browse verified cleaners and book with confidence — full scope, no surprises.
             </p>

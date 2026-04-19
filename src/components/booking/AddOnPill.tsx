@@ -27,7 +27,7 @@ export function AddOnPill({ name, icon, credits, selected, onToggle, paletteVar 
       <span className="text-xl flex-shrink-0">{icon}</span>
       <span className="flex-1 font-semibold text-sm truncate">{name}</span>
       <span
-        className="text-xs font-black px-2 py-0.5 rounded-full"
+        className="text-xs font-poppins font-bold px-2 py-0.5 rounded-full"
         style={{
           backgroundColor: `hsl(var(--${paletteVar})/0.15)`,
           color: `hsl(var(--${paletteVar}-deep))`,

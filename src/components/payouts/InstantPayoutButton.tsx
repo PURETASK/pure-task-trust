@@ -54,7 +54,7 @@ export default function InstantPayoutButton({
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="bg-success hover:bg-success/90 text-success-foreground gap-2 w-full font-black text-base h-12 rounded-2xl border-2 border-success/60"
+          className="bg-success hover:bg-success/90 text-success-foreground gap-2 w-full font-poppins font-bold text-base h-12 rounded-2xl border-2 border-success/60"
           disabled={!canPayout || disabled}
         >
           <Zap className="h-4 w-4" />

@@ -327,37 +327,37 @@ export default function CleanerProfile() {
                 <span className="text-4xl">{TIER_VISUAL[tier].emoji}</span>
                 <div>
                   <p className="text-white/70 text-xs font-semibold uppercase tracking-widest">Your Tier</p>
-                  <h3 className="text-white text-2xl font-black capitalize leading-tight">{tier}</h3>
+                  <h3 className="text-white text-2xl font-poppins font-bold capitalize leading-tight">{tier}</h3>
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-white/70 text-xs font-semibold uppercase tracking-widest">Reliability</p>
-                <p className="text-white text-3xl font-black">{reliabilityScore}<span className="text-base font-normal text-white/60">/100</span></p>
+                <p className="text-white text-3xl font-poppins font-bold">{reliabilityScore}<span className="text-base font-normal text-white/60">/100</span></p>
               </div>
             </div>
             {/* Bottom: rate + fee stats */}
             <div className="grid grid-cols-3 divide-x divide-border/60 px-0">
               <div className="px-5 py-4 text-center">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Rate Range</p>
-                <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>${hourlyRateRange.min}–${hourlyRateRange.max}</p>
+                <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>${hourlyRateRange.min}–${hourlyRateRange.max}</p>
                 <p className="text-xs text-muted-foreground font-medium">per hour</p>
               </div>
               <div className="px-5 py-4 text-center">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Platform Fee</p>
-                <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>{tierConfig.platformFeePercent}%</p>
+                <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>{tierConfig.platformFeePercent}%</p>
                 <p className="text-xs text-muted-foreground font-medium">you keep {100 - tierConfig.platformFeePercent}%</p>
               </div>
               <div className="px-5 py-4 text-center">
                 {tier === "platinum" ? (
                   <>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Status</p>
-                    <p className="text-2xl font-black text-foreground">🏆</p>
+                    <p className="text-2xl font-poppins font-bold text-foreground">🏆</p>
                     <p className="text-xs text-muted-foreground font-medium">Max tier!</p>
                   </>
                 ) : (
                   <>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Next Tier</p>
-                    <p className={`text-2xl font-black ${TIER_VISUAL[tier].text}`}>{Math.max(0, TIER_VISUAL[tier].nextMin - reliabilityScore)}</p>
+                    <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>{Math.max(0, TIER_VISUAL[tier].nextMin - reliabilityScore)}</p>
                     <p className="text-xs text-muted-foreground font-medium">pts to {TIER_VISUAL[tier].next}</p>
                   </>
                 )}
@@ -446,7 +446,7 @@ export default function CleanerProfile() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <span className={`text-base font-black ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
+                        <span className={`text-base font-poppins font-bold ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
                           ${tc.hourlyRateRange.min}–${tc.hourlyRateRange.max}
                         </span>
                         <p className="text-[10px] text-muted-foreground">/hr</p>
@@ -462,7 +462,7 @@ export default function CleanerProfile() {
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-semibold">Set Your Rate</Label>
                 <div className="text-right">
-                  <span className={`text-3xl font-black ${TIER_VISUAL[tier].text}`}>${hourlyRate}</span>
+                  <span className={`text-3xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>${hourlyRate}</span>
                   <span className="text-sm text-muted-foreground ml-1">/ hr</span>
                 </div>
               </div>
@@ -532,7 +532,7 @@ export default function CleanerProfile() {
               <Label className="text-sm font-semibold flex items-center gap-2 mb-3">
                 <Briefcase className="h-4 w-4 text-success" />
                 Years of Experience
-                <span className="ml-auto text-xl font-black text-success">{yearsExperience} yr{yearsExperience !== 1 ? "s" : ""}</span>
+                <span className="ml-auto text-xl font-poppins font-bold text-success">{yearsExperience} yr{yearsExperience !== 1 ? "s" : ""}</span>
               </Label>
               <Slider value={[yearsExperience]} onValueChange={([v]) => setYearsExperience(v)} min={0} max={20} step={1} />
               <div className="flex justify-between text-xs text-muted-foreground mt-1"><span>New</span><span>20+ years</span></div>

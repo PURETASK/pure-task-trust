@@ -19,6 +19,7 @@ import { useReferrals } from "@/hooks/useReferrals";
 import authSplitImg from "@/assets/auth-split.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
+import ptMark from "@/assets/brand/puretask-mark.png";
 
 const TRUST_POINTS = [
   { icon: Shield, text: "Background-verified cleaners" },
@@ -124,10 +125,10 @@ export default function AuthPage() {
   // Only block rendering if loading AND user is already authenticated (to prevent flash before redirect)
   if (isLoading && isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-aero">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <div className="h-14 w-14 rounded-2xl bg-aero-cyan/15 flex items-center justify-center shadow-aero">
+            <Loader2 className="h-7 w-7 animate-spin text-aero-trust" />
           </div>
           <p className="text-sm text-muted-foreground">Loading…</p>
         </div>
@@ -138,26 +139,26 @@ export default function AuthPage() {
   // ── Email confirmation screen ──────────────────────────────────────────────
   if (signupComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-success/5 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-aero p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-card border border-border/50 rounded-3xl p-8 shadow-elevated text-center"
+          className="max-w-md w-full bg-aero-card border border-aero rounded-3xl p-8 shadow-aero-lg text-center"
         >
-          <div className="h-20 w-20 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-5">
+          <div className="h-20 w-20 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-5 animate-float-y">
             <CheckCircle className="h-10 w-10 text-success" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Check your inbox!</h1>
+          <h1 className="text-2xl font-poppins font-bold mb-2 tracking-tight">Check your inbox!</h1>
           <p className="text-muted-foreground mb-1">Confirmation sent to:</p>
-          <p className="font-bold text-lg text-primary mb-6">{signupEmail}</p>
+          <p className="font-bold text-lg text-aero-trust mb-6">{signupEmail}</p>
 
-          <div className="bg-muted/50 rounded-2xl p-5 text-left mb-6 space-y-3">
+          <div className="bg-aero-cyan/10 rounded-2xl p-5 text-left mb-6 space-y-3 border border-aero-cyan/20">
             {[
               "Open the email from PureTask",
               'Click "Confirm your email"',
               role === "cleaner" ? "Complete your cleaner profile" : "Book your first cleaning!",
             ].map((s, i) => (
               <div key={i} className="flex items-center gap-3 text-sm">
-                <div className="h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold flex-shrink-0">{i + 1}</div>
+                <div className="h-6 w-6 rounded-full bg-gradient-aero text-white text-xs flex items-center justify-center font-bold flex-shrink-0">{i + 1}</div>
                 {s}
               </div>
             ))}
@@ -165,9 +166,9 @@ export default function AuthPage() {
 
           <p className="text-xs text-muted-foreground mb-4">
             Didn't get it?{" "}
-            <button onClick={() => setSignupComplete(false)} className="text-primary hover:underline">Try again</button>
+            <button onClick={() => setSignupComplete(false)} className="text-primary hover:underline font-medium">Try again</button>
           </p>
-          <Button variant="outline" className="w-full rounded-xl" onClick={() => { setIsSignUp(false); setSignupComplete(false); }}>
+          <Button variant="outline" className="w-full rounded-full border-aero" onClick={() => { setIsSignUp(false); setSignupComplete(false); }}>
             Back to Sign In
           </Button>
         </motion.div>
@@ -190,15 +191,13 @@ export default function AuthPage() {
           <div className="w-full max-w-md">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <Link to="/" className="flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground transition-colors">
-                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                </div>
-                <span className="font-bold text-foreground">PureTask</span>
+                <img src={ptMark} alt="PureTask" className="h-9 w-9 object-contain" />
+                <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
               </Link>
 
               {referralCode && (
-                <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-success/10 border border-primary/20 flex items-center gap-3">
-                  <Gift className="h-6 w-6 text-primary flex-shrink-0" />
+                <div className="mb-6 p-4 rounded-2xl bg-gradient-aero-soft border border-aero-cyan/30 flex items-center gap-3">
+                  <Gift className="h-6 w-6 text-aero-trust flex-shrink-0" />
                   <div>
                     <p className="font-semibold text-sm">You've been referred!</p>
                     <p className="text-xs text-muted-foreground">Complete signup to claim your $500 credit</p>
@@ -206,7 +205,7 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <h1 className="text-3xl font-bold mb-1">Join PureTask</h1>
+              <h1 className="text-3xl font-poppins font-bold mb-1 tracking-tight">Join PureTask</h1>
               <p className="text-muted-foreground mb-8">How would you like to use PureTask?</p>
 
               <div className="space-y-4">
@@ -269,11 +268,9 @@ export default function AuthPage() {
         <img src={panelBg} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-background/50" />
         <div className="absolute top-8 left-8">
-          <Link to="/" className="flex items-center gap-2 text-white/90 hover:text-white">
-            <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="font-bold text-lg">PureTask</span>
+          <Link to="/" className="flex items-center gap-2 text-white/95 hover:text-white">
+            <img src={ptMark} alt="PureTask" className="h-9 w-9 object-contain drop-shadow-lg" />
+            <span className="font-poppins font-bold text-lg drop-shadow-lg tracking-tight">PureTask</span>
           </Link>
         </div>
       </div>
@@ -285,10 +282,8 @@ export default function AuthPage() {
             {/* Mobile logo */}
             <div className="lg:hidden mb-6">
               <Link to="/" className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                </div>
-                <span className="font-bold text-foreground">PureTask</span>
+                <img src={ptMark} alt="PureTask" className="h-9 w-9 object-contain" />
+                <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
               </Link>
             </div>
 
@@ -306,7 +301,7 @@ export default function AuthPage() {
               </div>
             )}
 
-            <h1 className="text-3xl font-bold mb-1">{isSignUp ? "Create your account" : "Welcome back"}</h1>
+            <h1 className="text-3xl font-poppins font-bold mb-1 tracking-tight">{isSignUp ? "Create your account" : "Welcome back"}</h1>
             <p className="text-muted-foreground mb-6">
               {isSignUp ? "Start your journey with PureTask today." : "Sign in to your PureTask account."}
             </p>
@@ -380,7 +375,7 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 rounded-xl text-base font-semibold" disabled={isSubmitting}>
+              <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting}>
                 {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isSignUp ? "Creating account…" : "Signing in…"}</> : isSignUp ? "Create Account" : "Sign In"}
               </Button>
             </form>

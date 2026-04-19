@@ -101,7 +101,7 @@ export default function AboutUs() {
             </Badge>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
               Cleaning, rebuilt on{" "}
-              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
+              <span className="text-gradient-aero">
                 trust.
               </span>
             </h1>

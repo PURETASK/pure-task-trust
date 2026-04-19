@@ -422,7 +422,7 @@ export default function CleanerJobs() {
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold flex items-center gap-2">
                 <Briefcase className="h-7 w-7 text-success" /> Jobs
               </h1>
               <p className="text-muted-foreground text-sm mt-0.5">Accept, execute, and track your cleaning jobs</p>

@@ -87,7 +87,7 @@ export default function Messages() {
               <MessageCircle className="h-5 w-5 text-[hsl(var(--pt-purple))]" />
             </div>
             <div>
-              <h1 className="text-2xl font-black">Messages</h1>
+              <h1 className="text-2xl font-poppins font-bold">Messages</h1>
               {totalUnread > 0 && <p className="text-sm text-muted-foreground">{totalUnread} unread message{totalUnread !== 1 ? 's' : ''}</p>}
             </div>
           </div>

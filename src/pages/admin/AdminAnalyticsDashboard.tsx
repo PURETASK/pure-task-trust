@@ -165,7 +165,7 @@ export default function AdminAnalyticsDashboard() {
                   <div className={`h-10 w-10 rounded-xl ${bg} flex items-center justify-center mb-3`}>
                     <Icon className={`h-5 w-5 ${color}`} />
                   </div>
-                  <p className="text-2xl font-black">{value}</p>
+                  <p className="text-2xl font-poppins font-bold">{value}</p>
                   <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
                 </CardContent>
               </Card>
