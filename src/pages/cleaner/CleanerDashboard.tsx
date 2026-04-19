@@ -81,7 +81,7 @@ export default function CleanerDashboard() {
             </motion.div>
 
             <div className="flex gap-2 sm:gap-3">
-              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none">
+              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none bg-gradient-aero shadow-aero hover:shadow-aero-lg border-0 font-semibold">
                 <Link to="/cleaner/jobs"><Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />My Jobs</Link>
               </Button>
             </div>
