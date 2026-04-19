@@ -97,6 +97,8 @@ const CleanerSettings = lazy(() => import("./pages/cleaner/CleanerSettings"));
 const CleanerCertifications = lazy(() => import("./pages/cleaner/CleanerCertifications"));
 const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientNotes"));
 const CleanerEarningsForecast = lazy(() => import("./pages/cleaner/CleanerEarningsForecast"));
+const ClientSetup = lazy(() => import("./pages/ClientSetup"));
+import { RequireSetup } from "@/components/flow/RequireSetup";
 
 // Admin pages
 const TrustSafetyDashboard = lazy(() => import("./pages/admin/TrustSafetyDashboard"));
@@ -269,7 +271,8 @@ const App = () => (
 
                     {/* Preserved client routes */}
                     <Route path="/cleaner/:id" element={<RequireAuth><CleanerProfile /></RequireAuth>} />
-                    <Route path="/book" element={<RequireClient><Book /></RequireClient>} />
+                    <Route path="/setup" element={<RequireClient><ClientSetup /></RequireClient>} />
+                    <Route path="/book" element={<RequireClient><RequireSetup><Book /></RequireSetup></RequireClient>} />
                     <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
                     <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
                     <Route path="/job/:id/approve" element={<RequireClient><JobApproval /></RequireClient>} />
