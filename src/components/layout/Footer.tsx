@@ -7,6 +7,7 @@ import {
   BarChart3, Settings, TrendingUp, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ptMark from "@/assets/brand/puretask-mark.png";
 
 function FooterLink({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) {
   return (
@@ -20,17 +21,19 @@ function FooterLink({ to, children, className }: { to: string; children: React.R
 function GuestFooter() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="border-t border-border bg-gradient-to-b from-background to-muted/30">
+    <footer className="border-t border-aero bg-gradient-to-b from-background to-muted/30">
       {/* CTA Banner */}
-      <div className="bg-primary py-10">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-2xl font-bold text-primary-foreground mb-2">Ready for a spotless home?</h3>
-          <p className="text-primary-foreground/80 mb-6 text-sm">Join thousands of happy clients. Book in under 2 minutes.</p>
-          <div className="flex gap-3 justify-center">
-            <Button asChild size="lg" variant="secondary" className="font-semibold">
+      <div className="relative overflow-hidden bg-gradient-aero py-12">
+        <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-aero-cyan/30 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-2xl sm:text-3xl font-poppins font-bold text-white mb-2 tracking-tight">Ready for a spotless home?</h3>
+          <p className="text-white/85 mb-6 text-sm sm:text-base">Join thousands of happy clients. Book in under 2 minutes.</p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Button asChild size="lg" className="font-semibold rounded-full bg-white text-aero-trust hover:bg-white/90 border-0 shadow-elevated">
               <Link to="/auth?mode=signup">Get Started Free</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button asChild size="lg" variant="outline" className="font-semibold rounded-full border-white/40 text-white hover:bg-white/10 bg-transparent">
               <Link to="/discover">Browse Cleaners</Link>
             </Button>
           </div>
@@ -93,25 +96,23 @@ function GuestFooter() {
           ))}
         </div>
 
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-aero pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <FooterLink to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-xl bg-primary flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-lg text-foreground">PureTask</span>
+            <img src={ptMark} alt="PureTask" className="h-8 w-8 object-contain" />
+            <span className="font-poppins font-bold text-lg text-aero-trust tracking-tight">PureTask</span>
           </FooterLink>
-          <div className="flex items-center gap-4 flex-wrap justify-center">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
-              <Shield className="h-3.5 w-3.5 text-success" />
-              <span className="text-xs font-medium text-success">Background Checked</span>
+          <div className="flex items-center gap-3 flex-wrap justify-center">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aero-cyan/10 border border-aero-cyan/30">
+              <Shield className="h-3.5 w-3.5 text-aero-trust" />
+              <span className="text-xs font-medium text-aero-trust">Background Checked</span>
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
               <MapPin className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-medium text-primary">GPS Verified</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 border border-warning/20">
-              <Award className="h-3.5 w-3.5 text-warning" />
-              <span className="text-xs font-medium text-warning">Satisfaction Guaranteed</span>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
+              <Award className="h-3.5 w-3.5 text-success" />
+              <span className="text-xs font-medium text-success">Satisfaction Guaranteed</span>
             </div>
           </div>
           <p className="text-xs text-muted-foreground">© {currentYear} PureTask. All rights reserved.</p>
@@ -204,10 +205,8 @@ function ClientFooter() {
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <FooterLink to="/dashboard" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-              <Sparkles className="h-3.5 w-3.5 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-foreground">PureTask</span>
+            <img src={ptMark} alt="PureTask" className="h-7 w-7 object-contain" />
+            <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
           </FooterLink>
           <p className="text-xs text-muted-foreground">© {currentYear} PureTask · Trust-first cleaning marketplace</p>
           <div className="flex gap-4">
@@ -302,10 +301,8 @@ function CleanerFooter() {
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <FooterLink to="/cleaner/dashboard" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-success flex items-center justify-center">
-              <Sparkles className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="font-bold text-foreground">PureTask</span>
+            <img src={ptMark} alt="PureTask" className="h-7 w-7 object-contain" />
+            <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
             <span className="text-xs bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">Cleaner</span>
           </FooterLink>
           <p className="text-xs text-muted-foreground">© {currentYear} PureTask · Empowering professional cleaners</p>
@@ -405,10 +402,8 @@ function AdminFooter() {
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <FooterLink to="/admin/hub" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-destructive flex items-center justify-center">
-              <Shield className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="font-bold text-foreground">PureTask</span>
+            <img src={ptMark} alt="PureTask" className="h-7 w-7 object-contain" />
+            <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
             <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full font-medium">Admin</span>
           </FooterLink>
           <p className="text-xs text-muted-foreground">© {currentYear} PureTask Admin Console · Internal use only</p>
