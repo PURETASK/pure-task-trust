@@ -53,7 +53,7 @@ export default function MyCleanings() {
               <p className="text-sm text-muted-foreground">Manage all your bookings in one place.</p>
             </div>
           </div>
-          <Button asChild className="rounded-xl gap-1.5 hidden sm:flex">
+          <Button asChild className="rounded-xl gap-1.5 hidden sm:flex bg-gradient-aero shadow-aero hover:shadow-aero-lg border-0 font-semibold">
             <Link to="/book"><Plus className="h-4 w-4" /> Book New</Link>
           </Button>
         </motion.div>

@@ -337,15 +337,15 @@ export default function Discover() {
 
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[hsl(210,60%,10%)] to-[hsl(210,40%,16%)] py-10 sm:py-16 lg:py-20">
+      <div className="relative overflow-hidden bg-gradient-aero py-10 sm:py-16 lg:py-20">
         <div className="absolute inset-0">
           <img src={discoverBg} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[hsl(210,60%,10%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-aero-trust/40 via-transparent to-aero-trust/60" />
         </div>
 
         {/* Decorative brand color accents */}
-        <div className="absolute top-0 right-0 h-64 w-64 bg-[hsl(var(--pt-aqua)/0.12)] rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 h-48 w-48 bg-[hsl(var(--pt-purple)/0.1)] rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+        <div className="absolute top-0 right-0 h-64 w-64 bg-aero-cyan/30 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none animate-float-y" />
+        <div className="absolute bottom-0 left-0 h-48 w-48 bg-white/15 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
         <div className="relative container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -354,14 +354,14 @@ export default function Discover() {
                 <MapPin className="h-3 w-3 mr-1" />
                 {filteredCleaners.length > 0 ? `${filteredCleaners.length} cleaners available` : "Find cleaners near you"}
               </Badge>
-              <Badge className="bg-[hsl(var(--pt-aqua)/0.15)] text-[hsl(var(--pt-aqua))] border-[hsl(var(--pt-aqua)/0.3)] text-xs backdrop-blur-sm">
+              <Badge className="bg-aero-cyan/20 text-white border-aero-cyan/40 text-xs backdrop-blur-sm">
                 <Shield className="h-3 w-3 mr-1" /> 100% Verified
               </Badge>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3 max-w-2xl leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold text-white mb-2 sm:mb-3 max-w-2xl leading-tight tracking-tight">
               Find your perfect{" "}
-              <span className="bg-gradient-to-r from-[hsl(var(--pt-aqua))] to-[hsl(var(--pt-blue))] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-aero-cyan to-white bg-clip-text text-transparent">
                 verified cleaner
               </span>
             </h1>
@@ -372,9 +372,9 @@ export default function Discover() {
             {/* Trust quick-stats row */}
             <div className="flex flex-wrap gap-3 sm:gap-5 mb-5 sm:mb-7">
               {[
-                { icon: CheckCircle, label: "Background Checked", color: "text-[hsl(var(--pt-aqua))]" },
-                { icon: Camera, label: "Photo Proof", color: "text-[hsl(var(--pt-green))]" },
-                { icon: Clock, label: "GPS Verified", color: "text-[hsl(var(--pt-amber))]" },
+                { icon: CheckCircle, label: "Background Checked", color: "text-aero-cyan" },
+                { icon: Camera, label: "Photo Proof", color: "text-aero-cyan" },
+                { icon: Clock, label: "GPS Verified", color: "text-white" },
               ].map(({ icon: Icon, label, color }) => (
                 <div key={label} className="flex items-center gap-1.5 text-white/70 text-xs sm:text-sm">
                   <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${color} flex-shrink-0`} />
@@ -477,7 +477,7 @@ export default function Discover() {
             <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
               <MapPin className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-bold mb-2">No cleaners serve {location.zip} yet</h3>
+            <h3 className="text-xl font-poppins font-bold mb-2">No cleaners serve {location.zip} yet</h3>
             <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
               {searchQuery
                 ? `No matches for "${searchQuery}" in your area.`

@@ -198,11 +198,7 @@ export default function Wallet() {
                   ))}
                 </div>
                 <Button
-                  className="w-full gap-2 h-11 text-white border-2 border-white"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(var(--pt-green-deep)) 0%, hsl(var(--pt-green)) 100%)",
-                    boxShadow: "0 8px 24px -6px hsl(var(--pt-green-deep)/0.45)",
-                  }}
+                  className="w-full gap-2 h-11 text-white border-0 bg-gradient-aero shadow-aero hover:shadow-aero-lg rounded-xl font-semibold"
                   onClick={() => setBuyDialogOpen(true)}
                 >
                   <Plus className="h-4 w-4" />
