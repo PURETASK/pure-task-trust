@@ -45,7 +45,7 @@ export function AvailabilityStep({ onSubmit, onBack, isSubmitting }: { onSubmit:
       <div className="grid grid-cols-3 gap-2">
         {TEMPLATES.map(t => (
           <button key={t.id} type="button" onClick={() => applyTemplate(t)}
-            className={cn('flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-center', activeTemplate === t.id ? 'border-green-400/60 bg-green-500/10' : 'border-white/10 bg-white/5 hover:border-white/25')}>
+            className={cn('flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-center', activeTemplate === t.id ? 'border-success/60 bg-success/10' : 'border-white/10 bg-white/5 hover:border-white/25')}>
             <span className="text-2xl">{t.emoji}</span>
             <span className="text-xs font-semibold text-white/80">{t.label}</span>
           </button>
@@ -55,8 +55,8 @@ export function AvailabilityStep({ onSubmit, onBack, isSubmitting }: { onSubmit:
       {/* Days */}
       <div className="space-y-1.5">
         {DAYS.map(({ key, short }) => (
-          <div key={key} className={cn('flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all', schedule[key].enabled ? 'border-green-400/25 bg-green-500/8' : 'border-white/8 bg-white/4')} style={{ borderColor: schedule[key].enabled ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)', background: schedule[key].enabled ? 'rgba(74,222,128,0.06)' : 'rgba(255,255,255,0.04)' }}>
-            <Switch checked={schedule[key].enabled} onCheckedChange={(c) => { setSchedule(p => ({ ...p, [key]: { ...p[key], enabled: c } })); setActiveTemplate(null); }} className="data-[state=checked]:bg-green-500" />
+          <div key={key} className={cn('flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all', schedule[key].enabled ? 'border-success/25 bg-success/8' : 'border-white/8 bg-white/4')} style={{ borderColor: schedule[key].enabled ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)', background: schedule[key].enabled ? 'rgba(74,222,128,0.06)' : 'rgba(255,255,255,0.04)' }}>
+            <Switch checked={schedule[key].enabled} onCheckedChange={(c) => { setSchedule(p => ({ ...p, [key]: { ...p[key], enabled: c } })); setActiveTemplate(null); }} className="data-[state=checked]:bg-success" />
             <span className={cn('w-9 text-sm font-semibold', schedule[key].enabled ? 'text-white' : 'text-white/40')}>{short}</span>
             {schedule[key].enabled ? (
               <div className="flex items-center gap-2 flex-1">
@@ -75,14 +75,14 @@ export function AvailabilityStep({ onSubmit, onBack, isSubmitting }: { onSubmit:
         ))}
       </div>
 
-      <div className={cn('flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium', enabledDays > 0 ? 'text-green-400' : 'text-white/30')} style={{ background: enabledDays > 0 ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.04)', border: `1px solid ${enabledDays > 0 ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)'}` }}>
+      <div className={cn('flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium', enabledDays > 0 ? 'text-success' : 'text-white/30')} style={{ background: enabledDays > 0 ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.04)', border: `1px solid ${enabledDays > 0 ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)'}` }}>
         <Calendar className="h-4 w-4" />
         {enabledDays === 0 ? 'Select at least one day' : `Available ${enabledDays} day${enabledDays !== 1 ? 's' : ''} per week`}
       </div>
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
-        <Button onClick={() => enabledDays > 0 && onSubmit({ schedule })} disabled={enabledDays === 0 || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button onClick={() => enabledDays > 0 && onSubmit({ schedule })} disabled={enabledDays === 0 || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>

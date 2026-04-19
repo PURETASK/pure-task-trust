@@ -72,7 +72,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
       <Card>
         <CardHeader className={compact ? "pb-2" : undefined}>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Rocket className="h-5 w-5 text-blue-500" />
+            <Rocket className="h-5 w-5 text-primary" />
             Profile Boost
           </CardTitle>
         </CardHeader>
@@ -87,7 +87,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
     <Card>
       <CardHeader className={compact ? "pb-2" : undefined}>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Rocket className={`h-5 w-5 ${activeBoost ? 'text-blue-500' : 'text-muted-foreground'}`} />
+          <Rocket className={`h-5 w-5 ${activeBoost ? 'text-primary' : 'text-muted-foreground'}`} />
           Profile Boost
         </CardTitle>
       </CardHeader>
@@ -96,7 +96,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                   <Zap className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -106,7 +106,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
                   </p>
                 </div>
               </div>
-              <Badge className="bg-blue-500 hover:bg-blue-600">Active</Badge>
+              <Badge className="bg-primary hover:bg-primary">Active</Badge>
             </div>
             
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -115,7 +115,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
             </div>
 
             {!compact && activeBoost.jobs_during > 0 && (
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">
+              <p className="text-sm text-success dark:text-success">
                 {activeBoost.jobs_during} jobs received during this boost!
               </p>
             )}

@@ -26,7 +26,7 @@ export function InviteFriendsCTA({
         animate={{ opacity: 1, y: 0 }}
         className={className}
       >
-        <Card className="overflow-hidden border-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+        <Card className="overflow-hidden border-0 bg-gradient-to-r from-destructive to-accent text-white">
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex items-center gap-3 flex-1">
@@ -48,7 +48,7 @@ export function InviteFriendsCTA({
               <Button 
                 asChild 
                 variant="secondary" 
-                className="gap-2 bg-white text-purple-600 hover:bg-white/90 w-full sm:w-auto"
+                className="gap-2 bg-white text-accent hover:bg-white/90 w-full sm:w-auto"
               >
                 <Link to={linkTo}>
                   Share Now
@@ -70,8 +70,8 @@ export function InviteFriendsCTA({
       className={className}
     >
       <Card className="overflow-hidden hover:shadow-elevated transition-all">
-        <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 p-5">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center mb-4">
+        <div className="bg-gradient-to-br from-destructive/10 to-accent/10 p-5">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center mb-4">
             <Gift className="h-6 w-6 text-white" />
           </div>
           <h3 className="font-bold text-lg mb-1">

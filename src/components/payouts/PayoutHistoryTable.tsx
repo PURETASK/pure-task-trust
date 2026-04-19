@@ -40,14 +40,14 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
         );
       case 'pending':
         return (
-          <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1">
+          <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 gap-1">
             <Clock className="h-3 w-3" />
             Pending
           </Badge>
         );
       case 'processing':
         return (
-          <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20 gap-1">
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 gap-1">
             <Clock className="h-3 w-3 animate-spin" />
             Processing
           </Badge>
@@ -70,9 +70,9 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
 
   const getTypeIcon = (type?: string) => {
     if (type === 'instant') {
-      return <Zap className="h-4 w-4 text-amber-500" />;
+      return <Zap className="h-4 w-4 text-warning" />;
     }
-    return <Calendar className="h-4 w-4 text-cyan-500" />;
+    return <Calendar className="h-4 w-4 text-primary" />;
   };
 
   if (isLoading) {

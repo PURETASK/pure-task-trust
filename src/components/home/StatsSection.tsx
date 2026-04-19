@@ -42,7 +42,7 @@ const differentiators = [
 
 export function StatsSection() {
   return (
-    <section className="py-10 sm:py-16 bg-gradient-to-b from-cyan-50/50 to-background">
+    <section className="py-10 sm:py-16 bg-gradient-to-b from-primary/50 to-background">
       <div className="container px-4 sm:px-6">
         {/* Section Header */}
         <motion.div

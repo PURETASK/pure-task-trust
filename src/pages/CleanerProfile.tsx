@@ -31,35 +31,35 @@ const TIER: Record<string, {
 }> = {
   platinum: {
     label: "All-Star Expert", icon: "⭐",
-    gradient: "from-violet-600 via-violet-500 to-purple-400",
-    bar: "from-violet-500 to-purple-400",
-    badge: "bg-violet-500/15 text-violet-600 border-violet-500/40",
-    ring: "ring-violet-500/30",
-    accent: "text-violet-500",
+    gradient: "from-accent via-accent to-accent",
+    bar: "from-accent to-accent",
+    badge: "bg-accent/15 text-accent border-accent/40",
+    ring: "ring-accent/30",
+    accent: "text-accent",
   },
   gold: {
     label: "Top Performer", icon: "🏆",
-    gradient: "from-yellow-600 via-amber-500 to-yellow-400",
-    bar: "from-yellow-500 to-amber-400",
-    badge: "bg-yellow-500/15 text-yellow-700 border-yellow-500/40",
-    ring: "ring-yellow-500/30",
-    accent: "text-yellow-600",
+    gradient: "from-warning via-warning to-warning",
+    bar: "from-warning to-warning",
+    badge: "bg-warning/15 text-warning border-warning/40",
+    ring: "ring-warning/30",
+    accent: "text-warning",
   },
   silver: {
     label: "Proven Specialist", icon: "🛡️",
-    gradient: "from-slate-500 via-slate-400 to-slate-300",
-    bar: "from-slate-400 to-slate-300",
-    badge: "bg-slate-400/15 text-slate-600 border-slate-400/40",
-    ring: "ring-slate-400/30",
-    accent: "text-slate-500",
+    gradient: "from-muted via-muted to-muted",
+    bar: "from-muted to-muted",
+    badge: "bg-muted/15 text-muted-foreground border-border/40",
+    ring: "ring-border/30",
+    accent: "text-muted-foreground",
   },
   bronze: {
     label: "Rising Pro", icon: "📈",
-    gradient: "from-amber-800 via-amber-700 to-amber-600",
-    bar: "from-amber-700 to-amber-600",
-    badge: "bg-amber-700/15 text-amber-700 border-amber-700/40",
-    ring: "ring-amber-700/30",
-    accent: "text-amber-700",
+    gradient: "from-warning via-warning to-warning",
+    bar: "from-warning to-warning",
+    badge: "bg-warning/15 text-warning border-warning/40",
+    ring: "ring-warning/30",
+    accent: "text-warning",
   },
 };
 
@@ -841,10 +841,10 @@ export default function CleanerProfile() {
               <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
                 {/* Zone coloring */}
                 <div className="absolute inset-0 flex">
-                  <div className="w-[50%] bg-amber-700/20" />
-                  <div className="w-[20%] bg-slate-400/20" />
-                  <div className="w-[20%] bg-yellow-500/20" />
-                  <div className="w-[10%] bg-violet-500/20" />
+                  <div className="w-[50%] bg-warning/20" />
+                  <div className="w-[20%] bg-muted/20" />
+                  <div className="w-[20%] bg-warning/20" />
+                  <div className="w-[10%] bg-accent/20" />
                 </div>
                 <motion.div
                   className={`absolute left-0 top-0 h-full rounded-full bg-gradient-to-r ${tier.bar}`}

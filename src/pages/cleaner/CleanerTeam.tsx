@@ -290,7 +290,7 @@ export default function CleanerTeam() {
             {/* Teams I Own */}
             <section>
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Crown className="h-5 w-5 text-amber-500" />
+                <Crown className="h-5 w-5 text-warning" />
                 Teams I Own
               </h2>
               {ownedTeams.length > 0 ? (
@@ -462,7 +462,7 @@ export default function CleanerTeam() {
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Crown className="h-5 w-5 text-amber-500" />
+                <Crown className="h-5 w-5 text-warning" />
                 {detailTeam?.name}
               </DialogTitle>
               <DialogDescription>

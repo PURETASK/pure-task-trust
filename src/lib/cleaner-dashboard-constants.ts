@@ -17,10 +17,10 @@ export const TIPS = [
 ];
 
 export const TIER_COLORS: Record<string, { bg: string; text: string; border: string; gradient: string }> = {
-  bronze:   { bg: "bg-amber-500/10",  text: "text-amber-600",  border: "border-amber-500/30",  gradient: "from-amber-500/20 to-amber-600/5" },
-  silver:   { bg: "bg-slate-400/10",  text: "text-slate-500",  border: "border-slate-400/30",  gradient: "from-slate-400/20 to-slate-500/5" },
-  gold:     { bg: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/30", gradient: "from-yellow-400/20 to-yellow-600/5" },
-  platinum: { bg: "bg-cyan-500/10",   text: "text-cyan-600",   border: "border-cyan-500/30",   gradient: "from-cyan-400/20 to-cyan-600/5" },
+  bronze:   { bg: "bg-warning/10",  text: "text-warning",  border: "border-warning/30",  gradient: "from-warning/20 to-warning/5" },
+  silver:   { bg: "bg-muted/10",  text: "text-muted-foreground",  border: "border-border/30",  gradient: "from-muted/20 to-muted/5" },
+  gold:     { bg: "bg-warning/10", text: "text-warning", border: "border-warning/30", gradient: "from-warning/20 to-warning/5" },
+  platinum: { bg: "bg-primary/10",   text: "text-primary",   border: "border-primary/30",   gradient: "from-primary/20 to-primary/5" },
 };
 
 export const FEATURE_SECTIONS = [

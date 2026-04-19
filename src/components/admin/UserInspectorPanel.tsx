@@ -130,7 +130,7 @@ export function UserInspectorPanel({ userId, userRole, open, onOpenChange }: Use
               {userRole === "cleaner" && (
                 <>
                   <div className="p-3 rounded-xl bg-muted/50 text-center">
-                    <Star className="h-4 w-4 text-amber-500 mx-auto mb-1" />
+                    <Star className="h-4 w-4 text-warning mx-auto mb-1" />
                     <p className="text-lg font-bold">{((profile as any).avg_rating || 0).toFixed(1)}</p>
                     <p className="text-xs text-muted-foreground">Avg Rating</p>
                   </div>

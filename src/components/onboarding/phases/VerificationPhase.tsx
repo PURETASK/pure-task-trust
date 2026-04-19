@@ -88,7 +88,7 @@ export function VerificationPhase({
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs font-medium uppercase tracking-wide">Document type</Label>
               <Select value={docType} onValueChange={setDocType}>
-                <SelectTrigger className="h-12 rounded-xl bg-white/8 border-white/15 text-white data-[placeholder]:text-white/30 focus:border-pink-400">
+                <SelectTrigger className="h-12 rounded-xl bg-white/8 border-white/15 text-white data-[placeholder]:text-white/30 focus:border-destructive">
                   <SelectValue placeholder="Choose document type…" />
                 </SelectTrigger>
                 <SelectContent>
@@ -104,7 +104,7 @@ export function VerificationPhase({
             >
               {selectedFile ? (
                 <div className="flex flex-col items-center gap-2">
-                  <CheckCircle2 className="h-8 w-8 text-pink-400" />
+                  <CheckCircle2 className="h-8 w-8 text-destructive" />
                   <p className="font-semibold text-sm text-white">{fileName}</p>
                   <p className="text-xs text-white/30">Click to change</p>
                 </div>
@@ -154,7 +154,7 @@ export function VerificationPhase({
             <div className="grid gap-2">
               {BENEFITS.map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-3 px-4 py-2.5 rounded-xl" style={{ background: 'rgba(244,114,182,0.06)', border: '1px solid rgba(244,114,182,0.2)' }}>
-                  <Icon className="h-4 w-4 text-pink-400 flex-shrink-0" />
+                  <Icon className="h-4 w-4 text-destructive flex-shrink-0" />
                   <span className="text-sm text-white/70 font-medium">{text}</span>
                 </div>
               ))}
@@ -177,7 +177,7 @@ export function VerificationPhase({
                   { id: 'accurate', state: accurate, set: setAccurate, label: 'I certify all information I have provided is true and accurate.' },
                 ].map(({ id, state, set, label }) => (
                   <label key={id} htmlFor={id} className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                    <Checkbox id={id} checked={state} onCheckedChange={c => set(c === true)} className="mt-0.5 border-white/20 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500" />
+                    <Checkbox id={id} checked={state} onCheckedChange={c => set(c === true)} className="mt-0.5 border-white/20 data-[state=checked]:bg-destructive data-[state=checked]:border-destructive" />
                     <span className="text-sm text-white/60 leading-relaxed">{label}</span>
                   </label>
                 ))}

@@ -118,7 +118,7 @@ export default function CleanerJobDetail() {
       pending: <Badge variant="warning">Pending</Badge>,
       created: <Badge variant="warning">Pending</Badge>,
       confirmed: <Badge variant="default">Confirmed</Badge>,
-      in_progress: <Badge className="bg-violet-500 text-white">In Progress</Badge>,
+      in_progress: <Badge className="bg-accent text-white">In Progress</Badge>,
       completed: <Badge variant="success">Completed</Badge>,
     };
     return map[status] || <Badge variant="secondary">{status}</Badge>;

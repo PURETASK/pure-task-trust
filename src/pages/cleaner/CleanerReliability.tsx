@@ -42,9 +42,9 @@ const TIER_CONFIG: Record<string, {
   },
   silver:   {
     gradient: "from-[hsl(220,15%,18%)] via-[hsl(220,15%,28%)] to-[hsl(220,20%,36%)]",
-    glow: "hsl(220,15%,55%)", ring: "hsl(220,15%,65%)", border: "border-slate-400/60",
+    glow: "hsl(220,15%,55%)", ring: "hsl(220,15%,65%)", border: "border-border/60",
     label: "Proven Specialist", emoji: "🛡️", next: "Top Performer", nextScore: 70,
-    tagBg: "bg-slate-400/20", tagText: "text-slate-300",
+    tagBg: "bg-muted/20", tagText: "text-muted-foreground",
   },
   gold:     {
     gradient: "from-[hsl(38,90%,22%)] via-[hsl(42,92%,30%)] to-[hsl(45,95%,38%)]",
@@ -204,7 +204,7 @@ export default function CleanerReliability() {
                 {/* Demotion warning */}
                 {profile?.tier_demotion_warning_at && (
                   <div className="mt-4 flex items-start gap-2 bg-white/10 border border-white/20 rounded-2xl px-4 py-3">
-                    <AlertTriangle className="h-4 w-4 text-yellow-300 flex-shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-white/90">
                       <span className="font-bold">Tier at risk!</span> Improve within 3 days to keep your {cfg.label} status.
                     </p>

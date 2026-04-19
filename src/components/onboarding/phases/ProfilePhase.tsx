@@ -48,7 +48,7 @@ export function ProfilePhase({
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
 
-  const inputCls = 'h-11 rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-cyan-400 focus:ring-cyan-400/20';
+  const inputCls = 'h-11 rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-primary focus:ring-primary/20';
   const btnCls = 'h-12 rounded-xl border-0 font-semibold text-white';
   const gradientBtn = { background: 'linear-gradient(135deg, #06b6d4, #3b82f6)' };
   const backBtn = 'h-12 rounded-xl border-white/15 bg-white/5 text-white hover:bg-white/10 px-5';
@@ -148,18 +148,18 @@ export function ProfilePhase({
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <Label className="text-white/60 text-xs font-medium uppercase tracking-wide">Your Bio</Label>
-                <span className={`text-xs font-medium ${bioLen >= 20 ? 'text-cyan-400' : 'text-white/30'}`}>
+                <span className={`text-xs font-medium ${bioLen >= 20 ? 'text-primary' : 'text-white/30'}`}>
                   {bioLen < 20 ? `${20 - bioLen} more chars` : `${bioLen} ✓`}
                 </span>
               </div>
-              <Textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell clients about your experience…" className="min-h-[90px] resize-none rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-cyan-400" />
+              <Textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell clients about your experience…" className="min-h-[90px] resize-none rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-primary" />
               <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
                 <motion.div className="h-full rounded-full" style={{ background: '#06b6d4' }} animate={{ width: `${Math.min((bioLen / 20) * 100, 100)}%` }} />
               </div>
             </div>
 
             <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: 'rgba(167,139,250,0.08)', border: '1px solid rgba(167,139,250,0.2)' }}>
-              <Lightbulb className="h-4 w-4 text-violet-400 mt-0.5 flex-shrink-0" />
+              <Lightbulb className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
               <p className="text-xs text-white/50"><span className="text-white font-semibold">Pro tip: </span>Be specific — "5 years deep-cleaning Airbnb properties" converts 3× better.</p>
             </div>
 
@@ -181,7 +181,7 @@ export function ProfilePhase({
           <motion.div key="photo" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
             <div>
               <h2 className="text-2xl font-bold text-white">Add your profile photo</h2>
-              <p className="text-white/50 text-sm mt-1">Cleaners with photos get <span className="text-violet-400 font-semibold">3× more matches</span>.</p>
+              <p className="text-white/50 text-sm mt-1">Cleaners with photos get <span className="text-accent font-semibold">3× more matches</span>.</p>
             </div>
 
             <div
@@ -194,7 +194,7 @@ export function ProfilePhase({
                   <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/50" />
                   <div className="relative z-10 flex flex-col items-center gap-2">
-                    <div className="h-10 w-10 rounded-full bg-violet-500 flex items-center justify-center"><CheckCircle2 className="h-5 w-5 text-white" /></div>
+                    <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center"><CheckCircle2 className="h-5 w-5 text-white" /></div>
                     <span className="text-white font-semibold text-sm">Photo selected</span>
                     <span className="text-white/50 text-xs flex items-center gap-1"><RefreshCw className="h-3 w-3" />Click to change</span>
                   </div>
@@ -214,7 +214,7 @@ export function ProfilePhase({
             <div className="grid grid-cols-2 gap-2">
               {['Clear face, good lighting', 'No sunglasses or filters', 'Face the camera directly', 'No group photos'].map(tip => (
                 <div key={tip} className="flex items-center gap-2 text-xs text-white/40">
-                  <div className="h-1.5 w-1.5 rounded-full bg-violet-400 flex-shrink-0" />{tip}
+                  <div className="h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />{tip}
                 </div>
               ))}
             </div>
@@ -239,7 +239,7 @@ export function ProfilePhase({
               <div className="flex flex-col items-center justify-center py-12 space-y-4">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                   className="h-20 w-20 rounded-full flex items-center justify-center" style={{ background: 'rgba(6,182,212,0.15)', border: '2px solid rgba(6,182,212,0.4)' }}>
-                  <CheckCircle2 className="h-10 w-10 text-cyan-400" />
+                  <CheckCircle2 className="h-10 w-10 text-primary" />
                 </motion.div>
                 <h3 className="text-xl font-bold text-white">Phone Verified!</h3>
                 <p className="text-white/40 text-sm">Moving on…</p>
@@ -254,7 +254,7 @@ export function ProfilePhase({
                 </div>
 
                 <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: 'rgba(6,182,212,0.06)', border: '1px solid rgba(6,182,212,0.2)' }}>
-                  <ShieldCheck className="h-4 w-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                   <p className="text-xs text-white/50">A verified phone builds trust and protects your account.</p>
                 </div>
 
@@ -274,7 +274,7 @@ export function ProfilePhase({
                 ) : (
                   <div className="space-y-4">
                     <div className="flex flex-col items-center gap-4 py-2">
-                      <div className="[&_input]:bg-white/8 [&_input]:border-white/15 [&_input]:text-white [&_input]:text-center [&_input]:text-lg [&_input]:font-bold [&_input:focus]:border-cyan-400">
+                      <div className="[&_input]:bg-white/8 [&_input]:border-white/15 [&_input]:text-white [&_input]:text-center [&_input]:text-lg [&_input]:font-bold [&_input:focus]:border-primary">
                         <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
                           <InputOTPGroup>
                             <InputOTPSlot index={0} /><InputOTPSlot index={1} /><InputOTPSlot index={2} />

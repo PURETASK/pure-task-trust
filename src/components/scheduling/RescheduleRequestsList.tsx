@@ -17,10 +17,10 @@ import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 
 const bucketLabels: Record<string, { label: string; color: string }> = {
-  same_day: { label: 'Same Day', color: 'bg-amber-500/10 text-amber-600' },
-  next_day: { label: 'Next Day', color: 'bg-blue-500/10 text-blue-600' },
-  within_week: { label: 'Within Week', color: 'bg-green-500/10 text-green-600' },
-  future: { label: 'Future', color: 'bg-gray-500/10 text-gray-600' },
+  same_day: { label: 'Same Day', color: 'bg-warning/10 text-warning' },
+  next_day: { label: 'Next Day', color: 'bg-primary/10 text-primary' },
+  within_week: { label: 'Within Week', color: 'bg-success/10 text-success' },
+  future: { label: 'Future', color: 'bg-muted/10 text-muted-foreground' },
 };
 
 const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {

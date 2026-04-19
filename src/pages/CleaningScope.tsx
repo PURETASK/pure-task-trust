@@ -218,10 +218,10 @@ const SERVICE_TYPES = [
     emoji: '💎',
     tagline: 'Extra tasks',
     duration: 'Varies',
-    accentClass: 'bg-rose-500 text-white',
-    softClass: 'bg-rose-500/8 border-rose-500/25 text-rose-600',
-    dotClass: 'bg-rose-500',
-    ringClass: 'ring-rose-500/30',
+    accentClass: 'bg-destructive text-white',
+    softClass: 'bg-destructive/8 border-destructive/25 text-destructive',
+    dotClass: 'bg-destructive',
+    ringClass: 'ring-destructive/30',
     sections: [
       {
         room: 'Kitchen Add-Ons',

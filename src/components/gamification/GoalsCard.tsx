@@ -44,7 +44,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
       <Card>
         <CardHeader className={compact ? "pb-2" : undefined}>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Trophy className="h-5 w-5 text-amber-500" />
+            <Trophy className="h-5 w-5 text-warning" />
             Monthly Goals
           </CardTitle>
         </CardHeader>
@@ -67,7 +67,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
       <Card>
         <CardHeader className={compact ? "pb-2" : undefined}>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Trophy className="h-5 w-5 text-amber-500" />
+            <Trophy className="h-5 w-5 text-warning" />
             Monthly Goals
           </CardTitle>
         </CardHeader>
@@ -82,7 +82,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
     <Card>
       <CardHeader className={compact ? "pb-2" : undefined}>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Trophy className="h-5 w-5 text-amber-500" />
+          <Trophy className="h-5 w-5 text-warning" />
           Monthly Goals
         </CardTitle>
       </CardHeader>
@@ -102,10 +102,10 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
               <div key={goal.id} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Icon className={`h-4 w-4 ${isComplete ? 'text-emerald-500' : 'text-muted-foreground'}`} />
+                    <Icon className={`h-4 w-4 ${isComplete ? 'text-success' : 'text-muted-foreground'}`} />
                     <span className="text-sm font-medium">{config.label}</span>
                     {isComplete && (
-                      <CheckCircle className="h-4 w-4 text-emerald-500" />
+                      <CheckCircle className="h-4 w-4 text-success" />
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
                 </div>
                 <Progress 
                   value={progress} 
-                  className={`h-2 ${isComplete ? '[&>div]:bg-emerald-500' : ''}`}
+                  className={`h-2 ${isComplete ? '[&>div]:bg-success' : ''}`}
                 />
               </div>
             );

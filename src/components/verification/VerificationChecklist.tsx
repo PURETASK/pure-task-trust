@@ -21,27 +21,27 @@ function getStatusConfig(status: string | null) {
     case "verified":
       return {
         icon: Check,
-        color: "text-green-600",
-        bgColor: "bg-green-50",
-        borderColor: "border-green-200",
+        color: "text-success",
+        bgColor: "bg-success",
+        borderColor: "border-success",
         label: "Verified",
       };
     case "pending":
     case "in_progress":
       return {
         icon: Clock,
-        color: "text-amber-600",
-        bgColor: "bg-amber-50",
-        borderColor: "border-amber-200",
+        color: "text-warning",
+        bgColor: "bg-warning",
+        borderColor: "border-warning",
         label: "In Progress",
       };
     case "failed":
     case "rejected":
       return {
         icon: X,
-        color: "text-red-600",
-        bgColor: "bg-red-50",
-        borderColor: "border-red-200",
+        color: "text-destructive",
+        bgColor: "bg-destructive",
+        borderColor: "border-destructive",
         label: "Failed",
       };
     default:

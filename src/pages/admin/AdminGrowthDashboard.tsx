@@ -73,8 +73,8 @@ const AdminGrowthDashboard = () => {
                         <ArrowUpRight className="h-3 w-3 mr-1" /><span>{data?.totalClients || 0} total</span>
                       </div>
                     </div>
-                    <div className="h-12 w-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <UserPlus className="h-6 w-6 text-green-600" />
+                    <div className="h-12 w-12 bg-success dark:bg-success/30 rounded-full flex items-center justify-center">
+                      <UserPlus className="h-6 w-6 text-success" />
                     </div>
                   </div>
                 </CardContent>
@@ -89,8 +89,8 @@ const AdminGrowthDashboard = () => {
                         <ArrowUpRight className="h-3 w-3 mr-1" /><span>{data?.newCleanersThis || 0} new</span>
                       </div>
                     </div>
-                    <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                      <Users className="h-6 w-6 text-blue-600" />
+                    <div className="h-12 w-12 bg-primary dark:bg-primary/30 rounded-full flex items-center justify-center">
+                      <Users className="h-6 w-6 text-primary" />
                     </div>
                   </div>
                 </CardContent>
@@ -105,8 +105,8 @@ const AdminGrowthDashboard = () => {
                         <Repeat className="h-3 w-3 mr-1" /><span>Recurring bookings</span>
                       </div>
                     </div>
-                    <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
-                      <Target className="h-6 w-6 text-purple-600" />
+                    <div className="h-12 w-12 bg-accent dark:bg-accent/30 rounded-full flex items-center justify-center">
+                      <Target className="h-6 w-6 text-accent" />
                     </div>
                   </div>
                 </CardContent>
@@ -121,8 +121,8 @@ const AdminGrowthDashboard = () => {
                         <Gift className="h-3 w-3 mr-1" /><span>All time</span>
                       </div>
                     </div>
-                    <div className="h-12 w-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
-                      <Gift className="h-6 w-6 text-orange-600" />
+                    <div className="h-12 w-12 bg-warning dark:bg-warning/30 rounded-full flex items-center justify-center">
+                      <Gift className="h-6 w-6 text-warning" />
                     </div>
                   </div>
                 </CardContent>

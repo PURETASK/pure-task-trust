@@ -28,31 +28,31 @@ export function TermsAgreementStep({ onSubmit, isSubmitting }: TermsAgreementSte
         {[
           {
             id: 'terms', icon: ShieldCheck, title: 'Terms of Service', accepted: termsAccepted, setAccepted: setTermsAccepted,
-            label: <span>I agree to the <span className="text-green-400 font-semibold">Terms of Service</span> & <span className="text-green-400 font-semibold">Privacy Policy</span></span>,
+            label: <span>I agree to the <span className="text-success font-semibold">Terms of Service</span> & <span className="text-success font-semibold">Privacy Policy</span></span>,
             content: <><p>By using PureTask, you agree to: provide accurate information about your identity and qualifications, maintain professional conduct with all clients, complete jobs as agreed and communicate promptly, adhere to our quality standards and guidelines, respect client privacy and property, and allow us to run background checks for safety verification.</p><p className="pt-2">Full terms available at puretask.com/terms. We may update these terms periodically.</p></>
           },
           {
             id: 'contractor', icon: Briefcase, title: 'Independent Contractor', accepted: contractorAccepted, setAccepted: setContractorAccepted,
-            label: <span>I agree to work as an <span className="text-green-400 font-semibold">Independent Contractor</span></span>,
+            label: <span>I agree to work as an <span className="text-success font-semibold">Independent Contractor</span></span>,
             content: <><p>As an independent contractor: you operate as an independent business (not an employee), set your own rates within platform guidelines, choose your own schedule and which jobs to accept, are responsible for your own taxes and insurance, and may work with other platforms simultaneously.</p><p className="pt-2">This does not create an employer-employee relationship.</p></>
           }
         ].map(({ id, icon: Icon, title, accepted, setAccepted, label, content }) => (
           <div key={id} className="rounded-2xl border overflow-hidden transition-all" style={{ borderColor: accepted ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.12)', background: accepted ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.04)' }}>
-              <Icon className="h-4 w-4 text-green-400" />
+              <Icon className="h-4 w-4 text-success" />
               <span className="font-semibold text-sm text-white">{title}</span>
             </div>
             <ScrollArea className="h-28 px-4 py-3">
               <div className="text-xs text-white/50 space-y-2 leading-relaxed">{content}</div>
             </ScrollArea>
             <label htmlFor={id} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors">
-              <Checkbox id={id} checked={accepted} onCheckedChange={(c) => setAccepted(c === true)} className="border-white/30 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500" />
+              <Checkbox id={id} checked={accepted} onCheckedChange={(c) => setAccepted(c === true)} className="border-white/30 data-[state=checked]:bg-success data-[state=checked]:border-success" />
               <span className="text-sm text-white/80 leading-relaxed">{label}</span>
             </label>
           </div>
         ))}
 
-        <Button type="submit" disabled={!isValid || isSubmitting} className="w-full h-12 text-base font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button type="submit" disabled={!isValid || isSubmitting} className="w-full h-12 text-base font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : <><span>Agree & Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </form>

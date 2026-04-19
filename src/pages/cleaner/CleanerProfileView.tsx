@@ -20,10 +20,10 @@ import {
 } from "lucide-react";
 
 const TIER_CONFIG: Record<string, { gradient: string; badge: string; icon: string; color: string }> = {
-  bronze: { gradient: "from-amber-500/20 to-amber-600/5", badge: "bg-amber-500/10 text-amber-700 border-amber-500/30", icon: "🥉", color: "hsl(38 95% 55%)" },
-  silver: { gradient: "from-slate-400/20 to-slate-500/5", badge: "bg-slate-400/10 text-slate-600 border-slate-400/30", icon: "🥈", color: "hsl(220 15% 55%)" },
-  gold:   { gradient: "from-yellow-500/20 to-yellow-600/5", badge: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30", icon: "🥇", color: "hsl(45 95% 55%)" },
-  platinum: { gradient: "from-cyan-500/20 to-cyan-600/5", badge: "bg-cyan-500/10 text-cyan-700 border-cyan-500/30", icon: "💎", color: "hsl(190 90% 50%)" },
+  bronze: { gradient: "from-warning/20 to-warning/5", badge: "bg-warning/10 text-warning border-warning/30", icon: "🥉", color: "hsl(38 95% 55%)" },
+  silver: { gradient: "from-muted/20 to-muted/5", badge: "bg-muted/10 text-muted-foreground border-border/30", icon: "🥈", color: "hsl(220 15% 55%)" },
+  gold:   { gradient: "from-warning/20 to-warning/5", badge: "bg-warning/10 text-warning border-warning/30", icon: "🥇", color: "hsl(45 95% 55%)" },
+  platinum: { gradient: "from-primary/20 to-primary/5", badge: "bg-primary/10 text-primary border-primary/30", icon: "💎", color: "hsl(190 90% 50%)" },
 };
 
 const QUICK_LINKS = [

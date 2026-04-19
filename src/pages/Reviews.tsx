@@ -57,21 +57,21 @@ export default function Reviews() {
         <div className="container relative px-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto">
             {/* Badge — plain div to avoid framer-motion ref warning */}
-            <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 bg-amber-500/10 text-amber-600 border border-amber-500/20 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-1.5 rounded-full font-medium">
-              <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-500" />Verified Reviews
+            <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 bg-warning/10 text-warning border border-warning/20 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-1.5 rounded-full font-medium">
+              <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-warning" />Verified Reviews
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-tight">Real People,<br />Real Results</h1>
             <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-10 px-2">Every review is from a verified customer who experienced PureTask firsthand</p>
 
             {/* Rating Display */}
             {!statsLoading && stats && stats.totalReviews > 0 && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="inline-flex flex-col items-center gap-3 p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-card border border-amber-500/20 shadow-xl w-full max-w-md mx-auto">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="inline-flex flex-col items-center gap-3 p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-card border border-warning/20 shadow-xl w-full max-w-md mx-auto">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-4xl sm:text-6xl font-bold">{stats.averageRating.toFixed(1)}</span>
                   <div>
                     <div className="flex gap-0.5 mb-1">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className={`h-5 w-5 sm:h-7 sm:w-7 ${i < Math.round(stats.averageRating) ? "fill-amber-500 text-amber-500" : "text-muted-foreground/30"}`} />
+                        <Star key={i} className={`h-5 w-5 sm:h-7 sm:w-7 ${i < Math.round(stats.averageRating) ? "fill-warning text-warning" : "text-muted-foreground/30"}`} />
                       ))}
                     </div>
                     <p className="text-xs sm:text-sm text-muted-foreground">{stats.totalReviews.toLocaleString()} verified reviews</p>
@@ -100,7 +100,7 @@ export default function Reviews() {
             <Button variant={filterRating === null ? "default" : "outline"} size="sm" onClick={() => setFilterRating(null)} className="rounded-full h-9 text-xs sm:text-sm">All</Button>
             {RATINGS_FILTER.map((rating) => (
               <Button key={rating} variant={filterRating === rating ? "default" : "outline"} size="sm" onClick={() => setFilterRating(rating)} className="rounded-full gap-1 h-9 text-xs sm:text-sm">
-                <Star className={`h-3 w-3 ${filterRating === rating ? 'fill-primary-foreground' : 'fill-amber-500 text-amber-500'}`} />
+                <Star className={`h-3 w-3 ${filterRating === rating ? 'fill-primary-foreground' : 'fill-warning text-warning'}`} />
                 {rating} {ratingCounts[rating] ? `(${ratingCounts[rating]})` : ''}
               </Button>
             ))}
@@ -113,8 +113,8 @@ export default function Reviews() {
             </div>
           ) : !reviews?.length ? (
             <div className="flex flex-col items-center justify-center py-12 sm:py-24 px-4 sm:px-6 text-center">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-amber-500/10 border-2 border-amber-500/20 flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <MessageSquare className="h-8 w-8 sm:h-10 sm:w-10 text-amber-500" />
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-warning/10 border-2 border-warning/20 flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <MessageSquare className="h-8 w-8 sm:h-10 sm:w-10 text-warning" />
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">
                 {filterRating ? `No ${filterRating}-star reviews yet` : "Be Among the First to Review!"}
@@ -151,10 +151,10 @@ export default function Reviews() {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex gap-0.5">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className={`h-4 w-4 ${i < review.rating ? "fill-amber-500 text-amber-500" : "text-muted-foreground/20"}`} />
+                            <Star key={i} className={`h-4 w-4 ${i < review.rating ? "fill-warning text-warning" : "text-muted-foreground/20"}`} />
                           ))}
                         </div>
-                        <Badge variant="outline" className="text-xs border-amber-500/30 text-amber-600 bg-amber-500/5">{review.rating}/5</Badge>
+                        <Badge variant="outline" className="text-xs border-warning/30 text-warning bg-warning/5">{review.rating}/5</Badge>
                       </div>
                       {review.review_text ? (
                         <p className="text-foreground/90 mb-5 line-clamp-4 leading-relaxed">"{review.review_text}"</p>

@@ -34,7 +34,7 @@ export function BackgroundCheckConsentStep({ onSubmit, onBack, isSubmitting }: B
       <div className="grid gap-2.5">
         {BENEFITS.map(({ icon: Icon, text }) => (
           <div key={text} className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-            <Icon className="h-4 w-4 text-green-400 flex-shrink-0" />
+            <Icon className="h-4 w-4 text-success flex-shrink-0" />
             <span className="text-sm text-white/80 font-medium">{text}</span>
           </div>
         ))}
@@ -60,7 +60,7 @@ export function BackgroundCheckConsentStep({ onSubmit, onBack, isSubmitting }: B
             { id: 'accurate', state: infoAccurate, setState: setInfoAccurate, label: 'I certify that all information I have provided is true and accurate.' },
           ].map(({ id, state, setState, label }) => (
             <div key={id} onClick={() => setState(!state)} className="flex items-start gap-3 px-4 py-3.5 cursor-pointer hover:bg-white/5 transition-colors" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-              <Checkbox id={id} checked={state} onCheckedChange={(c) => setState(c === true)} className="mt-0.5 border-white/30 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500" />
+              <Checkbox id={id} checked={state} onCheckedChange={(c) => setState(c === true)} className="mt-0.5 border-white/30 data-[state=checked]:bg-success data-[state=checked]:border-success" />
               <Label htmlFor={id} className="text-sm text-white/70 leading-relaxed cursor-pointer">{label}</Label>
             </div>
           ))}
@@ -69,7 +69,7 @@ export function BackgroundCheckConsentStep({ onSubmit, onBack, isSubmitting }: B
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
-        <Button onClick={() => isValid && onSubmit()} disabled={!isValid || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button onClick={() => isValid && onSubmit()} disabled={!isValid || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : <><span>Authorize & Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>
