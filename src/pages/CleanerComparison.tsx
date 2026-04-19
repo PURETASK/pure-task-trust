@@ -43,7 +43,7 @@ export default function CleanerComparison() {
       <Helmet><title>Compare Cleaners | PureTask</title></Helmet>
       <div className="container py-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
             <Users className="h-6 w-6 text-primary" /> Compare Cleaners
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Side-by-side comparison to find your best match</p>

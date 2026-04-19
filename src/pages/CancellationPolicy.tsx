@@ -32,7 +32,7 @@ export default function CancellationPolicy() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10"
       >
-        <h1 className="text-4xl font-bold text-foreground mb-2">
+        <h1 className="text-4xl md:text-5xl font-poppins font-bold text-gradient-aero mb-2">
           Cancellation Policy
         </h1>
         <p className="text-muted-foreground">

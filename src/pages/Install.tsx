@@ -79,7 +79,7 @@ export default function Install() {
         >
           <CheckCircle2 className="h-12 w-12 text-white" />
         </motion.div>
-        <h1 className="text-3xl font-bold mb-2">You're all set!</h1>
+        <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-2">You're all set!</h1>
         <p className="text-muted-foreground mb-6 max-w-xs">
           PureTask is on your home screen. Open it anytime for the full app experience.
         </p>
