@@ -325,7 +325,7 @@ export default function Index() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-4 sm:mb-6">
               Ready to try a{" "}
-              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
+              <span className="text-gradient-aero">
                 better way to book?
               </span>
             </h2>
