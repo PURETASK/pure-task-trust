@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAutoRebook } from "@/hooks/useAutoRebook";
 import { useReceipt } from "@/hooks/useReceipt";
+import { RecurringUpsellModal } from "@/components/flow/booking/RecurringUpsellModal";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
@@ -99,6 +100,7 @@ export default function BookingStatus() {
 
   return (
     <main className="flex-1 py-8 bg-background">
+      <RecurringUpsellModal />
       <div className="container max-w-lg">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
 
