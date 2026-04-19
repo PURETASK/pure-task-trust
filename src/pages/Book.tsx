@@ -143,7 +143,9 @@ export default function Book() {
       return;
     }
     try {
-      const job = await createBooking({
+      // Trigger recurring upsell on the confirmation page
+      sessionStorage.setItem("puretask:show-recurring-upsell", "1");
+      await createBooking({
         cleaningType: serviceType,
         hours,
         addOns: selectedAddOns,
@@ -153,9 +155,9 @@ export default function Book() {
         address: address ? `${address.line1}, ${address.city}` : undefined,
         notes: notes || undefined,
       });
-      // Redirect handled by useBooking → navigate to /booking/:id?upsell=recurring
-      if (job?.id) navigate(`/booking/${job.id}?upsell=recurring`);
+      // useBooking handles navigation to /booking/:id
     } catch (e: any) {
+      sessionStorage.removeItem("puretask:show-recurring-upsell");
       toast({ title: "Booking failed", description: e?.message, variant: "destructive" });
     }
   };
