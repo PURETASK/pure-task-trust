@@ -127,20 +127,20 @@ export default function CleanerSchedule() {
       <div className="space-y-6 relative z-10">
 
         {/* ── Hero Header ─────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-primary/50 bg-gradient-to-br from-primary/40 via-background to-success/25 p-7">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/35 blur-2xl pointer-events-none" />
-          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-success/35 blur-2xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl border-aero bg-gradient-aero p-7 shadow-aero">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-aero-cyan/40 blur-3xl pointer-events-none animate-float-y" />
+          <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-aero-electric/40 blur-3xl pointer-events-none animate-float-y" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 p-3">
+              <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-aero p-3">
                 <Calendar className="h-7 w-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">My Schedule</h1>
-                <p className="text-muted-foreground text-sm mt-0.5">Your upcoming jobs and availability at a glance</p>
+                <h1 className="text-3xl font-poppins font-bold text-white">My Schedule</h1>
+                <p className="text-white/80 text-sm mt-0.5">Your upcoming jobs and availability at a glance</p>
               </div>
             </div>
-            <Button variant="outline" asChild className="rounded-xl border-2 border-primary/40 hover:border-primary/70">
+            <Button variant="outline" asChild className="rounded-xl bg-white/20 backdrop-blur border-white/30 text-white hover:bg-white/30 hover:border-white/50">
               <Link to="/cleaner/availability">
                 <Settings className="h-4 w-4 mr-2" />
                 Manage Availability
