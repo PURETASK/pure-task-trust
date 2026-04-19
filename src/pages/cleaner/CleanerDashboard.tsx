@@ -63,8 +63,8 @@ export default function CleanerDashboard() {
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm text-muted-foreground font-medium">Welcome back 👋</p>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
-                    Hey, <span className={tierStyle.text}>{displayName}!</span>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-poppins font-bold tracking-tight">
+                    Hey, <span className="text-gradient-aero">{displayName}!</span>
                   </h1>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function CleanerDashboard() {
 
           {/* Tip of the day */}
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Card className="bg-gradient-to-r from-primary/5 to-[hsl(var(--pt-aqua)/0.05)] border-primary/20">
+            <Card className="bg-gradient-to-r from-aero-trust/5 via-aero-electric/5 to-aero-cyan/10 border-aero-electric/20 rounded-3xl shadow-aero">
               <CardContent className="p-3.5 sm:p-5 flex items-start gap-3 sm:gap-4">
                 <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>
                 <div>
@@ -162,7 +162,7 @@ export default function CleanerDashboard() {
 
           {/* Gamification */}
           <section>
-            <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">🎯 Goals & Rewards</h2>
+            <h2 className="text-lg sm:text-xl font-poppins font-bold mb-3 sm:mb-4">🎯 Goals & Rewards</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <GoalsCard />
               <StreakCard />
@@ -173,7 +173,7 @@ export default function CleanerDashboard() {
           {/* Smart Scheduling Suggestions */}
           {scheduleSuggestions && scheduleSuggestions.length > 0 && (
             <motion.section initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
+              <h2 className="text-base sm:text-xl font-poppins font-bold mb-3 sm:mb-4 flex items-center gap-2">
                 <Zap className="h-5 w-5 text-warning" />Schedule Suggestions
               </h2>
               <div className="space-y-2">
@@ -208,7 +208,7 @@ export default function CleanerDashboard() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: si * 0.05 }}
             >
-              <h2 className="text-base sm:text-xl font-bold mb-3 sm:mb-4">{section.title}</h2>
+              <h2 className="text-base sm:text-xl font-poppins font-bold mb-3 sm:mb-4">{section.title}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
                 {section.items.map((item) => (
                   <motion.div key={item.label} whileHover={{ y: -3, scale: 1.01 }} transition={{ type: "spring", stiffness: 400 }}>
