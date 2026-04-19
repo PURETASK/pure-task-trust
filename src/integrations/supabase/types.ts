@@ -2098,6 +2098,69 @@ export type Database = {
         }
         Relationships: []
       }
+      cleaning_preferences: {
+        Row: {
+          allergy_notes: string | null
+          avoid_notes: string | null
+          client_id: string
+          created_at: string
+          eco_preference: boolean
+          extra_attention_notes: string | null
+          id: string
+          priorities: string[]
+          product_preferences: string | null
+          property_id: string | null
+          recurring_notes: string | null
+          scent_preference: string | null
+          updated_at: string
+        }
+        Insert: {
+          allergy_notes?: string | null
+          avoid_notes?: string | null
+          client_id: string
+          created_at?: string
+          eco_preference?: boolean
+          extra_attention_notes?: string | null
+          id?: string
+          priorities?: string[]
+          product_preferences?: string | null
+          property_id?: string | null
+          recurring_notes?: string | null
+          scent_preference?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allergy_notes?: string | null
+          avoid_notes?: string | null
+          client_id?: string
+          created_at?: string
+          eco_preference?: boolean
+          extra_attention_notes?: string | null
+          id?: string
+          priorities?: string[]
+          product_preferences?: string | null
+          property_id?: string | null
+          recurring_notes?: string | null
+          scent_preference?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cleaning_preferences_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cleaning_preferences_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cleaning_presets: {
         Row: {
           client_id: string
@@ -2350,46 +2413,67 @@ export type Database = {
       }
       client_profiles: {
         Row: {
+          alternate_email: string | null
           created_at: string
           default_address: string | null
           deleted_at: string | null
+          email: string | null
           first_name: string | null
           grace_cancellations_total: number | null
           grace_cancellations_used: number | null
           id: string
           last_name: string | null
+          phone: string | null
           preferences_json: Json | null
+          preferred_contact_method: string | null
           push_token: string | null
+          setup_completed_at: string | null
+          setup_current_step: string | null
+          sms_opt_in: boolean
           stripe_customer_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          alternate_email?: string | null
           created_at?: string
           default_address?: string | null
           deleted_at?: string | null
+          email?: string | null
           first_name?: string | null
           grace_cancellations_total?: number | null
           grace_cancellations_used?: number | null
           id?: string
           last_name?: string | null
+          phone?: string | null
           preferences_json?: Json | null
+          preferred_contact_method?: string | null
           push_token?: string | null
+          setup_completed_at?: string | null
+          setup_current_step?: string | null
+          sms_opt_in?: boolean
           stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          alternate_email?: string | null
           created_at?: string
           default_address?: string | null
           deleted_at?: string | null
+          email?: string | null
           first_name?: string | null
           grace_cancellations_total?: number | null
           grace_cancellations_used?: number | null
           id?: string
           last_name?: string | null
+          phone?: string | null
           preferences_json?: Json | null
+          preferred_contact_method?: string | null
           push_token?: string | null
+          setup_completed_at?: string | null
+          setup_current_step?: string | null
+          sms_opt_in?: boolean
           stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
@@ -5328,10 +5412,16 @@ export type Database = {
           bedrooms: number | null
           client_id: string
           created_at: string
+          doorman_notes: string | null
+          floors: number | null
+          gate_code: string | null
+          has_elevator: boolean | null
           has_pets: boolean
+          home_type: string | null
           id: string
           name: string
           parking_notes: string | null
+          pet_friendly_required: boolean
           pet_info: string | null
           special_notes: string | null
           sq_ft: number | null
@@ -5344,10 +5434,16 @@ export type Database = {
           bedrooms?: number | null
           client_id: string
           created_at?: string
+          doorman_notes?: string | null
+          floors?: number | null
+          gate_code?: string | null
+          has_elevator?: boolean | null
           has_pets?: boolean
+          home_type?: string | null
           id?: string
           name?: string
           parking_notes?: string | null
+          pet_friendly_required?: boolean
           pet_info?: string | null
           special_notes?: string | null
           sq_ft?: number | null
@@ -5360,10 +5456,16 @@ export type Database = {
           bedrooms?: number | null
           client_id?: string
           created_at?: string
+          doorman_notes?: string | null
+          floors?: number | null
+          gate_code?: string | null
+          has_elevator?: boolean | null
           has_pets?: boolean
+          home_type?: string | null
           id?: string
           name?: string
           parking_notes?: string | null
+          pet_friendly_required?: boolean
           pet_info?: string | null
           special_notes?: string | null
           sq_ft?: number | null

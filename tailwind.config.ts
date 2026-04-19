@@ -87,6 +87,15 @@ export default {
           DEFAULT: "hsl(var(--trust))",
           foreground: "hsl(var(--trust-foreground))",
         },
+        aero: {
+          bg: "hsl(var(--aero-bg))",
+          card: "hsl(var(--aero-card))",
+          border: "hsl(var(--aero-card-border))",
+          trust: "hsl(var(--aero-trust))",
+          "trust-foreground": "hsl(var(--aero-trust-foreground))",
+          cyan: "hsl(var(--aero-cyan))",
+          soft: "hsl(var(--aero-text-soft))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
