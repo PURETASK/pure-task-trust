@@ -35,7 +35,7 @@ function StarRating({ value, onChange, label }: { value: number; onChange: (v: n
             <Star
               className={`h-7 w-7 transition-colors ${
                 star <= (hovered || value)
-                  ? "fill-amber-400 text-amber-400"
+                  ? "fill-warning text-warning"
                   : "text-muted-foreground"
               }`}
             />

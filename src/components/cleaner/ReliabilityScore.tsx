@@ -8,12 +8,12 @@ interface ReliabilityScoreProps {
 }
 
 const tierConfig: Record<string, { label: string; color: string; textColor: string }> = {
-  standard: { label: "Standard", color: "bg-slate-500", textColor: "text-slate-500" },
-  bronze: { label: "Rising Pro", color: "bg-amber-600", textColor: "text-amber-600" },
-  silver: { label: "Proven Specialist", color: "bg-slate-400", textColor: "text-slate-400" },
-  gold: { label: "Top Performer", color: "bg-yellow-500", textColor: "text-yellow-500" },
-  platinum: { label: "All-Star Expert", color: "bg-cyan-500", textColor: "text-cyan-500" },
-  elite: { label: "Elite", color: "bg-orange-500", textColor: "text-orange-500" },
+  standard: { label: "Standard", color: "bg-muted-foreground", textColor: "text-muted-foreground" },
+  bronze: { label: "Rising Pro", color: "bg-warning", textColor: "text-warning" },
+  silver: { label: "Proven Specialist", color: "bg-aero-soft", textColor: "text-aero-soft" },
+  gold: { label: "Top Performer", color: "bg-warning", textColor: "text-warning" },
+  platinum: { label: "All-Star Expert", color: "bg-aero-cyan", textColor: "text-aero-cyan" },
+  elite: { label: "Elite", color: "bg-primary", textColor: "text-primary" },
 };
 
 export function ReliabilityScore({ score, tier }: ReliabilityScoreProps) {
