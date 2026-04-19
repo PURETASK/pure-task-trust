@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { useMessageThreads } from "@/hooks/useMessages";
 import { useInAppNotifications } from "@/hooks/useInAppNotifications";
+import { useUnreadTicketsCount } from "@/hooks/useUnreadTickets";
 
 interface NavItem {
   icon: React.ElementType;
@@ -63,6 +64,7 @@ export function MobileBottomNav() {
   const { user } = useAuth();
   const threadsQuery = useMessageThreads();
   const { unreadCount: notifCount } = useInAppNotifications();
+  const unreadTickets = useUnreadTicketsCount();
   const unreadMessages =
     threadsQuery.data?.reduce((sum, t) => sum + (t.unreadCount || 0), 0) ?? 0;
 
@@ -93,7 +95,14 @@ export function MobileBottomNav() {
           const active   = isActive(item);
           const isMsgs   = item.path === messagesPath;
           const isAlerts = item.path === "/admin/fraud-alerts";
-          const badge    = isMsgs ? unreadMessages : isAlerts ? notifCount : 0;
+          const isAccount = item.path === "/account" || item.path === "/cleaner/profile/view";
+          const badge    = isMsgs
+            ? unreadMessages
+            : isAlerts
+              ? notifCount
+              : isAccount
+                ? unreadTickets
+                : 0;
 
           return (
             <Link
