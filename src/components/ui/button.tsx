@@ -5,22 +5,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95 select-none",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-control ease-brand-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95 select-none",
   {
     variants: {
       variant: {
         default:
-          "gradient-brand text-white shadow-soft hover:shadow-card hover:-translate-y-0.5 active:translate-y-0",
+          "bg-gradient-button text-white shadow-tier-2 hover:shadow-tier-3 hover:-translate-y-0.5 active:translate-y-0",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-tier-1 hover:bg-destructive/90 hover:shadow-tier-2",
         outline:
           "border-2 border-border bg-background hover:bg-secondary hover:border-primary/30 text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-secondary hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        glass: "bg-white/90 backdrop-blur-sm text-pt-blue hover:bg-white border border-white/20 shadow-soft",
-        success: "bg-pt-green text-white shadow-soft hover:bg-pt-green/90",
+        glass: "bg-white/90 backdrop-blur-sm text-pt-blue hover:bg-white border border-white/20 shadow-tier-1",
+        success: "bg-gradient-confirm text-white shadow-tier-2 hover:shadow-tier-3",
         trust: "bg-pt-blue/10 text-pt-blue border border-pt-blue/20 hover:bg-pt-blue/20",
       },
       size: {
