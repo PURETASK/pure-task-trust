@@ -87,7 +87,7 @@ export default function ForProfessionals() {
 
             <motion.h1
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
-              className="text-[clamp(2.8rem,7vw,5.5rem)] font-black leading-[0.92] tracking-tight mb-6"
+              className="text-[clamp(2.8rem,7vw,5.5rem)] font-poppins font-bold leading-[0.92] tracking-tight mb-6"
             >
               Your time is<br />
               worth more than<br />
@@ -139,7 +139,7 @@ export default function ForProfessionals() {
                   <div className="h-11 w-11 rounded-2xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${f.accent})/0.15)`, color: `hsl(var(--${f.accent}))` }}>
                     <f.icon className="h-5 w-5" />
                   </div>
-                  <p className="text-3xl font-black mb-1" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
+                  <p className="text-3xl font-poppins font-bold mb-1" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
                   <p className="font-bold text-sm mb-1">{f.title}</p>
                   <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
                 </div>
@@ -158,7 +158,7 @@ export default function ForProfessionals() {
             className="mb-16"
           >
             <p className="text-[hsl(var(--pt-cyan))] font-bold text-sm tracking-widest uppercase mb-3">We Get It</p>
-            <h2 className="text-4xl md:text-6xl font-black leading-tight max-w-2xl">
+            <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Your current reality<br />
               <span className="text-muted-foreground font-light italic">vs. life with PureTask.</span>
             </h2>
@@ -179,7 +179,7 @@ export default function ForProfessionals() {
                   <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
                     <card.front.icon className="h-4 w-4 text-destructive" />
                   </div>
-                  <p className="text-xs font-black uppercase tracking-widest text-destructive mb-3">{card.front.label}</p>
+                  <p className="text-xs font-poppins font-bold uppercase tracking-widest text-destructive mb-3">{card.front.label}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{card.front.text}</p>
                 </div>
                 {/* Solution side */}
@@ -187,7 +187,7 @@ export default function ForProfessionals() {
                   <div className="h-9 w-9 rounded-xl flex items-center justify-center mb-4" style={{ background: `hsl(var(--${card.back.color})/0.15)`, color: `hsl(var(--${card.back.color}))` }}>
                     <card.back.icon className="h-4 w-4" />
                   </div>
-                  <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: `hsl(var(--${card.back.color}))` }}>{card.back.label}</p>
+                  <p className="text-xs font-poppins font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(var(--${card.back.color}))` }}>{card.back.label}</p>
                   <p className="text-sm leading-relaxed">{card.back.text}</p>
                 </div>
               </motion.div>
@@ -202,7 +202,7 @@ export default function ForProfessionals() {
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <p className="text-[hsl(var(--pt-cyan))] font-bold text-sm tracking-widest uppercase mb-4">The Time Math</p>
-              <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-6 leading-tight">
                 Get <span className="text-[hsl(var(--pt-cyan))]">4+ hours</span><br />
                 back every week.
               </h2>
@@ -238,9 +238,9 @@ export default function ForProfessionals() {
               >
                 <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-[hsl(var(--pt-cyan)/0.12)] blur-3xl" />
                 <div className="relative z-10">
-                  <p className="text-[6rem] md:text-[12rem] font-black leading-none text-[hsl(var(--pt-cyan))] opacity-20 absolute top-0 left-0 right-0 pointer-events-none">4</p>
+                  <p className="text-[6rem] md:text-[12rem] font-poppins font-bold leading-none text-[hsl(var(--pt-cyan))] opacity-20 absolute top-0 left-0 right-0 pointer-events-none">4</p>
                   <div className="relative pt-8">
-                    <p className="text-6xl md:text-8xl font-black text-[hsl(var(--pt-cyan))] mb-2">4+</p>
+                    <p className="text-6xl md:text-8xl font-poppins font-bold text-[hsl(var(--pt-cyan))] mb-2">4+</p>
                     <p className="text-2xl font-bold mb-1">Hours Saved</p>
                     <p className="text-muted-foreground mb-8">Every single week</p>
                     <div className="grid grid-cols-3 gap-3 text-center">
@@ -250,7 +250,7 @@ export default function ForProfessionals() {
                         { n: '∞', t: 'peace of mind' },
                       ].map((item) => (
                         <div key={item.t} className="rounded-2xl p-4 bg-card/60 border border-[hsl(var(--pt-cyan)/0.2)]">
-                          <p className="text-2xl font-black text-[hsl(var(--pt-cyan))]">{item.n}</p>
+                          <p className="text-2xl font-poppins font-bold text-[hsl(var(--pt-cyan))]">{item.n}</p>
                           <p className="text-xs text-muted-foreground">{item.t}</p>
                         </div>
                       ))}
@@ -279,7 +279,7 @@ export default function ForProfessionals() {
               <Badge className="mb-5 bg-[hsl(var(--pt-cyan)/0.15)] text-[hsl(var(--pt-cyan))] border border-[hsl(var(--pt-cyan)/0.3)] px-4 py-1.5">
                 Join 10,000+ professionals
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-black mb-5">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-5">
                 Ready to reclaim<br />
                 <span className="text-[hsl(var(--pt-cyan))]">your weekends?</span>
               </h2>

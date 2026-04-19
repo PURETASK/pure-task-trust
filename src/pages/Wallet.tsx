@@ -119,7 +119,7 @@ export default function Wallet() {
                 <WalletIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-black">My Wallet</h1>
+                <h1 className="text-2xl sm:text-3xl font-poppins font-bold">My Wallet</h1>
                 <p className="text-muted-foreground text-sm">Credits power your bookings</p>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function Wallet() {
             <div className="relative p-6 sm:p-8">
               {/* Available Balance */}
               <div className="flex items-center gap-2 mb-2">
-                <span className="palette-label-green font-black text-xs uppercase tracking-widest">Available Balance</span>
+                <span className="palette-label-green font-poppins font-bold text-xs uppercase tracking-widest">Available Balance</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger><Info className="h-3 w-3 text-muted-foreground" /></TooltipTrigger>
@@ -153,7 +153,7 @@ export default function Wallet() {
                 <Skeleton className="h-16 w-48 rounded-2xl border-2 border-black" />
               ) : (
                 <div className="inline-flex items-end gap-1 leading-none mb-5 rounded-2xl border-2 border-black px-4 py-2 bg-background/40">
-                  <span className="text-5xl sm:text-6xl font-black palette-label-green tracking-tight">
+                  <span className="text-5xl sm:text-6xl font-poppins font-bold palette-label-green tracking-tight">
                     ${availableCredits.toFixed(0)}
                   </span>
                   <span className="text-xl font-bold palette-label-green opacity-50 mb-1.5">
@@ -185,7 +185,7 @@ export default function Wallet() {
                       size="sm"
                       onClick={() => handleQuickTopUp(amt)}
                       disabled={isPurchasing}
-                      className="font-black h-10 rounded-xl border-2 transition-all bg-background hover:text-white"
+                      className="font-poppins font-bold h-10 rounded-xl border-2 transition-all bg-background hover:text-white"
                       style={{
                         borderColor: "hsl(var(--pt-green-deep))",
                         color: "hsl(var(--pt-green-deep))",
@@ -227,14 +227,14 @@ export default function Wallet() {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <p className="text-2xl font-black palette-label-amber tabular-nums">${heldCredits}</p>
+              <p className="text-2xl font-poppins font-bold palette-label-amber tabular-nums">${heldCredits}</p>
             </div>
             <div className="palette-card palette-card-green p-4">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="h-3.5 w-3.5 palette-label-green" />
                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Lifetime Spent</span>
               </div>
-              <p className="text-2xl font-black palette-label-green tabular-nums">${lifetimeSpent}</p>
+              <p className="text-2xl font-poppins font-bold palette-label-green tabular-nums">${lifetimeSpent}</p>
             </div>
           </div>
         </motion.div>
@@ -266,7 +266,7 @@ export default function Wallet() {
               <div className="palette-card palette-card-blue overflow-hidden">
                 <div className="p-5 sm:p-6 pb-0">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-black">Transactions</h2>
+                    <h2 className="text-lg font-poppins font-bold">Transactions</h2>
                     <Badge className="palette-pill-blue text-xs font-bold">{filteredLedger.length}</Badge>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 pb-4">
@@ -363,7 +363,7 @@ export default function Wallet() {
                                 </button>
                               )}
                               <p className={cn(
-                                "font-black tabular-nums text-sm",
+                                "font-poppins font-bold tabular-nums text-sm",
                                 isPositive ? "palette-label-green" : "text-foreground",
                               )}>
                                 {isPositive ? '+' : '−'}${Math.abs(entry.delta_credits)}
@@ -396,7 +396,7 @@ export default function Wallet() {
                     <Zap className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-lg font-black">Auto Top-Up</h2>
+                    <h2 className="text-lg font-poppins font-bold">Auto Top-Up</h2>
                     <p className="text-xs text-muted-foreground">
                       Never run out of credits. We'll add funds automatically when your balance gets low.
                     </p>

@@ -36,7 +36,7 @@ export function BookingCleanerCard({
       }}
     >
       <div
-        className="h-12 w-12 rounded-full flex items-center justify-center font-black text-base flex-shrink-0"
+        className="h-12 w-12 rounded-full flex items-center justify-center font-poppins font-bold text-base flex-shrink-0"
         style={{
           backgroundColor: `hsl(var(--${paletteVar})/0.18)`,
           color: `hsl(var(--${paletteVar}-deep))`,

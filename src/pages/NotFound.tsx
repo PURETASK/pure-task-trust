@@ -38,7 +38,7 @@ export default function NotFound() {
           <div className="absolute inset-0 rounded-full bg-primary/8 animate-pulse" />
           <div className="absolute inset-3 rounded-full bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-black text-primary">404</div>
+              <div className="text-6xl font-poppins font-bold text-primary">404</div>
               <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
                 <Sparkles className="h-6 w-6 text-accent mx-auto mt-1" />
               </motion.div>

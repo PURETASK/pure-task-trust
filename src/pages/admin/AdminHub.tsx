@@ -95,7 +95,7 @@ function StatKPI({ label, value, change, icon: Icon, color }: { label: string; v
             </div>
           )}
         </div>
-        <p className="text-2xl font-black">{value}</p>
+        <p className="text-2xl font-poppins font-bold">{value}</p>
         <p className="text-xs text-muted-foreground mt-1 font-medium">{label}</p>
       </CardContent>
     </Card>
@@ -125,7 +125,7 @@ export default function AdminHub() {
                   </div>
                   <div>
                     <p className="text-white/60 text-sm font-medium">PureTask</p>
-                    <h1 className="text-3xl sm:text-4xl font-black text-white">Admin Command Center</h1>
+                    <h1 className="text-3xl sm:text-4xl font-poppins font-bold text-white">Admin Command Center</h1>
                   </div>
                 </div>
                 <p className="text-white/60 text-base max-w-xl">Full platform control — analytics, trust & safety, user management, and live configuration.</p>

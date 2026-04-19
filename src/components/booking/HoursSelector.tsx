@@ -21,7 +21,7 @@ export function HoursSelector({ value, onChange, min = 1, max = 8, paletteVar = 
               type="button"
               onClick={() => onChange(h)}
               className={cn(
-                "h-12 rounded-xl border-2 font-black text-sm transition-all",
+                "h-12 rounded-xl border-2 font-poppins font-bold text-sm transition-all",
                 selected ? "text-white scale-105" : "bg-background hover:scale-105"
               )}
               style={

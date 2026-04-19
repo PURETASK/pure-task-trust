@@ -94,7 +94,7 @@ export function TimeOffManager() {
             <Star className="h-4 w-4 text-warning" />
           </div>
           <div>
-            <p className="font-black text-base text-warning">Common Holidays</p>
+            <p className="font-poppins font-bold text-base text-warning">Common Holidays</p>
             <p className="text-xs text-muted-foreground">Tap any holiday to block that day off — tap again to remove</p>
           </div>
         </div>
@@ -151,7 +151,7 @@ export function TimeOffManager() {
               <Umbrella className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-black text-base text-primary">Days I Don't Work</p>
+              <p className="font-poppins font-bold text-base text-primary">Days I Don't Work</p>
               <p className="text-xs text-muted-foreground">Mark specific dates you won't be available</p>
             </div>
           </div>

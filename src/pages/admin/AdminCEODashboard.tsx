@@ -66,7 +66,7 @@ const AdminCEODashboard = () => {
             </div>
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
-                <h1 className="text-4xl sm:text-5xl font-black text-white mb-2">CEO Dashboard</h1>
+                <h1 className="text-4xl sm:text-5xl font-poppins font-bold text-white mb-2">CEO Dashboard</h1>
                 <p className="text-white/60 text-lg">Live business metrics — GMV, revenue and growth KPIs.</p>
                 <div className="flex items-center gap-2 mt-3">
                   <Badge className="bg-success/20 text-success border-success/30">
@@ -108,7 +108,7 @@ const AdminCEODashboard = () => {
                           </div>
                         )}
                       </div>
-                      <p className="text-2xl sm:text-3xl font-black text-foreground">{kpi.format(value)}</p>
+                      <p className="text-2xl sm:text-3xl font-poppins font-bold text-foreground">{kpi.format(value)}</p>
                       <p className="text-xs text-muted-foreground mt-1.5 font-medium">{kpi.label}</p>
                       {kpi.key === "users" && data?.newUsersThis && (
                         <p className="text-xs text-success mt-1">+{data.newUsersThis} this month</p>
@@ -187,7 +187,7 @@ const AdminCEODashboard = () => {
                 ].map(item => (
                   <div key={item.label} className="text-center p-4 bg-muted/40 rounded-2xl border border-border/30">
                     <p className="text-xs text-muted-foreground mb-1 font-medium">{item.label}</p>
-                    <p className="text-2xl font-black">{item.value}</p>
+                    <p className="text-2xl font-poppins font-bold">{item.value}</p>
                     <p className="text-xs text-muted-foreground mt-1">{item.sub}</p>
                   </div>
                 ))}
@@ -208,15 +208,15 @@ const AdminCEODashboard = () => {
                 <div className="space-y-3">
                   <div className="grid grid-cols-3 gap-3 mb-4">
                     <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
-                      <p className="text-2xl font-black">{clvData.avgCLV}</p>
+                      <p className="text-2xl font-poppins font-bold">{clvData.avgCLV}</p>
                       <p className="text-xs text-muted-foreground">Avg CLV (cr)</p>
                     </div>
                     <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
-                      <p className="text-2xl font-black">{clvData.totalRevenue.toLocaleString()}</p>
+                      <p className="text-2xl font-poppins font-bold">{clvData.totalRevenue.toLocaleString()}</p>
                       <p className="text-xs text-muted-foreground">Total Revenue</p>
                     </div>
                     <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
-                      <p className="text-2xl font-black">{clvData.clients.filter(c => c.segment === 'whale').length}</p>
+                      <p className="text-2xl font-poppins font-bold">{clvData.clients.filter(c => c.segment === 'whale').length}</p>
                       <p className="text-xs text-muted-foreground">Whale Clients</p>
                     </div>
                   </div>
@@ -246,15 +246,15 @@ const AdminCEODashboard = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-3">
                     <div className="text-center p-3 bg-destructive/5 rounded-xl border border-destructive/20">
-                      <p className="text-2xl font-black text-destructive">{churnData.totalAtRisk}</p>
+                      <p className="text-2xl font-poppins font-bold text-destructive">{churnData.totalAtRisk}</p>
                       <p className="text-xs text-muted-foreground">Total At Risk</p>
                     </div>
                     <div className="text-center p-3 bg-warning/5 rounded-xl border border-warning/20">
-                      <p className="text-2xl font-black text-warning">{churnData.atRiskClients.length}</p>
+                      <p className="text-2xl font-poppins font-bold text-warning">{churnData.atRiskClients.length}</p>
                       <p className="text-xs text-muted-foreground">Clients</p>
                     </div>
                     <div className="text-center p-3 bg-primary/5 rounded-xl border border-primary/20">
-                      <p className="text-2xl font-black text-primary">{churnData.atRiskCleaners.length}</p>
+                      <p className="text-2xl font-poppins font-bold text-primary">{churnData.atRiskCleaners.length}</p>
                       <p className="text-xs text-muted-foreground">Cleaners</p>
                     </div>
                   </div>

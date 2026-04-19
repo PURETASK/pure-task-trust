@@ -80,7 +80,7 @@ export function PWAInstallBanner() {
           )}>
             {/* App icon */}
             <div className="h-11 w-11 rounded-xl gradient-brand flex items-center justify-center flex-shrink-0 shadow-md">
-              <span className="text-white font-black text-lg">P</span>
+              <span className="text-white font-poppins font-bold text-lg">P</span>
             </div>
 
             <div className="flex-1 min-w-0">

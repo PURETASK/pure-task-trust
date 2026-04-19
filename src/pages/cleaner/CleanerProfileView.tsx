@@ -112,7 +112,7 @@ export default function CleanerProfileView() {
                 <div className="relative flex-shrink-0">
                   <Avatar className="h-24 w-24 border-4 border-background shadow-xl">
                     <AvatarImage src={profile?.profile_photo_url || undefined} />
-                    <AvatarFallback className="text-2xl font-black bg-success/10 text-success">
+                    <AvatarFallback className="text-2xl font-poppins font-bold bg-success/10 text-success">
                       {fullName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
@@ -217,7 +217,7 @@ export default function CleanerProfileView() {
               </div>
             </div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-4xl font-black text-success">{reliabilityScore}</span>
+              <span className="text-4xl font-poppins font-bold text-success">{reliabilityScore}</span>
               <div className="flex-1">
                 <Progress value={reliabilityScore} className="h-3 rounded-full" />
               </div>

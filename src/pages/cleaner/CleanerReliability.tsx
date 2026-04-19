@@ -106,7 +106,7 @@ function MetricCard({ icon: Icon, label, weight, value, color, border, bg, delay
           <Icon className="h-4 w-4" style={{ color }} />
         </div>
         <div className="text-right">
-          <p className="text-2xl font-black" style={{ color }}>{pct}%</p>
+          <p className="text-2xl font-poppins font-bold" style={{ color }}>{pct}%</p>
           <p className="text-[10px] text-muted-foreground">{weight}% weight</p>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function CleanerReliability() {
               <div className="relative flex-shrink-0">
                 <ScoreRing score={score} ring={cfg.ring} size={180} />
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-5xl font-black text-white drop-shadow-lg">{score}</span>
+                  <span className="text-5xl font-poppins font-bold text-white drop-shadow-lg">{score}</span>
                   <span className="text-white/60 text-sm font-medium">/ 100</span>
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function CleanerReliability() {
               <div className="flex-1 text-white text-center sm:text-left">
                 <div className="flex items-center gap-3 justify-center sm:justify-start mb-1">
                   <span className="text-4xl drop-shadow">{cfg.emoji}</span>
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight">{cfg.label} Tier</h1>
+                  <h1 className="text-3xl sm:text-4xl font-poppins font-bold tracking-tight">{cfg.label} Tier</h1>
                 </div>
                 <p className="text-white/60 text-sm mb-4">Your reliability score & professional standing</p>
 
@@ -243,7 +243,7 @@ export default function CleanerReliability() {
                 <div className={`h-10 w-10 rounded-xl border-2 ${s.border} flex items-center justify-center mx-auto mb-2`} style={{ background: "hsl(var(--card))" }}>
                   <s.icon className={`h-5 w-5 ${s.iconCls}`} />
                 </div>
-                <div className="text-2xl font-black">{s.value}</div>
+                <div className="text-2xl font-poppins font-bold">{s.value}</div>
                 <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
               </motion.div>
             ))}
@@ -346,7 +346,7 @@ export default function CleanerReliability() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-sm font-black ${
+                          <span className={`text-sm font-poppins font-bold ${
                             event.weight > 0 ? "text-success" : event.weight < 0 ? "text-destructive" : "text-muted-foreground"
                           }`}>
                             {event.weight > 0 ? "+" : ""}{event.weight}
@@ -388,7 +388,7 @@ export default function CleanerReliability() {
                 { event: "Lost Dispute", penalty: "-10 pts", color: "border-[hsl(280,70%,55%)]/50 bg-[hsl(280,70%,55%)]/8 text-[hsl(280,70%,65%)]" },
               ].map(p => (
                 <div key={p.event} className={`rounded-2xl border-2 p-3 text-center ${p.color}`}>
-                  <p className="text-2xl font-black">{p.penalty}</p>
+                  <p className="text-2xl font-poppins font-bold">{p.penalty}</p>
                   <p className="text-xs font-semibold mt-0.5 opacity-80">{p.event}</p>
                 </div>
               ))}

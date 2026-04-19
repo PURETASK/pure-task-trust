@@ -83,7 +83,7 @@ export default function ForAirbnbHosts() {
 
             <motion.h1
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
-              className="text-[clamp(3rem,8vw,6rem)] font-black leading-[0.9] tracking-tight mb-6"
+              className="text-[clamp(3rem,8vw,6rem)] font-poppins font-bold leading-[0.9] tracking-tight mb-6"
             >
               Turnovers<br />
               <span className="text-[hsl(var(--pt-amber))]">Perfected.</span>
@@ -124,7 +124,7 @@ export default function ForAirbnbHosts() {
                 key={s.label}
                 className={`px-6 py-8 text-center ${i < stats.length - 1 ? 'border-r border-[hsl(var(--pt-amber)/0.2)]' : ''} ${i >= 2 ? 'border-t border-[hsl(var(--pt-amber)/0.2)] md:border-t-0' : ''}`}
               >
-                <p className="text-4xl md:text-5xl font-black text-[hsl(var(--pt-amber))] mb-1">{s.value}</p>
+                <p className="text-4xl md:text-5xl font-poppins font-bold text-[hsl(var(--pt-amber))] mb-1">{s.value}</p>
                 <p className="text-sm font-bold text-foreground">{s.label}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{s.sub}</p>
               </div>
@@ -141,7 +141,7 @@ export default function ForAirbnbHosts() {
             className="mb-16"
           >
             <p className="text-[hsl(var(--pt-amber))] font-bold text-sm tracking-widest uppercase mb-3">Why Hosts Choose PureTask</p>
-            <h2 className="text-4xl md:text-6xl font-black leading-tight max-w-2xl">
+            <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Built for Airbnb.<br />
               <span className="text-muted-foreground font-light">Not for everyone.</span>
             </h2>
@@ -165,7 +165,7 @@ export default function ForAirbnbHosts() {
                   }}
                 >
                   <span
-                    className="inline-block text-xs font-black tracking-widest uppercase mb-4 px-2.5 py-1 rounded-full"
+                    className="inline-block text-xs font-poppins font-bold tracking-widest uppercase mb-4 px-2.5 py-1 rounded-full"
                     style={{ background: `hsl(var(--${f.accent})/0.12)`, color: `hsl(var(--${f.accent}))` }}
                   >
                     {f.tag}
@@ -197,7 +197,7 @@ export default function ForAirbnbHosts() {
             className="text-center mb-20"
           >
             <p className="text-[hsl(var(--pt-amber))] font-bold text-sm tracking-widest uppercase mb-3">The Process</p>
-            <h2 className="text-4xl md:text-5xl font-black">How It Works</h2>
+            <h2 className="text-4xl md:text-5xl font-poppins font-bold">How It Works</h2>
           </motion.div>
 
           <div className="relative max-w-5xl mx-auto">
@@ -218,7 +218,7 @@ export default function ForAirbnbHosts() {
                   >
                     <step.icon className="h-7 w-7" />
                   </div>
-                  <div className="text-xs font-black tracking-widest mb-2 text-[hsl(var(--pt-amber))]">STEP {step.num}</div>
+                  <div className="text-xs font-poppins font-bold tracking-widest mb-2 text-[hsl(var(--pt-amber))]">STEP {step.num}</div>
                   <h3 className="font-bold text-base mb-2">{step.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
                 </motion.div>
@@ -240,10 +240,10 @@ export default function ForAirbnbHosts() {
                 style={{ background: 'linear-gradient(135deg, hsl(var(--pt-amber)/0.2) 0%, hsl(var(--pt-amber)/0.05) 100%)' }}
               >
                 <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-[hsl(var(--pt-amber)/0.15)] blur-3xl" />
-                <div className="text-[10rem] font-black leading-none opacity-10 absolute -bottom-4 -right-4 text-[hsl(var(--pt-amber))]">★</div>
+                <div className="text-[10rem] font-poppins font-bold leading-none opacity-10 absolute -bottom-4 -right-4 text-[hsl(var(--pt-amber))]">★</div>
                 <div className="relative z-10">
                   <p className="text-sm font-bold uppercase tracking-widest text-[hsl(var(--pt-amber))] mb-4">What's Included</p>
-                  <h3 className="text-3xl font-black mb-8">Every booking<br />comes with:</h3>
+                  <h3 className="text-3xl font-poppins font-bold mb-8">Every booking<br />comes with:</h3>
                   <ul className="space-y-4">
                     {trustItems.map((item, i) => (
                       <motion.li
@@ -271,7 +271,7 @@ export default function ForAirbnbHosts() {
             >
               <div>
                 <p className="text-[hsl(var(--pt-amber))] font-bold text-sm tracking-widest uppercase mb-3">Scale Your Hosting</p>
-                <h2 className="text-4xl md:text-5xl font-black leading-tight mb-5">
+                <h2 className="text-4xl md:text-5xl font-poppins font-bold leading-tight mb-5">
                   More guests.<br />Zero cleanup stress.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed text-lg">
@@ -286,7 +286,7 @@ export default function ForAirbnbHosts() {
                   { n: '24/7', t: 'Support for host emergencies' },
                 ].map((item) => (
                   <div key={item.t} className="rounded-2xl p-5 border border-[hsl(var(--pt-amber)/0.2)] bg-[hsl(var(--pt-amber)/0.04)]">
-                    <p className="text-3xl font-black text-[hsl(var(--pt-amber))] mb-1">{item.n}</p>
+                    <p className="text-3xl font-poppins font-bold text-[hsl(var(--pt-amber))] mb-1">{item.n}</p>
                     <p className="text-xs text-muted-foreground">{item.t}</p>
                   </div>
                 ))}
@@ -320,7 +320,7 @@ export default function ForAirbnbHosts() {
               <Badge className="mb-5 bg-[hsl(var(--pt-amber)/0.15)] text-[hsl(var(--pt-amber))] border border-[hsl(var(--pt-amber)/0.3)] px-4 py-1.5">
                 Trusted by 5,000+ turnovers
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-black mb-5">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-5">
                 Your guests deserve<br />
                 <span className="text-[hsl(var(--pt-amber))]">a spotless welcome.</span>
               </h2>

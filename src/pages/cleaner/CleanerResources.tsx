@@ -445,7 +445,7 @@ export default function CleanerResources() {
                     <div key={s.label} className={`rounded-2xl border-2 p-3.5 ${s.color}`}>
                       <p className="font-bold text-sm mb-1">{s.label}</p>
                       <p className="text-xs text-muted-foreground mb-2">{s.hrs}h/wk · ${s.rate}/hr · keep {s.keep}</p>
-                      <p className="text-xl font-black text-success">${annual.toLocaleString()}<span className="text-xs text-muted-foreground font-normal">/yr</span></p>
+                      <p className="text-xl font-poppins font-bold text-success">${annual.toLocaleString()}<span className="text-xs text-muted-foreground font-normal">/yr</span></p>
                     </div>
                   );
                 })}
@@ -493,7 +493,7 @@ export default function CleanerResources() {
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${s.badge}`}>{s.note}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-1">{s.per} base rate</p>
-                    <p className="text-sm font-black text-foreground">{s.ex}</p>
+                    <p className="text-sm font-poppins font-bold text-foreground">{s.ex}</p>
                   </div>
                 ))}
               </div>
@@ -509,7 +509,7 @@ export default function CleanerResources() {
                     { label: 'Weekly', disc: '−15%', color: 'text-[hsl(var(--pt-purple))]' },
                   ].map(f => (
                     <div key={f.label} className="rounded-xl border-2 border-border/50 bg-card p-2 text-center">
-                      <p className={`text-sm font-black ${f.color}`}>{f.disc}</p>
+                      <p className={`text-sm font-poppins font-bold ${f.color}`}>{f.disc}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{f.label}</p>
                     </div>
                   ))}
@@ -547,7 +547,7 @@ export default function CleanerResources() {
                   { value: '31%', label: 'Growth in gig cleaners', color: 'text-[hsl(var(--pt-purple))]', border: 'border-[hsl(var(--pt-purple))]/30', bg: 'bg-[hsl(var(--pt-purple))]/5' },
                 ].map(s => (
                   <div key={s.value} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4`}>
-                    <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
+                    <p className={`text-2xl font-poppins font-bold ${s.color}`}>{s.value}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
                   </div>
                 ))}
@@ -563,7 +563,7 @@ export default function CleanerResources() {
                     { pct: '64%', txt: 'say transparent pricing is #1 factor' },
                   ].map(i => (
                     <div key={i.pct} className="flex items-center gap-3 text-sm">
-                      <span className="font-black text-[hsl(var(--pt-purple))] w-10 flex-shrink-0">{i.pct}</span>
+                      <span className="font-poppins font-bold text-[hsl(var(--pt-purple))] w-10 flex-shrink-0">{i.pct}</span>
                       <span className="text-muted-foreground">{i.txt}</span>
                     </div>
                   ))}

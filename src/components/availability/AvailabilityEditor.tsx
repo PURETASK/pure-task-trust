@@ -183,7 +183,7 @@ export function AvailabilityEditor() {
             <Calendar className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="font-black text-base text-primary">Weekly Hours</p>
+            <p className="font-poppins font-bold text-base text-primary">Weekly Hours</p>
             <p className="text-xs text-muted-foreground">Tap ✏️ to edit times on any row</p>
           </div>
         </div>

@@ -122,7 +122,7 @@ export default function CleanerMessages() {
                             {name.charAt(0).toUpperCase()}
                           </div>
                           {thread.unreadCount > 0 && (
-                            <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary border-2 border-background flex items-center justify-center text-[9px] font-black text-primary-foreground">
+                            <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary border-2 border-background flex items-center justify-center text-[9px] font-poppins font-bold text-primary-foreground">
                               {thread.unreadCount}
                             </div>
                           )}

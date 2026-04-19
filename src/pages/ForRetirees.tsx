@@ -76,7 +76,7 @@ export default function ForRetirees() {
 
             <motion.h1
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
-              className="text-[clamp(2.8rem,7vw,5.5rem)] font-black leading-[0.92] tracking-tight mb-6"
+              className="text-[clamp(2.8rem,7vw,5.5rem)] font-poppins font-bold leading-[0.92] tracking-tight mb-6"
             >
               Enjoy your home.<br />
               <span className="text-[hsl(var(--pt-purple))]">We'll handle the rest.</span>
@@ -124,7 +124,7 @@ export default function ForRetirees() {
             className="mb-16"
           >
             <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Our Commitment to You</p>
-            <h2 className="text-4xl md:text-6xl font-black leading-tight max-w-2xl">
+            <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Your safety is our<br />
               <span className="text-muted-foreground font-light italic">highest priority.</span>
             </h2>
@@ -148,7 +148,7 @@ export default function ForRetirees() {
                   }}
                 >
                   <div
-                    className="absolute top-5 right-6 text-5xl md:text-7xl font-black leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
+                    className="absolute top-5 right-6 text-5xl md:text-7xl font-poppins font-bold leading-none opacity-[0.07] group-hover:opacity-[0.12] transition-opacity"
                     style={{ color: `hsl(var(--${pillar.accent}))` }}
                   >
                     {pillar.number}
@@ -177,7 +177,7 @@ export default function ForRetirees() {
             className="text-center mb-20"
           >
             <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Simple & Straightforward</p>
-            <h2 className="text-4xl md:text-5xl font-black mb-3">How It Works</h2>
+            <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-3">How It Works</h2>
             <p className="text-muted-foreground text-lg">No complicated apps. No confusing processes. Just reliable, trusted cleaning.</p>
           </motion.div>
 
@@ -201,7 +201,7 @@ export default function ForRetirees() {
                   >
                     <step.icon className="h-8 w-8" />
                   </div>
-                  <p className="text-xs font-black tracking-widest text-[hsl(var(--pt-purple))] mb-3">STEP {step.step}</p>
+                  <p className="text-xs font-poppins font-bold tracking-widest text-[hsl(var(--pt-purple))] mb-3">STEP {step.step}</p>
                   <h3 className="font-bold text-lg mb-3">{step.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
                 </div>
@@ -219,7 +219,7 @@ export default function ForRetirees() {
             className="mb-16"
           >
             <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Real Stories</p>
-            <h2 className="text-4xl md:text-5xl font-black max-w-xl leading-tight">
+            <h2 className="text-4xl md:text-5xl font-poppins font-bold max-w-xl leading-tight">
               Trusted by seniors<br />just like you.
             </h2>
           </motion.div>
@@ -247,7 +247,7 @@ export default function ForRetirees() {
                   <p className="text-base leading-relaxed italic mb-6 text-foreground">"{t.quote}"</p>
                   <div className="flex items-center gap-4">
                     <div
-                      className="h-12 w-12 rounded-2xl flex items-center justify-center font-black text-sm"
+                      className="h-12 w-12 rounded-2xl flex items-center justify-center font-poppins font-bold text-sm"
                       style={{ background: `hsl(var(--${t.color})/0.15)`, color: `hsl(var(--${t.color}))` }}
                     >
                       {t.initials}
@@ -278,7 +278,7 @@ export default function ForRetirees() {
                 <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-purple)/0.2)] flex items-center justify-center mb-6">
                   <Shield className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
-                <h3 className="text-3xl font-black mb-4">Our Promise to You</h3>
+                <h3 className="text-3xl font-poppins font-bold mb-4">Our Promise to You</h3>
                 <p className="text-muted-foreground leading-relaxed mb-8 text-lg">
                   Every booking comes with our full guarantee. If you're ever unsatisfied for any reason, we'll send a cleaner back at no extra cost. Your comfort and trust matter more than anything.
                 </p>
@@ -308,7 +308,7 @@ export default function ForRetirees() {
             >
               <div>
                 <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Worry-Free Cleaning</p>
-                <h2 className="text-4xl md:text-5xl font-black mb-5 leading-tight">
+                <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-5 leading-tight">
                   Peace of mind<br />
                   <span className="text-[hsl(var(--pt-purple))]">guaranteed.</span>
                 </h2>
@@ -325,7 +325,7 @@ export default function ForRetirees() {
                   { n: '4.9★', t: 'Senior satisfaction' },
                 ].map((item) => (
                   <div key={item.t} className="rounded-2xl p-5 border border-[hsl(var(--pt-purple)/0.2)] bg-[hsl(var(--pt-purple)/0.04)]">
-                    <p className="text-3xl font-black text-[hsl(var(--pt-purple))] mb-1">{item.n}</p>
+                    <p className="text-3xl font-poppins font-bold text-[hsl(var(--pt-purple))] mb-1">{item.n}</p>
                     <p className="text-xs text-muted-foreground">{item.t}</p>
                   </div>
                 ))}
@@ -362,7 +362,7 @@ export default function ForRetirees() {
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-black mb-5">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-5">
                 Ready for worry-free<br />
                 <span className="text-[hsl(var(--pt-purple))]">home cleaning?</span>
               </h2>

@@ -193,15 +193,15 @@ const AdminGrowthDashboard = () => {
             <CardContent>
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="text-center p-3 bg-muted/40 rounded-xl border border-border/30">
-                  <p className="text-2xl font-black">{referralData.summary.totalReferralSignups}</p>
+                  <p className="text-2xl font-poppins font-bold">{referralData.summary.totalReferralSignups}</p>
                   <p className="text-xs text-muted-foreground">Total Signups</p>
                 </div>
                 <div className="text-center p-3 bg-success/5 rounded-xl border border-success/20">
-                  <p className="text-2xl font-black text-success">{referralData.summary.totalConverted}</p>
+                  <p className="text-2xl font-poppins font-bold text-success">{referralData.summary.totalConverted}</p>
                   <p className="text-xs text-muted-foreground">Converted</p>
                 </div>
                 <div className="text-center p-3 bg-primary/5 rounded-xl border border-primary/20">
-                  <p className="text-2xl font-black text-primary">{referralData.summary.overallRate}%</p>
+                  <p className="text-2xl font-poppins font-bold text-primary">{referralData.summary.overallRate}%</p>
                   <p className="text-xs text-muted-foreground">Conversion Rate</p>
                 </div>
               </div>

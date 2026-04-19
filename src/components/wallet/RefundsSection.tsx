@@ -34,7 +34,7 @@ export function RefundsSection() {
               <RotateCcw className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black">Refunds</h2>
+              <h2 className="text-lg font-poppins font-bold">Refunds</h2>
               <p className="text-xs text-muted-foreground">Track refund requests and credits returned</p>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function RefundsSection() {
                     <Badge variant="outline" className={`text-[10px] font-semibold border-2 ${config.class}`}>
                       {config.label}
                     </Badge>
-                    <p className="font-black tabular-nums">${refund.amount}</p>
+                    <p className="font-poppins font-bold tabular-nums">${refund.amount}</p>
                   </div>
                 </motion.div>
               );

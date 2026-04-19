@@ -71,7 +71,7 @@ export default function Account() {
               <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black">Account</h1>
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold">Account</h1>
               <p className="text-muted-foreground text-sm">Profile and preferences</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function Account() {
         {/* ── USER CARD ───────────────────────────────────────────── */}
         <motion.div {...f(0.04)} className="mb-6">
           <div className="palette-card palette-card-blue p-5 sm:p-6 flex items-center gap-4">
-            <div className="palette-icon palette-icon-blue h-14 w-14 text-xl font-black">
+            <div className="palette-icon palette-icon-blue h-14 w-14 text-xl font-poppins font-bold">
               {initial}
             </div>
             <div className="flex-1 min-w-0">

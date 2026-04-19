@@ -63,7 +63,7 @@ export default function FavoriteCleaners() {
                   <Heart className="h-7 w-7 sm:h-8 sm:w-8 text-destructive fill-destructive/30" />
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-black">My Favorite Cleaners</h1>
+                  <h1 className="text-2xl sm:text-3xl font-poppins font-bold">My Favorite Cleaners</h1>
                   <p className="text-muted-foreground mt-1">{filteredFavorites.length} saved professional{filteredFavorites.length !== 1 ? 's' : ''}</p>
                 </div>
               </div>
@@ -86,7 +86,7 @@ export default function FavoriteCleaners() {
           <motion.div {...f(0.08)}>
             <div className="text-center py-20 rounded-3xl border-2 border-dashed border-border">
               <Heart className="h-20 w-20 mx-auto text-destructive/20 fill-destructive/10 mb-6" />
-              <h2 className="text-2xl font-black mb-3">{searchQuery ? 'No matches found' : 'No favorites yet'}</h2>
+              <h2 className="text-2xl font-poppins font-bold mb-3">{searchQuery ? 'No matches found' : 'No favorites yet'}</h2>
               <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
                 {searchQuery ? 'Try a different search term' : 'Save cleaners you love for quick rebooking'}
               </p>
@@ -108,7 +108,7 @@ export default function FavoriteCleaners() {
                       <div className="flex-1 p-5 sm:p-6">
                         <div className="flex items-start gap-4">
                           <div className="relative flex-shrink-0">
-                            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-xl sm:text-2xl font-black text-primary">
+                            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-xl sm:text-2xl font-poppins font-bold text-primary">
                               {name.charAt(0)}
                             </div>
                             {tier === 'platinum' && (
@@ -119,7 +119,7 @@ export default function FavoriteCleaners() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-2">
-                              <Link to={`/cleaner/${favorite.cleaner_id}`} className="font-black text-lg hover:text-primary transition-colors">{name}</Link>
+                              <Link to={`/cleaner/${favorite.cleaner_id}`} className="font-poppins font-bold text-lg hover:text-primary transition-colors">{name}</Link>
                               <Badge className={`${tierStyle.bg} ${tierStyle.text} border-2 ${tierStyle.border} text-xs font-bold`}>{tierStyle.label}</Badge>
                               {favorite.cleaner?.background_check_status === 'passed' && (
                                 <Badge className="gap-1 text-xs border-2 border-success/30 text-success bg-success/10 font-bold">
@@ -185,7 +185,7 @@ export default function FavoriteCleaners() {
         <AlertDialog open={!!confirmRemove} onOpenChange={() => setConfirmRemove(null)}>
           <AlertDialogContent className="rounded-3xl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="font-black">Remove from favorites?</AlertDialogTitle>
+              <AlertDialogTitle className="font-poppins font-bold">Remove from favorites?</AlertDialogTitle>
               <AlertDialogDescription>This cleaner will be removed from your favorites list. You can always re-add them.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

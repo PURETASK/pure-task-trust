@@ -61,7 +61,7 @@ function SliderRow({
           </div>
           <span className="font-semibold text-sm">{label}</span>
         </div>
-        <span className={cn('text-2xl font-black', iconClass)}>{display}</span>
+        <span className={cn('text-2xl font-poppins font-bold', iconClass)}>{display}</span>
       </div>
       <Slider min={min} max={max} step={step} value={[value]} onValueChange={([v]) => onChange(v)} className="py-1" />
       <div className="flex justify-between text-[11px] text-muted-foreground mt-1.5">
@@ -127,7 +127,7 @@ export default function EarningsCalculator() {
             <Badge className="mb-3 bg-success/10 text-success border-success/30 gap-1.5">
               <Calculator className="h-3.5 w-3.5" /> Free Interactive Tool
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-poppins font-bold tracking-tight mb-3 leading-tight">
               How Much Can You Earn<br />
               <span className="text-success">as a Cleaner?</span>
             </h1>
@@ -206,7 +206,7 @@ export default function EarningsCalculator() {
                   <span className="font-semibold text-sm">Reliability Score</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-black">{reliabilityScore}</span>
+                  <span className="text-2xl font-poppins font-bold">{reliabilityScore}</span>
                   <span className={cn('text-xs font-bold px-2.5 py-1 rounded-full border-2', tier.badge)}>
                     {tier.icon} {tier.name}
                   </span>
@@ -246,7 +246,7 @@ export default function EarningsCalculator() {
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 1.05, opacity: 0 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                    className="text-5xl font-black text-success leading-none mb-1"
+                    className="text-5xl font-poppins font-bold text-success leading-none mb-1"
                   >
                     ${Math.round(calc.annualNet).toLocaleString()}
                   </motion.p>
@@ -288,7 +288,7 @@ export default function EarningsCalculator() {
                   key={value}
                   initial={{ opacity: 0.4, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-xl font-black"
+                  className="text-xl font-poppins font-bold"
                 >
                   {value}
                 </motion.span>
@@ -322,7 +322,7 @@ export default function EarningsCalculator() {
             <div className="h-8 w-8 rounded-xl bg-warning/10 border-2 border-warning/20 flex items-center justify-center">
               <Sparkles className="h-4 w-4 text-warning" />
             </div>
-            <h2 className="text-xl font-black">How Your Tier Affects Earnings</h2>
+            <h2 className="text-xl font-poppins font-bold">How Your Tier Affects Earnings</h2>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {TIERS.map((t) => {
@@ -338,9 +338,9 @@ export default function EarningsCalculator() {
                   )}
                 >
                   <div className={cn('h-1 w-10 rounded-full bg-gradient-to-r mb-3', t.bar)} />
-                  <p className="font-black text-base mb-0.5">{t.icon} {t.name}</p>
+                  <p className="font-poppins font-bold text-base mb-0.5">{t.icon} {t.name}</p>
                   <p className="text-[11px] text-muted-foreground mb-2">Score {t.range[0]}–{t.range[1]} · Keep {t.keep}</p>
-                  <p className="text-2xl font-black text-success">${Math.round(annualEst).toLocaleString()}</p>
+                  <p className="text-2xl font-poppins font-bold text-success">${Math.round(annualEst).toLocaleString()}</p>
                   <p className="text-[11px] text-muted-foreground">est. annual</p>
                 </button>
               );
@@ -363,7 +363,7 @@ export default function EarningsCalculator() {
           ].map(({ emoji, title, desc, link, cta, border }) => (
             <div key={title} className={cn('rounded-2xl border-2 p-5', border)}>
               <span className="text-3xl mb-3 block">{emoji}</span>
-              <h3 className="font-black text-base mb-2">{title}</h3>
+              <h3 className="font-poppins font-bold text-base mb-2">{title}</h3>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{desc}</p>
               <Button asChild variant="outline" size="sm" className="rounded-xl border-2 font-semibold w-full">
                 <Link to={link}>{cta} <ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Link>

@@ -58,7 +58,7 @@ export default function CleanerDashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-5">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
               <div className="flex items-center gap-2.5 sm:gap-3 mb-2">
-                <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-black text-lg sm:text-xl ${tierStyle.text} flex-shrink-0`}>
+                <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-poppins font-bold text-lg sm:text-xl ${tierStyle.text} flex-shrink-0`}>
                   {displayName.charAt(0)}
                 </div>
                 <div>

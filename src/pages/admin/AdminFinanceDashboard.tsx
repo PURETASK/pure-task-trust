@@ -105,7 +105,7 @@ const AdminFinanceDashboard = () => {
                   <div className={`h-11 w-11 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
                     <Icon className={`h-5 w-5 ${color}`} />
                   </div>
-                  <p className="text-2xl font-black">{value}</p>
+                  <p className="text-2xl font-poppins font-bold">{value}</p>
                   <p className="text-xs font-medium text-foreground mt-1">{label}</p>
                   <p className="text-xs text-muted-foreground">{sublabel}</p>
                 </CardContent>

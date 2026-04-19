@@ -40,7 +40,7 @@ export function ServiceTypeCard({ name, description, estimate, icon: Icon, selec
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       <div className="text-right flex-shrink-0 hidden sm:block">
-        <p className="font-black text-sm" style={{ color: `hsl(var(--${paletteVar}-deep))` }}>{estimate}</p>
+        <p className="font-poppins font-bold text-sm" style={{ color: `hsl(var(--${paletteVar}-deep))` }}>{estimate}</p>
         <p className="text-[10px] text-muted-foreground">est. range</p>
       </div>
       <div

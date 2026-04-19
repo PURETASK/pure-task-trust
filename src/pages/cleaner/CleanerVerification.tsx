@@ -90,7 +90,7 @@ function StepPill({ num, label, done, active }: { num: number; label: string; do
         : active ? "border-primary/60 bg-primary/10 text-primary"
         : "border-border/40 bg-muted/20 text-muted-foreground"}`}
     >
-      <div className={`h-5 w-5 rounded-full flex items-center justify-center text-xs font-black
+      <div className={`h-5 w-5 rounded-full flex items-center justify-center text-xs font-poppins font-bold
         ${done ? "bg-success text-white" : active ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>
         {done ? <CheckCircle className="h-3 w-3" /> : num}
       </div>
@@ -254,7 +254,7 @@ export default function CleanerVerification() {
               </div>
               <div>
                 <div className="flex items-center gap-3 mb-1 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-black text-white">Identity Verification</h1>
+                  <h1 className="text-2xl sm:text-3xl font-poppins font-bold text-white">Identity Verification</h1>
                   {allDone && (
                     <Badge className="bg-success/30 text-success border-success/50 border">
                       <CheckCircle className="h-3.5 w-3.5 mr-1" />Fully Verified
@@ -286,7 +286,7 @@ export default function CleanerVerification() {
             <motion.div key={s.label} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07 }}>
               <div className={`rounded-2xl border-2 ${s.border} ${s.bg} text-center p-4`}>
                 <s.icon className={`h-5 w-5 mx-auto mb-1 ${s.iconCls}`} />
-                <p className={`text-2xl font-black ${s.iconCls}`}>{s.value}</p>
+                <p className={`text-2xl font-poppins font-bold ${s.iconCls}`}>{s.value}</p>
                 <p className="text-xs text-muted-foreground">{s.label}</p>
               </div>
             </motion.div>
@@ -559,7 +559,7 @@ export default function CleanerVerification() {
               <div className="h-14 w-14 rounded-2xl border-2 border-white/20 bg-white/10 flex items-center justify-center mx-auto mb-4">
                 <Lock className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-xl font-black text-white mb-1">Your Data is Secure</h3>
+              <h3 className="text-xl font-poppins font-bold text-white mb-1">Your Data is Secure</h3>
               <p className="text-white/60 text-sm max-w-md mx-auto">
                 All documents are encrypted with AES-256 and stored securely. Documents are only visible to you and platform administrators — clients see only a verification badge.
               </p>

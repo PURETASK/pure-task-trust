@@ -71,7 +71,7 @@ export default function ForFamilies() {
 
               <motion.h1
                 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.09 }}
-                className="text-[clamp(2.8rem,7vw,5.5rem)] font-black leading-[0.92] tracking-tight mb-6"
+                className="text-[clamp(2.8rem,7vw,5.5rem)] font-poppins font-bold leading-[0.92] tracking-tight mb-6"
               >
                 Safe. Trusted.<br />
                 <span className="text-[hsl(var(--pt-green))]">Family-Loved.</span>
@@ -118,7 +118,7 @@ export default function ForFamilies() {
                   <div className="h-12 w-12 rounded-2xl flex items-center justify-center" style={{ background: `hsl(var(--${item.color})/0.15)`, color: `hsl(var(--${item.color}))` }}>
                     <item.icon className="h-6 w-6" />
                   </div>
-                  <p className="text-2xl font-black" style={{ color: `hsl(var(--${item.color}))` }}>{item.val}</p>
+                  <p className="text-2xl font-poppins font-bold" style={{ color: `hsl(var(--${item.color}))` }}>{item.val}</p>
                   <p className="text-xs text-muted-foreground font-medium">{item.label}</p>
                 </motion.div>
               ))}
@@ -135,7 +135,7 @@ export default function ForFamilies() {
             className="mb-16"
           >
             <p className="text-[hsl(var(--pt-green))] font-bold text-sm tracking-widest uppercase mb-3">Safety First, Always</p>
-            <h2 className="text-4xl md:text-6xl font-black leading-tight max-w-2xl">
+            <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               When kids are involved,<br />
               <span className="text-muted-foreground font-light italic">there are no shortcuts.</span>
             </h2>
@@ -159,13 +159,13 @@ export default function ForFamilies() {
                   }}
                 >
                   <div
-                    className="absolute top-0 right-0 text-[6rem] font-black leading-none opacity-[0.06] group-hover:opacity-[0.1] transition-opacity"
+                    className="absolute top-0 right-0 text-[6rem] font-poppins font-bold leading-none opacity-[0.06] group-hover:opacity-[0.1] transition-opacity"
                     style={{ color: `hsl(var(--${pillar.accent}))` }}
                   >
                     {pillar.number}
                   </div>
                   <span
-                    className="inline-block text-xs font-black tracking-widest uppercase mb-5 px-3 py-1 rounded-full"
+                    className="inline-block text-xs font-poppins font-bold tracking-widest uppercase mb-5 px-3 py-1 rounded-full"
                     style={{ background: `hsl(var(--${pillar.accent})/0.12)`, color: `hsl(var(--${pillar.accent}))` }}
                   >
                     {pillar.tag}
@@ -191,7 +191,7 @@ export default function ForFamilies() {
             className="text-center mb-16"
           >
             <p className="text-[hsl(var(--pt-green))] font-bold text-sm tracking-widest uppercase mb-3">Real Families, Real Stories</p>
-            <h2 className="text-4xl md:text-5xl font-black">Trusted by Thousands of Families</h2>
+            <h2 className="text-4xl md:text-5xl font-poppins font-bold">Trusted by Thousands of Families</h2>
           </motion.div>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {testimonials.map((t, i) => (
@@ -216,7 +216,7 @@ export default function ForFamilies() {
                   <p className="text-lg leading-relaxed italic mb-6 text-foreground">"{t.quote}"</p>
                   <div className="flex items-center gap-4">
                     <div
-                      className="h-12 w-12 rounded-2xl flex items-center justify-center font-black text-sm"
+                      className="h-12 w-12 rounded-2xl flex items-center justify-center font-poppins font-bold text-sm"
                       style={{ background: `hsl(var(--${t.color})/0.15)`, color: `hsl(var(--${t.color}))` }}
                     >
                       {t.initials}
@@ -239,7 +239,7 @@ export default function ForFamilies() {
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <p className="text-[hsl(var(--pt-green))] font-bold text-sm tracking-widest uppercase mb-4">Peace of Mind for Busy Parents</p>
-              <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-6 leading-tight">
                 Your family<br />
                 <span className="text-[hsl(var(--pt-green))]">deserves better.</span>
               </h2>
@@ -275,7 +275,7 @@ export default function ForFamilies() {
                   <div className="h-12 w-12 md:h-16 md:w-16 rounded-3xl bg-[hsl(var(--pt-green)/0.2)] flex items-center justify-center mb-6">
                     <Leaf className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                   </div>
-                  <h3 className="text-2xl font-black mb-3">The Family-First Guarantee</h3>
+                  <h3 className="text-2xl font-poppins font-bold mb-3">The Family-First Guarantee</h3>
                   <p className="text-muted-foreground leading-relaxed mb-6">
                     If you're ever unsatisfied with a cleaning, we'll send another cleaner at no extra cost. Your family deserves the best — and we mean it, every single time.
                   </p>
@@ -287,7 +287,7 @@ export default function ForFamilies() {
                       { n: '4.9★', t: 'Family rating' },
                     ].map((item) => (
                       <div key={item.t} className="rounded-xl p-4 bg-card/80 border border-[hsl(var(--pt-green)/0.2)]">
-                        <p className="text-xl font-black text-[hsl(var(--pt-green))]">{item.n}</p>
+                        <p className="text-xl font-poppins font-bold text-[hsl(var(--pt-green))]">{item.n}</p>
                         <p className="text-xs text-muted-foreground">{item.t}</p>
                       </div>
                     ))}
@@ -319,7 +319,7 @@ export default function ForFamilies() {
                   <Heart className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                 </div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-black mb-5">
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-5">
                 Your family deserves<br />
                 <span className="text-[hsl(var(--pt-green))]">a spotless, safe home.</span>
               </h2>

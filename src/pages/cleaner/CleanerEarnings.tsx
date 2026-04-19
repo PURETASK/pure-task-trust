@@ -135,7 +135,7 @@ export default function CleanerEarnings() {
                     <Skeleton className="h-24 w-64 rounded-2xl" />
                   ) : (
                     <div className="flex items-end gap-1 leading-none">
-                      <span className="text-7xl sm:text-8xl font-black text-success tracking-tight">
+                      <span className="text-7xl sm:text-8xl font-poppins font-bold text-success tracking-tight">
                         ${stats.availableBalance.toFixed(0)}
                       </span>
                       <span className="text-3xl font-bold text-success/60 mb-3">
@@ -172,7 +172,7 @@ export default function CleanerEarnings() {
                       <s.icon className="h-4 w-4 shrink-0" />
                       <div>
                         <p className="text-xs opacity-70">{s.label}</p>
-                        <p className="font-black text-xl leading-none">{s.value}</p>
+                        <p className="font-poppins font-bold text-xl leading-none">{s.value}</p>
                       </div>
                     </div>
                   ))}
@@ -186,7 +186,7 @@ export default function CleanerEarnings() {
         <motion.div {...f(0.08)}>
           <div className="flex items-center gap-2 mb-3">
             <Banknote className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-black text-foreground">Payout Options</h2>
+            <h2 className="text-lg font-poppins font-bold text-foreground">Payout Options</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -203,12 +203,12 @@ export default function CleanerEarnings() {
                   <Zap className="h-7 w-7 text-success" />
                 </div>
                 <div>
-                  <h3 className="font-black text-lg text-foreground">Instant Payout</h3>
+                  <h3 className="font-poppins font-bold text-lg text-foreground">Instant Payout</h3>
                   <p className="text-sm text-muted-foreground">Money in your account within minutes</p>
                 </div>
               </div>
               <div className="relative mb-1">
-                <span className="text-5xl font-black text-success">${stats.availableBalance.toFixed(0)}</span>
+                <span className="text-5xl font-poppins font-bold text-success">${stats.availableBalance.toFixed(0)}</span>
                 <span className="text-xl font-bold text-success/60">.{(stats.availableBalance % 1).toFixed(2).slice(2)}</span>
               </div>
               <p className="text-xs text-muted-foreground mb-5">Available balance · 5% convenience fee applies</p>
@@ -239,12 +239,12 @@ export default function CleanerEarnings() {
                   <PiggyBank className="h-7 w-7 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <div>
-                  <h3 className="font-black text-lg text-foreground">Weekly Payout</h3>
+                  <h3 className="font-poppins font-bold text-lg text-foreground">Weekly Payout</h3>
                   <p className="text-sm text-muted-foreground">Automatic every Friday — no fees ever</p>
                 </div>
               </div>
               <div className="relative mb-1">
-                <span className="text-5xl font-black" style={{ color: "hsl(var(--pt-purple))" }}>
+                <span className="text-5xl font-poppins font-bold" style={{ color: "hsl(var(--pt-purple))" }}>
                   ${stats.availableBalance >= 20 ? stats.availableBalance.toFixed(0) : '0'}
                 </span>
                 <span className="text-xl font-bold ml-0.5" style={{ color: "hsl(var(--pt-purple)/0.6)" }}>
@@ -271,7 +271,7 @@ export default function CleanerEarnings() {
         <motion.div {...f(0.14)}>
           <div className="flex items-center gap-2 mb-3">
             <Calendar className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-black text-foreground">This Week</h2>
+            <h2 className="text-lg font-poppins font-bold text-foreground">This Week</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -286,13 +286,13 @@ export default function CleanerEarnings() {
                     <Calendar className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="font-black text-base text-foreground">Forecast Earnings</p>
+                    <p className="font-poppins font-bold text-base text-foreground">Forecast Earnings</p>
                     <p className="text-xs text-muted-foreground">Confirmed bookings this week</p>
                   </div>
                 </div>
               </div>
               <div className="relative flex items-end gap-1 mb-2">
-                <span className="text-6xl font-black text-primary leading-none">${forecastEarnings}</span>
+                <span className="text-6xl font-poppins font-bold text-primary leading-none">${forecastEarnings}</span>
               </div>
               <p className="text-sm text-muted-foreground mb-5">
                 {confirmedThisWeek.length} job{confirmedThisWeek.length !== 1 ? 's' : ''} · {forecastHours}h scheduled
@@ -306,7 +306,7 @@ export default function CleanerEarnings() {
                   {confirmedThisWeek.slice(0, 3).map((j) => (
                     <div key={j.id} className="flex items-center justify-between border-2 border-primary/20 bg-primary/10 rounded-2xl px-4 py-2.5">
                       <span className="text-sm font-semibold text-foreground">{j.cleaning_type || 'Cleaning'}</span>
-                      <span className="text-sm font-black text-primary">${j.escrow_credits_reserved || 0}</span>
+                      <span className="text-sm font-poppins font-bold text-primary">${j.escrow_credits_reserved || 0}</span>
                     </div>
                   ))}
                 </div>
@@ -324,7 +324,7 @@ export default function CleanerEarnings() {
                     <Target className="h-6 w-6 text-warning" />
                   </div>
                   <div>
-                    <p className="font-black text-base text-foreground">Weekly Hours Goal</p>
+                    <p className="font-poppins font-bold text-base text-foreground">Weekly Hours Goal</p>
                     <p className="text-xs text-muted-foreground">Set your target hours per week</p>
                   </div>
                 </div>
@@ -356,10 +356,10 @@ export default function CleanerEarnings() {
                     value={hoursInput}
                     onChange={e => setHoursInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') saveHoursGoal(); if (e.key === 'Escape') setEditingHoursGoal(false); }}
-                    className="border-2 border-warning/50 bg-warning/10 text-warning font-black text-2xl h-14 rounded-2xl text-center focus-visible:ring-warning/40"
+                    className="border-2 border-warning/50 bg-warning/10 text-warning font-poppins font-bold text-2xl h-14 rounded-2xl text-center focus-visible:ring-warning/40"
                     autoFocus
                   />
-                  <span className="text-2xl font-black text-warning/60">h</span>
+                  <span className="text-2xl font-poppins font-bold text-warning/60">h</span>
                 </div>
               )}
 
@@ -380,18 +380,18 @@ export default function CleanerEarnings() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-warning leading-none">{forecastHours}</span>
+                    <span className="text-2xl font-poppins font-bold text-warning leading-none">{forecastHours}</span>
                     <span className="text-[10px] text-muted-foreground">of {weeklyHoursGoal}h</span>
                   </div>
                 </div>
                 <div className="flex-1">
                   {hoursProgress >= 100 ? (
-                    <div className="flex items-center gap-2 text-success font-black text-xl">
+                    <div className="flex items-center gap-2 text-success font-poppins font-bold text-xl">
                       <Star className="h-6 w-6 fill-current" /> Goal achieved!
                     </div>
                   ) : (
                     <>
-                      <p className="text-4xl font-black text-warning">{hoursRemaining}h</p>
+                      <p className="text-4xl font-poppins font-bold text-warning">{hoursRemaining}h</p>
                       <p className="text-sm text-muted-foreground">remaining to goal</p>
                     </>
                   )}
@@ -434,7 +434,7 @@ export default function CleanerEarnings() {
               <div className="border-b border-primary/20 px-6 pt-5"
                 style={{ background: "linear-gradient(135deg, hsl(var(--primary)/0.08), transparent)" }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-black text-lg flex items-center gap-2 text-foreground">
+                  <h2 className="font-poppins font-bold text-lg flex items-center gap-2 text-foreground">
                     <DollarSign className="h-5 w-5 text-primary" /> Transaction History
                   </h2>
                 </div>

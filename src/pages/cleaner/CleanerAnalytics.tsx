@@ -23,7 +23,7 @@ function CustomTooltip({ active, payload, label }: any) {
   return (
     <div className="bg-card border-2 border-primary/30 rounded-2xl px-4 py-3 shadow-lg text-sm">
       <p className="text-xs text-muted-foreground mb-1">{label}</p>
-      <p className="text-lg font-black text-foreground">${payload[0]?.value ?? 0}</p>
+      <p className="text-lg font-poppins font-bold text-foreground">${payload[0]?.value ?? 0}</p>
     </div>
   );
 }
@@ -49,7 +49,7 @@ function StatCard({
         <Icon className={`h-5 w-5 ${colorClass}`} />
       </div>
       <p className="text-xs text-muted-foreground mb-0.5 font-medium">{label}</p>
-      <p className={`text-3xl font-black leading-none ${colorClass}`}>{value}</p>
+      <p className={`text-3xl font-poppins font-bold leading-none ${colorClass}`}>{value}</p>
       {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
       {trend !== undefined && trend !== null && (
         <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${positive ? "text-success" : "text-destructive"}`}>
@@ -154,7 +154,7 @@ export default function CleanerAnalytics() {
                   <BarChart3 className="h-7 w-7 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground">Analytics</h1>
+                  <h1 className="text-3xl sm:text-4xl font-poppins font-bold tracking-tight text-foreground">Analytics</h1>
                   <p className="text-muted-foreground text-sm">Track performance, earnings trends & growth</p>
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default function CleanerAnalytics() {
                   ? <TrendingUp className="h-6 w-6 text-success" />
                   : <TrendingDown className="h-6 w-6 text-destructive" />}
                 <div>
-                  <p className={`font-black text-2xl leading-none ${trendPositive ? "text-success" : "text-destructive"}`}>
+                  <p className={`font-poppins font-bold text-2xl leading-none ${trendPositive ? "text-success" : "text-destructive"}`}>
                     {trendPositive ? "+" : ""}{trendPct}%
                   </p>
                   <p className="text-muted-foreground text-xs">vs prior 4 weeks</p>
@@ -188,7 +188,7 @@ export default function CleanerAnalytics() {
               { label: "Avg Rating",  value: stats.avgRating?.toFixed(1) || "—", border: "border-warning/30", bg: "bg-warning/10", color: "text-warning" },
             ].map(s => (
               <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} px-4 py-3 text-center`}>
-                <p className={`text-2xl sm:text-3xl font-black ${s.color}`}>{s.value}</p>
+                <p className={`text-2xl sm:text-3xl font-poppins font-bold ${s.color}`}>{s.value}</p>
                 <p className="text-muted-foreground text-xs mt-0.5">{s.label}</p>
               </div>
             ))}
@@ -231,7 +231,7 @@ export default function CleanerAnalytics() {
         >
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-lg font-black text-foreground">Weekly Earnings</h2>
+              <h2 className="text-lg font-poppins font-bold text-foreground">Weekly Earnings</h2>
               <p className="text-xs text-muted-foreground">Last 8 weeks</p>
             </div>
             {trendPct !== null && (
@@ -284,7 +284,7 @@ export default function CleanerAnalytics() {
             style={{ boxShadow: "0 4px 24px -4px hsl(var(--success)/0.15)" }}
           >
             <div className="p-5 border-b-2 border-success/20 bg-success/10">
-              <h2 className="text-lg font-black text-foreground flex items-center gap-2">
+              <h2 className="text-lg font-poppins font-bold text-foreground flex items-center gap-2">
                 <Target className="h-5 w-5 text-success" />Job Statistics
               </h2>
             </div>
@@ -303,7 +303,7 @@ export default function CleanerAnalytics() {
                       </div>
                       <span className="text-sm font-medium text-muted-foreground">{label}</span>
                     </div>
-                    <span className={`font-black text-2xl ${color}`}>{value}</span>
+                    <span className={`font-poppins font-bold text-2xl ${color}`}>{value}</span>
                   </div>
                 ))}
               </div>
@@ -316,7 +316,7 @@ export default function CleanerAnalytics() {
             style={{ boxShadow: "0 4px 24px -4px hsl(var(--warning)/0.15)" }}
           >
             <div className="p-5 border-b-2 border-warning/20 bg-warning/10">
-              <h2 className="text-lg font-black text-foreground flex items-center gap-2">
+              <h2 className="text-lg font-poppins font-bold text-foreground flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-warning" />Recent Earnings
               </h2>
             </div>
@@ -349,7 +349,7 @@ export default function CleanerAnalytics() {
                           <p className="text-xs text-muted-foreground">{format(new Date(earning.created_at), "MMM d, yyyy")}</p>
                         </div>
                       </div>
-                      <span className="font-black text-success text-xl">+${earning.net_credits.toFixed(0)}</span>
+                      <span className="font-poppins font-bold text-success text-xl">+${earning.net_credits.toFixed(0)}</span>
                     </motion.div>
                   );
                 })}
@@ -362,7 +362,7 @@ export default function CleanerAnalytics() {
         <motion.div {...f(0.42)}>
           <div className="flex items-center gap-2 mb-4">
             <Award className="h-5 w-5 text-warning" />
-            <h2 className="text-lg font-black text-foreground">Performance Insights</h2>
+            <h2 className="text-lg font-poppins font-bold text-foreground">Performance Insights</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             {[

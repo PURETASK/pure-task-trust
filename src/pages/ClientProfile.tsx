@@ -59,12 +59,12 @@ export default function ClientProfile() {
                 <div className="flex items-end gap-4">
                   <Avatar className="h-24 w-24 ring-4 ring-background shadow-xl border-2 border-primary/30">
                     <AvatarImage src={user?.avatar} />
-                    <AvatarFallback className="text-2xl bg-primary text-primary-foreground font-black">
+                    <AvatarFallback className="text-2xl bg-primary text-primary-foreground font-poppins font-bold">
                       {getInitials(displayName)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="mb-2">
-                    <h1 className="text-2xl font-black">{displayName}</h1>
+                    <h1 className="text-2xl font-poppins font-bold">{displayName}</h1>
                     <div className="flex items-center gap-2 mt-1">
                       <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">{user?.email}</span>
@@ -90,7 +90,7 @@ export default function ClientProfile() {
                   <MapPin className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-black text-lg">Saved Addresses</h2>
+                  <h2 className="font-poppins font-bold text-lg">Saved Addresses</h2>
                   <p className="text-sm text-muted-foreground">Your service locations</p>
                 </div>
               </div>
@@ -133,7 +133,7 @@ export default function ClientProfile() {
 
         {/* Quick Links Grid */}
         <motion.div {...f(0.14)}>
-          <h2 className="text-base sm:text-xl font-black mb-4">Account Features</h2>
+          <h2 className="text-base sm:text-xl font-poppins font-bold mb-4">Account Features</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {quickLinks.map(({ to, icon: Icon, label, desc, color, border }, i) => (
               <motion.div key={to} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 + i * 0.05 }} whileHover={{ y: -3, scale: 1.01 }}>
@@ -159,7 +159,7 @@ export default function ClientProfile() {
               <div className="h-10 w-10 rounded-xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary" />
               </div>
-              <h2 className="font-black text-lg">Account Security</h2>
+              <h2 className="font-poppins font-bold text-lg">Account Security</h2>
             </div>
             <div className="divide-y divide-border/40">
               <Link to="/profile/edit#security" className="flex items-center justify-between py-4 hover:opacity-70 transition-opacity">

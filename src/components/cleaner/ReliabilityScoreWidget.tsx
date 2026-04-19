@@ -135,7 +135,7 @@ export function ReliabilityScoreWidget() {
             <div className="min-w-0">
               <p className="text-[10px] sm:text-xs font-medium text-white/70 uppercase tracking-wider">Reliability Score</p>
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-black">{currentScore}</span>
+                <span className="text-2xl sm:text-3xl font-poppins font-bold">{currentScore}</span>
                 <span className="text-white/70 text-xs sm:text-sm">/ 100</span>
               </div>
             </div>

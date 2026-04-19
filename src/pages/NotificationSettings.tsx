@@ -24,7 +24,7 @@ export default function NotificationSettings() {
               <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-warning" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black">Notifications</h1>
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold">Notifications</h1>
               <p className="text-muted-foreground text-sm">Manage how and when you receive alerts</p>
             </div>
           </div>
@@ -36,7 +36,7 @@ export default function NotificationSettings() {
             <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Bell className="h-4 w-4 text-muted-foreground" />
-                <h2 className="font-black">Notification Preferences</h2>
+                <h2 className="font-poppins font-bold">Notification Preferences</h2>
               </div>
               <NotificationPreferencesForm />
             </div>
@@ -47,7 +47,7 @@ export default function NotificationSettings() {
             <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Smartphone className="h-4 w-4 text-muted-foreground" />
-                <h2 className="font-black">Push Notifications</h2>
+                <h2 className="font-poppins font-bold">Push Notifications</h2>
               </div>
               <PushNotificationSetup />
             </div>
@@ -58,7 +58,7 @@ export default function NotificationSettings() {
             <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <History className="h-4 w-4 text-muted-foreground" />
-                <h2 className="font-black">Recent Notifications</h2>
+                <h2 className="font-poppins font-bold">Recent Notifications</h2>
               </div>
               <NotificationHistory />
             </div>

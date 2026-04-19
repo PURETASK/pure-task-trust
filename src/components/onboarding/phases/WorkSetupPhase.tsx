@@ -103,7 +103,7 @@ export function WorkSetupPhase({
             <div className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)' }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2"><Radio className="h-4 w-4 text-emerald-400" /><Label className="text-white/70 font-semibold text-sm">Travel radius</Label></div>
-                <span className="text-2xl font-black text-emerald-400">{travelRadius}<span className="text-sm font-medium text-white/50 ml-1">mi</span></span>
+                <span className="text-2xl font-poppins font-bold text-emerald-400">{travelRadius}<span className="text-sm font-medium text-white/50 ml-1">mi</span></span>
               </div>
               <Slider value={[travelRadius]} onValueChange={v => setTravelRadius(v[0])} min={5} max={50} step={5} className={`py-1 ${sliderCls}`} />
               <div className="flex justify-between text-xs text-white/25"><span>5 mi</span><span>50 mi</span></div>
@@ -220,7 +220,7 @@ export function WorkSetupPhase({
             <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.05))', border: '1px solid rgba(16,185,129,0.2)' }}>
               <div className="flex items-center gap-2 mb-1"><TrendingUp className="h-4 w-4 text-emerald-400" /><span className="text-emerald-400 text-xs font-semibold uppercase tracking-wide">Est. weekly earnings</span></div>
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-white">${Math.round(hourlyRate * 2 * 5)}–${Math.round(hourlyRate * 4 * 5)}</span>
+                <span className="text-3xl font-poppins font-bold text-white">${Math.round(hourlyRate * 2 * 5)}–${Math.round(hourlyRate * 4 * 5)}</span>
                 <span className="text-sm text-white/40">/ week</span>
               </div>
               <p className="text-xs text-white/30 mt-0.5">Based on 2–4 jobs/day at ${hourlyRate}/hr</p>
@@ -229,7 +229,7 @@ export function WorkSetupPhase({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label className="text-white/60 text-xs font-medium uppercase tracking-wide">Hourly rate</Label>
-                <span className="text-3xl font-black text-emerald-400">${hourlyRate}</span>
+                <span className="text-3xl font-poppins font-bold text-emerald-400">${hourlyRate}</span>
               </div>
               <Slider value={[hourlyRate]} onValueChange={v => setHourlyRate(v[0])} min={20} max={65} step={1} className={`py-2 ${sliderCls}`} />
               <div className="flex justify-between text-xs text-white/25"><span>$20/hr</span><span>$65/hr</span></div>
@@ -243,7 +243,7 @@ export function WorkSetupPhase({
                     <div className="flex items-center gap-1.5">
                       <span>{tier.emoji}</span>
                       <span className={`text-sm font-semibold ${active ? 'text-emerald-400' : 'text-white/50'}`}>{tier.label}</span>
-                      {active && <span className="ml-auto text-[10px] font-black text-emerald-400 uppercase">You</span>}
+                      {active && <span className="ml-auto text-[10px] font-poppins font-bold text-emerald-400 uppercase">You</span>}
                     </div>
                     <div className={`text-xs font-bold mt-0.5 ${active ? 'text-white' : 'text-white/30'}`}>{tier.range}/hr</div>
                   </div>

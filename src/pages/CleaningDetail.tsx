@@ -199,7 +199,7 @@ export default function CleaningDetail() {
             <div className="p-5 sm:p-6 space-y-4">
               {/* Cleaner info */}
               <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-black text-primary text-lg">
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-poppins font-bold text-primary text-lg">
                   {cleanerName.charAt(0)}
                 </div>
                 <div className="flex-1">
@@ -242,7 +242,7 @@ export default function CleaningDetail() {
                   <Camera className="h-5 w-5 text-warning" />
                 </div>
                 <div>
-                  <p className="font-black text-lg">Review & Approve</p>
+                  <p className="font-poppins font-bold text-lg">Review & Approve</p>
                   <p className="text-sm text-muted-foreground">Check the work and release payment to your cleaner.</p>
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function CleaningDetail() {
                   </DialogTrigger>
                   <DialogContent className="rounded-3xl">
                     <DialogHeader>
-                      <DialogTitle className="font-black">Report an Issue</DialogTitle>
+                      <DialogTitle className="font-poppins font-bold">Report an Issue</DialogTitle>
                       <DialogDescription>Describe the problem and we'll investigate promptly.</DialogDescription>
                     </DialogHeader>
                     <Textarea placeholder="Describe what went wrong..." value={issueText} onChange={e => setIssueText(e.target.value)} className="min-h-[100px] rounded-xl border-2" />
@@ -296,7 +296,7 @@ export default function CleaningDetail() {
                 </DialogTrigger>
                 <DialogContent className="rounded-3xl max-w-lg">
                   <DialogHeader>
-                    <DialogTitle className="font-black">Reschedule Cleaning</DialogTitle>
+                    <DialogTitle className="font-poppins font-bold">Reschedule Cleaning</DialogTitle>
                     <DialogDescription>Pick a new date and time for this cleaning.</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
@@ -349,7 +349,7 @@ export default function CleaningDetail() {
                 </DialogTrigger>
                 <DialogContent className="rounded-3xl max-w-lg">
                   <DialogHeader>
-                    <DialogTitle className="font-black">Cancel Cleaning</DialogTitle>
+                    <DialogTitle className="font-poppins font-bold">Cancel Cleaning</DialogTitle>
                     <DialogDescription>Are you sure you want to cancel this booking?</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
@@ -416,7 +416,7 @@ export default function CleaningDetail() {
                 </DialogTrigger>
                 <DialogContent className="rounded-3xl max-w-lg">
                   <DialogHeader>
-                    <DialogTitle className="font-black">Leave a Review</DialogTitle>
+                    <DialogTitle className="font-poppins font-bold">Leave a Review</DialogTitle>
                     <DialogDescription>Rate your experience with {cleanerName}.</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">

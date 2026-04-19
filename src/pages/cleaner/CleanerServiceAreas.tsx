@@ -259,7 +259,7 @@ export default function CleanerServiceAreas() {
                 <Globe className="h-4 w-4 text-white/60" />
                 <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Coverage Map</span>
               </div>
-              <h1 className="text-4xl font-black text-white leading-none mb-2">Service Areas</h1>
+              <h1 className="text-4xl font-poppins font-bold text-white leading-none mb-2">Service Areas</h1>
               <p className="text-white/60 text-sm">
                 Set your base location and how far you're willing to travel.
               </p>
@@ -335,7 +335,7 @@ export default function CleanerServiceAreas() {
                       <Label className="font-semibold text-sm">Travel Radius</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-3xl font-black ${rc.text}`}>{radiusMi}</span>
+                      <span className={`text-3xl font-poppins font-bold ${rc.text}`}>{radiusMi}</span>
                       <span className="text-sm text-muted-foreground">mi</span>
                       <Badge variant="secondary" className="text-xs">{getRadiusLabel(radiusMi)}</Badge>
                     </div>
@@ -417,7 +417,7 @@ export default function CleanerServiceAreas() {
                         <div className="flex items-start gap-4">
                           <div className={`h-14 w-14 rounded-full border-4 ${rc2.border} flex items-center justify-center ${rc2.bg} shrink-0`}>
                             <div className="text-center">
-                              <p className={`text-sm font-black leading-none ${rc2.text}`}>{area.radius_miles || 10}</p>
+                              <p className={`text-sm font-poppins font-bold leading-none ${rc2.text}`}>{area.radius_miles || 10}</p>
                               <p className="text-[9px] text-muted-foreground">mi</p>
                             </div>
                           </div>

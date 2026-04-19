@@ -457,7 +457,7 @@ export default function CleanerSchedule() {
               <CalendarClock className="h-4 w-4 text-warning" />
             </div>
             <div>
-              <p className="font-black text-base text-warning">Reschedule Requests</p>
+              <p className="font-poppins font-bold text-base text-warning">Reschedule Requests</p>
               <p className="text-xs text-muted-foreground">Accept or decline client reschedule requests</p>
             </div>
           </div>
