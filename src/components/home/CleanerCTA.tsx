@@ -12,7 +12,7 @@ export function CleanerCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="gradient-brand rounded-2xl sm:rounded-3xl py-10 sm:py-16 px-6 sm:px-8 text-center text-white"
+          className="bg-gradient-hero rounded-2xl sm:rounded-3xl py-10 sm:py-16 px-6 sm:px-8 text-center text-white shadow-tier-3"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Are You a Professional Cleaner?
@@ -24,7 +24,7 @@ export function CleanerCTA() {
           <Button
             variant="glass"
             size="lg"
-            className="bg-white text-pt-blue hover:bg-white/90 border-0 shadow-elevated w-full sm:w-auto"
+            className="bg-white text-pt-navy hover:bg-white/90 border-0 shadow-tier-2 w-full sm:w-auto"
             asChild
           >
             <Link to="/auth">

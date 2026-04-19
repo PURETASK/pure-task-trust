@@ -19,7 +19,7 @@ export function Hero() {
           fetchPriority="high"
           decoding="sync"
         />
-        <div className="absolute inset-0 bg-white/80" />
+        <div className="absolute inset-0 bg-gradient-hero opacity-90" />
       </div>
 
       <div className="w-full relative z-10 py-8 sm:py-20 px-4 sm:px-6 box-border">
@@ -29,7 +29,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-pt-blue/10 text-pt-blue text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/80 backdrop-blur border border-pt-navy/10 text-pt-navy text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-tier-1">
               <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               24-Hour Review Protection
             </div>
@@ -66,7 +66,7 @@ export function Hero() {
                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto bg-success text-success-foreground border-2 border-success hover:bg-success/90 hover:border-success/90" asChild>
+            <Button variant="glass" size="lg" className="w-full sm:w-auto" asChild>
               <Link to="/discover">Browse Cleaners</Link>
             </Button>
           </motion.div>
