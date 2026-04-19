@@ -51,7 +51,7 @@ export default function ForgotPassword() {
                     <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/25">
                       <Lock className="h-10 w-10 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold mb-2">Reset Password</h1>
+                    <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-2">Reset Password</h1>
                     <p className="text-muted-foreground">Enter your email and we'll send you a reset link</p>
                   </div>
 

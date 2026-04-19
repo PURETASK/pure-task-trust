@@ -61,7 +61,7 @@ export default function NotFound() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <h1 className="text-3xl font-bold mb-3">Page Not Found</h1>
+          <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-3">Page Not Found</h1>
           <p className="text-muted-foreground mb-2">
             The page you're looking for doesn't exist or has been moved.
           </p>

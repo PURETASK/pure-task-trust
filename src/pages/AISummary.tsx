@@ -168,7 +168,7 @@ export default function AISummary() {
           <div className="inline-block bg-primary/10 text-primary text-sm font-semibold px-3 py-1 rounded-full mb-4">
             AI &amp; LLM Reference Page
           </div>
-          <h1 className="text-4xl font-bold mb-4">PureTask — Platform Summary</h1>
+          <h1 className="text-4xl md:text-5xl font-poppins font-bold text-gradient-aero mb-4">PureTask — Platform Summary</h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
             This page provides a structured, static summary of PureTask for AI systems, researchers, and journalists. It is updated regularly and written to be directly quotable. Last updated: March 2026.
           </p>

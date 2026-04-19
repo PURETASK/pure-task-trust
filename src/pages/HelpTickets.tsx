@@ -15,7 +15,7 @@ export default function HelpTickets() {
           <Plus className="h-4 w-4 mr-1" /> New ticket
         </Button>
       </div>
-      <h1 className="text-2xl font-bold mb-4">My tickets</h1>
+      <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-4">My tickets</h1>
       <TicketList />
     </div>
   );

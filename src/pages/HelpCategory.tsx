@@ -20,7 +20,7 @@ export default function HelpCategory() {
       <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4">
         <ArrowLeft className="h-4 w-4 mr-1" /> Back
       </Button>
-      <h1 className="text-2xl font-bold capitalize mb-4">{category?.replace(/-/g, " ")}</h1>
+      <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero capitalize mb-4">{category?.replace(/-/g, " ")}</h1>
 
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16" />)}</div>
