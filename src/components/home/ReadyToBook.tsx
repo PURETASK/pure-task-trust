@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Zap } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 
 export function ReadyToBook() {
   return (
@@ -12,19 +12,22 @@ export function ReadyToBook() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="gradient-brand rounded-2xl sm:rounded-3xl py-10 sm:py-14 px-6 sm:px-8 text-center text-white"
+          className="relative overflow-hidden bg-gradient-aero rounded-3xl py-12 sm:py-16 px-6 sm:px-10 text-center text-white shadow-aero-lg"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+          <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-aero-cyan/30 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+
+          <Sparkles className="relative mx-auto mb-3 h-6 w-6 text-white/90 animate-float-y" aria-hidden />
+          <h2 className="relative text-2xl sm:text-3xl md:text-4xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">
             Ready to Book?
           </h2>
-          <p className="text-white/90 text-base sm:text-lg max-w-md mx-auto mb-6 sm:mb-8">
+          <p className="relative text-white/90 text-base sm:text-lg max-w-md mx-auto mb-6 sm:mb-8">
             Find your perfect cleaner and book in minutes
           </p>
 
           <Button
-            variant="glass"
             size="lg"
-            className="bg-white text-pt-blue hover:bg-white/90 border-0 shadow-elevated w-full sm:w-auto"
+            className="relative bg-white text-aero-trust hover:bg-white/90 border-0 shadow-elevated rounded-full font-semibold w-full sm:w-auto"
             asChild
           >
             <Link to="/book">

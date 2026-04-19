@@ -32,10 +32,11 @@ export default {
         
       },
       colors: {
-        // Brand colors
-        "pt-blue": "#0078FF",
-        "pt-aqua": "#00D4FF",
-        "pt-cyan": "#00BCD4",
+        // Brand colors — Clean Aero Glow spec
+        "pt-blue": "#169AF5",        // Electric Service Blue
+        "pt-aqua": "#40E8E0",        // Clean Aqua
+        "pt-cyan": "#40E8E0",        // aligned to Clean Aqua
+        "pt-trust": "#0A3B78",       // Deep Trust Blue
         "pt-green": "#28C76F",
         "pt-amber": "#FFC107",
         "pt-orange": "#FF9800",
