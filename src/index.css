@@ -623,3 +623,28 @@ img {
   font-family: 'Inter';
   font-display: swap;
 }
+
+/* ──────────────────────────────────────
+   AERO GLOW utilities (onboarding/booking)
+   ────────────────────────────────────── */
+@layer utilities {
+  .bg-aero {
+    background-color: hsl(var(--aero-bg));
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(var(--aero-cyan) / 0.15), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 110%, hsl(var(--aero-trust) / 0.10), transparent 60%);
+  }
+  .bg-aero-card { background-color: hsl(var(--aero-card)); }
+  .bg-gradient-aero { background-image: var(--gradient-aero); }
+  .bg-gradient-aero-soft { background-image: var(--gradient-aero-soft); }
+  .text-gradient-aero {
+    background-image: var(--gradient-aero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-aero { box-shadow: var(--shadow-aero); }
+  .shadow-aero-lg { box-shadow: var(--shadow-aero-lg); }
+  .ring-aero-glow { box-shadow: var(--glow-aero); }
+  .border-aero { border-color: hsl(var(--aero-card-border)); }
+}
