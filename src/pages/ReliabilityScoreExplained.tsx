@@ -59,7 +59,7 @@ export default function ReliabilityScoreExplained() {
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center"><Award className="h-5 w-5 text-primary" /></div>
-            <h2 className="text-2xl font-bold">Tier System</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Tier System</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {TIERS.map((t, i) => (
@@ -91,7 +91,7 @@ export default function ReliabilityScoreExplained() {
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center"><Star className="h-5 w-5 text-primary" /></div>
-            <h2 className="text-2xl font-bold">How Your Score is Calculated</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">How Your Score is Calculated</h2>
           </div>
           <div className="space-y-3">
             {SCORING_FACTORS.map((f, i) => (
@@ -142,7 +142,7 @@ export default function ReliabilityScoreExplained() {
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center"><Zap className="h-5 w-5 text-primary" /></div>
-            <h2 className="text-2xl font-bold">Easy Wins to Boost Your Score</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Easy Wins to Boost Your Score</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             {QUICK_WINS.map((w, i) => (
@@ -161,7 +161,7 @@ export default function ReliabilityScoreExplained() {
           <Card className="overflow-hidden border-0">
             <div className="bg-gradient-to-br from-primary via-primary/90 to-violet-600 p-10 text-center text-white">
               <Crown className="h-12 w-12 mx-auto mb-4 opacity-90" />
-              <h2 className="text-3xl font-bold mb-3">Reach Platinum & Maximize Earnings</h2>
+              <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-3">Reach Platinum & Maximize Earnings</h2>
               <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn the highest rates ($20–65/hr), get first access to premium clients, and pay the lowest platform fee (15%)</p>
               <div className="flex flex-wrap gap-4 justify-center">
                 {["Up to $65/hr", "Top placement in search", "VIP client access", "15% platform fee"].map((b) => (

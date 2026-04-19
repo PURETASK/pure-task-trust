@@ -75,7 +75,7 @@ export default function ResetPassword() {
               <div className="h-16 w-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck className="h-8 w-8 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold">Reset Password</h1>
+              <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Reset Password</h1>
               <p className="text-muted-foreground text-sm mt-1">
                 {isReset ? 'Your password has been updated' : 'Create a new secure password'}
               </p>

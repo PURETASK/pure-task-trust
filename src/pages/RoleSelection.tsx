@@ -96,7 +96,7 @@ export default function RoleSelection() {
 
               {/* Content */}
               <div className="p-6 bg-card">
-                <h2 className="text-2xl font-bold mb-1">I need cleaning</h2>
+                <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-1">I need cleaning</h2>
                 <p className="text-muted-foreground mb-5">Book verified, background-checked cleaners for your home or property.</p>
                 <div className="space-y-2.5 mb-5">
                   {CLIENT_PERKS.map((perk, i) => (
@@ -142,7 +142,7 @@ export default function RoleSelection() {
               </div>
 
               <div className="p-6 bg-card">
-                <h2 className="text-2xl font-bold mb-1">I'm a cleaner</h2>
+                <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-1">I'm a cleaner</h2>
                 <p className="text-muted-foreground mb-5">Join our marketplace and build a sustainable cleaning career on your own terms.</p>
                 <div className="space-y-2.5 mb-5">
                   {CLEANER_PERKS.map((perk, i) => (
