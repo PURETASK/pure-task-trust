@@ -243,7 +243,7 @@ function ServiceQuantityCard({
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-center gap-3">
           <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${
-            isCustom ? 'bg-violet-500/10 text-violet-500' : 'bg-primary/10 text-primary'
+            isCustom ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'
           }`}>
             {icon}
           </div>

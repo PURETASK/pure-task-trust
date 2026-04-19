@@ -66,19 +66,19 @@ export function DateTimePicker({
     <div className="space-y-6">
       {/* Same-Day Booking Notice */}
       {isSameDay && (
-        <Card className="bg-amber-500/10 border-amber-500/30">
+        <Card className="bg-warning/10 border-warning/30">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <Zap className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <Zap className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-sm text-amber-700 dark:text-amber-400">Same-Day Booking</p>
+                <p className="font-medium text-sm text-warning">Same-Day Booking</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   A ${SAME_DAY_CONFIG.rushFeeCredits} credit rush fee applies. 
                   Requires {SAME_DAY_CONFIG.minimumHoursNotice} hours notice. 
                   Move-out cleaning not available same-day.
                 </p>
               </div>
-              <Badge variant="outline" className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30 flex-shrink-0">
+              <Badge variant="outline" className="bg-warning/20 text-warning border-warning/30 flex-shrink-0">
                 +{rushFee} credits
               </Badge>
             </div>
@@ -127,7 +127,7 @@ export function DateTimePicker({
         {availableTimeSlots.length === 0 ? (
           <Card className="bg-muted/50">
             <CardContent className="p-6 text-center">
-              <AlertTriangle className="h-8 w-8 text-amber-500 mx-auto mb-3" />
+              <AlertTriangle className="h-8 w-8 text-warning mx-auto mb-3" />
               <p className="font-medium text-sm">No time slots available</p>
               <p className="text-xs text-muted-foreground mt-1">
                 Same-day bookings require {SAME_DAY_CONFIG.minimumHoursNotice} hours notice. 
@@ -173,7 +173,7 @@ export function DateTimePicker({
               </div>
               <div className="flex items-center gap-2">
                 {isSameDay && (
-                  <Badge variant="outline" className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30">
+                  <Badge variant="outline" className="bg-warning/20 text-warning border-warning/30">
                     Rush
                   </Badge>
                 )}
