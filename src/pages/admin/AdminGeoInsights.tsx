@@ -146,7 +146,7 @@ const AdminGeoInsights = () => {
               <Link to="/admin/analytics" className="hover:text-primary">Analytics</Link>
               <span>/</span><span>Geo Insights</span>
             </div>
-            <h1 className="text-3xl font-bold">Geographic Insights</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Geographic Insights</h1>
             <p className="text-muted-foreground mt-1">Demand vs supply heatmap across service areas</p>
           </div>
           <div className="flex items-center gap-2">

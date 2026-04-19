@@ -89,7 +89,7 @@ export default function AdminConversionDashboard() {
             <Link to="/admin/analytics" className="hover:text-primary transition-colors">Analytics</Link>
             <span>/</span><span>Conversion Dashboard</span>
           </div>
-          <h1 className="text-3xl font-bold">Conversion Dashboard</h1>
+          <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Conversion Dashboard</h1>
           <p className="text-muted-foreground mt-1">Track user behavior, conversion funnels, and A/B test performance</p>
         </motion.div>
 

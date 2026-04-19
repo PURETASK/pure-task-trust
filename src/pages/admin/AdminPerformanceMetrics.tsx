@@ -42,7 +42,7 @@ const AdminPerformanceMetrics = () => {
               <Link to="/admin/analytics" className="hover:text-primary transition-colors">Analytics</Link>
               <span>/</span><span>Performance Metrics</span>
             </div>
-            <h1 className="text-3xl font-bold">Performance Metrics</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Performance Metrics</h1>
             <p className="text-muted-foreground mt-1">Live cleaner reliability scores, ratings, and quality metrics</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>

@@ -129,7 +129,7 @@ export default function TrustSafetyDashboard() {
                 <Shield className="h-6 w-6 text-destructive" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Trust & Safety</h1>
+                <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Trust & Safety</h1>
                 <p className="text-sm text-muted-foreground">Prioritized triage queue — resolve signals needing human review</p>
               </div>
             </div>

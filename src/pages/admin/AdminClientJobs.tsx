@@ -177,7 +177,7 @@ export default function AdminClientJobs() {
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
+              <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero flex items-center gap-3">
                 <Calendar className="h-8 w-8 text-primary" />
                 Client Jobs
               </h1>

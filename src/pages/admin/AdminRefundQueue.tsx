@@ -30,7 +30,7 @@ export default function AdminRefundQueue() {
   return (
     <div className="container py-8 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
           <DollarSign className="h-6 w-6 text-primary" /> Refund Queue
         </h1>
         <p className="text-muted-foreground text-sm mt-1">Review and process client refund requests</p>

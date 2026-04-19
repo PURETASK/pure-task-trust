@@ -99,7 +99,7 @@ const AdminPlatformConfig = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-foreground">Platform Configuration</h1>
+                  <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Platform Configuration</h1>
                   {totalChanges > 0 && (
                     <Badge className="bg-warning/10 text-warning border-warning/20 text-xs">{totalChanges} unsaved</Badge>
                   )}
