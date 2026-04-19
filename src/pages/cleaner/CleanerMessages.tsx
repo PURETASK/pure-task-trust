@@ -75,9 +75,9 @@ export default function CleanerMessages() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">Messages</h1>
+            <h1 className="text-2xl sm:text-3xl font-poppins font-bold tracking-tight">Messages</h1>
             {totalUnread > 0 && (
-              <Badge className="bg-primary text-primary-foreground h-6 px-2 font-bold">{totalUnread}</Badge>
+              <Badge className="bg-gradient-aero text-white border-0 h-6 px-2 font-bold shadow-aero">{totalUnread}</Badge>
             )}
           </div>
         </div>

@@ -145,7 +145,7 @@ function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: num
       }`}
       style={{ background: "hsl(var(--card))" }}
     >
-      <div className={`h-1.5 w-full ${isInProgress ? "bg-gradient-to-r from-warning to-warning/70" : "bg-gradient-to-r from-primary to-primary/70"}`} />
+      <div className={`h-1.5 w-full ${isInProgress ? "bg-gradient-to-r from-warning to-warning/70" : "bg-gradient-aero"}`} />
 
       <div className="p-5 space-y-4">
         {/* TOP ROW */}

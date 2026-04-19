@@ -87,7 +87,7 @@ export default function JobInProgress() {
           {/* Status Header */}
           <div className="text-center mb-8">
             <div className="relative mx-auto w-24 h-24 mb-5">
-              <div className={`h-24 w-24 rounded-3xl flex items-center justify-center text-2xl font-bold ${isCompleted ? 'bg-success/10' : isInProgress ? 'bg-primary/10' : 'bg-secondary'}`}>
+              <div className={`h-24 w-24 rounded-3xl flex items-center justify-center text-2xl font-poppins font-bold shadow-aero ${isCompleted ? 'bg-success/10' : isInProgress ? 'bg-gradient-aero text-white animate-aero-pulse' : 'bg-secondary'}`}>
                 {isCompleted ? '✅' : isInProgress ? '🧹' : cleanerName.charAt(0)}
               </div>
               {isInProgress && (
@@ -101,7 +101,7 @@ export default function JobInProgress() {
               {isInProgress && <div className="h-2 w-2 rounded-full bg-current animate-pulse" />}
               {statusBadge.label}
             </div>
-            <h1 className="text-2xl font-bold mb-1">
+            <h1 className="text-2xl sm:text-3xl font-poppins font-bold mb-1 tracking-tight">
               {isCompleted ? 'Cleaning Complete!' : isInProgress ? 'Cleaning in Progress' : 'Your Cleaner is Confirmed'}
             </h1>
             <p className="text-muted-foreground text-sm">

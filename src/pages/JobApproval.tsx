@@ -122,11 +122,11 @@ export default function JobApproval() {
 
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="h-16 w-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="h-8 w-8 text-success" />
+              <div className="h-16 w-16 rounded-3xl bg-gradient-aero flex items-center justify-center mx-auto mb-4 shadow-aero animate-aero-pulse">
+                <Sparkles className="h-8 w-8 text-white" />
               </div>
               <Badge variant="success" className="mb-3">Cleaning Complete</Badge>
-              <h1 className="text-2xl font-bold mb-2">Review & Approve</h1>
+              <h1 className="text-2xl sm:text-3xl font-poppins font-bold mb-2 tracking-tight">Review &amp; Approve</h1>
               <p className="text-muted-foreground">
                 {hasPhotos
                   ? "Check the photos and approve, or report an issue within 24 hours — payment releases automatically after that"
