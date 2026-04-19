@@ -54,8 +54,8 @@ export default function Dashboard() {
         {/* ── GREETING ─────────────────────────────────────────────────── */}
         <motion.div {...fade(0)} className="mb-6 sm:mb-8">
           <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Hello, <span className="gradient-brand-text">{firstName}</span>
+          <h1 className="text-2xl sm:text-3xl font-poppins font-bold tracking-tight">
+            Hello, <span className="text-gradient-aero">{firstName}</span>
           </h1>
         </motion.div>
 
