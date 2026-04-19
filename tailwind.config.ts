@@ -135,6 +135,27 @@ export default {
         soft: "var(--shadow-soft)",
         card: "var(--shadow-card)",
         elevated: "var(--shadow-elevated)",
+        "tier-1": "var(--shadow-tier-1)",
+        "tier-2": "var(--shadow-tier-2)",
+        "tier-3": "var(--shadow-tier-3)",
+      },
+      backgroundImage: {
+        "gradient-hero":    "var(--gradient-hero)",
+        "gradient-button":  "var(--gradient-button)",
+        "gradient-icon":    "var(--gradient-icon)",
+        "gradient-confirm": "var(--gradient-confirm)",
+        "gradient-brand":   "var(--gradient-brand)",
+        "gradient-aero":    "var(--gradient-aero)",
+      },
+      transitionTimingFunction: {
+        "brand-out": "cubic-bezier(0.2, 0, 0, 1)",
+        "brand-spring": "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      transitionDuration: {
+        "micro": "120ms",
+        "control": "220ms",
+        "reveal": "340ms",
+        "confirm": "560ms",
       },
       keyframes: {
         "accordion-down": {
