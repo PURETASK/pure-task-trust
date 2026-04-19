@@ -111,8 +111,8 @@ export default function AdminAnalyticsDashboard() {
           className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4"
         >
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Analytics Hub</h1>
-            <p className="text-muted-foreground mt-1">Real-time business intelligence for PureTask</p>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Analytics Hub</h1>
+            <p className="text-aero-soft mt-1">Real-time business intelligence for PureTask</p>
           </div>
           <div className="flex items-center gap-3">
             <AdminCommandPalette />
