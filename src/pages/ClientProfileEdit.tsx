@@ -166,7 +166,7 @@ export default function ClientProfileEdit() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Edit Profile</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Edit Profile</h1>
             <p className="text-muted-foreground mt-1">Update your personal information</p>
           </div>
         </div>

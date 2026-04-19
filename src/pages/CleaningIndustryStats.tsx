@@ -222,7 +222,7 @@ export default function CleaningIndustryStats() {
             <div className="h-10 w-10 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
               <BarChart2 className="h-5 w-5 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Market Overview</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Market Overview</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {HEADLINE_STATS.map((s, i) => {
@@ -250,7 +250,7 @@ export default function CleaningIndustryStats() {
             <div className="h-10 w-10 rounded-2xl bg-success/10 border-2 border-success/30 flex items-center justify-center">
               <DollarSign className="h-5 w-5 text-success" />
             </div>
-            <h2 className="text-2xl font-bold">Cleaner Earnings by Experience Tier</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Cleaner Earnings by Experience Tier</h2>
           </div>
           <p className="text-muted-foreground mb-5 text-sm ml-1">Based on PureTask platform data and industry benchmarks. Rates reflect net take-home after platform fees.</p>
           <div className="space-y-3">
@@ -281,7 +281,7 @@ export default function CleaningIndustryStats() {
             <div className="h-10 w-10 rounded-2xl bg-warning/10 border-2 border-warning/30 flex items-center justify-center">
               <BarChart2 className="h-5 w-5 text-warning" />
             </div>
-            <h2 className="text-2xl font-bold">National Average Cleaning Prices (2025)</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">National Average Cleaning Prices (2025)</h2>
           </div>
           <p className="text-muted-foreground mb-5 text-sm ml-1">National US benchmarks aggregated from HomeAdvisor, Angi, Thumbtack, and PureTask platform data.</p>
           <div className="space-y-3">
@@ -318,7 +318,7 @@ export default function CleaningIndustryStats() {
             <div className="h-10 w-10 rounded-2xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center">
               <Users className="h-5 w-5 text-[hsl(var(--pt-purple))]" />
             </div>
-            <h2 className="text-2xl font-bold">Consumer Booking Behavior</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Consumer Booking Behavior</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {BOOKING_INSIGHTS.map((b) => (
@@ -340,7 +340,7 @@ export default function CleaningIndustryStats() {
             <div className="h-10 w-10 rounded-2xl bg-success/10 border-2 border-success/30 flex items-center justify-center">
               <TrendingUp className="h-5 w-5 text-success" />
             </div>
-            <h2 className="text-2xl font-bold">Industry Trends & Insights</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Industry Trends & Insights</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             {TREND_SECTIONS.map((section, si) => (
@@ -390,7 +390,7 @@ export default function CleaningIndustryStats() {
 
         {/* ── Free Tools ── */}
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-2xl font-bold mb-5">Explore Our Free Tools</h2>
+          <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-5">Explore Our Free Tools</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {FREE_TOOLS.map(({ title, desc, href, cta, borderClass, bgClass, color }) => (
               <div key={title} className={`rounded-3xl border-2 ${borderClass} ${bgClass} p-5`}>
@@ -407,7 +407,7 @@ export default function CleaningIndustryStats() {
         {/* ── Share CTA ── */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/6 via-background to-[hsl(var(--pt-purple))]/5 p-8 sm:p-12 text-center">
-            <h2 className="text-2xl font-bold mb-2">Writing about the cleaning industry?</h2>
+            <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-2">Writing about the cleaning industry?</h2>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
               Link to this page for accurate, up-to-date statistics. We update it quarterly and welcome corrections or additional data sources.
             </p>
