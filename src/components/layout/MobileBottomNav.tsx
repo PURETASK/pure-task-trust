@@ -95,7 +95,14 @@ export function MobileBottomNav() {
           const active   = isActive(item);
           const isMsgs   = item.path === messagesPath;
           const isAlerts = item.path === "/admin/fraud-alerts";
-          const badge    = isMsgs ? unreadMessages : isAlerts ? notifCount : 0;
+          const isAccount = item.path === "/account" || item.path === "/cleaner/profile/view";
+          const badge    = isMsgs
+            ? unreadMessages
+            : isAlerts
+              ? notifCount
+              : isAccount
+                ? unreadTickets
+                : 0;
 
           return (
             <Link
