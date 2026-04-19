@@ -6,3 +6,4 @@ export { FlowChip } from "./FlowChip";
 export { FlowNav } from "./FlowNav";
 export { FlowSummary, SummaryRow } from "./FlowSummary";
 export { FlowInput, FlowTextarea } from "./FlowInput";
+export { DashCelebration } from "./DashCelebration";
