@@ -52,7 +52,7 @@ const AdminClientRisk = () => {
               <Link to="/admin/trust-safety" className="hover:text-primary transition-colors">Trust & Safety</Link>
               <span>/</span><span>Client Risk Scores</span>
             </div>
-            <h1 className="text-3xl font-bold">Client Risk Scores</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Client Risk Scores</h1>
             <p className="text-muted-foreground mt-1">Risk scores from cancellation history and dispute frequency</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>

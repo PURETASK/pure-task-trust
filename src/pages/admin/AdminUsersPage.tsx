@@ -71,7 +71,7 @@ export default function AdminUsersPage() {
                 <Users className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">User Management</h1>
+                <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">User Management</h1>
                 <p className="text-sm text-muted-foreground">View and inspect all platform users</p>
               </div>
             </div>

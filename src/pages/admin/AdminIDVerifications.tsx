@@ -112,7 +112,7 @@ export default function AdminIDVerifications() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold">ID Verifications</h1>
+                  <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">ID Verifications</h1>
                   {pendingCount > 0 && (
                     <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 text-xs">
                       <AlertTriangle className="h-3 w-3 mr-1" />{pendingCount} pending

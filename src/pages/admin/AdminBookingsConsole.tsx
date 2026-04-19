@@ -156,7 +156,7 @@ export default function AdminBookingsConsole() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Bookings Console</h1>
+              <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Bookings Console</h1>
               <p className="text-muted-foreground">{filteredJobs.length} of {allJobs.length} bookings</p>
             </div>
             <div className="flex gap-2">

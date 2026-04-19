@@ -132,7 +132,7 @@ export default function AdminPricingManagement() {
                 <Settings className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Pricing Management</h1>
+                <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Pricing Management</h1>
                 <p className="text-sm text-muted-foreground">Dynamic pricing rules and credit bundle offers</p>
               </div>
             </div>

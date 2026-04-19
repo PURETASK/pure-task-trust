@@ -48,7 +48,7 @@ const AdminGrowthDashboard = () => {
               <Link to="/admin/analytics" className="hover:text-primary">Analytics</Link>
               <span>/</span><span>Growth Dashboard</span>
             </div>
-            <h1 className="text-3xl font-bold text-foreground">Growth Dashboard</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Growth Dashboard</h1>
             <p className="text-muted-foreground mt-1">Live user acquisition, funnel metrics, and subscription growth</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>

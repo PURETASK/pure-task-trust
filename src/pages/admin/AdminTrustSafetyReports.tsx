@@ -59,7 +59,7 @@ const AdminTrustSafetyReports = () => {
               <Link to="/admin/trust-safety" className="hover:text-primary transition-colors">Trust & Safety</Link>
               <span>/</span><span>Reports & Analytics</span>
             </div>
-            <h1 className="text-3xl font-bold">Reports & Analytics</h1>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Reports & Analytics</h1>
             <p className="text-muted-foreground mt-1">Trust & safety metrics and trends</p>
           </div>
           <div className="flex items-center gap-2">

@@ -12,7 +12,7 @@ export default function AdminWebhookLog() {
   return (
     <div className="container py-8 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
           <Webhook className="h-6 w-6 text-primary" /> Webhook Event Log
         </h1>
         <p className="text-muted-foreground text-sm mt-1">All incoming Stripe webhook events for debugging</p>

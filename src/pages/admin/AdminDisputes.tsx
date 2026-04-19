@@ -146,7 +146,7 @@ const AdminDisputes = () => {
                 <MessageSquare className="h-6 w-6 text-destructive" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Disputes Management</h1>
+                <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Disputes Management</h1>
                 <p className="text-sm text-muted-foreground">Review, investigate, and resolve customer disputes</p>
               </div>
             </div>
