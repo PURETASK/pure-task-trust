@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { useMessageThreads } from "@/hooks/useMessages";
 import { useInAppNotifications } from "@/hooks/useInAppNotifications";
+import { useUnreadTicketsCount } from "@/hooks/useUnreadTickets";
 
 interface NavItem {
   icon: React.ElementType;
@@ -63,6 +64,7 @@ export function MobileBottomNav() {
   const { user } = useAuth();
   const threadsQuery = useMessageThreads();
   const { unreadCount: notifCount } = useInAppNotifications();
+  const unreadTickets = useUnreadTicketsCount();
   const unreadMessages =
     threadsQuery.data?.reduce((sum, t) => sum + (t.unreadCount || 0), 0) ?? 0;
 
