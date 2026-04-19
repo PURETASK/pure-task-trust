@@ -3425,8 +3425,10 @@ export type Database = {
           body: string
           category: string
           created_at: string
+          helpful_count: number
           id: string
           is_published: boolean
+          not_helpful_count: number
           role: string
           slug: string
           summary: string | null
@@ -3439,8 +3441,10 @@ export type Database = {
           body: string
           category: string
           created_at?: string
+          helpful_count?: number
           id?: string
           is_published?: boolean
+          not_helpful_count?: number
           role?: string
           slug: string
           summary?: string | null
@@ -3453,8 +3457,10 @@ export type Database = {
           body?: string
           category?: string
           created_at?: string
+          helpful_count?: number
           id?: string
           is_published?: boolean
+          not_helpful_count?: number
           role?: string
           slug?: string
           summary?: string | null
@@ -6472,6 +6478,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_ticket_owner: {
+        Args: { _ticket_id: string; _user_id: string }
         Returns: boolean
       }
       move_to_dlq: {
