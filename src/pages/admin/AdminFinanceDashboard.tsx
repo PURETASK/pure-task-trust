@@ -84,8 +84,8 @@ const AdminFinanceDashboard = () => {
               <Link to="/admin/analytics" className="hover:text-primary transition-colors">Analytics</Link>
               <span>/</span><span>Finance Dashboard</span>
             </div>
-            <h1 className="text-3xl font-bold">Finance Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Live financial breakdown, payouts, refunds, and margins</p>
+            <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Finance Dashboard</h1>
+            <p className="text-aero-soft mt-1">Live financial breakdown, payouts, refunds, and margins</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />Refresh
