@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAutoRebook } from "@/hooks/useAutoRebook";
 import { useReceipt } from "@/hooks/useReceipt";
 import { RecurringUpsellModal } from "@/components/flow/booking/RecurringUpsellModal";
+import { DashCelebration } from "@/components/flow";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
@@ -104,19 +105,29 @@ export default function BookingStatus() {
       <div className="container max-w-lg">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
 
-          {/* Status Hero */}
-          <div className="text-center pt-4 pb-2">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className={`h-20 w-20 rounded-3xl ${config.bg} border-2 ${config.border} flex items-center justify-center mx-auto mb-4`}
-            >
-              <StatusIcon className={`h-10 w-10 ${config.color} ${statusKey === "active" ? "animate-pulse" : ""}`} />
-            </motion.div>
-            <h1 className="text-2xl font-black mb-2">{config.label}</h1>
-            <p className="text-muted-foreground max-w-xs mx-auto">{config.desc}</p>
-          </div>
+          {/* Status Hero — Aero celebration for confirmed/completed */}
+          {(statusKey === "accepted" || statusKey === "completed") ? (
+            <div className="rounded-3xl bg-aero border-2 border-aero p-6 shadow-aero">
+              <DashCelebration
+                title={config.label}
+                subtitle={config.desc}
+                size="md"
+              />
+            </div>
+          ) : (
+            <div className="text-center pt-4 pb-2">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className={`h-20 w-20 rounded-3xl ${config.bg} border-2 ${config.border} flex items-center justify-center mx-auto mb-4`}
+              >
+                <StatusIcon className={`h-10 w-10 ${config.color} ${statusKey === "active" ? "animate-pulse" : ""}`} />
+              </motion.div>
+              <h1 className="text-2xl font-black mb-2">{config.label}</h1>
+              <p className="text-muted-foreground max-w-xs mx-auto">{config.desc}</p>
+            </div>
+          )}
 
           {/* Progress Timeline */}
           {statusKey !== "declined" && statusKey !== "no_show_pending" && (
