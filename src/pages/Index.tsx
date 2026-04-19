@@ -139,7 +139,7 @@ export default function Index() {
               className="text-[2.25rem] xs:text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] sm:leading-[1.05] mb-4 sm:mb-6 tracking-tight"
             >
               Book trusted cleaners{" "}
-              <span className="bg-gradient-to-r from-primary to-[hsl(var(--pt-aqua))] bg-clip-text text-transparent">
+              <span className="text-gradient-aero font-poppins">
                 in minutes.
               </span>
             </motion.h1>
@@ -155,12 +155,12 @@ export default function Index() {
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
               className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-stretch xs:items-center sm:items-start"
             >
-              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-12 sm:h-14 rounded-2xl shadow-elevated w-full xs:w-auto">
+              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-12 sm:h-14 rounded-full bg-gradient-aero hover:opacity-95 border-0 shadow-aero-lg w-full xs:w-auto font-semibold">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-2xl border-border/60 w-full xs:w-auto bg-background/80 backdrop-blur-sm">
+              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-full border-aero w-full xs:w-auto bg-background/80 backdrop-blur-sm font-medium">
                 <Link to="/discover">Browse Cleaners</Link>
               </Button>
             </motion.div>
@@ -182,15 +182,16 @@ export default function Index() {
         <div className="relative">
 
       {/* ── PROOF BAR ─────────────────────────────────────────────────── */}
-      <section className="bg-primary py-4 sm:py-6">
-        <div className="container">
+      <section className="bg-gradient-aero py-4 sm:py-6 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
+        <div className="container relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-3 sm:gap-6">
             {PROOF_BAR.map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                className="flex items-center justify-center gap-2 sm:gap-3 text-primary-foreground"
+                className="flex items-center justify-center gap-2 sm:gap-3 text-white"
               >
                 <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                 <span className="text-[11px] sm:text-sm font-semibold leading-tight text-center sm:text-left">{item.label}</span>
@@ -207,8 +208,8 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">Why PureTask</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">Why PureTask</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">
               Why PureTask feels safer than traditional booking
             </h2>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -255,8 +256,8 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 hover:bg-success/10">Simple Process</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">How it works in 4 steps</h2>
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">Simple Process</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">How it works in 4 steps</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -270,11 +271,11 @@ export default function Index() {
                 {i < STEPS.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
                 )}
-                <div className="text-4xl sm:text-6xl font-black text-primary/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
-                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0">
-                  <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                <div className="text-4xl sm:text-6xl font-poppins font-bold text-aero-cyan/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
+                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-aero-cyan/15 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0 shadow-aero">
+                  <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-aero-trust" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
+                <h3 className="text-lg sm:text-xl font-poppins font-bold mb-2">{s.title}</h3>
                 <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
@@ -288,10 +289,10 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
           >
-            <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 hover:bg-warning/10">
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">
               What People Say
             </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">Hear from our community</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold tracking-tight">Hear from our community</h2>
           </motion.div>
           <TestimonialsCarousel />
         </div>
@@ -305,12 +306,12 @@ export default function Index() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <Quote className="h-10 w-10 sm:h-12 sm:w-12 text-primary/30 mx-auto mb-6" />
+            <Quote className="h-10 w-10 sm:h-12 sm:w-12 text-aero-cyan/50 mx-auto mb-6" />
             <p className="text-lg sm:text-xl md:text-2xl text-foreground leading-relaxed mb-6 sm:mb-8 italic">
               We built PureTask because we were tired of the same old booking experience — no transparency, no accountability, and no way to know if the job was actually done well. So we started from scratch. GPS tracking, photo proof, escrow payments. Every feature exists because we asked: "Would this make us trust a stranger in our home?"
             </p>
             <div className="flex flex-col items-center gap-1">
-              <p className="font-bold text-foreground text-base sm:text-lg">The PureTask Team</p>
+              <p className="font-poppins font-bold text-aero-trust text-base sm:text-lg">The PureTask Team</p>
               <p className="text-sm text-muted-foreground">Building a cleaning platform we'd actually want to use.</p>
             </div>
           </motion.div>
