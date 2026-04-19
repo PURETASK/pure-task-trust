@@ -59,7 +59,7 @@ const CHECKLISTS: ChecklistDef[] = [
     title: 'Deep Clean Checklist',
     subtitle: 'A thorough top-to-bottom clean — recommended every 3–6 months.',
     icon: Sparkles,
-    color: 'from-[hsl(var(--pt-purple))] to-violet-400',
+    color: 'from-[hsl(var(--pt-purple))] to-accent',
     badge: 'Quarterly recommended',
     time: '4–8 hours',
     items: [

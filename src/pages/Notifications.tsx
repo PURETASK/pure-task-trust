@@ -24,9 +24,9 @@ const typeEmoji: Record<string, string> = {
 };
 
 const typeBg: Record<string, string> = {
-  booking: "bg-primary/10", job_started: "bg-blue-500/10", job_completed: "bg-success/10",
-  payment: "bg-violet-500/10", review: "bg-amber-500/10", dispute: "bg-destructive/10",
-  referral: "bg-pink-500/10", payout: "bg-emerald-500/10", message: "bg-cyan-500/10",
+  booking: "bg-primary/10", job_started: "bg-primary/10", job_completed: "bg-success/10",
+  payment: "bg-accent/10", review: "bg-warning/10", dispute: "bg-destructive/10",
+  referral: "bg-destructive/10", payout: "bg-success/10", message: "bg-primary/10",
 };
 
 const FILTER_TYPE_MAP: Record<string, string[]> = {

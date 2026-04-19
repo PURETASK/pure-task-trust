@@ -19,22 +19,22 @@ export interface TrustQueueItemData {
 }
 
 const TYPE_CONFIG: Record<TrustQueueItemType, { icon: any; label: string; color: string }> = {
-  EXPIRED_ID: { icon: FileX, label: "Expired ID", color: "text-orange-600" },
+  EXPIRED_ID: { icon: FileX, label: "Expired ID", color: "text-warning" },
   BACKGROUND_FAIL: { icon: Shield, label: "Background Check Failed", color: "text-destructive" },
   FLAGGED_REVIEW: { icon: Star, label: "Flagged Review", color: "text-warning" },
-  HIGH_RISK_CLIENT: { icon: AlertTriangle, label: "High Risk Client", color: "text-orange-600" },
+  HIGH_RISK_CLIENT: { icon: AlertTriangle, label: "High Risk Client", color: "text-warning" },
   FRAUD_ALERT: { icon: AlertTriangle, label: "Fraud Alert", color: "text-destructive" },
 };
 
 const SEVERITY_STYLES: Record<TrustSeverity, string> = {
   critical: "border-destructive/30 bg-destructive/5",
-  high: "border-orange-500/30 bg-orange-500/5",
+  high: "border-warning/30 bg-warning/5",
   medium: "border-warning/30 bg-warning/5",
 };
 
 const SEVERITY_BADGE: Record<TrustSeverity, string> = {
   critical: "bg-destructive/10 text-destructive border-destructive/30",
-  high: "bg-orange-500/10 text-orange-600 border-orange-500/30",
+  high: "bg-warning/10 text-warning border-warning/30",
   medium: "bg-warning/10 text-warning border-warning/30",
 };
 

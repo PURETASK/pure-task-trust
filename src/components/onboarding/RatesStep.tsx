@@ -30,7 +30,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
 
   const weeklyLow = Math.round(hourlyRate * 2 * 5);
   const weeklyHigh = Math.round(hourlyRate * 4 * 5);
-  const sliderClass = "[&_[role=slider]]:bg-green-400 [&_[role=slider]]:border-green-500 [&_.relative]:bg-white/20";
+  const sliderClass = "[&_[role=slider]]:bg-success [&_[role=slider]]:border-success [&_.relative]:bg-white/20";
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3 }} className="space-y-5">
@@ -43,8 +43,8 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       {/* Earnings projection */}
       <div className="p-4 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.12), rgba(74,222,128,0.04))', border: '1px solid rgba(74,222,128,0.25)' }}>
         <div className="flex items-center gap-2 mb-1">
-          <TrendingUp className="h-4 w-4 text-green-400" />
-          <span className="text-green-400 text-xs font-semibold uppercase tracking-wide">Estimated weekly earnings</span>
+          <TrendingUp className="h-4 w-4 text-success" />
+          <span className="text-success text-xs font-semibold uppercase tracking-wide">Estimated weekly earnings</span>
         </div>
         <div className="flex items-baseline gap-1">
           <span className="text-3xl font-poppins font-bold text-white">${weeklyLow}–${weeklyHigh}</span>
@@ -57,7 +57,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Your hourly rate</Label>
-          <span className="text-3xl font-poppins font-bold text-green-400">${hourlyRate}</span>
+          <span className="text-3xl font-poppins font-bold text-success">${hourlyRate}</span>
         </div>
         <Slider value={[hourlyRate]} onValueChange={(v) => setHourlyRate(v[0])} min={20} max={65} step={1} className={`py-2 ${sliderClass}`} />
         <div className="flex justify-between text-xs text-white/30"><span>$20/hr</span><span>$65/hr</span></div>
@@ -71,8 +71,8 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
             <div key={tier.id} className="p-3 rounded-xl transition-all" style={{ background: active ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', border: `1px solid ${active ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.08)'}` }}>
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span>{tier.emoji}</span>
-                <span className={`text-sm font-semibold ${active ? 'text-green-400' : 'text-white/60'}`}>{tier.label}</span>
-                {active && <span className="ml-auto text-[10px] font-poppins font-bold text-green-400 uppercase">You</span>}
+                <span className={`text-sm font-semibold ${active ? 'text-success' : 'text-white/60'}`}>{tier.label}</span>
+                {active && <span className="ml-auto text-[10px] font-poppins font-bold text-success uppercase">You</span>}
               </div>
               <div className={`text-xs font-bold ${active ? 'text-white' : 'text-white/40'}`}>{tier.range}/hr</div>
             </div>
@@ -92,7 +92,7 @@ export function RatesStep({ initialData, onSubmit, onBack, isSubmitting }: Rates
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
-        <Button onClick={() => onSubmit({ hourlyRate, travelRadius })} disabled={isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button onClick={() => onSubmit({ hourlyRate, travelRadius })} disabled={isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>

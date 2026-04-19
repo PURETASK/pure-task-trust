@@ -39,9 +39,9 @@ export function ReferralCard({
   if (variant === "compact") {
     return (
       <Card className={`overflow-hidden ${className}`}>
-        <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 p-4">
+        <div className="bg-gradient-to-r from-destructive/10 to-accent/10 p-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center flex-shrink-0">
               <Gift className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
@@ -116,9 +116,9 @@ export function ReferralCard({
   // Full variant - larger display with more stats
   return (
     <Card className={`overflow-hidden ${className}`}>
-      <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 p-6 border-b">
+      <div className="bg-gradient-to-r from-destructive/10 to-accent/10 p-6 border-b">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center">
             <Gift className="h-7 w-7 text-white" />
           </div>
           <div>
@@ -138,8 +138,8 @@ export function ReferralCard({
             {isLoadingCode ? (
               <Skeleton className="h-14 flex-1" />
             ) : (
-              <div className="flex-1 bg-gradient-to-r from-pink-500/5 to-purple-500/5 border-2 border-dashed border-pink-500/30 rounded-xl px-6 py-3 text-center">
-                <span className="text-2xl font-bold tracking-wider bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+              <div className="flex-1 bg-gradient-to-r from-destructive/5 to-accent/5 border-2 border-dashed border-destructive/30 rounded-xl px-6 py-3 text-center">
+                <span className="text-2xl font-bold tracking-wider bg-gradient-to-r from-destructive to-accent bg-clip-text text-transparent">
                   {referralCode?.code || 'Loading...'}
                 </span>
               </div>

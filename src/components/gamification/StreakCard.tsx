@@ -18,7 +18,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
       <Card>
         <CardHeader className={compact ? "pb-2" : undefined}>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Flame className="h-5 w-5 text-orange-500" />
+            <Flame className="h-5 w-5 text-warning" />
             Weekly Streak
           </CardTitle>
         </CardHeader>
@@ -47,7 +47,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
     <Card>
       <CardHeader className={compact ? "pb-2" : undefined}>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Flame className={`h-5 w-5 ${currentStreakCount > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+          <Flame className={`h-5 w-5 ${currentStreakCount > 0 ? 'text-warning' : 'text-muted-foreground'}`} />
           Weekly Streak
         </CardTitle>
       </CardHeader>
@@ -57,7 +57,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
           <div className="flex items-center gap-3">
             <div className={`h-14 w-14 rounded-full flex items-center justify-center ${
               currentStreakCount > 0 
-                ? 'bg-gradient-to-br from-orange-400 to-red-500 text-white' 
+                ? 'bg-gradient-to-br from-warning to-destructive text-white' 
                 : 'bg-muted text-muted-foreground'
             }`}>
               <span className="text-2xl font-bold">{currentStreakCount}</span>
@@ -71,7 +71,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
           </div>
           
           {hasCurrentWeekStreak ? (
-            <Badge className="bg-emerald-500 hover:bg-emerald-600">
+            <Badge className="bg-success hover:bg-success">
               <TrendingUp className="h-3 w-3 mr-1" />
               On Track
             </Badge>
@@ -95,7 +95,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
                   key={week.weekKey}
                   className={`flex-1 h-8 rounded-md flex items-center justify-center text-xs font-medium transition-colors ${
                     week.isStreak 
-                      ? 'bg-gradient-to-br from-orange-400 to-red-500 text-white' 
+                      ? 'bg-gradient-to-br from-warning to-destructive text-white' 
                       : week.isCurrent 
                         ? 'bg-muted border-2 border-dashed border-muted-foreground/30' 
                         : 'bg-muted text-muted-foreground'
@@ -110,8 +110,8 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
         )}
 
         {!compact && currentStreakCount >= 4 && (
-          <div className="mt-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+          <div className="mt-4 p-3 bg-gradient-to-r from-warning to-warning dark:from-warning/20 dark:to-warning/20 rounded-lg border border-warning dark:border-warning">
+            <p className="text-sm font-medium text-warning dark:text-warning">
               🔥 You're on fire! {currentStreakCount} week streak bonus: +${currentStreakCount * 25}
             </p>
           </div>

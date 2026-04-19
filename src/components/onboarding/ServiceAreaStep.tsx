@@ -39,12 +39,12 @@ export function ServiceAreaStep({ initialData, onSubmit, onBack, isSubmitting }:
       <div className="p-4 rounded-2xl space-y-3" style={{ background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.2)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Radio className="h-4 w-4 text-green-400" />
+            <Radio className="h-4 w-4 text-success" />
             <Label className="text-white/80 font-semibold text-sm">Travel radius</Label>
           </div>
-          <span className="text-2xl font-poppins font-bold text-green-400">{travelRadius}<span className="text-sm font-medium text-white/60 ml-1">mi</span></span>
+          <span className="text-2xl font-poppins font-bold text-success">{travelRadius}<span className="text-sm font-medium text-white/60 ml-1">mi</span></span>
         </div>
-        <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className="py-1 [&_[role=slider]]:bg-green-400 [&_[role=slider]]:border-green-400 [&_.relative]:bg-white/20 [&_[data-orientation=horizontal]]:bg-white/20" />
+        <Slider value={[travelRadius]} onValueChange={(v) => setTravelRadius(v[0])} min={5} max={50} step={5} className="py-1 [&_[role=slider]]:bg-success [&_[role=slider]]:border-success [&_.relative]:bg-white/20 [&_[data-orientation=horizontal]]:bg-white/20" />
         <div className="flex justify-between text-xs text-white/30"><span>5 mi</span><span>50 mi</span></div>
       </div>
 
@@ -62,9 +62,9 @@ export function ServiceAreaStep({ initialData, onSubmit, onBack, isSubmitting }:
         <div className="flex gap-2">
           <div className="relative flex-1">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-            <Input placeholder="90210" value={zipCodeInput} onChange={(e) => setZipCodeInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAdd())} maxLength={10} className="pl-9 h-11 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-green-400" />
+            <Input placeholder="90210" value={zipCodeInput} onChange={(e) => setZipCodeInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAdd())} maxLength={10} className="pl-9 h-11 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-success" />
           </div>
-          <Button type="button" onClick={handleAdd} disabled={!isValidZip || selectedAreas.includes(zipCodeInput.trim())} className="h-11 px-4 rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+          <Button type="button" onClick={handleAdd} disabled={!isValidZip || selectedAreas.includes(zipCodeInput.trim())} className="h-11 px-4 rounded-xl bg-success hover:bg-success text-white border-0">
             <Plus className="h-4 w-4" />
           </Button>
         </div>
@@ -92,7 +92,7 @@ export function ServiceAreaStep({ initialData, onSubmit, onBack, isSubmitting }:
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
-        <Button onClick={() => selectedAreas.length > 0 && onSubmit({ travelRadius, selectedAreas })} disabled={selectedAreas.length === 0 || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button onClick={() => selectedAreas.length > 0 && onSubmit({ travelRadius, selectedAreas })} disabled={selectedAreas.length === 0 || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>

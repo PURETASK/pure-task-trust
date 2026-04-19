@@ -21,7 +21,7 @@ export function PlatformFee() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-cyan-50 to-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-soft border border-cyan-100"
+          className="bg-gradient-to-br from-primary to-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-soft border border-primary"
         >
           <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-5 sm:mb-6">
             <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl bg-white shadow-soft flex items-center justify-center flex-shrink-0">

@@ -55,7 +55,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
               <AvatarImage src={photoUrl || undefined} alt={fullName} />
               <AvatarFallback className="text-lg font-bold" style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }}>{initials}</AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-amber-500 flex items-center justify-center">
+            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-warning flex items-center justify-center">
               <CheckCircle2 className="h-3 w-3 text-white" />
             </div>
           </div>
@@ -63,7 +63,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
             <h3 className="font-bold text-lg text-white">{fullName}</h3>
             <p className="text-sm text-white/40 line-clamp-1">{bio || 'No bio yet'}</p>
             {hourlyRate && (
-              <span className="inline-block mt-1.5 text-xs px-2.5 py-0.5 rounded-full font-semibold text-amber-400" style={{ background: 'rgba(251,191,36,0.12)' }}>
+              <span className="inline-block mt-1.5 text-xs px-2.5 py-0.5 rounded-full font-semibold text-warning" style={{ background: 'rgba(251,191,36,0.12)' }}>
                 ${hourlyRate}/hr
               </span>
             )}
@@ -75,7 +75,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-white/50 text-xs font-semibold uppercase tracking-wide">Setup checklist</span>
-          <span className="text-xs text-amber-400 font-medium">{done}/{CHECKLIST.length} complete</span>
+          <span className="text-xs text-warning font-medium">{done}/{CHECKLIST.length} complete</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {CHECKLIST.map(({ icon: Icon, label, key }, i) => (
@@ -90,7 +90,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
                 border: `1px solid ${checks[key] ? 'rgba(251,191,36,0.2)' : 'rgba(255,255,255,0.06)'}`,
               }}
             >
-              {checks[key] ? <CheckCircle2 className="h-4 w-4 text-amber-400 flex-shrink-0" /> : <Icon className="h-4 w-4 text-white/25 flex-shrink-0" />}
+              {checks[key] ? <CheckCircle2 className="h-4 w-4 text-warning flex-shrink-0" /> : <Icon className="h-4 w-4 text-white/25 flex-shrink-0" />}
               <span className={`text-xs font-medium ${checks[key] ? 'text-white/70' : 'text-white/30'}`}>{label}</span>
             </motion.div>
           ))}
@@ -102,7 +102,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
         <p className="text-sm font-semibold text-white/70">What happens after launch</p>
         {['Background check initiated (3–5 days)', 'Job offers start appearing in your area', 'Accept jobs, complete them, get paid weekly'].map((step, i) => (
           <div key={i} className="flex items-start gap-2 text-xs text-white/35">
-            <span className="font-bold text-amber-400 mt-0.5">{i + 1}.</span>{step}
+            <span className="font-bold text-warning mt-0.5">{i + 1}.</span>{step}
           </div>
         ))}
       </div>

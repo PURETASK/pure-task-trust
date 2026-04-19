@@ -33,31 +33,31 @@ const TIER_MAP: Record<string, {
 }> = {
   platinum: {
     label: "All-Star Expert", icon: "⭐",
-    bar: "from-violet-500 to-violet-400",
+    bar: "from-accent to-accent",
     glow: "shadow-violet-500/25",
-    badge: "bg-violet-500/10 text-violet-600 border-violet-500/30",
-    dot: "bg-violet-500",
+    badge: "bg-accent/10 text-accent border-accent/30",
+    dot: "bg-accent",
   },
   gold: {
     label: "Top Performer", icon: "🏆",
-    bar: "from-yellow-500 to-amber-400",
+    bar: "from-warning to-warning",
     glow: "shadow-yellow-500/25",
-    badge: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
-    dot: "bg-yellow-500",
+    badge: "bg-warning/10 text-warning border-warning/30",
+    dot: "bg-warning",
   },
   silver: {
     label: "Proven Specialist", icon: "🛡️",
-    bar: "from-slate-400 to-slate-300",
+    bar: "from-muted to-muted",
     glow: "shadow-slate-400/20",
-    badge: "bg-slate-400/10 text-slate-600 border-slate-400/30",
-    dot: "bg-slate-400",
+    badge: "bg-muted/10 text-muted-foreground border-border/30",
+    dot: "bg-muted",
   },
   bronze: {
     label: "Rising Pro", icon: "📈",
-    bar: "from-amber-700 to-amber-600",
+    bar: "from-warning to-warning",
     glow: "shadow-amber-700/20",
-    badge: "bg-amber-700/10 text-amber-700 border-amber-700/30",
-    dot: "bg-amber-700",
+    badge: "bg-warning/10 text-warning border-warning/30",
+    dot: "bg-warning",
   },
 };
 

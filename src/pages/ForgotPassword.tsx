@@ -48,7 +48,7 @@ export default function ForgotPassword() {
               {!isEmailSent ? (
                 <motion.div key="form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <div className="text-center mb-8">
-                    <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/25">
+                    <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/25">
                       <Lock className="h-10 w-10 text-white" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-2">Reset Password</h1>

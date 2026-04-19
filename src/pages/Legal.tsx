@@ -431,25 +431,25 @@ function CancellationContent() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 mb-8">
-        <Card className="border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900">
+        <Card className="border-success bg-success dark:bg-success/20 dark:border-success">
           <CardContent className="p-6 text-center">
-            <Badge className="bg-green-500 mb-2">0% Fee</Badge>
+            <Badge className="bg-success mb-2">0% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Free Cancellation</h3>
             <p className="text-sm text-muted-foreground">More than 48 hours notice</p>
           </CardContent>
         </Card>
         
-        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900">
+        <Card className="border-warning bg-warning dark:bg-warning/20 dark:border-warning">
           <CardContent className="p-6 text-center">
-            <Badge className="bg-amber-500 mb-2">50% Fee</Badge>
+            <Badge className="bg-warning mb-2">50% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Partial Fee</h3>
             <p className="text-sm text-muted-foreground">24-48 hours notice</p>
           </CardContent>
         </Card>
         
-        <Card className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900">
+        <Card className="border-destructive bg-destructive dark:bg-destructive/20 dark:border-destructive">
           <CardContent className="p-6 text-center">
-            <Badge className="bg-red-500 mb-2">100% Fee</Badge>
+            <Badge className="bg-destructive mb-2">100% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Full Fee</h3>
             <p className="text-sm text-muted-foreground">Less than 24 hours</p>
           </CardContent>
@@ -552,7 +552,7 @@ function InfoSection({ icon: Icon, title, items }: InfoSectionProps) {
         <ul className="space-y-2">
           {items.map((item, idx) => (
             <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-              <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+              <CheckCircle className="w-4 h-4 text-success mt-0.5 shrink-0" />
               {item}
             </li>
           ))}

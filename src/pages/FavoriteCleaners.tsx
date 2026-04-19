@@ -13,10 +13,10 @@ import { toast } from 'sonner';
 import { useFavorites, useFavoriteActions, FavoriteCleaner } from '@/hooks/useFavorites';
 
 const TIER_STYLES: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  platinum: { bg: 'bg-violet-500/10', text: 'text-violet-600', border: 'border-violet-500/40', label: 'All-Star Expert' },
-  gold: { bg: 'bg-yellow-500/10', text: 'text-yellow-600', border: 'border-yellow-500/40', label: 'Top Performer' },
-  silver: { bg: 'bg-slate-400/10', text: 'text-slate-500', border: 'border-slate-400/40', label: 'Proven Specialist' },
-  bronze: { bg: 'bg-amber-600/10', text: 'text-amber-600', border: 'border-amber-600/40', label: 'Rising Pro' },
+  platinum: { bg: 'bg-accent/10', text: 'text-accent', border: 'border-accent/40', label: 'All-Star Expert' },
+  gold: { bg: 'bg-warning/10', text: 'text-warning', border: 'border-warning/40', label: 'Top Performer' },
+  silver: { bg: 'bg-muted/10', text: 'text-muted-foreground', border: 'border-border/40', label: 'Proven Specialist' },
+  bronze: { bg: 'bg-warning/10', text: 'text-warning', border: 'border-warning/40', label: 'Rising Pro' },
 };
 
 const f = (delay = 0) => ({
@@ -112,7 +112,7 @@ export default function FavoriteCleaners() {
                               {name.charAt(0)}
                             </div>
                             {tier === 'platinum' && (
-                              <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-violet-500 border-2 border-background flex items-center justify-center">
+                              <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent border-2 border-background flex items-center justify-center">
                                 <Crown className="h-3 w-3 text-white" />
                               </div>
                             )}

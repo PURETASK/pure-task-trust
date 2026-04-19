@@ -128,11 +128,11 @@ export default function AdminBookingsConsole() {
       completed: 'bg-success/10 text-success border-success/30',
       approved: 'bg-success/10 text-success border-success/30',
       in_progress: 'bg-primary/10 text-primary border-primary/30',
-      confirmed: 'bg-blue-500/10 text-blue-600 border-blue-500/30',
+      confirmed: 'bg-primary/10 text-primary border-primary/30',
       pending: 'bg-warning/10 text-warning border-warning/30',
       created: 'bg-warning/10 text-warning border-warning/30',
       cancelled: 'bg-destructive/10 text-destructive border-destructive/30',
-      disputed: 'bg-orange-500/10 text-orange-600 border-orange-500/30'
+      disputed: 'bg-warning/10 text-warning border-warning/30'
     };
     return colors[status] || 'bg-muted text-muted-foreground';
   };

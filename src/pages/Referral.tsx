@@ -60,13 +60,13 @@ export default function Referral() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-pink-500/10 via-purple-500/5 to-transparent -z-10 rounded-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-destructive/10 via-accent/5 to-transparent -z-10 rounded-3xl" />
             <div className="py-8">
               <motion.div 
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.1, type: "spring" }}
-                className="h-24 w-24 mx-auto rounded-3xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/25"
+                className="h-24 w-24 mx-auto rounded-3xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center mb-6 shadow-lg shadow-pink-500/25"
               >
                 <Gift className="h-12 w-12 text-white" />
               </motion.div>
@@ -78,12 +78,12 @@ export default function Referral() {
               </p>
               <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
-                  <Sparkles className="h-4 w-4 mr-2 text-amber-500" />
+                  <Sparkles className="h-4 w-4 mr-2 text-warning" />
                   Give ${referralCode?.referee_credits || 25}
                 </Badge>
                 <span className="text-muted-foreground">→</span>
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
-                  <Star className="h-4 w-4 mr-2 text-amber-500" />
+                  <Star className="h-4 w-4 mr-2 text-warning" />
                   Get ${referralCode?.reward_credits || 25}
                 </Badge>
               </div>
@@ -163,9 +163,9 @@ export default function Referral() {
               </Card>
             )}
             <Card className="overflow-hidden">
-              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 p-6 border-b">
+              <div className="bg-gradient-to-r from-destructive/10 to-accent/10 p-6 border-b">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center">
                     <Share2 className="h-6 w-6 text-white" />
                   </div>
                   <div>
@@ -179,11 +179,11 @@ export default function Referral() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground mb-2 block">Your Unique Code</label>
                   <div className="flex gap-3">
-                    <div className="flex-1 bg-gradient-to-r from-pink-500/5 to-purple-500/5 border-2 border-dashed border-pink-500/30 rounded-xl px-6 py-4 text-center">
+                    <div className="flex-1 bg-gradient-to-r from-destructive/5 to-accent/5 border-2 border-dashed border-destructive/30 rounded-xl px-6 py-4 text-center">
                       {isLoadingCode ? (
                         <Skeleton className="h-8 w-32 mx-auto" />
                       ) : (
-                        <span className="text-2xl font-bold tracking-wider bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+                        <span className="text-2xl font-bold tracking-wider bg-gradient-to-r from-destructive to-accent bg-clip-text text-transparent">
                           {referralCode?.code || 'Loading...'}
                         </span>
                       )}
@@ -267,7 +267,7 @@ export default function Referral() {
                       transition={{ delay: 0.4 + index * 0.1 }}
                       className="text-center p-4 rounded-xl bg-muted/30"
                     >
-                      <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg shadow-lg">
+                      <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-destructive to-accent flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg shadow-lg">
                         {item.step}
                       </div>
                       <h3 className="font-semibold mb-2">{item.title}</h3>
@@ -305,12 +305,12 @@ export default function Referral() {
                       >
                         <div className="flex items-center gap-4">
                           <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                            t.status === 'completed' ? 'bg-emerald-500/10' : 'bg-amber-500/10'
+                            t.status === 'completed' ? 'bg-success/10' : 'bg-warning/10'
                           }`}>
                             {t.status === 'completed' ? (
-                              <CheckCircle className="h-5 w-5 text-emerald-500" />
+                              <CheckCircle className="h-5 w-5 text-success" />
                             ) : (
-                              <Clock className="h-5 w-5 text-amber-500" />
+                              <Clock className="h-5 w-5 text-warning" />
                             )}
                           </div>
                           <div>
@@ -327,7 +327,7 @@ export default function Referral() {
                             {t.status === 'completed' ? 'Completed' : `${t.jobs_completed}/${t.jobs_required} jobs`}
                           </Badge>
                           {t.status === 'completed' && (
-                            <p className="text-sm text-emerald-600 dark:text-emerald-400 mt-1 font-medium">
+                            <p className="text-sm text-success dark:text-success mt-1 font-medium">
                               +${t.referrer_reward} credits
                             </p>
                           )}

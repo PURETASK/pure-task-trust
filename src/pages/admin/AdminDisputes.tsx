@@ -43,7 +43,7 @@ function SLABadge({ createdAt, status }: { createdAt: string; status: string }) 
   const label = hours >= 48 ? `${Math.floor(hours / 24)}d old` : hours >= 1 ? `${hours}h old` : '<1h old';
   const styles = {
     critical: 'bg-destructive/10 text-destructive border-destructive/30',
-    high: 'bg-orange-500/10 text-orange-600 border-orange-500/30',
+    high: 'bg-warning/10 text-warning border-warning/30',
     medium: 'bg-warning/10 text-warning border-warning/20',
     low: 'bg-muted text-muted-foreground border-border',
   };

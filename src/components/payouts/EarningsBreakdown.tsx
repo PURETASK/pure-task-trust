@@ -30,12 +30,12 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
   const getCleaningTypeLabel = (type?: string) => {
     switch (type) {
       case 'deep':
-        return { label: 'Deep Clean', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' };
+        return { label: 'Deep Clean', color: 'bg-accent/10 text-accent border-accent/20' };
       case 'move_out':
-        return { label: 'Move-out Clean', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' };
+        return { label: 'Move-out Clean', color: 'bg-warning/10 text-warning border-warning/20' };
       case 'standard':
       default:
-        return { label: 'Standard Clean', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' };
+        return { label: 'Standard Clean', color: 'bg-primary/10 text-primary border-primary/20' };
     }
   };
 
@@ -86,7 +86,7 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
                     Paid
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1 text-xs">
+                  <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 gap-1 text-xs">
                     <Clock className="h-3 w-3" />
                     Pending
                   </Badge>

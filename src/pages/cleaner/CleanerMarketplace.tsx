@@ -74,7 +74,7 @@ export default function CleanerMarketplace() {
         </div>
 
         {/* Tier earnings banner */}
-        <div className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/5 to-violet-500/5 border border-primary/20">
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20">
           <TrendingUp className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
           <p className="text-sm">
             As a <span className="font-bold capitalize text-foreground">{tier}</span> cleaner, you keep{" "}
@@ -147,7 +147,7 @@ export default function CleanerMarketplace() {
                                   <Button variant="outline" size="sm" onClick={() => handleDecline(job.id)} disabled={decliningId === job.id || acceptJob.isPending} className="gap-1.5 text-muted-foreground h-8 text-xs">
                                     {decliningId === job.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}Decline
                                   </Button>
-                                  <Button onClick={() => acceptJob.mutate(job.id)} disabled={acceptJob.isPending || decliningId === job.id} className="gap-1.5 bg-gradient-to-r from-success to-emerald-600 border-0 h-8 text-xs sm:text-sm">
+                                  <Button onClick={() => acceptJob.mutate(job.id)} disabled={acceptJob.isPending || decliningId === job.id} className="gap-1.5 bg-gradient-to-r from-success to-success border-0 h-8 text-xs sm:text-sm">
                                     {acceptJob.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}Accept
                                   </Button>
                                 </div>

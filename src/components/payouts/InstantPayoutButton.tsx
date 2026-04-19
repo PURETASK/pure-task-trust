@@ -67,7 +67,7 @@ export default function InstantPayoutButton({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-amber-500" />
+            <Zap className="h-5 w-5 text-warning" />
             Instant Payout
           </DialogTitle>
           <DialogDescription>
@@ -75,7 +75,7 @@ export default function InstantPayoutButton({
           </DialogDescription>
         </DialogHeader>
 
-        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+        <Card className="border-warning bg-warning dark:bg-warning/20 dark:border-warning">
           <CardContent className="p-4 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Available Balance</span>
@@ -85,7 +85,7 @@ export default function InstantPayoutButton({
               <span className="text-muted-foreground">Instant Payout Fee ({feePercentage}%)</span>
               <span className="text-destructive">-${fee.toFixed(2)}</span>
             </div>
-            <div className="border-t border-amber-200 dark:border-amber-800 pt-3 flex justify-between">
+            <div className="border-t border-warning dark:border-warning pt-3 flex justify-between">
               <span className="font-semibold">You'll Receive</span>
               <span className="font-bold text-lg text-success">${netAmount.toFixed(2)}</span>
             </div>
@@ -93,7 +93,7 @@ export default function InstantPayoutButton({
         </Card>
 
         <div className="flex items-start gap-2 text-sm text-muted-foreground">
-          <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-warning mt-0.5 shrink-0" />
           <p>
             Instant payouts are typically processed within a few hours. Regular weekly payouts
             (every Friday) are free with no fees.
@@ -107,7 +107,7 @@ export default function InstantPayoutButton({
           <Button
             onClick={handlePayout}
             disabled={isProcessing}
-            className="bg-amber-500 hover:bg-amber-600 gap-2"
+            className="bg-warning hover:bg-warning gap-2"
           >
             {isProcessing ? (
               <>

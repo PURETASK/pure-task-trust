@@ -51,7 +51,7 @@ export default function CleanerOnboarding() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-            className="h-10 w-10 rounded-full border-2 border-cyan-500/30 border-t-cyan-400"
+            className="h-10 w-10 rounded-full border-2 border-primary/30 border-t-cyan-400"
           />
           <span className="text-white/40 text-sm font-medium">Preparing your workspace…</span>
         </div>
@@ -82,7 +82,7 @@ export default function CleanerOnboarding() {
       <header className="relative z-10 flex items-center justify-between px-6 md:px-10 pt-6 pb-2">
         <div className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.3)' }}>
-            <Sparkles className="h-4 w-4 text-cyan-400" />
+            <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <span className="font-bold text-white text-lg tracking-tight">PureTask</span>
           <span className="text-white/20 text-sm ml-1">Pro Setup</span>

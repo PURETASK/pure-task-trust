@@ -121,9 +121,9 @@ export function useCalendarSync() {
 // Helper to get provider info
 export function getProviderInfo(provider: string) {
   const providers: Record<string, { name: string; icon: string; color: string }> = {
-    google: { name: "Google Calendar", icon: "📅", color: "text-red-500" },
-    outlook: { name: "Outlook", icon: "📆", color: "text-blue-500" },
-    apple: { name: "Apple Calendar", icon: "🍎", color: "text-gray-700" },
+    google: { name: "Google Calendar", icon: "📅", color: "text-destructive" },
+    outlook: { name: "Outlook", icon: "📆", color: "text-primary" },
+    apple: { name: "Apple Calendar", icon: "🍎", color: "text-muted-foreground" },
   };
   return providers[provider] || { name: provider, icon: "📅", color: "text-muted-foreground" };
 }

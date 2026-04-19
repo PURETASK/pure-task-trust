@@ -44,7 +44,7 @@ export function IDVerificationStep({ onSubmit, onBack, isSubmitting }: IDVerific
       <div className="space-y-1.5">
         <Label className="text-white/70 text-xs font-medium uppercase tracking-wide">Document type</Label>
         <Select value={documentType} onValueChange={setDocumentType}>
-          <SelectTrigger className="h-12 rounded-xl bg-white/10 border-white/20 text-white data-[placeholder]:text-white/40 focus:border-green-400">
+          <SelectTrigger className="h-12 rounded-xl bg-white/10 border-white/20 text-white data-[placeholder]:text-white/40 focus:border-success">
             <SelectValue placeholder="Choose your document type…" />
           </SelectTrigger>
           <SelectContent>
@@ -64,7 +64,7 @@ export function IDVerificationStep({ onSubmit, onBack, isSubmitting }: IDVerific
       >
         {selectedFile ? (
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-2">
-            <CheckCircle2 className="h-10 w-10 text-green-400" />
+            <CheckCircle2 className="h-10 w-10 text-success" />
             <p className="font-semibold text-sm text-white">{fileName}</p>
             <p className="text-xs text-white/40">Click to change document</p>
           </motion.div>
@@ -89,7 +89,7 @@ export function IDVerificationStep({ onSubmit, onBack, isSubmitting }: IDVerific
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting} className="h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5"><ArrowLeft className="h-4 w-4" /></Button>
-        <Button onClick={async () => { if (selectedFile && documentType) { try { await onSubmit({ file: selectedFile, documentType }); } catch (e: any) { toast({ title: 'Upload failed', description: e.message, variant: 'destructive' }); } } }} disabled={!selectedFile || !documentType || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0">
+        <Button onClick={async () => { if (selectedFile && documentType) { try { await onSubmit({ file: selectedFile, documentType }); } catch (e: any) { toast({ title: 'Upload failed', description: e.message, variant: 'destructive' }); } } }} disabled={!selectedFile || !documentType || isSubmitting} className="flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0">
           {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Uploading…</> : <><span>Continue</span><ArrowRight className="h-4 w-4 ml-2" /></>}
         </Button>
       </div>

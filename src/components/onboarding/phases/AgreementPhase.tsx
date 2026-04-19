@@ -17,8 +17,8 @@ const AGREEMENTS = [
     title: 'Terms of Service',
     label: (
       <span>
-        I agree to the <span className="text-cyan-400 font-semibold">Terms of Service</span> &{' '}
-        <span className="text-cyan-400 font-semibold">Privacy Policy</span>
+        I agree to the <span className="text-primary font-semibold">Terms of Service</span> &{' '}
+        <span className="text-primary font-semibold">Privacy Policy</span>
       </span>
     ),
     content: (
@@ -34,7 +34,7 @@ const AGREEMENTS = [
     title: 'Independent Contractor',
     label: (
       <span>
-        I agree to work as an <span className="text-cyan-400 font-semibold">Independent Contractor</span>
+        I agree to work as an <span className="text-primary font-semibold">Independent Contractor</span>
       </span>
     ),
     content: (
@@ -73,7 +73,7 @@ export function AgreementPhase({ onComplete, isSaving }: AgreementPhaseProps) {
               }}
             >
               <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                <Icon className="h-4 w-4 text-cyan-400" />
+                <Icon className="h-4 w-4 text-primary" />
                 <span className="font-semibold text-sm text-white">{title}</span>
               </div>
               <ScrollArea className="h-24 px-4 py-2.5">
@@ -88,7 +88,7 @@ export function AgreementPhase({ onComplete, isSaving }: AgreementPhaseProps) {
                   id={id}
                   checked={isChecked}
                   onCheckedChange={(c) => setAccepted(prev => ({ ...prev, [id]: c === true }))}
-                  className="border-white/30 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+                  className="border-white/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <span className="text-sm text-white/70">{label}</span>
               </label>

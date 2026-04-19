@@ -145,7 +145,7 @@ export default function TrustSafetyDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { label: 'Critical', count: criticalCount, color: 'border-destructive/30 bg-destructive/5', textColor: 'text-destructive', Icon: AlertTriangle },
-            { label: 'High Priority', count: highCount, color: 'border-orange-500/30 bg-orange-500/5', textColor: 'text-orange-600', Icon: AlertTriangle },
+            { label: 'High Priority', count: highCount, color: 'border-warning/30 bg-warning/5', textColor: 'text-warning', Icon: AlertTriangle },
             { label: 'Total Queue', count: queue.length, color: 'border-primary/30 bg-primary/5', textColor: 'text-primary', Icon: Shield },
             { label: 'Resolved (30d)', count: (disputes || []).filter(d => d.status === "resolved").length, color: 'border-success/30 bg-success/5', textColor: 'text-success', Icon: CheckCircle2 },
           ].map(({ label, count, color, textColor, Icon }, i) => (

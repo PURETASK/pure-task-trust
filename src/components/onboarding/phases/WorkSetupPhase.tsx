@@ -79,7 +79,7 @@ export function WorkSetupPhase({
   const btnCls = 'h-12 rounded-xl border-0 font-semibold text-white';
   const gradientBtn = { background: 'linear-gradient(135deg, #10b981, #06b6d4)' };
   const backBtn = 'h-12 rounded-xl border-white/15 bg-white/5 text-white hover:bg-white/10 px-5';
-  const sliderCls = '[&_[role=slider]]:bg-emerald-400 [&_[role=slider]]:border-emerald-500 [&_.relative]:bg-white/15';
+  const sliderCls = '[&_[role=slider]]:bg-success [&_[role=slider]]:border-success [&_.relative]:bg-white/15';
   const selectCls = 'w-[86px] h-8 text-xs rounded-lg bg-white/8 border-white/15 text-white';
 
   return (
@@ -102,8 +102,8 @@ export function WorkSetupPhase({
 
             <div className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)' }}>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2"><Radio className="h-4 w-4 text-emerald-400" /><Label className="text-white/70 font-semibold text-sm">Travel radius</Label></div>
-                <span className="text-2xl font-poppins font-bold text-emerald-400">{travelRadius}<span className="text-sm font-medium text-white/50 ml-1">mi</span></span>
+                <div className="flex items-center gap-2"><Radio className="h-4 w-4 text-success" /><Label className="text-white/70 font-semibold text-sm">Travel radius</Label></div>
+                <span className="text-2xl font-poppins font-bold text-success">{travelRadius}<span className="text-sm font-medium text-white/50 ml-1">mi</span></span>
               </div>
               <Slider value={[travelRadius]} onValueChange={v => setTravelRadius(v[0])} min={5} max={50} step={5} className={`py-1 ${sliderCls}`} />
               <div className="flex justify-between text-xs text-white/25"><span>5 mi</span><span>50 mi</span></div>
@@ -118,7 +118,7 @@ export function WorkSetupPhase({
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
-                  <Input placeholder="90210" value={zipInput} onChange={e => setZipInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addZip())} maxLength={10} className="pl-9 h-11 rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-emerald-400" />
+                  <Input placeholder="90210" value={zipInput} onChange={e => setZipInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addZip())} maxLength={10} className="pl-9 h-11 rounded-xl bg-white/8 border-white/15 text-white placeholder:text-white/25 focus:border-success" />
                 </div>
                 <Button type="button" onClick={addZip} disabled={!isValidZip} className="h-11 px-4 rounded-xl border-0 text-white" style={{ background: 'rgba(16,185,129,0.3)' }}><Plus className="h-4 w-4" /></Button>
               </div>
@@ -160,7 +160,7 @@ export function WorkSetupPhase({
             <div className="grid grid-cols-3 gap-2">
               {TEMPLATES.map(t => (
                 <button key={t.id} type="button" onClick={() => { setSchedule(Object.fromEntries(DAYS.map(d => [d.key, { enabled: t.days.includes(d.key), startTime: t.start, endTime: t.end }]))); setActiveTemplate(t.id); }}
-                  className={cn('flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 transition-all', activeTemplate === t.id ? 'border-emerald-400/50 bg-emerald-500/8' : 'border-white/8 bg-white/3 hover:border-white/20')}>
+                  className={cn('flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 transition-all', activeTemplate === t.id ? 'border-success/50 bg-success/8' : 'border-white/8 bg-white/3 hover:border-white/20')}>
                   <span className="text-xl">{t.emoji}</span>
                   <span className="text-xs font-semibold text-white/70">{t.label}</span>
                 </button>
@@ -171,7 +171,7 @@ export function WorkSetupPhase({
               {DAYS.map(({ key, short }) => (
                 <div key={key} className="flex items-center gap-3 px-3 py-2 rounded-xl border transition-all"
                   style={{ borderColor: schedule[key].enabled ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.06)', background: schedule[key].enabled ? 'rgba(16,185,129,0.05)' : 'rgba(255,255,255,0.02)' }}>
-                  <Switch checked={schedule[key].enabled} onCheckedChange={c => { setSchedule(p => ({ ...p, [key]: { ...p[key], enabled: c } })); setActiveTemplate(null); }} className="data-[state=checked]:bg-emerald-500" />
+                  <Switch checked={schedule[key].enabled} onCheckedChange={c => { setSchedule(p => ({ ...p, [key]: { ...p[key], enabled: c } })); setActiveTemplate(null); }} className="data-[state=checked]:bg-success" />
                   <span className={cn('w-9 text-sm font-semibold', schedule[key].enabled ? 'text-white' : 'text-white/30')}>{short}</span>
                   {schedule[key].enabled ? (
                     <div className="flex items-center gap-2 flex-1">
@@ -190,7 +190,7 @@ export function WorkSetupPhase({
               ))}
             </div>
 
-            <div className={cn('flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium', enabledDays > 0 ? 'text-emerald-400' : 'text-white/25')}
+            <div className={cn('flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium', enabledDays > 0 ? 'text-success' : 'text-white/25')}
               style={{ background: enabledDays > 0 ? 'rgba(16,185,129,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${enabledDays > 0 ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.06)'}` }}>
               <Calendar className="h-4 w-4" />
               {enabledDays === 0 ? 'Select at least one day' : `Available ${enabledDays} day${enabledDays !== 1 ? 's' : ''} / week`}
@@ -218,7 +218,7 @@ export function WorkSetupPhase({
             </div>
 
             <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.05))', border: '1px solid rgba(16,185,129,0.2)' }}>
-              <div className="flex items-center gap-2 mb-1"><TrendingUp className="h-4 w-4 text-emerald-400" /><span className="text-emerald-400 text-xs font-semibold uppercase tracking-wide">Est. weekly earnings</span></div>
+              <div className="flex items-center gap-2 mb-1"><TrendingUp className="h-4 w-4 text-success" /><span className="text-success text-xs font-semibold uppercase tracking-wide">Est. weekly earnings</span></div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-poppins font-bold text-white">${Math.round(hourlyRate * 2 * 5)}–${Math.round(hourlyRate * 4 * 5)}</span>
                 <span className="text-sm text-white/40">/ week</span>
@@ -229,7 +229,7 @@ export function WorkSetupPhase({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label className="text-white/60 text-xs font-medium uppercase tracking-wide">Hourly rate</Label>
-                <span className="text-3xl font-poppins font-bold text-emerald-400">${hourlyRate}</span>
+                <span className="text-3xl font-poppins font-bold text-success">${hourlyRate}</span>
               </div>
               <Slider value={[hourlyRate]} onValueChange={v => setHourlyRate(v[0])} min={20} max={65} step={1} className={`py-2 ${sliderCls}`} />
               <div className="flex justify-between text-xs text-white/25"><span>$20/hr</span><span>$65/hr</span></div>
@@ -242,8 +242,8 @@ export function WorkSetupPhase({
                   <div key={tier.id} className="p-2.5 rounded-xl transition-all" style={{ background: active ? 'rgba(16,185,129,0.08)' : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.06)'}` }}>
                     <div className="flex items-center gap-1.5">
                       <span>{tier.emoji}</span>
-                      <span className={`text-sm font-semibold ${active ? 'text-emerald-400' : 'text-white/50'}`}>{tier.label}</span>
-                      {active && <span className="ml-auto text-[10px] font-poppins font-bold text-emerald-400 uppercase">You</span>}
+                      <span className={`text-sm font-semibold ${active ? 'text-success' : 'text-white/50'}`}>{tier.label}</span>
+                      {active && <span className="ml-auto text-[10px] font-poppins font-bold text-success uppercase">You</span>}
                     </div>
                     <div className={`text-xs font-bold mt-0.5 ${active ? 'text-white' : 'text-white/30'}`}>{tier.range}/hr</div>
                   </div>

@@ -62,7 +62,7 @@ export default function JobInProgress() {
 
   const statusMap: Record<string, { label: string; color: string }> = {
     confirmed: { label: 'Confirmed', color: 'bg-primary text-primary-foreground' },
-    on_way: { label: 'On the Way', color: 'bg-blue-500 text-white' },
+    on_way: { label: 'On the Way', color: 'bg-primary text-white' },
     arrived: { label: 'Arrived', color: 'bg-accent text-accent-foreground' },
     in_progress: { label: 'In Progress 🧹', color: 'bg-success text-white' },
     completed: { label: 'Complete ✅', color: 'bg-success text-white' },

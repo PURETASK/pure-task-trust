@@ -7,18 +7,18 @@ import { SEO } from '@/components/seo';
 import React from 'react';
 
 const TIERS = [
-  { tier: "Rising Pro", range: "0–49", rate: "$20–30/hr", color: "from-amber-700 to-amber-500", icon: "📈", features: ["Standard platform access", "Basic job matching", "Standard support", "Platform fee: 25%"] },
-  { tier: "Proven Specialist", range: "50–69", rate: "$20–40/hr", color: "from-slate-500 to-slate-400", icon: "🛡️", features: ["Improved visibility", "Priority job matching", "Full platform access", "Platform fee: 22%"] },
-  { tier: "Top Performer", range: "70–89", rate: "$20–50/hr", color: "from-yellow-600 to-yellow-400", icon: "🏆", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 18%"] },
-  { tier: "All-Star Expert", range: "90–100", rate: "$20–65/hr", color: "from-violet-600 to-violet-400", icon: "⭐", features: ["VIP client access", "Premium positioning", "Maximum earnings", "Platform fee: 15%"] },
+  { tier: "Rising Pro", range: "0–49", rate: "$20–30/hr", color: "from-warning to-warning", icon: "📈", features: ["Standard platform access", "Basic job matching", "Standard support", "Platform fee: 25%"] },
+  { tier: "Proven Specialist", range: "50–69", rate: "$20–40/hr", color: "from-muted to-muted", icon: "🛡️", features: ["Improved visibility", "Priority job matching", "Full platform access", "Platform fee: 22%"] },
+  { tier: "Top Performer", range: "70–89", rate: "$20–50/hr", color: "from-warning to-warning", icon: "🏆", features: ["Top search results", "Premium client matching", "Early notifications", "Platform fee: 18%"] },
+  { tier: "All-Star Expert", range: "90–100", rate: "$20–65/hr", color: "from-accent to-accent", icon: "⭐", features: ["VIP client access", "Premium positioning", "Maximum earnings", "Platform fee: 15%"] },
 ];
 
 const SCORING_FACTORS = [
   { icon: CheckCircle, name: "Job Completion", points: 35, desc: "Complete every assigned job. This is the single most important factor.", color: "text-success", bg: "bg-success/10" },
-  { icon: Clock, name: "On-Time Check-In", points: 25, desc: "GPS check-in within 15 minutes of the scheduled start time.", color: "text-blue-500", bg: "bg-blue-500/10" },
-  { icon: Camera, name: "Photo Compliance", points: 20, desc: "Upload both before AND after photos on every completed job.", color: "text-violet-500", bg: "bg-violet-500/10" },
-  { icon: Star, name: "Client Rating", points: 15, desc: "Average star rating from client reviews (0–5 stars).", color: "text-amber-500", bg: "bg-amber-500/10" },
-  { icon: CheckCircle, name: "No Cancellations", points: 5, desc: "Low cancellation rate — avoid canceling jobs you've accepted.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
+  { icon: Clock, name: "On-Time Check-In", points: 25, desc: "GPS check-in within 15 minutes of the scheduled start time.", color: "text-primary", bg: "bg-primary/10" },
+  { icon: Camera, name: "Photo Compliance", points: 20, desc: "Upload both before AND after photos on every completed job.", color: "text-accent", bg: "bg-accent/10" },
+  { icon: Star, name: "Client Rating", points: 15, desc: "Average star rating from client reviews (0–5 stars).", color: "text-warning", bg: "bg-warning/10" },
+  { icon: CheckCircle, name: "No Cancellations", points: 5, desc: "Low cancellation rate — avoid canceling jobs you've accepted.", color: "text-primary", bg: "bg-primary/10" },
 ];
 
 const PENALTIES = [
@@ -45,7 +45,7 @@ export default function ReliabilityScoreExplained() {
         <div className="absolute top-20 left-1/3 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="container relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-3xl mx-auto">
-            <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-primary/25">
+            <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-primary/25">
               <TrendingUp className="h-12 w-12 text-white" />
             </div>
             <h1 className="text-5xl font-bold mb-4">Reliability Score</h1>
@@ -109,7 +109,7 @@ export default function ReliabilityScoreExplained() {
                   </div>
                   <div className="hidden sm:block">
                     <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                      <div className={`h-full bg-gradient-to-r from-primary to-violet-600 rounded-full`} style={{ width: `${f.points}%` }} />
+                      <div className={`h-full bg-gradient-to-r from-primary to-accent rounded-full`} style={{ width: `${f.points}%` }} />
                     </div>
                     <p className="text-xs text-muted-foreground text-right mt-1">{f.points}%</p>
                   </div>
@@ -159,7 +159,7 @@ export default function ReliabilityScoreExplained() {
         {/* Benefits CTA */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <Card className="overflow-hidden border-0">
-            <div className="bg-gradient-to-br from-primary via-primary/90 to-violet-600 p-10 text-center text-white">
+            <div className="bg-gradient-to-br from-primary via-primary/90 to-accent p-10 text-center text-white">
               <Crown className="h-12 w-12 mx-auto mb-4 opacity-90" />
               <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-3">Reach Platinum & Maximize Earnings</h2>
               <p className="text-white/80 max-w-2xl mx-auto mb-6">Platinum cleaners earn the highest rates ($20–65/hr), get first access to premium clients, and pay the lowest platform fee (15%)</p>

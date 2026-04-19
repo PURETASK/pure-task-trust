@@ -41,7 +41,7 @@ export default function CancellationPolicy() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-amber-500">{stats.byClient}</p>
+                  <p className="text-3xl font-bold text-warning">{stats.byClient}</p>
                   <p className="text-sm text-muted-foreground">By Clients</p>
                 </CardContent>
               </Card>
@@ -67,7 +67,7 @@ export default function CancellationPolicy() {
           )}
           
           {stats && stats.emergencies > 0 && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-amber-600">
+            <div className="mt-3 flex items-center gap-2 text-sm text-warning">
               <Zap className="h-4 w-4" />
               <span>{stats.emergencies} emergency cancellation(s) in this period</span>
             </div>
@@ -105,11 +105,11 @@ export default function CancellationPolicy() {
             <Card className="border-l-4 border-l-amber-500">
               <CardContent className="p-5 flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-amber-500">Partial Fee</h3>
+                  <h3 className="font-semibold text-warning">Partial Fee</h3>
                   <p className="text-sm text-muted-foreground mt-1">24-48 hours before booking</p>
-                  <p className="text-sm text-amber-600 mt-2">Half of booking amount charged, remaining 50% refunded</p>
+                  <p className="text-sm text-warning mt-2">Half of booking amount charged, remaining 50% refunded</p>
                 </div>
-                <Badge className="bg-amber-500 text-white">50% Fee</Badge>
+                <Badge className="bg-warning text-white">50% Fee</Badge>
               </CardContent>
             </Card>
 
@@ -138,7 +138,7 @@ export default function CancellationPolicy() {
             </p>
             <ul className="text-sm space-y-2 text-muted-foreground">
               <li>• Cancel on <strong>Thursday 9:00 AM</strong> (49h notice) → <span className="text-success">$0 fee (free cancellation)</span></li>
-              <li>• Cancel on <strong>Friday 9:00 AM</strong> (25h notice) → <span className="text-amber-600">$75 fee (50%)</span></li>
+              <li>• Cancel on <strong>Friday 9:00 AM</strong> (25h notice) → <span className="text-warning">$75 fee (50%)</span></li>
               <li>• Cancel on <strong>Saturday 8:00 AM</strong> (2h notice) → <span className="text-destructive">$150 fee (100%)</span></li>
             </ul>
           </CardContent>
@@ -151,9 +151,9 @@ export default function CancellationPolicy() {
             Grace Cancellations
           </h2>
 
-          <Card className="bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800">
+          <Card className="bg-success dark:bg-success/20 border-success dark:border-success">
             <CardContent className="p-5">
-              <h3 className="font-semibold text-emerald-600 mb-3">2 Free "Grace" Cancellations</h3>
+              <h3 className="font-semibold text-success mb-3">2 Free "Grace" Cancellations</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 We understand emergencies happen! Every client gets <strong>2 grace cancellations</strong> that 
                 can be used to waive any cancellation fee, regardless of timing.
@@ -174,7 +174,7 @@ export default function CancellationPolicy() {
 
                 <div>
                   <h4 className="font-medium text-sm flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-4 w-4 text-amber-500" /> Important Notes:
+                    <AlertTriangle className="h-4 w-4 text-warning" /> Important Notes:
                   </h4>
                   <ul className="text-sm text-muted-foreground space-y-1 ml-6">
                     <li>• Once used, grace cancellations don't replenish</li>
@@ -203,7 +203,7 @@ export default function CancellationPolicy() {
               <span><strong>No charge to client</strong> - Full refund of escrowed credits</span>
             </li>
             <li className="flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5" />
+              <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
               <span><strong>Reliability score impact</strong> - Cancellations affect cleaner's rating</span>
             </li>
           </ul>
@@ -212,14 +212,14 @@ export default function CancellationPolicy() {
         {/* No-Show Policy */}
         <section>
           <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertTriangle className="h-5 w-5 text-warning" />
             No-Show Policy
           </h2>
 
           <div className="space-y-4">
-            <Card className="border-amber-200 dark:border-amber-800">
+            <Card className="border-warning dark:border-warning">
               <CardContent className="p-5">
-                <h3 className="font-semibold text-amber-600 mb-3">Client No-Show</h3>
+                <h3 className="font-semibold text-warning mb-3">Client No-Show</h3>
                 <p className="text-sm text-muted-foreground mb-3">
                   If a client is not present or accessible at the scheduled time:
                 </p>
@@ -232,9 +232,9 @@ export default function CancellationPolicy() {
               </CardContent>
             </Card>
 
-            <Card className="border-amber-200 dark:border-amber-800">
+            <Card className="border-warning dark:border-warning">
               <CardContent className="p-5">
-                <h3 className="font-semibold text-amber-600 mb-3">Cleaner No-Show</h3>
+                <h3 className="font-semibold text-warning mb-3">Cleaner No-Show</h3>
                 <p className="text-sm text-muted-foreground mb-3">
                   If a cleaner doesn't arrive within 30 minutes of scheduled time:
                 </p>
@@ -344,7 +344,7 @@ export default function CancellationPolicy() {
                 </tr>
                 <tr className="border-b">
                   <td className="py-3 px-4">24-48 hours</td>
-                  <td className="py-3 px-4 text-amber-500 font-medium">50%</td>
+                  <td className="py-3 px-4 text-warning font-medium">50%</td>
                   <td className="py-3 px-4">Yes</td>
                 </tr>
                 <tr className="border-b">

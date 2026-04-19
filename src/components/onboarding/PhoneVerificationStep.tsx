@@ -64,8 +64,8 @@ export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationS
   if (subStep === 'verified') {
     return (
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-12 space-y-4">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }} className="h-20 w-20 rounded-full bg-green-500/20 flex items-center justify-center border-2 border-green-400/40">
-          <CheckCircle2 className="h-10 w-10 text-green-400" />
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }} className="h-20 w-20 rounded-full bg-success/20 flex items-center justify-center border-2 border-success/40">
+          <CheckCircle2 className="h-10 w-10 text-success" />
         </motion.div>
         <h3 className="text-xl font-bold text-white">Phone Verified!</h3>
         <p className="text-white/50 text-sm">Moving to the next step…</p>
@@ -73,9 +73,9 @@ export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationS
     );
   }
 
-  const inputClass = "h-12 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-green-400 text-base";
+  const inputClass = "h-12 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-success text-base";
   const btnBack = "h-12 rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 px-5";
-  const btnPrimary = "flex-1 h-12 font-semibold rounded-xl bg-green-500 hover:bg-green-400 text-white border-0";
+  const btnPrimary = "flex-1 h-12 font-semibold rounded-xl bg-success hover:bg-success text-white border-0";
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3 }} className="space-y-5">
@@ -91,7 +91,7 @@ export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationS
         {subStep === 'phone' ? (
           <motion.div key="phone" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
             <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-              <ShieldCheck className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+              <ShieldCheck className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
               <p className="text-xs text-white/60">A verified phone builds client trust and protects your account from fraud.</p>
             </div>
             <div className="relative">
@@ -110,7 +110,7 @@ export function PhoneVerificationStep({ onComplete, onBack }: PhoneVerificationS
           <motion.div key="otp" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
             <div className="flex flex-col items-center gap-4 py-3">
               <p className="text-sm text-white/60">Enter the 6-digit code</p>
-              <div className="[&_input]:bg-white/10 [&_input]:border-white/20 [&_input]:text-white [&_input]:text-center [&_input]:text-lg [&_input]:font-bold [&_input:focus]:border-green-400">
+              <div className="[&_input]:bg-white/10 [&_input]:border-white/20 [&_input]:text-white [&_input]:text-center [&_input]:text-lg [&_input]:font-bold [&_input:focus]:border-success">
                 <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} /><InputOTPSlot index={1} /><InputOTPSlot index={2} />
