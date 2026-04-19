@@ -132,8 +132,8 @@ const AdminBulkComms = () => {
             <Link to="/admin/analytics" className="hover:text-primary">Analytics</Link>
             <span>/</span><span>Bulk Communications</span>
           </div>
-          <h1 className="text-3xl font-bold">Bulk Communication Tool</h1>
-          <p className="text-muted-foreground mt-1">Target custom user segments with in-app notifications or emails</p>
+          <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Bulk Communication Tool</h1>
+          <p className="text-aero-soft mt-1">Target custom user segments with in-app notifications or emails</p>
         </div>
 
         {/* Step Indicator */}

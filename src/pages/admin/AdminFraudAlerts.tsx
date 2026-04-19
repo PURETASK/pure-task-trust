@@ -73,8 +73,8 @@ const AdminFraudAlerts = () => {
             <Link to="/admin/trust-safety" className="hover:text-primary transition-colors">Trust & Safety</Link>
             <span>/</span><span>Fraud Alerts</span>
           </div>
-          <h1 className="text-3xl font-bold">Fraud Alerts</h1>
-          <p className="text-muted-foreground mt-1">Monitor and respond to fraud detection alerts</p>
+          <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Fraud Alerts</h1>
+          <p className="text-aero-soft mt-1">Monitor and respond to fraud detection alerts</p>
         </div>
 
         {/* Stats */}
