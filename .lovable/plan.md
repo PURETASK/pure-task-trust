@@ -1,115 +1,200 @@
+# Support Center Redesign — Comprehensive Build Guide
 
+A complete sequenced plan to ship the AI-first, role-aware Support Center. Split into **6 batches**. Each batch is independently shippable, ends with a testable surface, and unblocks the next.
 
-# Support Center Redesign — Full Overhaul
+---
 
-A complete rethink of `/help` into a modern support hub: AI-first deflection, role-aware experiences, threaded ticket conversations, and contextual entry points across the app.
+## 🗂️ Batch Overview
 
-## The 4 Pillars
+| # | Batch | Scope | Risk | DB? |
+|---|-------|-------|------|-----|
+| 1 | **Foundation** | DB schema + RLS + seed articles | Low | ✅ |
+| 2 | **AI Backbone** | `support-ai-chat` edge fn + `AISupportChat` component | Medium | — |
+| 3 | **Ticket System** | Threaded messages + escalation + realtime | Medium | — |
+| 4 | **Hub & Browse** | `SupportHub` page + `TopicGrid` + `ArticleReader` | Low | — |
+| 5 | **Contextual Layer** | `FloatingHelpLauncher` + `HelpContext` + `MainLayout` mount | Low | — |
+| 6 | **Notifications & Polish** | Unread badges, `NotificationBell`/`MobileBottomNav`, `notify-ticket-reply`, QA | Low | — |
 
-**1. AI assistant first** — Every visit opens with a chat box. The AI answers from FAQs, policies (cancellation, pricing, reliability score), and the user's own data (recent bookings, wallet balance). If unresolved, "Talk to a human" converts the transcript into a ticket with full context.
+---
 
-**2. Role-aware** — Clients and cleaners see different categories, suggested articles, and quick actions. Detected automatically via `user_roles`.
+## 🧱 BATCH 1 — Foundation (Database + Seed Data)
 
-**3. Threaded tickets** — Real two-way conversations. Users see agent replies inline, get notified, can reply with attachments. No more email-only loop.
+**Goal:** All tables, columns, RLS, and starter content exist. Nothing user-visible yet.
 
-**4. Contextual support everywhere** — A floating "Help" launcher on key screens (booking, job, wallet) opens a sheet pre-filled with that context (booking ID, page, screenshot option). Replaces the standalone `JobSupportChat` with a unified component.
+### 1.1 New tables
 
-## New Information Architecture
+**`help_articles`**
+- Cols: `id`, `slug` (unique), `title`, `body_md`, `category`, `role` (`client`|`cleaner`|`both`), `tags text[]`, `view_count`, `helpful_count`, `not_helpful_count`, `is_published bool default true`, timestamps.
+- RLS: public SELECT where `is_published=true`; admin write via `has_role('admin')`.
 
-```text
-/help                         → Support Hub (landing)
-  ├─ AI chat (default view, full width)
-  ├─ Browse by topic (role-aware cards)
-  ├─ Quick actions (Cancel booking, Refund, etc.)
-  └─ Floating "My Tickets" badge (shows unread agent replies)
+**`ticket_messages`**
+- Cols: `id`, `ticket_id` (fk → `support_tickets`), `sender_id`, `sender_role` (`user`|`agent`|`ai`|`system`), `body`, `attachments jsonb default '[]'`, `created_at`.
+- RLS: ticket owner SELECT/INSERT; admin all.
+- Index: `(ticket_id, created_at)`.
 
-/help/articles/:slug          → Help article reader (markdown)
-/help/tickets                 → My Tickets list
-/help/tickets/:id             → Threaded conversation view
-/help/contact                 → Manual ticket form (fallback)
+**`support_conversations`** (AI chat sessions)
+- Cols: `id`, `user_id`, `messages jsonb default '[]'`, `resolved bool default false`, `escalated_ticket_id uuid null`, timestamps.
+- RLS: owner only; admin read.
+
+### 1.2 Extend `support_tickets`
+Add: `last_agent_reply_at timestamptz`, `unread_by_user bool default false`, `ai_transcript_id uuid null`, `category text`, `attachments jsonb default '[]'`.
+
+### 1.3 Realtime
+`ALTER PUBLICATION supabase_realtime ADD TABLE public.ticket_messages;`
+
+### 1.4 Seed ~20 starter articles
+- **Bookings (4):** How to book, Reschedule, Cancel a booking, Same-day rules
+- **Payments (4):** Buying credits, Refunds, Escrow & 24h review, Tipping
+- **Cleaners (3):** Choosing a cleaner, No-show policy, Reliability score
+- **Account (2):** Edit profile, Delete account
+- **Cleaner-only (4):** Getting paid, Reliability for cleaners, Tier benefits, Cancellation for cleaners
+- **General (3):** What is PureTask, Trust & safety, Contact support
+
+**Exit:** Migration applied, articles queryable, RLS verified, no linter warnings.
+
+---
+
+## 🤖 BATCH 2 — AI Backbone
+
+**Goal:** Working streaming AI chat that answers from policies + articles, grounded in the user's own data.
+
+### 2.1 Edge function `support-ai-chat`
+- Streaming SSE via Lovable AI Gateway, default model `google/gemini-3-flash-preview`.
+- System prompt embeds: cancellation tiers, escrow rules, reliability scoring, credit pricing, role-aware tone.
+- Tools (function calling):
+  - `search_help_articles({ query, role })` → top 3 matches.
+  - `lookup_user_booking({ status? })` → recent jobs for caller.
+  - `lookup_wallet_balance()` → credits.
+  - `escalate_to_ticket({ category, summary })` → returns `ticket_id`.
+- JWT-validated; uses caller's `user_id` for personalized tools.
+- Persists conversation to `support_conversations`.
+
+### 2.2 Component `AISupportChat.tsx`
+- Token-by-token SSE rendering.
+- Markdown via `react-markdown`.
+- Suggested-prompt chips ("Cancel my booking", "Refund", "No-show").
+- "Talk to a human" button → escalate → routes to `/help/tickets/:id`.
+- Handles 402/429 with toasts.
+
+### 2.3 Component `HelpContext.tsx` (provider stub)
+- Lightweight provider exposing `{ currentRoute, currentJobId?, currentBookingId? }`.
+- Used later by `FloatingHelpLauncher`; introduced now so AI chat can receive context.
+
+**Exit:** User can chat at a temp `/help` mount, get streamed answers grounded in articles, escalate.
+
+---
+
+## 🎫 BATCH 3 — Ticket System
+
+**Goal:** End-to-end threaded conversation between user and admin (admin replies via DB for v1).
+
+### 3.1 Edge function `escalate-conversation`
+- Input: `conversation_id`, `category`, `summary`.
+- Creates `support_tickets` with `ai_transcript_id`, copies AI transcript into `ticket_messages` (system + user + ai), links via `support_conversations.escalated_ticket_id`.
+- Returns `ticket_id`.
+
+### 3.2 Components
+- **`TicketList.tsx`** — cards of user's tickets, status, unread dot if `unread_by_user`.
+- **`TicketThread.tsx`** — message list with sender avatars/role badges, reply composer, attachments, realtime subscription on `ticket_messages` filtered by `ticket_id`.
+- **`ContactForm.tsx`** — manual ticket fallback (subject, category, body, attachments).
+
+### 3.3 Pages
+- Rewrite `src/pages/HelpTickets.tsx` to use `TicketList`.
+- New `src/pages/HelpTicket.tsx` at `/help/tickets/:id`.
+- New `src/pages/HelpContact.tsx` at `/help/contact`.
+
+### 3.4 Read state
+- On opening a ticket: set `unread_by_user=false`.
+
+**Exit:** Escalation creates a real ticket; user can reply; admin DB inserts appear live.
+
+---
+
+## 🏠 BATCH 4 — Hub & Browse
+
+**Goal:** Replace current 3-tab `/help` with the full Support Hub IA.
+
+### 4.1 Pages
+Rewrite `src/pages/Help.tsx` as `SupportHub` shell with nested `<Outlet />`:
 ```
-
-The Hub replaces the current 3-tab page. Tabs are too flat — we need depth: hub → topic → article OR hub → AI → ticket.
-
-## UX Layout — `/help` Hub
-
-```text
-┌──────────────────────────────────────────────────────┐
-│  Hi {name}, how can we help?                         │
-│  ┌────────────────────────────────────────────────┐  │
-│  │ 💬 Ask anything... (AI replies in seconds)     │  │
-│  └────────────────────────────────────────────────┘  │
-│  Suggested: "Cancel my booking" "Refund" "No-show"   │
-├──────────────────────────────────────────────────────┤
-│  Browse help (role-aware grid of 6 topic cards)      │
-│  [Bookings] [Payments] [Cleaners] [Account] ...      │
-├──────────────────────────────────────────────────────┤
-│  Need a human? → [Open ticket]   📧 Email  📞 Phone  │
-└──────────────────────────────────────────────────────┘
+/help                  → AI hero + suggested prompts + TopicGrid + "Need a human?" + tickets badge
+/help/articles/:slug   → ArticleReader
+/help/tickets          → TicketList
+/help/tickets/:id      → TicketThread
+/help/contact          → ContactForm
 ```
+Add nested routes in `src/App.tsx`.
 
-## Database Changes
+### 4.2 Components
+- **`SupportHub.tsx`** — landing layout (hero AI input, topic grid, CTA strip).
+- **`TopicGrid.tsx`** — 6 role-aware topic cards (queries `help_articles` by category + role).
+- **`ArticleReader.tsx`** — markdown render, `view_count++`, "Was this helpful?" Y/N updates counters, related articles footer.
 
-**New tables:**
-- `help_articles` — markdown content, slug, category, role (`client`/`cleaner`/`both`), tags, view_count. Public read.
-- `ticket_messages` — `ticket_id`, `sender_id`, `sender_role` (user/agent/ai), `body`, `attachments jsonb`, `created_at`. RLS: user reads/writes for tickets they own; admins (via `has_role`) read/write all.
-- `support_conversations` — AI chat sessions: `user_id`, `messages jsonb[]`, `resolved boolean`, `escalated_ticket_id`. So we can convert AI chats → tickets.
+### 4.3 Theme
+All headings: `font-poppins font-bold text-gradient-aero` per Clean Aero Glow.
 
-**Extend `support_tickets`:**
-- `last_agent_reply_at timestamptz` (drives unread badge)
-- `unread_by_user boolean default false`
-- `ai_transcript_id uuid` (links to originating AI chat)
-- `category text` (replaces freeform `issue_type`, FK-style enum)
-- `attachments jsonb default '[]'`
+**Exit:** `/help` is a polished hub. Browse → article → "still need help" → AI/ticket flow works.
 
-**Realtime:** Enable on `ticket_messages` so users see agent replies live.
+---
 
-## Backend (Edge Functions)
+## 🛟 BATCH 5 — Contextual Layer
 
-- `support-ai-chat` (streaming) — Lovable AI Gateway, `google/gemini-3-flash-preview`. System prompt includes PureTask policies (escrow, cancellation tiers, reliability). Tools: `search_help_articles`, `lookup_user_booking`, `escalate_to_ticket`. Returns SSE stream.
-- `escalate-conversation` — Converts AI chat → ticket, attaches transcript, notifies support queue.
-- `notify-ticket-reply` — Triggered when agent replies; sends push + email + sets `unread_by_user=true`.
+**Goal:** Help available on every authenticated screen, pre-filled with context.
 
-## Components to Build
+### 5.1 `FloatingHelpLauncher.tsx`
+- Bottom-right "?" FAB (hidden on `/help/*`).
+- Opens a Sheet containing a context-scoped `AISupportChat` (route + visible job/booking ID via `HelpContext`).
+- "Open full Support Center" link → `/help`.
 
-```text
-src/components/support/
-  ├─ SupportHub.tsx              (landing, AI + browse + CTA)
-  ├─ AISupportChat.tsx           (streaming chat, escalate button)
-  ├─ TopicGrid.tsx               (role-aware topic cards)
-  ├─ ArticleReader.tsx           (markdown + helpful Y/N + related)
-  ├─ TicketList.tsx              (with unread badges)
-  ├─ TicketThread.tsx            (messages + reply composer + attachments)
-  ├─ ContactForm.tsx             (manual ticket fallback)
-  ├─ FloatingHelpLauncher.tsx    (contextual sheet — replaces JobSupportChat)
-  └─ HelpContext.tsx             (provider: current page/booking auto-attached)
-```
+### 5.2 `HelpContext.tsx` (full)
+- Auto-detects `:jobId`, `:bookingId` from route params.
+- Pages can manually push extra context via `useHelpContext().setContext({...})`.
 
-## Pages
+### 5.3 Mount in `MainLayout.tsx`
+- Render `<FloatingHelpLauncher />` only when `isAuthenticated`. (Provider already wired.)
 
-- Rewrite `src/pages/Help.tsx` → `SupportHub` shell with nested routes
-- Add `src/pages/HelpArticle.tsx`, `src/pages/HelpTickets.tsx`, `src/pages/HelpTicket.tsx`, `src/pages/HelpContact.tsx`
-- Update `src/App.tsx` routes
-- Replace `src/components/cleaner/JobSupportChat.tsx` usage with `FloatingHelpLauncher` (keep the file as a thin re-export for back-compat)
+### 5.4 Back-compat
+- Replace `src/components/cleaner/JobSupportChat.tsx` body with a thin re-export of `FloatingHelpLauncher` so existing imports keep working.
 
-## Cross-App Integration
+**Exit:** "?" button visible everywhere when logged in; AI chat opens with route + job context.
 
-Mount `<FloatingHelpLauncher />` in `MainLayout` for authenticated users. Auto-attaches current route + visible booking/job ID. A "?" button bottom-right; click → contextual sheet (AI chat scoped to that page's content).
+---
 
-Update `NotificationBell` and `MobileBottomNav` to surface unread ticket replies.
+## 🔔 BATCH 6 — Notifications & Polish
 
-## Content Seeding
+**Goal:** Surface unread agent replies; final QA.
 
-Seed ~20 starter `help_articles` covering the existing FAQ content + cancellation policy + reliability score + credits, split by role. Future articles editable via an admin page (out of scope for v1).
+### 6.1 Edge function `notify-ticket-reply`
+- Triggered from admin-side insert into `ticket_messages` where `sender_role='agent'` (DB trigger via `pg_net` → edge fn).
+- Sets `support_tickets.unread_by_user=true`, `last_agent_reply_at=now()`.
+- Sends push (if `push_token`) + email via existing `send-email` + creates `notifications` row.
 
-## Rollout
+### 6.2 UI integration
+- **`NotificationBell`** — query unread tickets count, surface as a category.
+- **`MobileBottomNav`** — unread dot on Help icon when any ticket has `unread_by_user=true`.
+- **`SupportHub`** — "My Tickets" badge with unread count.
 
-Single PR, feature-complete. Old `JobSupportChat` re-exports new component so cleaner job pages keep working without edits. FAQ tab content migrates into seeded articles.
+### 6.3 Final QA
+- Run `supabase--linter` for RLS warnings.
+- Flow test: AI answer → escalate → admin reply → push + email + bell badge → user opens → unread cleared.
+- Mobile responsive sweep on `/help` and `TicketThread`.
+- Aero theme consistency check.
 
-## Out of Scope (Future)
+**Exit:** Full loop works; no security warnings; theme consistent.
 
+---
+
+## 📋 Out of Scope
 - Admin reply UI (agents reply via DB/dashboard for v1)
-- Live agent chat (handoff)
+- Live agent handoff
 - Multilingual articles
 - Article admin editor
 
+---
+
+## ▶️ Execution Protocol
+1. Each batch starts only after you reply **"start batch N"**.
+2. Each batch ends with a test checklist for you to verify in preview.
+3. DB migration (Batch 1) requires your approval before code proceeds.
+
+Reply **"start batch 1"** to begin with the database foundation.
