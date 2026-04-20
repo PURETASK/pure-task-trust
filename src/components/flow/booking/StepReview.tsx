@@ -134,12 +134,16 @@ export function StepReview({
         </div>
       </div>
 
-      <FlowField label="Notes for your cleaner" optional>
+      <FlowField
+        label="Notes for your cleaner"
+        helper={notesAutofilled ? "Pre-filled from your saved profile — edit anything you'd like to change for this visit." : undefined}
+        optional
+      >
         <FlowTextarea
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
           placeholder="Anything specific to mention? Alarm code, pets, parking, areas to focus on…"
-          rows={3}
+          rows={notesAutofilled ? 6 : 3}
         />
       </FlowField>
 
