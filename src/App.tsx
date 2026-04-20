@@ -32,6 +32,7 @@ const CleaningDetail = lazy(() => import("./pages/CleaningDetail"));
 const AccountPage = lazy(() => import("./pages/Account"));
 const Discover = lazy(() => import("./pages/Discover"));
 const CleanerProfile = lazy(() => import("./pages/CleanerProfile"));
+const CleanerProfileV2 = lazy(() => import("./pages/CleanerProfileV2"));
 const Book = lazy(() => import("./pages/Book"));
 const BookingStatus = lazy(() => import("./pages/BookingStatus"));
 const JobInProgress = lazy(() => import("./pages/JobInProgress"));
@@ -271,6 +272,7 @@ const App = () => (
 
                     {/* Preserved client routes */}
                     <Route path="/cleaner/:id" element={<RequireAuth><RequireSetup><CleanerProfile /></RequireSetup></RequireAuth>} />
+                    <Route path="/cleaner/:id/v2" element={<RequireAuth><RequireSetup><CleanerProfileV2 /></RequireSetup></RequireAuth>} />
                     <Route path="/setup" element={<RequireClient><ClientSetup /></RequireClient>} />
                     <Route path="/book" element={<RequireClient><RequireSetup><Book /></RequireSetup></RequireClient>} />
                     <Route path="/booking/:id" element={<RequireClient><RequireSetup><BookingStatus /></RequireSetup></RequireClient>} />

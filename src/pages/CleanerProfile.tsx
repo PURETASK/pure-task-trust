@@ -608,14 +608,20 @@ export default function CleanerProfile() {
           <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
         </div>
 
-        {/* Back nav */}
-        <div className="relative z-10 container px-4 sm:px-6 pt-4 sm:pt-6">
+        {/* Back nav + V2 toggle */}
+        <div className="relative z-10 container px-4 sm:px-6 pt-4 sm:pt-6 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1.5 text-white/70 hover:text-white text-sm transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
+          <Link
+            to={`/cleaner/${id}/v2`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white text-xs font-bold transition-all border border-white/20"
+          >
+            <Zap className="h-3.5 w-3.5" /> Try new design (v2)
+          </Link>
         </div>
 
         {/* Hero content */}
