@@ -20,15 +20,21 @@ export default function ClientSetup() {
   const { state, saving, updateContact, updateHome, updateAccess, updatePrefs, saveStep } =
     useClientSetup();
   const [step, setStep] = useState<SetupStep>("welcome");
+  const [resumed, setResumed] = useState(false);
 
-  // Resume where the user left off
+  // Resume where the user left off (or finish if already complete)
   useEffect(() => {
     if (state.loading) return;
     if (state.setupCompleted) {
-      const dest = (location.state as any)?.from?.pathname ?? "/book";
+      const dest = (location.state as any)?.from?.pathname ?? "/discover";
       navigate(dest, { replace: true });
+      return;
     }
-  }, [state.loading, state.setupCompleted, location.state, navigate]);
+    if (!resumed && state.lastStep && SETUP_STEPS.includes(state.lastStep)) {
+      setStep(state.lastStep);
+      setResumed(true);
+    }
+  }, [state.loading, state.setupCompleted, state.lastStep, location.state, navigate, resumed]);
 
   const stepIndex = SETUP_STEPS.indexOf(step);
 
@@ -36,9 +42,9 @@ export default function ClientSetup() {
     const nextIdx = Math.min(stepIndex + 1, SETUP_STEPS.length - 1);
     const nextStep = SETUP_STEPS[nextIdx];
     if (step !== "welcome") {
-      const ok = await saveStep(nextStep);
-      if (!ok) {
-        toast.error("Couldn't save. Please try again.");
+      const result = await saveStep(nextStep);
+      if (!result.ok) {
+        toast.error(result.error || "Couldn't save. Please try again.");
         return;
       }
     }
@@ -58,9 +64,9 @@ export default function ClientSetup() {
   };
 
   const finish = async () => {
-    const ok = await saveStep("complete");
-    if (!ok) {
-      toast.error("Couldn't finish setup. Please try again.");
+    const result = await saveStep("complete");
+    if (!result.ok) {
+      toast.error(result.error || "Couldn't finish setup. Please try again.");
       return;
     }
     toast.success("Profile saved! Let's book your first cleaning.");

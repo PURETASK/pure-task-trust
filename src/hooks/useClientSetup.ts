@@ -74,6 +74,7 @@ export interface SetupState {
   addressId?: string;
   prefsId?: string;
   setupCompleted: boolean;
+  lastStep?: SetupStep;
   loading: boolean;
 }
 
@@ -140,6 +141,7 @@ export function useClientSetup() {
         addressId: address?.id,
         prefsId: prefs?.id,
         setupCompleted: !!cp.setup_completed_at,
+        lastStep: (cp.setup_current_step as SetupStep) ?? undefined,
         loading: false,
         contact: {
           first_name: cp.first_name ?? "",
@@ -210,10 +212,10 @@ export function useClientSetup() {
     []
   );
 
-  /** Save current step + advance flag to DB. Returns true on success. */
+  /** Save current step + advance flag to DB. Returns {ok, error?}. */
   const saveStep = useCallback(
-    async (nextStep: SetupStep): Promise<boolean> => {
-      if (!user) return false;
+    async (nextStep: SetupStep): Promise<{ ok: boolean; error?: string }> => {
+      if (!user) return { ok: false, error: "Not signed in" };
       setSaving(true);
       try {
         // 1. Upsert client_profiles (contact)
@@ -342,12 +344,13 @@ export function useClientSetup() {
           addressId,
           propertyId,
           prefsId,
+          lastStep: nextStep,
           setupCompleted: nextStep === "complete" ? true : s.setupCompleted,
         }));
-        return true;
-      } catch (e) {
+        return { ok: true };
+      } catch (e: any) {
         console.error("[useClientSetup] saveStep failed", e);
-        return false;
+        return { ok: false, error: e?.message || "Save failed" };
       } finally {
         setSaving(false);
       }
