@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePostSignup } from "@/hooks/usePostSignup";
 import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
+import { DevToolsWidget } from "@/components/dev/DevToolsWidget";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
@@ -176,6 +177,7 @@ const App = () => (
               <ScrollToTop />
               <ExitIntentPopup />
               <PWAInstallBanner />
+              <DevToolsWidget />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Auth pages — no layout */}

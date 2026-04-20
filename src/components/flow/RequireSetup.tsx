@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDevBypass } from "@/hooks/useDevBypass";
 
 /**
  * Gates booking-related routes behind first-time profile setup completion.
@@ -13,6 +14,7 @@ export function RequireSetup({ children }: { children: ReactNode }) {
   const location = useLocation();
   const [checked, setChecked] = useState(false);
   const [done, setDone] = useState(false);
+  const { active: devBypass, state: devState } = useDevBypass();
 
   useEffect(() => {
     if (!user) return;
@@ -40,7 +42,7 @@ export function RequireSetup({ children }: { children: ReactNode }) {
     );
   }
 
-  if (user && !done) {
+  if (user && !done && !(devBypass && devState.skipSetup)) {
     return <Navigate to="/setup" state={{ from: location }} replace />;
   }
 
