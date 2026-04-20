@@ -17,7 +17,7 @@ import { UserRole } from '@/contexts/AuthContext';
 
 // ⬇️  EDIT THIS LIST with your owner email(s)
 export const OWNER_EMAILS = [
-  // add your email(s) here, e.g. 'you@example.com'
+  'therealmofnexus1@gmail.com',
 ];
 
 const STORAGE_KEY = 'puretask_dev_bypass_v1';
