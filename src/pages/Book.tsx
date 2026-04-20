@@ -8,6 +8,7 @@ import { useBooking, type CleaningType } from "@/hooks/useBooking";
 import { useWallet } from "@/hooks/useWallet";
 import { useCleaners, useCleaner } from "@/hooks/useCleaners";
 import { useAddresses, type Address } from "@/hooks/useAddresses";
+import { useClientProfile, buildDefaultNotes } from "@/hooks/useClientProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
@@ -59,6 +60,7 @@ export default function Book() {
   const [address, setAddress] = useState<Address | undefined>();
   const [cleanerId, setCleanerId] = useState<string | null>(preselectedCleanerId);
   const [notes, setNotes] = useState("");
+  const [notesAutofilled, setNotesAutofilled] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"credits" | "card">("credits");
   const [isDirectPaying, setIsDirectPaying] = useState(false);
 
@@ -70,13 +72,24 @@ export default function Book() {
   const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
   const { data: selectedCleaner } = useCleaner(cleanerId || "");
   const { data: savedAddresses } = useAddresses();
+  const { data: clientProfile } = useClientProfile();
 
-  // Auto-pick default address
+  // Auto-pick default address from saved profile
   useEffect(() => {
     if (savedAddresses?.length && !address) {
       setAddress(savedAddresses.find((a) => a.is_default) || savedAddresses[0]);
     }
   }, [savedAddresses, address]);
+
+  // Pre-fill notes once with saved profile context (parking, pets, allergies, priorities…)
+  useEffect(() => {
+    if (notesAutofilled || notes || !clientProfile) return;
+    const seeded = buildDefaultNotes(clientProfile);
+    if (seeded) {
+      setNotes(seeded);
+      setNotesAutofilled(true);
+    }
+  }, [clientProfile, notes, notesAutofilled]);
 
   // Cleaner availability blocks
   const { data: availabilityBlocks } = useQuery({
@@ -323,6 +336,10 @@ export default function Book() {
             notes={notes}
             onNotesChange={setNotes}
             onEditStep={setStep}
+            clientName={clientProfile?.fullName || undefined}
+            clientEmail={clientProfile?.email || user?.email || undefined}
+            clientPhone={clientProfile?.phone || undefined}
+            notesAutofilled={notesAutofilled}
           />
         )}
 

@@ -1,7 +1,8 @@
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 import { FlowField } from "@/components/flow/FlowField";
 import { FlowTextarea } from "@/components/flow/FlowInput";
-import { Shield, Edit2, MapPin, Calendar, Clock, User, Sparkles } from "lucide-react";
+import { Shield, Edit2, MapPin, Calendar, Clock, User, Sparkles, UserCheck, Sparkle } from "lucide-react";
 import type { CleanerListing } from "@/hooks/useCleaners";
 import type { Address } from "@/hooks/useAddresses";
 import type { CleaningType } from "@/hooks/useBooking";
@@ -19,6 +20,10 @@ interface StepReviewProps {
   notes: string;
   onNotesChange: (v: string) => void;
   onEditStep: (step: number) => void;
+  clientName?: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  notesAutofilled?: boolean;
 }
 
 function ReviewBlock({
@@ -46,11 +51,34 @@ function ReviewBlock({
 
 export function StepReview({
   serviceType, hours, date, time, address, cleaner, selectedAddOns, notes, onNotesChange, onEditStep,
+  clientName, clientEmail, clientPhone, notesAutofilled,
 }: StepReviewProps) {
   const service = SERVICE_OPTIONS.find((s) => s.cleaningType === serviceType);
+  const hasContact = !!(clientName || clientEmail || clientPhone);
 
   return (
     <div className="space-y-5">
+      {hasContact && (
+        <div className="rounded-2xl border border-aero bg-aero-card p-4 flex items-start gap-3">
+          <div className="h-9 w-9 rounded-xl bg-aero-bg text-aero-trust flex items-center justify-center flex-shrink-0">
+            <UserCheck className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0 text-sm">
+            <p className="text-xs uppercase tracking-wide text-aero-soft font-medium">Booking as</p>
+            <p className="font-medium text-foreground mt-0.5 truncate">{clientName || "—"}</p>
+            <p className="text-xs text-aero-soft mt-0.5 truncate">
+              {[clientEmail, clientPhone].filter(Boolean).join(" · ") || "—"}
+            </p>
+          </div>
+          <Link
+            to="/account"
+            className="text-xs text-aero-trust hover:text-aero-cyan font-medium inline-flex items-center gap-1"
+          >
+            <Edit2 className="h-3 w-3" /> Edit
+          </Link>
+        </div>
+      )}
+
       <div className="rounded-2xl border border-aero bg-aero-card overflow-hidden">
         <div className="px-5 py-1">
           <ReviewBlock
