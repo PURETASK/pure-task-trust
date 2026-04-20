@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useDevBypass } from '@/hooks/useDevBypass';
 
 interface RequireAuthProps {
   children: ReactNode;
@@ -34,13 +35,14 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
   const { needsRoleSelection, needsOnboarding, role, isLoading: profileLoading } = useUserProfile();
   const location = useLocation();
+  const { active: devBypass, state: devState } = useDevBypass();
 
   // Step 1: Wait for the auth session to be resolved
   if (authLoading) {
     return <AuthLoadingSkeleton />;
   }
 
-  // Step 2: Not logged in → send to /auth
+  // Step 2: Not logged in → send to /auth (dev bypass cannot fake a session)
   if (!isAuthenticated) {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
@@ -50,19 +52,24 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     return <>{children}</>;
   }
 
-  // Step 4: Determine effective role — prefer AuthContext (set immediately on login)
-  // If AuthContext has the role, we can act on it immediately without waiting for profile query
-  const effectiveRole = user?.role ?? role;
+  // Step 4: Determine effective role — dev override > AuthContext > profile query
+  const effectiveRole =
+    (devBypass && devState.roleOverride) || user?.role || role;
 
   // Step 5: If we don't have a role from AuthContext yet AND profile is still loading,
   // show skeleton briefly rather than making a wrong redirect decision
-  if (!effectiveRole && profileLoading && requireRole) {
+  if (!effectiveRole && profileLoading && requireRole && !devBypass) {
     return <AuthLoadingSkeleton />;
   }
 
   // Step 6: Role-based redirect decisions (only when we have settled state)
-  // Check if user needs to select a role
-  if (requireRole && !effectiveRole && needsRoleSelection && location.pathname !== '/role-selection') {
+  if (
+    requireRole &&
+    !effectiveRole &&
+    needsRoleSelection &&
+    location.pathname !== '/role-selection' &&
+    !(devBypass && devState.skipRoleSelection)
+  ) {
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
@@ -72,13 +79,19 @@ export function RequireAuth({ children, allowedRoles, requireRole = true }: Requ
     effectiveRole === 'cleaner' &&
     needsOnboarding &&
     location.pathname !== '/cleaner/onboarding' &&
-    location.pathname !== '/role-selection'
+    location.pathname !== '/role-selection' &&
+    !(devBypass && devState.skipOnboarding)
   ) {
     return <Navigate to="/cleaner/onboarding" replace />;
   }
 
   // Step 8: Wrong role for this route → redirect to their home
-  if (allowedRoles && effectiveRole && !allowedRoles.includes(effectiveRole)) {
+  if (
+    allowedRoles &&
+    effectiveRole &&
+    !allowedRoles.includes(effectiveRole) &&
+    !(devBypass && devState.skipRoleGuard)
+  ) {
     const redirectPath =
       effectiveRole === 'cleaner' ? '/cleaner/dashboard' :
       effectiveRole === 'admin' ? '/admin/hub' :
