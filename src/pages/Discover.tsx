@@ -22,6 +22,7 @@ import { SEO } from "@/components/seo";
 import { ZipGate, type ResolvedLocation } from "@/components/discover/ZipGate";
 import { LocationBar } from "@/components/discover/LocationBar";
 import discoverBg from "@/assets/discover-bg.jpg";
+import { CleanerShowcaseCard } from "@/components/cleaners/CleanerShowcaseCard";
 
 const ZIP_STORAGE_KEY = "puretask_client_zip";
 
