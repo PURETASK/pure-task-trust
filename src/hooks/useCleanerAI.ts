@@ -4,7 +4,6 @@ import { useCleanerStats } from './useCleanerEarnings';
 import { useReliabilityScore } from './useReliabilityScore';
 import { useAvailabilityBlocks } from './useAvailability';
 import { useCleanerReviews } from './useReviews';
-import { useMarketplaceJobs } from './useMarketplaceJobs';
 import { format, addDays, isAfter, isBefore } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -25,7 +24,6 @@ export function useCleanerAI() {
   const { jobs } = useCleanerJobs();
   const { score, scoreBreakdown, events } = useReliabilityScore(profile?.id);
   const { blocks: availability } = useAvailabilityBlocks();
-  const { jobs: marketplaceJobs } = useMarketplaceJobs('all');
   const { data: reviews } = useCleanerReviews(profile?.id || '');
 
   const sendMessage = useCallback(async (input: string) => {
@@ -84,14 +82,6 @@ export function useCleanerAI() {
         isBlocked: !a.is_active,
       }));
 
-      // Get top marketplace opportunities
-      const topOpportunities = (marketplaceJobs || []).slice(0, 5).map(job => ({
-        type: job.cleaning_type,
-        date: job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'EEE MMM d, h:mm a') : 'TBD',
-        estimatedHours: job.estimated_hours,
-        credits: job.escrow_credits_reserved,
-      }));
-
       // Get recent reviews
       const recentReviews = (reviews || []).slice(0, 5).map(r => ({
         rating: r.rating,
@@ -133,9 +123,6 @@ export function useCleanerAI() {
         
         // Reviews
         recentReviews: recentReviews,
-        
-        // Marketplace opportunities
-        marketplaceOpportunities: topOpportunities,
       };
 
       const { data: sessionData } = await supabase.auth.getSession();
@@ -222,7 +209,7 @@ export function useCleanerAI() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, profile, stats, jobs, score, scoreBreakdown, events, availability, marketplaceJobs, reviews]);
+  }, [messages, profile, stats, jobs, score, scoreBreakdown, events, availability, reviews]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
