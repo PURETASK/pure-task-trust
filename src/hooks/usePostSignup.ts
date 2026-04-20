@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 
@@ -12,6 +13,8 @@ import { useAuth, UserRole } from '@/contexts/AuthContext';
  */
 export function usePostSignup() {
   const { session } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!session?.user) return;
@@ -72,6 +75,30 @@ export function usePostSignup() {
             .then(({ error }) => {
               if (error) console.error('Failed to send welcome email:', error);
             });
+        }
+      }
+
+      // Force brand-new clients straight into the setup flow.
+      // Skip if already on /setup, an auth route, or the cleaner onboarding.
+      if (isNewUser) {
+        const effectiveRole =
+          (pendingRole as UserRole | null) ??
+          (user.user_metadata?.role as UserRole | undefined) ??
+          null;
+
+        if (effectiveRole === 'client') {
+          const { data: clientProfile } = await supabase
+            .from('client_profiles')
+            .select('setup_completed_at')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          const skipPaths = ['/setup', '/auth', '/role-selection', '/cleaner/onboarding'];
+          const onSkippedRoute = skipPaths.some((p) => location.pathname.startsWith(p));
+
+          if (!clientProfile?.setup_completed_at && !onSkippedRoute) {
+            navigate('/setup', { replace: true });
+          }
         }
       }
     };
