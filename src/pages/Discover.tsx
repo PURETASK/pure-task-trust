@@ -494,13 +494,31 @@ export default function Discover() {
           {!isLoading && sortedCleaners.length > 0 && (
             <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {sortedCleaners.map((cleaner, i) => (
-                <CleanerCard
+                <CleanerShowcaseCard
                   key={cleaner.id}
-                  cleaner={cleaner}
-                  isFav={favoriteCleanerIds.has(cleaner.id)}
-                  onFav={handleToggleFavorite}
-                  isToggling={isToggling}
+                  cleaner={{
+                    id: cleaner.id,
+                    name: cleaner.name,
+                    firstName: cleaner.firstName,
+                    lastName: cleaner.lastName,
+                    profilePhotoUrl: (cleaner as any).profilePhotoUrl,
+                    hourlyRate: cleaner.hourlyRate,
+                    avgRating: cleaner.avgRating,
+                    jobsCompleted: cleaner.jobsCompleted,
+                    reliabilityScore: cleaner.reliabilityScore,
+                    tier: cleaner.tier,
+                    verified: (cleaner as any).verified,
+                    bio: cleaner.bio,
+                    professionalHeadline: (cleaner as any).professionalHeadline,
+                    services: cleaner.services,
+                    distanceLabel: cleaner.distance,
+                    isAvailable: cleaner.isAvailable,
+                  }}
+                  isFavorite={favoriteCleanerIds.has(cleaner.id)}
+                  onToggleFavorite={handleToggleFavorite}
+                  isFavoriteLoading={isToggling}
                   index={i}
+                  zip={location?.zip}
                 />
               ))}
             </div>
