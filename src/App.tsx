@@ -261,7 +261,7 @@ const App = () => (
 
                     {/* Legacy redirects → new routes */}
                     <Route path="/dashboard" element={<Navigate to="/home" replace />} />
-                    <Route path="/discover" element={<Discover />} />
+                    <Route path="/discover" element={<RequireSetup><Discover /></RequireSetup>} />
                     <Route path="/favorites" element={<Navigate to="/discover" replace />} />
                     <Route path="/profile" element={<Navigate to="/account" replace />} />
                     <Route path="/profile/edit" element={<RequireClient><ClientProfileEdit /></RequireClient>} />
@@ -270,12 +270,12 @@ const App = () => (
                     <Route path="/properties" element={<Navigate to="/account" replace />} />
 
                     {/* Preserved client routes */}
-                    <Route path="/cleaner/:id" element={<RequireAuth><CleanerProfile /></RequireAuth>} />
+                    <Route path="/cleaner/:id" element={<RequireAuth><RequireSetup><CleanerProfile /></RequireSetup></RequireAuth>} />
                     <Route path="/setup" element={<RequireClient><ClientSetup /></RequireClient>} />
                     <Route path="/book" element={<RequireClient><RequireSetup><Book /></RequireSetup></RequireClient>} />
-                    <Route path="/booking/:id" element={<RequireClient><BookingStatus /></RequireClient>} />
-                    <Route path="/job/:id" element={<RequireClient><JobInProgress /></RequireClient>} />
-                    <Route path="/job/:id/approve" element={<RequireClient><JobApproval /></RequireClient>} />
+                    <Route path="/booking/:id" element={<RequireClient><RequireSetup><BookingStatus /></RequireSetup></RequireClient>} />
+                    <Route path="/job/:id" element={<RequireClient><RequireSetup><JobInProgress /></RequireSetup></RequireClient>} />
+                    <Route path="/job/:id/approve" element={<RequireClient><RequireSetup><JobApproval /></RequireSetup></RequireClient>} />
                     {/* Legacy alias → canonical path */}
                     <Route path="/job-approval/:id" element={<Navigate to="/job/:id/approve" replace />} />
                     <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
