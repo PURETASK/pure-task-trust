@@ -10,10 +10,11 @@ import { cn } from "@/lib/utils";
  * Online/Offline availability toggle for cleaners, shown in the main header.
  */
 export function CleanerAvailabilityToggle() {
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
   const [toggling, setToggling] = useState(false);
   const isAvailable = profile?.is_available ?? false;
+  const isBusy = toggling || isLoading;
 
   const handleToggle = async () => {
     if (!profile?.id) {
@@ -56,15 +57,17 @@ export function CleanerAvailabilityToggle() {
   return (
     <button
       onClick={handleToggle}
-      disabled={toggling || !profile}
+      disabled={isBusy || !profile}
       className={cn(
         "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold transition-all active:scale-95",
-        isAvailable
+        isLoading
+          ? "bg-muted border-border text-muted-foreground"
+          : isAvailable
           ? "bg-success/10 border-success/30 text-success hover:bg-success/20 shadow-sm"
           : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
       )}
     >
-      {toggling ? (
+      {isBusy ? (
         <Loader2 className="h-3 w-3 animate-spin" />
       ) : (
         <span
@@ -74,7 +77,9 @@ export function CleanerAvailabilityToggle() {
           )}
         />
       )}
-      <span className="hidden xs:inline">{isAvailable ? "Online" : "Offline"}</span>
+      <span className="hidden xs:inline">
+        {isLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
+      </span>
     </button>
   );
 }
