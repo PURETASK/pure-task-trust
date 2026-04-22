@@ -6392,8 +6392,6 @@ export type Database = {
           is_available: boolean | null
           jobs_completed: number | null
           last_name: string | null
-          latitude: number | null
-          longitude: number | null
           low_flexibility_badge: boolean | null
           moveout_addon_cph: number | null
           professional_headline: string | null
@@ -6416,8 +6414,6 @@ export type Database = {
           is_available?: boolean | null
           jobs_completed?: number | null
           last_name?: string | null
-          latitude?: number | null
-          longitude?: number | null
           low_flexibility_badge?: boolean | null
           moveout_addon_cph?: number | null
           professional_headline?: string | null
@@ -6440,8 +6436,6 @@ export type Database = {
           is_available?: boolean | null
           jobs_completed?: number | null
           last_name?: string | null
-          latitude?: number | null
-          longitude?: number | null
           low_flexibility_badge?: boolean | null
           moveout_addon_cph?: number | null
           professional_headline?: string | null
