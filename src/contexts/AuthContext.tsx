@@ -75,7 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: supabaseUser.id,
         email: supabaseUser.email || '',
         name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
-        role: (supabaseUser.user_metadata?.role as UserRole) || 'client',
+        // SECURITY: never trust user_metadata for role — it's user-writable.
+        // Default to least-privileged 'client' until the DB confirms otherwise.
+        role: 'client',
       });
       setIsLoading(false);
     }, 5000);
@@ -99,7 +101,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: supabaseUser.id,
         email: supabaseUser.email || '',
         name: profileData?.full_name || supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
-        role: (roleData?.role as UserRole) || (supabaseUser.user_metadata?.role as UserRole) || 'client',
+        // SECURITY: role MUST come from the user_roles table (server-controlled).
+        // user_metadata is user-writable and would allow self-elevation.
+        role: (roleData?.role as UserRole) || 'client',
         avatar: profileData?.avatar_url || undefined,
       });
     } catch (error) {
@@ -109,7 +113,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: supabaseUser.id,
         email: supabaseUser.email || '',
         name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
-        role: (supabaseUser.user_metadata?.role as UserRole) || 'client',
+        // SECURITY: never trust user_metadata for role — default to least privilege.
+        role: 'client',
       });
     }
   };
