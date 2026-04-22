@@ -281,7 +281,7 @@ const getEmailTemplate = (template: EmailTemplate, data: Record<string, unknown>
           <p>Hi ${data.name || "there"},</p>
           <p>Great news! Your referral <strong>${data.refereeName || "a friend"}</strong> just completed their first job!</p>
           <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 12px; margin: 20px 0; text-align: center; color: white;">
-            <h2 style="margin: 0 0 10px 0; font-size: 32px;">+${data.credits || 500} Credits</h2>
+            <h2 style="margin: 0 0 10px 0; font-size: 32px;">+${data.credits || 25} Credits</h2>
             <p style="margin: 0; opacity: 0.9;">Added to your account!</p>
           </div>
           <p>Keep sharing your referral code to earn more credits!</p>
