@@ -18,6 +18,7 @@ import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -42,26 +43,46 @@ export function CleanerHeader() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { profile } = useCleanerProfile();
+  const queryClient = useQueryClient();
   const [toggling, setToggling] = useState(false);
 
   const isAvailable = profile?.is_available ?? false;
 
   const handleToggleAvailability = async () => {
-    if (!profile?.id) return;
+    if (!profile?.id) {
+      toast.error("Cleaner profile not loaded yet");
+      return;
+    }
+
+    const next = !isAvailable;
     setToggling(true);
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("cleaner_profiles")
-        .update({ is_available: !isAvailable })
-        .eq("id", profile.id);
+        .update({ is_available: next })
+        .eq("id", profile.id)
+        .select("id, is_available")
+        .maybeSingle();
+
       if (error) throw error;
+      if (!data) throw new Error("No profile row updated");
+
+      queryClient.setQueriesData({ queryKey: ["cleaner-profile"] }, (old: any) =>
+        old ? { ...old, is_available: next } : old
+      );
+      await queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+
       toast.success(
-        !isAvailable
+        next
           ? "You're now available — clients can book you!"
           : "You're now offline — you won't receive new bookings."
       );
-    } catch {
-      toast.error("Failed to update availability");
+    } catch (error) {
+      console.error("Availability toggle failed:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update availability"
+      );
     } finally {
       setToggling(false);
     }
