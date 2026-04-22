@@ -69,19 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
-    // Fallback: if DB fetch takes >5s, unblock with metadata-derived user
-    const fallback = setTimeout(() => {
-      setUser({
-        id: supabaseUser.id,
-        email: supabaseUser.email || '',
-        name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
-        // SECURITY: never trust user_metadata for role — it's user-writable.
-        // Default to least-privileged 'client' until the DB confirms otherwise.
-        role: 'client',
-      });
-      setIsLoading(false);
-    }, 5000);
-
     try {
       const [{ data: roleData }, { data: profileData }] = await Promise.all([
         supabase
@@ -96,7 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle(),
       ]);
 
-      clearTimeout(fallback);
       setUser({
         id: supabaseUser.id,
         email: supabaseUser.email || '',
@@ -107,7 +93,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatar: profileData?.avatar_url || undefined,
       });
     } catch (error) {
-      clearTimeout(fallback);
       console.error('Failed to fetch user profile:', error);
       setUser({
         id: supabaseUser.id,
