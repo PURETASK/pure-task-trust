@@ -16,22 +16,38 @@ export function CleanerAvailabilityToggle() {
   const isAvailable = profile?.is_available ?? false;
 
   const handleToggle = async () => {
-    if (!profile?.id) return;
+    if (!profile?.id) {
+      toast.error("Cleaner profile not loaded yet");
+      return;
+    }
+    const next = !isAvailable;
     setToggling(true);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("cleaner_profiles")
-        .update({ is_available: !isAvailable })
-        .eq("id", profile.id);
+        .update({ is_available: next })
+        .eq("id", profile.id)
+        .select("id, is_available")
+        .maybeSingle();
       if (error) throw error;
-      queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+      if (!data) throw new Error("No profile row updated (permission?)");
+
+      // Optimistically update cache so the UI flips immediately.
+      queryClient.setQueriesData({ queryKey: ["cleaner-profile"] }, (old: any) =>
+        old ? { ...old, is_available: next } : old
+      );
+      await queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+
       toast.success(
-        !isAvailable
+        next
           ? "You're now online — clients can book you!"
           : "You're now offline — no new bookings."
       );
-    } catch {
-      toast.error("Failed to update availability");
+    } catch (err) {
+      console.error("Availability toggle failed:", err);
+      toast.error(
+        err instanceof Error ? err.message : "Failed to update availability"
+      );
     } finally {
       setToggling(false);
     }
