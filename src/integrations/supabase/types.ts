@@ -6454,6 +6454,10 @@ export type Database = {
         Args: { cleaner_user_id: string; client_profile_id: string }
         Returns: boolean
       }
+      client_has_job_with_cleaner: {
+        Args: { _cleaner_profile_id: string; _client_user_id: string }
+        Returns: boolean
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
