@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,10 @@ function formatMessageTime(dateString: string) {
 }
 
 export default function Messages() {
+  const [searchParams] = useSearchParams();
+  const deepLinkThreadId = searchParams.get("thread");
+  const deepLinkJobId = searchParams.get("job");
+
   const { data: threads, isLoading: threadsLoading } = useMessageThreads();
   const [selectedThread, setSelectedThread] = useState<MessageThread | null>(null);
   const [newMessage, setNewMessage] = useState("");
@@ -29,11 +34,20 @@ export default function Messages() {
   const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThread?.id || '');
   const { sendMessage, isSending, markAsRead } = useMessageActions(selectedThread?.id || '');
 
+  // Auto-select thread from deep link (?thread= or ?job=), else first thread
   useEffect(() => {
-    if (threads && threads.length > 0 && !selectedThread) {
-      setSelectedThread(threads[0]);
+    if (!threads || threads.length === 0) return;
+    if (selectedThread) return;
+    if (deepLinkThreadId) {
+      const match = threads.find(t => t.id === deepLinkThreadId);
+      if (match) { setSelectedThread(match); return; }
     }
-  }, [threads, selectedThread]);
+    if (deepLinkJobId) {
+      const match = threads.find(t => t.job_id === deepLinkJobId);
+      if (match) { setSelectedThread(match); return; }
+    }
+    setSelectedThread(threads[0]);
+  }, [threads, selectedThread, deepLinkThreadId, deepLinkJobId]);
 
   useEffect(() => {
     if (selectedThread && selectedThread.unreadCount > 0) markAsRead();
