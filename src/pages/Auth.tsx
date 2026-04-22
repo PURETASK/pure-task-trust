@@ -200,7 +200,7 @@ export default function AuthPage() {
                   <Gift className="h-6 w-6 text-aero-trust flex-shrink-0" />
                   <div>
                     <p className="font-semibold text-sm">You've been referred!</p>
-                    <p className="text-xs text-muted-foreground">Complete signup to claim your $500 credit</p>
+                    <p className="text-xs text-muted-foreground">Complete signup to claim your $25 credit</p>
                   </div>
                 </div>
               )}
