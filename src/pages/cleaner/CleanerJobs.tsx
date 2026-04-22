@@ -331,9 +331,13 @@ function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: num
 
         {/* ACTIONS ROW */}
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
-            <Link to={`/cleaner/messages?job=${job.id}`}><MessageCircle className="h-4 w-4" /> Message</Link>
-          </Button>
+          <MessageJobButton
+            jobId={job.id}
+            otherPartyId={(job as any).client_id}
+            variant="outline"
+            className="flex-1 rounded-xl border-2 border-border/60 gap-1.5"
+            label="Message"
+          />
           <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
             <Link to={`/cleaner/jobs/${job.id}`}><ExternalLink className="h-4 w-4" /> Full Details</Link>
           </Button>

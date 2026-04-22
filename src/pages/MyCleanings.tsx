@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useClientJobs } from "@/hooks/useJob";
 import { motion } from "framer-motion";
+import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 
 type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
@@ -131,8 +132,8 @@ function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, e
 
         return (
           <motion.div key={job.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-            <Link to={`/my-cleanings/${job.id}`}>
-              <div className={`palette-card palette-card-${palette} flex items-center gap-4 p-4 sm:p-5 hover:shadow-elevated transition-all cursor-pointer group`}>
+            <div className={`palette-card palette-card-${palette} flex items-center gap-4 p-4 sm:p-5 hover:shadow-elevated transition-all group`}>
+              <Link to={`/my-cleanings/${job.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
                 <div className={`palette-icon palette-icon-${palette} h-12 w-12 font-bold text-sm`}>
                   {cleanerName.charAt(0)}
                 </div>
@@ -151,9 +152,21 @@ function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, e
                     <p className="text-xs text-muted-foreground mt-1">${job.escrow_credits_reserved} credits held</p>
                   )}
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+              </Link>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {job.cleaner_id && (
+                  <MessageJobButton
+                    jobId={job.id}
+                    otherPartyId={job.cleaner_id}
+                    iconOnly
+                    variant="ghost"
+                    className="rounded-xl h-9 w-9 p-0 hover:bg-primary/10"
+                    aria-label="Message cleaner"
+                  />
+                )}
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
-            </Link>
+            </div>
           </motion.div>
         );
       })}
