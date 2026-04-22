@@ -23,6 +23,7 @@ import { useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 import type { CleanerJobWithClient } from "@/hooks/useCleanerProfile";
 
 const TIER_FEE: Record<string, number> = { platinum: 0.15, gold: 0.16, silver: 0.18, bronze: 0.20 };
@@ -330,9 +331,13 @@ function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: num
 
         {/* ACTIONS ROW */}
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
-            <Link to={`/cleaner/messages?job=${job.id}`}><MessageCircle className="h-4 w-4" /> Message</Link>
-          </Button>
+          <MessageJobButton
+            jobId={job.id}
+            otherPartyId={(job as any).client_id}
+            variant="outline"
+            className="flex-1 rounded-xl border-2 border-border/60 gap-1.5"
+            label="Message"
+          />
           <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 border-border/60 gap-1.5" asChild>
             <Link to={`/cleaner/jobs/${job.id}`}><ExternalLink className="h-4 w-4" /> Full Details</Link>
           </Button>
@@ -370,9 +375,18 @@ function CompactJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: 
             <span className="text-xs text-muted-foreground truncate">{address}</span>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="shrink-0 rounded-xl h-8 px-3 text-xs gap-1" asChild>
-          <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
-        </Button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <MessageJobButton
+            jobId={job.id}
+            otherPartyId={(job as any).client_id}
+            iconOnly
+            className="rounded-xl h-8 w-8 p-0"
+            aria-label="Message client"
+          />
+          <Button variant="ghost" size="sm" className="rounded-xl h-8 px-3 text-xs gap-1" asChild>
+            <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
+          </Button>
+        </div>
       </div>
     </motion.div>
   );
@@ -518,9 +532,18 @@ export default function CleanerJobs() {
                           Submitted — payment releases upon client approval
                         </p>
                       </div>
-                      <Button variant="outline" size="sm" className="shrink-0 rounded-xl" asChild>
-                        <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
-                      </Button>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <MessageJobButton
+                          jobId={job.id}
+                          otherPartyId={(job as any).client_id}
+                          iconOnly
+                          className="rounded-xl h-8 w-8 p-0"
+                          aria-label="Message client"
+                        />
+                        <Button variant="outline" size="sm" className="rounded-xl" asChild>
+                          <Link to={`/cleaner/jobs/${job.id}`}>View</Link>
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 ))
