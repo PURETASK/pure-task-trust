@@ -29,6 +29,7 @@ import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
+import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 
 const statusConfig: Record<string, { label: string; color: string; description: string }> = {
   created: { label: "Pending", color: "bg-muted text-muted-foreground", description: "Waiting for cleaner confirmation" },
@@ -280,10 +281,14 @@ export default function CleaningDetail() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             {/* Message Cleaner */}
-            {job.cleaner_id && ['created', 'pending', 'confirmed', 'in_progress'].includes(job.status) && (
-              <Button variant="outline" className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2" asChild>
-                <Link to="/messages"><MessageCircle className="h-5 w-5" /><span className="text-xs font-bold">Message</span></Link>
-              </Button>
+            {job.cleaner_id && ['created', 'pending', 'confirmed', 'in_progress', 'completed'].includes(job.status) && (
+              <MessageJobButton
+                jobId={job.id}
+                otherPartyId={job.cleaner_id}
+                variant="outline"
+                className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2"
+                label="Message"
+              />
             )}
 
             {/* Reschedule */}
