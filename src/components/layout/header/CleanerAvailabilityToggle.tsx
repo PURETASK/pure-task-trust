@@ -34,10 +34,11 @@ export function CleanerAvailabilityToggle() {
       if (!data) throw new Error("No profile row updated (permission?)");
 
       // Optimistically update cache so the UI flips immediately.
-      queryClient.setQueriesData({ queryKey: ["cleaner-profile"] }, (old: any) =>
+      const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
+      queryClient.setQueryData(cleanerProfileQueryKey, (old: any) =>
         old ? { ...old, is_available: next } : old
       );
-      await queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+      await queryClient.invalidateQueries({ queryKey: cleanerProfileQueryKey });
 
       toast.success(
         next
