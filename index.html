@@ -24,6 +24,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Preconnect to backend for faster first API calls (LCP) -->
+    <link rel="preconnect" href="https://ksoxwlxkbshohmhygqxk.supabase.co" crossorigin />
+
+    <!-- Preload LCP hero image so it is discoverable in the initial HTML -->
+    <link
+      rel="preload"
+      as="image"
+      href="/hero/spring-cleaning-hero.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
     <!-- Fonts: async-loaded to avoid render-blocking. display=swap prevents invisible text. -->
     <link
       rel="preload"
