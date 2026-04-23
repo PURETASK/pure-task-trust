@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/spring-cleaning-hero.webp";
+
+// Served from /public so it can be preloaded from index.html with a stable URL
+const heroImage = "/hero/spring-cleaning-hero.webp";
 
 export function Hero() {
   return (
