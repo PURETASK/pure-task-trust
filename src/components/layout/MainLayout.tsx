@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, HelpCircle, Shield, Bell, MessageCircle } from "lucide-react";
-import logo from "@/assets/brand/puretask-mark.png";
+import logo from "@/assets/brand/puretask-mark-sm.webp";
 import { CreditChip } from "@/components/layout/header/CreditChip";
 import { CleanerAvailabilityToggle } from "@/components/layout/header/CleanerAvailabilityToggle";
 import { RoleBadge } from "@/components/layout/header/RoleBadge";
