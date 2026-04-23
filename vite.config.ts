@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
       // Use public/manifest.json
       manifest: false,
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,webp,svg,woff2}"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         // Never cache OAuth redirect — must always hit the network
         navigateFallbackDenylist: [/^\/~oauth/, /^\/auth/],
