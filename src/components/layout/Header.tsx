@@ -6,7 +6,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import logo from "@/assets/brand/puretask-mark.png";
+import logo from "@/assets/brand/puretask-mark-sm.webp";
 
 export function Header() {
   return (

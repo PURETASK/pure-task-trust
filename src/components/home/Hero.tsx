@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/spring-cleaning-hero.png";
+import heroImage from "@/assets/spring-cleaning-hero.webp";
 
 export function Hero() {
   return (
