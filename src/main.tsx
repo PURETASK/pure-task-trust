@@ -20,9 +20,12 @@ const initSentry = () => {
 };
 
 if (typeof window !== "undefined") {
-  if ("requestIdleCallback" in window) {
-    (window as any).requestIdleCallback(initSentry, { timeout: 3000 });
+  const w = window as Window & {
+    requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => void;
+  };
+  if (typeof w.requestIdleCallback === "function") {
+    w.requestIdleCallback(initSentry, { timeout: 3000 });
   } else {
-    window.setTimeout(initSentry, 1500);
+    setTimeout(initSentry, 1500);
   }
 }
