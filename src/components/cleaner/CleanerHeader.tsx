@@ -42,11 +42,12 @@ export function CleanerHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { profile } = useCleanerProfile();
+  const { profile, isLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
   const [toggling, setToggling] = useState(false);
 
   const isAvailable = profile?.is_available ?? false;
+  const isBusy = toggling || isLoading;
 
   const handleToggleAvailability = async () => {
     if (!profile?.id) {
@@ -68,10 +69,11 @@ export function CleanerHeader() {
       if (error) throw error;
       if (!data) throw new Error("No profile row updated");
 
-      queryClient.setQueriesData({ queryKey: ["cleaner-profile"] }, (old: any) =>
+      const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
+      queryClient.setQueryData(cleanerProfileQueryKey, (old: any) =>
         old ? { ...old, is_available: next } : old
       );
-      await queryClient.invalidateQueries({ queryKey: ["cleaner-profile"] });
+      await queryClient.invalidateQueries({ queryKey: cleanerProfileQueryKey });
 
       toast.success(
         next
@@ -137,21 +139,23 @@ export function CleanerHeader() {
           {/* One-tap availability toggle */}
           <button
             onClick={handleToggleAvailability}
-            disabled={toggling || !profile}
+            disabled={isBusy || !profile}
             className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${
-              isAvailable
+              isLoading
+                ? "bg-muted border-border text-muted-foreground"
+                : isAvailable
                 ? "bg-success/10 border-success/30 text-success hover:bg-success/20"
                 : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
             }`}
           >
-            {toggling ? (
+            {isBusy ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : isAvailable ? (
               <Wifi className="h-3.5 w-3.5" />
             ) : (
               <WifiOff className="h-3.5 w-3.5" />
             )}
-            {isAvailable ? "Online" : "Offline"}
+            {isLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
           </button>
 
           <DropdownMenu>
@@ -182,21 +186,27 @@ export function CleanerHeader() {
               <div className="px-2 py-2 md:hidden">
                 <button
                   onClick={handleToggleAvailability}
-                  disabled={toggling || !profile}
+                  disabled={isBusy || !profile}
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isAvailable
+                    isLoading
+                      ? "bg-muted text-muted-foreground"
+                      : isAvailable
                       ? "bg-success/10 text-success"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {toggling ? (
+                  {isBusy ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : isAvailable ? (
                     <Wifi className="h-4 w-4" />
                   ) : (
                     <WifiOff className="h-4 w-4" />
                   )}
-                  {isAvailable ? "Online — tap to go offline" : "Offline — tap to go online"}
+                  {isLoading
+                    ? "Loading availability"
+                    : isAvailable
+                    ? "Online — tap to go offline"
+                    : "Offline — tap to go online"}
                 </button>
               </div>
               <DropdownMenuSeparator className="md:hidden" />
