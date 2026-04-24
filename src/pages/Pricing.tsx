@@ -151,7 +151,7 @@ export default function Pricing() {
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3 sm:mb-4 leading-tight">
                 Transparent,<br /><span className="text-primary">Fair Pricing</span>
               </h1>
-              <ul className="text-left text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-10 space-y-2">
+              <ul className="text-left text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-10 space-y-2 w-fit">
                 {[
                   <><strong className="text-foreground">1 credit = $1 USD</strong> — simple, transparent pricing</>,
                   <>Cleaners keep <strong className="text-foreground">75–85%</strong> of every booking</>,
