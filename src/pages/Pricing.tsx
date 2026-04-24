@@ -151,18 +151,31 @@ export default function Pricing() {
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3 sm:mb-4 leading-tight">
                 Transparent,<br /><span className="text-primary">Fair Pricing</span>
               </h1>
-              <p className="text-sm sm:text-xl text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-10 leading-relaxed">
-                1 credit = $1 USD. Cleaners keep <strong className="text-foreground">75–85%</strong> of every booking. The platform fee covers verification, GPS, photo storage, and 24/7 support.
-              </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-6 mb-6 sm:mb-10">
+              <ul className="text-left text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-10 space-y-2">
+                {[
+                  <><strong className="text-foreground">1 credit = $1 USD</strong> — simple, transparent pricing</>,
+                  <>Cleaners keep <strong className="text-foreground">75–85%</strong> of every booking</>,
+                  <>Platform fee covers verification &amp; GPS tracking</>,
+                  <>Includes photo storage and 24/7 support</>,
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-10">
                 {[
                   { value: "1 credit", label: "= $1 USD" },
                   { value: "75–85%", label: "Cleaner keeps" },
                   { value: "100%", label: "Verified" },
                 ].map(({ value, label }) => (
-                  <div key={label} className="text-center">
-                    <div className="text-base sm:text-2xl font-bold text-foreground leading-tight">{value}</div>
-                    <div className="text-muted-foreground text-[10px] sm:text-sm leading-tight">{label}</div>
+                  <div
+                    key={label}
+                    className="text-center rounded-xl sm:rounded-2xl border-2 border-primary/30 bg-primary/5 px-2 py-3 sm:px-4 sm:py-5 shadow-sm hover:border-primary/50 hover:bg-primary/10 transition-colors"
+                  >
+                    <div className="text-base sm:text-2xl font-bold text-primary leading-tight">{value}</div>
+                    <div className="text-muted-foreground text-[10px] sm:text-sm leading-tight mt-1">{label}</div>
                   </div>
                 ))}
               </div>
