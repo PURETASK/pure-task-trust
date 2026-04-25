@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import puretaskMark from "@/assets/brand/puretask-mark.png";
+import puretaskMark from "@/assets/brand/dash-icon-framed.png";
 
 interface FlowShellProps {
   children: ReactNode;
