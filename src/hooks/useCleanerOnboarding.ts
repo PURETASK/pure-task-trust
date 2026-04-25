@@ -384,5 +384,12 @@ export function useCleanerOnboarding() {
     isSavingRates: saveRatesMutation.isPending,
     completeOnboarding: completeOnboardingMutation.mutateAsync,
     isCompletingOnboarding: completeOnboardingMutation.isPending,
+
+    savePersonalInfo: savePersonalInfoMutation.mutateAsync,
+    isSavingPersonalInfo: savePersonalInfoMutation.isPending,
+    saveSpecialties: saveSpecialtiesMutation.mutateAsync,
+    isSavingSpecialties: saveSpecialtiesMutation.isPending,
+    saveEmergencyContact: saveEmergencyContactMutation.mutateAsync,
+    isSavingEmergencyContact: saveEmergencyContactMutation.isPending,
   };
 }
