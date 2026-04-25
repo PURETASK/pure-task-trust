@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import ptMark from "@/assets/brand/puretask-mark.png";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -107,8 +108,8 @@ export default function Install() {
           className="relative flex flex-col items-center"
         >
           {/* App icon */}
-          <div className="h-24 w-24 rounded-[28px] gradient-brand flex items-center justify-center mb-5 shadow-elevated">
-            <span className="text-white font-poppins font-bold text-4xl">P</span>
+          <div className="h-24 w-24 rounded-[28px] bg-white flex items-center justify-center mb-5 shadow-elevated overflow-hidden">
+            <img src={ptMark} alt="PureTask" className="h-20 w-20 object-contain" />
           </div>
 
           <h1 className="text-4xl font-poppins font-bold tracking-tight mb-2">PureTask</h1>
