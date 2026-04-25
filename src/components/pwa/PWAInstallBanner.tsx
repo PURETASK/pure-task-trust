@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Download, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import ptMark from "@/assets/brand/puretask-mark-sm.webp";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -79,8 +80,8 @@ export function PWAInstallBanner() {
             "shadow-elevated p-3.5 flex items-center gap-3"
           )}>
             {/* App icon */}
-            <div className="h-11 w-11 rounded-xl gradient-brand flex items-center justify-center flex-shrink-0 shadow-md">
-              <span className="text-white font-poppins font-bold text-lg">P</span>
+            <div className="h-11 w-11 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden">
+              <img src={ptMark} alt="PureTask" className="h-9 w-9 object-contain" />
             </div>
 
             <div className="flex-1 min-w-0">
