@@ -38,6 +38,7 @@ export default {
         "pt-cyan": "#40E8E0",        // aligned to Clean Aqua
         "pt-trust": "#0A3B78",       // Deep Trust Blue
         "pt-navy": "#072A55",        // V2.1 Anchor — Navy-950
+        "pt-anchor": "#072A55",      // V2.1 Anchor Navy alias
         "pt-green": "#28C76F",
         "pt-amber": "#FFC107",
         "pt-orange": "#FF9800",
