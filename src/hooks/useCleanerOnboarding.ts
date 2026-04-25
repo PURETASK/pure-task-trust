@@ -7,9 +7,28 @@ import type { Database } from '@/integrations/supabase/types';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
-export type OnboardingPhase = 'agreement' | 'profile' | 'verification' | 'work-setup' | 'launch';
+export type OnboardingPhase =
+  | 'agreement'
+  | 'profile'
+  | 'personal'
+  | 'verification'
+  | 'work-setup'
+  | 'specialties'
+  | 'emergency'
+  | 'payout'
+  | 'launch';
 
-const PHASES: OnboardingPhase[] = ['agreement', 'profile', 'verification', 'work-setup', 'launch'];
+const PHASES: OnboardingPhase[] = [
+  'agreement',
+  'profile',
+  'personal',
+  'verification',
+  'work-setup',
+  'specialties',
+  'emergency',
+  'payout',
+  'launch',
+];
 
 export interface BasicInfoData {
   firstName: string;
