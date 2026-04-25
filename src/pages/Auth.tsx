@@ -301,6 +301,11 @@ export default function AuthPage() {
               </div>
             )}
 
+            <img
+              src={ptMark}
+              alt="PureTask"
+              className="h-16 w-16 object-contain mb-3"
+            />
             <h1 className="text-3xl font-poppins font-bold mb-1 tracking-tight">{isSignUp ? "Create your account" : "Welcome back"}</h1>
             <p className="text-muted-foreground mb-6">
               {isSignUp ? "Start your journey with PureTask today." : "Sign in to your PureTask account."}
