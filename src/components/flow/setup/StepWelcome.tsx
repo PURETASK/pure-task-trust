@@ -1,7 +1,7 @@
 import { FlowCard, FlowProgress } from "@/components/flow";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Home, Heart } from "lucide-react";
-import dashImg from "@/assets/brand/dash-hummingbird.png";
+import dashImg from "@/assets/brand/dash-front.png";
 
 interface Props {
   total: number;
