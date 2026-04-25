@@ -660,6 +660,23 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* Brand Packet v1.0.1 a11y gate — fully halt looping mascot/glow motion */
+  .animate-float-y,
+  .animate-aero-pulse,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none !important;
+  }
+}
+
+/* ── Brand Packet v1.0.1 — 2px focus rings on every interactive surface ── */
+@layer base {
+  :where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
 }
 
 /* ── Performance helpers ──────────────────────────────────────────────── */

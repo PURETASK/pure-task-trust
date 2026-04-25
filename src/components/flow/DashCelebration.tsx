@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import dashImg from "@/assets/brand/dash-hummingbird.png";
+import dashImg from "@/assets/brand/dash-celebrate.png";
 
 interface Props {
   title: string;
@@ -13,11 +13,34 @@ interface Props {
  * Used on booking confirmation, setup completion, and other success states.
  */
 export function DashCelebration({ title, subtitle, size = "md" }: Props) {
+  const prefersReducedMotion = useReducedMotion();
   const sizes = {
     sm: "h-20 w-20",
     md: "h-28 w-28 sm:h-32 sm:w-32",
     lg: "h-32 w-32 sm:h-40 sm:w-40",
   };
+
+  // Reduced-motion: render a calm, static celebration (no halo pulse, no
+  // sparkle loop, no spring entrance) per Brand Packet v1.0.1 a11y gate.
+  if (prefersReducedMotion) {
+    return (
+      <div className="relative text-center py-2">
+        <div className="absolute inset-x-0 top-0 mx-auto h-40 w-40 rounded-full bg-gradient-aero opacity-15 blur-3xl pointer-events-none" />
+        <img
+          src={dashImg}
+          alt=""
+          loading="lazy"
+          className={`relative mx-auto ${sizes[size]} drop-shadow-[0_8px_24px_hsl(var(--aero-cyan)/0.35)]`}
+        />
+        <h2 className="font-poppins text-2xl sm:text-3xl font-semibold tracking-tight mt-4">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="mt-2 text-aero-soft max-w-sm mx-auto leading-relaxed">{subtitle}</p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="relative text-center py-2">
