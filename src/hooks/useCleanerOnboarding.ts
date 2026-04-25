@@ -7,9 +7,28 @@ import type { Database } from '@/integrations/supabase/types';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
-export type OnboardingPhase = 'agreement' | 'profile' | 'verification' | 'work-setup' | 'launch';
+export type OnboardingPhase =
+  | 'agreement'
+  | 'profile'
+  | 'personal'
+  | 'verification'
+  | 'work-setup'
+  | 'specialties'
+  | 'emergency'
+  | 'payout'
+  | 'launch';
 
-const PHASES: OnboardingPhase[] = ['agreement', 'profile', 'verification', 'work-setup', 'launch'];
+const PHASES: OnboardingPhase[] = [
+  'agreement',
+  'profile',
+  'personal',
+  'verification',
+  'work-setup',
+  'specialties',
+  'emergency',
+  'payout',
+  'launch',
+];
 
 export interface BasicInfoData {
   firstName: string;
@@ -296,6 +315,47 @@ export function useCleanerOnboarding() {
     onSuccess: () => invalidateProfile(),
   });
 
+  // ── New: Personal info (DOB + home address) ───────────────────────────
+  const savePersonalInfoMutation = useMutation({
+    mutationFn: async (data: { date_of_birth: string; home_address: { street: string; city: string; state: string; zip: string } }) => {
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({ date_of_birth: data.date_of_birth, home_address: data.home_address as any })
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidateProfile(),
+  });
+
+  // ── New: Specialties / languages / pet-friendly / supplies ────────────
+  const saveSpecialtiesMutation = useMutation({
+    mutationFn: async (data: { specialties: string[]; languages: string[]; pet_friendly: boolean; brings_supplies: boolean }) => {
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({
+          specialties: data.specialties,
+          languages: data.languages,
+          pet_friendly: data.pet_friendly,
+          brings_supplies: data.brings_supplies,
+        } as any)
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidateProfile(),
+  });
+
+  // ── New: Emergency contact ────────────────────────────────────────────
+  const saveEmergencyContactMutation = useMutation({
+    mutationFn: async (data: { emergency_contact: { name: string; phone: string; relationship: string } }) => {
+      const id = await getProfileId();
+      const { error } = await supabase.from('cleaner_profiles')
+        .update({ emergency_contact: data.emergency_contact as any })
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidateProfile(),
+  });
+
   return {
     currentPhase,
     currentPhaseIndex: PHASES.indexOf(currentPhase),
@@ -324,5 +384,12 @@ export function useCleanerOnboarding() {
     isSavingRates: saveRatesMutation.isPending,
     completeOnboarding: completeOnboardingMutation.mutateAsync,
     isCompletingOnboarding: completeOnboardingMutation.isPending,
+
+    savePersonalInfo: savePersonalInfoMutation.mutateAsync,
+    isSavingPersonalInfo: savePersonalInfoMutation.isPending,
+    saveSpecialties: saveSpecialtiesMutation.mutateAsync,
+    isSavingSpecialties: saveSpecialtiesMutation.isPending,
+    saveEmergencyContact: saveEmergencyContactMutation.mutateAsync,
+    isSavingEmergencyContact: saveEmergencyContactMutation.isPending,
   };
 }
