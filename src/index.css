@@ -679,6 +679,11 @@ body {
   }
 }
 
+/* ── V2.1 §2 — numerics always tabular for prices / credits / totals ── */
+@layer utilities {
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+}
+
 /* ── Performance helpers ──────────────────────────────────────────────── */
 
 /* Prevent layout shift from images without explicit dimensions */
