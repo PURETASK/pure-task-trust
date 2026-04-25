@@ -1577,11 +1577,15 @@ export type Database = {
           bio: string | null
           bio_generated_at: string | null
           bio_score: number | null
+          brings_supplies: boolean | null
           cleaning_types: string[] | null
           created_at: string
+          date_of_birth: string | null
           deep_addon_cph: number | null
           deleted_at: string | null
+          emergency_contact: Json | null
           first_name: string | null
+          home_address: Json | null
           hourly_rate_credits: number
           id: string
           instant_payout_enabled: boolean | null
@@ -1612,6 +1616,7 @@ export type Database = {
           specialties: string[] | null
           stripe_account_id: string | null
           stripe_connect_id: string | null
+          stripe_connect_onboarded: boolean
           stripe_payouts_enabled: boolean | null
           supplies_provided: boolean | null
           tier: string
@@ -1619,6 +1624,7 @@ export type Database = {
           travel_radius_km: number | null
           updated_at: string
           user_id: string
+          verification_status: Database["public"]["Enums"]["cleaner_verification_status"]
           work_style: string[] | null
           years_experience: number | null
         }
@@ -1632,11 +1638,15 @@ export type Database = {
           bio?: string | null
           bio_generated_at?: string | null
           bio_score?: number | null
+          brings_supplies?: boolean | null
           cleaning_types?: string[] | null
           created_at?: string
+          date_of_birth?: string | null
           deep_addon_cph?: number | null
           deleted_at?: string | null
+          emergency_contact?: Json | null
           first_name?: string | null
+          home_address?: Json | null
           hourly_rate_credits?: number
           id?: string
           instant_payout_enabled?: boolean | null
@@ -1667,6 +1677,7 @@ export type Database = {
           specialties?: string[] | null
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
+          stripe_connect_onboarded?: boolean
           stripe_payouts_enabled?: boolean | null
           supplies_provided?: boolean | null
           tier?: string
@@ -1674,6 +1685,7 @@ export type Database = {
           travel_radius_km?: number | null
           updated_at?: string
           user_id: string
+          verification_status?: Database["public"]["Enums"]["cleaner_verification_status"]
           work_style?: string[] | null
           years_experience?: number | null
         }
@@ -1687,11 +1699,15 @@ export type Database = {
           bio?: string | null
           bio_generated_at?: string | null
           bio_score?: number | null
+          brings_supplies?: boolean | null
           cleaning_types?: string[] | null
           created_at?: string
+          date_of_birth?: string | null
           deep_addon_cph?: number | null
           deleted_at?: string | null
+          emergency_contact?: Json | null
           first_name?: string | null
+          home_address?: Json | null
           hourly_rate_credits?: number
           id?: string
           instant_payout_enabled?: boolean | null
@@ -1722,6 +1738,7 @@ export type Database = {
           specialties?: string[] | null
           stripe_account_id?: string | null
           stripe_connect_id?: string | null
+          stripe_connect_onboarded?: boolean
           stripe_payouts_enabled?: boolean | null
           supplies_provided?: boolean | null
           tier?: string
@@ -1729,6 +1746,7 @@ export type Database = {
           travel_radius_km?: number | null
           updated_at?: string
           user_id?: string
+          verification_status?: Database["public"]["Enums"]["cleaner_verification_status"]
           work_style?: string[] | null
           years_experience?: number | null
         }
@@ -6522,6 +6540,7 @@ export type Database = {
         | "photo_compliance"
         | "positive_review"
         | "negative_review"
+      cleaner_verification_status: "pending" | "clear" | "consider" | "rejected"
       cleaning_type: "basic" | "deep" | "move_out" | "move_in"
       client_risk_band: "low" | "normal" | "elevated" | "high"
       client_risk_event_type:
@@ -6734,6 +6753,7 @@ export const Constants = {
         "positive_review",
         "negative_review",
       ],
+      cleaner_verification_status: ["pending", "clear", "consider", "rejected"],
       cleaning_type: ["basic", "deep", "move_out", "move_in"],
       client_risk_band: ["low", "normal", "elevated", "high"],
       client_risk_event_type: [
