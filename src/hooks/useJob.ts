@@ -169,91 +169,16 @@ export function useJobActions(jobId: string) {
   const approveJobMutation = useMutation({
     mutationFn: async () => {
       if (!user?.id) throw new Error('Not authenticated');
-
-      // Get the job details
-      const { data: job, error: jobError } = await supabase
-        .from('jobs')
-        .select('escrow_credits_reserved, client_id, cleaner_id, actual_hours, estimated_hours')
-        .eq('id', jobId)
-        .single();
-
-      if (jobError) throw jobError;
-      if (!job) throw new Error('Job not found');
-
-      // Get client profile to find user_id
-      const { data: clientProfile } = await supabase
-        .from('client_profiles')
-        .select('user_id')
-        .eq('id', job.client_id)
-        .single();
-
-      if (!clientProfile) throw new Error('Client not found');
-
-      const holdAmount = job.escrow_credits_reserved || 0;
-      const hoursWorked = job.actual_hours || job.estimated_hours || 0;
-      const hourlyRate = holdAmount / (job.estimated_hours || 1);
-      const creditsCharged = Math.round(hoursWorked * hourlyRate);
-      const refundAmount = Math.max(0, holdAmount - creditsCharged);
-
-      // 1. Update job status to completed
-      const { error: statusError } = await supabase
-        .from('jobs')
-        .update({
-          status: 'completed',
-          final_charge_credits: creditsCharged,
-        })
-        .eq('id', jobId);
-
-      if (statusError) throw statusError;
-
-      // 2. Update credit account - release hold and deduct final amount
-      const { data: account } = await supabase
-        .from('credit_accounts')
-        .select('current_balance, held_balance, lifetime_spent')
-        .eq('user_id', clientProfile.user_id)
-        .single();
-
-      if (account) {
-        await supabase
-          .from('credit_accounts')
-          .update({
-            current_balance: account.current_balance - creditsCharged,
-            held_balance: Math.max(0, account.held_balance - holdAmount),
-            lifetime_spent: account.lifetime_spent + creditsCharged,
-          })
-          .eq('user_id', clientProfile.user_id);
-      }
-
-      // 3. Create cleaner earnings record if cleaner exists
-      if (job.cleaner_id) {
-        // Get cleaner tier to apply correct platform fee
-        const { data: cleanerProfile } = await supabase
-          .from('cleaner_profiles')
-          .select('tier')
-          .eq('id', job.cleaner_id)
-          .maybeSingle();
-        
-        // Tier-based platform fee: Bronze 25%, Silver 22%, Gold 18%, Platinum 15%
-        const tierFeeMap: Record<string, number> = {
-          platinum: 0.15,
-          gold: 0.18,
-          silver: 0.22,
-          bronze: 0.25,
-        };
-        const feeRate = tierFeeMap[cleanerProfile?.tier || 'bronze'] ?? 0.25;
-        const platformFee = Math.round(creditsCharged * feeRate);
-        const netCredits = creditsCharged - platformFee;
-
-        await supabase.from('cleaner_earnings').insert({
-          cleaner_id: job.cleaner_id,
-          job_id: jobId,
-          gross_credits: creditsCharged,
-          platform_fee_credits: platformFee,
-          net_credits: netCredits,
-        });
-      }
-
-      return { creditsCharged, refundAmount };
+      // Server-side atomic approval: settles credits, completes job, creates earnings
+      const { data, error } = await supabase.functions.invoke('approve-job', {
+        body: { jobId },
+      });
+      if (error) throw new Error(error.message || 'Failed to approve job');
+      if (data?.error) throw new Error(data.error);
+      return {
+        creditsCharged: data.credits_charged as number,
+        refundAmount: data.refund as number,
+      };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] });
