@@ -6468,6 +6468,10 @@ export type Database = {
       }
     }
     Functions: {
+      approve_job_atomic: {
+        Args: { _job_id: string; _user_id: string }
+        Returns: Json
+      }
       cleaner_has_job_with_client: {
         Args: { cleaner_user_id: string; client_profile_id: string }
         Returns: boolean
@@ -6475,6 +6479,18 @@ export type Database = {
       client_has_job_with_cleaner: {
         Args: { _cleaner_profile_id: string; _client_user_id: string }
         Returns: boolean
+      }
+      create_booking_atomic: {
+        Args: {
+          _cleaner_id: string
+          _cleaning_type: Database["public"]["Enums"]["cleaning_type"]
+          _hours: number
+          _notes: string
+          _scheduled_start: string
+          _total_credits: number
+          _user_id: string
+        }
+        Returns: string
       }
       delete_email: {
         Args: { message_id: number; queue_name: string }
