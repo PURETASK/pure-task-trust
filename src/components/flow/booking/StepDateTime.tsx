@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 import {
   isSameDayBooking,
   getAvailableTimeSlots,
-  SAME_DAY_CONFIG,
   calculateRushFee,
 } from "@/lib/same-day-booking";
+import { usePlatformConfig } from "@/hooks/usePlatformConfig";
 
 const ALL_SLOTS = [
   "08:00", "09:00", "10:00", "11:00", "12:00",
@@ -36,9 +36,10 @@ export function StepDateTime({
   date, time, onDateChange, onTimeChange, flexible, onFlexibleChange,
 }: StepDateTimeProps) {
   const today = startOfToday();
+  const { rushFeeCredits, sameDayMinNoticeHours } = usePlatformConfig();
   const sameDay = date ? isSameDayBooking(date) : false;
-  const rushFee = date ? calculateRushFee(date) : 0;
-  const availableSlots = date ? getAvailableTimeSlots(date, ALL_SLOTS) : ALL_SLOTS;
+  const rushFee = date ? calculateRushFee(date, rushFeeCredits) : 0;
+  const availableSlots = date ? getAvailableTimeSlots(date, ALL_SLOTS, sameDayMinNoticeHours) : ALL_SLOTS;
 
   return (
     <div className="space-y-6">
@@ -50,7 +51,7 @@ export function StepDateTime({
           <div className="text-sm">
             <p className="font-medium text-foreground">Same-day booking</p>
             <p className="text-aero-soft text-xs mt-0.5 leading-relaxed">
-              A +${SAME_DAY_CONFIG.rushFeeCredits} rush fee applies. Requires {SAME_DAY_CONFIG.minimumHoursNotice}h notice.
+              A +${rushFeeCredits} rush fee applies. Requires {sameDayMinNoticeHours}h notice.
             </p>
           </div>
         </div>
@@ -73,7 +74,7 @@ export function StepDateTime({
         <FlowField
           label="Pick a time"
           helper={sameDay && availableSlots.length < ALL_SLOTS.length
-            ? `Some times unavailable due to ${SAME_DAY_CONFIG.minimumHoursNotice}h minimum notice`
+            ? `Some times unavailable due to ${sameDayMinNoticeHours}h minimum notice`
             : undefined}
         >
           {availableSlots.length === 0 ? (
