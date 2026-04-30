@@ -41,9 +41,9 @@ is independently shippable and unblocks the next.
 | ~~`Wallet.tsx`~~ ✅ | n/a — operates on settled credit ledger, no raw escrow math present |
 | ~~`cleaner/CleanerEarnings.tsx`~~ ✅ | Now uses `calcJobMoney` per-job → shows NET cleaner forecast |
 | ~~`useCleanerStats` (pendingBalance)~~ ✅ | Was summing gross escrow → now nets out platform fee |
-| `admin/AdminFinanceDashboard.tsx` | `useJobMoney`, `usePlatformConfig` | Hardcoded fee splits |
-| `admin/AdminBookingsConsole.tsx` | `useJobAuthorization` (static) | Manual status filtering |
-| `admin/AdminRefundQueue.tsx` | `useJobMoney` | Refund preview math drifts from server |
+| ~~`admin/AdminFinanceDashboard.tsx`~~ ✅ | Tier-fee chart now reads `usePlatformConfig` (was hardcoded 16/18/20 — drifted from real 18/22/25) |
+| ~~`admin/AdminBookingsConsole.tsx`~~ ✅ | Credits column + CSV export now use `calcJobMoney` (escrow vs settled charge, platform fee, cleaner net) |
+| `admin/AdminRefundQueue.tsx` | `useJobMoney` | Deferred — needs join to `jobs`; revisit when refund row carries job context |
 | `MyCleanings.tsx` | `useJobAuthorization`, `useEscrowCountdown` | Row CTAs use ad-hoc checks |
 | `JobInProgress.tsx` | `useJobAuthorization` | Cleaner/client gating duplicated |
 | ~~`cleaner/CleanerDashboard.tsx`~~ ✅ | Already reads from `cleaner_earnings.net_credits` (settled) |

@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
 import { useAdminFinanceStats } from "@/hooks/useAdminStats";
+import { usePlatformConfig } from "@/hooks/usePlatformConfig";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, startOfMonth, subMonths } from "date-fns";
@@ -16,13 +17,6 @@ const chartConfig = {
   revenue: { label: "Revenue (cr)", color: "hsl(var(--chart-1))" },
   payouts: { label: "Payouts (cr)", color: "hsl(var(--chart-2))" },
 };
-
-const TIER_FEE_DATA = [
-  { name: 'Platinum (15%)', value: 15, fill: 'hsl(210, 100%, 60%)' },
-  { name: 'Gold (16%)', value: 16, fill: 'hsl(45, 100%, 55%)' },
-  { name: 'Silver (18%)', value: 18, fill: 'hsl(220, 15%, 65%)' },
-  { name: 'Bronze (20%)', value: 20, fill: 'hsl(25, 80%, 50%)' },
-];
 
 function ReconciliationWidget() {
   const { data, isLoading } = useQuery({
@@ -67,6 +61,16 @@ function ReconciliationWidget() {
 
 const AdminFinanceDashboard = () => {
   const { data, isLoading, refetch } = useAdminFinanceStats();
+  const { platformFeePct } = usePlatformConfig();
+
+  // Tier fee chart now reads from platform_config (single source of truth) —
+  // previously hardcoded to stale values (16/18/20) that drifted from DB.
+  const TIER_FEE_DATA = [
+    { name: `Platinum (${platformFeePct('platinum')}%)`, value: platformFeePct('platinum'), fill: 'hsl(210, 100%, 60%)' },
+    { name: `Gold (${platformFeePct('gold')}%)`,         value: platformFeePct('gold'),     fill: 'hsl(45, 100%, 55%)' },
+    { name: `Silver (${platformFeePct('silver')}%)`,     value: platformFeePct('silver'),   fill: 'hsl(220, 15%, 65%)' },
+    { name: `Bronze (${platformFeePct('bronze')}%)`,     value: platformFeePct('bronze'),   fill: 'hsl(25, 80%, 50%)' },
+  ];
 
   const KPI_CARDS = [
     { label: 'Platform Revenue', sublabel: 'This month (fees)', value: `${(data?.revenueThis || 0).toLocaleString()} cr`, icon: DollarSign, color: 'text-success', bg: 'bg-success/10', border: 'border-success/25' },
