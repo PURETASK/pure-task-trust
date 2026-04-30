@@ -23,7 +23,7 @@ import {
 import { useJob, useJobActions } from "@/hooks/useJob";
 import { useRequestReschedule } from "@/hooks/useRescheduling";
 import { useCreateReview, useJobReview } from "@/hooks/useReviews";
-import { useGraceCancellations, getFeeBucket } from "@/hooks/useCancellations";
+import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
