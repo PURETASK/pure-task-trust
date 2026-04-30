@@ -15,6 +15,8 @@ import {
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { calcJobMoney } from '@/hooks/useJobMoney';
+import { usePlatformConfig } from '@/hooks/usePlatformConfig';
 
 interface Job {
   id: string;
@@ -23,13 +25,17 @@ interface Job {
   scheduled_start_at: string | null;
   scheduled_end_at: string | null;
   estimated_hours: number | null;
+  actual_hours: number | null;
+  final_charge_credits: number | null;
+  rush_fee_credits: number | null;
+  tip_credits: number | null;
   credit_charge_credits: number | null;
   escrow_credits_reserved: number | null;
   notes: string | null;
   cleaner_id: string;
   client_id: string;
   created_at: string | null;
-  cleaner?: { first_name: string | null; last_name: string | null };
+  cleaner?: { first_name: string | null; last_name: string | null; tier?: string | null };
   client?: { first_name: string | null; last_name: string | null };
 }
 
@@ -38,6 +44,7 @@ type StatusFilter = typeof STATUS_FILTERS[number];
 
 export default function AdminBookingsConsole() {
   const queryClient = useQueryClient();
+  const { platformFeePct: feePct, creditToUsdRate } = usePlatformConfig();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -49,7 +56,7 @@ export default function AdminBookingsConsole() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select(`*, cleaner:cleaner_profiles!jobs_cleaner_id_fkey(first_name, last_name), client:client_profiles!jobs_client_id_fkey(first_name, last_name)`)
+        .select(`*, cleaner:cleaner_profiles!jobs_cleaner_id_fkey(first_name, last_name, tier), client:client_profiles!jobs_client_id_fkey(first_name, last_name)`)
         .order('created_at', { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -101,17 +108,24 @@ export default function AdminBookingsConsole() {
 
   // ── CSV Export ────────────────────────────────────────────────────────────
   const handleExportCSV = () => {
-    const headers = ['ID', 'Status', 'Type', 'Client', 'Cleaner', 'Scheduled', 'Hours', 'Credits'];
-    const rows = filteredJobs.map(j => [
-      j.id,
-      j.status,
-      j.cleaning_type,
-      `${j.client?.first_name || ''} ${j.client?.last_name || ''}`.trim(),
-      `${j.cleaner?.first_name || ''} ${j.cleaner?.last_name || ''}`.trim() || 'Unassigned',
-      j.scheduled_start_at ? format(new Date(j.scheduled_start_at), 'yyyy-MM-dd HH:mm') : '',
-      j.estimated_hours || '',
-      j.escrow_credits_reserved || j.credit_charge_credits || '',
-    ]);
+    const feeMap = { bronze: feePct('bronze'), silver: feePct('silver'), gold: feePct('gold'), platinum: feePct('platinum') };
+    const headers = ['ID', 'Status', 'Type', 'Client', 'Cleaner', 'Scheduled', 'Hours', 'Escrow', 'Charged', 'PlatformFee', 'CleanerNet'];
+    const rows = filteredJobs.map(j => {
+      const m = calcJobMoney({ ...j, cleaner_tier: j.cleaner?.tier }, { platformFeePct: feeMap, creditToUsdRate });
+      return [
+        j.id,
+        j.status,
+        j.cleaning_type,
+        `${j.client?.first_name || ''} ${j.client?.last_name || ''}`.trim(),
+        `${j.cleaner?.first_name || ''} ${j.cleaner?.last_name || ''}`.trim() || 'Unassigned',
+        j.scheduled_start_at ? format(new Date(j.scheduled_start_at), 'yyyy-MM-dd HH:mm') : '',
+        j.estimated_hours || '',
+        m.escrowHeld || '',
+        m.isSettled ? m.totalClientCharge : '',
+        m.platformFee || '',
+        m.cleanerNet || '',
+      ];
+    });
     const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -237,7 +251,13 @@ export default function AdminBookingsConsole() {
                         </div>
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           <DollarSign className="h-3.5 w-3.5" />
-                          {job.escrow_credits_reserved || job.credit_charge_credits || 0} cr
+                          {(() => {
+                            const m = calcJobMoney(
+                              { ...job, cleaner_tier: job.cleaner?.tier },
+                              { platformFeePct: { bronze: feePct('bronze'), silver: feePct('silver'), gold: feePct('gold'), platinum: feePct('platinum') }, creditToUsdRate },
+                            );
+                            return `${m.isSettled ? m.totalClientCharge : m.escrowHeld} cr${m.isSettled ? '' : ' held'}`;
+                          })()}
                         </div>
                       </div>
                     </div>
