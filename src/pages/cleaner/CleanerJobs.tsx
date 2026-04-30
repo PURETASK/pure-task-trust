@@ -353,9 +353,15 @@ function LiveJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string })
 }
 
 // ─── Compact job card for lists ──────────────────────────────────────────────
-function CompactJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: number }) {
-  const gross = job.escrow_credits_reserved || 0;
-  const net = Math.round(gross * (1 - feeRate));
+function CompactJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string }) {
+  const net = calcJobMoney({
+    escrow_credits_reserved: (job as any).escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: (job as any).actual_hours,
+    final_charge_credits: (job as any).final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: tier,
+  }).cleanerNet;
   const address = formatAddress(job);
   const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
   const date = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
@@ -416,7 +422,6 @@ export default function CleanerJobs() {
   const { profile } = useCleanerProfile();
 
   const tier = profile?.tier || "bronze";
-  const feeRate = TIER_FEE[tier] ?? 0.20;
 
   // Categorize jobs by tab
   const offers = jobs.filter(j => j.status === "pending" || j.status === "created");
@@ -495,7 +500,7 @@ export default function CleanerJobs() {
               {offers.length === 0 ? (
                 <EmptyTab icon={Bell} title="No new offers" subtitle="You'll see new job offers here when clients book you" />
               ) : (
-                offers.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                offers.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
@@ -504,7 +509,7 @@ export default function CleanerJobs() {
               {upcoming.length === 0 ? (
                 <EmptyTab icon={Calendar} title="No upcoming jobs" subtitle="Confirmed bookings will appear here" />
               ) : (
-                upcoming.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                upcoming.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
@@ -513,7 +518,7 @@ export default function CleanerJobs() {
               {liveJobs.length === 0 ? (
                 <EmptyTab icon={Flame} title="No active job" subtitle="When you clock in to a job, the live workflow appears here" />
               ) : (
-                liveJobs.map(job => <LiveJobCard key={job.id} job={job} feeRate={feeRate} />)
+                liveJobs.map(job => <LiveJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
