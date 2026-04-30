@@ -38,14 +38,15 @@ is independently shippable and unblocks the next.
 
 | Page | Primitive to wire in | Issue today |
 |------|----------------------|-------------|
-| `Wallet.tsx` | `useJobMoney` | Refund line items computed manually |
-| `cleaner/CleanerEarnings.tsx` | `useJobMoney` | Shows gross escrow as forecast (overstated 15–25%) |
+| ~~`Wallet.tsx`~~ ✅ | n/a — operates on settled credit ledger, no raw escrow math present |
+| ~~`cleaner/CleanerEarnings.tsx`~~ ✅ | Now uses `calcJobMoney` per-job → shows NET cleaner forecast |
+| ~~`useCleanerStats` (pendingBalance)~~ ✅ | Was summing gross escrow → now nets out platform fee |
 | `admin/AdminFinanceDashboard.tsx` | `useJobMoney`, `usePlatformConfig` | Hardcoded fee splits |
 | `admin/AdminBookingsConsole.tsx` | `useJobAuthorization` (static) | Manual status filtering |
 | `admin/AdminRefundQueue.tsx` | `useJobMoney` | Refund preview math drifts from server |
 | `MyCleanings.tsx` | `useJobAuthorization`, `useEscrowCountdown` | Row CTAs use ad-hoc checks |
 | `JobInProgress.tsx` | `useJobAuthorization` | Cleaner/client gating duplicated |
-| `cleaner/CleanerDashboard.tsx` | `useJobMoney` (today's earnings) | Same gross-escrow bug |
+| ~~`cleaner/CleanerDashboard.tsx`~~ ✅ | Already reads from `cleaner_earnings.net_credits` (settled) |
 
 **Definition of done per page:** No raw `escrow_credits_reserved`, no inline
 `status === 'X' && role === 'Y'`, no hardcoded fee %.
