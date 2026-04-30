@@ -11,6 +11,7 @@ import { useAddresses, type Address } from "@/hooks/useAddresses";
 import { useClientProfile, buildDefaultNotes } from "@/hooks/useClientProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { usePlatformConfig } from "@/hooks/usePlatformConfig";
 
 import { FlowShell } from "@/components/flow/FlowShell";
 import { FlowProgress } from "@/components/flow/FlowProgress";
@@ -32,8 +33,6 @@ import {
   isCleaningTypeAllowedSameDay,
   calculateRushFee,
 } from "@/lib/same-day-booking";
-
-const SERVICE_CHARGE_PCT = 0.15;
 
 const STEPS = [
   { id: 1, label: "Service" },
@@ -69,6 +68,7 @@ export default function Book() {
   const { user } = useAuth();
   const { createBooking, isCreating } = useBooking();
   const { account, isLoadingAccount } = useWallet();
+  const { rushFeeCredits, directChargeFeePct } = usePlatformConfig();
   const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
   const { data: selectedCleaner } = useCleaner(cleanerId || "");
   const { data: savedAddresses } = useAddresses();
@@ -114,13 +114,13 @@ export default function Book() {
     (sum, id) => sum + (ADD_ONS.find((a) => a.id === id)?.credits || 0),
     0,
   );
-  const rushFee = calculateRushFee(date);
+  const rushFee = calculateRushFee(date, rushFeeCredits);
   const sameDay = date ? isSameDayBooking(date) : false;
   const subtotal = (serviceType ? cleanerRate * hours : 0) + addOnCredits;
   const totalCredits = subtotal + rushFee;
   const availableCredits = (account?.current_balance || 0) - (account?.held_balance || 0);
   const hasEnoughCredits = availableCredits >= totalCredits;
-  const serviceCharge = Math.round(totalCredits * SERVICE_CHARGE_PCT);
+  const serviceCharge = Math.round(totalCredits * (directChargeFeePct / 100));
   const directPayTotal = totalCredits + serviceCharge;
 
   const isDateBlockedByCleaner = useMemo(() => {
