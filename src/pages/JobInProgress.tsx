@@ -9,6 +9,10 @@ import { useJob } from "@/hooks/useJob";
 import { format, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useJobParticipants } from "@/hooks/useJobParticipants";
+import { useStatusPresentation } from "@/hooks/useStatusPresentation";
+import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { useJobMoney } from "@/hooks/useJobMoney";
 
 const timelineSteps = [
   { id: "accepted", label: "Confirmed", desc: "Cleaner accepted your booking", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed'] },
@@ -22,6 +26,10 @@ export default function JobInProgress() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
   const { data: job, isLoading, error } = useJob(id || '');
+  const participants = useJobParticipants(job);
+  const statusPres = useStatusPresentation(job?.status);
+  const escrow = useEscrowCountdown(job);
+  const money = useJobMoney(job);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [justUpdated, setJustUpdated] = useState(false);
 
@@ -54,20 +62,11 @@ export default function JobInProgress() {
     </main>
   );
 
-  const cleanerName = job.cleaner ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Your Cleaner' : 'Finding cleaner...';
+  const cleanerName = participants.cleaner.fullName;
   const getCurrentStep = () => { for (let i = timelineSteps.length - 1; i >= 0; i--) { if (timelineSteps[i].statusMatch.includes(job.status)) return i; } return 0; };
   const currentStep = getCurrentStep();
   const isCompleted = job.status === 'completed';
   const isInProgress = job.status === 'in_progress';
-
-  const statusMap: Record<string, { label: string; color: string }> = {
-    confirmed: { label: 'Confirmed', color: 'bg-primary text-primary-foreground' },
-    on_way: { label: 'On the Way', color: 'bg-primary text-white' },
-    arrived: { label: 'Arrived', color: 'bg-accent text-accent-foreground' },
-    in_progress: { label: 'In Progress 🧹', color: 'bg-success text-white' },
-    completed: { label: 'Complete ✅', color: 'bg-success text-white' },
-  };
-  const statusBadge = statusMap[job.status] || { label: job.status, color: 'bg-secondary' };
 
   return (
     <main className="flex-1 py-8">
@@ -88,7 +87,7 @@ export default function JobInProgress() {
           <div className="text-center mb-8">
             <div className="relative mx-auto w-24 h-24 mb-5">
               <div className={`h-24 w-24 rounded-3xl flex items-center justify-center text-2xl font-poppins font-bold shadow-aero ${isCompleted ? 'bg-success/10' : isInProgress ? 'bg-gradient-aero text-white animate-aero-pulse' : 'bg-secondary'}`}>
-                {isCompleted ? '✅' : isInProgress ? '🧹' : cleanerName.charAt(0)}
+                {isCompleted ? '✅' : isInProgress ? '🧹' : participants.cleaner.initial}
               </div>
               {isInProgress && (
                 <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity }}
@@ -97,9 +96,9 @@ export default function JobInProgress() {
                 </motion.div>
               )}
             </div>
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-3 ${statusBadge.color}`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-3 ${statusPres.pillClass}`}>
               {isInProgress && <div className="h-2 w-2 rounded-full bg-current animate-pulse" />}
-              {statusBadge.label}
+              {statusPres.emoji} {statusPres.label}
             </div>
             <h1 className="text-2xl sm:text-3xl font-poppins font-bold mb-1 tracking-tight">
               {isCompleted ? 'Cleaning Complete!' : isInProgress ? 'Cleaning in Progress' : 'Your Cleaner is Confirmed'}
@@ -114,7 +113,7 @@ export default function JobInProgress() {
             <CardContent className="p-5">
               <div className="flex items-center gap-4 mb-4">
                 <div className="h-14 w-14 rounded-2xl bg-secondary flex items-center justify-center font-bold text-xl flex-shrink-0">
-                  {cleanerName.charAt(0)}
+                  {participants.cleaner.initial}
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{cleanerName}</h3>
@@ -181,7 +180,10 @@ export default function JobInProgress() {
                 { label: "Service Type", value: `${(job.cleaning_type || '').replace('_', ' ')} Clean` },
                 { label: "Duration", value: `${job.estimated_hours || 2}h est.` },
                 { label: "Scheduled", value: job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'MMM d, h:mm a') : 'TBD' },
-                { label: "Credits Held", value: `${job.escrow_credits_reserved || 0} credits` },
+                {
+                  label: money.isSettled ? "Charged" : "Credits Held",
+                  value: `${money.isSettled ? money.totalClientCharge : money.escrowHeld} credits`,
+                },
               ].map(({ label, value }) => (
                 <div key={label}>
                   <p className="text-muted-foreground text-xs mb-0.5">{label}</p>
@@ -196,8 +198,14 @@ export default function JobInProgress() {
             <CardContent className="p-4 flex items-center gap-3">
               <Shield className="h-5 w-5 text-warning flex-shrink-0" />
               <div>
-                <p className="font-medium text-sm">{job.escrow_credits_reserved || 0} credits in escrow</p>
-                <p className="text-xs text-muted-foreground">{isCompleted ? 'Review within 24 hours — credits release automatically if no dispute is raised' : 'Review within 24 hours after completion — credits release automatically if no dispute is raised'}</p>
+                <p className="font-medium text-sm">{money.escrowHeld} credits in escrow</p>
+                <p className="text-xs text-muted-foreground">
+                  {isCompleted && escrow.isReviewable
+                    ? `${escrow.label} — credits release automatically if no dispute is raised`
+                    : isCompleted && escrow.isExpired
+                    ? 'Review window closed — credits released'
+                    : `Review within ${escrow.windowHours} hours after completion — credits release automatically if no dispute is raised`}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -211,7 +219,7 @@ export default function JobInProgress() {
                 </Link>
               </Button>
               <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-1">
-                <Clock className="h-3 w-3" /> Credits auto-release in 24h if not disputed
+                <Clock className="h-3 w-3" /> {escrow.label || `Credits auto-release in ${escrow.windowHours}h if not disputed`}
               </p>
             </div>
           ) : (
