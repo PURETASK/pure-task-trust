@@ -26,6 +26,7 @@ import { useCreateReview, useJobReview } from "@/hooks/useReviews";
 import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { useJobMoney } from "@/hooks/useJobMoney";
 import { useJobAuthorization } from "@/hooks/useJobAuthorization";
 import { Progress } from "@/components/ui/progress";
 import { format, differenceInHours } from "date-fns";
