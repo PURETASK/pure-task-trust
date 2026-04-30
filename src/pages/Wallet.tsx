@@ -28,6 +28,7 @@ import { FundingMethods } from "@/components/wallet/FundingMethods";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useFunnel } from '@/hooks/useFunnel';
 import walletBg from '@/assets/wallet-bg.png';
 
 const reasonLabels: Record<string, string> = {
@@ -38,6 +39,12 @@ const reasonLabels: Record<string, string> = {
 
 const QUICK_AMOUNTS = [25, 50, 100, 200];
 const LOW_BALANCE_THRESHOLD = 20;
+
+const TOPUP_FUNNEL_STEPS = [
+  'amount_selected',
+  'checkout_redirect',
+  'payment_returned',
+] as const;
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 12 },
@@ -60,6 +67,7 @@ export default function Wallet() {
   } = useWallet();
   const { generateReceipt, isGenerating } = useReceipt();
   const { toast } = useToast();
+  const topupFunnel = useFunnel('topup', TOPUP_FUNNEL_STEPS);
 
   const availableCredits = account?.current_balance || 0;
   const heldCredits = account?.held_balance || 0;
@@ -72,14 +80,19 @@ export default function Wallet() {
     const credits = searchParams.get('credits');
     const canceled = searchParams.get('canceled');
     if (success === 'true' && credits) {
+      topupFunnel.trackStep('payment_returned', { outcome: 'success', credits: Number(credits) });
+      topupFunnel.trackComplete({ credits: Number(credits) });
       toast({ title: '💰 Payment Successful!', description: `${credits} credits added to your wallet.` });
       setSearchParams({});
       refetch();
     }
     if (canceled === 'true') {
+      topupFunnel.trackStep('payment_returned', { outcome: 'canceled' });
+      topupFunnel.trackAbandon('user_canceled_checkout');
       toast({ title: 'Payment Canceled', description: 'Your purchase was not completed.', variant: 'destructive' });
       setSearchParams({});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, toast, setSearchParams, refetch]);
 
   const filteredLedger = useMemo(() => ledger.filter((entry) => {
@@ -93,6 +106,8 @@ export default function Wallet() {
   }), [ledger, txSearch, txTypeFilter]);
 
   const handleQuickTopUp = (amount: number) => {
+    topupFunnel.trackStep('amount_selected', { amount, source: 'quick_amount' });
+    topupFunnel.trackStep('checkout_redirect', { amount });
     purchaseCredits(amount);
   };
 
