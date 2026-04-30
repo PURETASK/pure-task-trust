@@ -28,6 +28,8 @@ import { useReceipt } from "@/hooks/useReceipt";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { useJobAuthorization } from "@/hooks/useJobAuthorization";
+import { useJobParticipants } from "@/hooks/useJobParticipants";
+import { useStatusPresentation } from "@/hooks/useStatusPresentation";
 import { Progress } from "@/components/ui/progress";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
@@ -35,15 +37,15 @@ import { motion } from "framer-motion";
 import { DateTimePicker } from "@/components/booking/DateTimePicker";
 import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 
-const statusConfig: Record<string, { label: string; color: string; description: string }> = {
-  created: { label: "Pending", color: "bg-muted text-muted-foreground", description: "Waiting for cleaner confirmation" },
-  pending: { label: "Pending", color: "bg-muted text-muted-foreground", description: "Waiting for cleaner confirmation" },
-  confirmed: { label: "Confirmed", color: "bg-primary/10 text-primary border-primary/20", description: "Your cleaner has confirmed" },
-  on_the_way: { label: "On The Way", color: "bg-[hsl(var(--pt-aqua))]/10 text-[hsl(var(--pt-aqua))] border-[hsl(var(--pt-aqua))]/20", description: "Your cleaner is heading to you" },
-  in_progress: { label: "In Progress", color: "bg-success/10 text-success border-success/20", description: "Cleaning is underway" },
-  completed: { label: "Completed", color: "bg-success/10 text-success border-success/20", description: "Cleaning finished" },
-  cancelled: { label: "Cancelled", color: "bg-destructive/10 text-destructive border-destructive/20", description: "This booking was cancelled" },
-  disputed: { label: "Disputed", color: "bg-warning/10 text-warning border-warning/20", description: "Issue under review" },
+const statusDescriptions: Record<string, string> = {
+  created: "Waiting for cleaner confirmation",
+  pending: "Waiting for cleaner confirmation",
+  confirmed: "Your cleaner has confirmed",
+  on_way: "Your cleaner is heading to you",
+  in_progress: "Cleaning is underway",
+  completed: "Cleaning finished",
+  cancelled: "This booking was cancelled",
+  disputed: "Issue under review",
 };
 
 export default function CleaningDetail() {
@@ -97,8 +99,10 @@ export default function CleaningDetail() {
     );
   }
 
-  const status = statusConfig[job.status] || statusConfig.created;
-  const cleanerName = job.cleaner ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Cleaner' : 'Finding cleaner…';
+  const status = useStatusPresentation(job.status);
+  const statusDescription = statusDescriptions[job.status] ?? "";
+  const participants = useJobParticipants(job);
+  const cleanerName = participants.cleaner.fullName;
   const serviceType = (job.cleaning_type || 'standard').replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
   const auth = useJobAuthorization({
     id: job.id,
@@ -213,18 +217,18 @@ export default function CleaningDetail() {
           }}>
             <div className={`px-5 py-3 ${needsApproval ? 'bg-warning/10' : 'bg-primary/5'}`}>
               <div className="flex items-center justify-between">
-                <Badge variant="outline" className={`font-semibold border ${status.color}`}>{status.label}</Badge>
+                <Badge variant="outline" className={`font-semibold ${status.pillClass}`}>{status.label}</Badge>
                 {needsApproval && <Badge className="bg-warning text-warning-foreground font-bold">Action Required</Badge>}
                 {hasReview && <Badge className="bg-success/10 text-success border-success/30 font-bold gap-1"><Star className="h-3 w-3 fill-current" /> Reviewed</Badge>}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">{status.description}</p>
+              <p className="text-xs text-muted-foreground mt-1">{statusDescription}</p>
             </div>
 
             <div className="p-5 sm:p-6 space-y-4">
               {/* Cleaner info */}
               <div className="flex items-center gap-4">
                 <div className="h-14 w-14 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-poppins font-bold text-primary text-lg">
-                  {cleanerName.charAt(0)}
+                  {participants.cleaner.initial}
                 </div>
                 <div className="flex-1">
                   <p className="font-bold text-lg">{cleanerName}</p>
@@ -246,8 +250,8 @@ export default function CleaningDetail() {
                 {job.scheduled_start_at && (
                   <DetailItem icon={<CalendarClock className="h-4 w-4" />} label="Scheduled" value={format(new Date(job.scheduled_start_at), "EEE, MMM d · h:mm a")} />
                 )}
-                {job.escrow_credits_reserved != null && (
-                  <DetailItem icon={<DollarSign className="h-4 w-4" />} label="Credits Held" value={`$${job.escrow_credits_reserved}`} />
+                {money.escrowHeld > 0 && (
+                  <DetailItem icon={<DollarSign className="h-4 w-4" />} label="Credits Held" value={`$${money.escrowHeld}`} />
                 )}
                 {job.final_charge_credits != null && (
                   <DetailItem icon={<DollarSign className="h-4 w-4" />} label="Final Charge" value={`$${job.final_charge_credits}`} />

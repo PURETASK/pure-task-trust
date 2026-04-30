@@ -17,6 +17,8 @@ import { useReceipt } from "@/hooks/useReceipt";
 import { RecurringUpsellModal } from "@/components/flow/booking/RecurringUpsellModal";
 import { DashCelebration } from "@/components/flow";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { useJobParticipants } from "@/hooks/useJobParticipants";
+import { useJobMoney } from "@/hooks/useJobMoney";
 import { Progress } from "@/components/ui/progress";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
@@ -84,7 +86,16 @@ export default function BookingStatus() {
   const timelineStep = getTimelineStep(statusKey);
   const StatusIcon = config.icon;
 
-  const cleanerName = job.cleaner ? `${job.cleaner.first_name || ""} ${job.cleaner.last_name || ""}`.trim() || "Assigned Cleaner" : "Finding cleaner…";
+  const participants = useJobParticipants(job ?? null);
+  const cleanerName = participants.cleaner.fullName;
+  const money = useJobMoney({
+    escrow_credits_reserved: job.escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: job.actual_hours,
+    final_charge_credits: job.final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: (job.cleaner as any)?.tier,
+  });
   const formattedDate = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "EEEE, MMMM d, yyyy") : "To be scheduled";
   const formattedTime = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "h:mm a") : "TBD";
   const addressLine = (job as any).address_line1
@@ -189,7 +200,7 @@ export default function BookingStatus() {
               clientId={job.client_id || ""}
               cleanerId={job.cleaner_id || null}
               originalStart={job.scheduled_start_at || ""}
-              escrowCredits={job.escrow_credits_reserved || 0}
+              escrowCredits={money.escrowHeld}
             />
           )}
 
@@ -207,7 +218,7 @@ export default function BookingStatus() {
               {/* Cleaner Info */}
               <div className="flex items-center gap-3 pb-4 border-b-2 border-border/30">
                 <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-poppins font-bold text-primary text-lg flex-shrink-0">
-                  {cleanerName.charAt(0)}
+                  {participants.cleaner.initial}
                 </div>
                 <div className="flex-1">
                   <p className="font-poppins font-bold">{cleanerName}</p>
@@ -256,7 +267,7 @@ export default function BookingStatus() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Credits in escrow</p>
-                  <p className="font-poppins font-bold text-primary text-lg">{job.escrow_credits_reserved || 0}</p>
+                  <p className="font-poppins font-bold text-primary text-lg">{money.escrowHeld}</p>
                 </div>
               </div>
 

@@ -50,6 +50,9 @@ a future session._
 - `src/pages/admin/AdminBookingsConsole.tsx` (Wave 1: money)
 - `src/pages/MyCleanings.tsx` (Wave 1+2: money + escrow + participants + status)
 - `src/pages/JobInProgress.tsx` (Wave 1+2: money + escrow + participants + status)
+- `src/pages/BookingStatus.tsx` (Wave 1+2: money + participants — on-demand sweep)
+- `src/pages/CleaningDetail.tsx` (Wave 1+2: money + participants + status — on-demand sweep)
+- `src/pages/cleaner/CleanerJobDetail.tsx` (Wave 1+2: money + participants + status — on-demand sweep; cleaner now sees `cleanerNet` instead of gross escrow)
 
 ## Stop-condition met
 
