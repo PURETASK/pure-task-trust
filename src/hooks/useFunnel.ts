@@ -147,7 +147,7 @@ export function useFunnel(
         ...baseEnvelope(),
         step_name: null,
         step_index: null,
-        event_type,
+        event_type: eventType,
         properties,
       });
     },
