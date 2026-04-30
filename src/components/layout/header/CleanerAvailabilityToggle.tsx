@@ -14,7 +14,10 @@ export function CleanerAvailabilityToggle() {
   const queryClient = useQueryClient();
   const [toggling, setToggling] = useState(false);
   const isAvailable = profile?.is_available ?? false;
-  const isBusy = toggling || isLoading;
+  // Only show "Loading" while we have NO profile yet. Once we have data,
+  // background refetches must not flip the badge back to "Loading".
+  const showLoading = isLoading && !profile;
+  const isBusy = toggling || showLoading;
 
   const handleToggle = async () => {
     if (!profile?.id) {
@@ -68,7 +71,7 @@ export function CleanerAvailabilityToggle() {
           : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
       )}
     >
-      {isBusy ? (
+      {toggling || showLoading ? (
         <Loader2 className="h-3 w-3 animate-spin" />
       ) : (
         <span
@@ -79,7 +82,7 @@ export function CleanerAvailabilityToggle() {
         />
       )}
       <span className="hidden xs:inline">
-        {isLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
+        {showLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
       </span>
     </button>
   );
