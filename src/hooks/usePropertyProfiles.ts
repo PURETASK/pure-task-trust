@@ -22,8 +22,8 @@ export function usePropertyProfiles() {
 
   const createProperty = useMutation({
     mutationFn: async (property: {
-      name: string; address_id?: string; sq_ft?: number; bedrooms?: number;
-      bathrooms?: number; has_pets?: boolean; pet_info?: string;
+      name: string; address_id?: string;
+      has_pets?: boolean; pet_info?: string;
       access_instructions?: string; parking_notes?: string; special_notes?: string;
     }) => {
       const { error } = await supabase.from('property_profiles').insert({

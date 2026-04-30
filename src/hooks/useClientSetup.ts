@@ -36,13 +36,7 @@ export interface HomeData {
   city: string;
   state: string;
   postal_code: string;
-  home_type?: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  sq_ft?: number;
-  floors?: number;
-  has_elevator?: boolean;
-  /** UX-only: user confirmed map pin matches their home. Not persisted. */
+  /** Persisted on the address row — user confirmed the map pin matches their home. */
   address_confirmed?: boolean;
 }
 
@@ -57,13 +51,10 @@ export interface AccessData {
 }
 
 export interface PrefsData {
-  priorities: string[];
   extra_attention_notes?: string;
   avoid_notes?: string;
   product_preferences?: string;
   allergy_notes?: string;
-  scent_preference?: string;
-  eco_preference?: boolean;
 }
 
 export interface SetupState {
@@ -84,7 +75,7 @@ const empty: SetupState = {
   contact: { first_name: "", last_name: "", phone: "", email: "" },
   home: { line1: "", city: "", state: "", postal_code: "" },
   access: { has_pets: false },
-  prefs: { priorities: [] },
+  prefs: {},
   setupCompleted: false,
   loading: true,
 };
@@ -160,12 +151,7 @@ export function useClientSetup() {
           city: address?.city ?? "",
           state: address?.state ?? "",
           postal_code: address?.postal_code ?? "",
-          home_type: prop?.home_type ?? undefined,
-          bedrooms: prop?.bedrooms ?? undefined,
-          bathrooms: prop?.bathrooms ? Number(prop.bathrooms) : undefined,
-          sq_ft: prop?.sq_ft ?? undefined,
-          floors: prop?.floors ?? undefined,
-          has_elevator: prop?.has_elevator ?? undefined,
+          address_confirmed: address?.address_confirmed ?? false,
         },
         access: {
           parking_notes: prop?.parking_notes ?? "",
@@ -177,13 +163,10 @@ export function useClientSetup() {
           pet_friendly_required: prop?.pet_friendly_required ?? false,
         },
         prefs: {
-          priorities: prefs?.priorities ?? [],
           extra_attention_notes: prefs?.extra_attention_notes ?? "",
           avoid_notes: prefs?.avoid_notes ?? "",
           product_preferences: prefs?.product_preferences ?? "",
           allergy_notes: prefs?.allergy_notes ?? "",
-          scent_preference: prefs?.scent_preference ?? "",
-          eco_preference: prefs?.eco_preference ?? false,
         },
       });
     })();
@@ -257,6 +240,7 @@ export function useClientSetup() {
             postal_code: state.home.postal_code || null,
             is_default: true,
             label: "Home",
+            address_confirmed: !!state.home.address_confirmed,
           };
           if (addressId) {
             const { error } = await supabase
@@ -281,12 +265,6 @@ export function useClientSetup() {
           client_id: clientId,
           address_id: addressId ?? null,
           name: "My Home",
-          home_type: state.home.home_type || null,
-          bedrooms: state.home.bedrooms ?? null,
-          bathrooms: state.home.bathrooms ?? null,
-          sq_ft: state.home.sq_ft ?? null,
-          floors: state.home.floors ?? null,
-          has_elevator: state.home.has_elevator ?? null,
           parking_notes: state.access.parking_notes || null,
           access_instructions: state.access.access_instructions || null,
           gate_code: state.access.gate_code || null,
@@ -316,13 +294,10 @@ export function useClientSetup() {
         const prefsPayload = {
           client_id: clientId,
           property_id: propertyId ?? null,
-          priorities: state.prefs.priorities ?? [],
           extra_attention_notes: state.prefs.extra_attention_notes || null,
           avoid_notes: state.prefs.avoid_notes || null,
           product_preferences: state.prefs.product_preferences || null,
           allergy_notes: state.prefs.allergy_notes || null,
-          scent_preference: state.prefs.scent_preference || null,
-          eco_preference: !!state.prefs.eco_preference,
         };
         if (prefsId) {
           const { error } = await supabase
