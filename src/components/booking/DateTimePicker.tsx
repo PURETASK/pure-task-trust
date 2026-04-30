@@ -9,9 +9,9 @@ import { CalendarDays, Clock, AlertTriangle, Zap } from 'lucide-react';
 import { 
   isSameDayBooking, 
   getAvailableTimeSlots, 
-  SAME_DAY_CONFIG,
   calculateRushFee 
 } from '@/lib/same-day-booking';
+import { usePlatformConfig } from '@/hooks/usePlatformConfig';
 
 interface DateTimePickerProps {
   selectedDate: Date | undefined;
@@ -39,23 +39,24 @@ export function DateTimePicker({
   onTimeChange,
 }: DateTimePickerProps) {
   const today = startOfToday();
+  const { rushFeeCredits, sameDayMinNoticeHours } = usePlatformConfig();
   
   // Allow same-day bookings (but with restrictions)
   const minDate = today;
   
   // Get available time slots based on same-day rules
   const availableTimeSlots = selectedDate 
-    ? getAvailableTimeSlots(selectedDate, allTimeSlots)
+    ? getAvailableTimeSlots(selectedDate, allTimeSlots, sameDayMinNoticeHours)
     : allTimeSlots;
   
   const isSameDay = selectedDate ? isSameDayBooking(selectedDate) : false;
-  const rushFee = selectedDate ? calculateRushFee(selectedDate) : 0;
+  const rushFee = selectedDate ? calculateRushFee(selectedDate, rushFeeCredits) : 0;
 
   // If selected time becomes unavailable when date changes, clear it
   const handleDateChange = (date: Date | undefined) => {
     onDateChange(date);
     if (date && selectedTime) {
-      const newAvailableSlots = getAvailableTimeSlots(date, allTimeSlots);
+      const newAvailableSlots = getAvailableTimeSlots(date, allTimeSlots, sameDayMinNoticeHours);
       if (!newAvailableSlots.includes(selectedTime)) {
         onTimeChange('');
       }
@@ -73,8 +74,8 @@ export function DateTimePicker({
               <div>
                 <p className="font-medium text-sm text-warning">Same-Day Booking</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  A ${SAME_DAY_CONFIG.rushFeeCredits} credit rush fee applies. 
-                  Requires {SAME_DAY_CONFIG.minimumHoursNotice} hours notice. 
+                  A ${rushFeeCredits} credit rush fee applies. 
+                  Requires {sameDayMinNoticeHours} hours notice. 
                   Move-out cleaning not available same-day.
                 </p>
               </div>
@@ -119,7 +120,7 @@ export function DateTimePicker({
           <h3 className="font-semibold">Select Time</h3>
           {isSameDay && availableTimeSlots.length < allTimeSlots.length && (
             <span className="text-xs text-muted-foreground">
-              (Some times unavailable due to {SAME_DAY_CONFIG.minimumHoursNotice}hr notice)
+              (Some times unavailable due to {sameDayMinNoticeHours}hr notice)
             </span>
           )}
         </div>
@@ -130,7 +131,7 @@ export function DateTimePicker({
               <AlertTriangle className="h-8 w-8 text-warning mx-auto mb-3" />
               <p className="font-medium text-sm">No time slots available</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Same-day bookings require {SAME_DAY_CONFIG.minimumHoursNotice} hours notice. 
+                Same-day bookings require {sameDayMinNoticeHours} hours notice. 
                 Please select tomorrow or a future date.
               </p>
             </CardContent>

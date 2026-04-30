@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { usePlatformConfig, PLATFORM_CONFIG_DEFAULTS } from "./usePlatformConfig";
 
 export interface CancellationEvent {
   id: number;
@@ -50,13 +51,37 @@ export interface GraceCancellation {
   created_at: string;
 }
 
-// Helper to determine fee bucket based on hours before start
-export function getFeeBucket(hoursBefore: number): { bucket: string; feePercent: number } {
+// Helper to determine fee bucket based on hours before start.
+// Tiers (lt24h / lt12h / lt2h) are sourced from `platform_config` so
+// admins can tune them without redeploying. Defaults match the documented policy.
+export function getFeeBucket(
+  hoursBefore: number,
+  cfg?: {
+    lt24h?: number;
+    lt12h?: number;
+    lt2h?: number;
+  }
+): { bucket: string; feePercent: number } {
+  const lt24 = cfg?.lt24h ?? PLATFORM_CONFIG_DEFAULTS.cancel_fee_pct_lt_24h;
+  const lt12 = cfg?.lt12h ?? PLATFORM_CONFIG_DEFAULTS.cancel_fee_pct_lt_12h;
+  const lt2 = cfg?.lt2h ?? PLATFORM_CONFIG_DEFAULTS.cancel_fee_pct_lt_2h;
+
   if (hoursBefore >= 48) return { bucket: "48h+", feePercent: 0 };
-  if (hoursBefore >= 24) return { bucket: "24-48h", feePercent: 25 };
-  if (hoursBefore >= 12) return { bucket: "12-24h", feePercent: 50 };
-  if (hoursBefore >= 2) return { bucket: "2-12h", feePercent: 75 };
-  return { bucket: "<2h", feePercent: 100 };
+  if (hoursBefore >= 24) return { bucket: "24-48h", feePercent: lt24 };
+  if (hoursBefore >= 12) return { bucket: "12-24h", feePercent: lt12 };
+  if (hoursBefore >= 2) return { bucket: "2-12h", feePercent: Math.round((lt12 + lt2) / 2) };
+  return { bucket: "<2h", feePercent: lt2 };
+}
+
+/** Hook variant that auto-injects current platform config tiers. */
+export function useFeeBucket() {
+  const { cancelFeePctLt24h, cancelFeePctLt12h, cancelFeePctLt2h } = usePlatformConfig();
+  return (hoursBefore: number) =>
+    getFeeBucket(hoursBefore, {
+      lt24h: cancelFeePctLt24h,
+      lt12h: cancelFeePctLt12h,
+      lt2h: cancelFeePctLt2h,
+    });
 }
 
 export function useCancellationEvents(jobId?: string) {

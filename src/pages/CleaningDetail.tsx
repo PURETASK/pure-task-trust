@@ -23,7 +23,7 @@ import {
 import { useJob, useJobActions } from "@/hooks/useJob";
 import { useRequestReschedule } from "@/hooks/useRescheduling";
 import { useCreateReview, useJobReview } from "@/hooks/useReviews";
-import { useGraceCancellations, getFeeBucket } from "@/hooks/useCancellations";
+import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
@@ -103,11 +103,12 @@ export default function CleaningDetail() {
   const canReview = isApproved && !existingReview;
   const hasReview = !!existingReview;
 
+  const computeFeeBucket = useFeeBucket();
   // Calculate cancellation fee preview
   const hoursBefore = job.scheduled_start_at
     ? differenceInHours(new Date(job.scheduled_start_at), new Date())
     : 999;
-  const { bucket: feeBucket, feePercent } = getFeeBucket(hoursBefore);
+  const { bucket: feeBucket, feePercent } = computeFeeBucket(hoursBefore);
   const estimatedFee = job.escrow_credits_reserved
     ? Math.round(job.escrow_credits_reserved * (feePercent / 100))
     : 0;

@@ -2,6 +2,13 @@
 import { CleaningType } from "@/hooks/useBooking";
 import { addHours, isToday, isBefore, startOfDay, setHours, setMinutes } from "date-fns";
 
+/**
+ * Static config — kept for fallback / restricted cleaning types only.
+ * Numerical values (notice hours, rush fee) should be sourced from
+ * `usePlatformConfig()` to avoid drift with admin-managed settings.
+ * @deprecated Read `rushFeeCredits` / `sameDayMinNoticeHours` from
+ *   `usePlatformConfig()`. Restricted types remain here.
+ */
 export const SAME_DAY_CONFIG = {
   // Minimum hours notice required for same-day bookings
   minimumHoursNotice: 6,
@@ -26,7 +33,8 @@ export function isSameDayBooking(bookingDate: Date): boolean {
  */
 export function isTimeSlotAvailableForSameDay(
   bookingDate: Date,
-  timeSlot: string // format: "HH:mm"
+  timeSlot: string, // format: "HH:mm"
+  minimumHoursNotice: number = SAME_DAY_CONFIG.minimumHoursNotice
 ): boolean {
   if (!isToday(bookingDate)) {
     return true; // Not same-day, always available from this check
@@ -34,7 +42,7 @@ export function isTimeSlotAvailableForSameDay(
   
   const [hours, minutes] = timeSlot.split(':').map(Number);
   const slotDateTime = setMinutes(setHours(bookingDate, hours), minutes);
-  const minBookingTime = addHours(new Date(), SAME_DAY_CONFIG.minimumHoursNotice);
+  const minBookingTime = addHours(new Date(), minimumHoursNotice);
   
   // Strict greater-than: slot must be MORE than minimumHoursNotice away (not equal)
   return slotDateTime > minBookingTime;
@@ -46,14 +54,15 @@ export function isTimeSlotAvailableForSameDay(
  */
 export function getAvailableTimeSlots(
   bookingDate: Date,
-  allTimeSlots: string[]
+  allTimeSlots: string[],
+  minimumHoursNotice: number = SAME_DAY_CONFIG.minimumHoursNotice
 ): string[] {
   if (!isToday(bookingDate)) {
     return allTimeSlots; // All slots available for future dates
   }
   
   return allTimeSlots.filter((slot) =>
-    isTimeSlotAvailableForSameDay(bookingDate, slot)
+    isTimeSlotAvailableForSameDay(bookingDate, slot, minimumHoursNotice)
   );
 }
 
@@ -67,18 +76,25 @@ export function isCleaningTypeAllowedSameDay(cleaningType: CleaningType): boolea
 /**
  * Calculate the rush fee if applicable
  * Returns 0 if not same-day, otherwise returns the rush fee
+ * @param rushFeeCredits — pass from `usePlatformConfig().rushFeeCredits`
  */
-export function calculateRushFee(bookingDate: Date | undefined): number {
+export function calculateRushFee(
+  bookingDate: Date | undefined,
+  rushFeeCredits: number = SAME_DAY_CONFIG.rushFeeCredits
+): number {
   if (!bookingDate || !isToday(bookingDate)) {
     return 0;
   }
-  return SAME_DAY_CONFIG.rushFeeCredits;
+  return rushFeeCredits;
 }
 
 /**
  * Get same-day booking restrictions message
  */
-export function getSameDayRestrictionMessage(): string {
+export function getSameDayRestrictionMessage(
+  minimumHoursNotice: number = SAME_DAY_CONFIG.minimumHoursNotice,
+  rushFeeCredits: number = SAME_DAY_CONFIG.rushFeeCredits
+): string {
   const restrictedTypes = SAME_DAY_CONFIG.restrictedCleaningTypes
     .map(type => {
       if (type === 'move_out') return 'Move-out Clean';
@@ -87,7 +103,7 @@ export function getSameDayRestrictionMessage(): string {
     })
     .join(', ');
     
-  return `Same-day bookings require ${SAME_DAY_CONFIG.minimumHoursNotice} hours notice and have a $${SAME_DAY_CONFIG.rushFeeCredits} rush fee. ${restrictedTypes} is not available for same-day booking.`;
+  return `Same-day bookings require ${minimumHoursNotice} hours notice and have a $${rushFeeCredits} rush fee. ${restrictedTypes} is not available for same-day booking.`;
 }
 
 /**
@@ -97,7 +113,8 @@ export function getSameDayRestrictionMessage(): string {
 export function validateSameDayBooking(
   bookingDate: Date,
   timeSlot: string,
-  cleaningType: CleaningType
+  cleaningType: CleaningType,
+  minimumHoursNotice: number = SAME_DAY_CONFIG.minimumHoursNotice
 ): { valid: boolean; error?: string } {
   if (!isToday(bookingDate)) {
     return { valid: true };
@@ -113,10 +130,10 @@ export function validateSameDayBooking(
   }
   
   // Check minimum notice
-  if (!isTimeSlotAvailableForSameDay(bookingDate, timeSlot)) {
+  if (!isTimeSlotAvailableForSameDay(bookingDate, timeSlot, minimumHoursNotice)) {
     return {
       valid: false,
-      error: `Same-day bookings require at least ${SAME_DAY_CONFIG.minimumHoursNotice} hours notice. Please select a later time or a future date.`,
+      error: `Same-day bookings require at least ${minimumHoursNotice} hours notice. Please select a later time or a future date.`,
     };
   }
   
