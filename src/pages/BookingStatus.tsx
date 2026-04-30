@@ -200,7 +200,7 @@ export default function BookingStatus() {
               clientId={job.client_id || ""}
               cleanerId={job.cleaner_id || null}
               originalStart={job.scheduled_start_at || ""}
-              escrowCredits={job.escrow_credits_reserved || 0}
+              escrowCredits={money.escrowHeld}
             />
           )}
 
