@@ -27,7 +27,6 @@ import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { Progress } from "@/components/ui/progress";
-import { Clock } from "lucide-react";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
