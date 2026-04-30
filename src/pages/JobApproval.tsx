@@ -20,6 +20,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { PostJobFlow } from "@/components/job/PostJobFlow";
 import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
+import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { Progress } from "@/components/ui/progress";
 
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
@@ -36,6 +38,9 @@ export default function JobApproval() {
   const { approveJob, isApproving, reportIssue, isReportingIssue } = useJobActions(id || "");
   const { data: jobPhotos, isLoading: loadingPhotos } = useJobPhotos(id || "");
   const { data: existingReview } = useJobReview(id || "");
+
+  // Live escrow countdown — replaces hardcoded "24 hours" copy
+  const escrow = useEscrowCountdown(job ?? null);
 
   const allPhotos = jobPhotos || [];
   const beforePhotos = allPhotos.filter(
@@ -129,9 +134,30 @@ export default function JobApproval() {
               <h1 className="text-2xl sm:text-3xl font-poppins font-bold mb-2 tracking-tight">Review &amp; Approve</h1>
               <p className="text-muted-foreground">
                 {hasPhotos
-                  ? "Check the photos and approve, or report an issue within 24 hours — payment releases automatically after that"
-                  : "Approve or report an issue within 24 hours — payment releases automatically after that"}
+                  ? `Check the photos and approve, or report an issue within ${escrow.windowHours} hours — payment releases automatically after that`
+                  : `Approve or report an issue within ${escrow.windowHours} hours — payment releases automatically after that`}
               </p>
+
+              {/* Live countdown strip — only renders when job is in the review window */}
+              {escrow.isReviewable && escrow.releaseAt && (
+                <div className="mt-4 rounded-2xl border border-aero-cyan/30 bg-aero-bg/50 p-3 text-left">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                      <Clock className="h-4 w-4 text-aero-trust" />
+                      {escrow.label}
+                    </span>
+                    <span className="text-xs text-aero-soft">
+                      Releases at {escrow.releaseAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <Progress value={escrow.progressPct} className="h-1.5" />
+                </div>
+              )}
+              {escrow.isExpired && (
+                <Badge variant="outline" className="mt-3">
+                  ✓ Escrow released
+                </Badge>
+              )}
             </div>
 
             {/* Photo Proof */}
