@@ -14,14 +14,16 @@ export function useAuditLog() {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['audit-log', filters],
     queryFn: async () => {
+      // Reads from `admin_audit_log` (the canonical, written-to table).
+      // Wave 1 / Primitive #1: previously this hook read from the empty
+      // `audit_log` table, which is why AdminAuditLog.tsx looked broken.
       let query = supabase
-        .from('audit_log')
-        .select('*')
+        .from('admin_audit_log')
+        .select('id, admin_user_id, action, entity_type, entity_id, old_values, new_values, reason, success, error_message, metadata, created_at')
         .order('created_at', { ascending: false })
         .limit(200);
 
       if (filters.action) query = query.eq('action', filters.action);
-      if (filters.actorType) query = query.eq('actor_type', filters.actorType as any);
       if (filters.dateFrom) query = query.gte('created_at', filters.dateFrom);
       if (filters.dateTo) query = query.lte('created_at', filters.dateTo);
 
@@ -34,8 +36,8 @@ export function useAuditLog() {
   const filteredEntries = filters.search
     ? entries.filter(e =>
         e.action.toLowerCase().includes(filters.search.toLowerCase()) ||
-        e.target_table?.toLowerCase().includes(filters.search.toLowerCase()) ||
-        e.target_id?.toLowerCase().includes(filters.search.toLowerCase())
+        e.entity_type?.toLowerCase().includes(filters.search.toLowerCase()) ||
+        e.entity_id?.toLowerCase().includes(filters.search.toLowerCase())
       )
     : entries;
 

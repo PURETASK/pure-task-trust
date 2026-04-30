@@ -39,16 +39,9 @@ export default function AdminAuditLog() {
                 onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
               />
             </div>
-            <Select value={filters.actorType} onValueChange={v => setFilters(f => ({ ...f, actorType: v === 'all' ? '' : v }))}>
-              <SelectTrigger className="w-[140px]"><SelectValue placeholder="Actor type" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All actors</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="client">Client</SelectItem>
-                <SelectItem value="cleaner">Cleaner</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Note: admin_audit_log only contains admin actions, so the
+                old "actor type" filter has been replaced with a status
+                filter that surfaces failed admin actions for debugging. */}
             <Input
               type="date"
               className="w-[160px]"
@@ -77,16 +70,22 @@ export default function AdminAuditLog() {
                   <div key={entry.id} className="px-4 py-3 hover:bg-muted/30 transition-colors">
                     <div className="flex items-center gap-3">
                       <Badge className={`text-xs ${getActionColor(entry.action)}`}>{entry.action}</Badge>
-                      <span className="text-xs text-muted-foreground">{entry.actor_type}</span>
-                      {entry.target_table && (
-                        <span className="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">{entry.target_table}</span>
+                      <span className="text-xs text-muted-foreground">admin</span>
+                      {entry.entity_type && (
+                        <span className="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">{entry.entity_type}</span>
+                      )}
+                      {entry.success === false && (
+                        <Badge variant="destructive" className="text-xs">failed</Badge>
                       )}
                       <span className="ml-auto text-xs text-muted-foreground">
                         {format(new Date(entry.created_at), 'MMM d, h:mm a')}
                       </span>
                     </div>
-                    {entry.target_id && (
-                      <p className="text-xs text-muted-foreground mt-1 font-mono truncate">ID: {entry.target_id}</p>
+                    {entry.entity_id && (
+                      <p className="text-xs text-muted-foreground mt-1 font-mono truncate">ID: {entry.entity_id}</p>
+                    )}
+                    {entry.error_message && (
+                      <p className="text-xs text-destructive mt-1 truncate">Error: {entry.error_message}</p>
                     )}
                   </div>
                 ))}

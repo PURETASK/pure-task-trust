@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { TrustQueueItem, TrustQueueItemData, TrustQueueItemType, TrustSeverity } from "@/components/admin/TrustQueueItem";
 import { toast } from "sonner";
 import { useFraudAlerts } from "@/hooks/useFraudAlerts";
+import { logAdminAction } from "@/lib/audit";
 import { useDisputes } from "@/hooks/useDisputes";
 import { differenceInHours } from "date-fns";
 
@@ -90,25 +91,45 @@ export default function TrustSafetyDashboard() {
   const handleResolve = async (id: string) => {
     setActingId(id);
     try {
-      const userId = (await supabase.auth.getUser()).data.user?.id;
-      await supabase.from("admin_audit_log").insert({ admin_user_id: userId || "", action: "trust_queue_resolved", entity_id: id, reason: "Resolved via Trust & Safety queue" });
+      const isFraud = id.startsWith("fraud-");
+      const realId = isFraud ? id.replace("fraud-", "") : id;
+      await logAdminAction({
+        action: "trust_queue_resolved",
+        entity_type: isFraud ? "fraud_alert" : "trust_queue_item",
+        entity_id: realId,
+        reason: "Resolved via Trust & Safety queue",
+        metadata: { composite_id: id },
+      });
       if (id.startsWith("fraud-")) await supabase.from("fraud_alerts").update({ status: "resolved" }).eq("id", id.replace("fraud-", ""));
       toast.success("Item resolved and logged");
       queryClient.invalidateQueries({ queryKey: ["fraud-alerts"] });
       queryClient.invalidateQueries({ queryKey: ["trust-id-verifications"] });
-    } catch { toast.error("Failed to resolve"); }
+    } catch (e: any) {
+      console.error("[TrustSafetyDashboard] resolve failed:", e);
+      toast.error(e?.message || "Failed to resolve");
+    }
     finally { setActingId(null); }
   };
 
   const handleDismiss = async (id: string) => {
     setActingId(id);
     try {
-      const userId = (await supabase.auth.getUser()).data.user?.id;
-      await supabase.from("admin_audit_log").insert({ admin_user_id: userId || "", action: "trust_queue_dismissed", entity_id: id, reason: "Dismissed via Trust & Safety queue" });
+      const isFraud = id.startsWith("fraud-");
+      const realId = isFraud ? id.replace("fraud-", "") : id;
+      await logAdminAction({
+        action: "trust_queue_dismissed",
+        entity_type: isFraud ? "fraud_alert" : "trust_queue_item",
+        entity_id: realId,
+        reason: "Dismissed via Trust & Safety queue",
+        metadata: { composite_id: id },
+      });
       if (id.startsWith("fraud-")) await supabase.from("fraud_alerts").update({ status: "dismissed" }).eq("id", id.replace("fraud-", ""));
       toast.success("Item dismissed");
       queryClient.invalidateQueries({ queryKey: ["fraud-alerts"] });
-    } catch { toast.error("Failed to dismiss"); }
+    } catch (e: any) {
+      console.error("[TrustSafetyDashboard] dismiss failed:", e);
+      toast.error(e?.message || "Failed to dismiss");
+    }
     finally { setActingId(null); }
   };
 

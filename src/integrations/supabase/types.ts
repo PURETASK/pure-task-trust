@@ -149,12 +149,14 @@ export type Database = {
           created_at: string
           entity_id: string | null
           entity_type: string | null
+          error_message: string | null
           id: string
           ip_address: unknown
           metadata: Json | null
           new_values: Json | null
           old_values: Json | null
           reason: string | null
+          success: boolean
           user_agent: string | null
         }
         Insert: {
@@ -163,12 +165,14 @@ export type Database = {
           created_at?: string
           entity_id?: string | null
           entity_type?: string | null
+          error_message?: string | null
           id?: string
           ip_address?: unknown
           metadata?: Json | null
           new_values?: Json | null
           old_values?: Json | null
           reason?: string | null
+          success?: boolean
           user_agent?: string | null
         }
         Update: {
@@ -177,12 +181,14 @@ export type Database = {
           created_at?: string
           entity_id?: string | null
           entity_type?: string | null
+          error_message?: string | null
           id?: string
           ip_address?: unknown
           metadata?: Json | null
           new_values?: Json | null
           old_values?: Json | null
           reason?: string | null
+          success?: boolean
           user_agent?: string | null
         }
         Relationships: []
@@ -6515,6 +6521,20 @@ export type Database = {
       is_ticket_owner: {
         Args: { _ticket_id: string; _user_id: string }
         Returns: boolean
+      }
+      log_admin_action: {
+        Args: {
+          _action: string
+          _entity_id?: string
+          _entity_type?: string
+          _error_message?: string
+          _metadata?: Json
+          _new_values?: Json
+          _old_values?: Json
+          _reason?: string
+          _success?: boolean
+        }
+        Returns: string
       }
       move_to_dlq: {
         Args: {
