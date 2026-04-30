@@ -91,16 +91,26 @@ export default function JobApproval() {
       ? `${job.cleaner.first_name || ""} ${job.cleaner.last_name || ""}`.trim() || "Your Cleaner"
       : "Cleaner";
 
-  const holdAmount = job.escrow_credits_reserved || 0;
-  const hoursWorked = job.actual_hours || job.estimated_hours || 0;
-  const hourlyRate = holdAmount / (job.estimated_hours || 1);
-  const creditsCharged = Math.round(hoursWorked * hourlyRate);
-  const refundAmount = Math.max(0, holdAmount - creditsCharged);
+  const money = useJobMoney({
+    escrow_credits_reserved: job.escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: job.actual_hours,
+    final_charge_credits: job.final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: (job.cleaner as any)?.tier,
+  });
+  const holdAmount = money.escrowHeld;
+  const hoursWorked = money.billableHours;
+  const creditsCharged = money.laborCharge + money.rushFee;
+  const refundAmount = money.refund;
 
   const handleApprove = async () => {
     try {
       await approveJob();
-      toast({ title: "Payment released!", description: `${creditsCharged} credits released to ${cleanerName}` });
+      toast({
+        title: "Payment released!",
+        description: `$${creditsCharged} released to ${cleanerName}${refundAmount > 0 ? ` · $${refundAmount} refunded` : ""}`,
+      });
       setShowPostJobFlow(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to approve job", variant: "destructive" });
