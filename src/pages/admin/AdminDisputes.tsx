@@ -14,6 +14,7 @@ import { MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, Search, Eye, D
 import { motion } from 'framer-motion';
 import { format, differenceInHours } from 'date-fns';
 import { toast } from 'sonner';
+import { withAdminAuditLog } from '@/lib/audit';
 
 interface AdminDispute {
   id: string;
@@ -79,15 +80,27 @@ const AdminDisputes = () => {
 
   const resolveDispute = useMutation({
     mutationFn: async ({ disputeId, type, notes, refund }: { disputeId: string; type: string; notes: string; refund: number }) => {
-      const { error } = await supabase.from('disputes').update({
+      const updates = {
         status: 'resolved' as const,
         resolution_type: type,
         resolution_notes: notes,
         refund_amount_credits: refund || null,
         resolved_at: new Date().toISOString(),
         admin_notes: adminNotes || null,
-      }).eq('id', disputeId);
-      if (error) throw error;
+      };
+      await withAdminAuditLog(
+        'dispute_resolved',
+        {
+          entity_type: 'dispute',
+          entity_id: disputeId,
+          new_values: updates,
+          reason: notes,
+        },
+        async () => {
+          const { error } = await supabase.from('disputes').update(updates).eq('id', disputeId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => {
       toast.success('Dispute resolved');
@@ -99,11 +112,21 @@ const AdminDisputes = () => {
 
   const updateStatus = useMutation({
     mutationFn: async ({ disputeId, status, notes }: { disputeId: string; status: string; notes?: string }) => {
-      const { error } = await supabase.from('disputes').update({
-        status: status as 'open' | 'investigating' | 'resolved' | 'closed',
-        admin_notes: notes || null,
-      }).eq('id', disputeId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'dispute_status_updated',
+        {
+          entity_type: 'dispute',
+          entity_id: disputeId,
+          new_values: { status, admin_notes: notes ?? null },
+        },
+        async () => {
+          const { error } = await supabase.from('disputes').update({
+            status: status as 'open' | 'investigating' | 'resolved' | 'closed',
+            admin_notes: notes || null,
+          }).eq('id', disputeId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => {
       toast.success('Status updated');
