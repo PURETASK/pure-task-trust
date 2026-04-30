@@ -340,10 +340,10 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
-                          {(job.escrow_credits_reserved || 0) > 0 && (
+                          {getJobNet(job) > 0 && (
                             <span className="flex items-center gap-1 text-success font-medium">
                               <DollarSign className="h-3 w-3" />
-                              {getNet(job.escrow_credits_reserved || 0)}
+                              {getJobNet(job)}
                             </span>
                           )}
                         </div>
@@ -398,10 +398,10 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
-                          {(job.escrow_credits_reserved || 0) > 0 && (
+                          {getJobNet(job) > 0 && (
                             <span className="flex items-center gap-1 text-success font-medium">
                               <DollarSign className="h-3 w-3" />
-                              {getNet(job.escrow_credits_reserved || 0)}
+                              {getJobNet(job)}
                             </span>
                           )}
                         </div>
