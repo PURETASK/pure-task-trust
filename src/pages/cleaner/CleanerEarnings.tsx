@@ -14,6 +14,8 @@ import {
 import { useCleanerEarnings } from "@/hooks/useCleanerEarnings";
 import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { format, addDays, startOfWeek } from "date-fns";
+import { calcJobMoney } from "@/hooks/useJobMoney";
+import { usePlatformConfig } from "@/hooks/usePlatformConfig";
 import InstantPayoutButton from "@/components/payouts/InstantPayoutButton";
 import PayoutHistoryTable from "@/components/payouts/PayoutHistoryTable";
 import EarningsBreakdown from "@/components/payouts/EarningsBreakdown";
@@ -36,6 +38,7 @@ export default function CleanerEarnings() {
   const { earnings, isLoadingEarnings, stats, payouts, refetchPayouts } = useCleanerEarnings();
   const { jobs } = useCleanerJobs();
   const { profile } = useCleanerProfile();
+  const { platformFeePct, creditToUsdRate } = usePlatformConfig();
   const [payoutsEnabled, setPayoutsEnabled] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
   const [editingHoursGoal, setEditingHoursGoal] = useState(false);
@@ -52,7 +55,18 @@ export default function CleanerEarnings() {
     return d >= weekStart && d <= weekEnd && ['confirmed', 'in_progress'].includes(j.status);
   });
 
-  const forecastEarnings = confirmedThisWeek.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
+  // Use canonical money primitive — gives NET earnings after platform fee, not gross escrow.
+  const feeMap = {
+    bronze: platformFeePct('bronze'),
+    silver: platformFeePct('silver'),
+    gold: platformFeePct('gold'),
+    platinum: platformFeePct('platinum'),
+  };
+  const moneyOpts = { platformFeePct: feeMap, creditToUsdRate };
+  const perJobMoney = confirmedThisWeek.map(j =>
+    calcJobMoney({ ...j, cleaner_tier: profile?.tier }, moneyOpts),
+  );
+  const forecastEarnings = perJobMoney.reduce((s, m) => s + m.cleanerNet, 0);
   const forecastHours = confirmedThisWeek.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
   const hoursProgress = Math.min(100, (forecastHours / weeklyHoursGoal) * 100);
   const hoursRemaining = Math.max(0, weeklyHoursGoal - forecastHours);
@@ -303,10 +317,10 @@ export default function CleanerEarnings() {
                 </Button>
               ) : (
                 <div className="space-y-2">
-                  {confirmedThisWeek.slice(0, 3).map((j) => (
+                  {confirmedThisWeek.slice(0, 3).map((j, idx) => (
                     <div key={j.id} className="flex items-center justify-between border-2 border-primary/20 bg-primary/10 rounded-2xl px-4 py-2.5">
                       <span className="text-sm font-semibold text-foreground">{j.cleaning_type || 'Cleaning'}</span>
-                      <span className="text-sm font-poppins font-bold text-primary">${j.escrow_credits_reserved || 0}</span>
+                      <span className="text-sm font-poppins font-bold text-primary">${perJobMoney[idx]?.cleanerNet ?? 0}</span>
                     </div>
                   ))}
                 </div>
