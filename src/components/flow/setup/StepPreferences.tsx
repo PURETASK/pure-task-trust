@@ -4,7 +4,6 @@ import {
   FlowField,
   FlowTextarea,
   FlowNav,
-  FlowChip,
 } from "@/components/flow";
 import type { PrefsData } from "@/hooks/useClientSetup";
 
@@ -19,18 +18,6 @@ interface Props {
   onSkip: () => void;
 }
 
-const PRIORITIES = [
-  "Deep Cleaning",
-  "Speed / Efficiency",
-  "Attention to Detail",
-  "Sanitization",
-  "Organization",
-  "Eco-Friendly Products",
-  "Pet Hair Focus",
-  "Kitchen Focus",
-  "Bathroom Focus",
-];
-
 export function StepPreferences({
   step,
   total,
@@ -41,13 +28,6 @@ export function StepPreferences({
   onNext,
   onSkip,
 }: Props) {
-  const togglePriority = (p: string) => {
-    const next = data.priorities.includes(p)
-      ? data.priorities.filter((x) => x !== p)
-      : [...data.priorities, p];
-    onChange({ priorities: next });
-  };
-
   return (
     <div className="space-y-6">
       <FlowProgress current={step} total={total} />
@@ -55,20 +35,6 @@ export function StepPreferences({
         title="Cleaning preferences"
         description="What matters most to you? This personalizes every visit."
       >
-        <FlowField label="Cleaning priorities" helper="Select any that apply." optional>
-          <div className="flex flex-wrap gap-2">
-            {PRIORITIES.map((p) => (
-              <FlowChip
-                key={p}
-                selected={data.priorities.includes(p)}
-                onClick={() => togglePriority(p)}
-              >
-                {p}
-              </FlowChip>
-            ))}
-          </div>
-        </FlowField>
-
         <div className="grid sm:grid-cols-2 gap-5">
           <FlowField label="Areas needing extra attention" optional>
             <FlowTextarea
@@ -102,39 +68,6 @@ export function StepPreferences({
             />
           </FlowField>
         </div>
-
-        <FlowField label="Scent preference" optional>
-          <div className="flex flex-wrap gap-2">
-            {["Fragrance-free", "Light & clean", "Citrus", "Lavender"].map((s) => (
-              <FlowChip
-                key={s}
-                selected={data.scent_preference === s}
-                onClick={() =>
-                  onChange({ scent_preference: data.scent_preference === s ? "" : s })
-                }
-              >
-                {s}
-              </FlowChip>
-            ))}
-          </div>
-        </FlowField>
-
-        <FlowField label="Eco-friendly products only?" optional>
-          <div className="flex gap-2">
-            <FlowChip
-              selected={!!data.eco_preference}
-              onClick={() => onChange({ eco_preference: true })}
-            >
-              Yes please
-            </FlowChip>
-            <FlowChip
-              selected={data.eco_preference === false}
-              onClick={() => onChange({ eco_preference: false })}
-            >
-              No preference
-            </FlowChip>
-          </div>
-        </FlowField>
       </FlowCard>
 
       <FlowNav onBack={onBack} onNext={onNext} onSkip={onSkip} loading={saving} />
