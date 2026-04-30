@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { JobWithDetails } from "@/hooks/useJob";
+import { calcJobMoney } from "@/hooks/useJobMoney";
+
+const escrowHeld = (job: JobWithDetails) => calcJobMoney({
+  escrow_credits_reserved: (job as any).escrow_credits_reserved,
+  estimated_hours: job.estimated_hours,
+  actual_hours: (job as any).actual_hours,
+  final_charge_credits: (job as any).final_charge_credits,
+  rush_fee_credits: (job as any).rush_fee_credits,
+  cleaner_tier: (job.cleaner as any)?.tier,
+}).escrowHeld;
 
 interface Props {
   candidates: JobWithDetails[];
@@ -98,9 +108,9 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
                         Last booked {new Date(job.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </p>
                     )}
-                    {job.escrow_credits_reserved != null && job.escrow_credits_reserved > 0 && (
+                    {escrowHeld(job) > 0 && (
                       <p className="text-xs text-muted-foreground">
-                        Usually ~${job.escrow_credits_reserved} credits
+                        Usually ~${escrowHeld(job)} credits
                       </p>
                     )}
                   </div>

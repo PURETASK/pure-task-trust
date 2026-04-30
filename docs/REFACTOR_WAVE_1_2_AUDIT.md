@@ -38,6 +38,7 @@ a future session._
    the escrow review window via `useEscrowCountdown`.
 5. **Hardcoded "24 hours" copy** on JobInProgress drifted from
    `escrow_review_window_hours`. Now config-driven.
+6. **CleanerSchedule + CleanerJobs had wrong tier-fee table** (15/16/18/20 hardcoded; real values are 15/18/22/25). Cleaners on `silver`/`bronze` saw inflated net earnings on their schedule and job lists by ~2–5 credits per job. Fixed by routing through `calcJobMoney`.
 
 ## Files swept into primitives
 
@@ -53,6 +54,23 @@ a future session._
 - `src/pages/BookingStatus.tsx` (Wave 1+2: money + participants — on-demand sweep)
 - `src/pages/CleaningDetail.tsx` (Wave 1+2: money + participants + status — on-demand sweep)
 - `src/pages/cleaner/CleanerJobDetail.tsx` (Wave 1+2: money + participants + status — on-demand sweep; cleaner now sees `cleanerNet` instead of gross escrow)
+- `src/pages/cleaner/CleanerJobs.tsx` (Wave 1: money — fixed wrong tier-fee table)
+- `src/pages/cleaner/CleanerSchedule.tsx` (Wave 1: money — fixed wrong tier-fee table)
+- `src/components/client-home/UpcomingCleaningCard.tsx` (Wave 1: money — boundary via calcJobMoney)
+- `src/components/client-home/RecentActivityTimeline.tsx` (Wave 1: money)
+- `src/components/client-home/QuickRebookSection.tsx` (Wave 1: money)
+
+## Phase D — Lint enforcement (shipped)
+
+`eslint.config.js` now contains a `no-restricted-syntax` rule that blocks
+raw `escrow_credits_reserved` and `final_charge_credits` member access
+across the codebase, with an allowlist for the legitimate boundary files
+(useJobMoney, hooks that select the column from Supabase, and pages that
+pass the field straight into `useJobMoney`/`calcJobMoney`).
+
+**Effect:** Any new file that tries to read these fields directly fails
+lint with a pointer to this doc. Future drift cannot reintroduce the
+overstatement bugs we squashed above.
 
 ## Stop-condition met
 

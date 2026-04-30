@@ -12,14 +12,8 @@ import { RescheduleRequestsList } from "@/components/scheduling/RescheduleReques
 import { format, addDays, startOfWeek, addWeeks, addMonths, subMonths, getDaysInMonth, startOfMonth, getDay, isSameDay, differenceInHours } from "date-fns";
 import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { calcJobMoney } from "@/hooks/useJobMoney";
 import scheduleBg from "@/assets/availability-bg.png";
-
-const TIER_FEE: Record<string, number> = {
-  platinum: 0.15,
-  gold: 0.16,
-  silver: 0.18,
-  bronze: 0.20,
-};
 
 export default function CleanerSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,8 +23,15 @@ export default function CleanerSchedule() {
   const { jobs, isLoading } = useCleanerJobs();
   const { profile } = useCleanerProfile();
   const tier = profile?.tier || "bronze";
-  const feeRate = TIER_FEE[tier] ?? 0.20;
-  const getNet = (gross: number) => Math.round(gross * (1 - feeRate));
+  const getJobNet = (job: any) =>
+    calcJobMoney({
+      escrow_credits_reserved: job.escrow_credits_reserved,
+      estimated_hours: job.estimated_hours,
+      actual_hours: job.actual_hours,
+      final_charge_credits: job.final_charge_credits,
+      rush_fee_credits: job.rush_fee_credits,
+      cleaner_tier: tier,
+    }).cleanerNet;
 
   const generateTwoWeeksCalendar = () => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -72,8 +73,7 @@ export default function CleanerSchedule() {
   const acceptedJobs = selectedDateJobs.filter(j => j.status === 'confirmed' || j.status === 'in_progress');
 
   // ── Daily earnings summary ───────────────────────────────────────────────
-  const dailyGross = selectedDateJobs.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
-  const dailyNet = getNet(dailyGross);
+  const dailyNet = selectedDateJobs.reduce((sum, j) => sum + getJobNet(j), 0);
   const dailyHours = selectedDateJobs.reduce((sum, j) => sum + (j.estimated_hours || 2), 0);
 
   // ── Gap detection ─────────────────────────────────────────────────────────
@@ -340,10 +340,10 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
-                          {(job.escrow_credits_reserved || 0) > 0 && (
+                          {getJobNet(job) > 0 && (
                             <span className="flex items-center gap-1 text-success font-medium">
                               <DollarSign className="h-3 w-3" />
-                              {getNet(job.escrow_credits_reserved || 0)}
+                              {getJobNet(job)}
                             </span>
                           )}
                         </div>
@@ -398,10 +398,10 @@ export default function CleanerSchedule() {
                             <MapPin className="h-3 w-3" />
                             {job.estimated_hours || 2}h
                           </span>
-                          {(job.escrow_credits_reserved || 0) > 0 && (
+                          {getJobNet(job) > 0 && (
                             <span className="flex items-center gap-1 text-success font-medium">
                               <DollarSign className="h-3 w-3" />
-                              {getNet(job.escrow_credits_reserved || 0)}
+                              {getJobNet(job)}
                             </span>
                           )}
                         </div>

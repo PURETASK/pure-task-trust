@@ -20,13 +20,12 @@ import { useCleanerJobs, useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobPhotoValidation } from "@/components/job/PhotoRequirements";
+import { calcJobMoney } from "@/hooks/useJobMoney";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 import type { CleanerJobWithClient } from "@/hooks/useCleanerProfile";
-
-const TIER_FEE: Record<string, number> = { platinum: 0.15, gold: 0.16, silver: 0.18, bronze: 0.20 };
 
 const TYPE_EMOJI: Record<string, string> = {
   standard: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
@@ -48,7 +47,7 @@ function googleMapsUrl(address: string) {
 }
 
 // ─── Live Job Card (full workflow card) ──────────────────────────────────────
-function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: number }) {
+function LiveJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string }) {
   const [photoType, setPhotoType] = useState<"before" | "after">("before");
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
@@ -59,8 +58,14 @@ function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: num
   const { checkins, hasCheckedIn, hasCheckedOut, checkIn, checkOut, isLoading: checkinsLoading } = useJobCheckins(job.id);
   const { beforeCount, afterCount, canCheckout } = useJobPhotoValidation(photos);
 
-  const gross = job.escrow_credits_reserved || 0;
-  const net = Math.round(gross * (1 - feeRate));
+  const net = calcJobMoney({
+    escrow_credits_reserved: (job as any).escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: (job as any).actual_hours,
+    final_charge_credits: (job as any).final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: tier,
+  }).cleanerNet;
   const address = formatAddress(job);
   const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
   const isInProgress = job.status === "in_progress";
@@ -348,9 +353,15 @@ function LiveJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: num
 }
 
 // ─── Compact job card for lists ──────────────────────────────────────────────
-function CompactJobCard({ job, feeRate }: { job: CleanerJobWithClient; feeRate: number }) {
-  const gross = job.escrow_credits_reserved || 0;
-  const net = Math.round(gross * (1 - feeRate));
+function CompactJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string }) {
+  const net = calcJobMoney({
+    escrow_credits_reserved: (job as any).escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: (job as any).actual_hours,
+    final_charge_credits: (job as any).final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: tier,
+  }).cleanerNet;
   const address = formatAddress(job);
   const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
   const date = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
@@ -411,7 +422,6 @@ export default function CleanerJobs() {
   const { profile } = useCleanerProfile();
 
   const tier = profile?.tier || "bronze";
-  const feeRate = TIER_FEE[tier] ?? 0.20;
 
   // Categorize jobs by tab
   const offers = jobs.filter(j => j.status === "pending" || j.status === "created");
@@ -490,7 +500,7 @@ export default function CleanerJobs() {
               {offers.length === 0 ? (
                 <EmptyTab icon={Bell} title="No new offers" subtitle="You'll see new job offers here when clients book you" />
               ) : (
-                offers.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                offers.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
@@ -499,7 +509,7 @@ export default function CleanerJobs() {
               {upcoming.length === 0 ? (
                 <EmptyTab icon={Calendar} title="No upcoming jobs" subtitle="Confirmed bookings will appear here" />
               ) : (
-                upcoming.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                upcoming.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
@@ -508,7 +518,7 @@ export default function CleanerJobs() {
               {liveJobs.length === 0 ? (
                 <EmptyTab icon={Flame} title="No active job" subtitle="When you clock in to a job, the live workflow appears here" />
               ) : (
-                liveJobs.map(job => <LiveJobCard key={job.id} job={job} feeRate={feeRate} />)
+                liveJobs.map(job => <LiveJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
@@ -555,7 +565,7 @@ export default function CleanerJobs() {
               {history.length === 0 ? (
                 <EmptyTab icon={Clock} title="No history yet" subtitle="Past jobs will appear here over time" />
               ) : (
-                history.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                history.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
           </Tabs>
