@@ -25,10 +25,10 @@ interface Job {
   scheduled_start_at: string | null;
   scheduled_end_at: string | null;
   estimated_hours: number | null;
-  actual_hours: number | null;
-  final_charge_credits: number | null;
-  rush_fee_credits: number | null;
-  tip_credits: number | null;
+  actual_hours?: number | null;
+  final_charge_credits?: number | null;
+  rush_fee_credits?: number | null;
+  tip_credits?: number | null;
   credit_charge_credits: number | null;
   escrow_credits_reserved: number | null;
   notes: string | null;
