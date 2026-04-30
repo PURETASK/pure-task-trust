@@ -119,14 +119,20 @@ export default function CleaningDetail() {
 
   const computeFeeBucket = useFeeBucket();
   const escrow = useEscrowCountdown(job ?? null);
+  const money = useJobMoney({
+    escrow_credits_reserved: job.escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: job.actual_hours,
+    final_charge_credits: job.final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: (job.cleaner as any)?.tier,
+  });
   // Calculate cancellation fee preview
   const hoursBefore = job.scheduled_start_at
     ? differenceInHours(new Date(job.scheduled_start_at), new Date())
     : 999;
   const { bucket: feeBucket, feePercent } = computeFeeBucket(hoursBefore);
-  const estimatedFee = job.escrow_credits_reserved
-    ? Math.round(job.escrow_credits_reserved * (feePercent / 100))
-    : 0;
+  const estimatedFee = Math.round(money.escrowHeld * (feePercent / 100));
 
   const handleApprove = async () => {
     try {
