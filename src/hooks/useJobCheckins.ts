@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { getCurrentProfileIds } from '@/hooks/useCurrentProfile';
 import { toast } from 'sonner';
 
 export interface JobCheckin {
@@ -103,14 +104,9 @@ export function useJobCheckins(jobId?: string) {
     }) => {
       if (!user) throw new Error('Not authenticated');
 
-      // Get cleaner profile
-      const { data: profile } = await supabase
-        .from('cleaner_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
-
-      if (!profile) throw new Error('Cleaner profile not found');
+      // Resolve cleaner_profiles.id via shared primitive (cached, dedup'd).
+      const { cleanerProfileId } = await getCurrentProfileIds(queryClient, user.id);
+      if (!cleanerProfileId) throw new Error('Cleaner profile not found');
 
       // Get current GPS location
       const location = await getCurrentLocation();
@@ -128,7 +124,7 @@ export function useJobCheckins(jobId?: string) {
         .from('job_checkins')
         .insert({
           job_id: jobId,
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           type: 'check_in',
           lat: location.lat,
           lng: location.lng,
@@ -191,13 +187,8 @@ export function useJobCheckins(jobId?: string) {
     }) => {
       if (!user) throw new Error('Not authenticated');
 
-      const { data: profile } = await supabase
-        .from('cleaner_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
-
-      if (!profile) throw new Error('Cleaner profile not found');
+      const { cleanerProfileId } = await getCurrentProfileIds(queryClient, user.id);
+      if (!cleanerProfileId) throw new Error('Cleaner profile not found');
 
       const location = await getCurrentLocation();
       const distance = calculateDistance(
@@ -211,7 +202,7 @@ export function useJobCheckins(jobId?: string) {
         .from('job_checkins')
         .insert({
           job_id: jobId,
-          cleaner_id: profile.id,
+          cleaner_id: cleanerProfileId,
           type: 'check_out',
           lat: location.lat,
           lng: location.lng,

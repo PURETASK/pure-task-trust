@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { getCurrentProfileIds } from '@/hooks/useCurrentProfile';
 import type { Database } from '@/integrations/supabase/types';
 
 type Job = Database['public']['Tables']['jobs']['Row'];
@@ -116,14 +117,9 @@ export function useClientJobs() {
     queryFn: async (): Promise<JobWithDetails[]> => {
       if (!user?.id) return [];
 
-      // First get client profile
-      const { data: clientProfile } = await supabase
-        .from('client_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (!clientProfile) return [];
+      // Resolve client_profiles.id via shared primitive (cached, dedup'd).
+      const { clientProfileId } = await getCurrentProfileIds(queryClient, user.id);
+      if (!clientProfileId) return [];
 
       const { data, error } = await supabase
         .from('jobs')
@@ -138,7 +134,7 @@ export function useClientJobs() {
             reliability_score
           )
         `)
-        .eq('client_id', clientProfile.id)
+        .eq('client_id', clientProfileId)
         .order('created_at', { ascending: false })
         .limit(20);
 
@@ -198,18 +194,12 @@ export function useJobActions(jobId: string) {
     mutationFn: async (description: string) => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      // Get client profile
-      const { data: clientProfile } = await supabase
-        .from('client_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (!clientProfile) throw new Error('Client profile not found');
+      const { clientProfileId } = await getCurrentProfileIds(queryClient, user.id);
+      if (!clientProfileId) throw new Error('Client profile not found');
 
       const { error } = await supabase.from('disputes').insert({
         job_id: jobId,
-        client_id: clientProfile.id,
+        client_id: clientProfileId,
         client_notes: description,
         status: 'open',
       });
