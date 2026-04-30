@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useJob } from "@/hooks/useJob";
 import { useJobAuthorization } from "@/hooks/useJobAuthorization";
+import { useJobMoney } from "@/hooks/useJobMoney";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
