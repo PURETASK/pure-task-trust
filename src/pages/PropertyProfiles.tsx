@@ -10,23 +10,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { usePropertyProfiles } from "@/hooks/usePropertyProfiles";
-import { Home, Plus, PawPrint, Car, Key, Ruler, Trash2, Edit } from "lucide-react";
+import { Home, Plus, PawPrint, Car, Key, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function PropertyProfiles() {
   const { properties, isLoading, createProperty, updateProperty, deleteProperty } = usePropertyProfiles();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
-    name: '', sq_ft: '', bedrooms: '', bathrooms: '', has_pets: false,
+    name: '', has_pets: false,
     pet_info: '', access_instructions: '', parking_notes: '', special_notes: '',
   });
 
   const handleCreate = async () => {
     await createProperty.mutateAsync({
       name: form.name || 'My Property',
-      sq_ft: form.sq_ft ? parseInt(form.sq_ft) : undefined,
-      bedrooms: form.bedrooms ? parseInt(form.bedrooms) : undefined,
-      bathrooms: form.bathrooms ? parseFloat(form.bathrooms) : undefined,
       has_pets: form.has_pets,
       pet_info: form.pet_info || undefined,
       access_instructions: form.access_instructions || undefined,
@@ -35,7 +32,7 @@ export default function PropertyProfiles() {
     });
     toast.success('Property added');
     setOpen(false);
-    setForm({ name: '', sq_ft: '', bedrooms: '', bathrooms: '', has_pets: false, pet_info: '', access_instructions: '', parking_notes: '', special_notes: '' });
+    setForm({ name: '', has_pets: false, pet_info: '', access_instructions: '', parking_notes: '', special_notes: '' });
   };
 
   return (
@@ -57,11 +54,6 @@ export default function PropertyProfiles() {
               <DialogHeader><DialogTitle>Add Property</DialogTitle></DialogHeader>
               <div className="space-y-4">
                 <div><Label>Property Name</Label><Input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="e.g. Main Apartment" /></div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div><Label>Sq Ft</Label><Input type="number" value={form.sq_ft} onChange={e => setForm(f => ({...f, sq_ft: e.target.value}))} /></div>
-                  <div><Label>Bedrooms</Label><Input type="number" value={form.bedrooms} onChange={e => setForm(f => ({...f, bedrooms: e.target.value}))} /></div>
-                  <div><Label>Bathrooms</Label><Input type="number" step="0.5" value={form.bathrooms} onChange={e => setForm(f => ({...f, bathrooms: e.target.value}))} /></div>
-                </div>
                 <div className="flex items-center gap-3">
                   <Switch checked={form.has_pets} onCheckedChange={v => setForm(f => ({...f, has_pets: v}))} />
                   <Label>Has Pets</Label>
@@ -92,9 +84,6 @@ export default function PropertyProfiles() {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {prop.sq_ft && <Badge variant="outline"><Ruler className="h-3 w-3 mr-1" />{prop.sq_ft} sq ft</Badge>}
-                    {prop.bedrooms && <Badge variant="outline">{prop.bedrooms} bed</Badge>}
-                    {prop.bathrooms && <Badge variant="outline">{prop.bathrooms} bath</Badge>}
                     {prop.has_pets && <Badge variant="outline" className="text-warning"><PawPrint className="h-3 w-3 mr-1" />Has Pets</Badge>}
                   </div>
                   {prop.pet_info && <p className="text-sm"><PawPrint className="h-3.5 w-3.5 inline mr-1 text-warning" />{prop.pet_info}</p>}

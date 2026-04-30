@@ -21,13 +21,10 @@ export interface ClientProfileSummary {
     petFriendlyRequired: boolean | null;
   } | null;
   prefs: {
-    priorities: string[];
     extraAttentionNotes: string | null;
     avoidNotes: string | null;
     allergyNotes: string | null;
     productPreferences: string | null;
-    scentPreference: string | null;
-    ecoPreference: boolean | null;
   } | null;
 }
 
@@ -92,13 +89,10 @@ export function useClientProfile() {
           : null,
         prefs: prefs
           ? {
-              priorities: prefs.priorities ?? [],
               extraAttentionNotes: prefs.extra_attention_notes,
               avoidNotes: prefs.avoid_notes,
               allergyNotes: prefs.allergy_notes,
               productPreferences: prefs.product_preferences,
-              scentPreference: prefs.scent_preference,
-              ecoPreference: prefs.eco_preference,
             }
           : null,
       };
@@ -115,12 +109,9 @@ export function buildDefaultNotes(p: ClientProfileSummary | null | undefined): s
   if (p.property?.gateCode) lines.push(`Gate code: ${p.property.gateCode}`);
   if (p.property?.doormanNotes) lines.push(`Doorman: ${p.property.doormanNotes}`);
   if (p.property?.hasPets && p.property?.petInfo) lines.push(`Pets: ${p.property.petInfo}`);
-  if (p.prefs?.priorities?.length) lines.push(`Priorities: ${p.prefs.priorities.join(", ")}`);
   if (p.prefs?.extraAttentionNotes) lines.push(`Extra attention: ${p.prefs.extraAttentionNotes}`);
   if (p.prefs?.avoidNotes) lines.push(`Please avoid: ${p.prefs.avoidNotes}`);
   if (p.prefs?.allergyNotes) lines.push(`Allergies: ${p.prefs.allergyNotes}`);
   if (p.prefs?.productPreferences) lines.push(`Products: ${p.prefs.productPreferences}`);
-  if (p.prefs?.scentPreference) lines.push(`Scent: ${p.prefs.scentPreference}`);
-  if (p.prefs?.ecoPreference) lines.push(`Eco-friendly products only.`);
   return lines.join("\n");
 }
