@@ -64,7 +64,7 @@ export function CleanerAvailabilityToggle() {
       disabled={isBusy || !profile}
       className={cn(
         "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold transition-all active:scale-95",
-        isLoading
+        showLoading
           ? "bg-muted border-border text-muted-foreground"
           : isAvailable
           ? "bg-success/10 border-success/30 text-success hover:bg-success/20 shadow-sm"
