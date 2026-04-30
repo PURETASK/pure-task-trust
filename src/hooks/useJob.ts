@@ -10,6 +10,7 @@ type JobStatus = Database['public']['Enums']['job_status'];
 export interface JobWithDetails extends Job {
   cleaner?: {
     id: string;
+    user_id: string;
     first_name: string | null;
     last_name: string | null;
     avg_rating: number | null;
@@ -17,6 +18,7 @@ export interface JobWithDetails extends Job {
   } | null;
   client?: {
     id: string;
+    user_id: string;
     first_name: string | null;
     last_name: string | null;
   } | null;
@@ -34,6 +36,7 @@ export function useJob(jobId: string) {
           *,
           cleaner:cleaner_id (
             id,
+            user_id,
             first_name,
             last_name,
             avg_rating,
@@ -41,6 +44,7 @@ export function useJob(jobId: string) {
           ),
           client:client_id (
             id,
+            user_id,
             first_name,
             last_name
           )
@@ -127,6 +131,7 @@ export function useClientJobs() {
           *,
           cleaner:cleaner_id (
             id,
+            user_id,
             first_name,
             last_name,
             avg_rating,

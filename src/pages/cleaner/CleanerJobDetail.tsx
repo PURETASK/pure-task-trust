@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useJob } from "@/hooks/useJob";
+import { useJobAuthorization } from "@/hooks/useJobAuthorization";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
@@ -150,10 +151,23 @@ export default function CleanerJobDetail() {
     );
   }
 
+  const auth = useJobAuthorization({
+    id: job.id,
+    status: job.status,
+    client_user_id: job.client?.user_id ?? null,
+    cleaner_user_id: job.cleaner?.user_id ?? null,
+    scheduled_start_at: job.scheduled_start_at,
+    check_in_at: job.check_in_at,
+    check_out_at: job.check_out_at,
+    actual_end_at: job.actual_end_at,
+    final_charge_credits: job.final_charge_credits,
+  });
   const isInProgress = job.status === "in_progress";
-  const canCheckin = job.status === "confirmed" && !hasCheckedIn;
-  const canCheckoutNow = job.status === "in_progress" && !hasCheckedOut;
   const isCompleted = job.status === "completed";
+  // canStart guards "Check In" (confirmed + cleaner-owned); UX still requires !hasCheckedIn
+  const canCheckin = auth.canStart && !hasCheckedIn;
+  // canComplete guards "Check Out" (in_progress + has check_in); UX still requires !hasCheckedOut
+  const canCheckoutNow = auth.canComplete && !hasCheckedOut;
 
   // Client data for brief card
   const jobWithAddress = job as any;

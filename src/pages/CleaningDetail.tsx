@@ -26,6 +26,7 @@ import { useCreateReview, useJobReview } from "@/hooks/useReviews";
 import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { useJobAuthorization } from "@/hooks/useJobAuthorization";
 import { Progress } from "@/components/ui/progress";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
@@ -98,11 +99,22 @@ export default function CleaningDetail() {
   const status = statusConfig[job.status] || statusConfig.created;
   const cleanerName = job.cleaner ? `${job.cleaner.first_name || ''} ${job.cleaner.last_name || ''}`.trim() || 'Cleaner' : 'Finding cleaner…';
   const serviceType = (job.cleaning_type || 'standard').replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
-  const needsApproval = job.status === 'completed' && job.final_charge_credits == null;
+  const auth = useJobAuthorization({
+    id: job.id,
+    status: job.status,
+    client_user_id: job.client?.user_id ?? null,
+    cleaner_user_id: job.cleaner?.user_id ?? null,
+    scheduled_start_at: job.scheduled_start_at,
+    check_in_at: job.check_in_at,
+    check_out_at: job.check_out_at,
+    actual_end_at: job.actual_end_at,
+    final_charge_credits: job.final_charge_credits,
+  });
   const isApproved = job.status === 'completed' && job.final_charge_credits != null;
-  const canReschedule = ['created', 'pending', 'confirmed'].includes(job.status);
-  const canCancel = ['created', 'pending', 'confirmed'].includes(job.status);
-  const canReview = isApproved && !existingReview;
+  const needsApproval = auth.canApprove;
+  const canReschedule = auth.canReschedule;
+  const canCancel = auth.canCancel;
+  const canReview = isApproved && !existingReview && auth.canReview;
   const hasReview = !!existingReview;
 
   const computeFeeBucket = useFeeBucket();

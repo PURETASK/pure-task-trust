@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useJob, useJobActions } from "@/hooks/useJob";
 import { useJobPhotos } from "@/hooks/useJobPhotos";
 import { useJobReview } from "@/hooks/useReviews";
+import { useJobAuthorization } from "@/hooks/useJobAuthorization";
 import {
   Dialog, DialogContent, DialogDescription,
   DialogHeader, DialogTitle, DialogTrigger,
@@ -41,6 +42,19 @@ export default function JobApproval() {
 
   // Live escrow countdown — replaces hardcoded "24 hours" copy
   const escrow = useEscrowCountdown(job ?? null);
+
+  // Single source of truth for who can approve / dispute this job
+  const auth = useJobAuthorization(job ? {
+    id: job.id,
+    status: job.status,
+    client_user_id: job.client?.user_id ?? null,
+    cleaner_user_id: job.cleaner?.user_id ?? null,
+    scheduled_start_at: job.scheduled_start_at,
+    check_in_at: job.check_in_at,
+    check_out_at: job.check_out_at,
+    actual_end_at: job.actual_end_at,
+    final_charge_credits: job.final_charge_credits,
+  } : null);
 
   const allPhotos = jobPhotos || [];
   const beforePhotos = allPhotos.filter(
@@ -295,7 +309,14 @@ export default function JobApproval() {
             </div>
 
             {/* Approve */}
-            <Button variant="success" size="lg" className="w-full mb-3" onClick={handleApprove} disabled={isApproving}>
+            <Button
+              variant="success"
+              size="lg"
+              className="w-full mb-3"
+              onClick={handleApprove}
+              disabled={isApproving || !auth.canApprove}
+              title={!auth.canApprove ? auth.reasons.canApprove : undefined}
+            >
               {isApproving ? (
                 <><Loader2 className="h-5 w-5 mr-2 animate-spin" />Processing...</>
               ) : (
@@ -306,7 +327,12 @@ export default function JobApproval() {
             {/* Report issue */}
             <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5">
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
+                  disabled={!auth.canDispute}
+                  title={!auth.canDispute ? auth.reasons.canDispute : undefined}
+                >
                   <AlertTriangle className="h-4 w-4" />Dispute / Report Issue
                 </Button>
               </DialogTrigger>
