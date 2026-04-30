@@ -47,6 +47,18 @@ export default function CleanerJobDetail() {
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
+  // Display primitives — safe with undefined job
+  const participants = useJobParticipants(job ?? null);
+  const status = useStatusPresentation(job?.status);
+  const money = useJobMoney({
+    escrow_credits_reserved: job?.escrow_credits_reserved,
+    estimated_hours: job?.estimated_hours,
+    actual_hours: job?.actual_hours,
+    final_charge_credits: job?.final_charge_credits,
+    rush_fee_credits: (job as any)?.rush_fee_credits,
+    cleaner_tier: (job?.cleaner as any)?.tier,
+  });
+
   // Live elapsed timer
   useEffect(() => {
     if (!job?.check_in_at || job.status !== 'in_progress') return;
@@ -117,17 +129,6 @@ export default function CleanerJobDetail() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const map: Record<string, JSX.Element> = {
-      pending: <Badge variant="warning">Pending</Badge>,
-      created: <Badge variant="warning">Pending</Badge>,
-      confirmed: <Badge variant="default">Confirmed</Badge>,
-      in_progress: <Badge className="bg-accent text-white">In Progress</Badge>,
-      completed: <Badge variant="success">Completed</Badge>,
-    };
-    return map[status] || <Badge variant="secondary">{status}</Badge>;
-  };
-
   const photoProgress = Math.min(100, ((beforeCount + afterCount) / 2) * 100);
   const jobStep = job?.status === 'confirmed' ? 1 : job?.status === 'in_progress' ? 2 : job?.status === 'completed' ? 3 : 0;
 
@@ -189,17 +190,17 @@ export default function CleanerJobDetail() {
               {(job.cleaning_type || '').replace('_', ' ')} Clean
             </h1>
             <p className="text-muted-foreground text-sm">
-              {job.client?.first_name} {job.client?.last_name}
+              {participants.client.fullName}
             </p>
           </div>
-          {getStatusBadge(job.status)}
+          <Badge variant={status.badgeVariant}>{status.label}</Badge>
         </div>
 
         {/* Client Brief Card — shows for confirmed/in_progress */}
         {(job.status === 'confirmed' || job.status === 'in_progress') && (
           <ClientBriefCard
             notes={jobWithAddress.notes || jobWithAddress.address_notes}
-            clientFirstName={job.client?.first_name}
+            clientFirstName={participants.client.firstName}
             cleaningType={job.cleaning_type}
             preferences={clientPrefs}
           />
@@ -272,7 +273,7 @@ export default function CleanerJobDetail() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Your Earnings</p>
-                  <p className="font-medium text-sm text-success">{job.escrow_credits_reserved || 0} cr</p>
+                  <p className="font-medium text-sm text-success">{money.cleanerNet} cr</p>
                 </div>
               </div>
             </div>
