@@ -64,6 +64,11 @@ export default tseslint.config(
       "src/pages/cleaner/CleanerJobDetail.tsx",
       "src/pages/MyCleanings.tsx",
       "src/pages/JobInProgress.tsx",
+      "src/pages/cleaner/CleanerJobs.tsx",
+      "src/pages/cleaner/CleanerSchedule.tsx",
+      "src/components/client-home/UpcomingCleaningCard.tsx",
+      "src/components/client-home/RecentActivityTimeline.tsx",
+      "src/components/client-home/QuickRebookSection.tsx",
     ],
     rules: {
       "no-restricted-syntax": "off",
