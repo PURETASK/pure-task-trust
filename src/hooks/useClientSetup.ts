@@ -42,6 +42,8 @@ export interface HomeData {
   sq_ft?: number;
   floors?: number;
   has_elevator?: boolean;
+  /** UX-only: user confirmed map pin matches their home. Not persisted. */
+  address_confirmed?: boolean;
 }
 
 export interface AccessData {

@@ -4,8 +4,11 @@ import {
   FlowField,
   FlowInput,
   FlowNav,
-  FlowChip,
 } from "@/components/flow";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useMemo } from "react";
+import { MapPin } from "lucide-react";
 import type { HomeData } from "@/hooks/useClientSetup";
 
 interface Props {
@@ -18,37 +21,34 @@ interface Props {
   onNext: () => void;
 }
 
-const HOME_TYPES = [
-  { value: "house", label: "House" },
-  { value: "apartment", label: "Apartment" },
-  { value: "condo", label: "Condo" },
-  { value: "townhome", label: "Townhome" },
-  { value: "other", label: "Other" },
-];
-
 export function StepHome({ step, total, data, saving, onChange, onBack, onNext }: Props) {
-  const valid =
+  const addressFilled = !!(
     data.line1.trim() &&
     data.city.trim() &&
     data.state.trim() &&
-    data.postal_code.trim() &&
-    data.home_type &&
-    data.bedrooms != null &&
-    data.bathrooms != null;
+    data.postal_code.trim()
+  );
+  const valid = addressFilled && !!data.address_confirmed;
 
-  const requiresElevator = data.home_type === "apartment" || data.home_type === "condo";
+  const mapQuery = useMemo(() => {
+    if (!addressFilled) return null;
+    const q = [data.line1, data.city, data.state, data.postal_code]
+      .filter(Boolean)
+      .join(", ");
+    return encodeURIComponent(q);
+  }, [addressFilled, data.line1, data.city, data.state, data.postal_code]);
 
   return (
     <div className="space-y-6">
       <FlowProgress current={step} total={total} />
       <FlowCard
-        title="Tell us about your home"
-        description="This helps us match the right cleaner and price your visit accurately."
+        title="Where's your home?"
+        description="We use this to match nearby cleaners and price your visit accurately."
       >
         <FlowField label="Street address">
           <FlowInput
             value={data.line1}
-            onChange={(e) => onChange({ line1: e.target.value })}
+            onChange={(e) => onChange({ line1: e.target.value, address_confirmed: false })}
             autoComplete="address-line1"
             placeholder="123 Main Street"
           />
@@ -58,7 +58,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
           <FlowField label="Apartment / Unit" optional>
             <FlowInput
               value={data.line2 ?? ""}
-              onChange={(e) => onChange({ line2: e.target.value })}
+              onChange={(e) => onChange({ line2: e.target.value, address_confirmed: false })}
               autoComplete="address-line2"
               placeholder="Apt 4B"
             />
@@ -66,7 +66,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
           <FlowField label="City">
             <FlowInput
               value={data.city}
-              onChange={(e) => onChange({ city: e.target.value })}
+              onChange={(e) => onChange({ city: e.target.value, address_confirmed: false })}
               autoComplete="address-level2"
               placeholder="San Francisco"
             />
@@ -77,7 +77,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
           <FlowField label="State">
             <FlowInput
               value={data.state}
-              onChange={(e) => onChange({ state: e.target.value.toUpperCase() })}
+              onChange={(e) => onChange({ state: e.target.value.toUpperCase(), address_confirmed: false })}
               autoComplete="address-level1"
               placeholder="CA"
               maxLength={2}
@@ -86,7 +86,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
           <FlowField label="ZIP">
             <FlowInput
               value={data.postal_code}
-              onChange={(e) => onChange({ postal_code: e.target.value })}
+              onChange={(e) => onChange({ postal_code: e.target.value, address_confirmed: false })}
               autoComplete="postal-code"
               placeholder="94110"
               inputMode="numeric"
@@ -94,90 +94,39 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
           </FlowField>
         </div>
 
-        <FlowField label="Home type">
-          <div className="flex flex-wrap gap-2">
-            {HOME_TYPES.map((t) => (
-              <FlowChip
-                key={t.value}
-                selected={data.home_type === t.value}
-                onClick={() => onChange({ home_type: t.value })}
-              >
-                {t.label}
-              </FlowChip>
-            ))}
-          </div>
-        </FlowField>
-
-        <div className="grid sm:grid-cols-2 gap-5">
-          <FlowField label="Bedrooms">
-            <div className="flex flex-wrap gap-2">
-              {[0, 1, 2, 3, 4, 5].map((n) => (
-                <FlowChip
-                  key={n}
-                  selected={data.bedrooms === n}
-                  onClick={() => onChange({ bedrooms: n })}
-                >
-                  {n === 5 ? "5+" : n === 0 ? "Studio" : n}
-                </FlowChip>
-              ))}
+        {addressFilled && mapQuery && (
+          <FlowField label="Confirm location on map">
+            <div className="rounded-2xl overflow-hidden border border-aero bg-aero-bg/40">
+              <iframe
+                title="Address preview map"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=&layer=mapnik&marker=&q=${mapQuery}`}
+                className="w-full h-56 sm:h-64"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+              <div className="flex items-center gap-2 px-3 py-2 text-xs text-aero-soft border-t border-aero">
+                <MapPin className="h-3.5 w-3.5 text-aero-trust" />
+                {[data.line1, data.city, data.state, data.postal_code].filter(Boolean).join(", ")}
+              </div>
             </div>
-          </FlowField>
-          <FlowField label="Bathrooms">
-            <div className="flex flex-wrap gap-2">
-              {[1, 1.5, 2, 2.5, 3, 4].map((n) => (
-                <FlowChip
-                  key={n}
-                  selected={data.bathrooms === n}
-                  onClick={() => onChange({ bathrooms: n })}
-                >
-                  {n === 4 ? "4+" : n}
-                </FlowChip>
-              ))}
-            </div>
-          </FlowField>
-        </div>
 
-        <div className="grid sm:grid-cols-2 gap-5">
-          <FlowField label="Square footage" optional>
-            <FlowInput
-              type="number"
-              value={data.sq_ft ?? ""}
-              onChange={(e) =>
-                onChange({ sq_ft: e.target.value ? Number(e.target.value) : undefined })
-              }
-              placeholder="1200"
-              inputMode="numeric"
-            />
-          </FlowField>
-          <FlowField label="Number of floors" optional>
-            <FlowInput
-              type="number"
-              value={data.floors ?? ""}
-              onChange={(e) =>
-                onChange({ floors: e.target.value ? Number(e.target.value) : undefined })
-              }
-              placeholder="1"
-              inputMode="numeric"
-            />
-          </FlowField>
-        </div>
-
-        {requiresElevator && (
-          <FlowField label="Elevator access" optional>
-            <div className="flex gap-2">
-              <FlowChip
-                selected={data.has_elevator === true}
-                onClick={() => onChange({ has_elevator: true })}
-              >
-                Yes
-              </FlowChip>
-              <FlowChip
-                selected={data.has_elevator === false}
-                onClick={() => onChange({ has_elevator: false })}
-              >
-                No
-              </FlowChip>
-            </div>
+            <label
+              htmlFor="confirm-address"
+              className="mt-4 flex items-start gap-3 rounded-2xl border border-aero bg-aero-bg/40 p-3 cursor-pointer hover:bg-aero-bg/60 transition"
+            >
+              <Checkbox
+                id="confirm-address"
+                checked={!!data.address_confirmed}
+                onCheckedChange={(v) => onChange({ address_confirmed: v === true })}
+                className="mt-0.5"
+              />
+              <div>
+                <div className="text-sm font-medium">This is the correct address</div>
+                <div className="text-xs text-aero-soft mt-0.5">
+                  Confirm the pin matches your home so cleaners arrive at the right place.
+                </div>
+              </div>
+            </label>
           </FlowField>
         )}
       </FlowCard>
