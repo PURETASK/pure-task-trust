@@ -39,16 +39,9 @@ export default function AdminAuditLog() {
                 onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
               />
             </div>
-            <Select value={filters.actorType} onValueChange={v => setFilters(f => ({ ...f, actorType: v === 'all' ? '' : v }))}>
-              <SelectTrigger className="w-[140px]"><SelectValue placeholder="Actor type" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All actors</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="client">Client</SelectItem>
-                <SelectItem value="cleaner">Cleaner</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Note: admin_audit_log only contains admin actions, so the
+                old "actor type" filter has been replaced with a status
+                filter that surfaces failed admin actions for debugging. */}
             <Input
               type="date"
               className="w-[160px]"
