@@ -25,6 +25,8 @@ import { useRequestReschedule } from "@/hooks/useRescheduling";
 import { useCreateReview, useJobReview } from "@/hooks/useReviews";
 import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
+import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { Progress } from "@/components/ui/progress";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -104,6 +106,7 @@ export default function CleaningDetail() {
   const hasReview = !!existingReview;
 
   const computeFeeBucket = useFeeBucket();
+  const escrow = useEscrowCountdown(job ?? null);
   // Calculate cancellation fee preview
   const hoursBefore = job.scheduled_start_at
     ? differenceInHours(new Date(job.scheduled_start_at), new Date())
@@ -248,6 +251,20 @@ export default function CleaningDetail() {
                   <p className="text-sm text-muted-foreground">Check the work and release payment to your cleaner.</p>
                 </div>
               </div>
+              {escrow.isReviewable && escrow.releaseAt && (
+                <div className="mb-4 rounded-2xl bg-background/60 border border-warning/30 p-3">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                      <Clock className="h-4 w-4 text-warning" />
+                      {escrow.label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Auto-releases {escrow.releaseAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  <Progress value={escrow.progressPct} className="h-1.5" />
+                </div>
+              )}
               <div className="flex gap-3">
                 <Button className="flex-1 rounded-xl" size="lg" onClick={handleApprove} disabled={isApproving}>
                   {isApproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}

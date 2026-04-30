@@ -16,12 +16,14 @@ import { useAutoRebook } from "@/hooks/useAutoRebook";
 import { useReceipt } from "@/hooks/useReceipt";
 import { RecurringUpsellModal } from "@/components/flow/booking/RecurringUpsellModal";
 import { DashCelebration } from "@/components/flow";
+import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { Progress } from "@/components/ui/progress";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/15", border: "border-primary/50", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
-  completed: { icon: Check, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Job Complete!", desc: "Your home is sparkling — review within 24 hours or payment releases automatically" },
+  completed: { icon: Check, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Job Complete!", desc: "Your home is sparkling — review and we'll release payment automatically" },
   no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 45 minutes — choose to reschedule or get a full refund" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/15", border: "border-destructive/50", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
 };
@@ -89,6 +91,7 @@ export default function BookingStatus() {
     ? `${(job as any).address_line1}${(job as any).address_city ? ", " + (job as any).address_city : ""}`
     : (job as any).service_address || "Address on file";
   const canCancel = ["created", "pending", "confirmed"].includes(job.status);
+  const escrow = useEscrowCountdown(job ?? null);
 
   const handleConfirmCancel = async () => {
     try {
@@ -113,6 +116,27 @@ export default function BookingStatus() {
                 subtitle={config.desc}
                 size="md"
               />
+              {/* Live escrow countdown — only on completed jobs in review window */}
+              {statusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
+                <div className="mt-4 rounded-2xl bg-background/60 border border-aero-cyan/30 p-3">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                      <Clock className="h-4 w-4 text-aero-trust" />
+                      {escrow.label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Auto-releases {escrow.releaseAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  <Progress value={escrow.progressPct} className="h-1.5" />
+                </div>
+              )}
+              {statusKey === "completed" && escrow.isExpired && (
+                <div className="mt-4 inline-flex items-center gap-1.5 text-sm text-success">
+                  <Check className="h-4 w-4" />
+                  Escrow released
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-center pt-4 pb-2">
@@ -240,7 +264,7 @@ export default function BookingStatus() {
               <div className="rounded-2xl border-2 border-success/30 bg-success/5 p-3 flex items-start gap-2">
                 <Shield className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-poppins font-bold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within 24 hours, or payment releases automatically.
+                  <span className="font-poppins font-bold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within {escrow.windowHours} hours, or payment releases automatically.
                 </p>
               </div>
             </div>
