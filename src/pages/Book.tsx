@@ -93,6 +93,37 @@ export default function Book() {
     }
   }, [savedAddresses, address]);
 
+  // ── Funnel: emit step events when the user advances ──
+  useEffect(() => {
+    if (step === lastTrackedStep.current) return;
+    const stepName = BOOKING_FUNNEL_STEPS[step - 1];
+    if (!stepName) return;
+    funnel.trackStep(stepName, {
+      step_number: step,
+      service_type: serviceType,
+      has_address: !!address,
+      has_cleaner: !!cleanerId,
+      preselected_cleaner: !!preselectedCleanerId,
+    });
+    lastTrackedStep.current = step;
+    // funnel ref is stable; intentionally exclude to avoid re-fires
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  // ── Funnel: abandon on unmount if not completed ──
+  useEffect(() => {
+    return () => {
+      const currentStep = BOOKING_FUNNEL_STEPS[lastTrackedStep.current - 1];
+      if (currentStep) {
+        funnel.trackAbandon("user_left_flow", {
+          last_step: currentStep,
+          last_step_index: lastTrackedStep.current - 1,
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Pre-fill notes once with saved profile context (parking, pets, allergies, priorities…)
   useEffect(() => {
     if (notesAutofilled || notes || !clientProfile) return;
