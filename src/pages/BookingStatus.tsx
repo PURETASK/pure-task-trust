@@ -19,14 +19,14 @@ import { DashCelebration } from "@/components/flow";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { Progress } from "@/components/ui/progress";
 
-const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: (windowHours: number) => string }> = {
+const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/15", border: "border-primary/50", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
   completed: { icon: Check, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Job Complete!", desc: "Your home is sparkling — review and we'll release payment automatically" },
   no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 45 minutes — choose to reschedule or get a full refund" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/15", border: "border-destructive/50", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
-} as any;
+};
 
 const TIMELINE_STEPS = [
   { status: "pending", label: "Booked" },
