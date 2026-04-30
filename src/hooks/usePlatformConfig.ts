@@ -120,7 +120,7 @@ async function fetchPlatformConfig(): Promise<ConfigMap> {
   }
 
   const map: ConfigMap = {};
-  for (const row of (data ?? []) as ConfigRow[]) {
+  for (const row of (data ?? []) as unknown as ConfigRow[]) {
     map[row.key] = row.value;
   }
   return map;
