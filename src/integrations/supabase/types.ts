@@ -90,6 +90,7 @@ export type Database = {
       }
       addresses: {
         Row: {
+          address_confirmed: boolean
           city: string
           country: string
           created_at: string
@@ -107,6 +108,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address_confirmed?: boolean
           city: string
           country?: string
           created_at?: string
@@ -124,6 +126,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address_confirmed?: boolean
           city?: string
           country?: string
           created_at?: string
@@ -2128,14 +2131,11 @@ export type Database = {
           avoid_notes: string | null
           client_id: string
           created_at: string
-          eco_preference: boolean
           extra_attention_notes: string | null
           id: string
-          priorities: string[]
           product_preferences: string | null
           property_id: string | null
           recurring_notes: string | null
-          scent_preference: string | null
           updated_at: string
         }
         Insert: {
@@ -2143,14 +2143,11 @@ export type Database = {
           avoid_notes?: string | null
           client_id: string
           created_at?: string
-          eco_preference?: boolean
           extra_attention_notes?: string | null
           id?: string
-          priorities?: string[]
           product_preferences?: string | null
           property_id?: string | null
           recurring_notes?: string | null
-          scent_preference?: string | null
           updated_at?: string
         }
         Update: {
@@ -2158,14 +2155,11 @@ export type Database = {
           avoid_notes?: string | null
           client_id?: string
           created_at?: string
-          eco_preference?: boolean
           extra_attention_notes?: string | null
           id?: string
-          priorities?: string[]
           product_preferences?: string | null
           property_id?: string | null
           recurring_notes?: string | null
-          scent_preference?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -5483,67 +5477,49 @@ export type Database = {
         Row: {
           access_instructions: string | null
           address_id: string | null
-          bathrooms: number | null
-          bedrooms: number | null
           client_id: string
           created_at: string
           doorman_notes: string | null
-          floors: number | null
           gate_code: string | null
-          has_elevator: boolean | null
           has_pets: boolean
-          home_type: string | null
           id: string
           name: string
           parking_notes: string | null
           pet_friendly_required: boolean
           pet_info: string | null
           special_notes: string | null
-          sq_ft: number | null
           updated_at: string
         }
         Insert: {
           access_instructions?: string | null
           address_id?: string | null
-          bathrooms?: number | null
-          bedrooms?: number | null
           client_id: string
           created_at?: string
           doorman_notes?: string | null
-          floors?: number | null
           gate_code?: string | null
-          has_elevator?: boolean | null
           has_pets?: boolean
-          home_type?: string | null
           id?: string
           name?: string
           parking_notes?: string | null
           pet_friendly_required?: boolean
           pet_info?: string | null
           special_notes?: string | null
-          sq_ft?: number | null
           updated_at?: string
         }
         Update: {
           access_instructions?: string | null
           address_id?: string | null
-          bathrooms?: number | null
-          bedrooms?: number | null
           client_id?: string
           created_at?: string
           doorman_notes?: string | null
-          floors?: number | null
           gate_code?: string | null
-          has_elevator?: boolean | null
           has_pets?: boolean
-          home_type?: string | null
           id?: string
           name?: string
           parking_notes?: string | null
           pet_friendly_required?: boolean
           pet_info?: string | null
           special_notes?: string | null
-          sq_ft?: number | null
           updated_at?: string
         }
         Relationships: [
