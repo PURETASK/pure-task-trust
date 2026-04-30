@@ -23,6 +23,7 @@ import { PostJobFlow } from "@/components/job/PostJobFlow";
 import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { Progress } from "@/components/ui/progress";
+import { useJobMoney } from "@/hooks/useJobMoney";
 
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
