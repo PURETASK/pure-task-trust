@@ -11,6 +11,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { HeroState } from "@/hooks/useClientHome";
 import type { JobWithDetails } from "@/hooks/useJob";
+import { calcJobMoney } from "@/hooks/useJobMoney";
+
+const escrowHeld = (job: JobWithDetails) => calcJobMoney({
+  escrow_credits_reserved: (job as any).escrow_credits_reserved,
+  estimated_hours: job.estimated_hours,
+  actual_hours: (job as any).actual_hours,
+  final_charge_credits: (job as any).final_charge_credits,
+  rush_fee_credits: (job as any).rush_fee_credits,
+  cleaner_tier: (job.cleaner as any)?.tier,
+}).escrowHeld;
 
 interface Props {
   heroState: HeroState;
@@ -320,10 +330,10 @@ function InProgressState({ job }: { job: JobWithDetails }) {
           </div>
         </div>
 
-        {job.escrow_credits_reserved != null && (
+        {escrowHeld(job) > 0 && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 pl-[74px]">
             <CreditCard className="h-3 w-3" />
-            <span>${job.escrow_credits_reserved} held for this job</span>
+            <span>${escrowHeld(job)} held for this job</span>
           </div>
         )}
 
@@ -378,9 +388,9 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
             <p className="font-semibold text-sm">{cleanerName(job)}</p>
             <p className="text-xs text-muted-foreground capitalize">{serviceLabel(job.cleaning_type)}</p>
           </div>
-          {job.escrow_credits_reserved != null && (
+          {escrowHeld(job) > 0 && (
             <div className="text-right">
-              <p className="text-lg font-bold">${job.escrow_credits_reserved}</p>
+              <p className="text-lg font-bold">${escrowHeld(job)}</p>
               <p className="text-[10px] text-muted-foreground">credits held</p>
             </div>
           )}
@@ -435,10 +445,10 @@ function JobDetails({ job, address }: { job: JobWithDetails; address: string | n
             <span className="truncate">{address}</span>
           </div>
         )}
-        {job.escrow_credits_reserved != null && job.escrow_credits_reserved > 0 && (
+        {escrowHeld(job) > 0 && (
           <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
             <CreditCard className="h-3 w-3" />
-            <span>${job.escrow_credits_reserved} credits held</span>
+            <span>${escrowHeld(job)} credits held</span>
           </div>
         )}
       </div>
