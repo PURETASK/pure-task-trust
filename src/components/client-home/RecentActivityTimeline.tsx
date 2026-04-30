@@ -6,6 +6,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useClientJobs } from "@/hooks/useJob";
 import { useWallet } from "@/hooks/useWallet";
+import { calcJobMoney } from "@/hooks/useJobMoney";
 import { useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -47,13 +48,21 @@ export function RecentActivityTimeline() {
           timestamp: job.created_at,
         });
       }
-      if (job.escrow_credits_reserved && job.escrow_credits_reserved > 0 && job.status !== "completed") {
+      const held = calcJobMoney({
+        escrow_credits_reserved: (job as any).escrow_credits_reserved,
+        estimated_hours: job.estimated_hours,
+        actual_hours: (job as any).actual_hours,
+        final_charge_credits: (job as any).final_charge_credits,
+        rush_fee_credits: (job as any).rush_fee_credits,
+        cleaner_tier: (job.cleaner as any)?.tier,
+      }).escrowHeld;
+      if (held > 0 && job.status !== "completed") {
         items.push({
           id: `hold-${job.id}`,
           icon: Clock,
           cardClass: "palette-card palette-card-amber",
           iconWrapClass: "palette-icon palette-icon-amber",
-          text: `$${job.escrow_credits_reserved} credits placed on hold`,
+          text: `$${held} credits placed on hold`,
           timestamp: job.created_at,
         });
       }
