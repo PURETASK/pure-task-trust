@@ -44,8 +44,8 @@ is independently shippable and unblocks the next.
 | ~~`admin/AdminFinanceDashboard.tsx`~~ ✅ | Tier-fee chart now reads `usePlatformConfig` (was hardcoded 16/18/20 — drifted from real 18/22/25) |
 | ~~`admin/AdminBookingsConsole.tsx`~~ ✅ | Credits column + CSV export now use `calcJobMoney` (escrow vs settled charge, platform fee, cleaner net) |
 | `admin/AdminRefundQueue.tsx` | `useJobMoney` | Deferred — needs join to `jobs`; revisit when refund row carries job context |
-| `MyCleanings.tsx` | `useJobAuthorization`, `useEscrowCountdown` | Row CTAs use ad-hoc checks |
-| `JobInProgress.tsx` | `useJobAuthorization` | Cleaner/client gating duplicated |
+| ~~`MyCleanings.tsx`~~ ✅ | Row now uses `useJobParticipants` + `useStatusPresentation` + `useEscrowCountdown` + `useJobMoney`. "Needs Review" pill now driven by escrow window (was a `final_charge_credits == null` heuristic that mis-flagged auto-approved jobs). |
+| ~~`JobInProgress.tsx`~~ ✅ | Status badge, name, initial, escrow notice + countdown all primitive-driven. Hardcoded "24 hours" copy gone. |
 | ~~`cleaner/CleanerDashboard.tsx`~~ ✅ | Already reads from `cleaner_earnings.net_credits` (settled) |
 
 **Definition of done per page:** No raw `escrow_credits_reserved`, no inline
@@ -61,8 +61,9 @@ is independently shippable and unblocks the next.
 | # | Primitive | Kills | What it owns |
 |---|-----------|-------|--------------|
 | 7 | `useJobAddress(job)` | ~6 | Address fallback (`address_line1` vs legacy `address`), formatting, map link |
-| 8 | `useJobParticipants(job)` | ~10 | Cleaner/client name + avatar fallback + initials + role-aware "you/them" |
-| 9 | `useStatusPresentation(status)` | ~6 | Status enum → `{ label, color, icon, tone }`. Duplicated in 6 pages |
+| ~~7~~ → 9 | `useJobAddress(job)` | ~6 | Address fallback (`address_line1` vs legacy `address`), formatting, map link |
+| ~~8~~ ✅ | `useJobParticipants(job)` | ~10 | Cleaner/client name + avatar fallback + initials + role-aware "you/them" — **shipped, swept into MyCleanings + JobInProgress** |
+| ~~9~~ ✅ | `useStatusPresentation(status)` | ~6 | Status enum → `{ label, tone, pillClass, badgeVariant, palettePillClass, emoji, isTerminal, isActive, isReviewable }` — **shipped, swept into MyCleanings + JobInProgress** |
 | 10 | `useJobSchedule(job)` | ~4 | Scheduled vs actual time formatting, timezone, "in 2 hours" relative copy |
 
 After Wave 2, a typical job card becomes:
