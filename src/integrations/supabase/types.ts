@@ -3378,6 +3378,51 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          funnel_name: string | null
+          id: number
+          page_url: string | null
+          properties: Json
+          session_id: string
+          step_index: number | null
+          step_name: string | null
+          trace_id: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          funnel_name?: string | null
+          id?: number
+          page_url?: string | null
+          properties?: Json
+          session_id: string
+          step_index?: number | null
+          step_name?: string | null
+          trace_id: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          funnel_name?: string | null
+          id?: number
+          page_url?: string | null
+          properties?: Json
+          session_id?: string
+          step_index?: number | null
+          step_name?: string | null
+          trace_id?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       grace_cancellations: {
         Row: {
           client_id: string

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { format, setHours as setDateHours, setMinutes as setDateMinutes, getDay } from "date-fns";
@@ -12,6 +12,7 @@ import { useClientProfile, buildDefaultNotes } from "@/hooks/useClientProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { usePlatformConfig } from "@/hooks/usePlatformConfig";
+import { useFunnel } from "@/hooks/useFunnel";
 
 import { FlowShell } from "@/components/flow/FlowShell";
 import { FlowProgress } from "@/components/flow/FlowProgress";
@@ -45,6 +46,15 @@ const STEPS = [
 
 const TOTAL_STEPS = STEPS.length;
 
+const BOOKING_FUNNEL_STEPS = [
+  "service",
+  "datetime",
+  "scope",
+  "cleaner",
+  "review",
+  "payment",
+] as const;
+
 export default function Book() {
   const [searchParams] = useSearchParams();
   const preselectedCleanerId = searchParams.get("cleaner");
@@ -69,6 +79,8 @@ export default function Book() {
   const { createBooking, isCreating } = useBooking();
   const { account, isLoadingAccount } = useWallet();
   const { rushFeeCredits, directChargeFeePct } = usePlatformConfig();
+  const funnel = useFunnel("booking", BOOKING_FUNNEL_STEPS);
+  const lastTrackedStep = useRef<number>(0);
   const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
   const { data: selectedCleaner } = useCleaner(cleanerId || "");
   const { data: savedAddresses } = useAddresses();
@@ -80,6 +92,37 @@ export default function Book() {
       setAddress(savedAddresses.find((a) => a.is_default) || savedAddresses[0]);
     }
   }, [savedAddresses, address]);
+
+  // ── Funnel: emit step events when the user advances ──
+  useEffect(() => {
+    if (step === lastTrackedStep.current) return;
+    const stepName = BOOKING_FUNNEL_STEPS[step - 1];
+    if (!stepName) return;
+    funnel.trackStep(stepName, {
+      step_number: step,
+      service_type: serviceType,
+      has_address: !!address,
+      has_cleaner: !!cleanerId,
+      preselected_cleaner: !!preselectedCleanerId,
+    });
+    lastTrackedStep.current = step;
+    // funnel ref is stable; intentionally exclude to avoid re-fires
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  // ── Funnel: abandon on unmount if not completed ──
+  useEffect(() => {
+    return () => {
+      const currentStep = BOOKING_FUNNEL_STEPS[lastTrackedStep.current - 1];
+      if (currentStep) {
+        funnel.trackAbandon("user_left_flow", {
+          last_step: currentStep,
+          last_step_index: lastTrackedStep.current - 1,
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Pre-fill notes once with saved profile context (parking, pets, allergies, priorities…)
   useEffect(() => {
@@ -152,6 +195,12 @@ export default function Book() {
   const handleConfirmCredits = async () => {
     if (!serviceType || !user || !cleanerId) return;
     if (!hasEnoughCredits) {
+      funnel.trackEvent("funnel.validation_error", {
+        step: "payment",
+        reason: "insufficient_credits",
+        needed: totalCredits,
+        available: availableCredits,
+      });
       toast({ title: "Insufficient credits", variant: "destructive" });
       return;
     }
@@ -168,9 +217,22 @@ export default function Book() {
         address: address ? `${address.line1}, ${address.city}` : undefined,
         notes: notes || undefined,
       });
+      funnel.trackComplete({
+        payment_method: "credits",
+        total_credits: totalCredits,
+        cleaning_type: serviceType,
+        cleaner_id: cleanerId,
+        same_day: sameDay,
+        addons_count: selectedAddOns.length,
+      });
       // useBooking handles navigation to /booking/:id
     } catch (e: any) {
       sessionStorage.removeItem("puretask:show-recurring-upsell");
+      funnel.trackEvent("funnel.error", {
+        step: "payment",
+        reason: "create_booking_failed",
+        message: e?.message,
+      });
       toast({ title: "Booking failed", description: e?.message, variant: "destructive" });
     }
   };
@@ -193,8 +255,22 @@ export default function Book() {
         },
       });
       if (error) throw error;
-      if (data?.url) window.open(data.url, "_blank");
+      if (data?.url) {
+        funnel.trackComplete({
+          payment_method: "card",
+          total_credits: totalCredits,
+          service_charge: serviceCharge,
+          cleaning_type: serviceType,
+          cleaner_id: cleanerId,
+        });
+        window.open(data.url, "_blank");
+      }
     } catch (e: any) {
+      funnel.trackEvent("funnel.error", {
+        step: "payment",
+        reason: "direct_payment_failed",
+        message: e.message,
+      });
       toast({ title: "Payment failed", description: e.message, variant: "destructive" });
     } finally {
       setIsDirectPaying(false);

@@ -1,7 +1,9 @@
 // Observability and tracking system
-// Sends UI events to POST /events/ui
+// Sends UI events to the `funnel_events` table via `lib/funnel-sink.ts`.
+// Previously POSTed to /api/events/ui which did not exist (silent drop).
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+import { recordFunnelEvent } from './funnel-sink';
+
 const SESSION_ID = crypto.randomUUID();
 let currentTraceId = crypto.randomUUID();
 
@@ -27,12 +29,6 @@ export interface TrackingEvent {
   user_agent?: string;
 }
 
-// Queue for batching events
-let eventQueue: TrackingEvent[] = [];
-let flushTimeout: ReturnType<typeof setTimeout> | null = null;
-const FLUSH_INTERVAL = 2000; // 2 seconds
-const MAX_QUEUE_SIZE = 10;
-
 // Generate new trace ID for user actions
 export function startNewTrace(): string {
   currentTraceId = crypto.randomUUID();
@@ -49,64 +45,14 @@ export function getSessionId(): string {
 
 // Core tracking function
 export function track(eventType: EventType, properties: Record<string, unknown> = {}): void {
-  const event: TrackingEvent = {
-    event_type: eventType,
-    trace_id: currentTraceId,
+  recordFunnelEvent({
     session_id: SESSION_ID,
-    timestamp: new Date().toISOString(),
+    trace_id: currentTraceId,
+    event_type: eventType,
     properties,
-    page_url: typeof window !== 'undefined' ? window.location.href : undefined,
-    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-  };
-
-  eventQueue.push(event);
-
-  // Flush if queue is full
-  if (eventQueue.length >= MAX_QUEUE_SIZE) {
-    flushEvents();
-  } else if (!flushTimeout) {
-    // Schedule flush
-    flushTimeout = setTimeout(flushEvents, FLUSH_INTERVAL);
-  }
-}
-
-// Flush events to backend
-async function flushEvents(): Promise<void> {
-  if (flushTimeout) {
-    clearTimeout(flushTimeout);
-    flushTimeout = null;
-  }
-
-  if (eventQueue.length === 0) return;
-
-  const eventsToSend = [...eventQueue];
-  eventQueue = [];
-
-  try {
-    // Use sendBeacon for reliability
-    if (navigator.sendBeacon) {
-      const blob = new Blob([JSON.stringify({ events: eventsToSend })], {
-        type: 'application/json',
-      });
-      navigator.sendBeacon(`${API_BASE_URL}/events/ui`, blob);
-    } else {
-      // Fallback to fetch
-      await fetch(`${API_BASE_URL}/events/ui`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ events: eventsToSend }),
-        credentials: 'include',
-        keepalive: true,
-      });
-    }
-  } catch (error) {
-    // Log error but don't crash the app
-    console.error('Failed to send tracking events:', error);
-    // Re-queue events on failure (with limit)
-    if (eventQueue.length < MAX_QUEUE_SIZE * 2) {
-      eventQueue.unshift(...eventsToSend);
-    }
-  }
+    page_url: typeof window !== 'undefined' ? window.location.href : null,
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+  });
 }
 
 // Convenience functions
@@ -145,10 +91,4 @@ export function trackFormSubmit(formName: string, properties: Record<string, unk
 
 export function trackModal(action: 'opened' | 'closed', modalName: string): void {
   track(action === 'opened' ? 'ui.modal_opened' : 'ui.modal_closed', { modal_name: modalName });
-}
-
-// Flush on page unload
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', flushEvents);
-  window.addEventListener('pagehide', flushEvents);
 }
