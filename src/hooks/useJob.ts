@@ -36,6 +36,7 @@ export function useJob(jobId: string) {
           *,
           cleaner:cleaner_id (
             id,
+            user_id,
             first_name,
             last_name,
             avg_rating,
@@ -43,6 +44,7 @@ export function useJob(jobId: string) {
           ),
           client:client_id (
             id,
+            user_id,
             first_name,
             last_name
           )
@@ -129,6 +131,7 @@ export function useClientJobs() {
           *,
           cleaner:cleaner_id (
             id,
+            user_id,
             first_name,
             last_name,
             avg_rating,
