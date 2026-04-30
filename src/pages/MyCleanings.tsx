@@ -10,20 +10,14 @@ import { format } from "date-fns";
 import { useClientJobs } from "@/hooks/useJob";
 import { motion } from "framer-motion";
 import { MessageJobButton } from "@/components/messaging/MessageJobButton";
+import { useJobParticipants } from "@/hooks/useJobParticipants";
+import { useStatusPresentation } from "@/hooks/useStatusPresentation";
+import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
+import { useJobMoney } from "@/hooks/useJobMoney";
 
 type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
 const PALETTES = ["blue", "green", "amber", "purple"] as const;
-
-const statusMap: Record<string, { label: string; pill: string }> = {
-  created: { label: "Pending", pill: "palette-pill-amber" },
-  pending: { label: "Pending", pill: "palette-pill-amber" },
-  confirmed: { label: "Confirmed", pill: "palette-pill-blue" },
-  in_progress: { label: "In Progress", pill: "palette-pill-green" },
-  completed: { label: "Completed", pill: "palette-pill-green" },
-  cancelled: { label: "Cancelled", pill: "bg-destructive/10 text-destructive border-2 border-destructive/30" },
-  disputed: { label: "Disputed", pill: "palette-pill-amber" },
-};
 
 const f = (delay = 0) => ({ initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.3 } });
 
@@ -124,53 +118,71 @@ function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, e
   return (
     <div className="space-y-3">
       {jobs.map((job, i) => {
-        const cleanerName = job.cleaner ? `${job.cleaner.first_name || ""} ${job.cleaner.last_name || ""}`.trim() || "Cleaner" : "Finding cleaner…";
-        const serviceType = (job.cleaning_type || "standard").replace("_", " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-        const status = statusMap[job.status] ?? { label: job.status, pill: "palette-pill-blue" };
-        const needsApproval = job.status === 'completed' && job.final_charge_credits == null;
         const palette = PALETTES[i % 4];
-
-        return (
-          <motion.div key={job.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-            <div className={`palette-card palette-card-${palette} flex items-center gap-4 p-4 sm:p-5 hover:shadow-elevated transition-all group`}>
-              <Link to={`/my-cleanings/${job.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
-                <div className={`palette-icon palette-icon-${palette} h-12 w-12 font-bold text-sm`}>
-                  {cleanerName.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-bold truncate">{cleanerName}</p>
-                    <span className={`palette-pill ${status.pill} text-[10px] h-5 px-2`}>{status.label}</span>
-                    {needsApproval && <span className="palette-pill palette-pill-amber text-[10px] h-5 px-2">Review</span>}
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                    <span className="flex items-center gap-1"><Sparkles className="h-3 w-3" /> {serviceType}</span>
-                    {job.scheduled_start_at && <span>{format(new Date(job.scheduled_start_at), "EEE, MMM d · h:mm a")}</span>}
-                    {job.estimated_hours && <span><Clock className="h-3 w-3 inline mr-0.5" />{job.estimated_hours}h</span>}
-                  </div>
-                  {job.escrow_credits_reserved != null && job.escrow_credits_reserved > 0 && (
-                    <p className="text-xs text-muted-foreground mt-1">${job.escrow_credits_reserved} credits held</p>
-                  )}
-                </div>
-              </Link>
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                {job.cleaner_id && (
-                  <MessageJobButton
-                    jobId={job.id}
-                    otherPartyId={job.cleaner_id}
-                    iconOnly
-                    variant="ghost"
-                    className="rounded-xl h-9 w-9 p-0 hover:bg-primary/10"
-                    aria-label="Message cleaner"
-                  />
-                )}
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              </div>
-            </div>
-          </motion.div>
-        );
+        return <JobRow key={job.id} job={job} index={i} palette={palette} />;
       })}
     </div>
+  );
+}
+
+/* ── SINGLE JOB ROW (uses Wave 1 + Wave 2 primitives) ──────────── */
+function JobRow({ job, index, palette }: { job: any; index: number; palette: typeof PALETTES[number] }) {
+  const participants = useJobParticipants(job);
+  const status = useStatusPresentation(job.status);
+  const escrow = useEscrowCountdown(job);
+  const money = useJobMoney(job);
+  const cleanerName = participants.cleaner.fullName;
+  const serviceType = (job.cleaning_type || "standard").replace("_", " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
+  // "Needs Review" is now driven by the escrow window, not a heuristic on
+  // final_charge_credits — auto-approved jobs were incorrectly flagged.
+  const needsApproval = status.isReviewable && escrow.isReviewable && !escrow.isExpired;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.03 }}>
+      <div className={`palette-card palette-card-${palette} flex items-center gap-4 p-4 sm:p-5 hover:shadow-elevated transition-all group`}>
+        <Link to={`/my-cleanings/${job.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
+          <div className={`palette-icon palette-icon-${palette} h-12 w-12 font-bold text-sm`}>
+            {participants.cleaner.initial}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="font-bold truncate">{cleanerName}</p>
+              <span className={`palette-pill ${status.palettePillClass} text-[10px] h-5 px-2`}>{status.label}</span>
+              {needsApproval && (
+                <span className="palette-pill palette-pill-amber text-[10px] h-5 px-2" title={escrow.label}>
+                  Review · {escrow.hoursRemaining}h
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+              <span className="flex items-center gap-1"><Sparkles className="h-3 w-3" /> {serviceType}</span>
+              {job.scheduled_start_at && <span>{format(new Date(job.scheduled_start_at), "EEE, MMM d · h:mm a")}</span>}
+              {job.estimated_hours && <span><Clock className="h-3 w-3 inline mr-0.5" />{job.estimated_hours}h</span>}
+            </div>
+            {money.escrowHeld > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {money.isSettled
+                  ? `${money.totalClientCharge} credits charged`
+                  : `${money.escrowHeld} credits held`}
+              </p>
+            )}
+          </div>
+        </Link>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {job.cleaner_id && (
+            <MessageJobButton
+              jobId={job.id}
+              otherPartyId={job.cleaner_id}
+              iconOnly
+              variant="ghost"
+              className="rounded-xl h-9 w-9 p-0 hover:bg-primary/10"
+              aria-label="Message cleaner"
+            />
+          )}
+          <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
