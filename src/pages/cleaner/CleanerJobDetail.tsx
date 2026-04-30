@@ -484,7 +484,7 @@ export default function CleanerJobDetail() {
               <CheckCircle className="h-12 w-12 text-success mx-auto mb-3" />
               <h3 className="font-bold text-lg mb-1">Job Complete!</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Waiting for client approval. Your {job.escrow_credits_reserved || 0} credits will be released after review.
+                Waiting for client approval. Your {money.cleanerNet} credits will be released after review.
               </p>
               {photos.length > 0 && (
                 <div className="grid grid-cols-3 gap-2 mb-4">
@@ -533,7 +533,7 @@ export default function CleanerJobDetail() {
           jobId={jobId!}
           cleanerId={profile.id}
           clientId={job.client_id}
-          clientFirstName={job.client?.first_name}
+          clientFirstName={participants.client.firstName}
         />
       )}
     </CleanerLayout>
