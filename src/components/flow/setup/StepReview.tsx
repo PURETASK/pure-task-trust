@@ -82,20 +82,7 @@ export function StepReview({ step, total, state, saving, onBack, onConfirm, onEd
 
         <Section title="Home" onEdit={() => onEdit("home")}>
           <Row label="Address" value={fullAddr} />
-          <Row label="Type" value={home.home_type} />
-          <Row
-            label="Layout"
-            value={
-              home.bedrooms != null && home.bathrooms != null
-                ? `${home.bedrooms === 0 ? "Studio" : `${home.bedrooms} bed`} · ${home.bathrooms} bath`
-                : undefined
-            }
-          />
-          {home.sq_ft && <Row label="Size" value={`${home.sq_ft} sq ft`} />}
-          {home.floors && <Row label="Floors" value={home.floors} />}
-          {home.has_elevator != null && (
-            <Row label="Elevator" value={home.has_elevator ? "Yes" : "No"} />
-          )}
+          {home.address_confirmed && <Row label="Confirmed" value="Yes" />}
         </Section>
 
         <Section title="Access & pets" onEdit={() => onEdit("access")}>
@@ -115,23 +102,6 @@ export function StepReview({ step, total, state, saving, onBack, onConfirm, onEd
         </Section>
 
         <Section title="Cleaning preferences" onEdit={() => onEdit("preferences")}>
-          {prefs.priorities.length > 0 && (
-            <Row
-              label="Priorities"
-              value={
-                <div className="flex flex-wrap gap-1.5">
-                  {prefs.priorities.map((p) => (
-                    <span
-                      key={p}
-                      className="text-xs px-2 py-0.5 rounded-full bg-gradient-aero text-white"
-                    >
-                      {p}
-                    </span>
-                  ))}
-                </div>
-              }
-            />
-          )}
           {prefs.extra_attention_notes && (
             <Row label="Extra attention" value={prefs.extra_attention_notes} />
           )}
@@ -140,8 +110,6 @@ export function StepReview({ step, total, state, saving, onBack, onConfirm, onEd
             <Row label="Products" value={prefs.product_preferences} />
           )}
           {prefs.allergy_notes && <Row label="Allergies" value={prefs.allergy_notes} />}
-          {prefs.scent_preference && <Row label="Scent" value={prefs.scent_preference} />}
-          {prefs.eco_preference && <Row label="Eco-only" value="Yes" />}
         </Section>
 
         <div className="flex items-start gap-2 rounded-2xl bg-gradient-aero-soft border border-aero p-4 text-sm">
