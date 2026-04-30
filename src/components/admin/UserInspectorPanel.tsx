@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User, Star, Briefcase, DollarSign, Calendar, ShieldBan, Mail } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/audit";
 
 interface UserInspectorPanelProps {
   userId: string | null;
@@ -64,16 +65,16 @@ export function UserInspectorPanel({ userId, userRole, open, onOpenChange }: Use
   const handleSuspend = async () => {
     setSuspending(true);
     try {
-      await supabase.from("admin_audit_log").insert({
-        admin_user_id: (await supabase.auth.getUser()).data.user?.id || "",
+      await logAdminAction({
         action: "user_suspended",
         entity_type: userRole || "user",
-        entity_id: userId || "",
+        entity_id: userId,
         reason: "Suspended via User Inspector Panel",
       });
       toast.success("User suspension logged for review");
-    } catch {
-      toast.error("Failed to log suspension");
+    } catch (e: any) {
+      console.error("[UserInspectorPanel] suspend log failed:", e);
+      toast.error(e?.message || "Failed to log suspension");
     } finally {
       setSuspending(false);
     }

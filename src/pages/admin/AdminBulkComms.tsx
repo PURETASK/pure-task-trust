@@ -13,6 +13,7 @@ import { MessageSquare, Users, Send, Plus, Trash2, ChevronRight, ChevronLeft, Ch
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/audit";
 
 interface FilterCondition {
   field: string;
@@ -92,8 +93,7 @@ const AdminBulkComms = () => {
 
       if (channel === "email" || channel === "both") {
         // Log intent — actual email sending via edge function
-        await supabase.from("admin_audit_log").insert({
-          admin_user_id: (await supabase.auth.getUser()).data.user?.id || "",
+        await logAdminAction({
           action: "bulk_email_sent",
           metadata: { subject, audience_size: users.length, role, channel },
         });
