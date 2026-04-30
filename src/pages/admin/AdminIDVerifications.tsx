@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Shield, CheckCircle2, XCircle, Clock, Eye, Search, FileText, User, Calendar, AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
+import { withAdminAuditLog } from '@/lib/audit';
 
 type VerificationStatus = 'pending' | 'verified' | 'failed';
 
@@ -57,8 +58,19 @@ export default function AdminIDVerifications() {
         updateData.verified_at = new Date().toISOString();
         updateData.expires_at = new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000).toISOString();
       }
-      const { error } = await supabase.from('id_verifications').update(updateData).eq('id', id);
-      if (error) throw error;
+      await withAdminAuditLog(
+        status === 'verified' ? 'id_verification_approved' : 'id_verification_rejected',
+        {
+          entity_type: 'id_verification',
+          entity_id: id,
+          new_values: updateData,
+          reason: notes ?? null,
+        },
+        async () => {
+          const { error } = await supabase.from('id_verifications').update(updateData).eq('id', id);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-id-verifications'] });

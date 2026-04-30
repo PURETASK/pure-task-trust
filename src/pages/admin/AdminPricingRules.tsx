@@ -11,6 +11,7 @@ import { DEFAULT_PRICING_RULES } from '@/lib/pricing-rules';
 import { toast } from 'sonner';
 import type { Json } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
+import { withAdminAuditLog } from '@/lib/audit';
 
 interface PricingRule {
   id: string;
@@ -66,8 +67,19 @@ export default function AdminPricingRules() {
 
   const toggleMutation = useMutation({
     mutationFn: async ({ ruleId, currentStatus }: { ruleId: string; currentStatus: boolean }) => {
-      const { error } = await supabase.from('pricing_rules').update({ is_active: !currentStatus }).eq('id', ruleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'pricing_rule_toggled',
+        {
+          entity_type: 'pricing_rule',
+          entity_id: ruleId,
+          old_values: { is_active: currentStatus },
+          new_values: { is_active: !currentStatus },
+        },
+        async () => {
+          const { error } = await supabase.from('pricing_rules').update({ is_active: !currentStatus }).eq('id', ruleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: (_, variables) => {
       toast.success(`Rule ${!variables.currentStatus ? 'enabled' : 'disabled'}`);
@@ -78,8 +90,18 @@ export default function AdminPricingRules() {
 
   const updateMultiplierMutation = useMutation({
     mutationFn: async ({ ruleId, multiplier }: { ruleId: string; multiplier: number }) => {
-      const { error } = await supabase.from('pricing_rules').update({ multiplier }).eq('id', ruleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'pricing_rule_multiplier_updated',
+        {
+          entity_type: 'pricing_rule',
+          entity_id: ruleId,
+          new_values: { multiplier },
+        },
+        async () => {
+          const { error } = await supabase.from('pricing_rules').update({ multiplier }).eq('id', ruleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => {
       toast.success('Multiplier updated');

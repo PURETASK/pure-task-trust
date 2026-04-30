@@ -11,6 +11,7 @@ import { Loader2, Plus, Trash2, Package, Settings, Clock, Tag, TrendingUp, Zap }
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { withAdminAuditLog } from '@/lib/audit';
 
 interface PricingRule {
   id: string;
@@ -66,8 +67,19 @@ export default function AdminPricingManagement() {
 
   const toggleRuleMutation = useMutation({
     mutationFn: async ({ ruleId, currentStatus }: { ruleId: string; currentStatus: boolean }) => {
-      const { error } = await supabase.from('pricing_rules').update({ is_active: !currentStatus }).eq('id', ruleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'pricing_rule_toggled',
+        {
+          entity_type: 'pricing_rule',
+          entity_id: ruleId,
+          old_values: { is_active: currentStatus },
+          new_values: { is_active: !currentStatus },
+        },
+        async () => {
+          const { error } = await supabase.from('pricing_rules').update({ is_active: !currentStatus }).eq('id', ruleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => { toast.success('Rule updated'); queryClient.invalidateQueries({ queryKey: ['pricing-rules'] }); },
     onError: () => toast.error('Failed to update rule')
@@ -75,8 +87,14 @@ export default function AdminPricingManagement() {
 
   const deleteRuleMutation = useMutation({
     mutationFn: async (ruleId: string) => {
-      const { error } = await supabase.from('pricing_rules').delete().eq('id', ruleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'pricing_rule_deleted',
+        { entity_type: 'pricing_rule', entity_id: ruleId },
+        async () => {
+          const { error } = await supabase.from('pricing_rules').delete().eq('id', ruleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => { toast.success('Rule deleted'); queryClient.invalidateQueries({ queryKey: ['pricing-rules'] }); },
     onError: () => toast.error('Failed to delete rule')
@@ -84,8 +102,19 @@ export default function AdminPricingManagement() {
 
   const toggleBundleMutation = useMutation({
     mutationFn: async ({ bundleId, currentStatus }: { bundleId: string; currentStatus: boolean }) => {
-      const { error } = await supabase.from('bundle_offers').update({ is_active: !currentStatus }).eq('id', bundleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'bundle_offer_toggled',
+        {
+          entity_type: 'bundle_offer',
+          entity_id: bundleId,
+          old_values: { is_active: currentStatus },
+          new_values: { is_active: !currentStatus },
+        },
+        async () => {
+          const { error } = await supabase.from('bundle_offers').update({ is_active: !currentStatus }).eq('id', bundleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => { toast.success('Bundle updated'); queryClient.invalidateQueries({ queryKey: ['bundle-offers'] }); },
     onError: () => toast.error('Failed to update bundle')
@@ -93,8 +122,14 @@ export default function AdminPricingManagement() {
 
   const deleteBundleMutation = useMutation({
     mutationFn: async (bundleId: string) => {
-      const { error } = await supabase.from('bundle_offers').delete().eq('id', bundleId);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'bundle_offer_deleted',
+        { entity_type: 'bundle_offer', entity_id: bundleId },
+        async () => {
+          const { error } = await supabase.from('bundle_offers').delete().eq('id', bundleId);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => { toast.success('Bundle deleted'); queryClient.invalidateQueries({ queryKey: ['bundle-offers'] }); },
     onError: () => toast.error('Failed to delete bundle')
@@ -102,8 +137,14 @@ export default function AdminPricingManagement() {
 
   const createBundleMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from('bundle_offers').insert([newBundle]);
-      if (error) throw error;
+      await withAdminAuditLog(
+        'bundle_offer_created',
+        { entity_type: 'bundle_offer', new_values: newBundle as Record<string, unknown> },
+        async () => {
+          const { error } = await supabase.from('bundle_offers').insert([newBundle]);
+          if (error) throw error;
+        },
+      );
     },
     onSuccess: () => {
       toast.success('Bundle created');

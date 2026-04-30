@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { withAdminAuditLog } from "@/lib/audit";
 
 const SEV_STYLES: Record<string, string> = {
   critical: 'bg-destructive text-destructive-foreground',
@@ -47,15 +48,37 @@ const AdminFraudAlerts = () => {
   });
 
   const handleResolve = async (id: string) => {
-    await supabase.from('fraud_alerts').update({ status: 'resolved' }).eq('id', id);
-    toast.success('Alert resolved');
-    queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+    try {
+      await withAdminAuditLog(
+        'fraud_alert_resolved',
+        { entity_type: 'fraud_alert', entity_id: id, new_values: { status: 'resolved' } },
+        async () => {
+          const { error } = await supabase.from('fraud_alerts').update({ status: 'resolved' }).eq('id', id);
+          if (error) throw error;
+        },
+      );
+      toast.success('Alert resolved');
+      queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+    } catch {
+      toast.error('Failed to resolve alert');
+    }
   };
 
   const handleDismiss = async (id: string) => {
-    await supabase.from('fraud_alerts').update({ status: 'dismissed' }).eq('id', id);
-    toast.success('Alert dismissed');
-    queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+    try {
+      await withAdminAuditLog(
+        'fraud_alert_dismissed',
+        { entity_type: 'fraud_alert', entity_id: id, new_values: { status: 'dismissed' } },
+        async () => {
+          const { error } = await supabase.from('fraud_alerts').update({ status: 'dismissed' }).eq('id', id);
+          if (error) throw error;
+        },
+      );
+      toast.success('Alert dismissed');
+      queryClient.invalidateQueries({ queryKey: ['fraud-alerts'] });
+    } catch {
+      toast.error('Failed to dismiss alert');
+    }
   };
 
   const STAT_CARDS = [
