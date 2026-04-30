@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { Settings, DollarSign, Clock, Flag, Save, RefreshCw, CheckCircle, Loader2, Zap } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminAction } from "@/lib/audit";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
