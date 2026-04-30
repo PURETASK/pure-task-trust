@@ -16,6 +16,7 @@ import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useReferrals } from "@/hooks/useReferrals";
+import { useFunnel } from "@/hooks/useFunnel";
 import authSplitImg from "@/assets/auth-split.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
@@ -26,6 +27,18 @@ const TRUST_POINTS = [
   { icon: Camera, text: "Photo proof on every clean" },
   { icon: Star, text: "Pay only when you're happy" },
 ];
+
+const SIGNUP_FUNNEL_STEPS = [
+  "role_selected",
+  "credentials_entered",
+  "submitted",
+  "email_confirmation_shown",
+] as const;
+
+const LOGIN_FUNNEL_STEPS = [
+  "credentials_entered",
+  "submitted",
+] as const;
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
@@ -46,6 +59,20 @@ export default function AuthPage() {
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
   const { checkLimit, isLocked, remainingSeconds } = useRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 30_000 });
+  const signupFunnel = useFunnel("signup", SIGNUP_FUNNEL_STEPS);
+  const loginFunnel = useFunnel("login", LOGIN_FUNNEL_STEPS);
+
+  // Track role selection (for signup) once
+  useEffect(() => {
+    if (isSignUp && role) {
+      signupFunnel.trackStep("role_selected", {
+        role,
+        from_url: !!urlRole,
+        from_referral: !!referralCode,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignUp, role]);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {
@@ -59,6 +86,9 @@ export default function AuthPage() {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!checkLimit()) {
+      (isSignUp ? signupFunnel : loginFunnel).trackEvent("funnel.rate_limited", {
+        remaining_seconds: remainingSeconds,
+      });
       toast.error(`Too many attempts. Please wait ${remainingSeconds} seconds.`);
       return;
     }
@@ -69,8 +99,15 @@ export default function AuthPage() {
           toast.error("Select a role first");
           return;
         }
+        signupFunnel.trackStep("credentials_entered", { role, has_full_name: !!fullName });
+        signupFunnel.trackStep("submitted", { role, method: "email" });
         const result = await signup(email, password, role, fullName);
         if (result.error) {
+          signupFunnel.trackEvent("funnel.error", {
+            step: "submitted",
+            method: "email",
+            message: result.error,
+          });
           toast.error(`Sign up failed: ${result.error}`);
         } else {
           if (referralCode) {
@@ -79,11 +116,26 @@ export default function AuthPage() {
           }
           setSignupEmail(email);
           setSignupComplete(true);
+          signupFunnel.trackStep("email_confirmation_shown", { role });
+          signupFunnel.trackComplete({
+            role,
+            method: "email",
+            referral_used: !!referralCode,
+          });
         }
       } else {
+        loginFunnel.trackStep("credentials_entered");
+        loginFunnel.trackStep("submitted", { method: "email" });
         const result = await login(email, password);
         if (result.error) {
+          loginFunnel.trackEvent("funnel.error", {
+            step: "submitted",
+            method: "email",
+            message: result.error,
+          });
           toast.error(`Sign in failed: ${result.error}`);
+        } else {
+          loginFunnel.trackComplete({ method: "email" });
         }
         // Navigation is handled by the useEffect watching isAuthenticated + user
       }
@@ -99,8 +151,15 @@ export default function AuthPage() {
     }
     setIsSubmitting(true);
     try {
+      const f = isSignUp ? signupFunnel : loginFunnel;
+      f.trackStep("submitted", { method: "google", role: isSignUp ? role : undefined });
       const result = await loginWithGoogle(isSignUp ? role : undefined);
-      if (result.error) toast.error(`Google Sign-In Failed: ${result.error}`);
+      if (result.error) {
+        f.trackEvent("funnel.error", { method: "google", message: result.error });
+        toast.error(`Google Sign-In Failed: ${result.error}`);
+      }
+      // Successful OAuth completion is recorded after redirect via the
+      // isAuthenticated effect below (trackComplete on first authed render).
     } finally {
       setIsSubmitting(false);
     }
@@ -113,10 +172,15 @@ export default function AuthPage() {
     }
     setIsSubmitting(true);
     try {
+      const f = isSignUp ? signupFunnel : loginFunnel;
+      f.trackStep("submitted", { method: "apple", role: isSignUp ? role : undefined });
       const result = await lovable.auth.signInWithOAuth("apple", {
         redirect_uri: window.location.origin,
       });
-      if (result.error) toast.error(`Apple Sign-In Failed: ${String(result.error)}`);
+      if (result.error) {
+        f.trackEvent("funnel.error", { method: "apple", message: String(result.error) });
+        toast.error(`Apple Sign-In Failed: ${String(result.error)}`);
+      }
     } finally {
       setIsSubmitting(false);
     }
