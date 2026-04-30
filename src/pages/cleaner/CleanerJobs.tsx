@@ -565,7 +565,7 @@ export default function CleanerJobs() {
               {history.length === 0 ? (
                 <EmptyTab icon={Clock} title="No history yet" subtitle="Past jobs will appear here over time" />
               ) : (
-                history.map(job => <CompactJobCard key={job.id} job={job} feeRate={feeRate} />)
+                history.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
           </Tabs>
