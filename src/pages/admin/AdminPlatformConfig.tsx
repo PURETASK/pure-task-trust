@@ -64,13 +64,13 @@ const AdminPlatformConfig = () => {
       const userId = (await supabase.auth.getUser()).data.user?.id;
       const { error } = await supabase.from("platform_config" as any).upsert({ key, value, updated_at: new Date().toISOString(), updated_by: userId }, { onConflict: "key" });
       if (error) throw error;
-      await supabase.from("admin_audit_log").insert({
-        admin_user_id: userId || "",
+      await logAdminAction({
         action: "platform_config_updated",
         entity_type: "platform_config",
-        entity_id: key,
+        // entity_id requires a uuid; key is a string, so encode as metadata
         new_values: { [key]: value },
         reason: `Config updated via Platform Config panel`,
+        metadata: { key },
       });
       queryClient.invalidateQueries({ queryKey: ["platform-config"] });
       setEditValues((prev) => { const n = { ...prev }; delete n[key]; return n; });
