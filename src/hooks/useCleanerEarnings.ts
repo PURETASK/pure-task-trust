@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useCleanerProfile } from './useCleanerProfile';
 import { toast } from 'sonner';
+import { calcJobMoney } from './useJobMoney';
 
 export interface CleanerEarning {
   id: string;
@@ -190,7 +191,7 @@ export function useCleanerStats() {
             .eq('cleaner_id', profile.id),
           supabase
             .from('jobs')
-            .select('escrow_credits_reserved')
+            .select('escrow_credits_reserved, estimated_hours, actual_hours, rush_fee_credits, final_charge_credits')
             .eq('cleaner_id', profile.id)
             .eq('status', 'in_progress'),
         ]);
@@ -208,7 +209,12 @@ export function useCleanerStats() {
       const totalEarned = allEarnings.reduce((sum, e) => sum + e.net_credits, 0);
       const paidOut = allEarnings.filter(e => e.payout_id).reduce((sum, e) => sum + e.net_credits, 0);
       const availableBalance = totalEarned - paidOut;
-      const pendingBalance = pendingJobs.reduce((sum, j) => sum + (j.escrow_credits_reserved || 0), 0);
+      // Forecast cleaner-net (post platform fee) for in-progress jobs, not gross escrow.
+      const tier = profile.tier as any;
+      const pendingBalance = pendingJobs.reduce((sum, j) => {
+        const m = calcJobMoney({ ...j, cleaner_tier: tier });
+        return sum + m.cleanerNet;
+      }, 0);
       const completedJobs = allJobs.filter(j => j.status === 'completed').length;
 
       return {
