@@ -106,6 +106,7 @@ export default function CleaningDetail() {
   const hasReview = !!existingReview;
 
   const computeFeeBucket = useFeeBucket();
+  const escrow = useEscrowCountdown(job ?? null);
   // Calculate cancellation fee preview
   const hoursBefore = job.scheduled_start_at
     ? differenceInHours(new Date(job.scheduled_start_at), new Date())
