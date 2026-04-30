@@ -12,10 +12,11 @@ import { FlowShell } from '@/components/flow/FlowShell';
 import { Card } from '@/components/ui/card';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { CheckCircle2, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useFunnel } from '@/hooks/useFunnel';
 
 const PHASE_LABELS: Record<string, string> = {
   agreement: 'Agreement',
@@ -29,6 +30,11 @@ const PHASE_LABELS: Record<string, string> = {
   launch: 'Activate',
 };
 
+const ONBOARDING_FUNNEL_STEPS = [
+  'agreement', 'profile', 'personal', 'verification',
+  'work-setup', 'specialties', 'emergency', 'payout', 'launch',
+] as const;
+
 export default function CleanerOnboarding() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
@@ -37,6 +43,32 @@ export default function CleanerOnboarding() {
     currentPhase, currentPhaseIndex, totalPhases,
     isLoading, profile, advancePhase, goBack,
   } = onboarding;
+  const funnel = useFunnel('cleaner_onboarding', ONBOARDING_FUNNEL_STEPS);
+  const lastTrackedPhase = useRef<string | null>(null);
+
+  // Track each phase the cleaner reaches
+  useEffect(() => {
+    if (isLoading || !currentPhase) return;
+    if (lastTrackedPhase.current === currentPhase) return;
+    funnel.trackStep(currentPhase, {
+      phase_index: currentPhaseIndex,
+      total_phases: totalPhases,
+    });
+    lastTrackedPhase.current = currentPhase;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPhase, isLoading]);
+
+  // Abandon on unmount if not completed
+  useEffect(() => {
+    return () => {
+      if (lastTrackedPhase.current && lastTrackedPhase.current !== 'launch') {
+        funnel.trackAbandon('user_left_flow', {
+          last_phase: lastTrackedPhase.current,
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Auto-redirect if already completed
   useEffect(() => {
@@ -57,9 +89,17 @@ export default function CleanerOnboarding() {
   const handleComplete = async () => {
     try {
       await onboarding.completeOnboarding();
+      funnel.trackComplete({
+        total_phases: totalPhases,
+      });
       toast.success("You're activated! Verification is in progress.");
       navigate('/cleaner/dashboard', { replace: true });
     } catch (err: any) {
+      funnel.trackEvent('funnel.error', {
+        step: 'launch',
+        reason: 'complete_onboarding_failed',
+        message: err?.message,
+      });
       console.error('[CleanerOnboarding] completeOnboarding failed:', err);
       toast.error(err?.message || 'Failed to activate. Please try again.');
     }
