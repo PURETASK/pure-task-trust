@@ -6528,6 +6528,76 @@ export type Database = {
         Returns: number
       }
       generate_referral_code: { Args: never; Returns: string }
+      get_my_cleaner_profile: {
+        Args: never
+        Returns: {
+          accepts_high_risk: boolean | null
+          ai_bio: string | null
+          avg_rating: number | null
+          background_check_required: boolean | null
+          background_check_status: string | null
+          base_rate_cph: number | null
+          bio: string | null
+          bio_generated_at: string | null
+          bio_score: number | null
+          brings_supplies: boolean | null
+          cleaning_types: string[] | null
+          created_at: string
+          date_of_birth: string | null
+          deep_addon_cph: number | null
+          deleted_at: string | null
+          emergency_contact: Json | null
+          first_name: string | null
+          home_address: Json | null
+          hourly_rate_credits: number
+          id: string
+          instant_payout_enabled: boolean | null
+          intro_video_url: string | null
+          is_available: boolean | null
+          jobs_completed: number
+          languages: string[] | null
+          last_name: string | null
+          latitude: number | null
+          longitude: number | null
+          low_flexibility_badge: boolean
+          max_jobs_per_day: number | null
+          minimum_payout_cents: number | null
+          monthly_earnings_goal: number | null
+          moveout_addon_cph: number | null
+          onboarding_completed_at: string | null
+          onboarding_current_step: string | null
+          onboarding_reminder_sent_at: string | null
+          onboarding_started_at: string | null
+          payout_percent: number | null
+          payout_schedule: string | null
+          personality: string[] | null
+          pet_friendly: boolean | null
+          professional_headline: string | null
+          profile_photo_url: string | null
+          push_token: string | null
+          reliability_score: number
+          specialties: string[] | null
+          stripe_account_id: string | null
+          stripe_connect_id: string | null
+          stripe_connect_onboarded: boolean
+          stripe_payouts_enabled: boolean | null
+          supplies_provided: boolean | null
+          tier: string
+          tier_demotion_warning_at: string | null
+          travel_radius_km: number | null
+          updated_at: string
+          user_id: string
+          verification_status: Database["public"]["Enums"]["cleaner_verification_status"]
+          work_style: string[] | null
+          years_experience: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cleaner_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -6572,6 +6642,14 @@ export type Database = {
           message: Json
           msg_id: number
           read_ct: number
+        }[]
+      }
+      set_my_cleaner_availability: {
+        Args: { _is_available: boolean }
+        Returns: {
+          id: string
+          is_available: boolean
+          user_id: string
         }[]
       }
       vault_insert_cron_secret: {
