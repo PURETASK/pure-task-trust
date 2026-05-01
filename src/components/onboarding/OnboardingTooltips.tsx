@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { X, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
 
 interface TooltipStep {
   title: string;
@@ -13,34 +15,69 @@ interface TooltipStep {
 interface OnboardingTooltipsProps {
   steps: TooltipStep[];
   storageKey: string;
+  /** If provided, the tour visibility is driven by this server-backed flag.
+   *  When `seen` is true, the tour will not show. When false, it shows once
+   *  and calls `markSeenRpc` on dismissal. */
+  seen?: boolean | null;
+  /** Set to true while the seen flag is still loading — suppresses the tour
+   *  flash for returning users. */
+  loading?: boolean;
+  /** Name of a Supabase RPC (no args) to mark the tour as seen server-side. */
+  markSeenRpc?: string;
 }
 
-export function OnboardingTooltips({ steps, storageKey }: OnboardingTooltipsProps) {
+export function OnboardingTooltips({
+  steps,
+  storageKey,
+  seen,
+  loading,
+  markSeenRpc,
+}: OnboardingTooltipsProps) {
+  const useServer = typeof seen === 'boolean' || loading === true || !!markSeenRpc;
+
   const [currentStep, setCurrentStep] = useState(0);
   const [dismissed, setDismissed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const seen = localStorage.getItem(storageKey);
-    if (seen === 'true') setDismissed(true);
-  }, [storageKey]);
+    if (useServer) return;
+    const seenLocal = localStorage.getItem(storageKey);
+    if (seenLocal === 'true') setDismissed(true);
+  }, [storageKey, useServer]);
 
   const dismiss = () => {
     setDismissed(true);
-    localStorage.setItem(storageKey, 'true');
+    if (useServer) {
+      if (markSeenRpc) {
+        // Fire & forget — UI already hides immediately.
+        (supabase as any).rpc(markSeenRpc).then?.(() => {});
+      }
+    } else {
+      localStorage.setItem(storageKey, 'true');
+    }
   };
 
+  if (!mounted) return null;
   if (dismissed || steps.length === 0) return null;
+  if (useServer && (loading || seen)) return null;
 
   const step = steps[currentStep];
   const isLast = currentStep === steps.length - 1;
 
-  return (
+  const node = (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-md"
+        className="fixed z-[100] left-1/2 -translate-x-1/2 px-4"
+        style={{
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)',
+          width: 'min(28rem, calc(100vw - 1rem))',
+          maxWidth: '100vw',
+        }}
       >
         <Card className="border-primary/30 shadow-elevated bg-background/95 backdrop-blur-md">
           <CardContent className="p-4 space-y-3">
@@ -84,6 +121,8 @@ export function OnboardingTooltips({ steps, storageKey }: OnboardingTooltipsProp
       </motion.div>
     </AnimatePresence>
   );
+
+  return createPortal(node, document.body);
 }
 
 export const CLIENT_ONBOARDING_STEPS: TooltipStep[] = [

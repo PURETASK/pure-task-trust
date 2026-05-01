@@ -231,8 +231,14 @@ export default function CleanerDashboard() {
         </div>
       </CleanerLayout>
 
-      {/* Onboarding Tooltips */}
-      <OnboardingTooltips steps={CLEANER_ONBOARDING_STEPS} storageKey="cleaner-onboarding-seen" />
+      {/* Onboarding Tooltips — only on a cleaner's first ever login (server-backed). */}
+      <OnboardingTooltips
+        steps={CLEANER_ONBOARDING_STEPS}
+        storageKey="cleaner-onboarding-seen"
+        loading={isLoadingProfile}
+        seen={!!(profile as any)?.dashboard_tour_seen_at}
+        markSeenRpc="mark_my_cleaner_tour_seen"
+      />
     </main>
   );
 }
