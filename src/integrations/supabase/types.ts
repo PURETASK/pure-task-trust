@@ -1589,6 +1589,7 @@ export type Database = {
           brings_supplies: boolean | null
           cleaning_types: string[] | null
           created_at: string
+          dashboard_tour_seen_at: string | null
           date_of_birth: string | null
           deep_addon_cph: number | null
           deleted_at: string | null
@@ -1650,6 +1651,7 @@ export type Database = {
           brings_supplies?: boolean | null
           cleaning_types?: string[] | null
           created_at?: string
+          dashboard_tour_seen_at?: string | null
           date_of_birth?: string | null
           deep_addon_cph?: number | null
           deleted_at?: string | null
@@ -1711,6 +1713,7 @@ export type Database = {
           brings_supplies?: boolean | null
           cleaning_types?: string[] | null
           created_at?: string
+          dashboard_tour_seen_at?: string | null
           date_of_birth?: string | null
           deep_addon_cph?: number | null
           deleted_at?: string | null
@@ -6543,6 +6546,7 @@ export type Database = {
           brings_supplies: boolean | null
           cleaning_types: string[] | null
           created_at: string
+          dashboard_tour_seen_at: string | null
           date_of_birth: string | null
           deep_addon_cph: number | null
           deleted_at: string | null
@@ -6627,6 +6631,7 @@ export type Database = {
         }
         Returns: string
       }
+      mark_my_cleaner_tour_seen: { Args: never; Returns: string }
       move_to_dlq: {
         Args: {
           dlq_name: string
