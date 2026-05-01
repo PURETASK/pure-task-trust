@@ -7,6 +7,8 @@ import type { Database } from '@/integrations/supabase/types';
 type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
 type Job = Database['public']['Tables']['jobs']['Row'];
 
+type RpcResult<T> = { data: T | null; error: unknown };
+
 const CLEANER_PROFILE_QUERY_TIMEOUT_MS = 8000;
 
 async function withQueryTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
@@ -42,8 +44,8 @@ export function useCleanerProfile() {
     queryFn: async () => {
       if (!user?.id) return null;
 
-      const { data, error } = await withQueryTimeout(
-        (supabase as any).rpc('get_my_cleaner_profile'),
+      const { data, error } = await withQueryTimeout<RpcResult<CleanerProfile | CleanerProfile[]>>(
+        (supabase as any).rpc('get_my_cleaner_profile') as PromiseLike<RpcResult<CleanerProfile | CleanerProfile[]>>,
         'Cleaner profile request timed out'
       );
 
