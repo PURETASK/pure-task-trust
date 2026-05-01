@@ -47,7 +47,8 @@ export function CleanerHeader() {
   const [toggling, setToggling] = useState(false);
 
   const isAvailable = profile?.is_available ?? false;
-  const isBusy = toggling || isLoading;
+  const showLoading = isLoading && !profile;
+  const isBusy = toggling || showLoading;
 
   const handleToggleAvailability = async () => {
     if (!profile?.id) {
@@ -60,14 +61,11 @@ export function CleanerHeader() {
 
     try {
       const { data, error } = await supabase
-        .from("cleaner_profiles")
-        .update({ is_available: next })
-        .eq("id", profile.id)
-        .select("id, is_available")
-        .maybeSingle();
+        .rpc("set_my_cleaner_availability" as any, { _is_available: next });
 
       if (error) throw error;
-      if (!data) throw new Error("No profile row updated");
+      const updated = Array.isArray(data) ? data[0] : data;
+      if (!updated) throw new Error("No profile row updated");
 
       const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
       queryClient.setQueryData(cleanerProfileQueryKey, (old: any) =>
@@ -141,7 +139,7 @@ export function CleanerHeader() {
             onClick={handleToggleAvailability}
             disabled={isBusy || !profile}
             className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${
-              isLoading
+              showLoading
                 ? "bg-muted border-border text-muted-foreground"
                 : isAvailable
                 ? "bg-success/10 border-success/30 text-success hover:bg-success/20"
@@ -155,7 +153,7 @@ export function CleanerHeader() {
             ) : (
               <WifiOff className="h-3.5 w-3.5" />
             )}
-            {isLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
+            {showLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
           </button>
 
           <DropdownMenu>
@@ -188,7 +186,7 @@ export function CleanerHeader() {
                   onClick={handleToggleAvailability}
                   disabled={isBusy || !profile}
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isLoading
+                    showLoading
                       ? "bg-muted text-muted-foreground"
                       : isAvailable
                       ? "bg-success/10 text-success"
@@ -202,7 +200,7 @@ export function CleanerHeader() {
                   ) : (
                     <WifiOff className="h-4 w-4" />
                   )}
-                  {isLoading
+                  {showLoading
                     ? "Loading availability"
                     : isAvailable
                     ? "Online — tap to go offline"

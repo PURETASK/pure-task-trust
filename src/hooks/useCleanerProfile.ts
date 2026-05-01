@@ -43,16 +43,13 @@ export function useCleanerProfile() {
       if (!user?.id) return null;
 
       const { data, error } = await withQueryTimeout(
-        supabase
-          .from('cleaner_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle(),
+        (supabase as any).rpc('get_my_cleaner_profile'),
         'Cleaner profile request timed out'
       );
 
       if (error) throw error;
-      return data as CleanerProfile | null;
+      const profile = Array.isArray(data) ? data[0] : data;
+      return profile as CleanerProfile | null;
     },
     enabled: !!user?.id && !authLoading,
     staleTime: 1000 * 60 * 2,

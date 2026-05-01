@@ -28,13 +28,10 @@ export function CleanerAvailabilityToggle() {
     setToggling(true);
     try {
       const { data, error } = await supabase
-        .from("cleaner_profiles")
-        .update({ is_available: next })
-        .eq("id", profile.id)
-        .select("id, is_available")
-        .maybeSingle();
+        .rpc("set_my_cleaner_availability" as any, { _is_available: next });
       if (error) throw error;
-      if (!data) throw new Error("No profile row updated (permission?)");
+      const updated = Array.isArray(data) ? data[0] : data;
+      if (!updated) throw new Error("No profile row updated (permission?)");
 
       // Optimistically update cache so the UI flips immediately.
       const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
