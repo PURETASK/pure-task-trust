@@ -78,8 +78,29 @@ serve(async (req) => {
       );
     }
 
+    // Brute-force protection: lock out after 5 failed attempts
+    const MAX_ATTEMPTS = 5;
+    const currentAttempts = (verification as any).attempt_count ?? 0;
+    if (currentAttempts >= MAX_ATTEMPTS) {
+      // Expire this OTP so it cannot be tried any further
+      await supabaseClient
+        .from("phone_verifications")
+        .update({ expires_at: new Date(0).toISOString() })
+        .eq("id", verification.id);
+      return new Response(
+        JSON.stringify({ error: "Too many failed attempts. Request a new code." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Check OTP code
     if (verification.otp_code !== otp_code) {
+      await supabaseClient
+        .from("phone_verifications")
+        .update({ attempt_count: currentAttempts + 1 })
+        .eq("id", verification.id);
+      // Small delay to slow scripted attacks
+      await new Promise((r) => setTimeout(r, 1000));
       return new Response(
         JSON.stringify({ error: "Invalid verification code" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
