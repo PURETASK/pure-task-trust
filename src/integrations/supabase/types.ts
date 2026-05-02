@@ -5154,6 +5154,7 @@ export type Database = {
       }
       phone_verifications: {
         Row: {
+          attempt_count: number
           created_at: string
           expires_at: string
           id: string
@@ -5163,6 +5164,7 @@ export type Database = {
           verified_at: string | null
         }
         Insert: {
+          attempt_count?: number
           created_at?: string
           expires_at: string
           id?: string
@@ -5172,6 +5174,7 @@ export type Database = {
           verified_at?: string | null
         }
         Update: {
+          attempt_count?: number
           created_at?: string
           expires_at?: string
           id?: string
