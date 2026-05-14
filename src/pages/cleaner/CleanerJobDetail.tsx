@@ -59,6 +59,23 @@ export default function CleanerJobDetail() {
     cleaner_tier: (job?.cleaner as any)?.tier,
   });
 
+  // IMPORTANT: this hook must run on every render — keep it ABOVE any early
+  // returns so the hook count stays stable when `job` transitions from
+  // undefined → loaded. (Previously placed below the !job guard, which
+  // caused "Rendered more hooks than during the previous render" and crashed
+  // the page when a cleaner clicked "View" on a job.)
+  const auth = useJobAuthorization({
+    id: job?.id ?? '',
+    status: job?.status ?? null,
+    client_user_id: job?.client?.user_id ?? null,
+    cleaner_user_id: job?.cleaner?.user_id ?? null,
+    scheduled_start_at: job?.scheduled_start_at ?? null,
+    check_in_at: job?.check_in_at ?? null,
+    check_out_at: job?.check_out_at ?? null,
+    actual_end_at: job?.actual_end_at ?? null,
+    final_charge_credits: job?.final_charge_credits ?? null,
+  });
+
   // Live elapsed timer
   useEffect(() => {
     if (!job?.check_in_at || job.status !== 'in_progress') return;
@@ -155,17 +172,6 @@ export default function CleanerJobDetail() {
     );
   }
 
-  const auth = useJobAuthorization({
-    id: job.id,
-    status: job.status,
-    client_user_id: job.client?.user_id ?? null,
-    cleaner_user_id: job.cleaner?.user_id ?? null,
-    scheduled_start_at: job.scheduled_start_at,
-    check_in_at: job.check_in_at,
-    check_out_at: job.check_out_at,
-    actual_end_at: job.actual_end_at,
-    final_charge_credits: job.final_charge_credits,
-  });
   const isInProgress = job.status === "in_progress";
   const isCompleted = job.status === "completed";
   // canStart guards "Check In" (confirmed + cleaner-owned); UX still requires !hasCheckedIn
