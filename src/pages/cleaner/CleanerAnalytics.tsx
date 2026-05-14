@@ -22,7 +22,7 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-card border-2 border-primary/30 rounded-2xl px-4 py-3 shadow-lg text-sm">
-      <p className="text-xs text-muted-foreground mb-1">{label}</p>
+      <p className="text-xs text-ink-muted mb-1">{label}</p>
       <p className="text-lg font-poppins font-bold text-foreground">${payload[0]?.value ?? 0}</p>
     </div>
   );
@@ -48,9 +48,9 @@ function StatCard({
       <div className={`h-12 w-12 rounded-2xl border-2 ${borderClass} bg-card flex items-center justify-center mb-3`}>
         <Icon className={`h-5 w-5 ${colorClass}`} />
       </div>
-      <p className="text-xs text-muted-foreground mb-0.5 font-medium">{label}</p>
+      <p className="text-xs text-ink-muted mb-0.5 font-medium">{label}</p>
       <p className={`text-3xl font-poppins font-bold leading-none ${colorClass}`}>{value}</p>
-      {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
+      {sub && <p className="text-xs text-ink-muted mt-1">{sub}</p>}
       {trend !== undefined && trend !== null && (
         <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${positive ? "text-success" : "text-destructive"}`}>
           {positive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
@@ -76,7 +76,7 @@ function InsightPill({
       <div className={`h-10 w-10 rounded-xl border-2 ${borderClass} ${iconBgClass} flex items-center justify-center flex-shrink-0`}>
         <Icon className={`h-4 w-4 ${iconColorClass}`} />
       </div>
-      <p className="text-sm text-muted-foreground leading-relaxed pt-1.5">{text}</p>
+      <p className="text-sm text-ink-muted leading-relaxed pt-1.5">{text}</p>
     </div>
   );
 }
@@ -155,7 +155,7 @@ export default function CleanerAnalytics() {
                 </div>
                 <div>
                   <h1 className="text-3xl sm:text-4xl font-poppins font-bold tracking-tight text-foreground">Analytics</h1>
-                  <p className="text-muted-foreground text-sm">Track performance, earnings trends & growth</p>
+                  <p className="text-ink-muted text-sm">Track performance, earnings trends & growth</p>
                 </div>
               </div>
             </div>
@@ -174,7 +174,7 @@ export default function CleanerAnalytics() {
                   <p className={`font-poppins font-bold text-2xl leading-none ${trendPositive ? "text-success" : "text-destructive"}`}>
                     {trendPositive ? "+" : ""}{trendPct}%
                   </p>
-                  <p className="text-muted-foreground text-xs">vs prior 4 weeks</p>
+                  <p className="text-ink-muted text-xs">vs prior 4 weeks</p>
                 </div>
               </div>
             )}
@@ -189,7 +189,7 @@ export default function CleanerAnalytics() {
             ].map(s => (
               <div key={s.label} className={`rounded-2xl border-2 ${s.border} ${s.bg} px-4 py-3 text-center`}>
                 <p className={`text-2xl sm:text-3xl font-poppins font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-muted-foreground text-xs mt-0.5">{s.label}</p>
+                <p className="text-ink-muted text-xs mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
@@ -232,7 +232,7 @@ export default function CleanerAnalytics() {
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-lg font-poppins font-bold text-foreground">Weekly Earnings</h2>
-              <p className="text-xs text-muted-foreground">Last 8 weeks</p>
+              <p className="text-xs text-ink-muted">Last 8 weeks</p>
             </div>
             {trendPct !== null && (
               <Badge
@@ -301,7 +301,7 @@ export default function CleanerAnalytics() {
                       <div className={`h-9 w-9 rounded-xl border-2 ${border} ${bg} flex items-center justify-center`}>
                         <Icon className={`h-4 w-4 ${color}`} />
                       </div>
-                      <span className="text-sm font-medium text-muted-foreground">{label}</span>
+                      <span className="text-sm font-medium text-ink-muted">{label}</span>
                     </div>
                     <span className={`font-poppins font-bold text-2xl ${color}`}>{value}</span>
                   </div>
@@ -323,11 +323,11 @@ export default function CleanerAnalytics() {
             {isLoadingEarnings ? <div className="p-5"><Skeleton className="h-40 rounded-2xl" /></div>
             : earnings.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
-                <div className="h-16 w-16 rounded-2xl border-2 border-border bg-muted flex items-center justify-center mb-3">
-                  <Zap className="h-8 w-8 text-muted-foreground/40" />
+                <div className="h-16 w-16 rounded-2xl border border-hairline-soft bg-muted flex items-center justify-center mb-3">
+                  <Zap className="h-8 w-8 text-ink-muted/40" />
                 </div>
                 <p className="text-sm font-semibold text-foreground">No earnings yet</p>
-                <p className="text-xs text-muted-foreground mt-1">Accept jobs to start earning</p>
+                <p className="text-xs text-ink-muted mt-1">Accept jobs to start earning</p>
               </div>
             ) : (
               <div className="divide-y divide-border/40">
@@ -346,7 +346,7 @@ export default function CleanerAnalytics() {
                         <span className="text-xl">{emoji}</span>
                         <div>
                           <p className="text-sm font-semibold text-foreground">{label}</p>
-                          <p className="text-xs text-muted-foreground">{format(new Date(earning.created_at), "MMM d, yyyy")}</p>
+                          <p className="text-xs text-ink-muted">{format(new Date(earning.created_at), "MMM d, yyyy")}</p>
                         </div>
                       </div>
                       <span className="font-poppins font-bold text-success text-xl">+${earning.net_credits.toFixed(0)}</span>

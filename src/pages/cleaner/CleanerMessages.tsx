@@ -78,7 +78,7 @@ export default function CleanerMessages() {
     return (
       <CleanerLayout>
         <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-ink-muted" />
         </div>
       </CleanerLayout>
     );
@@ -103,12 +103,12 @@ export default function CleanerMessages() {
             description="Messages from your clients will appear here once you accept bookings."
           />
         ) : (
-          <div className="grid md:grid-cols-3 gap-0 h-[680px] rounded-2xl border border-border overflow-hidden">
+          <div className="grid md:grid-cols-3 gap-0 h-[680px] rounded-2xl border border-hairline-soft overflow-hidden">
             {/* Thread List */}
             <div className="md:col-span-1 border-r border-border flex flex-col bg-muted/10">
               <div className="p-3 border-b border-border">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
                   <Input
                     placeholder="Search conversations…"
                     value={search}
@@ -144,11 +144,11 @@ export default function CleanerMessages() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-0.5">
                             <p className={`text-sm font-semibold truncate ${thread.unreadCount > 0 ? "text-foreground" : "text-foreground/80"}`}>{name}</p>
-                            <span className="text-[11px] text-muted-foreground flex-shrink-0 ml-1">
+                            <span className="text-[11px] text-ink-muted flex-shrink-0 ml-1">
                               {thread.lastMessage ? formatDistanceToNow(new Date(thread.lastMessage.created_at), { addSuffix: false }) : ""}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground truncate">{thread.lastMessage?.body || "No messages yet"}</p>
+                          <p className="text-xs text-ink-muted truncate">{thread.lastMessage?.body || "No messages yet"}</p>
                           {thread.job_id && (
                             <div className="flex items-center gap-1 mt-1">
                               <Calendar className="h-3 w-3 text-primary/60" />
@@ -174,7 +174,7 @@ export default function CleanerMessages() {
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{getOtherName(selectedThread)}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-ink-muted">
                         {selectedThread.subject || (selectedThread.job_id ? "Booking conversation" : "Direct message")}
                       </p>
                     </div>
@@ -189,7 +189,7 @@ export default function CleanerMessages() {
                   <div className="flex-1 overflow-y-auto p-5 space-y-3">
                     {messagesLoading ? (
                       <div className="flex items-center justify-center h-full">
-                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        <Loader2 className="h-6 w-6 animate-spin text-ink-muted" />
                       </div>
                     ) : messages && messages.length > 0 ? (
                       messages.map((msg, i) => {
@@ -204,7 +204,7 @@ export default function CleanerMessages() {
                           >
                             <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${isMine ? "bg-primary text-primary-foreground rounded-br-md" : "bg-muted rounded-bl-md"}`}>
                               <p className="text-sm leading-relaxed">{msg.body}</p>
-                              <p className={`text-[11px] mt-1 ${isMine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                              <p className={`text-[11px] mt-1 ${isMine ? "text-primary-foreground/60" : "text-ink-muted"}`}>
                                 {format(new Date(msg.created_at), "h:mm a")}
                               </p>
                             </div>
@@ -212,7 +212,7 @@ export default function CleanerMessages() {
                         );
                       })
                     ) : (
-                      <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                      <div className="flex items-center justify-center h-full text-ink-muted text-sm">
                         No messages yet — say hello! 👋
                       </div>
                     )}
@@ -234,11 +234,11 @@ export default function CleanerMessages() {
                         {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1.5 pl-1">Enter to send · Shift+Enter for new line</p>
+                    <p className="text-xs text-ink-muted mt-1.5 pl-1">Enter to send · Shift+Enter for new line</p>
                   </div>
                 </>
               ) : (
-                <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                <div className="flex-1 flex items-center justify-center text-ink-muted">
                   <div className="text-center">
                     <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
                     <p>Select a conversation</p>

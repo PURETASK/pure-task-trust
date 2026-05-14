@@ -39,7 +39,7 @@ function PhotoUploadBox({
   return (
     <div className="space-y-2">
       <Label className="text-sm font-semibold">{label}</Label>
-      <p className="text-xs text-muted-foreground">{hint}</p>
+      <p className="text-xs text-ink-muted">{hint}</p>
       <div
         onClick={() => !loading && ref.current?.click()}
         className={`relative cursor-pointer rounded-2xl border-2 transition-all overflow-hidden
@@ -53,12 +53,12 @@ function PhotoUploadBox({
             <div className={`h-14 w-14 rounded-2xl flex items-center justify-center ${accepted ? color.bg : "bg-muted"}`}>
               {accepted
                 ? <CheckCircle className={`h-7 w-7 ${color.icon}`} />
-                : <Icon className="h-7 w-7 text-muted-foreground" />
+                : <Icon className="h-7 w-7 text-ink-muted" />
               }
             </div>
             <div className="text-center">
               <p className="text-sm font-medium">{accepted ? "Uploaded ✓" : "Tap to upload"}</p>
-              <p className="text-xs text-muted-foreground">JPG, PNG, HEIC up to 10MB</p>
+              <p className="text-xs text-ink-muted">JPG, PNG, HEIC up to 10MB</p>
             </div>
           </div>
         )}
@@ -88,10 +88,10 @@ function StepPill({ num, label, done, active }: { num: number; label: string; do
     <div className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all
       ${done ? "border-success/60 bg-success/10 text-success"
         : active ? "border-primary/60 bg-primary/10 text-primary"
-        : "border-border/40 bg-muted/20 text-muted-foreground"}`}
+        : "border-hairline-soft bg-muted/20 text-ink-muted"}`}
     >
       <div className={`h-5 w-5 rounded-full flex items-center justify-center text-xs font-poppins font-bold
-        ${done ? "bg-success text-white" : active ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>
+        ${done ? "bg-success text-white" : active ? "bg-primary text-white" : "bg-muted text-ink-muted"}`}>
         {done ? <CheckCircle className="h-3 w-3" /> : num}
       </div>
       <span className="text-xs font-semibold">{label}</span>
@@ -287,7 +287,7 @@ export default function CleanerVerification() {
               <div className={`rounded-2xl border-2 ${s.border} ${s.bg} text-center p-4`}>
                 <s.icon className={`h-5 w-5 mx-auto mb-1 ${s.iconCls}`} />
                 <p className={`text-2xl font-poppins font-bold ${s.iconCls}`}>{s.value}</p>
-                <p className="text-xs text-muted-foreground">{s.label}</p>
+                <p className="text-xs text-ink-muted">{s.label}</p>
               </div>
             </motion.div>
           ))}
@@ -309,7 +309,7 @@ export default function CleanerVerification() {
                 </div>
                 <div>
                   <h2 className="font-bold text-base">Government ID</h2>
-                  <p className="text-xs text-muted-foreground">Upload a valid government-issued photo ID</p>
+                  <p className="text-xs text-ink-muted">Upload a valid government-issued photo ID</p>
                 </div>
               </div>
               {idComplete
@@ -320,14 +320,14 @@ export default function CleanerVerification() {
 
             <div className="p-5 space-y-5">
               <div>
-                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3 block">Select ID Type</Label>
+                <Label className="text-xs font-semibold uppercase tracking-wide text-ink-muted mb-3 block">Select ID Type</Label>
                 <div className="grid grid-cols-2 gap-2">
                   {ID_TYPES.map(t => (
                     <button key={t.value} type="button" onClick={() => setSelectedIdType(t.value)}
                       className={`flex items-center gap-2.5 p-3 rounded-2xl border-2 text-left text-sm font-semibold transition-all ${
                         selectedIdType === t.value
                           ? "border-primary/70 bg-primary/10 text-primary"
-                          : "border-border/40 bg-muted/20 text-muted-foreground hover:border-primary/40"
+                          : "border-hairline-soft bg-muted/20 text-ink-muted hover:border-primary/40"
                       }`}>
                       <t.icon className="h-4 w-4 shrink-0" />{t.label}
                     </button>
@@ -372,7 +372,7 @@ export default function CleanerVerification() {
                 </div>
                 <div>
                   <h2 className="font-bold text-base">Selfie / Face Photo</h2>
-                  <p className="text-xs text-muted-foreground">A clear, unobstructed photo of your face</p>
+                  <p className="text-xs text-ink-muted">A clear, unobstructed photo of your face</p>
                 </div>
               </div>
               {selfieUploaded
@@ -390,7 +390,7 @@ export default function CleanerVerification() {
                   "Neutral expression, looking directly at camera",
                   "Hold your ID next to your face for best results",
                 ].map(tip => (
-                  <div key={tip} className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <div key={tip} className="flex items-start gap-2 text-xs text-ink-muted">
                     <CheckCircle className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />{tip}
                   </div>
                 ))}
@@ -434,7 +434,7 @@ export default function CleanerVerification() {
                 </div>
                 <div>
                   <h2 className="font-bold text-base">Background Check</h2>
-                  <p className="text-xs text-muted-foreground">National criminal & identity screening</p>
+                  <p className="text-xs text-ink-muted">National criminal & identity screening</p>
                 </div>
               </div>
               {isLoading || profileLoading ? <Skeleton className="h-6 w-20" />
@@ -452,7 +452,7 @@ export default function CleanerVerification() {
                     <div>
                       <p className="font-bold text-success text-sm">Background check passed ✓</p>
                       {latestCheck.completed_at && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-ink-muted">
                           Completed {format(new Date(latestCheck.completed_at), "MMM d, yyyy")}
                           {latestCheck.expires_at && ` · Expires ${format(new Date(latestCheck.expires_at), "MMM d, yyyy")}`}
                         </p>
@@ -472,7 +472,7 @@ export default function CleanerVerification() {
                   <Clock className="h-6 w-6 text-warning shrink-0" />
                   <div>
                     <p className="font-bold text-warning text-sm">Check in progress</p>
-                    <p className="text-xs text-muted-foreground">Usually 2–5 business days. We'll email you with results.</p>
+                    <p className="text-xs text-ink-muted">Usually 2–5 business days. We'll email you with results.</p>
                   </div>
                 </div>
               ) : (
@@ -485,7 +485,7 @@ export default function CleanerVerification() {
                       "Identity verification",
                       "County court records (7 years)",
                     ].map(item => (
-                      <div key={item} className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div key={item} className="flex items-center gap-2 text-xs text-ink-muted">
                         <CheckCircle className="h-3.5 w-3.5 text-success shrink-0" />{item}
                       </div>
                     ))}
@@ -496,7 +496,7 @@ export default function CleanerVerification() {
                       <Switch checked={bgConsentGiven} onCheckedChange={setBgConsentGiven} className="mt-0.5" />
                       <div className="flex-1">
                         <p className="text-sm font-bold leading-tight">I authorize PureTask to conduct a background check</p>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-xs text-ink-muted mt-1">
                           By enabling this, you authorize PureTask and its partners to conduct a comprehensive background check. Results are confidential and only used to verify your eligibility.
                         </p>
                       </div>
@@ -509,7 +509,7 @@ export default function CleanerVerification() {
                         exit={{ opacity: 0, height: 0 }} className="space-y-3 overflow-hidden">
                         <div className="space-y-2">
                           <Label className="text-sm font-bold">Type your full legal name to confirm</Label>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-ink-muted">
                             Please type:{" "}
                             <span className="font-bold text-foreground">
                               {profile?.first_name ? `${profile.first_name} ${profile.last_name || ""}`.trim() : "your full name"}

@@ -81,7 +81,7 @@ export default function CleanerSettings() {
             </div>
             Settings
           </h1>
-          <p className="text-muted-foreground mt-1">Manage your account, preferences, and configuration</p>
+          <p className="text-ink-muted mt-1">Manage your account, preferences, and configuration</p>
         </motion.div>
 
         {/* Settings Groups */}
@@ -89,7 +89,7 @@ export default function CleanerSettings() {
           <motion.div key={group.group} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.08 }}>
             <Card className="overflow-hidden">
               <CardHeader className="pb-0 pt-4 px-4">
-                <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                <CardTitle className="text-sm font-semibold text-ink-muted uppercase tracking-wider flex items-center gap-2">
                   <group.icon className={`h-3.5 w-3.5 ${group.color}`} />
                   {group.group}
                 </CardTitle>
@@ -108,9 +108,9 @@ export default function CleanerSettings() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm">{item.label}</p>
-                        <p className="text-xs text-muted-foreground">{item.desc}</p>
+                        <p className="text-xs text-ink-muted">{item.desc}</p>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                      <ChevronRight className="h-4 w-4 text-ink-muted group-hover:text-foreground group-hover:translate-x-0.5 transition-all flex-shrink-0" />
                     </Link>
                   );
                 })}

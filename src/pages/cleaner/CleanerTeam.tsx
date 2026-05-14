@@ -78,7 +78,7 @@ function MemberCard({
                 <Badge variant="outline" className="text-xs">Pending</Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <p className="text-xs text-ink-muted flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               Joined {new Date(member.joined_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
             </p>
@@ -235,7 +235,7 @@ export default function CleanerTeam() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">My Team</h1>
-            <p className="text-muted-foreground mt-1">Manage your cleaning team</p>
+            <p className="text-ink-muted mt-1">Manage your cleaning team</p>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
@@ -309,7 +309,7 @@ export default function CleanerTeam() {
                             </div>
                             <div>
                               <h3 className="font-semibold">{team.name}</h3>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-sm text-ink-muted">
                                 {team.description || "No description"}
                               </p>
                               <div className="flex items-center gap-2 mt-2">
@@ -353,9 +353,9 @@ export default function CleanerTeam() {
               ) : (
                 <Card>
                   <CardContent className="py-12 text-center">
-                    <Users className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
-                    <p className="text-muted-foreground">You haven't created any teams yet</p>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <Users className="h-12 w-12 mx-auto text-ink-muted/30 mb-4" />
+                    <p className="text-ink-muted">You haven't created any teams yet</p>
+                    <p className="text-sm text-ink-muted mt-1">
                       Create a team to collaborate on larger jobs
                     </p>
                   </CardContent>
@@ -380,7 +380,7 @@ export default function CleanerTeam() {
                           </div>
                           <div>
                             <h3 className="font-semibold">{team.name}</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-ink-muted">
                               {team.description || "No description"}
                             </p>
                           </div>
@@ -392,7 +392,7 @@ export default function CleanerTeam() {
               ) : (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-ink-muted text-sm">
                       You're not a member of any other teams
                     </p>
                   </CardContent>
@@ -431,7 +431,7 @@ export default function CleanerTeam() {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
+                  <span className="bg-background px-2 text-ink-muted">
                     Or share link
                   </span>
                 </div>
@@ -473,15 +473,15 @@ export default function CleanerTeam() {
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 rounded-lg bg-muted/50 text-center">
-                  <p className="text-xs text-muted-foreground">Members</p>
+                  <p className="text-xs text-ink-muted">Members</p>
                   <p className="text-xl font-bold">{memberCount}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50 text-center">
-                  <p className="text-xs text-muted-foreground">Pending</p>
+                  <p className="text-xs text-ink-muted">Pending</p>
                   <p className="text-xl font-bold">{pendingCount}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50 text-center">
-                  <p className="text-xs text-muted-foreground">Status</p>
+                  <p className="text-xs text-ink-muted">Status</p>
                   <Badge className="mt-1" variant={detailTeam?.is_active ? "default" : "secondary"}>
                     {detailTeam?.is_active ? "Active" : "Inactive"}
                   </Badge>
@@ -493,7 +493,7 @@ export default function CleanerTeam() {
                 <Shield className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Verification Required</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-ink-muted">
                     All team members must complete a background check and ID verification to participate in team jobs.
                   </p>
                 </div>
@@ -541,9 +541,9 @@ export default function CleanerTeam() {
                   </div>
                 ) : (
                   <div className="py-8 text-center border rounded-lg border-dashed">
-                    <Users className="h-8 w-8 mx-auto text-muted-foreground/30 mb-2" />
-                    <p className="text-sm text-muted-foreground">No members yet</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <Users className="h-8 w-8 mx-auto text-ink-muted/30 mb-2" />
+                    <p className="text-sm text-ink-muted">No members yet</p>
+                    <p className="text-xs text-ink-muted mt-1">
                       Invite cleaners to join your team
                     </p>
                   </div>
@@ -552,7 +552,7 @@ export default function CleanerTeam() {
 
               {/* Created Date */}
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-ink-muted">
                   Created {detailTeam?.created_at && format(new Date(detailTeam.created_at), "MMMM d, yyyy")}
                 </p>
               </div>

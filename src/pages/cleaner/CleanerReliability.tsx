@@ -42,9 +42,9 @@ const TIER_CONFIG: Record<string, {
   },
   silver:   {
     gradient: "from-[hsl(220,15%,18%)] via-[hsl(220,15%,28%)] to-[hsl(220,20%,36%)]",
-    glow: "hsl(220,15%,55%)", ring: "hsl(220,15%,65%)", border: "border-border/60",
+    glow: "hsl(220,15%,55%)", ring: "hsl(220,15%,65%)", border: "border-hairline-soft",
     label: "Proven Specialist", emoji: "🛡️", next: "Top Performer", nextScore: 70,
-    tagBg: "bg-muted/20", tagText: "text-muted-foreground",
+    tagBg: "bg-muted/20", tagText: "text-ink-muted",
   },
   gold:     {
     gradient: "from-[hsl(38,90%,22%)] via-[hsl(42,92%,30%)] to-[hsl(45,95%,38%)]",
@@ -107,7 +107,7 @@ function MetricCard({ icon: Icon, label, weight, value, color, border, bg, delay
         </div>
         <div className="text-right">
           <p className="text-2xl font-poppins font-bold" style={{ color }}>{pct}%</p>
-          <p className="text-[10px] text-muted-foreground">{weight}% weight</p>
+          <p className="text-[10px] text-ink-muted">{weight}% weight</p>
         </div>
       </div>
       <p className="text-xs font-semibold text-foreground mb-2">{label}</p>
@@ -244,7 +244,7 @@ export default function CleanerReliability() {
                   <s.icon className={`h-5 w-5 ${s.iconCls}`} />
                 </div>
                 <div className="text-2xl font-poppins font-bold">{s.value}</div>
-                <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+                <p className="text-xs text-ink-muted mt-0.5">{s.label}</p>
               </motion.div>
             ))}
           </div>
@@ -319,11 +319,11 @@ export default function CleanerReliability() {
                 </div>
               ) : !events || events.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
-                  <div className="h-16 w-16 rounded-2xl border-2 border-border/40 bg-muted flex items-center justify-center mb-3">
-                    <AlertCircle className="h-8 w-8 text-muted-foreground/40" />
+                  <div className="h-16 w-16 rounded-2xl border-2 border-hairline-soft bg-muted flex items-center justify-center mb-3">
+                    <AlertCircle className="h-8 w-8 text-ink-muted/40" />
                   </div>
-                  <p className="font-bold text-muted-foreground">No events yet</p>
-                  <p className="text-xs text-muted-foreground mt-1">Complete jobs to build your track record</p>
+                  <p className="font-bold text-ink-muted">No events yet</p>
+                  <p className="text-xs text-ink-muted mt-1">Complete jobs to build your track record</p>
                 </div>
               ) : (
                 <div className="divide-y divide-border/30 max-h-96 overflow-y-auto">
@@ -342,18 +342,18 @@ export default function CleanerReliability() {
                           <span className="text-xl">{meta.emoji}</span>
                           <div>
                             <p className="text-sm font-bold">{meta.label}</p>
-                            <p className="text-xs text-muted-foreground">{format(new Date(event.created_at), "MMM d, yyyy")}</p>
+                            <p className="text-xs text-ink-muted">{format(new Date(event.created_at), "MMM d, yyyy")}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`text-sm font-poppins font-bold ${
-                            event.weight > 0 ? "text-success" : event.weight < 0 ? "text-destructive" : "text-muted-foreground"
+                            event.weight > 0 ? "text-success" : event.weight < 0 ? "text-destructive" : "text-ink-muted"
                           }`}>
                             {event.weight > 0 ? "+" : ""}{event.weight}
                           </span>
                           {!meta.positive && (
                             <Button variant="outline" size="sm"
-                              className="h-7 text-xs rounded-xl border-2 border-border/50 hover:border-primary/50"
+                              className="h-7 text-xs rounded-xl border border-hairline-soft/50 hover:border-primary/50"
                               onClick={() => { setDisputeEvent(event); setDisputeOpen(true); }}>
                               Dispute
                             </Button>
@@ -378,7 +378,7 @@ export default function CleanerReliability() {
               </div>
               <div>
                 <h2 className="font-bold">Penalties to Avoid</h2>
-                <p className="text-xs text-muted-foreground">These events will lower your score</p>
+                <p className="text-xs text-ink-muted">These events will lower your score</p>
               </div>
             </div>
             <div className="grid sm:grid-cols-3 gap-3">

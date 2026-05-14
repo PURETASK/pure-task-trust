@@ -33,7 +33,7 @@ export default function CleanerCertifications() {
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Award className="h-6 w-6 text-primary" /> Certifications
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">Upload certifications to boost your profile credibility</p>
+            <p className="text-ink-muted text-sm mt-1">Upload certifications to boost your profile credibility</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -53,7 +53,7 @@ export default function CleanerCertifications() {
         {isLoading ? (
           <div className="space-y-3">{[1,2].map(i => <Skeleton key={i} className="h-24 rounded-xl" />)}</div>
         ) : certifications.length === 0 ? (
-          <Card><CardContent className="py-12 text-center text-muted-foreground">No certifications yet. Add your professional credentials to stand out!</CardContent></Card>
+          <Card><CardContent className="py-12 text-center text-ink-muted">No certifications yet. Add your professional credentials to stand out!</CardContent></Card>
         ) : (
           <div className="space-y-3">
             {certifications.map(cert => (
@@ -71,7 +71,7 @@ export default function CleanerCertifications() {
                         <Badge className="bg-warning/15 text-warning"><Clock className="h-3 w-3 mr-1" />Pending</Badge>
                       )}
                     </div>
-                    {cert.description && <p className="text-xs text-muted-foreground mt-0.5">{cert.description}</p>}
+                    {cert.description && <p className="text-xs text-ink-muted mt-0.5">{cert.description}</p>}
                   </div>
                   <Button variant="ghost" size="sm" className="text-destructive" onClick={() => deleteCertification.mutateAsync(cert.id).then(() => toast.success('Removed'))}>
                     <Trash2 className="h-4 w-4" />
