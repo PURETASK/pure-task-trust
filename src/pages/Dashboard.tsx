@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import cleaningPattern from "@/assets/hero-cleaning-pattern.jpg";
 import { useClientHome } from "@/hooks/useClientHome";
 import { UpcomingCleaningCard } from "@/components/client-home/UpcomingCleaningCard";
 import { QuickRebookSection } from "@/components/client-home/QuickRebookSection";
@@ -34,16 +33,7 @@ export default function Dashboard() {
   const firstName = user?.name?.split(" ")[0] || "there";
 
   return (
-    <main className="flex-1 min-h-screen relative">
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <img 
-          src={cleaningPattern} 
-          alt="" 
-          className="w-full h-full object-contain opacity-30" 
-          aria-hidden="true" 
-        />
-        <div className="absolute inset-0 bg-background/70" />
-      </div>
+    <main className="flex-1 min-h-screen relative bg-app-canvas">
       <Helmet>
         <title>Home | PureTask</title>
         <meta name="description" content="Your PureTask client command center — manage cleanings, wallet, and messages." />
@@ -53,9 +43,11 @@ export default function Dashboard() {
 
         {/* ── GREETING ─────────────────────────────────────────────────── */}
         <motion.div {...fade(0)} className="mb-6 sm:mb-8">
-          <p className="text-sm text-muted-foreground font-medium">Welcome back 👋</p>
-          <h1 className="text-2xl sm:text-3xl font-poppins font-bold tracking-tight">
-            Hello, <span className="text-gradient-aero">{firstName}</span>
+          <p className="text-[10px] font-bold tracking-[0.08em] uppercase text-ink-faint mb-1">
+            Welcome back
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+            Hello, {firstName}
           </h1>
         </motion.div>
 
