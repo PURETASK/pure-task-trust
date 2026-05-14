@@ -107,7 +107,7 @@ export default function Messages() {
           </div>
 
           {!filteredThreads || filteredThreads.length === 0 && !search ? (
-            <Card className="py-12 sm:py-16 border-2 border-[hsl(var(--pt-purple))]/20 rounded-3xl">
+            <Card className="py-12 sm:py-16 border border-hairline-soft rounded-3xl">
               <CardContent className="text-center">
                 <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-3xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center mx-auto mb-4 sm:mb-5">
                   <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-[hsl(var(--pt-purple))]" />
@@ -120,7 +120,7 @@ export default function Messages() {
             <div className="flex flex-col md:grid md:grid-cols-5 gap-3 sm:gap-4 h-auto md:h-[680px]">
               
               {/* Thread List */}
-              <Card className={cn("md:col-span-2 overflow-hidden flex flex-col border-2 border-[hsl(var(--pt-purple))]/20 rounded-3xl", selectedThread ? 'hidden md:flex' : 'flex')}>
+              <Card className={cn("md:col-span-2 overflow-hidden flex flex-col border border-hairline-soft rounded-3xl", selectedThread ? 'hidden md:flex' : 'flex')}>
                 {/* Search */}
                 <div className="p-3 border-b">
                   <div className="relative">
@@ -178,7 +178,7 @@ export default function Messages() {
               </Card>
 
               {/* Chat Area */}
-              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[420px] sm:min-h-[500px] md:min-h-0 border-2 border-primary/20 rounded-3xl", !selectedThread && 'hidden md:flex')}>
+              <Card className={cn("md:col-span-3 flex flex-col overflow-hidden min-h-[420px] sm:min-h-[500px] md:min-h-0 border border-hairline-soft rounded-3xl", !selectedThread && 'hidden md:flex')}>
                 {selectedThread ? (
                   <>
                     {/* Chat Header */}
