@@ -70,6 +70,31 @@ export default function CleaningDetail() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
 
+  // Hooks must be called unconditionally — provide null-safe inputs.
+  const status = useStatusPresentation(job?.status ?? "pending");
+  const participants = useJobParticipants(job ?? null);
+  const auth = useJobAuthorization(job ? {
+    id: job.id,
+    status: job.status,
+    client_user_id: job.client?.user_id ?? null,
+    cleaner_user_id: job.cleaner?.user_id ?? null,
+    scheduled_start_at: job.scheduled_start_at,
+    check_in_at: job.check_in_at,
+    check_out_at: job.check_out_at,
+    actual_end_at: job.actual_end_at,
+    final_charge_credits: job.final_charge_credits,
+  } : null);
+  const computeFeeBucket = useFeeBucket();
+  const escrow = useEscrowCountdown(job ?? null);
+  const money = useJobMoney({
+    escrow_credits_reserved: job?.escrow_credits_reserved ?? 0,
+    estimated_hours: job?.estimated_hours ?? 0,
+    actual_hours: job?.actual_hours ?? null,
+    final_charge_credits: job?.final_charge_credits ?? null,
+    rush_fee_credits: (job as any)?.rush_fee_credits ?? null,
+    cleaner_tier: (job?.cleaner as any)?.tier ?? null,
+  });
+
   if (isLoading) {
     return (
       <main className="flex-1 py-6">
@@ -99,22 +124,9 @@ export default function CleaningDetail() {
     );
   }
 
-  const status = useStatusPresentation(job.status);
   const statusDescription = statusDescriptions[job.status] ?? "";
-  const participants = useJobParticipants(job);
   const cleanerName = participants.cleaner.fullName;
   const serviceType = (job.cleaning_type || 'standard').replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
-  const auth = useJobAuthorization({
-    id: job.id,
-    status: job.status,
-    client_user_id: job.client?.user_id ?? null,
-    cleaner_user_id: job.cleaner?.user_id ?? null,
-    scheduled_start_at: job.scheduled_start_at,
-    check_in_at: job.check_in_at,
-    check_out_at: job.check_out_at,
-    actual_end_at: job.actual_end_at,
-    final_charge_credits: job.final_charge_credits,
-  });
   const isApproved = job.status === 'completed' && job.final_charge_credits != null;
   const needsApproval = auth.canApprove;
   const canReschedule = auth.canReschedule;
@@ -122,16 +134,6 @@ export default function CleaningDetail() {
   const canReview = isApproved && !existingReview && auth.canReview;
   const hasReview = !!existingReview;
 
-  const computeFeeBucket = useFeeBucket();
-  const escrow = useEscrowCountdown(job ?? null);
-  const money = useJobMoney({
-    escrow_credits_reserved: job.escrow_credits_reserved,
-    estimated_hours: job.estimated_hours,
-    actual_hours: job.actual_hours,
-    final_charge_credits: job.final_charge_credits,
-    rush_fee_credits: (job as any).rush_fee_credits,
-    cleaner_tier: (job.cleaner as any)?.tier,
-  });
   // Calculate cancellation fee preview
   const hoursBefore = job.scheduled_start_at
     ? differenceInHours(new Date(job.scheduled_start_at), new Date())
@@ -175,7 +177,7 @@ export default function CleaningDetail() {
       setRescheduleDate(undefined);
       setRescheduleTime(undefined);
       setRescheduleReason("");
-    } catch {}
+    } catch { /* noop */ }
   };
 
   const handleCancel = async () => {
@@ -198,7 +200,7 @@ export default function CleaningDetail() {
         reviewText: reviewText || undefined,
       });
       setReviewOpen(false);
-    } catch {}
+    } catch { /* noop */ }
   };
 
   return (

@@ -62,7 +62,7 @@ export default function Messages() {
     try {
       await sendMessage(newMessage.trim());
       setNewMessage("");
-    } catch {}
+    } catch { /* noop */ }
   };
 
   const getOtherPartyName = (thread: MessageThread) => {

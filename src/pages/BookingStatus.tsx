@@ -61,6 +61,17 @@ export default function BookingStatus() {
   const queryClient = useQueryClient();
   const { rebook, isRebooking } = useAutoRebook();
   const { generateReceipt, isGenerating } = useReceipt();
+  const { user } = useAuth();
+  const participants = useJobParticipants(job ?? null);
+  const escrow = useEscrowCountdown(job ?? null);
+  const money = useJobMoney({
+    escrow_credits_reserved: job?.escrow_credits_reserved ?? 0,
+    estimated_hours: job?.estimated_hours ?? 0,
+    actual_hours: job?.actual_hours ?? null,
+    final_charge_credits: job?.final_charge_credits ?? null,
+    rush_fee_credits: (job as any)?.rush_fee_credits ?? null,
+    cleaner_tier: (job?.cleaner as any)?.tier ?? null,
+  });
 
   if (isLoading) {
     return (
@@ -97,24 +108,13 @@ export default function BookingStatus() {
   const timelineStep = getTimelineStep(effectiveStatusKey);
   const StatusIcon = config.icon;
 
-  const participants = useJobParticipants(job ?? null);
   const cleanerName = participants.cleaner.fullName;
-  const money = useJobMoney({
-    escrow_credits_reserved: job.escrow_credits_reserved,
-    estimated_hours: job.estimated_hours,
-    actual_hours: job.actual_hours,
-    final_charge_credits: job.final_charge_credits,
-    rush_fee_credits: (job as any).rush_fee_credits,
-    cleaner_tier: (job.cleaner as any)?.tier,
-  });
   const formattedDate = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "EEEE, MMMM d, yyyy") : "To be scheduled";
   const formattedTime = job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "h:mm a") : "TBD";
   const addressLine = (job as any).address_line1
     ? `${(job as any).address_line1}${(job as any).address_city ? ", " + (job as any).address_city : ""}`
     : (job as any).service_address || "Address on file";
   const canCancel = ["created", "pending", "confirmed"].includes(job.status);
-  const escrow = useEscrowCountdown(job ?? null);
-  const { user } = useAuth();
 
   const handleConfirmCancel = async () => {
     if (!user?.id || !id) return;

@@ -31,7 +31,7 @@ export function useIsTouchDevice() {
     setIsTouch(
       'ontouchstart' in window ||
       navigator.maxTouchPoints > 0 ||
-      // @ts-ignore - for older browsers
+      // @ts-expect-error - msMaxTouchPoints is IE/Edge legacy, not in lib.dom
       navigator.msMaxTouchPoints > 0
     );
   }, []);

@@ -21,6 +21,9 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      // `any` is used pervasively for Supabase row shims and 3rd-party callbacks.
+      // Downgrade to warn so it shows up in editor but doesn't fail CI.
+      "@typescript-eslint/no-explicit-any": "warn",
       // Wave 1 — primitive boundary enforcement.
       // Block raw reads of money fields outside useJobMoney + allowlisted boundary files.
       "no-restricted-syntax": [
@@ -36,6 +39,43 @@ export default tseslint.config(
             "Do not read final_charge_credits directly. Use useJobMoney(job).finalCharge — see docs/REFACTOR_WAVE_1_2_AUDIT.md.",
         },
       ],
+    },
+  },
+  // Tests: relax rules. Tests intentionally use `any` for mocks/factories,
+  // use vitest triple-slash references, and may touch raw money columns
+  // when verifying database invariants.
+  {
+    files: ["tests/**/*.{ts,tsx}", "src/**/__tests__/**/*.{ts,tsx}", "src/test/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/triple-slash-reference": "off",
+      "no-restricted-syntax": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "prefer-const": "off",
+    },
+  },
+  // Edge functions run server-side with the service role key — they ARE the
+  // system. They legitimately read/write the raw money columns.
+  {
+    files: ["supabase/functions/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+    },
+  },
+  // Generated/vendored shadcn UI primitives often have empty interfaces
+  // that exist purely to mark prop slots — that's intentional, not dead code.
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+  },
+  // Tailwind config legitimately uses require() for plugins.
+  {
+    files: ["tailwind.config.ts", "*.config.{js,ts}"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   // Allowlist: files that legitimately bridge the database boundary

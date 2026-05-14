@@ -56,7 +56,7 @@ export default function CleanerMessages() {
     try {
       await sendMessage(newMessage.trim());
       setNewMessage("");
-    } catch {}
+    } catch { /* noop */ }
   };
 
   const handleKey = (e: React.KeyboardEvent) => {

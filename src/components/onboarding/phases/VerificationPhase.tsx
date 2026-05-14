@@ -131,7 +131,7 @@ export function VerificationPhase({
                 onClick={async () => {
                   if (selectedFile && docType) {
                     try { await onSaveIdDocument({ file: selectedFile, documentType: docType }); setSub('consent'); }
-                    catch {} // error already toasted
+                    catch { /* error already toasted */ }
                   }
                 }}
                 disabled={!selectedFile || !docType || isSavingIdDocument}
@@ -189,7 +189,7 @@ export function VerificationPhase({
               <Button
                 onClick={async () => {
                   try { await onSaveBackgroundConsent(); onComplete(); }
-                  catch {} // error already toasted
+                  catch { /* error already toasted */ }
                 }}
                 disabled={!fcra || !accurate || isSavingBackgroundConsent}
                 className={`flex-1 ${btnCls}`} style={gradientBtn}

@@ -87,8 +87,6 @@ export default function CleanerEarnings() {
       if (data?.error) throw new Error(data.error);
       toast.success(`Payout of $${data.amount?.toFixed(2)} processed!`);
       refetchPayouts?.();
-    } catch (error: any) {
-      throw error;
     } finally {
       setIsProcessingPayout(false);
     }
