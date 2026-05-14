@@ -83,7 +83,7 @@ export function StepAccess({ step, total, data, saving, onChange, onBack, onNext
         </FlowField>
 
         {data.has_pets && (
-          <div className="space-y-5 rounded-2xl bg-aero-bg border border-aero p-4 sm:p-5">
+          <div className="space-y-5 rounded-2xl bg-aero-bg border border-hairline-soft p-4 sm:p-5">
             <FlowField label="Pet details" optional helper="Type, name, temperament, where they'll be during the visit.">
               <FlowTextarea
                 value={data.pet_info ?? ""}

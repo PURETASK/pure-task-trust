@@ -2,11 +2,11 @@ import { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 const baseInputClasses = cn(
-  "w-full rounded-2xl border border-aero bg-aero-card",
-  "px-4 py-3 text-base text-foreground placeholder:text-aero-soft/70",
+  "w-full rounded-2xl border border-hairline-soft bg-app-surface",
+  "px-4 py-3 text-base text-foreground placeholder:text-ink-muted/70",
   "shadow-[inset_0_1px_2px_hsl(214_30%_85%/0.4)]",
   "transition-all duration-150",
-  "focus-visible:outline-none focus-visible:border-aero-cyan focus-visible:ring-2 focus-visible:ring-aero-cyan/30",
+  "focus-visible:outline-none focus-visible:border-hairline-soft-cyan focus-visible:ring-2 focus-visible:ring-aero-cyan/30",
   "disabled:opacity-50 disabled:cursor-not-allowed"
 );
 

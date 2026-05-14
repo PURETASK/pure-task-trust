@@ -27,7 +27,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-aero bg-aero-bg/40 p-4 sm:p-5">
+    <div className="rounded-2xl border border-hairline-soft bg-aero-bg/40 p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-poppins font-semibold text-base">{title}</h3>
         <button
@@ -47,7 +47,7 @@ function Row({ label, value }: { label: string; value?: ReactNode }) {
   if (!value && value !== 0) return null;
   return (
     <div className="flex gap-3">
-      <span className="text-aero-soft min-w-32 sm:min-w-36">{label}</span>
+      <span className="text-ink-muted min-w-32 sm:min-w-36">{label}</span>
       <span className="text-foreground">{value}</span>
     </div>
   );
@@ -112,7 +112,7 @@ export function StepReview({ step, total, state, saving, onBack, onConfirm, onEd
           {prefs.allergy_notes && <Row label="Allergies" value={prefs.allergy_notes} />}
         </Section>
 
-        <div className="flex items-start gap-2 rounded-2xl bg-gradient-aero-soft border border-aero p-4 text-sm">
+        <div className="flex items-start gap-2 rounded-2xl bg-gradient-aero-soft border border-hairline-soft p-4 text-sm">
           <CheckCircle2 className="h-5 w-5 text-aero-trust shrink-0 mt-0.5" />
           <p className="text-foreground/80">
             Your profile is saved. You&apos;ll be able to book a cleaning next, and we&apos;ll prefill

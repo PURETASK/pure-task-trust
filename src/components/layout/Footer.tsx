@@ -21,7 +21,7 @@ function FooterLink({ to, children, className }: { to: string; children: React.R
 function GuestFooter() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="border-t border-aero bg-gradient-to-b from-background to-muted/30">
+    <footer className="border-t border-hairline-soft bg-gradient-to-b from-background to-muted/30">
       {/* CTA Banner */}
       <div className="relative overflow-hidden bg-gradient-aero py-12">
         <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-aero-cyan/30 blur-3xl" />
@@ -96,13 +96,13 @@ function GuestFooter() {
           ))}
         </div>
 
-        <div className="border-t border-aero pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-hairline-soft pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <FooterLink to="/" className="flex items-center gap-2">
             <img src={ptMark} alt="PureTask" className="h-8 w-8 object-contain" />
             <span className="font-poppins font-bold text-lg text-aero-trust tracking-tight">PureTask</span>
           </FooterLink>
           <div className="flex items-center gap-3 flex-wrap justify-center">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aero-cyan/10 border border-aero-cyan/30">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aero-cyan/10 border border-hairline-soft-cyan/30">
               <Shield className="h-3.5 w-3.5 text-aero-trust" />
               <span className="text-xs font-medium text-aero-trust">Background Checked</span>
             </div>
