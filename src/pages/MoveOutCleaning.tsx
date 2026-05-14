@@ -42,7 +42,7 @@ export default function MoveOutCleaning() {
               Leave it{" "}
               <span className="bg-gradient-to-r from-warning to-[hsl(var(--pt-orange))] bg-clip-text text-transparent">spotless</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+            <p className="text-lg sm:text-xl text-ink-muted max-w-2xl mx-auto mb-8">
               Comprehensive end-of-tenancy cleaning that covers every cabinet, appliance, wall, and fixture. Photo-documented so you have proof for your landlord or new buyer.
             </p>
             <Button size="lg" asChild className="rounded-2xl h-14 px-8 shadow-elevated">
@@ -58,7 +58,7 @@ export default function MoveOutCleaning() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {MOVEOUT_TASKS.map((task, i) => (
               <motion.div key={task} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}>
-                <Card className="border-2 border-border/50 rounded-2xl">
+                <Card className="border border-hairline-soft/50 rounded-2xl">
                   <CardContent className="p-4 flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                     <span className="text-sm font-medium">{task}</span>
@@ -74,10 +74,10 @@ export default function MoveOutCleaning() {
         <div className="container text-center max-w-2xl mx-auto">
           <Home className="h-12 w-12 text-warning mx-auto mb-4" />
           <h2 className="text-3xl font-bold mb-4">Perfect for tenants & landlords</h2>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-ink-muted mb-4">
             Get your deposit back or prepare a property for new tenants. Our cleaners document every room with timestamped photos so you have verifiable proof of condition.
           </p>
-          <p className="text-muted-foreground">
+          <p className="text-ink-muted">
             Credits are held in escrow until you approve the work. If anything is missed, open a dispute within 24 hours.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function MoveOutCleaning() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-warning/5 via-background to-background">
         <div className="container text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready to move out stress-free?</h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Book online in 60 seconds. Verified cleaner. Photo proof. Escrow protection.</p>
+          <p className="text-ink-muted mb-8 max-w-lg mx-auto">Book online in 60 seconds. Verified cleaner. Photo proof. Escrow protection.</p>
           <Button size="lg" asChild className="rounded-2xl h-14 px-10 shadow-elevated">
             <Link to="/book">Book Now <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>

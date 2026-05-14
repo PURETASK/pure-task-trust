@@ -25,14 +25,14 @@ export default function HelpCategory() {
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16" />)}</div>
       ) : filtered.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No articles in this category yet.</p>
+        <p className="text-ink-muted text-sm">No articles in this category yet.</p>
       ) : (
         <div className="space-y-2">
           {filtered.map(a => (
             <Link key={a.id} to={`/help/articles/${a.slug}`}>
               <Card className="p-4 hover:border-primary/50 transition-all">
                 <p className="font-semibold">{a.title}</p>
-                {a.summary && <p className="text-sm text-muted-foreground mt-1">{a.summary}</p>}
+                {a.summary && <p className="text-sm text-ink-muted mt-1">{a.summary}</p>}
               </Card>
             </Link>
           ))}

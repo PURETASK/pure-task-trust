@@ -51,7 +51,7 @@ export default function FavoriteCleaners() {
                 </div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-poppins font-bold">My Favorite Cleaners</h1>
-                  <p className="text-muted-foreground mt-1">{filtered.length} saved professional{filtered.length !== 1 ? 's' : ''}</p>
+                  <p className="text-ink-muted mt-1">{filtered.length} saved professional{filtered.length !== 1 ? 's' : ''}</p>
                 </div>
               </div>
               <Button asChild className="gap-2">
@@ -63,7 +63,7 @@ export default function FavoriteCleaners() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
           <Input placeholder="Search your favorites..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-12 h-12 rounded-2xl border-2" />
         </div>
 
@@ -78,7 +78,7 @@ export default function FavoriteCleaners() {
             <div className="text-center py-20 rounded-3xl border-2 border-dashed border-border">
               <Heart className="h-20 w-20 mx-auto text-destructive/20 fill-destructive/10 mb-6" />
               <h2 className="text-2xl font-poppins font-bold mb-3">{searchQuery ? 'No matches found' : 'No favorites yet'}</h2>
-              <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+              <p className="text-ink-muted mb-6 max-w-sm mx-auto">
                 {searchQuery ? 'Try a different search term' : 'Save cleaners you love for quick rebooking'}
               </p>
               {!searchQuery && <Button asChild size="lg"><Link to="/discover"><Search className="h-4 w-4 mr-2" />Browse Cleaners</Link></Button>}

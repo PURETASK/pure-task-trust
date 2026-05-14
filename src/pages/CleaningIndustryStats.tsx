@@ -61,7 +61,7 @@ const HEADLINE_STATS = [
 ];
 
 const EARNINGS_DATA = [
-  { tier: 'Entry (Bronze)', hourly: '$20–30', monthly: '$1,600–2,400', annual: '$19K–29K', fee: '20%', borderClass: 'border-border/50', badgeClass: 'bg-muted/40 text-muted-foreground border-border/40' },
+  { tier: 'Entry (Bronze)', hourly: '$20–30', monthly: '$1,600–2,400', annual: '$19K–29K', fee: '20%', borderClass: 'border-border/50', badgeClass: 'bg-muted/40 text-ink-muted border-hairline-soft' },
   { tier: 'Mid (Silver)', hourly: '$20–40', monthly: '$1,600–3,200', annual: '$19K–38K', fee: '18%', borderClass: 'border-primary/30', badgeClass: 'bg-primary/10 text-primary border-primary/30' },
   { tier: 'Experienced (Gold)', hourly: '$20–50', monthly: '$1,600–4,000', annual: '$19K–48K', fee: '17%', borderClass: 'border-warning/30', badgeClass: 'bg-warning/10 text-warning border-warning/30' },
   { tier: 'Top (Platinum)', hourly: '$20–65', monthly: '$1,600–5,200', annual: '$19K–62K', fee: '15%', borderClass: 'border-[hsl(var(--pt-purple))]/30', badgeClass: 'bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))] border-[hsl(var(--pt-purple))]/30' },
@@ -143,7 +143,7 @@ function CopyStatButton({ text }: { text: string }) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <button onClick={handle} className="ml-auto shrink-0 p-1.5 rounded-xl border-2 border-border/40 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground" title="Copy stat">
+    <button onClick={handle} className="ml-auto shrink-0 p-1.5 rounded-xl border-2 border-hairline-soft hover:bg-muted transition-colors text-ink-muted hover:text-foreground" title="Copy stat">
       {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
   );
@@ -195,9 +195,9 @@ export default function CleaningIndustryStats() {
             <h1 className="text-4xl sm:text-5xl font-bold mb-4 leading-tight">
               Cleaning Industry<br />
               <span className="text-primary">Statistics & Market Data</span><br />
-              <span className="text-2xl sm:text-3xl text-muted-foreground font-semibold">2025</span>
+              <span className="text-2xl sm:text-3xl text-ink-muted font-semibold">2025</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mb-6">
+            <p className="text-lg text-ink-muted max-w-2xl mb-6">
               Comprehensive data on the US residential cleaning market — earnings, pricing benchmarks, consumer behavior, and platform economy trends.
             </p>
             <div className="flex flex-wrap gap-3">
@@ -235,8 +235,8 @@ export default function CleaningIndustryStats() {
                     </div>
                     <p className={`text-4xl font-poppins font-bold mb-1 ${s.valueColor}`}>{s.value}</p>
                     <p className="font-bold text-sm mb-3">{s.label}</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-3">{s.context}</p>
-                    <p className="text-xs text-muted-foreground/60 italic">Source: {s.source}</p>
+                    <p className="text-sm text-ink-muted leading-relaxed mb-3">{s.context}</p>
+                    <p className="text-xs text-ink-muted/60 italic">Source: {s.source}</p>
                   </div>
                 </motion.div>
               );
@@ -252,24 +252,24 @@ export default function CleaningIndustryStats() {
             </div>
             <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Cleaner Earnings by Experience Tier</h2>
           </div>
-          <p className="text-muted-foreground mb-5 text-sm ml-1">Based on PureTask platform data and industry benchmarks. Rates reflect net take-home after platform fees.</p>
+          <p className="text-ink-muted mb-5 text-sm ml-1">Based on PureTask platform data and industry benchmarks. Rates reflect net take-home after platform fees.</p>
           <div className="space-y-3">
             {EARNINGS_DATA.map((row) => (
               <div key={row.tier} className={`rounded-2xl border-2 ${row.borderClass} bg-card p-4 flex flex-wrap sm:flex-nowrap items-center gap-3`}>
                 <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${row.badgeClass} flex-shrink-0`}>{row.tier}</span>
                 <div className="flex flex-wrap gap-x-6 gap-y-1 flex-1 text-sm">
-                  <div><span className="text-muted-foreground text-xs">Hourly</span><p className="font-bold text-success">{row.hourly}</p></div>
-                  <div><span className="text-muted-foreground text-xs">Monthly</span><p className="font-semibold">{row.monthly}</p></div>
-                  <div><span className="text-muted-foreground text-xs">Annual</span><p className="font-bold text-foreground">{row.annual}</p></div>
+                  <div><span className="text-ink-muted text-xs">Hourly</span><p className="font-bold text-success">{row.hourly}</p></div>
+                  <div><span className="text-ink-muted text-xs">Monthly</span><p className="font-semibold">{row.monthly}</p></div>
+                  <div><span className="text-ink-muted text-xs">Annual</span><p className="font-bold text-foreground">{row.annual}</p></div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <span className="text-xs text-muted-foreground block">Platform fee</span>
-                  <span className="text-sm font-bold text-muted-foreground">{row.fee}</span>
+                  <span className="text-xs text-ink-muted block">Platform fee</span>
+                  <span className="text-sm font-bold text-ink-muted">{row.fee}</span>
                 </div>
               </div>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground mt-3">
+          <p className="text-xs text-ink-muted mt-3">
             * Assumes 30 working hours/week, 48 weeks/year. Actual results vary.{' '}
             <Link to="/earnings-calculator" className="text-primary hover:underline font-semibold">Use the earnings calculator</Link> for personalized estimates.
           </p>
@@ -283,20 +283,20 @@ export default function CleaningIndustryStats() {
             </div>
             <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">National Average Cleaning Prices (2025)</h2>
           </div>
-          <p className="text-muted-foreground mb-5 text-sm ml-1">National US benchmarks aggregated from HomeAdvisor, Angi, Thumbtack, and PureTask platform data.</p>
+          <p className="text-ink-muted mb-5 text-sm ml-1">National US benchmarks aggregated from HomeAdvisor, Angi, Thumbtack, and PureTask platform data.</p>
           <div className="space-y-3">
             {PRICING_DATA.map((row) => {
               const pct = Math.round(((row.avg - row.low) / (row.high - row.low)) * 100);
               return (
-                <div key={row.service} className="rounded-2xl border-2 border-border/50 bg-card p-4">
+                <div key={row.service} className="rounded-2xl border border-hairline-soft/50 bg-card p-4">
                   <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <span className="font-semibold text-sm">{row.service}</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground text-xs">${row.low}–${row.high}</span>
+                      <span className="text-ink-muted text-xs">${row.low}–${row.high}</span>
                       <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border bg-primary/10 text-primary border-primary/30`}>avg ${row.avg}</span>
                     </div>
                   </div>
-                  <div className={`relative h-3 ${row.trackBg} rounded-full overflow-hidden border border-border/30`}>
+                  <div className={`relative h-3 ${row.trackBg} rounded-full overflow-hidden border border-hairline-soft/30`}>
                     <div
                       className={`absolute inset-y-0 ${row.color} rounded-full opacity-80`}
                       style={{ width: `${pct}%`, left: `${((row.low) / row.high) * 30}%` }}
@@ -306,7 +306,7 @@ export default function CleaningIndustryStats() {
               );
             })}
           </div>
-          <p className="text-xs text-muted-foreground mt-3">
+          <p className="text-xs text-ink-muted mt-3">
             Prices vary by city, home condition, and cleaner tier.{' '}
             <Link to="/cost-estimator" className="text-primary hover:underline font-semibold">Get a personalized estimate →</Link>
           </p>
@@ -325,8 +325,8 @@ export default function CleaningIndustryStats() {
               <div key={b.stat} className={`flex items-start gap-3 p-4 rounded-2xl border-2 ${b.borderClass} ${b.bgClass}`}>
                 <div className="flex-1">
                   <p className={`text-3xl font-poppins font-bold mb-1 ${b.statColor}`}>{b.stat}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
-                  <p className="text-xs text-muted-foreground/50 italic mt-2">{b.source}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed">{b.desc}</p>
+                  <p className="text-xs text-ink-muted/50 italic mt-2">{b.source}</p>
                 </div>
                 <CopyStatButton text={`${b.stat} ${b.desc} (${b.source})`} />
               </div>
@@ -353,7 +353,7 @@ export default function CleaningIndustryStats() {
                     {section.stats.map((stat, i) => (
                       <div key={i} className="flex items-start gap-2.5 text-sm">
                         <div className={`h-2 w-2 rounded-full ${section.dotColor} mt-1.5 shrink-0`} />
-                        <p className="text-muted-foreground leading-relaxed">{stat}</p>
+                        <p className="text-ink-muted leading-relaxed">{stat}</p>
                       </div>
                     ))}
                   </div>
@@ -372,17 +372,17 @@ export default function CleaningIndustryStats() {
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-lg mb-2">How to Cite This Page</h3>
-                <p className="text-sm text-muted-foreground mb-4">Feel free to reference or cite this data in your articles, blog posts, or research. Please attribute the source as shown below:</p>
-                <div className="bg-background rounded-2xl border-2 border-border/50 p-4 font-mono text-xs text-muted-foreground leading-relaxed mb-4 relative group">
+                <p className="text-sm text-ink-muted mb-4">Feel free to reference or cite this data in your articles, blog posts, or research. Please attribute the source as shown below:</p>
+                <div className="bg-background rounded-2xl border border-hairline-soft/50 p-4 font-mono text-xs text-ink-muted leading-relaxed mb-4 relative group">
                   PureTask Research. "Cleaning Industry Statistics & Market Data 2025." PureTask, {UPDATED}. {pageUrl}
                   <button
                     onClick={() => navigator.clipboard.writeText(`PureTask Research. "Cleaning Industry Statistics & Market Data 2025." PureTask, ${UPDATED}. ${pageUrl}`)}
-                    className="absolute top-3 right-3 p-1.5 rounded-xl border-2 border-border/40 bg-muted hover:bg-border transition-colors opacity-0 group-hover:opacity-100"
+                    className="absolute top-3 right-3 p-1.5 rounded-xl border-2 border-hairline-soft bg-muted hover:bg-border transition-colors opacity-0 group-hover:opacity-100"
                   >
                     <Copy className="h-3.5 w-3.5" />
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">All statistics are sourced from publicly available research unless marked as PureTask internal data. Sources include IBISWorld, BLS, Statista, HomeAdvisor, Angi, Thumbtack, and others as noted.</p>
+                <p className="text-xs text-ink-muted">All statistics are sourced from publicly available research unless marked as PureTask internal data. Sources include IBISWorld, BLS, Statista, HomeAdvisor, Angi, Thumbtack, and others as noted.</p>
               </div>
             </div>
           </div>
@@ -395,7 +395,7 @@ export default function CleaningIndustryStats() {
             {FREE_TOOLS.map(({ title, desc, href, cta, borderClass, bgClass, color }) => (
               <div key={title} className={`rounded-3xl border-2 ${borderClass} ${bgClass} p-5`}>
                 <h3 className={`font-bold mb-2 ${color}`}>{title}</h3>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{desc}</p>
+                <p className="text-sm text-ink-muted mb-4 leading-relaxed">{desc}</p>
                 <Link to={href} className={`text-sm font-bold ${color} hover:underline flex items-center gap-1.5`}>
                   {cta} <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
@@ -408,7 +408,7 @@ export default function CleaningIndustryStats() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/6 via-background to-[hsl(var(--pt-purple))]/5 p-8 sm:p-12 text-center">
             <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-2">Writing about the cleaning industry?</h2>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            <p className="text-ink-muted mb-6 max-w-md mx-auto">
               Link to this page for accurate, up-to-date statistics. We update it quarterly and welcome corrections or additional data sources.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">

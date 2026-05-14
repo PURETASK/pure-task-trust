@@ -270,7 +270,7 @@ function RoomAccordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="rounded-2xl border border-border/60 overflow-hidden bg-card">
+    <div className="rounded-2xl border border-hairline-soft overflow-hidden bg-card">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-muted/40 transition-colors"
@@ -279,15 +279,15 @@ function RoomAccordion({
           <span className="text-lg leading-none">{section.icon}</span>
           <span className="font-semibold text-sm text-foreground">{section.room}</span>
           <span className={cn(
-            'text-[10px] font-bold rounded-full px-2 py-0.5 bg-muted text-muted-foreground'
+            'text-[10px] font-bold rounded-full px-2 py-0.5 bg-muted text-ink-muted'
           )}>
             {section.tasks.length} tasks
           </span>
         </div>
         {open ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+          <ChevronUp className="h-4 w-4 text-ink-muted flex-shrink-0" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+          <ChevronDown className="h-4 w-4 text-ink-muted flex-shrink-0" />
         )}
       </button>
 
@@ -300,11 +300,11 @@ function RoomAccordion({
             transition={{ duration: 0.22, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <ul className="px-4 pb-4 pt-1 space-y-2.5 border-t border-border/40">
+            <ul className="px-4 pb-4 pt-1 space-y-2.5 border-t border-hairline-soft">
               {section.tasks.map((task, i) => (
                 <li key={i} className="flex items-start gap-2.5">
                   <span className={cn('mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0', dotClass)} />
-                  <span className="text-sm text-muted-foreground leading-relaxed">{task}</span>
+                  <span className="text-sm text-ink-muted leading-relaxed">{task}</span>
                 </li>
               ))}
             </ul>
@@ -368,7 +368,7 @@ export default function CleaningScope() {
               What's Included in<br />
               <span className="text-primary">Your Cleaning</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mb-7">
+            <p className="text-lg text-ink-muted max-w-xl mb-7">
               Tap a service type to explore what tasks are covered — room by room, nothing hidden.
             </p>
 
@@ -396,7 +396,7 @@ export default function CleaningScope() {
                   'flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap border-2 transition-all duration-150 flex-shrink-0',
                   activeId === s.id
                     ? cn(s.accentClass, 'border-transparent shadow-md')
-                    : 'border-border/50 text-muted-foreground hover:border-border hover:text-foreground bg-background'
+                    : 'border-border/50 text-ink-muted hover:border-border hover:text-foreground bg-background'
                 )}
               >
                 <span className="text-base leading-none">{s.emoji}</span>
@@ -427,10 +427,10 @@ export default function CleaningScope() {
                   <span className="text-3xl">{active.emoji}</span>
                   <div>
                     <h2 className="font-poppins font-bold text-xl text-foreground">{active.label}</h2>
-                    <p className="text-sm text-muted-foreground">{active.tagline}</p>
+                    <p className="text-sm text-ink-muted">{active.tagline}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground bg-background/60 rounded-xl px-3 py-1.5">
+                <div className="flex items-center gap-1.5 text-sm font-semibold text-ink-muted bg-background/60 rounded-xl px-3 py-1.5">
                   <Clock className="h-4 w-4" />
                   {active.duration}
                 </div>
@@ -457,7 +457,7 @@ export default function CleaningScope() {
                   </div>
                   <ul className="space-y-2">
                     {active.notIncluded.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-ink-muted">
                         <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-destructive/50 flex-shrink-0" />
                         {item}
                       </li>
@@ -485,7 +485,7 @@ export default function CleaningScope() {
                 <span className="text-2xl flex-shrink-0">{note.icon}</span>
                 <div>
                   <p className="font-semibold text-sm mb-1">{note.title}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{note.body}</p>
+                  <p className="text-xs text-ink-muted leading-relaxed">{note.body}</p>
                 </div>
               </div>
             ))}

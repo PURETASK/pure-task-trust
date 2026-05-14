@@ -63,7 +63,7 @@ export default function RoleSelection() {
             One last step
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">How will you use PureTask?</h1>
-          <p className="text-xl text-muted-foreground">Choose your role — you can only pick one.</p>
+          <p className="text-xl text-ink-muted">Choose your role — you can only pick one.</p>
         </div>
 
         {/* Role cards */}
@@ -76,7 +76,7 @@ export default function RoleSelection() {
               className={`w-full text-left rounded-3xl border-2 overflow-hidden transition-all ${
                 selectedRole === "client"
                   ? "border-primary shadow-elevated"
-                  : "border-border/60 hover:border-primary/50 hover:shadow-card"
+                  : "border-hairline-soft hover:border-primary/50 hover:shadow-card"
               }`}
             >
               {/* Hero image */}
@@ -97,7 +97,7 @@ export default function RoleSelection() {
               {/* Content */}
               <div className="p-6 bg-card">
                 <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-1">I need cleaning</h2>
-                <p className="text-muted-foreground mb-5">Book verified, background-checked cleaners for your home or property.</p>
+                <p className="text-ink-muted mb-5">Book verified, background-checked cleaners for your home or property.</p>
                 <div className="space-y-2.5 mb-5">
                   {CLIENT_PERKS.map((perk, i) => (
                     <div key={i} className="flex items-center gap-2.5 text-sm">
@@ -124,7 +124,7 @@ export default function RoleSelection() {
               className={`w-full text-left rounded-3xl border-2 overflow-hidden transition-all ${
                 selectedRole === "cleaner"
                   ? "border-success shadow-elevated"
-                  : "border-border/60 hover:border-success/50 hover:shadow-card"
+                  : "border-hairline-soft hover:border-success/50 hover:shadow-card"
               }`}
             >
               <div className="relative h-48 overflow-hidden">
@@ -143,7 +143,7 @@ export default function RoleSelection() {
 
               <div className="p-6 bg-card">
                 <h2 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero mb-1">I'm a cleaner</h2>
-                <p className="text-muted-foreground mb-5">Join our marketplace and build a sustainable cleaning career on your own terms.</p>
+                <p className="text-ink-muted mb-5">Join our marketplace and build a sustainable cleaning career on your own terms.</p>
                 <div className="space-y-2.5 mb-5">
                   {CLEANER_PERKS.map((perk, i) => (
                     <div key={i} className="flex items-center gap-2.5 text-sm">
@@ -163,7 +163,7 @@ export default function RoleSelection() {
           </motion.div>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-8">
+        <p className="text-center text-sm text-ink-muted mt-8">
           Your role cannot be changed after selection.{" "}
           <Link to="/help" className="text-primary hover:underline">Need help?</Link>
         </p>

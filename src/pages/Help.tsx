@@ -35,7 +35,7 @@ export default function Help() {
             <h1 className="text-xl sm:text-3xl font-bold leading-tight">
               Hi {user?.name?.split(" ")[0] || "there"}, how can we help?
             </h1>
-            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+            <p className="text-ink-muted text-xs sm:text-sm mt-1">
               Ask the AI, browse articles, or talk to a human.
             </p>
           </div>
@@ -63,7 +63,7 @@ export default function Help() {
           <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-[hsl(var(--pt-amber-deep))] text-sm sm:text-base">Need a human?</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-ink-muted mt-1">
                 Our support team replies within 2 hours during business days.
               </p>
             </div>

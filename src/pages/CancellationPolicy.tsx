@@ -35,7 +35,7 @@ export default function CancellationPolicy() {
         <h1 className="text-4xl md:text-5xl font-poppins font-bold text-gradient-aero mb-2">
           Cancellation Policy
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           Last updated: November 9, 2024
         </p>
       </motion.div>
@@ -62,18 +62,18 @@ export default function CancellationPolicy() {
           <Clock className="w-6 h-6 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Client Cancellation Fees</h2>
         </div>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-ink-muted mb-6">
           Cancellation fees are based on how much notice you give before the scheduled cleaning time:
         </p>
 
         {/* Fee Cards */}
         <div className="space-y-4">
           {/* Free Cancellation */}
-          <div className="flex items-start justify-between p-6 rounded-lg border border-border bg-background">
+          <div className="flex items-start justify-between p-6 rounded-lg border border-hairline-soft bg-background">
             <div>
               <h3 className="text-xl font-bold text-success mb-1">Free Cancellation</h3>
               <p className="text-success mb-2">More than 24 hours before booking</p>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-ink-muted text-sm">
                 Full refund of escrowed credits back to your account
               </p>
             </div>
@@ -86,7 +86,7 @@ export default function CancellationPolicy() {
               <div>
                 <h3 className="text-xl font-bold text-warning mb-1">Light Fee</h3>
                 <p className="text-warning mb-2">6–24 hours before booking</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-ink-muted text-sm">
                   25% of booking amount charged, remaining 75% refunded
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function CancellationPolicy() {
               <div>
                 <h3 className="text-xl font-bold text-warning mb-1">Partial Fee</h3>
                 <p className="text-warning mb-2">2–6 hours before booking</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-ink-muted text-sm">
                   Half of booking amount charged, remaining 50% refunded
                 </p>
               </div>
@@ -109,11 +109,11 @@ export default function CancellationPolicy() {
           </Card>
 
           {/* Full Fee */}
-          <div className="flex items-start justify-between p-6 rounded-lg border border-border bg-background">
+          <div className="flex items-start justify-between p-6 rounded-lg border border-hairline-soft bg-background">
             <div>
               <h3 className="text-xl font-bold text-destructive mb-1">Full Fee</h3>
               <p className="text-destructive mb-2">Less than 2 hours before booking or no-show</p>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-ink-muted text-sm">
                 Full booking amount charged, no refund (cleaner has reserved the time)
               </p>
             </div>
@@ -213,7 +213,7 @@ export default function CancellationPolicy() {
 
         <Card className="mt-6 bg-muted/50 border-primary/20">
           <CardContent className="p-4">
-            <p className="text-muted-foreground">
+            <p className="text-ink-muted">
               <strong className="text-foreground">Pro tip:</strong> Save your grace cancellations for true emergencies. For planned changes, try to give 24+ hours notice for free 
               cancellation.
             </p>
@@ -232,26 +232,26 @@ export default function CancellationPolicy() {
           <Users className="w-6 h-6 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Cleaner Cancellations</h2>
         </div>
-        <p className="text-muted-foreground mb-4">
+        <p className="text-ink-muted mb-4">
           When a cleaner cancels a confirmed booking:
         </p>
 
         <div className="space-y-3">
           <div className="flex items-start gap-3">
             <DollarSign className="w-5 h-5 text-success mt-0.5 shrink-0" />
-            <p><strong className="text-foreground">No charge to client</strong> <span className="text-muted-foreground">- Full refund of escrowed credits</span></p>
+            <p><strong className="text-foreground">No charge to client</strong> <span className="text-ink-muted">- Full refund of escrowed credits</span></p>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-            <p><strong className="text-foreground">Reliability score impact</strong> <span className="text-muted-foreground">- Cancellations affect cleaner's rating</span></p>
+            <p><strong className="text-foreground">Reliability score impact</strong> <span className="text-ink-muted">- Cancellations affect cleaner's rating</span></p>
           </div>
           <div className="flex items-start gap-3">
             <Gift className="w-5 h-5 text-warning mt-0.5 shrink-0" />
-            <p><strong className="text-foreground">Backup cleaner offered</strong> <span className="text-muted-foreground">- We'll try to match you with another verified cleaner</span></p>
+            <p><strong className="text-foreground">Backup cleaner offered</strong> <span className="text-ink-muted">- We'll try to match you with another verified cleaner</span></p>
           </div>
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
-            <p><strong className="text-foreground">Multiple cancellations</strong> <span className="text-muted-foreground">- May result in account suspension</span></p>
+            <p><strong className="text-foreground">Multiple cancellations</strong> <span className="text-ink-muted">- May result in account suspension</span></p>
           </div>
         </div>
       </motion.section>
@@ -377,7 +377,7 @@ export default function CancellationPolicy() {
           <HelpCircle className="w-6 h-6 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Questions or Concerns?</h2>
         </div>
-        <p className="text-muted-foreground mb-4">
+        <p className="text-ink-muted mb-4">
           If you have questions about cancellation fees or need assistance with a cancellation:
         </p>
         <Card className="bg-success dark:bg-success/30 border-success dark:border-success">
@@ -409,7 +409,7 @@ export default function CancellationPolicy() {
           {/* Mobile cards */}
           <div className="sm:hidden divide-y divide-border">
             {[
-              { notice: 'More than 24 hours', fee: '0% (Free)', feeClass: 'text-success', grace: 'N/A', graceClass: 'text-muted-foreground' },
+              { notice: 'More than 24 hours', fee: '0% (Free)', feeClass: 'text-success', grace: 'N/A', graceClass: 'text-ink-muted' },
               { notice: '6–24 hours', fee: '25%', feeClass: 'text-warning', grace: 'Yes', graceClass: 'text-success' },
               { notice: '2–6 hours', fee: '50%', feeClass: 'text-warning', grace: 'Yes', graceClass: 'text-success' },
               { notice: 'Less than 2 hours', fee: '100%', feeClass: 'text-destructive', grace: 'Yes', graceClass: 'text-success' },
@@ -418,11 +418,11 @@ export default function CancellationPolicy() {
               <div key={row.notice} className="p-4 space-y-2">
                 <p className="font-semibold text-sm">{row.notice}</p>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Fee</span>
+                  <span className="text-ink-muted">Fee</span>
                   <span className={`font-medium ${row.feeClass}`}>{row.fee}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Grace Available?</span>
+                  <span className="text-ink-muted">Grace Available?</span>
                   <span className={row.graceClass}>{row.grace}</span>
                 </div>
               </div>
@@ -442,7 +442,7 @@ export default function CancellationPolicy() {
                 <TableRow>
                   <TableCell className="font-medium">More than 24 hours</TableCell>
                   <TableCell className="text-success font-medium">0% (Free)</TableCell>
-                  <TableCell className="text-muted-foreground">N/A</TableCell>
+                  <TableCell className="text-ink-muted">N/A</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">6–24 hours</TableCell>

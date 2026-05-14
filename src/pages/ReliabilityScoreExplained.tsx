@@ -49,7 +49,7 @@ export default function ReliabilityScoreExplained() {
               <TrendingUp className="h-12 w-12 text-white" />
             </div>
             <h1 className="text-5xl font-bold mb-4">Reliability Score</h1>
-            <p className="text-xl text-muted-foreground">Your score (0–100) determines your tier, earning potential, and visibility to clients</p>
+            <p className="text-xl text-ink-muted">Your score (0–100) determines your tier, earning potential, and visibility to clients</p>
           </motion.div>
         </div>
       </section>
@@ -64,18 +64,18 @@ export default function ReliabilityScoreExplained() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {TIERS.map((t, i) => (
               <motion.div key={t.tier} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card className="overflow-hidden hover:shadow-elevated transition-all border-border/60">
+                <Card className="overflow-hidden hover:shadow-elevated transition-all border-hairline-soft">
                   <div className={`h-2 bg-gradient-to-r ${t.color}`} />
                   <CardContent className="p-5">
                     <div className="text-center mb-4">
                       <div className="text-3xl mb-2">{t.icon}</div>
                       <h3 className="font-bold text-lg">{t.tier}</h3>
                       <p className="text-sm font-semibold text-primary">{t.range} pts</p>
-                      <p className="text-xs text-muted-foreground">{t.rate}/hr</p>
+                      <p className="text-xs text-ink-muted">{t.rate}/hr</p>
                     </div>
                     <ul className="space-y-1.5">
                       {t.features.map((f, fi) => (
-                        <li key={fi} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <li key={fi} className="flex items-start gap-2 text-xs text-ink-muted">
                           <CheckCircle className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />{f}
                         </li>
                       ))}
@@ -96,7 +96,7 @@ export default function ReliabilityScoreExplained() {
           <div className="space-y-3">
             {SCORING_FACTORS.map((f, i) => (
               <motion.div key={f.name} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                <div className="flex items-center gap-4 p-5 rounded-2xl border border-border/60 bg-card hover:shadow-soft transition-all">
+                <div className="flex items-center gap-4 p-5 rounded-2xl border border-hairline-soft bg-card hover:shadow-soft transition-all">
                   <div className={`h-12 w-12 rounded-xl ${f.bg} flex items-center justify-center flex-shrink-0`}>
                     <f.icon className={`h-6 w-6 ${f.color}`} />
                   </div>
@@ -105,13 +105,13 @@ export default function ReliabilityScoreExplained() {
                       <h4 className="font-bold">{f.name}</h4>
                       <Badge className="bg-success/10 text-success border-success/30">+{f.points} pts</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">{f.desc}</p>
+                    <p className="text-sm text-ink-muted">{f.desc}</p>
                   </div>
                   <div className="hidden sm:block">
                     <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                       <div className={`h-full bg-gradient-to-r from-primary to-accent rounded-full`} style={{ width: `${f.points}%` }} />
                     </div>
-                    <p className="text-xs text-muted-foreground text-right mt-1">{f.points}%</p>
+                    <p className="text-xs text-ink-muted text-right mt-1">{f.points}%</p>
                   </div>
                 </div>
               </motion.div>
@@ -130,7 +130,7 @@ export default function ReliabilityScoreExplained() {
                       <h4 className="font-semibold text-sm">{p.name}</h4>
                       <Badge variant="destructive" className="text-xs">{p.pts} pts</Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground">{p.desc}</p>
+                    <p className="text-xs text-ink-muted">{p.desc}</p>
                   </div>
                 </div>
               ))}
@@ -147,9 +147,9 @@ export default function ReliabilityScoreExplained() {
           <div className="grid md:grid-cols-2 gap-4">
             {QUICK_WINS.map((w, i) => (
               <motion.div key={w.title} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <div className="flex items-start gap-4 p-5 rounded-2xl border border-border/60 bg-card hover:shadow-soft hover:border-primary/30 transition-all">
+                <div className="flex items-start gap-4 p-5 rounded-2xl border border-hairline-soft bg-card hover:shadow-soft hover:border-primary/30 transition-all">
                   <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0"><w.icon className="h-6 w-6 text-primary" /></div>
-                  <div><h4 className="font-bold mb-1">{w.title}</h4><p className="text-sm text-muted-foreground">{w.desc}</p></div>
+                  <div><h4 className="font-bold mb-1">{w.title}</h4><p className="text-sm text-ink-muted">{w.desc}</p></div>
                 </div>
               </motion.div>
             ))}

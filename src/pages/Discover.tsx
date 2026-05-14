@@ -50,7 +50,7 @@ const TIER_MAP: Record<string, {
     label: "Proven Specialist", icon: "🛡️",
     bar: "from-muted to-muted",
     glow: "shadow-slate-400/20",
-    badge: "bg-muted/10 text-muted-foreground border-border/30",
+    badge: "bg-muted/10 text-ink-muted border-border/30",
     dot: "bg-muted",
   },
   bronze: {
@@ -102,7 +102,7 @@ function CleanerCard({
       className="h-full"
     >
       <Link to={`/cleaner/${cleaner.id}`} className="block h-full group">
-        <div className={`relative h-full rounded-2xl border border-border/60 bg-card overflow-hidden
+        <div className={`relative h-full rounded-2xl border border-hairline-soft bg-card overflow-hidden
           hover:border-primary/40 hover:shadow-xl ${tier.glow} transition-all duration-300 flex flex-col`}>
 
           {/* ── TOP PHOTO / AVATAR BAND ─────────────────────── */}
@@ -143,9 +143,9 @@ function CleanerCard({
             <button
               onClick={e => onFav(cleaner.id, e)}
               disabled={isToggling}
-              className="absolute top-3 right-3 h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm border border-border/60 flex items-center justify-center hover:scale-110 transition-transform shadow-md touch-target"
+              className="absolute top-3 right-3 h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm border border-hairline-soft flex items-center justify-center hover:scale-110 transition-transform shadow-md touch-target"
             >
-              <Heart className={`h-4 w-4 transition-all ${isFav ? "fill-destructive text-destructive scale-110" : "text-muted-foreground"}`} />
+              <Heart className={`h-4 w-4 transition-all ${isFav ? "fill-destructive text-destructive scale-110" : "text-ink-muted"}`} />
             </button>
 
             {/* ── TIER PILL pinned at bottom-left of photo ── */}
@@ -155,9 +155,9 @@ function CleanerCard({
             </div>
 
             {/* ── RATE pinned at bottom-right ── */}
-            <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm border border-border/60 rounded-xl px-2.5 py-1 shadow-md">
+            <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm border border-hairline-soft rounded-xl px-2.5 py-1 shadow-md">
               <span className="text-base font-poppins font-bold text-primary">${cleaner.hourlyRate}</span>
-              <span className="text-[10px] text-muted-foreground">/hr</span>
+              <span className="text-[10px] text-ink-muted">/hr</span>
             </div>
           </div>
 
@@ -167,7 +167,7 @@ function CleanerCard({
             {/* Name + meta */}
             <div>
               <h3 className="font-bold text-base leading-tight mb-0.5">{cleaner.name}</h3>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 text-xs text-ink-muted">
                 <MapPin className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate">{cleaner.distance}</span>
                 <span>·</span>
@@ -183,7 +183,7 @@ function CleanerCard({
               </div>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground">Reliability</span>
+                  <span className="text-[10px] text-ink-muted">Reliability</span>
                   <span className="text-[10px] font-bold">{score}%</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-muted overflow-hidden">
@@ -201,10 +201,10 @@ function CleanerCard({
             {cleaner.services.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {cleaner.services.slice(0, 3).map((s: string) => (
-                  <span key={s} className="text-[10px] px-2 py-0.5 bg-muted/70 rounded-md text-muted-foreground font-medium">{s}</span>
+                  <span key={s} className="text-[10px] px-2 py-0.5 bg-muted/70 rounded-md text-ink-muted font-medium">{s}</span>
                 ))}
                 {cleaner.services.length > 3 && (
-                  <span className="text-[10px] px-2 py-0.5 bg-muted/70 rounded-md text-muted-foreground font-medium">+{cleaner.services.length - 3}</span>
+                  <span className="text-[10px] px-2 py-0.5 bg-muted/70 rounded-md text-ink-muted font-medium">+{cleaner.services.length - 3}</span>
                 )}
               </div>
             )}
@@ -387,7 +387,7 @@ export default function Discover() {
             {/* Search bar */}
             <div className="flex gap-2 max-w-2xl">
               <div className="relative flex-1">
-                <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-ink-muted" />
                 <Input
                   placeholder="Search by name or specialty…"
                   value={searchQuery}
@@ -395,7 +395,7 @@ export default function Discover() {
                   className="pl-10 sm:pl-12 h-12 sm:h-14 rounded-2xl text-base bg-background/95 border-0 shadow-elevated"
                 />
                 {searchQuery && (
-                  <button onClick={() => setSearchQuery("")} className="absolute right-3.5 sm:right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <button onClick={() => setSearchQuery("")} className="absolute right-3.5 sm:right-4 top-1/2 -translate-y-1/2 text-ink-muted hover:text-foreground">
                     <X className="h-4 w-4" />
                   </button>
                 )}
@@ -416,12 +416,12 @@ export default function Discover() {
                     <div>
                       <Label className="text-sm font-semibold mb-3 block">Min Rating: {minRating > 0 ? `${minRating.toFixed(1)}★` : "Any"}</Label>
                       <Slider value={[minRating]} onValueChange={([v]) => setMinRating(v)} min={0} max={5} step={0.5} className="w-full" />
-                      <div className="flex justify-between text-xs text-muted-foreground mt-2"><span>Any</span><span>5★</span></div>
+                      <div className="flex justify-between text-xs text-ink-muted mt-2"><span>Any</span><span>5★</span></div>
                     </div>
                     <div>
                       <Label className="text-sm font-semibold mb-3 block">Max Rate: ${maxPrice}{maxPrice >= 100 ? "+" : ""}/hr</Label>
                       <Slider value={[maxPrice]} onValueChange={([v]) => setMaxPrice(v)} min={10} max={100} step={5} className="w-full" />
-                      <div className="flex justify-between text-xs text-muted-foreground mt-2"><span>$10</span><span>$100+</span></div>
+                      <div className="flex justify-between text-xs text-ink-muted mt-2"><span>$10</span><span>$100+</span></div>
                     </div>
                     <div className="flex gap-3">
                       <Button variant="outline" className="flex-1 rounded-xl" onClick={() => { setMinRating(0); setMaxPrice(100); }}>Reset</Button>
@@ -450,7 +450,7 @@ export default function Discover() {
             </Label>
           </div>
           {filteredCleaners.length > 0 && (
-            <span className="text-xs sm:text-sm text-muted-foreground ml-auto flex-shrink-0 font-medium">
+            <span className="text-xs sm:text-sm text-ink-muted ml-auto flex-shrink-0 font-medium">
               {filteredCleaners.length} result{filteredCleaners.length !== 1 ? "s" : ""}
             </span>
           )}
@@ -476,10 +476,10 @@ export default function Discover() {
         {!isLoading && sortedCleaners.length === 0 && (
           <div className="text-center py-16">
             <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <MapPin className="h-8 w-8 text-muted-foreground" />
+              <MapPin className="h-8 w-8 text-ink-muted" />
             </div>
             <h3 className="text-xl font-poppins font-bold mb-2">No cleaners serve {location.zip} yet</h3>
-            <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
+            <p className="text-ink-muted text-sm mb-5 max-w-sm mx-auto">
               {searchQuery
                 ? `No matches for "${searchQuery}" in your area.`
                 : "We couldn't find cleaners covering your ZIP. Try a nearby ZIP."}

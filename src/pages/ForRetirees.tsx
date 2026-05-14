@@ -84,7 +84,7 @@ export default function ForRetirees() {
 
             <motion.p
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
-              className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
+              className="text-xl text-ink-muted mb-10 max-w-xl leading-relaxed"
             >
               Safe, reliable cleaning with the accountability and transparency you deserve. Trusted cleaners who know your home, respect your space, and always show up.
             </motion.p>
@@ -126,7 +126,7 @@ export default function ForRetirees() {
             <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Our Commitment to You</p>
             <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Your safety is our<br />
-              <span className="text-muted-foreground font-light italic">highest priority.</span>
+              <span className="text-ink-muted font-light italic">highest priority.</span>
             </h2>
           </motion.div>
 
@@ -160,7 +160,7 @@ export default function ForRetirees() {
                     <pillar.icon className="h-6 w-6" />
                   </div>
                   <h3 className="font-bold text-lg mb-3 leading-snug">{pillar.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{pillar.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -178,7 +178,7 @@ export default function ForRetirees() {
           >
             <p className="text-[hsl(var(--pt-purple))] font-bold text-sm tracking-widest uppercase mb-3">Simple & Straightforward</p>
             <h2 className="text-4xl md:text-5xl font-poppins font-bold mb-3">How It Works</h2>
-            <p className="text-muted-foreground text-lg">No complicated apps. No confusing processes. Just reliable, trusted cleaning.</p>
+            <p className="text-ink-muted text-lg">No complicated apps. No confusing processes. Just reliable, trusted cleaning.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -203,7 +203,7 @@ export default function ForRetirees() {
                   </div>
                   <p className="text-xs font-poppins font-bold tracking-widest text-[hsl(var(--pt-purple))] mb-3">STEP {step.step}</p>
                   <h3 className="font-bold text-lg mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{step.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -254,7 +254,7 @@ export default function ForRetirees() {
                     </div>
                     <div>
                       <p className="font-bold">{t.name}</p>
-                      <p className="text-xs text-muted-foreground">Age {t.age}</p>
+                      <p className="text-xs text-ink-muted">Age {t.age}</p>
                     </div>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function ForRetirees() {
                   <Shield className="h-8 w-8 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <h3 className="text-3xl font-poppins font-bold mb-4">Our Promise to You</h3>
-                <p className="text-muted-foreground leading-relaxed mb-8 text-lg">
+                <p className="text-ink-muted leading-relaxed mb-8 text-lg">
                   Every booking comes with our full guarantee. If you're ever unsatisfied for any reason, we'll send a cleaner back at no extra cost. Your comfort and trust matter more than anything.
                 </p>
                 <ul className="space-y-3">
@@ -312,7 +312,7 @@ export default function ForRetirees() {
                   Peace of mind<br />
                   <span className="text-[hsl(var(--pt-purple))]">guaranteed.</span>
                 </h2>
-                <p className="text-muted-foreground leading-relaxed text-lg">
+                <p className="text-ink-muted leading-relaxed text-lg">
                   You deserve a service that respects your time, your home, and your trust. PureTask was built with seniors in mind — simple, transparent, and always accountable.
                 </p>
               </div>
@@ -326,7 +326,7 @@ export default function ForRetirees() {
                 ].map((item) => (
                   <div key={item.t} className="rounded-2xl p-5 border border-[hsl(var(--pt-purple)/0.2)] bg-[hsl(var(--pt-purple)/0.04)]">
                     <p className="text-3xl font-poppins font-bold text-[hsl(var(--pt-purple))] mb-1">{item.n}</p>
-                    <p className="text-xs text-muted-foreground">{item.t}</p>
+                    <p className="text-xs text-ink-muted">{item.t}</p>
                   </div>
                 ))}
               </div>
@@ -366,7 +366,7 @@ export default function ForRetirees() {
                 Ready for worry-free<br />
                 <span className="text-[hsl(var(--pt-purple))]">home cleaning?</span>
               </h2>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              <p className="text-ink-muted text-lg mb-8 leading-relaxed">
                 Join thousands of seniors who trust PureTask for safe, reliable, and respectful home cleaning every time.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

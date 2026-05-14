@@ -60,7 +60,7 @@ export default function SpendingAnalytics() {
           <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-primary" /> Spending Analytics
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">Track your cleaning spend over time</p>
+          <p className="text-ink-muted text-sm mt-1">Track your cleaning spend over time</p>
         </div>
 
         {isLoading ? (
@@ -72,14 +72,14 @@ export default function SpendingAnalytics() {
                 <CardContent className="p-5">
                   <DollarSign className="h-5 w-5 text-primary mb-2" />
                   <p className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">${spending?.totalSpent || 0}</p>
-                  <p className="text-xs text-muted-foreground">Total Spent (12mo)</p>
+                  <p className="text-xs text-ink-muted">Total Spent (12mo)</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-5">
                   <Calendar className="h-5 w-5 text-success mb-2" />
                   <p className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">{spending?.transactionCount || 0}</p>
-                  <p className="text-xs text-muted-foreground">Total Bookings</p>
+                  <p className="text-xs text-ink-muted">Total Bookings</p>
                 </CardContent>
               </Card>
             </div>
@@ -98,7 +98,7 @@ export default function SpendingAnalytics() {
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <p className="text-center text-muted-foreground py-8">No spending data yet</p>
+                  <p className="text-center text-ink-muted py-8">No spending data yet</p>
                 )}
               </CardContent>
             </Card>
@@ -118,7 +118,7 @@ export default function SpendingAnalytics() {
                     </PieChart>
                   </ResponsiveContainer>
                 ) : (
-                  <p className="text-center text-muted-foreground py-8">No data yet</p>
+                  <p className="text-center text-ink-muted py-8">No data yet</p>
                 )}
               </CardContent>
             </Card>

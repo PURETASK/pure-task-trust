@@ -40,7 +40,7 @@ const TIERS = [
     feePct: 22,
     popular: false,
     colorBg: 'bg-muted/5',
-    colorBadge: 'border-border/40 text-muted-foreground',
+    colorBadge: 'border-hairline-soft text-ink-muted',
     accent: 'hsl(var(--success))',
     icon: TrendingUp,
     features: ['All Rising Pro features', 'Proven reliability (50–69)', 'Priority scheduling available', 'Specialty services offered'],
@@ -151,7 +151,7 @@ export default function Pricing() {
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3 sm:mb-4 leading-tight">
                 Transparent,<br /><span className="text-primary">Fair Pricing</span>
               </h1>
-              <ul className="text-left text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-10 space-y-2 w-fit">
+              <ul className="text-left text-sm sm:text-base text-ink-muted max-w-xl mx-auto mb-6 sm:mb-10 space-y-2 w-fit">
                 {[
                   <><strong className="text-foreground">1 credit = $1 USD</strong> — simple, transparent pricing</>,
                   <>Cleaners keep <strong className="text-foreground">75–85%</strong> of every booking</>,
@@ -175,7 +175,7 @@ export default function Pricing() {
                     className="text-center rounded-xl sm:rounded-2xl border-2 border-primary/30 bg-primary/5 px-2 py-3 sm:px-4 sm:py-5 shadow-sm hover:border-primary/50 hover:bg-primary/10 transition-colors"
                   >
                     <div className="text-base sm:text-2xl font-bold text-primary leading-tight">{value}</div>
-                    <div className="text-muted-foreground text-[10px] sm:text-sm leading-tight mt-1">{label}</div>
+                    <div className="text-ink-muted text-[10px] sm:text-sm leading-tight mt-1">{label}</div>
                   </div>
                 ))}
               </div>
@@ -201,7 +201,7 @@ export default function Pricing() {
             <div className="max-w-6xl mx-auto px-4 relative z-10">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">Choose Your Cleaner Tier</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">
+                <p className="text-ink-muted text-sm sm:text-base">
                   All cleaners are verified. Higher reliability score = higher rate = better service.{" "}
                   <Link to="/reliability-score" className="text-primary hover:underline underline-offset-2 font-medium">
                     Learn how the reliability score works →
@@ -251,7 +251,7 @@ export default function Pricing() {
             <div className="max-w-4xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2">Example Bookings</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Real numbers, no surprises</p>
+                <p className="text-ink-muted text-sm sm:text-base">Real numbers, no surprises</p>
               </div>
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {EXAMPLES.map(({ title, label, total, cleaner, platform, popular }) => (
@@ -259,11 +259,11 @@ export default function Pricing() {
                     {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="bg-primary">Most Booked</Badge></div>}
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-1">{title}</h3>
-                      <p className="text-sm text-muted-foreground mb-5">{label}</p>
+                      <p className="text-sm text-ink-muted mb-5">{label}</p>
                       <div className="space-y-2.5 mb-5">
-                        <div className="flex justify-between text-sm"><span className="text-muted-foreground">You pay</span><span className="font-semibold text-xl">${total}</span></div>
-                        <div className="flex justify-between text-sm"><span className="text-muted-foreground">Cleaner earns</span><span className="font-medium text-success">${cleaner}</span></div>
-                        <div className="flex justify-between text-sm border-t pt-2"><span className="text-muted-foreground">Platform fee</span><span className="font-medium">${platform}</span></div>
+                        <div className="flex justify-between text-sm"><span className="text-ink-muted">You pay</span><span className="font-semibold text-xl">${total}</span></div>
+                        <div className="flex justify-between text-sm"><span className="text-ink-muted">Cleaner earns</span><span className="font-medium text-success">${cleaner}</span></div>
+                        <div className="flex justify-between text-sm border-t pt-2"><span className="text-ink-muted">Platform fee</span><span className="font-medium">${platform}</span></div>
                       </div>
                       <Button asChild variant="outline" className="w-full">
                         <Link to="/book">Book Now</Link>
@@ -291,7 +291,7 @@ export default function Pricing() {
                   <PiggyBank className="h-3.5 w-3.5 mr-1.5" /> Your Payout
                 </Badge>
                 <h2 className="text-2xl sm:text-4xl font-bold mb-3">Keep More As You Grow</h2>
-                <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+                <p className="text-ink-muted text-sm sm:text-base max-w-2xl mx-auto">
                   Every cleaner starts as a Rising Pro keeping <strong className="text-foreground">75%</strong>. Hit consistent reliability and climb to All-Star Expert where you keep <strong className="text-foreground">85%</strong>. The split scales with you — automatically.
                 </p>
               </div>
@@ -307,12 +307,12 @@ export default function Pricing() {
                             <span className="text-2xl">{tier.emoji}</span>
                             <div>
                               <p className="font-semibold text-sm sm:text-base">{tier.tier}</p>
-                              <p className="text-xs text-muted-foreground">Score {tier.score}</p>
+                              <p className="text-xs text-ink-muted">Score {tier.score}</p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-2xl sm:text-3xl font-bold text-success">{tier.keepPct}%</p>
-                            <p className="text-xs text-muted-foreground">{tier.feePct}% platform fee</p>
+                            <p className="text-xs text-ink-muted">{tier.feePct}% platform fee</p>
                           </div>
                         </div>
                         <div className="relative h-8 rounded-lg overflow-hidden bg-muted">
@@ -323,7 +323,7 @@ export default function Pricing() {
                             You keep ${tier.keepPct}
                           </div>
                           <div
-                            className="absolute inset-y-0 right-0 flex items-center justify-center text-xs font-medium text-muted-foreground"
+                            className="absolute inset-y-0 right-0 flex items-center justify-center text-xs font-medium text-ink-muted"
                             style={{ width: `${tier.feePct}%` }}
                           >
                             ${tier.feePct} fee
@@ -332,7 +332,7 @@ export default function Pricing() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground text-center mt-5 pt-5 border-t">
+                  <p className="text-xs text-ink-muted text-center mt-5 pt-5 border-t">
                     Per $100 earned. Tier promotion is automatic when you hit the score threshold.
                   </p>
                 </CardContent>
@@ -351,10 +351,10 @@ export default function Pricing() {
                         <h3 className="font-bold text-base mb-1">{tier.tier}</h3>
                         <Badge variant="outline" className={`text-xs mb-3 ${tier.colorBadge}`}>Score {tier.score}</Badge>
                         <div className="text-2xl font-bold mb-1">{tier.rate}</div>
-                        <p className="text-muted-foreground text-xs mb-4">client pays</p>
+                        <p className="text-ink-muted text-xs mb-4">client pays</p>
                         <div className="p-3 bg-success/10 rounded-xl border border-success/20">
                           <p className="text-success font-bold text-2xl">{tier.keepPct}%</p>
-                          <p className="text-xs text-muted-foreground">you keep</p>
+                          <p className="text-xs text-ink-muted">you keep</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -369,17 +369,17 @@ export default function Pricing() {
             <div className="max-w-5xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2">Your Real Take-Home, Per Hour</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">After the platform fee — the number that actually hits your wallet.</p>
+                <p className="text-ink-muted text-sm sm:text-base">After the platform fee — the number that actually hits your wallet.</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 {CLEANER_NET.map((t) => (
                   <Card key={t.tier} className="relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-1" style={{ background: t.accent }} />
                     <CardContent className="p-5 text-center">
-                      <p className="text-xs text-muted-foreground mb-1">{t.emoji} {t.tier} @ ${t.midRate}/hr</p>
+                      <p className="text-xs text-ink-muted mb-1">{t.emoji} {t.tier} @ ${t.midRate}/hr</p>
                       <p className="text-3xl sm:text-4xl font-bold mb-1" style={{ color: t.accent }}>${t.net}</p>
-                      <p className="text-xs text-muted-foreground">net per hour</p>
-                      <div className="mt-3 pt-3 border-t text-xs text-muted-foreground">
+                      <p className="text-xs text-ink-muted">net per hour</p>
+                      <div className="mt-3 pt-3 border-t text-xs text-ink-muted">
                         Set your own rate within the {t.rate} range
                       </div>
                     </CardContent>
@@ -398,7 +398,7 @@ export default function Pricing() {
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Calendar className="h-6 w-6 text-primary" /> Monthly Earnings Scenarios
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Based on the actual payout splits above.</p>
+                <p className="text-ink-muted text-sm sm:text-base">Based on the actual payout splits above.</p>
               </div>
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                 {[
@@ -422,10 +422,10 @@ export default function Pricing() {
                       <CardContent className="p-6 text-center">
                         <div className="text-3xl mb-2">{emoji}</div>
                         <p className="font-semibold mb-1">{tier} Cleaner</p>
-                        <p className="text-xs text-muted-foreground mb-4">{jobs} jobs · {hours} hrs · ${rate}/hr</p>
+                        <p className="text-xs text-ink-muted mb-4">{jobs} jobs · {hours} hrs · ${rate}/hr</p>
                         <p className="text-4xl font-bold text-success mb-1">${net.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground mb-4">take-home / month</p>
-                        <div className="text-xs text-muted-foreground space-y-1 pt-3 border-t">
+                        <p className="text-xs text-ink-muted mb-4">take-home / month</p>
+                        <div className="text-xs text-ink-muted space-y-1 pt-3 border-t">
                           <div className="flex justify-between"><span>Gross</span><span className="font-medium text-foreground">${gross.toLocaleString()}</span></div>
                           <div className="flex justify-between"><span>Platform fee ({Math.round((1 - keep) * 100)}%)</span><span>−${(gross - net).toLocaleString()}</span></div>
                         </div>
@@ -442,7 +442,7 @@ export default function Pricing() {
             <div className="max-w-4xl mx-auto px-4">
               <div className="text-center mb-8 sm:mb-10">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2">Where Your Platform Fee Goes</h2>
-                <p className="text-muted-foreground text-sm sm:text-base">Every dollar reinvested in keeping you safe, paid, and supported.</p>
+                <p className="text-ink-muted text-sm sm:text-base">Every dollar reinvested in keeping you safe, paid, and supported.</p>
               </div>
               <Card>
                 <CardContent className="p-6 sm:p-8 space-y-5">
@@ -474,7 +474,7 @@ export default function Pricing() {
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
                   <Trophy className="h-6 w-6 text-warning" /> How To Climb To All-Star Expert
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base">
+                <p className="text-ink-muted text-sm sm:text-base">
                   Your tier is set by your reliability score (0–100), updated after every job.
                 </p>
               </div>
@@ -494,7 +494,7 @@ export default function Pricing() {
                       </div>
                       <div>
                         <p className="font-semibold mb-1">{title}</p>
-                        <p className="text-sm text-muted-foreground">{desc}</p>
+                        <p className="text-sm text-ink-muted">{desc}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -512,7 +512,7 @@ export default function Pricing() {
           <section className="py-10 sm:py-16 bg-gradient-to-r from-primary/5 via-background to-success/5">
             <div className="max-w-3xl mx-auto px-4 text-center">
               <h3 className="text-2xl sm:text-3xl font-bold mb-3">Ready to start earning?</h3>
-              <p className="text-muted-foreground mb-6 text-sm sm:text-base">
+              <p className="text-ink-muted mb-6 text-sm sm:text-base">
                 Join free. Set your own schedule. Get paid weekly with instant payout options.
               </p>
               <div className="flex flex-wrap justify-center gap-3">

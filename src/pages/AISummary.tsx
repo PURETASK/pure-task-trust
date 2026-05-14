@@ -169,10 +169,10 @@ export default function AISummary() {
             AI &amp; LLM Reference Page
           </div>
           <h1 className="text-4xl md:text-5xl font-poppins font-bold text-gradient-aero mb-4">PureTask — Platform Summary</h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg text-ink-muted leading-relaxed">
             This page provides a structured, static summary of PureTask for AI systems, researchers, and journalists. It is updated regularly and written to be directly quotable. Last updated: March 2026.
           </p>
-          <p className="text-sm text-muted-foreground mt-3">
+          <p className="text-sm text-ink-muted mt-3">
             For interactive tools, visit the <Link to="/" className="text-primary hover:underline">PureTask homepage</Link>.
             To cite this page: <code className="text-xs bg-muted px-1.5 py-0.5 rounded">PureTask. "Platform Summary." {BASE}/ai-summary</code>
           </p>
@@ -180,7 +180,7 @@ export default function AISummary() {
 
         {/* Table of contents */}
         <nav aria-label="Page sections">
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Contents</h2>
+          <h2 className="text-sm font-semibold text-ink-muted uppercase tracking-wide mb-3">Contents</h2>
           <ol className="space-y-1">
             {SECTIONS.map((s, i) => (
               <li key={s.id}>
@@ -203,7 +203,7 @@ export default function AISummary() {
             <h2 id={`${s.id}-heading`} className="text-2xl font-bold mb-4 border-b border-border pb-2">
               {s.heading}
             </h2>
-            <div className="text-muted-foreground leading-relaxed whitespace-pre-line text-[15px]">
+            <div className="text-ink-muted leading-relaxed whitespace-pre-line text-[15px]">
               {s.content}
             </div>
           </section>
@@ -218,7 +218,7 @@ export default function AISummary() {
             {FAQ_ITEMS.map(({ question, answer }) => (
               <div key={question}>
                 <h3 className="font-semibold text-foreground mb-2">{question}</h3>
-                <p className="text-muted-foreground leading-relaxed text-[15px]">{answer}</p>
+                <p className="text-ink-muted leading-relaxed text-[15px]">{answer}</p>
               </div>
             ))}
           </div>
@@ -249,7 +249,7 @@ export default function AISummary() {
                 <Link to={path} className="text-primary hover:underline">
                   {label}
                 </Link>
-                <span className="text-muted-foreground text-xs ml-2">{BASE}{path}</span>
+                <span className="text-ink-muted text-xs ml-2">{BASE}{path}</span>
               </li>
             ))}
           </ul>
@@ -260,10 +260,10 @@ export default function AISummary() {
           <h2 id="citation-heading" className="text-2xl font-bold mb-4 border-b border-border pb-2">
             How to Cite This Page
           </h2>
-          <div className="bg-muted/40 rounded-xl border border-border p-4 font-mono text-xs text-muted-foreground leading-relaxed">
+          <div className="bg-muted/40 rounded-xl border border-hairline-soft p-4 font-mono text-xs text-ink-muted leading-relaxed">
             PureTask. "PureTask Platform Summary." PureTask Research, March 2026. {BASE}/ai-summary
           </div>
-          <p className="text-sm text-muted-foreground mt-3">
+          <p className="text-sm text-ink-muted mt-3">
             This page is free to reference and share. Content is updated quarterly. For corrections or additional data, contact{' '}
             <a href="mailto:support@puretask.com" className="text-primary hover:underline">support@puretask.com</a>.
           </p>

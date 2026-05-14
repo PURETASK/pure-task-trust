@@ -112,10 +112,10 @@ export default function CleaningDetail() {
       <main className="flex-1 py-6">
         <div className="container px-4 sm:px-6 max-w-3xl text-center py-20">
           <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="h-8 w-8 text-muted-foreground/30" />
+            <Sparkles className="h-8 w-8 text-ink-muted/30" />
           </div>
           <p className="text-lg font-bold">Cleaning not found</p>
-          <p className="text-sm text-muted-foreground mt-1">This cleaning may have been removed.</p>
+          <p className="text-sm text-ink-muted mt-1">This cleaning may have been removed.</p>
           <Button variant="outline" className="mt-4 rounded-xl" asChild>
             <Link to="/my-cleanings">← Back to My Cleanings</Link>
           </Button>
@@ -223,7 +223,7 @@ export default function CleaningDetail() {
                 {needsApproval && <Badge className="bg-warning text-warning-foreground font-bold">Action Required</Badge>}
                 {hasReview && <Badge className="bg-success/10 text-success border-success/30 font-bold gap-1"><Star className="h-3 w-3 fill-current" /> Reviewed</Badge>}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">{statusDescription}</p>
+              <p className="text-xs text-ink-muted mt-1">{statusDescription}</p>
             </div>
 
             <div className="p-5 sm:p-6 space-y-4">
@@ -234,7 +234,7 @@ export default function CleaningDetail() {
                 </div>
                 <div className="flex-1">
                   <p className="font-bold text-lg">{cleanerName}</p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-ink-muted">
                     {job.cleaner?.avg_rating && (
                       <span className="flex items-center gap-0.5">
                         <Star className="h-3.5 w-3.5 text-warning fill-warning" />{job.cleaner.avg_rating.toFixed(1)}
@@ -273,7 +273,7 @@ export default function CleaningDetail() {
                 </div>
                 <div>
                   <p className="font-poppins font-bold text-lg">Review & Approve</p>
-                  <p className="text-sm text-muted-foreground">Check the work and release payment to your cleaner.</p>
+                  <p className="text-sm text-ink-muted">Check the work and release payment to your cleaner.</p>
                 </div>
               </div>
               {escrow.isReviewable && escrow.releaseAt && (
@@ -283,7 +283,7 @@ export default function CleaningDetail() {
                       <Clock className="h-4 w-4 text-warning" />
                       {escrow.label}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-ink-muted">
                       Auto-releases {escrow.releaseAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
                     </span>
                   </div>
@@ -369,8 +369,8 @@ export default function CleaningDetail() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="rounded-xl bg-muted/50 border-2 border-border/40 p-3">
-                      <p className="text-xs text-muted-foreground">
+                    <div className="rounded-xl bg-muted/50 border-2 border-hairline-soft p-3">
+                      <p className="text-xs text-ink-muted">
                         <Shield className="h-3 w-3 inline mr-1" />
                         Rescheduling is free if done 48+ hours before the original time. Your cleaner will need to confirm the new slot.
                       </p>
@@ -408,7 +408,7 @@ export default function CleaningDetail() {
                           <CheckCircle2 className="h-5 w-5 text-success flex-shrink-0" />
                           <div>
                             <p className="font-bold text-sm text-success">Free cancellation</p>
-                            <p className="text-xs text-muted-foreground">More than 48 hours before your cleaning.</p>
+                            <p className="text-xs text-ink-muted">More than 48 hours before your cleaning.</p>
                           </div>
                         </div>
                       ) : (
@@ -416,7 +416,7 @@ export default function CleaningDetail() {
                           <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0" />
                           <div>
                             <p className="font-bold text-sm text-warning">{feePercent}% cancellation fee</p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-ink-muted">
                               Estimated fee: ${estimatedFee} credits ({feeBucket} window)
                             </p>
                           </div>
@@ -482,7 +482,7 @@ export default function CleaningDetail() {
                               className={`h-8 w-8 transition-colors ${
                                 star <= reviewRating
                                   ? "text-warning fill-warning"
-                                  : "text-muted-foreground/30"
+                                  : "text-ink-muted/30"
                               }`}
                             />
                           </button>
@@ -532,19 +532,19 @@ export default function CleaningDetail() {
                 <p className="font-bold text-sm">Your Review</p>
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className={`h-3.5 w-3.5 ${star <= existingReview.rating ? 'text-warning fill-warning' : 'text-muted-foreground/20'}`} />
+                    <Star key={star} className={`h-3.5 w-3.5 ${star <= existingReview.rating ? 'text-warning fill-warning' : 'text-ink-muted/20'}`} />
                   ))}
                 </div>
               </div>
               {existingReview.review_text && (
-                <p className="text-sm text-muted-foreground">{existingReview.review_text}</p>
+                <p className="text-sm text-ink-muted">{existingReview.review_text}</p>
               )}
             </div>
           </motion.div>
         )}
 
         {/* ── TRUST MESSAGE ────────────────────────────────────────── */}
-        <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1.5 mt-8">
+        <p className="text-xs text-ink-muted text-center flex items-center justify-center gap-1.5 mt-8">
           <Shield className="h-3 w-3" /> Protected by 24-Hour Review · Escrow-backed payments
         </p>
       </div>
@@ -554,10 +554,10 @@ export default function CleaningDetail() {
 
 function DetailItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-start gap-2 p-3 rounded-xl bg-muted/50 border-2 border-border/30">
-      <span className="text-muted-foreground mt-0.5">{icon}</span>
+    <div className="flex items-start gap-2 p-3 rounded-xl bg-muted/50 border border-hairline-soft/30">
+      <span className="text-ink-muted mt-0.5">{icon}</span>
       <div>
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{label}</p>
+        <p className="text-[10px] uppercase tracking-wider text-ink-muted font-bold">{label}</p>
         <p className="font-semibold text-sm">{value}</p>
       </div>
     </div>

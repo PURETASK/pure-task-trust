@@ -65,7 +65,7 @@ export default function Notifications() {
                     <Badge className="bg-primary text-primary-foreground font-bold text-sm px-2.5 py-1 rounded-full">{unreadCount}</Badge>
                   )}
                 </h1>
-                <p className="text-muted-foreground text-sm">Stay on top of everything happening</p>
+                <p className="text-ink-muted text-sm">Stay on top of everything happening</p>
               </div>
             </div>
             {unreadCount > 0 && (
@@ -84,7 +84,7 @@ export default function Notifications() {
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                   filter === f.value
                     ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                    : "bg-muted text-ink-muted hover:bg-muted/80 hover:text-foreground"
                 }`}
               >
                 <f.icon className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export default function Notifications() {
                     <Sparkles className="h-7 w-7 text-warning" />
                   </div>
                   <h3 className="font-bold text-lg mb-1">{filter === "all" ? "All caught up!" : `No ${filter} notifications`}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-ink-muted">
                     {filter === "all" ? "We'll notify you about bookings, payments, and more" : "Nothing here yet — check back soon"}
                   </p>
                 </CardContent>
@@ -121,7 +121,7 @@ export default function Notifications() {
                       className={`relative flex items-start gap-4 p-4 rounded-3xl border-2 transition-all cursor-pointer group ${
                         !n.is_read
                           ? "bg-primary/5 border-primary/30 hover:bg-primary/10"
-                          : "bg-card border-border/40 hover:border-primary/20"
+                          : "bg-card border-hairline-soft hover:border-primary/20"
                       }`}
                     >
                       {/* Unread dot */}
@@ -130,7 +130,7 @@ export default function Notifications() {
                       )}
 
                       {/* Icon */}
-                      <div className={`h-11 w-11 rounded-xl border-2 border-border/40 flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
+                      <div className={`h-11 w-11 rounded-xl border-2 border-hairline-soft flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
                         {typeEmoji[n.type] || "🔔"}
                       </div>
 
@@ -138,11 +138,11 @@ export default function Notifications() {
                       <div className="flex-1 min-w-0 pr-6">
                         <div className="flex items-baseline gap-2 flex-wrap">
                           <p className="font-semibold text-sm">{n.title}</p>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-ink-muted">
                             {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                           </span>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">{n.message}</p>
+                        <p className="text-sm text-ink-muted mt-0.5 line-clamp-2">{n.message}</p>
                         {n.link_url && (
                           <Link to={n.link_url} className="inline-flex items-center gap-1 text-xs text-primary mt-1.5 hover:underline" onClick={(e) => e.stopPropagation()}>
                             View details<ExternalLink className="h-3 w-3" />

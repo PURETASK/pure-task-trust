@@ -98,7 +98,7 @@ export default function Legal() {
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 sm:mb-4">
             Legal Center
           </h1>
-          <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto px-2">
+          <p className="text-base sm:text-xl text-ink-muted max-w-2xl mx-auto px-2">
             Your guide to PureTask policies, terms, and protections
           </p>
           <Badge variant="secondary" className="mt-3 sm:mt-4">
@@ -121,7 +121,7 @@ export default function Legal() {
                       <h3 className="font-semibold text-foreground mb-1 text-sm sm:text-base">
                         {item.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
+                      <p className="text-xs sm:text-sm text-ink-muted mb-2 sm:mb-3">
                         {item.desc}
                       </p>
                       <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-1">
@@ -195,7 +195,7 @@ export default function Legal() {
                     className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-base font-semibold whitespace-nowrap transition-all border-b-2 ${
                       isActive 
                         ? 'border-primary text-primary bg-primary/5' 
-                        : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground'
+                        : 'border-transparent text-ink-muted hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -222,7 +222,7 @@ export default function Legal() {
             <h2 className="text-2xl font-bold text-foreground mb-3">
               Have Questions About Our Policies?
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+            <p className="text-ink-muted mb-6 max-w-xl mx-auto">
               Our team is here to help clarify any legal questions or concerns you may have.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -254,7 +254,7 @@ function PrivacyContent() {
           <Shield className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Privacy Policy</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           How we protect and handle your information
         </p>
       </div>
@@ -311,7 +311,7 @@ function TermsContent() {
           <FileText className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Terms of Service</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           Platform rules, user responsibilities, and legal agreements
         </p>
       </div>
@@ -368,7 +368,7 @@ function PhotoContent() {
           <Camera className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Photo Proof & Consent</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           Transparency through before/after documentation
         </p>
       </div>
@@ -425,7 +425,7 @@ function CancellationContent() {
           <Clock className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Cancellation Policy</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           Fees, grace cancellations, and refund policies
         </p>
       </div>
@@ -435,7 +435,7 @@ function CancellationContent() {
           <CardContent className="p-6 text-center">
             <Badge className="bg-success mb-2">0% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Free Cancellation</h3>
-            <p className="text-sm text-muted-foreground">More than 48 hours notice</p>
+            <p className="text-sm text-ink-muted">More than 48 hours notice</p>
           </CardContent>
         </Card>
         
@@ -443,7 +443,7 @@ function CancellationContent() {
           <CardContent className="p-6 text-center">
             <Badge className="bg-warning mb-2">50% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Partial Fee</h3>
-            <p className="text-sm text-muted-foreground">24-48 hours notice</p>
+            <p className="text-sm text-ink-muted">24-48 hours notice</p>
           </CardContent>
         </Card>
         
@@ -451,7 +451,7 @@ function CancellationContent() {
           <CardContent className="p-6 text-center">
             <Badge className="bg-destructive mb-2">100% Fee</Badge>
             <h3 className="font-bold text-foreground text-lg">Full Fee</h3>
-            <p className="text-sm text-muted-foreground">Less than 24 hours</p>
+            <p className="text-sm text-ink-muted">Less than 24 hours</p>
           </CardContent>
         </Card>
       </div>
@@ -486,7 +486,7 @@ function DamageContent() {
           <AlertTriangle className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-bold text-foreground">Damage & Claims Policy</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           How we handle property damage and claims resolution
         </p>
       </div>
@@ -551,7 +551,7 @@ function InfoSection({ icon: Icon, title, items }: InfoSectionProps) {
         </div>
         <ul className="space-y-2">
           {items.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <li key={idx} className="flex items-start gap-2 text-sm text-ink-muted">
               <CheckCircle className="w-4 h-4 text-success mt-0.5 shrink-0" />
               {item}
             </li>

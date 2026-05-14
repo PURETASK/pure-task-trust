@@ -36,12 +36,12 @@ export default function HelpArticle() {
             <Skeleton className="h-32 w-full" />
           </div>
         ) : !article ? (
-          <p className="text-muted-foreground">Article not found.</p>
+          <p className="text-ink-muted">Article not found.</p>
         ) : (
           <>
             <article className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
               <h1>{article.title}</h1>
-              {article.summary && <p className="lead text-muted-foreground">{article.summary}</p>}
+              {article.summary && <p className="lead text-ink-muted">{article.summary}</p>}
               <ReactMarkdown>{article.body}</ReactMarkdown>
             </article>
 
@@ -75,7 +75,7 @@ export default function HelpArticle() {
                     <Link key={r.id} to={`/help/articles/${r.slug}`}>
                       <Card className="p-3 hover:border-primary/50 transition-all">
                         <p className="font-semibold text-sm">{r.title}</p>
-                        {r.summary && <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{r.summary}</p>}
+                        {r.summary && <p className="text-xs text-ink-muted mt-1 line-clamp-1">{r.summary}</p>}
                       </Card>
                     </Link>
                   ))}

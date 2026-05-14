@@ -72,7 +72,7 @@ export default function Account() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-poppins font-bold">Account</h1>
-              <p className="text-muted-foreground text-sm">Profile and preferences</p>
+              <p className="text-ink-muted text-sm">Profile and preferences</p>
             </div>
           </div>
         </motion.div>
@@ -85,7 +85,7 @@ export default function Account() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-lg truncate">{name}</p>
-              <p className="text-sm text-muted-foreground truncate">{email}</p>
+              <p className="text-sm text-ink-muted truncate">{email}</p>
             </div>
             <Button variant="outline" size="sm" className="rounded-xl" asChild>
               <Link to="/profile/edit">Edit</Link>
@@ -104,9 +104,9 @@ export default function Account() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm">{section.title}</p>
-                    <p className="text-xs text-muted-foreground">{section.description}</p>
+                    <p className="text-xs text-ink-muted">{section.description}</p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                  <ChevronRight className="h-4 w-4 text-ink-muted group-hover:text-primary transition-colors flex-shrink-0" />
                 </div>
               </Link>
             </motion.div>

@@ -236,7 +236,7 @@ export default function CleanerProfileV2() {
         className="container max-w-3xl pt-4 space-y-5"
       >
         {/* HERO */}
-        <div className="relative rounded-3xl overflow-hidden border border-border/60 bg-card shadow-elevated">
+        <div className="relative rounded-3xl overflow-hidden border border-hairline-soft bg-card shadow-elevated">
           <div className="relative h-72 sm:h-96">
             {cleaner.profilePhotoUrl ? (
               <img src={cleaner.profilePhotoUrl} alt={cleaner.name} className="w-full h-full object-cover" />
@@ -264,9 +264,9 @@ export default function CleanerProfileV2() {
               <button
                 onClick={handleFav}
                 disabled={isToggling}
-                className="h-11 w-11 rounded-full bg-card/95 backdrop-blur-sm border border-border/60 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                className="h-11 w-11 rounded-full bg-card/95 backdrop-blur-sm border border-hairline-soft flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
               >
-                <Heart className={cn("h-5 w-5", isFav ? "fill-destructive text-destructive" : "text-muted-foreground")} />
+                <Heart className={cn("h-5 w-5", isFav ? "fill-destructive text-destructive" : "text-ink-muted")} />
               </button>
             </div>
 
@@ -296,10 +296,10 @@ export default function CleanerProfileV2() {
             { label: "On-time", value: `${onTime}%`, icon: Clock, color: "text-success" },
             { label: "Experience", value: `${years}yr`, icon: Award, color: "text-warning" },
           ].map((s) => (
-            <div key={s.label} className="bg-card border border-border/60 rounded-2xl p-4 text-center">
+            <div key={s.label} className="bg-card border border-hairline-soft rounded-2xl p-4 text-center">
               <s.icon className={cn("h-5 w-5 mx-auto mb-1.5", s.color)} />
               <p className="text-xl font-poppins font-bold">{s.value}</p>
-              <p className="text-xs text-muted-foreground font-medium">{s.label}</p>
+              <p className="text-xs text-ink-muted font-medium">{s.label}</p>
             </div>
           ))}
         </div>
@@ -307,9 +307,9 @@ export default function CleanerProfileV2() {
         {/* PRICE + BOOK CTA */}
         <div className="bg-gradient-to-br from-primary/10 via-aero-cyan/5 to-accent/10 border border-primary/30 rounded-3xl p-5 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">Hourly rate</p>
+            <p className="text-xs text-ink-muted font-semibold uppercase tracking-wide">Hourly rate</p>
             <p className="text-3xl font-poppins font-bold text-primary mt-0.5">
-              ${cleaner.hourlyRate}<span className="text-sm text-muted-foreground font-medium">/hour</span>
+              ${cleaner.hourlyRate}<span className="text-sm text-ink-muted font-medium">/hour</span>
             </p>
           </div>
           <Button onClick={() => setQuickOpen(true)} size="lg" className="rounded-xl font-bold shadow-md shadow-primary/30 gap-2 px-6">
@@ -319,14 +319,14 @@ export default function CleanerProfileV2() {
 
         {/* ABOUT */}
         {cleaner.bio && (
-          <div className="bg-card border border-border/60 rounded-3xl p-5">
+          <div className="bg-card border border-hairline-soft rounded-3xl p-5">
             <h2 className="font-poppins font-bold text-lg mb-2">About {cleaner.firstName || cleaner.name.split(" ")[0]}</h2>
             <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{cleaner.bio}</p>
           </div>
         )}
 
         {/* TRUST CHECKLIST */}
-        <div className="bg-card border border-border/60 rounded-3xl p-5">
+        <div className="bg-card border border-hairline-soft rounded-3xl p-5">
           <h2 className="font-poppins font-bold text-lg mb-3">Why book with confidence</h2>
           <ul className="space-y-2.5 text-sm">
             {[
@@ -347,7 +347,7 @@ export default function CleanerProfileV2() {
 
         {/* SERVICES */}
         {cleaner.services && cleaner.services.length > 0 && (
-          <div className="bg-card border border-border/60 rounded-3xl p-5">
+          <div className="bg-card border border-hairline-soft rounded-3xl p-5">
             <h2 className="font-poppins font-bold text-lg mb-3">Services offered</h2>
             <div className="flex flex-wrap gap-2">
               {cleaner.services.map((s) => (
@@ -360,7 +360,7 @@ export default function CleanerProfileV2() {
         )}
 
         {/* AVAILABILITY CALENDAR — one-tap booking */}
-        <div className="bg-card border border-border/60 rounded-3xl overflow-hidden">
+        <div className="bg-card border border-hairline-soft rounded-3xl overflow-hidden">
           <div className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
             <button onClick={prevMonth} className="p-1 hover:bg-primary-foreground/10 rounded-lg">
               <ChevronLeft className="h-5 w-5" />
@@ -376,7 +376,7 @@ export default function CleanerProfileV2() {
           <div className="p-4">
             <div className="grid grid-cols-7 gap-1 mb-2">
               {DAYS.map((d) => (
-                <div key={d} className="text-center text-xs font-semibold text-muted-foreground py-1">{d}</div>
+                <div key={d} className="text-center text-xs font-semibold text-ink-muted py-1">{d}</div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
@@ -396,8 +396,8 @@ export default function CleanerProfileV2() {
                     onClick={() => { setSelectedDate(d); setSelectedTime(null); }}
                     className={cn(
                       "h-11 rounded-lg text-sm font-semibold border transition-all",
-                      isPast && "text-muted-foreground/30 border-transparent cursor-not-allowed",
-                      !isPast && !isAvailable && "border-transparent text-muted-foreground/50 cursor-not-allowed",
+                      isPast && "text-ink-muted/30 border-transparent cursor-not-allowed",
+                      !isPast && !isAvailable && "border-transparent text-ink-muted/50 cursor-not-allowed",
                       isAvailable && !isSelected && !booked && "border-success/40 bg-success/5 hover:bg-success/15 text-foreground",
                       isAvailable && booked && !isSelected && "border-warning/40 bg-warning/5 text-foreground",
                       isSelected && "border-primary bg-primary text-primary-foreground shadow-md",
@@ -408,7 +408,7 @@ export default function CleanerProfileV2() {
                 );
               })}
             </div>
-            <div className="flex flex-wrap gap-3 mt-3 text-xs text-muted-foreground">
+            <div className="flex flex-wrap gap-3 mt-3 text-xs text-ink-muted">
               <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border-2 border-success bg-success/10" /> Open</span>
               <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border-2 border-warning bg-warning/10" /> Some bookings</span>
               <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-primary" /> Selected</span>
@@ -416,7 +416,7 @@ export default function CleanerProfileV2() {
 
             {/* Slots */}
             {selectedDate && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-5 pt-5 border-t border-border/40">
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-5 pt-5 border-t border-hairline-soft">
                 <p className="text-sm font-semibold mb-3">
                   Available times on <span className="text-primary">{format(selectedDate, "EEE, MMM d")}</span>
                 </p>
@@ -425,43 +425,43 @@ export default function CleanerProfileV2() {
                     <button
                       key={slot}
                       onClick={() => handleSlotClick(slot)}
-                      className="h-11 rounded-xl border border-border/60 text-sm font-semibold hover:border-primary hover:bg-primary/5 hover:text-primary transition-all"
+                      className="h-11 rounded-xl border border-hairline-soft text-sm font-semibold hover:border-primary hover:bg-primary/5 hover:text-primary transition-all"
                     >
                       {slot}
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground mt-3">Tap a time to book it instantly →</p>
+                <p className="text-xs text-ink-muted mt-3">Tap a time to book it instantly →</p>
               </motion.div>
             )}
           </div>
         </div>
 
         {/* REVIEWS */}
-        <div className="bg-card border border-border/60 rounded-3xl p-5">
+        <div className="bg-card border border-hairline-soft rounded-3xl p-5">
           <h2 className="font-poppins font-bold text-lg mb-4 flex items-center gap-2">
             <Star className="h-5 w-5 text-warning fill-warning" />
             Reviews ({reviews?.length || 0})
           </h2>
           {!reviews || reviews.length === 0 ? (
-            <p className="text-sm text-muted-foreground italic">No reviews yet — be the first!</p>
+            <p className="text-sm text-ink-muted italic">No reviews yet — be the first!</p>
           ) : (
             <div className="space-y-4">
               {reviews.slice(0, 5).map((r: any) => (
-                <div key={r.id} className="border-b border-border/40 last:border-0 pb-4 last:pb-0">
+                <div key={r.id} className="border-b border-hairline-soft last:border-0 pb-4 last:pb-0">
                   <div className="flex items-center gap-2 mb-1.5">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={cn("h-4 w-4", i < (r.rating || 0) ? "fill-warning text-warning" : "text-muted-foreground/25")} />
+                        <Star key={i} className={cn("h-4 w-4", i < (r.rating || 0) ? "fill-warning text-warning" : "text-ink-muted/25")} />
                       ))}
                     </div>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-ink-muted">
                       {r.created_at ? format(new Date(r.created_at), "MMM d, yyyy") : ""}
                     </span>
                   </div>
                   {r.comment && (
                     <p className="text-sm text-foreground/85 italic">
-                      <Quote className="inline h-3 w-3 text-muted-foreground/40 mr-1" />
+                      <Quote className="inline h-3 w-3 text-ink-muted/40 mr-1" />
                       {r.comment}
                     </p>
                   )}
@@ -473,10 +473,10 @@ export default function CleanerProfileV2() {
       </motion.div>
 
       {/* Floating mobile book bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border/60 p-4 flex items-center justify-between gap-3 shadow-2xl z-40">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-hairline-soft p-4 flex items-center justify-between gap-3 shadow-2xl z-40">
         <div>
-          <p className="text-xl font-poppins font-bold text-primary">${cleaner.hourlyRate}<span className="text-xs text-muted-foreground">/hr</span></p>
-          <p className="text-xs text-muted-foreground">{cleaner.name}</p>
+          <p className="text-xl font-poppins font-bold text-primary">${cleaner.hourlyRate}<span className="text-xs text-ink-muted">/hr</span></p>
+          <p className="text-xs text-ink-muted">{cleaner.name}</p>
         </div>
         <Button onClick={() => setQuickOpen(true)} className="flex-1 rounded-xl font-bold gap-2">
           <Zap className="h-4 w-4" /> Book Now

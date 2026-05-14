@@ -24,14 +24,14 @@ export default function DataExport() {
           <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
             <Download className="h-6 w-6 text-primary" /> Data Export
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">Download a copy of all your personal data (GDPR compliant)</p>
+          <p className="text-ink-muted text-sm mt-1">Download a copy of all your personal data (GDPR compliant)</p>
         </div>
 
         <Card>
           <CardContent className="p-6 space-y-4">
             <div className="space-y-2">
               <h3 className="font-semibold">What's included</h3>
-              <ul className="text-sm text-muted-foreground space-y-1">
+              <ul className="text-sm text-ink-muted space-y-1">
                 <li>• Profile information and settings</li>
                 <li>• Booking history and job details</li>
                 <li>• Payment and credit transactions</li>
@@ -55,7 +55,7 @@ export default function DataExport() {
                   <div key={exp.id} className="px-4 py-3 flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium">Export requested {format(new Date(exp.requested_at), 'MMM d, yyyy')}</p>
-                      {exp.completed_at && <p className="text-xs text-muted-foreground">Completed {format(new Date(exp.completed_at), 'MMM d, yyyy')}</p>}
+                      {exp.completed_at && <p className="text-xs text-ink-muted">Completed {format(new Date(exp.completed_at), 'MMM d, yyyy')}</p>}
                     </div>
                     {exp.status === 'pending' ? (
                       <Badge className="bg-warning/15 text-warning"><Clock className="h-3 w-3 mr-1" />Processing</Badge>
