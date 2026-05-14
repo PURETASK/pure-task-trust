@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/15", border: "border-primary/50", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
   completed: { icon: Check, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Job Complete!", desc: "Your home is sparkling — review and we'll release payment automatically" },
-  no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 45 minutes — choose to reschedule or get a full refund" },
+  no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 30 minutes and your cleaner hasn't checked in — report a no-show for a full refund" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/15", border: "border-destructive/50", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
 };
 
@@ -83,8 +83,18 @@ export default function BookingStatus() {
   }
 
   const statusKey = getStatusKey(job.status);
-  const config = STATUS_CONFIG[statusKey] || STATUS_CONFIG.pending;
-  const timelineStep = getTimelineStep(statusKey);
+  // Detect no-show window: 30+ min past scheduled start, cleaner has not checked in,
+  // and job is still in a pre-active state (not in_progress / completed / cancelled).
+  const minutesPastStart = job.scheduled_start_at
+    ? (Date.now() - new Date(job.scheduled_start_at).getTime()) / 60000
+    : 0;
+  const isNoShowEligible =
+    !(job as any).check_in_at &&
+    minutesPastStart >= 30 &&
+    ["pending", "created", "confirmed", "accepted"].includes(job.status);
+  const effectiveStatusKey = isNoShowEligible ? "no_show_pending" : statusKey;
+  const config = STATUS_CONFIG[effectiveStatusKey] || STATUS_CONFIG.pending;
+  const timelineStep = getTimelineStep(effectiveStatusKey);
   const StatusIcon = config.icon;
 
   const participants = useJobParticipants(job ?? null);
@@ -183,7 +193,7 @@ export default function BookingStatus() {
           )}
 
           {/* Progress Timeline */}
-          {statusKey !== "declined" && statusKey !== "no_show_pending" && (
+          {effectiveStatusKey !== "declined" && effectiveStatusKey !== "no_show_pending" && (
             <div className="rounded-3xl border-2 border-border/40 p-4 overflow-hidden">
               <div className="flex items-center">
                 {TIMELINE_STEPS.map((step, i) => {
@@ -212,7 +222,7 @@ export default function BookingStatus() {
           )}
 
           {/* No-Show Decision Card */}
-          {statusKey === "no_show_pending" && (
+          {effectiveStatusKey === "no_show_pending" && (
             <NoShowDecisionCard
               jobId={job.id}
               clientId={job.client_id || ""}
