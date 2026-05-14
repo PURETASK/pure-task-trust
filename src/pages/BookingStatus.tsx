@@ -21,6 +21,8 @@ import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobParticipants } from "@/hooks/useJobParticipants";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { Progress } from "@/components/ui/progress";
+import { ActiveJobPhotoFeed } from "@/components/job/ActiveJobPhotoFeed";
+import { RescheduleModal } from "@/components/booking/RescheduleModal";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
