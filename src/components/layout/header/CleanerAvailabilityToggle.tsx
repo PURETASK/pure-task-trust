@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,80 +10,44 @@ import type { Database } from "@/integrations/supabase/types";
 type CleanerProfile = Database["public"]["Tables"]["cleaner_profiles"]["Row"];
 
 /**
- * Online/Offline availability toggle for cleaners, shown in the main header.
+ * Always-On availability indicator for cleaners.
+ * Cleaners stay online at all times — if the profile is somehow offline,
+ * we silently flip it back to available.
  */
 export function CleanerAvailabilityToggle() {
   const { profile, isLoading } = useCleanerProfile();
   const queryClient = useQueryClient();
-  const [toggling, setToggling] = useState(false);
-  const isAvailable = profile?.is_available ?? false;
-  // Only show "Loading" while we have NO profile yet. Once we have data,
-  // background refetches must not flip the badge back to "Loading".
   const showLoading = isLoading && !profile;
-  const isBusy = toggling || showLoading;
 
-  const handleToggle = async () => {
-    if (!profile?.id) {
-      toast.error("Cleaner profile not loaded yet");
-      return;
-    }
-    const next = !isAvailable;
-    setToggling(true);
-    try {
-      const { data, error } = await supabase
-        .rpc("set_my_cleaner_availability", { _is_available: next });
-      if (error) throw error;
-      const updated = Array.isArray(data) ? data[0] : data;
-      if (!updated) throw new Error("No profile row updated (permission?)");
-
-      // Optimistically update cache so the UI flips immediately.
+  // Auto-restore to online if the cleaner profile is offline.
+  useEffect(() => {
+    if (!profile?.id || profile.is_available) return;
+    (async () => {
+      const { error } = await supabase
+        .rpc("set_my_cleaner_availability", { _is_available: true });
+      if (error) return;
       const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
       queryClient.setQueryData<CleanerProfile | null>(cleanerProfileQueryKey, (old) =>
-        old ? { ...old, is_available: next } : old
+        old ? { ...old, is_available: true } : old
       );
-      await queryClient.invalidateQueries({ queryKey: cleanerProfileQueryKey });
-
-      toast.success(
-        next
-          ? "You're now online — clients can book you!"
-          : "You're now offline — no new bookings."
-      );
-    } catch (err) {
-      console.error("Availability toggle failed:", err);
-      toast.error(
-        err instanceof Error ? err.message : "Failed to update availability"
-      );
-    } finally {
-      setToggling(false);
-    }
-  };
+    })();
+  }, [profile?.id, profile?.is_available, profile?.user_id, queryClient]);
 
   return (
-    <button
-      onClick={handleToggle}
-      disabled={isBusy || !profile}
+    <div
       className={cn(
-        "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold transition-all active:scale-95",
+        "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold",
         showLoading
           ? "bg-muted border-border text-muted-foreground"
-          : isAvailable
-          ? "bg-success/10 border-success/30 text-success hover:bg-success/20 shadow-sm"
-          : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
+          : "bg-success/10 border-success/30 text-success shadow-sm"
       )}
     >
-      {toggling || showLoading ? (
+      {showLoading ? (
         <Loader2 className="h-3 w-3 animate-spin" />
       ) : (
-        <span
-          className={cn(
-            "h-2 w-2 rounded-full flex-shrink-0",
-            isAvailable ? "bg-success animate-pulse" : "bg-muted-foreground"
-          )}
-        />
+        <span className="h-2 w-2 rounded-full flex-shrink-0 bg-success animate-pulse" />
       )}
-      <span className="hidden xs:inline">
-        {showLoading ? "Loading" : isAvailable ? "Online" : "Offline"}
-      </span>
-    </button>
+      <span className="hidden xs:inline">{showLoading ? "Loading" : "Online"}</span>
+    </div>
   );
 }
