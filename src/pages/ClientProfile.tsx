@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useAddresses } from "@/hooks/useAddresses";
-import { Mail, Edit, Home, Wallet, Bell, Heart, Building2, Shield, Key, Trash2, ChevronRight, CheckCircle, Gift } from "lucide-react";
+import { Mail, Edit, Home, Wallet, Bell, Heart, Building2, Key, Trash2, ChevronRight, CheckCircle, Gift } from "lucide-react";
 import { motion } from "framer-motion";
 import { Pill, SectionLabel } from "@/components/wf";
 
@@ -169,7 +169,6 @@ export default function ClientProfile() {
             </div>
           </div>
         </motion.div>
-        <Shield className="hidden" aria-hidden />
       </div>
     </main>
   );
