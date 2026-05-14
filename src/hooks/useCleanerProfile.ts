@@ -45,7 +45,7 @@ export function useCleanerProfile() {
       if (!user?.id) return null;
 
       const { data, error } = await withQueryTimeout<RpcResult<CleanerProfile | CleanerProfile[]>>(
-        (supabase as any).rpc('get_my_cleaner_profile') as PromiseLike<RpcResult<CleanerProfile | CleanerProfile[]>>,
+        supabase.rpc('get_my_cleaner_profile') as PromiseLike<RpcResult<CleanerProfile | CleanerProfile[]>>,
         'Cleaner profile request timed out'
       );
 
