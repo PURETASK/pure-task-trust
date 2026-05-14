@@ -95,10 +95,21 @@ export default function CancellationPolicy() {
               <CardContent className="p-5 flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-success">Free Cancellation</h3>
-                  <p className="text-sm text-muted-foreground mt-1">More than 48 hours before booking</p>
+                  <p className="text-sm text-muted-foreground mt-1">More than 24 hours before booking</p>
                   <p className="text-sm text-muted-foreground mt-2">Full refund of escrowed credits back to your account</p>
                 </div>
                 <Badge className="bg-success text-white">0% Fee</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-amber-400">
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-warning">Light Fee</h3>
+                  <p className="text-sm text-muted-foreground mt-1">6–24 hours before booking</p>
+                  <p className="text-sm text-warning mt-2">25% of booking amount charged, remaining 75% refunded</p>
+                </div>
+                <Badge className="bg-warning text-white">25% Fee</Badge>
               </CardContent>
             </Card>
 
@@ -106,7 +117,7 @@ export default function CancellationPolicy() {
               <CardContent className="p-5 flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-warning">Partial Fee</h3>
-                  <p className="text-sm text-muted-foreground mt-1">24-48 hours before booking</p>
+                  <p className="text-sm text-muted-foreground mt-1">2–6 hours before booking</p>
                   <p className="text-sm text-warning mt-2">Half of booking amount charged, remaining 50% refunded</p>
                 </div>
                 <Badge className="bg-warning text-white">50% Fee</Badge>
@@ -117,7 +128,7 @@ export default function CancellationPolicy() {
               <CardContent className="p-5 flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-destructive">Full Fee</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Less than 24 hours before booking</p>
+                  <p className="text-sm text-muted-foreground mt-1">Less than 2 hours before booking or no-show</p>
                   <p className="text-sm text-destructive mt-2">Full booking amount charged, no refund (cleaner has reserved the time)</p>
                 </div>
                 <Badge variant="destructive">100% Fee</Badge>
@@ -137,9 +148,10 @@ export default function CancellationPolicy() {
               <strong>Booking:</strong> $150 for 3-hour cleaning on Saturday at 10:00 AM
             </p>
             <ul className="text-sm space-y-2 text-muted-foreground">
-              <li>• Cancel on <strong>Thursday 9:00 AM</strong> (49h notice) → <span className="text-success">$0 fee (free cancellation)</span></li>
-              <li>• Cancel on <strong>Friday 9:00 AM</strong> (25h notice) → <span className="text-warning">$75 fee (50%)</span></li>
-              <li>• Cancel on <strong>Saturday 8:00 AM</strong> (2h notice) → <span className="text-destructive">$150 fee (100%)</span></li>
+              <li>• Cancel on <strong>Friday 9:00 AM</strong> (25h notice) → <span className="text-success">$0 fee (free cancellation)</span></li>
+              <li>• Cancel on <strong>Friday 8:00 PM</strong> (14h notice) → <span className="text-warning">$37.50 fee (25%)</span></li>
+              <li>• Cancel on <strong>Saturday 6:00 AM</strong> (4h notice) → <span className="text-warning">$75 fee (50%)</span></li>
+              <li>• Cancel on <strong>Saturday 9:30 AM</strong> (30m notice) → <span className="text-destructive">$150 fee (100%)</span></li>
             </ul>
           </CardContent>
         </Card>
@@ -166,7 +178,7 @@ export default function CancellationPolicy() {
                   </h4>
                   <ul className="text-sm text-muted-foreground space-y-1 ml-6">
                     <li>• Use when you need to cancel with short notice</li>
-                    <li>• Waives the 50% or 100% cancellation fee</li>
+                    <li>• Waives the 25%, 50% or 100% cancellation fee</li>
                     <li>• Automatically offered when applicable during cancellation</li>
                     <li>• Tracked in your account settings</li>
                   </ul>
@@ -186,7 +198,7 @@ export default function CancellationPolicy() {
 
               <p className="text-sm mt-4 text-muted-foreground">
                 <strong>Pro tip:</strong> Save your grace cancellations for true emergencies. For planned 
-                changes, try to give 48+ hours notice for free cancellation.
+                changes, try to give 24+ hours notice for free cancellation.
               </p>
             </CardContent>
           </Card>
@@ -257,9 +269,10 @@ export default function CancellationPolicy() {
           </p>
 
           <ul className="text-sm space-y-2 text-muted-foreground">
-            <li>• <strong>More than 48 hours:</strong> Free rescheduling</li>
-            <li>• <strong>24-48 hours:</strong> 50% fee applies (unless using grace cancellation)</li>
-            <li>• <strong>Less than 24 hours:</strong> 100% fee applies (unless using grace cancellation)</li>
+            <li>• <strong>More than 24 hours:</strong> Free rescheduling</li>
+            <li>• <strong>6–24 hours:</strong> 25% fee applies (unless using grace cancellation)</li>
+            <li>• <strong>2–6 hours:</strong> 50% fee applies (unless using grace cancellation)</li>
+            <li>• <strong>Less than 2 hours:</strong> 100% fee applies (unless using grace cancellation)</li>
           </ul>
 
           <p className="text-sm text-muted-foreground mt-4">
@@ -338,17 +351,22 @@ export default function CancellationPolicy() {
               </thead>
               <tbody>
                 <tr className="border-b">
-                  <td className="py-3 px-4">48+ hours</td>
+                  <td className="py-3 px-4">24+ hours</td>
                   <td className="py-3 px-4 text-success font-medium">0% (Free)</td>
                   <td className="py-3 px-4">N/A</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="py-3 px-4">24-48 hours</td>
+                  <td className="py-3 px-4">6–24 hours</td>
+                  <td className="py-3 px-4 text-warning font-medium">25%</td>
+                  <td className="py-3 px-4">Yes</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-3 px-4">2–6 hours</td>
                   <td className="py-3 px-4 text-warning font-medium">50%</td>
                   <td className="py-3 px-4">Yes</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="py-3 px-4">&lt;24 hours</td>
+                  <td className="py-3 px-4">&lt;2 hours</td>
                   <td className="py-3 px-4 text-destructive font-medium">100%</td>
                   <td className="py-3 px-4">Yes</td>
                 </tr>
