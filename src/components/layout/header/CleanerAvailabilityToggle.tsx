@@ -5,6 +5,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import type { Database } from "@/integrations/supabase/types";
+
+type CleanerProfile = Database["public"]["Tables"]["cleaner_profiles"]["Row"];
 
 /**
  * Online/Offline availability toggle for cleaners, shown in the main header.
@@ -28,14 +31,14 @@ export function CleanerAvailabilityToggle() {
     setToggling(true);
     try {
       const { data, error } = await supabase
-        .rpc("set_my_cleaner_availability" as any, { _is_available: next });
+        .rpc("set_my_cleaner_availability", { _is_available: next });
       if (error) throw error;
       const updated = Array.isArray(data) ? data[0] : data;
       if (!updated) throw new Error("No profile row updated (permission?)");
 
       // Optimistically update cache so the UI flips immediately.
       const cleanerProfileQueryKey = ["cleaner-profile", profile.user_id] as const;
-      queryClient.setQueryData(cleanerProfileQueryKey, (old: any) =>
+      queryClient.setQueryData<CleanerProfile | null>(cleanerProfileQueryKey, (old) =>
         old ? { ...old, is_available: next } : old
       );
       await queryClient.invalidateQueries({ queryKey: cleanerProfileQueryKey });

@@ -6,6 +6,22 @@ import type { Database } from '@/integrations/supabase/types';
 type ClientProfile = Database['public']['Tables']['client_profiles']['Row'];
 type CleanerProfile = Database['public']['Tables']['cleaner_profiles']['Row'];
 
+const USER_PROFILE_QUERY_TIMEOUT_MS = 8000;
+
+async function withUserProfileTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new Error(timeoutMessage)), USER_PROFILE_QUERY_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+  }
+}
+
 interface UserProfileData {
   role: UserRole | null;
   hasRole: boolean;
@@ -34,11 +50,14 @@ export function useUserProfile() {
       }
 
       // Fetch role from user_roles table
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      const { data: roleData } = await withUserProfileTimeout(
+        supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .maybeSingle(),
+        'User role request timed out'
+      );
 
       const role = roleData?.role as UserRole | null;
 
@@ -59,20 +78,26 @@ export function useUserProfile() {
       let needsOnboarding = false;
 
       if (role === 'client') {
-        const { data } = await supabase
-          .from('client_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const { data } = await withUserProfileTimeout(
+          supabase
+            .from('client_profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+          'Client profile request timed out'
+        );
         clientProfile = data;
         // Client profile is auto-created by DB trigger — never block on missing profile
         needsOnboarding = false;
       } else if (role === 'cleaner') {
-        const { data } = await supabase
-          .from('cleaner_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const { data } = await withUserProfileTimeout(
+          supabase
+            .from('cleaner_profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+          'Cleaner profile request timed out'
+        );
         cleanerProfile = data;
         // Only redirect to onboarding if:
         // 1. Profile exists AND onboarding not completed AND
