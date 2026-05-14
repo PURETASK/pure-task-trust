@@ -92,14 +92,6 @@ export default function JobApproval() {
       ? `${job.cleaner.first_name || ""} ${job.cleaner.last_name || ""}`.trim() || "Your Cleaner"
       : "Cleaner";
 
-  const money = useJobMoney({
-    escrow_credits_reserved: job.escrow_credits_reserved,
-    estimated_hours: job.estimated_hours,
-    actual_hours: job.actual_hours,
-    final_charge_credits: job.final_charge_credits,
-    rush_fee_credits: (job as any).rush_fee_credits,
-    cleaner_tier: (job.cleaner as any)?.tier,
-  });
   const holdAmount = money.escrowHeld;
   const hoursWorked = money.billableHours;
   const creditsCharged = money.laborCharge + money.rushFee;
