@@ -99,9 +99,9 @@ export default function Notifications() {
             <div className="space-y-3">{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}</div>
           ) : filtered.length === 0 ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-2 border-dashed border-warning/20 rounded-3xl">
+              <Card className="border border-dashed border-hairline-soft rounded-3xl shadow-wf">
                 <CardContent className="py-16 text-center">
-                  <div className="h-14 w-14 rounded-2xl bg-warning/10 border-2 border-warning/30 flex items-center justify-center mx-auto mb-4">
+                  <div className="h-14 w-14 rounded-2xl bg-warning/10 border border-warning/30 flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="h-7 w-7 text-warning" />
                   </div>
                   <h3 className="font-bold text-lg mb-1">{filter === "all" ? "All caught up!" : `No ${filter} notifications`}</h3>
@@ -118,10 +118,10 @@ export default function Notifications() {
                   <motion.div key={n.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: i * 0.03 }}>
                     <div
                       onClick={() => handleClick(n)}
-                      className={`relative flex items-start gap-4 p-4 rounded-3xl border-2 transition-all cursor-pointer group ${
+                      className={`relative flex items-start gap-4 p-4 rounded-[14px] border shadow-wf transition-all cursor-pointer group ${
                         !n.is_read
-                          ? "bg-primary/5 border-primary/30 hover:bg-primary/10"
-                          : "bg-card border-hairline-soft hover:border-primary/20"
+                          ? "bg-primary/5 border-primary/30 hover:shadow-wf-hover"
+                          : "bg-app-surface border-hairline-soft hover:border-primary/20 hover:shadow-wf-hover"
                       }`}
                     >
                       {/* Unread dot */}
@@ -130,7 +130,7 @@ export default function Notifications() {
                       )}
 
                       {/* Icon */}
-                      <div className={`h-11 w-11 rounded-xl border-2 border-hairline-soft flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
+                      <div className={`h-11 w-11 rounded-xl border border-hairline-soft flex items-center justify-center text-xl flex-shrink-0 ${typeBg[n.type] || "bg-muted"}`}>
                         {typeEmoji[n.type] || "🔔"}
                       </div>
 
