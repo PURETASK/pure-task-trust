@@ -9,6 +9,7 @@ import { format, addDays, setHours, setMinutes } from "date-fns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CancelAlternativesModalProps {
   open: boolean;
@@ -49,24 +50,36 @@ export function CancelAlternativesModal({
   const [step, setStep] = useState<"alternatives" | "reason">("alternatives");
   const [selectedReason, setSelectedReason] = useState("");
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const alternativeSlots = generateAlternativeSlots(currentScheduledAt);
 
   const reschedule = useMutation({
     mutationFn: async (newDate: Date) => {
-      const { error } = await supabase
-        .from("jobs")
-        .update({ scheduled_start_at: newDate.toISOString() })
-        .eq("id", jobId);
+      if (!user?.id) throw new Error("Not authenticated");
+      const { data, error } = await supabase.rpc("reschedule_job_atomic", {
+        _user_id: user.id,
+        _job_id: jobId,
+        _new_start: newDate.toISOString(),
+      });
       if (error) throw error;
+      return data as { fee_credits: number; reschedules_used: number; reschedules_remaining: number };
     },
-    onSuccess: (_, newDate) => {
-      toast.success(`Rescheduled to ${format(newDate, "MMM d 'at' h:mm a")}`);
+    onSuccess: (result, newDate) => {
+      const fee = Number(result?.fee_credits ?? 0);
+      const left = Number(result?.reschedules_remaining ?? 0);
+      const when = format(newDate, "MMM d 'at' h:mm a");
+      if (fee > 0) {
+        toast.success(`Rescheduled to ${when} · ${fee} credit fee (within 2h of original time)`);
+      } else {
+        toast.success(`Rescheduled to ${when} · ${left} free reschedule${left === 1 ? "" : "s"} left`);
+      }
       queryClient.invalidateQueries({ queryKey: ["job", jobId] });
       queryClient.invalidateQueries({ queryKey: ["client-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["credit-account"] });
       onOpenChange(false);
     },
-    onError: () => toast.error("Failed to reschedule"),
+    onError: (e: any) => toast.error(e?.message ?? "Failed to reschedule"),
   });
 
   const handleConfirmCancel = () => {

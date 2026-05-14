@@ -265,18 +265,17 @@ export default function CancellationPolicy() {
         <section>
           <h2 className="text-xl font-semibold mb-4">Rescheduling</h2>
           <p className="text-muted-foreground mb-4">
-            Rescheduling to a different date/time follows the same fee structure as cancellations:
+            Rescheduling has its own, simpler rules:
           </p>
 
           <ul className="text-sm space-y-2 text-muted-foreground">
-            <li>• <strong>More than 24 hours:</strong> Free rescheduling</li>
-            <li>• <strong>6–24 hours:</strong> 25% fee applies (unless using grace cancellation)</li>
-            <li>• <strong>2–6 hours:</strong> 50% fee applies (unless using grace cancellation)</li>
-            <li>• <strong>Less than 2 hours:</strong> 100% fee applies (unless using grace cancellation)</li>
+            <li>• <strong>More than 2 hours before:</strong> Free — up to <strong>3 reschedules per job</strong></li>
+            <li>• <strong>Within 2 hours:</strong> 50% fee (still counts toward the 3)</li>
+            <li>• <strong>4th reschedule:</strong> blocked — client must cancel instead</li>
           </ul>
 
           <p className="text-sm text-muted-foreground mt-4">
-            Cleaners can propose alternative times, subject to mutual agreement and availability.
+            Cancellation fees are always calculated against the <strong>original</strong> scheduled time — clients can't reduce a fee by rescheduling first.
           </p>
         </section>
 
