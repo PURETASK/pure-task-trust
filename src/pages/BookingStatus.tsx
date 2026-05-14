@@ -340,6 +340,7 @@ export default function BookingStatus() {
             )}
             {statusKey === "active" && (
               <>
+                <ActiveJobPhotoFeed jobId={id!} />
                 <Button className="w-full rounded-xl h-12 animate-pulse" asChild><Link to={`/job/${id}`}>Track Live Progress</Link></Button>
                 <Button variant="outline" className="w-full gap-2 rounded-xl border-2" asChild>
                   <Link to={`/messages?job=${id}`}><MessageCircle className="h-4 w-4" />Message Cleaner</Link>
