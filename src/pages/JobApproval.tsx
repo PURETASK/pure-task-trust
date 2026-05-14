@@ -24,6 +24,7 @@ import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { Progress } from "@/components/ui/progress";
 import { useJobMoney } from "@/hooks/useJobMoney";
+import { Pill, SectionLabel } from "@/components/wf";
 
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
@@ -147,18 +148,19 @@ export default function JobApproval() {
         />
       )}
 
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-12 bg-app-canvas">
         <div className="container max-w-lg">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
 
             {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-8 rounded-3xl border border-hairline-soft bg-app-surface shadow-wf p-6">
               <div className="h-16 w-16 rounded-3xl bg-gradient-aero flex items-center justify-center mx-auto mb-4 shadow-aero animate-aero-pulse">
                 <Sparkles className="h-8 w-8 text-white" />
               </div>
-              <Badge variant="success" className="mb-3">Cleaning Complete</Badge>
-              <h1 className="text-2xl sm:text-3xl font-poppins font-bold mb-2 tracking-tight">Review &amp; Approve</h1>
-              <p className="text-muted-foreground">
+              <SectionLabel className="justify-center mb-2">Status</SectionLabel>
+              <Pill variant="success" className="mb-3">Cleaning Complete</Pill>
+              <h1 className="text-3xl sm:text-4xl font-poppins font-bold mb-2 tracking-tight">Review &amp; Approve</h1>
+              <p className="text-ink-muted">
                 {hasPhotos
                   ? `Check the photos and approve, or report an issue within ${escrow.windowHours} hours — payment releases automatically after that`
                   : `Approve or report an issue within ${escrow.windowHours} hours — payment releases automatically after that`}
@@ -187,7 +189,7 @@ export default function JobApproval() {
             </div>
 
             {/* Photo Proof */}
-            <Card className="mb-6 overflow-hidden">
+            <Card className="mb-6 overflow-hidden rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
               <CardContent className="p-0">
                 {loadingPhotos ? (
                   <div className="h-48 flex items-center justify-center bg-secondary/50">
@@ -279,34 +281,34 @@ export default function JobApproval() {
 
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center font-semibold">
+                    <div className="h-12 w-12 rounded-2xl bg-app-sunken border border-hairline-soft flex items-center justify-center font-semibold">
                       {cleanerName.charAt(0)}
                     </div>
                     <div>
                       <h3 className="font-semibold">{cleanerName}</h3>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1 text-sm text-ink-muted">
                         <Clock className="h-3.5 w-3.5" />{hoursWorked}h worked
                       </div>
                     </div>
                   </div>
 
                   {/* Credit Breakdown */}
-                  <div className="space-y-3 p-4 bg-secondary/50 rounded-xl">
+                  <div className="space-y-3 p-4 bg-app-sunken border border-hairline-soft rounded-2xl">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Credits held</span>
+                      <span className="text-ink-muted">Credits held</span>
                       <span>{holdAmount}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Time charged</span>
+                      <span className="text-ink-muted">Time charged</span>
                       <span>-{creditsCharged}</span>
                     </div>
                     {refundAmount > 0 && (
-                      <div className="flex justify-between text-success">
+                      <div className="flex justify-between text-state-success-fg">
                         <span>Refunded to you</span>
                         <span>+{refundAmount}</span>
                       </div>
                     )}
-                    <div className="border-t border-border pt-3 flex justify-between font-semibold">
+                    <div className="border-t border-hairline-soft pt-3 flex justify-between font-semibold">
                       <span>To release</span>
                       <span>{creditsCharged} credits</span>
                     </div>
@@ -316,7 +318,7 @@ export default function JobApproval() {
             </Card>
 
             {/* Quick Satisfaction Pulse */}
-            <div className="rounded-xl border border-border/40 p-4 mb-3">
+            <div className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf p-4 mb-3">
               <SatisfactionPulse jobId={id!} />
             </div>
 

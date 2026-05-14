@@ -27,6 +27,7 @@ import {
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
   Star, DollarSign, Navigation, HelpCircle
 } from "lucide-react";
+import { Pill, SectionLabel } from "@/components/wf";
 
 export default function CleanerJobDetail() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -187,19 +188,20 @@ export default function CleanerJobDetail() {
     <CleanerLayout>
       <div className="space-y-5 max-w-2xl relative">
         {/* Header */}
-        <div className="flex items-center gap-3">
+        <div className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf p-5 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate("/cleaner/jobs")}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold capitalize">
+            <SectionLabel>Job</SectionLabel>
+            <h1 className="text-2xl font-bold capitalize tracking-tight">
               {(job.cleaning_type || '').replace('_', ' ')} Clean
             </h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-ink-muted text-sm">
               {participants.client.fullName}
             </p>
           </div>
-          <Badge variant={status.badgeVariant}>{status.label}</Badge>
+          <Pill variant={status.badgeVariant === 'success' ? 'success' : status.badgeVariant === 'destructive' ? 'danger' : status.badgeVariant === 'outline' ? 'neutral' : 'info'}>{status.label}</Pill>
         </div>
 
         {/* Client Brief Card — shows for confirmed/in_progress */}
@@ -213,7 +215,7 @@ export default function CleanerJobDetail() {
         )}
 
         {/* Progress Steps */}
-        <Card>
+        <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               {['Check In', 'In Progress', 'Complete'].map((step, i) => (
@@ -236,7 +238,7 @@ export default function CleanerJobDetail() {
         </Card>
 
         {/* Job Details */}
-        <Card>
+        <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Job Details</CardTitle>
           </CardHeader>
@@ -328,7 +330,7 @@ export default function CleanerJobDetail() {
 
         {/* Check-in Action */}
         {canCheckin && (
-          <Card className="border-primary/20 bg-primary/5">
+          <Card className="rounded-3xl border border-primary/30 bg-primary/5 shadow-wf">
             <CardContent className="p-5">
               <div className="flex items-start gap-4">
                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -349,7 +351,7 @@ export default function CleanerJobDetail() {
 
         {/* Photo Upload — Numbered Stepper */}
         {isInProgress && (
-          <Card>
+          <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Camera className="h-4 w-4" />
@@ -448,7 +450,7 @@ export default function CleanerJobDetail() {
 
         {/* Checkout */}
         {canCheckoutNow && (
-          <Card className={`${canCheckout ? "border-success/20 bg-success/5" : "border-warning/20 bg-warning/5"}`}>
+          <Card className={`rounded-3xl shadow-wf ${canCheckout ? "border border-state-success-fg/30 bg-state-success-bg" : "border border-warning/30 bg-warning/5"}`}>
             <CardContent className="p-5">
               <div className="flex items-start gap-4">
                 <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${canCheckout ? 'bg-success/10' : 'bg-warning/10'}`}>
@@ -485,11 +487,11 @@ export default function CleanerJobDetail() {
 
         {/* Completed state */}
         {isCompleted && (
-          <Card className="border-success/20 bg-success/5">
+          <Card className="rounded-3xl border border-state-success-fg/30 bg-state-success-bg shadow-wf">
             <CardContent className="p-5 text-center">
-              <CheckCircle className="h-12 w-12 text-success mx-auto mb-3" />
+              <CheckCircle className="h-12 w-12 text-state-success-fg mx-auto mb-3" />
               <h3 className="font-bold text-lg mb-1">Job Complete!</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-ink-muted mb-4">
                 Waiting for client approval. Your {money.cleanerNet} credits will be released after review.
               </p>
               {photos.length > 0 && (
