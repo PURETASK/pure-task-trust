@@ -74,6 +74,9 @@ const MoveOutCleaning = lazy(() => import("./pages/MoveOutCleaning"));
 const RecurringCleaning = lazy(() => import("./pages/RecurringCleaning"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 
+// Internal dev preview — wireframe component kit
+const WireframeKit = lazy(() => import("./pages/_dev/WireframeKit"));
+
 // Cleaner pages
 const CleanerDashboard = lazy(() => import("./pages/cleaner/CleanerDashboard"));
 const CleanerSchedule = lazy(() => import("./pages/cleaner/CleanerSchedule"));
@@ -206,6 +209,7 @@ const App = () => (
                     {/* Public routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
+                    <Route path="/_dev/wireframe-kit" element={<WireframeKit />} />
                     <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
                     <Route path="/cancellationpolicy" element={<Navigate to="/cancellation-policy" replace />} />
                     <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
