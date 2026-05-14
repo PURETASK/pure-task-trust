@@ -201,7 +201,7 @@ export default function CleanerJobDetail() {
               {participants.client.fullName}
             </p>
           </div>
-          <Pill variant={status.badgeVariant === 'success' ? 'success' : status.badgeVariant === 'destructive' ? 'danger' : status.badgeVariant === 'warning' ? 'warning' : 'info'}>{status.label}</Pill>
+          <Pill variant={status.badgeVariant === 'success' ? 'success' : status.badgeVariant === 'destructive' ? 'danger' : status.badgeVariant === 'outline' ? 'neutral' : 'info'}>{status.label}</Pill>
         </div>
 
         {/* Client Brief Card — shows for confirmed/in_progress */}
