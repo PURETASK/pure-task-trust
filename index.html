@@ -59,6 +59,17 @@
   <meta name="twitter:title" content="PureTask - Trusted Cleaning Services">
   <meta property="og:description" content="Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results. Transparent pricing with escrow protection.">
   <meta name="twitter:description" content="Book verified, background-checked cleaners with GPS-verified arrivals and photo-documented results. Transparent pricing with escrow protection.">
+
+  <!-- OneSignal Web Push -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "4561cf96-56fd-4fbe-8b59-2fdfcb4f33bb",
+      });
+    });
+  </script>
 </head>
 
   <body>
