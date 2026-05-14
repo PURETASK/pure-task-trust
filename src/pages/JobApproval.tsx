@@ -44,6 +44,15 @@ export default function JobApproval() {
   // Live escrow countdown — replaces hardcoded "24 hours" copy
   const escrow = useEscrowCountdown(job ?? null);
 
+  const money = useJobMoney({
+    escrow_credits_reserved: job?.escrow_credits_reserved ?? 0,
+    estimated_hours: job?.estimated_hours ?? 0,
+    actual_hours: job?.actual_hours ?? null,
+    final_charge_credits: job?.final_charge_credits ?? null,
+    rush_fee_credits: (job as any)?.rush_fee_credits ?? null,
+    cleaner_tier: (job?.cleaner as any)?.tier ?? null,
+  });
+
   // Single source of truth for who can approve / dispute this job
   const auth = useJobAuthorization(job ? {
     id: job.id,
