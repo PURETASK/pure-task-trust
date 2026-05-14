@@ -125,7 +125,7 @@ export default function Index() {
             src={heroImg}
             alt="Pristine clean home"
             className="w-full h-full object-cover sm:object-contain object-right-bottom opacity-60 sm:opacity-100"
-            loading="eager" fetchpriority="high" decoding="sync"
+            loading="eager" fetchPriority="high" decoding="sync"
           />
           {/* Mobile: stronger overlay for text legibility over full-bleed image */}
           <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-background/95 via-background/80 sm:via-background/85 to-background/60 sm:to-background/30" />
