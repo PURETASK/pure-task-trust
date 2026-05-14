@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import cleaningPattern from "@/assets/hero-cleaning-pattern.jpg";
 import { useClientHome } from "@/hooks/useClientHome";
 import { UpcomingCleaningCard } from "@/components/client-home/UpcomingCleaningCard";
 import { QuickRebookSection } from "@/components/client-home/QuickRebookSection";
