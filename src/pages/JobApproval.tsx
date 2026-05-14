@@ -168,13 +168,13 @@ export default function JobApproval() {
 
               {/* Live countdown strip — only renders when job is in the review window */}
               {escrow.isReviewable && escrow.releaseAt && (
-                <div className="mt-4 rounded-2xl border border-aero-cyan/30 bg-aero-bg/50 p-3 text-left">
+                <div className="mt-4 rounded-[14px] border border-hairline-soft bg-app-surface shadow-wf p-3 text-left">
                   <div className="flex items-center justify-between mb-2 gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink">
                       <Clock className="h-4 w-4 text-aero-trust" />
                       {escrow.label}
                     </span>
-                    <span className="text-xs text-aero-soft">
+                    <span className="text-xs text-ink-muted">
                       Releases at {escrow.releaseAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
                     </span>
                   </div>
@@ -322,34 +322,34 @@ export default function JobApproval() {
               <SatisfactionPulse jobId={id!} />
             </div>
 
-            {/* Approve */}
-            <Button
-              variant="success"
-              size="lg"
-              className="w-full mb-3"
-              onClick={handleApprove}
-              disabled={isApproving || !auth.canApprove}
-              title={!auth.canApprove ? auth.reasons.canApprove : undefined}
-            >
-              {isApproving ? (
-                <><Loader2 className="h-5 w-5 mr-2 animate-spin" />Processing...</>
-              ) : (
-                <><Check className="h-5 w-5 mr-2" />Approve & Release Credits</>
-              )}
-            </Button>
+            {/* Sticky CTA bar (mobile) — keeps Approve / Dispute always reachable */}
+            <div className="sticky bottom-0 left-0 right-0 -mx-4 sm:mx-0 mt-2 px-4 sm:px-0 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pt-0 sm:pb-0 bg-gradient-to-t from-app-canvas via-app-canvas/95 to-transparent sm:bg-none z-20">
+              <Button
+                variant="success"
+                size="lg"
+                className="w-full mb-3"
+                onClick={handleApprove}
+                disabled={isApproving || !auth.canApprove}
+                title={!auth.canApprove ? auth.reasons.canApprove : undefined}
+              >
+                {isApproving ? (
+                  <><Loader2 className="h-5 w-5 mr-2 animate-spin" />Processing...</>
+                ) : (
+                  <><Check className="h-5 w-5 mr-2" />Approve & Release Credits</>
+                )}
+              </Button>
 
-            {/* Report issue */}
-            <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
-                  disabled={!auth.canDispute}
-                  title={!auth.canDispute ? auth.reasons.canDispute : undefined}
-                >
-                  <AlertTriangle className="h-4 w-4" />Dispute / Report Issue
-                </Button>
-              </DialogTrigger>
+              <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
+                    disabled={!auth.canDispute}
+                    title={!auth.canDispute ? auth.reasons.canDispute : undefined}
+                  >
+                    <AlertTriangle className="h-4 w-4" />Dispute / Report Issue
+                  </Button>
+                </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Report an Issue</DialogTitle>
@@ -370,7 +370,8 @@ export default function JobApproval() {
                   </div>
                 </div>
               </DialogContent>
-            </Dialog>
+              </Dialog>
+            </div>
 
           </motion.div>
         </div>
