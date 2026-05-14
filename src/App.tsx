@@ -73,6 +73,12 @@ const DeepCleaning = lazy(() => import("./pages/DeepCleaning"));
 const MoveOutCleaning = lazy(() => import("./pages/MoveOutCleaning"));
 const RecurringCleaning = lazy(() => import("./pages/RecurringCleaning"));
 const Notifications = lazy(() => import("./pages/Notifications"));
+const Dispute = lazy(() => import("./pages/Dispute"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Trust = lazy(() => import("./pages/Trust"));
+const Waitlist = lazy(() => import("./pages/Waitlist"));
+const PressKit = lazy(() => import("./pages/PressKit"));
+const PhotoEtiquette = lazy(() => import("./pages/cleaner/PhotoEtiquette"));
 
 // Internal dev preview — wireframe component kit
 const WireframeKit = lazy(() => import("./pages/_dev/WireframeKit"));
@@ -230,6 +236,9 @@ const App = () => (
                     <Route path="/deep-cleaning" element={<DeepCleaning />} />
                     <Route path="/move-out-cleaning" element={<MoveOutCleaning />} />
                     <Route path="/recurring-cleaning" element={<RecurringCleaning />} />
+                    <Route path="/trust" element={<Trust />} />
+                    <Route path="/waitlist" element={<Waitlist />} />
+                    <Route path="/press" element={<PressKit />} />
 
                     {/* Admin routes */}
                     <Route path="/admin/analytics" element={<RequireAdmin><AdminAnalyticsDashboard /></RequireAdmin>} />
@@ -284,6 +293,8 @@ const App = () => (
                     <Route path="/booking/:id" element={<RequireClient><RequireSetup><BookingStatus /></RequireSetup></RequireClient>} />
                     <Route path="/job/:id" element={<RequireClient><RequireSetup><JobInProgress /></RequireSetup></RequireClient>} />
                     <Route path="/job/:id/approve" element={<RequireClient><RequireSetup><JobApproval /></RequireSetup></RequireClient>} />
+                    <Route path="/dispute/:id" element={<RequireClient><RequireSetup><Dispute /></RequireSetup></RequireClient>} />
+                    <Route path="/privacy" element={<RequireAuth><Privacy /></RequireAuth>} />
                     {/* Legacy alias → canonical path */}
                     <Route path="/job-approval/:id" element={<Navigate to="/job/:id/approve" replace />} />
                     <Route path="/wallet" element={<RequireClient><Wallet /></RequireClient>} />
@@ -328,6 +339,7 @@ const App = () => (
                     <Route path="/cleaner/certifications" element={<RequireCleaner><CleanerCertifications /></RequireCleaner>} />
                     <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
                     <Route path="/cleaner/earnings-forecast" element={<RequireCleaner><CleanerEarningsForecast /></RequireCleaner>} />
+                    <Route path="/cleaner/photo-etiquette" element={<RequireCleaner><PhotoEtiquette /></RequireCleaner>} />
 
                     <Route path="*" element={<NotFound />} />
                   </Route>

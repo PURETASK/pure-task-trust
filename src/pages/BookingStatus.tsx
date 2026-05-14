@@ -331,6 +331,9 @@ export default function BookingStatus() {
                 <Button variant="outline" className="w-full gap-2 rounded-xl border-2" asChild>
                   <Link to={`/messages?job=${id}`}><MessageCircle className="h-4 w-4" />Message Cleaner</Link>
                 </Button>
+                <Button variant="outline" className="w-full gap-2 rounded-xl" onClick={() => setShowRescheduleModal(true)}>
+                  <Calendar className="h-4 w-4" />Reschedule
+                </Button>
                 {canCancel && (
                   <Button variant="ghost" className="w-full text-destructive hover:bg-destructive/5 rounded-xl" onClick={() => setShowCancelModal(true)}>
                     Cancel Booking
@@ -354,6 +357,9 @@ export default function BookingStatus() {
                 </div>
                 <Button variant="success" className="w-full h-12 rounded-xl gap-2" asChild>
                   <Link to={`/job/${id}/approve`}><Check className="h-5 w-5" />Review Photos & Approve</Link>
+                </Button>
+                <Button variant="ghost" className="w-full gap-2 rounded-xl text-destructive hover:bg-destructive/5" asChild>
+                  <Link to={`/dispute/${id}`}><AlertTriangle className="h-4 w-4" />Flag an issue</Link>
                 </Button>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1 rounded-xl gap-2" onClick={() => rebook(id!)} disabled={isRebooking}>
