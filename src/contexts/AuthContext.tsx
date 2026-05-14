@@ -102,16 +102,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
       const [{ data: roleData }, { data: profileData }] = await Promise.all([
-        supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', supabaseUser.id)
-          .maybeSingle(),
-        supabase
-          .from('profiles')
-          .select('full_name, avatar_url')
-          .eq('id', supabaseUser.id)
-          .maybeSingle(),
+        withAuthTimeout(
+          supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', supabaseUser.id)
+            .maybeSingle(),
+          'User role request timed out'
+        ),
+        withAuthTimeout(
+          supabase
+            .from('profiles')
+            .select('full_name, avatar_url')
+            .eq('id', supabaseUser.id)
+            .maybeSingle(),
+          'User profile request timed out'
+        ),
       ]);
 
       setUser({
