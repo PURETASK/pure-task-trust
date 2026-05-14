@@ -22,7 +22,7 @@ export const FlowChip = forwardRef<HTMLButtonElement, FlowChipProps>(
           "border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aero-cyan focus-visible:ring-offset-2",
           selected
             ? "bg-gradient-aero text-white border-transparent shadow-aero"
-            : "bg-aero-card text-foreground border-aero hover:border-aero-cyan/50 hover:bg-aero-bg",
+            : "bg-app-surface text-foreground border-hairline-soft hover:border-hairline-soft-cyan/50 hover:bg-aero-bg",
           className
         )}
         {...props}

@@ -60,13 +60,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     return "/home";
   };
 
-  const headerAccentClass = !isAuthenticated
-    ? "border-b-aero"
-    : user?.role === "admin"
-    ? "border-b-destructive/30"
-    : user?.role === "cleaner"
-    ? "border-b-success/30"
-    : "border-b-aero";
+  const headerAccentClass = "border-hairline-soft";
 
   const avatarRingClass = !isAuthenticated
     ? "ring-aero-cyan/40"
@@ -79,7 +73,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <HelpProvider>
     <SidebarProvider>
-      <div className="min-h-dvh flex w-full max-w-[100vw] bg-background overflow-x-clip">
+      <div className="min-h-dvh flex w-full max-w-[100vw] bg-app-canvas overflow-x-clip">
         {/* Skip to main content — WCAG 2.4.1 */}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-semibold">
           Skip to main content
@@ -89,7 +83,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="flex-1 flex flex-col min-h-dvh min-w-0">
           {/* ── HEADER ───────────────────────────────────────────────────── */}
           <header role="banner" className={cn(
-            "sticky top-0 z-40 h-12 sm:h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-safe",
+            "sticky top-0 z-40 h-12 sm:h-14 border-b bg-app-surface/95 backdrop-blur supports-[backdrop-filter]:bg-app-surface/75 pt-safe",
             headerAccentClass
           )}>
             <div className="flex h-full items-center justify-between px-2 sm:px-4">

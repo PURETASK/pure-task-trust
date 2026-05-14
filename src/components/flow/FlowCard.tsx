@@ -17,7 +17,7 @@ export function FlowCard({ title, description, children, className, glow }: Flow
   return (
     <section
       className={cn(
-        "bg-aero-card border border-aero rounded-3xl shadow-aero",
+        "bg-app-surface border border-hairline-soft rounded-3xl shadow-wf",
         "p-6 sm:p-8 md:p-10",
         glow && "ring-aero-glow",
         className
@@ -26,12 +26,12 @@ export function FlowCard({ title, description, children, className, glow }: Flow
       {(title || description) && (
         <header className="mb-6 sm:mb-8 space-y-2">
           {title && (
-            <h1 className="font-poppins text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+            <h1 className="font-poppins text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               {title}
             </h1>
           )}
           {description && (
-            <p className="text-sm sm:text-base text-aero-soft leading-relaxed">{description}</p>
+            <p className="text-sm sm:text-base text-ink-muted leading-relaxed">{description}</p>
           )}
         </header>
       )}

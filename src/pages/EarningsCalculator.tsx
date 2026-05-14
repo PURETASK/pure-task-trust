@@ -169,7 +169,7 @@ export default function EarningsCalculator() {
           >
             {/* Section header */}
             <div className="flex items-center gap-2 mb-1">
-              <div className="h-8 w-8 rounded-xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-xl bg-primary/10 border border-hairline-soft flex items-center justify-center">
                 <Calculator className="h-4 w-4 text-primary" />
               </div>
               <h2 className="font-bold text-base">Adjust Your Numbers</h2>
@@ -319,7 +319,7 @@ export default function EarningsCalculator() {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="h-8 w-8 rounded-xl bg-warning/10 border-2 border-warning/20 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-xl bg-warning/10 border border-hairline-soft flex items-center justify-center">
               <Sparkles className="h-4 w-4 text-warning" />
             </div>
             <h2 className="text-xl font-poppins font-bold">How Your Tier Affects Earnings</h2>

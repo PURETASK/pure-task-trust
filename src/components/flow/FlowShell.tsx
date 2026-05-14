@@ -16,7 +16,7 @@ interface FlowShellProps {
  */
 export function FlowShell({ children, summary, className }: FlowShellProps) {
   return (
-    <div className={cn("min-h-[100dvh] bg-aero pb-24 md:pb-16", className)}>
+    <div className={cn("min-h-[100dvh] bg-app-canvas pb-24 md:pb-16", className)}>
       <header className="pt-safe pt-6 pb-2 flex items-center justify-center">
         <a href="/" className="flex items-center gap-2 opacity-90 hover:opacity-100 transition-opacity">
           <img

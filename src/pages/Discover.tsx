@@ -355,7 +355,7 @@ export default function Discover() {
                 <MapPin className="h-3 w-3 mr-1" />
                 {filteredCleaners.length > 0 ? `${filteredCleaners.length} cleaners available` : "Find cleaners near you"}
               </Badge>
-              <Badge className="bg-aero-cyan/20 text-white border-aero-cyan/40 text-xs backdrop-blur-sm">
+              <Badge className="bg-aero-cyan/20 text-white border-hairline-soft-cyan/40 text-xs backdrop-blur-sm">
                 <Shield className="h-3 w-3 mr-1" /> 100% Verified
               </Badge>
             </div>

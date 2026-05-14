@@ -226,11 +226,7 @@ export default function Index() {
                 whileHover={{ y: -4 }}
               >
                 <Card
-                  className="h-full transition-all duration-300"
-                  style={{
-                    border: `2px solid ${item.borderColor}`,
-                    boxShadow: `0 4px 24px 0 ${item.borderColor.replace(')', ' / 0.15)')}, 0 1px 6px 0 ${item.borderColor.replace(')', ' / 0.1)')}`,
-                  }}
+                  className="h-full rounded-3xl border border-hairline-soft bg-app-surface shadow-wf hover:shadow-wf-hover transition-all duration-300"
                 >
                   <CardContent className="p-6 sm:p-8">
                     <div

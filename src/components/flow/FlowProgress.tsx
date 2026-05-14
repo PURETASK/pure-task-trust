@@ -15,7 +15,7 @@ export function FlowProgress({ current, total, label, className }: FlowProgressP
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between mb-2 text-xs sm:text-sm">
-        <span className="font-medium text-aero-soft">
+        <span className="font-medium text-ink-muted">
           {label ?? `Step ${current} of ${total}`}
         </span>
         <span className="font-semibold text-aero-trust tabular-nums">{pct}%</span>

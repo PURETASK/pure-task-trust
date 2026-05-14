@@ -36,7 +36,7 @@ export function DashCelebration({ title, subtitle, size = "md" }: Props) {
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-2 text-aero-soft max-w-sm mx-auto leading-relaxed">{subtitle}</p>
+          <p className="mt-2 text-ink-muted max-w-sm mx-auto leading-relaxed">{subtitle}</p>
         )}
       </div>
     );
@@ -99,7 +99,7 @@ export function DashCelebration({ title, subtitle, size = "md" }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-2 text-aero-soft max-w-sm mx-auto leading-relaxed"
+          className="mt-2 text-ink-muted max-w-sm mx-auto leading-relaxed"
         >
           {subtitle}
         </motion.p>

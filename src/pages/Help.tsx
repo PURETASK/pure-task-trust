@@ -59,7 +59,7 @@ export default function Help() {
           <TopicGrid role={role} />
         </div>
 
-        <Card className="p-4 sm:p-6 rounded-2xl border-2 border-[hsl(var(--pt-amber-deep))] bg-[hsl(var(--pt-amber))]/[0.05]">
+        <Card className="p-4 sm:p-6 rounded-2xl border border-hairline-soft bg-[hsl(var(--pt-amber))]/[0.05]">
           <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-[hsl(var(--pt-amber-deep))] text-sm sm:text-base">Need a human?</h3>
@@ -70,7 +70,7 @@ export default function Help() {
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button
                 onClick={() => navigate("/help/contact")}
-                className="bg-[hsl(var(--pt-amber))] hover:bg-[hsl(var(--pt-amber-deep))] text-white border-2 border-[hsl(var(--pt-amber-deep))] w-full sm:w-auto h-10"
+                className="bg-[hsl(var(--pt-amber))] hover:bg-[hsl(var(--pt-amber-deep))] text-white border border-hairline-soft w-full sm:w-auto h-10"
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Open ticket

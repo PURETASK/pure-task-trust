@@ -229,7 +229,7 @@ export default function CleaningDetail() {
             <div className="p-5 sm:p-6 space-y-4">
               {/* Cleaner info */}
               <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-poppins font-bold text-primary text-lg">
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 border border-hairline-soft flex items-center justify-center font-poppins font-bold text-primary text-lg">
                   {participants.cleaner.initial}
                 </div>
                 <div className="flex-1">
@@ -425,7 +425,7 @@ export default function CleaningDetail() {
                     </div>
 
                     {graceRemaining > 0 && feePercent > 0 && (
-                      <div className="rounded-xl bg-primary/5 border-2 border-primary/20 p-3">
+                      <div className="rounded-xl bg-primary/5 border border-hairline-soft p-3">
                         <p className="text-xs text-primary font-medium">
                           <Shield className="h-3 w-3 inline mr-1" />
                           You have {graceRemaining} grace cancellation{graceRemaining > 1 ? 's' : ''} remaining — this could waive the fee.

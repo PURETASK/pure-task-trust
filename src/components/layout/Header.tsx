@@ -10,7 +10,7 @@ import logo from "@/assets/brand/puretask-mark-sm.webp";
 
 export function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/80 backdrop-blur-xl border-b border-aero flex items-center px-6">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-app-surface/85 backdrop-blur-xl border-b border-hairline-soft flex items-center px-6">
       <div className="flex w-full items-center justify-between max-w-7xl mx-auto">
         <Link to="/" className="flex items-center gap-2 group">
           <img

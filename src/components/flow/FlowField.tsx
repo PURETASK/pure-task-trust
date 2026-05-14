@@ -32,7 +32,7 @@ export function FlowField({
         >
           {label}
           {optional && (
-            <span className="text-xs font-normal text-aero-soft">Optional</span>
+            <span className="text-xs font-normal text-ink-muted">Optional</span>
           )}
         </label>
       )}
@@ -40,7 +40,7 @@ export function FlowField({
       {error ? (
         <p className="text-xs text-destructive">{error}</p>
       ) : helper ? (
-        <p className="text-xs text-aero-soft leading-relaxed">{helper}</p>
+        <p className="text-xs text-ink-muted leading-relaxed">{helper}</p>
       ) : null}
     </div>
   );

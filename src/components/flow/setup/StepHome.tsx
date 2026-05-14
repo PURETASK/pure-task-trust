@@ -96,7 +96,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
 
         {addressFilled && mapQuery && (
           <FlowField label="Confirm location on map">
-            <div className="rounded-2xl overflow-hidden border border-aero bg-aero-bg/40">
+            <div className="rounded-2xl overflow-hidden border border-hairline-soft bg-aero-bg/40">
               <iframe
                 title="Address preview map"
                 src={`https://www.openstreetmap.org/export/embed.html?bbox=&layer=mapnik&marker=&q=${mapQuery}`}
@@ -104,7 +104,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
-              <div className="flex items-center gap-2 px-3 py-2 text-xs text-aero-soft border-t border-aero">
+              <div className="flex items-center gap-2 px-3 py-2 text-xs text-ink-muted border-t border-hairline-soft">
                 <MapPin className="h-3.5 w-3.5 text-aero-trust" />
                 {[data.line1, data.city, data.state, data.postal_code].filter(Boolean).join(", ")}
               </div>
@@ -112,7 +112,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
 
             <label
               htmlFor="confirm-address"
-              className="mt-4 flex items-start gap-3 rounded-2xl border border-aero bg-aero-bg/40 p-3 cursor-pointer hover:bg-aero-bg/60 transition"
+              className="mt-4 flex items-start gap-3 rounded-2xl border border-hairline-soft bg-aero-bg/40 p-3 cursor-pointer hover:bg-aero-bg/60 transition"
             >
               <Checkbox
                 id="confirm-address"
@@ -122,7 +122,7 @@ export function StepHome({ step, total, data, saving, onChange, onBack, onNext }
               />
               <div>
                 <div className="text-sm font-medium">This is the correct address</div>
-                <div className="text-xs text-aero-soft mt-0.5">
+                <div className="text-xs text-ink-muted mt-0.5">
                   Confirm the pin matches your home so cleaners arrive at the right place.
                 </div>
               </div>

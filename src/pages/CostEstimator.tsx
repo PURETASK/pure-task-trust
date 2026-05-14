@@ -250,7 +250,7 @@ export default function CostEstimator() {
                   <label className="font-semibold text-sm text-ink-muted">Bedrooms</label>
                   <span className="text-3xl font-poppins font-bold text-primary leading-none">{bedrooms}</span>
                 </div>
-                <div className="rounded-2xl bg-primary/5 border-2 border-primary/20 p-4">
+                <div className="rounded-2xl bg-primary/5 border border-hairline-soft p-4">
                   <Slider min={0} max={7} step={1} value={[bedrooms]} onValueChange={([v]) => setBedrooms(v)} className="py-1" />
                   <div className="flex justify-between text-xs text-ink-muted mt-2"><span>Studio</span><span>7 beds</span></div>
                 </div>
@@ -274,7 +274,7 @@ export default function CostEstimator() {
                   <label className="font-semibold text-sm text-ink-muted">Home size</label>
                   <span className="text-3xl font-poppins font-bold text-warning leading-none">{sqft.toLocaleString()} <span className="text-base font-semibold text-ink-muted">sqft</span></span>
                 </div>
-                <div className="rounded-2xl bg-warning/5 border-2 border-warning/20 p-4">
+                <div className="rounded-2xl bg-warning/5 border border-hairline-soft p-4">
                   <Slider min={300} max={4000} step={50} value={[sqft]} onValueChange={([v]) => setSqft(v)} className="py-1" />
                   <div className="flex justify-between text-xs text-ink-muted mt-2"><span>300 sqft (studio)</span><span>4,000 sqft (large home)</span></div>
                 </div>

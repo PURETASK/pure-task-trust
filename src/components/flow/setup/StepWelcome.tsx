@@ -26,7 +26,7 @@ export function StepWelcome({ total, onStart }: Props) {
           <h1 className="font-poppins text-3xl sm:text-4xl font-semibold tracking-tight mt-4">
             Welcome to <span className="text-gradient-aero">PureTask</span>
           </h1>
-          <p className="mt-3 text-aero-soft max-w-md mx-auto leading-relaxed">
+          <p className="mt-3 text-ink-muted max-w-md mx-auto leading-relaxed">
             Let&apos;s set up your home profile so we can match you with the right cleaner faster
             and deliver a better experience every visit.
           </p>
@@ -39,13 +39,13 @@ export function StepWelcome({ total, onStart }: Props) {
             ].map(({ icon: Icon, title, body }) => (
               <div
                 key={title}
-                className="rounded-2xl bg-aero-bg border border-aero p-4"
+                className="rounded-2xl bg-aero-bg border border-hairline-soft p-4"
               >
                 <div className="h-9 w-9 rounded-xl bg-gradient-aero text-white grid place-items-center mb-2">
                   <Icon className="h-4 w-4" />
                 </div>
                 <div className="font-medium text-sm">{title}</div>
-                <div className="text-xs text-aero-soft mt-0.5">{body}</div>
+                <div className="text-xs text-ink-muted mt-0.5">{body}</div>
               </div>
             ))}
           </div>
@@ -58,7 +58,7 @@ export function StepWelcome({ total, onStart }: Props) {
             Get started
             <ArrowRight className="size-4" />
           </Button>
-          <p className="mt-3 text-xs text-aero-soft">Takes about 2 minutes • {total - 1} quick steps</p>
+          <p className="mt-3 text-xs text-ink-muted">Takes about 2 minutes • {total - 1} quick steps</p>
         </div>
       </FlowCard>
     </div>

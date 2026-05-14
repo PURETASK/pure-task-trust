@@ -149,7 +149,7 @@ export default function AboutUs() {
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
             >
-              <Card className="border-2 border-primary/20 shadow-lg bg-card">
+              <Card className="border border-hairline-soft shadow-lg bg-card">
                 <CardContent className="p-8 sm:p-10">
                   <Quote className="h-8 w-8 text-primary/30 mb-4" />
                   <blockquote className="text-lg leading-relaxed text-foreground mb-6 space-y-4">
