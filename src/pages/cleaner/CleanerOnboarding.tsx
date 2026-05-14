@@ -121,13 +121,13 @@ export default function CleanerOnboarding() {
 
   // Sticky progress summary (right column on desktop)
   const summary = (
-    <Card className="p-5 space-y-4">
+    <Card className="p-5 space-y-4 rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-aero-text-soft">Step {currentPhaseIndex + 1} of {totalPhases}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-ink-faint">Step {currentPhaseIndex + 1} of {totalPhases}</p>
         <p className="font-poppins text-lg font-semibold text-aero-trust mt-0.5">{PHASE_LABELS[currentPhase]}</p>
       </div>
 
-      <div className="h-2 rounded-full bg-aero-card-border overflow-hidden">
+      <div className="h-2 rounded-full bg-app-sunken overflow-hidden">
         <div
           className="h-full bg-gradient-aero transition-all duration-500"
           style={{ width: `${((currentPhaseIndex + 1) / totalPhases) * 100}%` }}
@@ -141,13 +141,13 @@ export default function CleanerOnboarding() {
           return (
             <li key={key} className={cn(
               'flex items-center gap-2 py-1',
-              active ? 'text-aero-trust font-semibold' : done ? 'text-aero-text-soft' : 'text-aero-text-soft/60'
+              active ? 'text-aero-trust font-semibold' : done ? 'text-ink-muted' : 'text-ink-muted/60'
             )}>
               {done
                 ? <CheckCircle2 className="h-4 w-4 text-aero-cyan flex-shrink-0" />
                 : <span className={cn(
                     'h-4 w-4 rounded-full border-2 flex-shrink-0',
-                    active ? 'border-aero-trust bg-aero-cyan/30' : 'border-aero-card-border'
+                    active ? 'border-aero-trust bg-aero-cyan/30' : 'border-hairline-soft'
                   )} />
               }
               <span>{label}</span>
@@ -156,9 +156,9 @@ export default function CleanerOnboarding() {
         })}
       </ol>
 
-      <div className="pt-3 border-t border-aero-card-border flex items-start gap-2">
+      <div className="pt-3 border-t border-hairline-soft flex items-start gap-2">
         <ShieldCheck className="h-4 w-4 text-aero-trust flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-aero-text-soft leading-relaxed">
+        <p className="text-xs text-ink-muted leading-relaxed">
           Progress saved automatically. Pick up where you left off any time.
         </p>
       </div>
@@ -167,7 +167,7 @@ export default function CleanerOnboarding() {
 
   return (
     <FlowShell summary={summary}>
-      <Card className="p-6 md:p-8 shadow-aero">
+      <Card className="p-6 md:p-8 rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPhase}

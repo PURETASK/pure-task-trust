@@ -203,19 +203,19 @@ export default function AuthPage() {
   // ── Email confirmation screen ──────────────────────────────────────────────
   if (signupComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-aero p-4">
+      <div className="min-h-screen flex items-center justify-center bg-app-canvas p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-aero-card border border-aero rounded-3xl p-8 shadow-aero-lg text-center"
+          className="max-w-md w-full bg-app-surface border border-hairline-soft rounded-3xl p-8 shadow-wf text-center"
         >
-          <div className="h-20 w-20 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-5 animate-float-y">
-            <CheckCircle className="h-10 w-10 text-success" />
+          <div className="h-20 w-20 rounded-full bg-state-success-bg flex items-center justify-center mx-auto mb-5 animate-float-y">
+            <CheckCircle className="h-10 w-10 text-state-success-fg" />
           </div>
-          <h1 className="text-2xl font-poppins font-bold mb-2 tracking-tight">Check your inbox!</h1>
-          <p className="text-muted-foreground mb-1">Confirmation sent to:</p>
+          <h1 className="text-3xl font-poppins font-bold mb-2 tracking-tight">Check your inbox!</h1>
+          <p className="text-ink-muted mb-1">Confirmation sent to:</p>
           <p className="font-bold text-lg text-aero-trust mb-6">{signupEmail}</p>
 
-          <div className="bg-aero-cyan/10 rounded-2xl p-5 text-left mb-6 space-y-3 border border-aero-cyan/20">
+          <div className="bg-app-sunken rounded-2xl p-5 text-left mb-6 space-y-3 border border-hairline-soft">
             {[
               "Open the email from PureTask",
               'Click "Confirm your email"',
@@ -228,11 +228,11 @@ export default function AuthPage() {
             ))}
           </div>
 
-          <p className="text-xs text-muted-foreground mb-4">
+          <p className="text-xs text-ink-muted mb-4">
             Didn't get it?{" "}
             <button onClick={() => setSignupComplete(false)} className="text-primary hover:underline font-medium">Try again</button>
           </p>
-          <Button variant="outline" className="w-full rounded-full border-aero" onClick={() => { setIsSignUp(false); setSignupComplete(false); }}>
+          <Button variant="outline" className="w-full rounded-full border border-hairline-soft" onClick={() => { setIsSignUp(false); setSignupComplete(false); }}>
             Back to Sign In
           </Button>
         </motion.div>
@@ -251,26 +251,26 @@ export default function AuthPage() {
         </div>
 
         {/* Right: role select */}
-        <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-background">
+        <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-app-canvas">
           <div className="w-full max-w-md">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Link to="/" className="flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/" className="flex items-center gap-2 mb-8 text-ink-muted hover:text-foreground transition-colors">
                 <img src={ptMark} alt="PureTask" className="h-9 w-9 object-contain" />
                 <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
               </Link>
 
               {referralCode && (
-                <div className="mb-6 p-4 rounded-2xl bg-gradient-aero-soft border border-aero-cyan/30 flex items-center gap-3">
+                <div className="mb-6 p-4 rounded-2xl bg-app-surface border border-hairline-soft shadow-wf flex items-center gap-3">
                   <Gift className="h-6 w-6 text-aero-trust flex-shrink-0" />
                   <div>
                     <p className="font-semibold text-sm">You've been referred!</p>
-                    <p className="text-xs text-muted-foreground">Complete signup to claim your $25 credit</p>
+                    <p className="text-xs text-ink-muted">Complete signup to claim your $25 credit</p>
                   </div>
                 </div>
               )}
 
-              <h1 className="text-3xl font-poppins font-bold mb-1 tracking-tight">Join PureTask</h1>
-              <p className="text-muted-foreground mb-8">How would you like to use PureTask?</p>
+              <h1 className="text-4xl font-poppins font-bold mb-1 tracking-tight">Join PureTask</h1>
+              <p className="text-ink-muted mb-8">How would you like to use PureTask?</p>
 
               <div className="space-y-4">
                 {[
@@ -290,26 +290,26 @@ export default function AuthPage() {
                   <motion.button
                     key={opt.role} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                     onClick={() => setRole(opt.role)}
-                    className={`w-full rounded-2xl border-2 border-border/60 ${opt.border} transition-all text-left overflow-hidden flex items-stretch`}
+                    className={`w-full rounded-3xl border border-hairline-soft bg-app-surface shadow-wf hover:shadow-wf-hover ${opt.border} transition-all text-left overflow-hidden flex items-stretch`}
                   >
                     <div className="relative w-20 h-20 flex-shrink-0">
                       <img src={opt.image} alt={opt.title} className="w-full h-full object-cover" loading="lazy" />
                     </div>
                     <div className="flex-1 px-4 py-4 flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-xl ${opt.bg} flex items-center justify-center flex-shrink-0`}>
+                      <div className={`h-10 w-10 rounded-2xl ${opt.bg} flex items-center justify-center flex-shrink-0`}>
                         <opt.icon className={`h-5 w-5 ${opt.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">{opt.title}</p>
-                        <p className="text-sm text-muted-foreground">{opt.desc}</p>
+                        <p className="text-sm text-ink-muted">{opt.desc}</p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                      <ArrowRight className="h-5 w-5 text-ink-muted flex-shrink-0" />
                     </div>
                   </motion.button>
                 ))}
               </div>
 
-              <p className="text-center text-sm text-muted-foreground mt-6">
+              <p className="text-center text-sm text-ink-muted mt-6">
                 Already have an account?{" "}
                 <button onClick={() => setIsSignUp(false)} className="text-primary font-semibold hover:underline">Sign in</button>
               </p>
@@ -340,7 +340,7 @@ export default function AuthPage() {
       </div>
 
       {/* Right: form */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-background overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-app-canvas overflow-y-auto">
         <div className="w-full max-w-md">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             {/* Mobile logo */}
@@ -352,7 +352,7 @@ export default function AuthPage() {
             </div>
 
             {isSignUp && role && (
-              <button onClick={() => setRole(null)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-5 transition-colors">
+              <button onClick={() => setRole(null)} className="flex items-center gap-2 text-sm text-ink-muted hover:text-foreground mb-5 transition-colors">
                 ← Change role
               </button>
             )}
@@ -370,21 +370,21 @@ export default function AuthPage() {
               alt="PureTask"
               className="h-16 w-16 object-contain mb-3"
             />
-            <h1 className="text-3xl font-poppins font-bold mb-1 tracking-tight">{isSignUp ? "Create your account" : "Welcome back"}</h1>
-            <p className="text-muted-foreground mb-6">
+            <h1 className="text-4xl font-poppins font-bold mb-1 tracking-tight">{isSignUp ? "Create your account" : "Welcome back"}</h1>
+            <p className="text-ink-muted mb-6">
               {isSignUp ? "Start your journey with PureTask today." : "Sign in to your PureTask account."}
             </p>
 
             {/* Tab switch */}
-            <div className="flex gap-1 p-1 bg-muted rounded-xl mb-6">
+            <div className="flex gap-1 p-1 bg-app-sunken border border-hairline-soft rounded-2xl mb-6">
               {[{ id: "signin", label: "Sign In" }, { id: "signup", label: "Sign Up" }].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => { setIsSignUp(tab.id === "signup"); if (tab.id === "signup") setRole(null); }}
-                  className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
                     (isSignUp ? "signup" : "signin") === tab.id
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-app-surface text-foreground shadow-wf"
+                      : "text-ink-muted hover:text-foreground"
                   }`}
                 >
                   {tab.label}
@@ -450,8 +450,8 @@ export default function AuthPage() {
             </form>
 
             <div className="relative my-5">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
-              <div className="relative flex justify-center"><span className="bg-background px-3 text-sm text-muted-foreground">or continue with</span></div>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-hairline-soft" /></div>
+              <div className="relative flex justify-center"><span className="bg-app-canvas px-3 text-sm text-ink-muted">or continue with</span></div>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -472,7 +472,7 @@ export default function AuthPage() {
               </Button>
             </div>
 
-            <p className="text-center text-sm text-muted-foreground mt-6">
+            <p className="text-center text-sm text-ink-muted mt-6">
               {isSignUp ? "Already have an account? " : "New to PureTask? "}
               <button onClick={() => { setIsSignUp(!isSignUp); setRole(null); }} className="text-primary font-semibold hover:underline">
                 {isSignUp ? "Sign in" : "Create account"}
