@@ -25,13 +25,13 @@ export function StepScope({ hours, onHoursChange, selectedAddOns, onToggleAddOn 
   return (
     <div className="space-y-6">
       <FlowField label="How many hours?" helper="You only pay for time actually worked. Unused credits are returned.">
-        <div className="rounded-2xl border border-aero bg-aero-card p-5">
+        <div className="rounded-2xl border border-hairline-soft bg-app-surface p-5">
           <div className="flex items-center justify-between gap-4">
             <button
               type="button"
               onClick={() => onHoursChange(Math.max(1, hours - 1))}
               disabled={hours <= 1}
-              className="h-12 w-12 rounded-full border border-aero bg-aero-bg flex items-center justify-center hover:border-aero-cyan disabled:opacity-40 transition-colors"
+              className="h-12 w-12 rounded-full border border-hairline-soft bg-aero-bg flex items-center justify-center hover:border-hairline-soft-cyan disabled:opacity-40 transition-colors"
               aria-label="Decrease hours"
             >
               <Minus className="h-4 w-4" />
@@ -41,13 +41,13 @@ export function StepScope({ hours, onHoursChange, selectedAddOns, onToggleAddOn 
               <span className="font-poppins text-3xl font-semibold tabular-nums text-foreground">
                 {hours}
               </span>
-              <span className="text-aero-soft text-sm">hrs</span>
+              <span className="text-ink-muted text-sm">hrs</span>
             </div>
             <button
               type="button"
               onClick={() => onHoursChange(Math.min(12, hours + 1))}
               disabled={hours >= 12}
-              className="h-12 w-12 rounded-full border border-aero bg-aero-bg flex items-center justify-center hover:border-aero-cyan disabled:opacity-40 transition-colors"
+              className="h-12 w-12 rounded-full border border-hairline-soft bg-aero-bg flex items-center justify-center hover:border-hairline-soft-cyan disabled:opacity-40 transition-colors"
               aria-label="Increase hours"
             >
               <Plus className="h-4 w-4" />
@@ -75,19 +75,19 @@ export function StepScope({ hours, onHoursChange, selectedAddOns, onToggleAddOn 
                 className={cn(
                   "rounded-2xl border p-3 flex items-center gap-3 transition-all text-left",
                   selected
-                    ? "border-aero-cyan bg-aero-bg shadow-sm"
-                    : "border-aero bg-aero-card hover:border-aero-cyan/40"
+                    ? "border-hairline-soft-cyan bg-aero-bg shadow-sm"
+                    : "border-hairline-soft bg-app-surface hover:border-hairline-soft-cyan/40"
                 )}
               >
                 <span className="text-2xl flex-shrink-0">{a.icon}</span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{a.name}</p>
-                  <p className="text-xs text-aero-soft">+${a.credits}</p>
+                  <p className="text-xs text-ink-muted">+${a.credits}</p>
                 </div>
                 <div
                   className={cn(
                     "h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center",
-                    selected ? "bg-aero-trust border-aero-trust" : "border-aero"
+                    selected ? "bg-aero-trust border-hairline-soft-trust" : "border-hairline-soft"
                   )}
                 >
                   {selected && <span className="text-white text-xs leading-none">✓</span>}

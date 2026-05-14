@@ -62,8 +62,8 @@ export function StepService({ value, onChange }: StepServiceProps) {
               "w-full text-left rounded-2xl border p-5 transition-all",
               "flex items-start gap-4",
               selected
-                ? "border-aero-cyan bg-aero-bg shadow-aero ring-2 ring-aero-cyan/20"
-                : "border-aero bg-aero-card hover:border-aero-cyan/40 hover:shadow-sm"
+                ? "border-hairline-soft-cyan bg-aero-bg shadow-wf ring-2 ring-aero-cyan/20"
+                : "border-hairline-soft bg-app-surface hover:border-hairline-soft-cyan/40 hover:shadow-sm"
             )}
           >
             <div
@@ -78,13 +78,13 @@ export function StepService({ value, onChange }: StepServiceProps) {
               <h3 className="font-poppins font-semibold text-base text-foreground">
                 {opt.name}
               </h3>
-              <p className="text-sm text-aero-soft mt-0.5 leading-relaxed">
+              <p className="text-sm text-ink-muted mt-0.5 leading-relaxed">
                 {opt.description}
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                 <span className="text-aero-trust font-medium">{opt.estimate}</span>
-                <span className="text-aero-soft">·</span>
-                <span className="text-aero-soft">{opt.bestFor}</span>
+                <span className="text-ink-muted">·</span>
+                <span className="text-ink-muted">{opt.bestFor}</span>
               </div>
             </div>
           </button>
