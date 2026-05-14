@@ -127,12 +127,12 @@ export default function CleanerSchedule() {
       <div className="space-y-6 relative z-10">
 
         {/* ── Hero Header ─────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl border-aero bg-gradient-aero p-7 shadow-aero">
+        <div className="relative overflow-hidden rounded-3xl border-hairline-soft bg-gradient-aero p-7 shadow-wf">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-aero-cyan/40 blur-3xl pointer-events-none animate-float-y" />
           <div className="absolute -left-6 -bottom-6 h-32 w-32 rounded-full bg-aero-electric/40 blur-3xl pointer-events-none animate-float-y" />
           <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-aero p-3">
+              <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-wf p-3">
                 <Calendar className="h-7 w-7 text-white" />
               </div>
               <div>
@@ -170,7 +170,7 @@ export default function CleanerSchedule() {
         </div>
 
         {/* Calendar Card */}
-        <Card className="border-2 border-primary/30 rounded-2xl overflow-hidden">
+        <Card className="border border-hairline-soft rounded-2xl overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-4 bg-primary/25 border-b border-primary/40">
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" />
@@ -308,7 +308,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
-              <Card className="border-2 border-warning/30 rounded-2xl">
+              <Card className="border border-hairline-soft rounded-2xl">
                 <CardContent className="p-8 text-center text-ink-muted">
                   No job requests for this day.
                 </CardContent>
@@ -366,7 +366,7 @@ export default function CleanerSchedule() {
             {isLoading ? (
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
-              <Card className="border-2 border-success/30 rounded-2xl">
+              <Card className="border border-hairline-soft rounded-2xl">
                 <CardContent className="p-8 text-center text-ink-muted">
                   No accepted jobs for this day.
                 </CardContent>
@@ -453,7 +453,7 @@ export default function CleanerSchedule() {
         {/* ── Reschedule Requests Section ───────────────────────────── */}
         <div className="rounded-3xl border-2 border-warning/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
           <div className="flex items-center gap-3 px-5 py-4 bg-warning/8 border-b-2 border-warning/30">
-            <div className="h-9 w-9 rounded-xl bg-warning/15 border-2 border-warning/30 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-warning/15 border border-hairline-soft flex items-center justify-center">
               <CalendarClock className="h-4 w-4 text-warning" />
             </div>
             <div>

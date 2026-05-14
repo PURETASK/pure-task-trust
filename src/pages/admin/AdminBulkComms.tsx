@@ -133,7 +133,7 @@ const AdminBulkComms = () => {
             <span>/</span><span>Bulk Communications</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Bulk Communication Tool</h1>
-          <p className="text-aero-soft mt-1">Target custom user segments with in-app notifications or emails</p>
+          <p className="text-ink-muted mt-1">Target custom user segments with in-app notifications or emails</p>
         </div>
 
         {/* Step Indicator */}

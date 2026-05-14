@@ -97,7 +97,7 @@ const AdminFraudAlerts = () => {
             <span>/</span><span>Fraud Alerts</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Fraud Alerts</h1>
-          <p className="text-aero-soft mt-1">Monitor and respond to fraud detection alerts</p>
+          <p className="text-ink-muted mt-1">Monitor and respond to fraud detection alerts</p>
         </div>
 
         {/* Stats */}

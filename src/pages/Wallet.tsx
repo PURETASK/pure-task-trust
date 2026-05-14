@@ -179,7 +179,7 @@ export default function Wallet() {
 
               {/* Low balance warning */}
               {!isLoadingAccount && isLowBalance && (
-                <div className="rounded-2xl bg-warning/10 border-2 border-warning/30 px-4 py-2.5 mb-4 flex items-center gap-2">
+                <div className="rounded-2xl bg-warning/10 border border-hairline-soft px-4 py-2.5 mb-4 flex items-center gap-2">
                   <Zap className="h-4 w-4 text-warning flex-shrink-0" />
                   <p className="text-sm font-bold text-warning">
                     Low balance — top up to keep booking smoothly.
@@ -213,7 +213,7 @@ export default function Wallet() {
                   ))}
                 </div>
                 <Button
-                  className="w-full gap-2 h-11 text-white border-0 bg-gradient-aero shadow-aero hover:shadow-aero-lg rounded-xl font-semibold"
+                  className="w-full gap-2 h-11 text-white border-0 bg-gradient-aero shadow-wf hover:shadow-wf-lg rounded-xl font-semibold"
                   onClick={() => setBuyDialogOpen(true)}
                 >
                   <Plus className="h-4 w-4" />

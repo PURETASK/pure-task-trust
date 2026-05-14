@@ -52,7 +52,7 @@ const AdminOperationsDashboard = () => {
               <span>/</span><span>Operations Dashboard</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Operations Dashboard</h1>
-            <p className="text-aero-soft mt-1">Live booking status, cancellations, and disputes</p>
+            <p className="text-ink-muted mt-1">Live booking status, cancellations, and disputes</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />Refresh
