@@ -142,7 +142,7 @@ export default function BookingStatus() {
   };
 
   return (
-    <main className="flex-1 py-8 bg-background">
+    <main className="flex-1 py-8 bg-app-canvas">
       <RecurringUpsellModal />
       <div className="container max-w-lg">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
@@ -233,77 +233,77 @@ export default function BookingStatus() {
           )}
 
           {/* Booking Details Card */}
-          <div className="rounded-3xl border-2 border-border/40 overflow-hidden">
+          <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf overflow-hidden">
             <div className="p-5 pb-3">
-              <h2 className="text-base font-poppins font-bold flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-ink flex items-center gap-2">
                 Booking Details
-                <Badge className={`${config.bg} ${config.color} border-2 ${config.border} text-xs font-bold`}>
+                <Badge className={`${config.bg} ${config.color} border ${config.border} text-[10px] font-semibold`}>
                   {config.label}
                 </Badge>
               </h2>
             </div>
             <div className="p-5 pt-0 space-y-4">
               {/* Cleaner Info */}
-              <div className="flex items-center gap-3 pb-4 border-b-2 border-border/30">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-poppins font-bold text-primary text-lg flex-shrink-0">
+              <div className="flex items-center gap-3 pb-4 border-b border-hairline-soft">
+                <div className="h-11 w-11 rounded-[10px] bg-app-canvas border border-hairline flex items-center justify-center font-semibold text-ink text-base flex-shrink-0">
                   {participants.cleaner.initial}
                 </div>
                 <div className="flex-1">
-                  <p className="font-poppins font-bold">{cleanerName}</p>
+                  <p className="font-semibold text-ink">{cleanerName}</p>
                   {job.cleaner?.avg_rating && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                    <div className="flex items-center gap-1 text-xs text-ink-muted">
+                      <Star className="h-3 w-3 fill-state-warning-fg text-state-warning-fg" />
                       {job.cleaner.avg_rating.toFixed(1)} rating
                     </div>
                   )}
                 </div>
                 {job.cleaner && (
-                  <Badge className="text-success border-2 border-success/30 bg-success/10 gap-1 text-xs font-bold">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-state-success-bg text-state-success-fg px-2.5 py-[3px] text-[10px] font-semibold">
                     <Shield className="h-3 w-3" />Verified
-                  </Badge>
+                  </span>
                 )}
               </div>
 
               {/* Details Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-start gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 border-2 border-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Calendar className="h-4 w-4 text-primary" />
+                  <div className="h-8 w-8 rounded-md bg-app-canvas border border-hairline flex items-center justify-center flex-shrink-0 mt-0.5 text-ink-muted">
+                    <Calendar className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground font-bold">Date & Time</p>
-                    <p className="font-bold text-sm">{formattedDate}</p>
-                    <p className="text-xs text-muted-foreground">{formattedTime}</p>
+                    <p className="text-[10px] uppercase tracking-[0.08em] text-ink-faint font-bold">Date & Time</p>
+                    <p className="font-semibold text-sm text-ink">{formattedDate}</p>
+                    <p className="text-xs text-ink-muted">{formattedTime}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-warning/10 border-2 border-warning/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <MapPin className="h-4 w-4 text-warning" />
+                  <div className="h-8 w-8 rounded-md bg-app-canvas border border-hairline flex items-center justify-center flex-shrink-0 mt-0.5 text-ink-muted">
+                    <MapPin className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground font-bold">Location</p>
-                    <p className="font-bold text-sm">{addressLine}</p>
+                    <p className="text-[10px] uppercase tracking-[0.08em] text-ink-faint font-bold">Location</p>
+                    <p className="font-semibold text-sm text-ink">{addressLine}</p>
                   </div>
                 </div>
               </div>
 
               {/* Payment */}
-              <div className="pt-3 border-t-2 border-border/30 flex items-center justify-between">
+              <div className="pt-3 border-t border-hairline-soft flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm capitalize font-bold">{(job.cleaning_type || "").replace("_", " ")} Clean</span>
+                  <CreditCard className="h-4 w-4 text-ink-faint" />
+                  <span className="text-sm capitalize font-semibold text-ink">{(job.cleaning_type || "").replace("_", " ")} Clean</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">Credits in escrow</p>
-                  <p className="font-poppins font-bold text-primary text-lg">{money.escrowHeld}</p>
+                  <p className="text-[10px] uppercase tracking-[0.08em] text-ink-faint">Credits in escrow</p>
+                  <p className="font-bold text-primary text-lg tabular-nums">{money.escrowHeld}</p>
                 </div>
               </div>
 
               {/* Escrow Note */}
-              <div className="rounded-2xl border-2 border-success/30 bg-success/5 p-3 flex items-start gap-2">
-                <Shield className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-muted-foreground">
-                  <span className="font-poppins font-bold text-foreground">Escrow Protection:</span> Payment is held after completion. Review and report any issue within {escrow.windowHours} hours, or payment releases automatically.
+              <div className="rounded-md bg-state-success-bg border border-state-success-fg/20 p-3 flex items-start gap-2">
+                <Shield className="h-4 w-4 text-state-success-fg mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-ink-muted">
+                  <span className="font-semibold text-state-success-fg">Escrow Protection:</span> Payment is held after completion. Review and report any issue within {escrow.windowHours} hours, or payment releases automatically.
                 </p>
               </div>
             </div>
