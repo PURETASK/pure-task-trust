@@ -146,7 +146,7 @@ export default function Index() {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-[15px] sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0"
+              className="text-[15px] sm:text-xl text-ink-muted mb-6 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0"
             >
               GPS check-in/out, before &amp; after photos, and payment released only after you approve.
             </motion.p>
@@ -212,7 +212,7 @@ export default function Index() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">
               Why PureTask feels safer than traditional booking
             </h2>
-            <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-ink-muted max-w-2xl mx-auto">
               We rebuilt the cleaning experience from scratch — transparency, accountability, and your protection come first.
             </p>
           </motion.div>
@@ -240,7 +240,7 @@ export default function Index() {
                       <item.icon className={`h-6 w-6 sm:h-7 sm:w-7 ${item.color}`} />
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{item.desc}</p>
+                    <p className="text-ink-muted text-sm sm:text-base leading-relaxed">{item.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -276,7 +276,7 @@ export default function Index() {
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-aero-trust" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-poppins font-bold mb-2">{s.title}</h3>
-                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{s.desc}</p>
+                <p className="text-ink-muted text-sm sm:text-base leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -312,7 +312,7 @@ export default function Index() {
             </p>
             <div className="flex flex-col items-center gap-1">
               <p className="font-poppins font-bold text-aero-trust text-base sm:text-lg">The PureTask Team</p>
-              <p className="text-sm text-muted-foreground">Building a cleaning platform we'd actually want to use.</p>
+              <p className="text-sm text-ink-muted">Building a cleaning platform we'd actually want to use.</p>
             </div>
           </motion.div>
         </div>
@@ -329,7 +329,7 @@ export default function Index() {
                 better way to book?
               </span>
             </h2>
-            <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-ink-muted mb-6 sm:mb-8 max-w-2xl mx-auto">
               Transparent, verified, and built around your peace of mind.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 justify-center items-stretch xs:items-center">
@@ -340,7 +340,7 @@ export default function Index() {
                 <Link to="/auth?role=cleaner">Earn as a Cleaner</Link>
               </Button>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6">
+            <p className="text-xs sm:text-sm text-ink-muted mt-4 sm:mt-6">
               No credit card required · Background-checked cleaners · Pay only when you approve
             </p>
           </motion.div>
