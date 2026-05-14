@@ -18,17 +18,14 @@ import { useCleanerJobs } from "@/hooks/useCleanerProfile";
 import { useSmartScheduling } from "@/hooks/useSmartScheduling";
 import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { format, isToday } from "date-fns";
 import type { CleanerTier } from "@/lib/tier-config";
-import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
+import { Pill, SectionLabel } from "@/components/wf";
 import {
-  Briefcase, Clock, DollarSign, MessageSquare, Search,
-  TrendingUp, ArrowRight, Lightbulb, Timer, Shield, Award, Zap,
+  Briefcase, Clock, DollarSign, MessageSquare,
+  Lightbulb, Shield, Award, Zap,
 } from "lucide-react";
 
 
@@ -43,7 +40,6 @@ export default function CleanerDashboard() {
 
   const displayName = profile?.first_name || user?.name?.split(" ")[0] || "Cleaner";
   const tier = (profile?.tier || "bronze") as CleanerTier;
-  const tierStyle = TIER_COLORS[tier] || TIER_COLORS.bronze;
   const tipIdx = (new Date().getDate() + (profile?.reliability_score || 0) % 4) % TIPS.length;
   const tip = TIPS[tipIdx];
 
