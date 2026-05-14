@@ -60,7 +60,7 @@ export function SpecialtiesStep({ initial, onSave, onBack, isSaving }: Props) {
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div>
         <h2 className="font-poppins text-2xl font-semibold text-aero-trust">Your specialties</h2>
-        <p className="text-sm text-aero-text-soft mt-1.5">Helps clients find the perfect match. You can edit these any time.</p>
+        <p className="text-sm text-ink-muted mt-1.5">Helps clients find the perfect match. You can edit these any time.</p>
       </div>
 
       <div>
@@ -75,8 +75,8 @@ export function SpecialtiesStep({ initial, onSave, onBack, isSaving }: Props) {
                 className={cn(
                   'min-h-[44px] px-4 rounded-full text-sm font-medium border-2 transition-colors',
                   on
-                    ? 'bg-aero-trust text-white border-aero-trust'
-                    : 'bg-aero-card text-aero-trust border-aero-card-border hover:border-aero-cyan'
+                    ? 'bg-aero-trust text-white border-hairline-soft-trust'
+                    : 'bg-app-surface text-aero-trust border-hairline-soft hover:border-hairline-soft-cyan'
                 )}>
                 {s.label}
               </button>
@@ -97,8 +97,8 @@ export function SpecialtiesStep({ initial, onSave, onBack, isSaving }: Props) {
                 className={cn(
                   'min-h-[44px] px-4 rounded-full text-sm font-medium border-2 transition-colors',
                   on
-                    ? 'bg-aero-cyan text-aero-trust border-aero-cyan'
-                    : 'bg-aero-card text-aero-trust border-aero-card-border hover:border-aero-cyan'
+                    ? 'bg-aero-cyan text-aero-trust border-hairline-soft-cyan'
+                    : 'bg-app-surface text-aero-trust border-hairline-soft hover:border-hairline-soft-cyan'
                 )}>
                 {l}
               </button>
@@ -113,7 +113,7 @@ export function SpecialtiesStep({ initial, onSave, onBack, isSaving }: Props) {
             <PawPrint className="h-5 w-5 text-aero-trust" />
             <div>
               <p className="text-base font-medium text-aero-trust">Pet-friendly</p>
-              <p className="text-xs text-aero-text-soft">I'm comfortable cleaning homes with pets</p>
+              <p className="text-xs text-ink-muted">I'm comfortable cleaning homes with pets</p>
             </div>
           </div>
           <Switch checked={petFriendly} onCheckedChange={setPetFriendly} />
@@ -124,7 +124,7 @@ export function SpecialtiesStep({ initial, onSave, onBack, isSaving }: Props) {
             <SprayCan className="h-5 w-5 text-aero-trust" />
             <div>
               <p className="text-base font-medium text-aero-trust">I bring my own supplies</p>
-              <p className="text-xs text-aero-text-soft">Cleaning products, vacuum, mop, etc.</p>
+              <p className="text-xs text-ink-muted">Cleaning products, vacuum, mop, etc.</p>
             </div>
           </div>
           <Switch checked={bringsSupplies} onCheckedChange={setBringsSupplies} />

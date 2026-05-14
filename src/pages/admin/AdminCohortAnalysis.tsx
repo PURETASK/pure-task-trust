@@ -103,7 +103,7 @@ const AdminCohortAnalysis = () => {
               <span>/</span><span>Cohort Analysis</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Client Cohort Analysis</h1>
-            <p className="text-aero-soft mt-1">Retention, LTV, and booking frequency by signup cohort</p>
+            <p className="text-ink-muted mt-1">Retention, LTV, and booking frequency by signup cohort</p>
           </div>
           <Button variant="outline" size="sm" onClick={exportCSV} disabled={isLoading || !data}>
             <Download className="h-4 w-4 mr-2" />Export CSV

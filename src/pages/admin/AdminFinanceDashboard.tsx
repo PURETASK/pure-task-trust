@@ -89,7 +89,7 @@ const AdminFinanceDashboard = () => {
               <span>/</span><span>Finance Dashboard</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Finance Dashboard</h1>
-            <p className="text-aero-soft mt-1">Live financial breakdown, payouts, refunds, and margins</p>
+            <p className="text-ink-muted mt-1">Live financial breakdown, payouts, refunds, and margins</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />Refresh

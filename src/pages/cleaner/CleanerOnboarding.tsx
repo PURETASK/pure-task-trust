@@ -110,10 +110,10 @@ export default function CleanerOnboarding() {
       <FlowShell>
         <Card className="p-8 text-center">
           <div
-            className="mx-auto h-10 w-10 rounded-full border-2 border-aero-card-border border-t-aero-trust animate-spin motion-reduce:animate-none"
+            className="mx-auto h-10 w-10 rounded-full border-2 border-hairline-soft border-t-aero-trust animate-spin motion-reduce:animate-none"
             aria-label="Loading"
           />
-          <p className="mt-4 text-sm text-aero-text-soft">Preparing your workspace…</p>
+          <p className="mt-4 text-sm text-ink-muted">Preparing your workspace…</p>
         </Card>
       </FlowShell>
     );
@@ -147,7 +147,7 @@ export default function CleanerOnboarding() {
                 ? <CheckCircle2 className="h-4 w-4 text-aero-cyan flex-shrink-0" />
                 : <span className={cn(
                     'h-4 w-4 rounded-full border-2 flex-shrink-0',
-                    active ? 'border-aero-trust bg-aero-cyan/30' : 'border-hairline-soft'
+                    active ? 'border-hairline-soft-trust bg-aero-cyan/30' : 'border-hairline-soft'
                   )} />
               }
               <span>{label}</span>

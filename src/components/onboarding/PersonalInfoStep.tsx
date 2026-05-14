@@ -60,12 +60,12 @@ export function PersonalInfoStep({ initial, onSave, onBack, isSaving }: Props) {
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div>
         <h2 className="font-poppins text-2xl font-semibold text-aero-trust">Personal information</h2>
-        <p className="text-sm text-aero-text-soft mt-1.5">We need this for your background check and to set your travel-radius origin.</p>
+        <p className="text-sm text-ink-muted mt-1.5">We need this for your background check and to set your travel-radius origin.</p>
       </div>
 
-      <Card className="p-3 bg-aero-card-border/30 border-aero-card-border flex items-start gap-3">
+      <Card className="p-3 bg-app-surface-border/30 border-hairline-soft flex items-start gap-3">
         <ShieldCheck className="h-5 w-5 text-aero-trust flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-aero-text-soft leading-relaxed">
+        <p className="text-xs text-ink-muted leading-relaxed">
           This information is encrypted and only used for verification. Your home address is never shown to clients.
         </p>
       </Card>
@@ -74,7 +74,7 @@ export function PersonalInfoStep({ initial, onSave, onBack, isSaving }: Props) {
         <div>
           <Label htmlFor="dob" className="text-aero-trust font-medium">Date of birth</Label>
           <div className="relative mt-1.5">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-aero-text-soft" />
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
             <Input id="dob" type="date" value={dob} onChange={e => setDob(e.target.value)}
               className="pl-10 h-12 text-base" required />
           </div>

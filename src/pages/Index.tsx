@@ -155,12 +155,12 @@ export default function Index() {
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
               className="flex flex-col xs:flex-row gap-3 mb-8 sm:mb-10 items-stretch xs:items-center sm:items-start"
             >
-              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-12 sm:h-14 rounded-full bg-gradient-aero hover:opacity-95 border-0 shadow-aero-lg w-full xs:w-auto font-semibold">
+              <Button size="lg" asChild className="text-base px-6 sm:px-8 h-12 sm:h-14 rounded-full bg-gradient-aero hover:opacity-95 border-0 shadow-wf-lg w-full xs:w-auto font-semibold">
                 <Link to="/book">
                   Book a Cleaning <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-full border-aero w-full xs:w-auto bg-background/80 backdrop-blur-sm font-medium">
+              <Button variant="outline" size="lg" asChild className="text-base h-12 sm:h-14 rounded-full border-hairline-soft w-full xs:w-auto bg-background/80 backdrop-blur-sm font-medium">
                 <Link to="/discover">Browse Cleaners</Link>
               </Button>
             </motion.div>
@@ -208,7 +208,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">Why PureTask</Badge>
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-hairline-soft-cyan/30 hover:bg-aero-cyan/15">Why PureTask</Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">
               Why PureTask feels safer than traditional booking
             </h2>
@@ -252,7 +252,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10 sm:mb-16"
           >
-            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">Simple Process</Badge>
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-hairline-soft-cyan/30 hover:bg-aero-cyan/15">Simple Process</Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold mb-3 sm:mb-4 tracking-tight">How it works in 4 steps</h2>
           </motion.div>
 
@@ -268,7 +268,7 @@ export default function Index() {
                   <div className="hidden lg:block absolute top-8 left-[calc(100%-16px)] w-8 h-0.5 bg-gradient-to-r from-border to-transparent" />
                 )}
                 <div className="text-4xl sm:text-6xl font-poppins font-bold text-aero-cyan/40 mb-2 sm:mb-3 leading-none">{s.step}</div>
-                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-aero-cyan/15 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0 shadow-aero">
+                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-aero-cyan/15 flex items-center justify-center mb-3 sm:mb-4 mx-auto sm:mx-0 shadow-wf">
                   <s.icon className="h-5 w-5 sm:h-6 sm:w-6 text-aero-trust" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-poppins font-bold mb-2">{s.title}</h3>
@@ -285,7 +285,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-8 sm:mb-12"
           >
-            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-aero-cyan/30 hover:bg-aero-cyan/15">
+            <Badge className="mb-3 sm:mb-4 bg-aero-cyan/15 text-aero-trust border-hairline-soft-cyan/30 hover:bg-aero-cyan/15">
               What People Say
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-poppins font-bold tracking-tight">Hear from our community</h2>

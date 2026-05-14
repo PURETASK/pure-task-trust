@@ -149,7 +149,7 @@ export default function BookingStatus() {
 
           {/* Status Hero — Aero celebration for confirmed/completed */}
           {(effectiveStatusKey === "accepted" || effectiveStatusKey === "completed") ? (
-            <div className="rounded-3xl bg-aero border-2 border-aero p-6 shadow-aero">
+            <div className="rounded-3xl bg-aero border-2 border-hairline-soft p-6 shadow-wf">
               <DashCelebration
                 title={config.label}
                 subtitle={config.desc}
@@ -157,7 +157,7 @@ export default function BookingStatus() {
               />
               {/* Live escrow countdown — only on completed jobs in review window */}
               {effectiveStatusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
-                <div className="mt-4 rounded-2xl bg-background/60 border border-aero-cyan/30 p-3">
+                <div className="mt-4 rounded-2xl bg-background/60 border border-hairline-soft-cyan/30 p-3">
                   <div className="flex items-center justify-between mb-2 gap-2">
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
                       <Clock className="h-4 w-4 text-aero-trust" />
@@ -315,7 +315,7 @@ export default function BookingStatus() {
               <>
                 <p className="text-center text-sm text-muted-foreground">We'll notify you as soon as a cleaner accepts</p>
                 {canCancel && (
-                  <Button variant="outline" className="w-full gap-2 text-destructive border-2 border-destructive/30 hover:bg-destructive/5 rounded-xl" onClick={() => setShowCancelModal(true)}>
+                  <Button variant="outline" className="w-full gap-2 text-destructive border border-hairline-soft hover:bg-destructive/5 rounded-xl" onClick={() => setShowCancelModal(true)}>
                     <AlertTriangle className="h-4 w-4" />Cancel Booking
                   </Button>
                 )}

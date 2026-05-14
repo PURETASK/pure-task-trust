@@ -312,7 +312,7 @@ export default function CleanerProfile() {
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-poppins font-bold text-gradient-aero">Profile Settings</h1>
-          <p className="text-aero-soft mt-1">Build a high-converting profile with AI-powered bio generation</p>
+          <p className="text-ink-muted mt-1">Build a high-converting profile with AI-powered bio generation</p>
         </div>
 
         {/* Tier Status Banner */}
