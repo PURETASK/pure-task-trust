@@ -4,7 +4,6 @@ import { Check, Clock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Pill, SectionLabel, StatusBanner, WfButton } from "@/components/wf";
 import { useRequestReschedule } from "@/hooks/useRescheduling";
-import { useAvailability } from "@/hooks/useAvailability";
 import { cn } from "@/lib/utils";
 
 interface Props {
