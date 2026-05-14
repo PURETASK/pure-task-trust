@@ -12,6 +12,7 @@ import { SatisfactionPulse } from "@/components/reviews/SatisfactionPulse";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 import { useAutoRebook } from "@/hooks/useAutoRebook";
 import { useReceipt } from "@/hooks/useReceipt";
 import { RecurringUpsellModal } from "@/components/flow/booking/RecurringUpsellModal";
@@ -103,14 +104,31 @@ export default function BookingStatus() {
     : (job as any).service_address || "Address on file";
   const canCancel = ["created", "pending", "confirmed"].includes(job.status);
   const escrow = useEscrowCountdown(job ?? null);
+  const { user } = useAuth();
 
   const handleConfirmCancel = async () => {
+    if (!user?.id || !id) return;
     try {
-      await supabase.from("jobs").update({ status: "cancelled" }).eq("id", id!);
+      const { data, error } = await supabase.rpc("cancel_job_atomic", {
+        _user_id: user.id,
+        _job_id: id,
+        _reason: null,
+      });
+      if (error) throw error;
+      const result = data as { fee_credits?: number; refund_credits?: number; fee_pct?: number };
       queryClient.invalidateQueries({ queryKey: ["job", id] });
       queryClient.invalidateQueries({ queryKey: ["client-jobs"] });
-      toast.success("Booking cancelled");
-    } catch { toast.error("Failed to cancel booking"); }
+      queryClient.invalidateQueries({ queryKey: ["credit-account"] });
+      const fee = Number(result?.fee_credits ?? 0);
+      const refund = Number(result?.refund_credits ?? 0);
+      if (fee > 0) {
+        toast.success(`Booking cancelled · ${fee} credit fee, ${refund} refunded`);
+      } else {
+        toast.success(`Booking cancelled · ${refund} credits refunded`);
+      }
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to cancel booking");
+    }
   };
 
   return (
