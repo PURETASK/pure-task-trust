@@ -28,7 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AUTH_PROFILE_TIMEOUT_MS = 8000;
 
 async function withAuthTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
-  let timeoutId: ReturnType<typeof window.setTimeout> | undefined;
+  let timeoutId: number | undefined;
 
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = window.setTimeout(() => reject(new Error(timeoutMessage)), AUTH_PROFILE_TIMEOUT_MS);
