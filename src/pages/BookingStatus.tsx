@@ -21,6 +21,8 @@ import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobParticipants } from "@/hooks/useJobParticipants";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { Progress } from "@/components/ui/progress";
+import { ActiveJobPhotoFeed } from "@/components/job/ActiveJobPhotoFeed";
+import { RescheduleModal } from "@/components/booking/RescheduleModal";
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; border: string; label: string; desc: string }> = {
   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Finding Your Cleaner", desc: "We're matching you with the perfect cleaner nearby" },
@@ -58,6 +60,7 @@ export default function BookingStatus() {
   const { id } = useParams<{ id: string }>();
   const { data: job, isLoading, error } = useJob(id || "");
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const queryClient = useQueryClient();
   const { rebook, isRebooking } = useAutoRebook();
   const { generateReceipt, isGenerating } = useReceipt();
@@ -337,6 +340,7 @@ export default function BookingStatus() {
             )}
             {statusKey === "active" && (
               <>
+                <ActiveJobPhotoFeed jobId={id!} />
                 <Button className="w-full rounded-xl h-12 animate-pulse" asChild><Link to={`/job/${id}`}>Track Live Progress</Link></Button>
                 <Button variant="outline" className="w-full gap-2 rounded-xl border-2" asChild>
                   <Link to={`/messages?job=${id}`}><MessageCircle className="h-4 w-4" />Message Cleaner</Link>
@@ -380,6 +384,20 @@ export default function BookingStatus() {
         currentScheduledAt={job.scheduled_start_at || null}
         onConfirmCancel={handleConfirmCancel}
       />
+      {job.cleaner_id && (
+        <RescheduleModal
+          open={showRescheduleModal}
+          onOpenChange={setShowRescheduleModal}
+          job={{
+            id: job.id,
+            client_id: job.client_id,
+            cleaner_id: job.cleaner_id,
+            cleaning_type: job.cleaning_type,
+            scheduled_start_at: job.scheduled_start_at,
+            cleaner: job.cleaner ? { first_name: job.cleaner.first_name, user_id: job.cleaner.user_id } : null,
+          }}
+        />
+      )}
     </main>
   );
 }
