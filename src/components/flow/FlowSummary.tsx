@@ -15,7 +15,7 @@ export function FlowSummary({ title = "Summary", children, footer, className }: 
   return (
     <aside
       className={cn(
-        "bg-aero-card border border-aero rounded-3xl shadow-aero p-5 sm:p-6 space-y-4",
+        "bg-app-surface border border-hairline-soft rounded-3xl shadow-wf p-5 sm:p-6 space-y-4",
         className
       )}
     >
@@ -24,7 +24,7 @@ export function FlowSummary({ title = "Summary", children, footer, className }: 
         <h2 className="font-poppins font-semibold text-base text-foreground">{title}</h2>
       </div>
       <div className="space-y-3 text-sm">{children}</div>
-      {footer && <div className="pt-4 border-t border-aero">{footer}</div>}
+      {footer && <div className="pt-4 border-t border-hairline-soft">{footer}</div>}
     </aside>
   );
 }
@@ -38,7 +38,7 @@ interface SummaryRowProps {
 export function SummaryRow({ label, value, emphasis }: SummaryRowProps) {
   return (
     <div className="flex items-baseline justify-between gap-3">
-      <span className={cn("text-aero-soft", emphasis && "text-foreground font-medium")}>
+      <span className={cn("text-ink-muted", emphasis && "text-foreground font-medium")}>
         {label}
       </span>
       <span
