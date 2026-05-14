@@ -148,7 +148,7 @@ export default function BookingStatus() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
 
           {/* Status Hero — Aero celebration for confirmed/completed */}
-          {(statusKey === "accepted" || statusKey === "completed") ? (
+          {(effectiveStatusKey === "accepted" || effectiveStatusKey === "completed") ? (
             <div className="rounded-3xl bg-aero border-2 border-aero p-6 shadow-aero">
               <DashCelebration
                 title={config.label}
@@ -156,7 +156,7 @@ export default function BookingStatus() {
                 size="md"
               />
               {/* Live escrow countdown — only on completed jobs in review window */}
-              {statusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
+              {effectiveStatusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
                 <div className="mt-4 rounded-2xl bg-background/60 border border-aero-cyan/30 p-3">
                   <div className="flex items-center justify-between mb-2 gap-2">
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -170,7 +170,7 @@ export default function BookingStatus() {
                   <Progress value={escrow.progressPct} className="h-1.5" />
                 </div>
               )}
-              {statusKey === "completed" && escrow.isExpired && (
+              {effectiveStatusKey === "completed" && escrow.isExpired && (
                 <div className="mt-4 inline-flex items-center gap-1.5 text-sm text-success">
                   <Check className="h-4 w-4" />
                   Escrow released
@@ -185,7 +185,7 @@ export default function BookingStatus() {
                 transition={{ type: "spring", stiffness: 200 }}
                 className={`h-20 w-20 rounded-3xl ${config.bg} border-2 ${config.border} flex items-center justify-center mx-auto mb-4`}
               >
-                <StatusIcon className={`h-10 w-10 ${config.color} ${statusKey === "active" ? "animate-pulse" : ""}`} />
+                <StatusIcon className={`h-10 w-10 ${config.color} ${effectiveStatusKey === "active" ? "animate-pulse" : ""}`} />
               </motion.div>
               <h1 className="text-2xl font-poppins font-bold mb-2">{config.label}</h1>
               <p className="text-muted-foreground max-w-xs mx-auto">{config.desc}</p>
