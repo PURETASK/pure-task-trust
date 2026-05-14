@@ -164,7 +164,9 @@ function JobRow({ job, index }: { job: any; index: number }) {
                 <p className="font-semibold text-ink text-sm truncate">{cleanerName}</p>
                 <Pill variant={statusVariant}>{status.label}</Pill>
                 {needsApproval && (
-                  <Pill variant="warning" title={escrow.label}>Review · {escrow.hoursRemaining}h</Pill>
+                  <span title={escrow.label}>
+                    <Pill variant="warning">Review · {escrow.hoursRemaining}h</Pill>
+                  </span>
                 )}
               </div>
               <div className="flex items-center gap-2.5 text-[11px] text-ink-muted flex-wrap">
