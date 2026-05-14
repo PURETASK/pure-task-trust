@@ -257,7 +257,7 @@ export default function Discover() {
     try {
       const raw = localStorage.getItem(ZIP_STORAGE_KEY);
       if (raw) setLocation(JSON.parse(raw));
-    } catch {}
+    } catch { /* noop */ }
   }, []);
 
   const handleResolved = (loc: ResolvedLocation) => {
@@ -265,7 +265,7 @@ export default function Discover() {
     setZipModalOpen(false);
     try {
       localStorage.setItem(ZIP_STORAGE_KEY, JSON.stringify(loc));
-    } catch {}
+    } catch { /* noop */ }
   };
 
   const { data: cleaners, isLoading, error } = useCleanersByZip({

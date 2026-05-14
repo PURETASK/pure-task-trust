@@ -177,7 +177,7 @@ export default function CleaningDetail() {
       setRescheduleDate(undefined);
       setRescheduleTime(undefined);
       setRescheduleReason("");
-    } catch {}
+    } catch { /* noop */ }
   };
 
   const handleCancel = async () => {
@@ -200,7 +200,7 @@ export default function CleaningDetail() {
         reviewText: reviewText || undefined,
       });
       setReviewOpen(false);
-    } catch {}
+    } catch { /* noop */ }
   };
 
   return (
