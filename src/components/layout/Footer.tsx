@@ -86,7 +86,7 @@ function GuestFooter() {
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <FooterLink to={link.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <FooterLink to={link.path} className="text-sm text-ink-muted hover:text-primary transition-colors">
                       {link.name}
                     </FooterLink>
                   </li>
@@ -115,7 +115,7 @@ function GuestFooter() {
               <span className="text-xs font-medium text-success">Satisfaction Guaranteed</span>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">© {currentYear} PureTask. All rights reserved.</p>
+          <p className="text-xs text-ink-muted">© {currentYear} PureTask. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -145,7 +145,7 @@ function ClientFooter() {
             <ul className="space-y-2">
               {quickLinks.map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <FooterLink to={l.path} className="flex items-center gap-2 text-sm text-ink-muted hover:text-primary transition-colors">
                     <l.icon className="h-3.5 w-3.5" />{l.label}
                   </FooterLink>
                 </li>
@@ -163,7 +163,7 @@ function ClientFooter() {
                 { name: "Cancellation Policy", path: "/cancellation-policy" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-primary transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -180,7 +180,7 @@ function ClientFooter() {
                 { name: "Notification Settings", path: "/settings/notifications" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-primary transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -197,7 +197,7 @@ function ClientFooter() {
                 { name: "Terms of Service", path: "/legal" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-primary transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -208,11 +208,11 @@ function ClientFooter() {
             <img src={ptMark} alt="PureTask" className="h-7 w-7 object-contain" />
             <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
           </FooterLink>
-          <p className="text-xs text-muted-foreground">© {currentYear} PureTask · Trust-first cleaning marketplace</p>
+          <p className="text-xs text-ink-muted">© {currentYear} PureTask · Trust-first cleaning marketplace</p>
           <div className="flex gap-4">
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Privacy</FooterLink>
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Terms</FooterLink>
-            <FooterLink to="/help" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Support</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Privacy</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Terms</FooterLink>
+            <FooterLink to="/help" className="text-xs text-ink-muted hover:text-foreground transition-colors">Support</FooterLink>
           </div>
         </div>
       </div>
@@ -240,7 +240,7 @@ function CleanerFooter() {
                 { name: "Messages", path: "/cleaner/messages" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-success transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-success transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -257,7 +257,7 @@ function CleanerFooter() {
                 { name: "AI Assistant", path: "/cleaner/ai-assistant" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-success transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-success transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -275,7 +275,7 @@ function CleanerFooter() {
                 { name: "Team Management", path: "/cleaner/team" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-success transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-success transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -293,7 +293,7 @@ function CleanerFooter() {
                 { name: "Help Center", path: "/help" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-success transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-success transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -305,11 +305,11 @@ function CleanerFooter() {
             <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
             <span className="text-xs bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">Cleaner</span>
           </FooterLink>
-          <p className="text-xs text-muted-foreground">© {currentYear} PureTask · Empowering professional cleaners</p>
+          <p className="text-xs text-ink-muted">© {currentYear} PureTask · Empowering professional cleaners</p>
           <div className="flex gap-4">
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Privacy</FooterLink>
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Terms</FooterLink>
-            <FooterLink to="/help" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Support</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Privacy</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Terms</FooterLink>
+            <FooterLink to="/help" className="text-xs text-ink-muted hover:text-foreground transition-colors">Support</FooterLink>
           </div>
         </div>
       </div>
@@ -338,7 +338,7 @@ function AdminFooter() {
                 { name: "Geo Insights", path: "/admin/geo-insights" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-destructive transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-destructive transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -356,7 +356,7 @@ function AdminFooter() {
                 { name: "ID Verifications", path: "/admin/id-verifications" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-destructive transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-destructive transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -376,7 +376,7 @@ function AdminFooter() {
                 { name: "Platform Config", path: "/admin/platform-config" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-destructive transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-destructive transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -394,7 +394,7 @@ function AdminFooter() {
                 { name: "Client Jobs", path: "/admin/client-jobs" },
               ].map(l => (
                 <li key={l.path}>
-                  <FooterLink to={l.path} className="text-sm text-muted-foreground hover:text-destructive transition-colors">{l.name}</FooterLink>
+                  <FooterLink to={l.path} className="text-sm text-ink-muted hover:text-destructive transition-colors">{l.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -406,10 +406,10 @@ function AdminFooter() {
             <span className="font-poppins font-bold text-aero-trust tracking-tight">PureTask</span>
             <span className="text-xs bg-destructive/10 text-destructive px-2 py-0.5 rounded-full font-medium">Admin</span>
           </FooterLink>
-          <p className="text-xs text-muted-foreground">© {currentYear} PureTask Admin Console · Internal use only</p>
+          <p className="text-xs text-ink-muted">© {currentYear} PureTask Admin Console · Internal use only</p>
           <div className="flex gap-4">
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Privacy</FooterLink>
-            <FooterLink to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Terms</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Privacy</FooterLink>
+            <FooterLink to="/legal" className="text-xs text-ink-muted hover:text-foreground transition-colors">Terms</FooterLink>
           </div>
         </div>
       </div>

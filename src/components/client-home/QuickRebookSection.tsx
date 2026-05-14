@@ -44,7 +44,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
             </div>
             <div>
               <p className="text-sm font-bold">No recent cleaners yet</p>
-              <p className="text-xs text-muted-foreground">Complete a booking to see quick rebook options.</p>
+              <p className="text-xs text-ink-muted">Complete a booking to see quick rebook options.</p>
             </div>
             <Button size="sm" variant="outline" asChild className="mt-1 rounded-xl border-2">
               <Link to="/book">Browse Cleaners</Link>
@@ -87,7 +87,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
                       <p className="font-bold text-sm truncate">{name}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         {rating != null && (
-                          <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-0.5 text-xs text-ink-muted">
                             <Star className="h-3 w-3 fill-warning text-warning" />
                             {rating.toFixed(1)}
                           </span>
@@ -100,16 +100,16 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
                   {/* Property & last booked */}
                   <div className="space-y-1 mb-3">
                     {address && (
-                      <p className="text-xs text-muted-foreground truncate">{address}</p>
+                      <p className="text-xs text-ink-muted truncate">{address}</p>
                     )}
                     {job.updated_at && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <p className="text-xs text-ink-muted flex items-center gap-1">
                         <CalendarCheck className="h-3 w-3" />
                         Last booked {new Date(job.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </p>
                     )}
                     {escrowHeld(job) > 0 && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-ink-muted">
                         Usually ~${escrowHeld(job)} credits
                       </p>
                     )}
@@ -152,7 +152,7 @@ function SectionHeader() {
         </div>
         <div>
           <h2 className="text-base sm:text-lg font-bold">Quick Rebook</h2>
-          <p className="text-xs text-muted-foreground">Book your usual cleaning in seconds.</p>
+          <p className="text-xs text-ink-muted">Book your usual cleaning in seconds.</p>
         </div>
       </div>
       <Link to="/book" className="text-xs text-primary font-semibold hover:underline">
@@ -173,7 +173,7 @@ function PopularWaysToBook() {
     <section>
       <div className="mb-3">
         <h2 className="text-base sm:text-lg font-bold">Popular Ways to Book</h2>
-        <p className="text-xs text-muted-foreground">Get started with your first cleaning.</p>
+        <p className="text-xs text-ink-muted">Get started with your first cleaning.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {ways.map((w) => (
@@ -185,7 +185,7 @@ function PopularWaysToBook() {
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-sm">{w.label}</p>
-                  <p className="text-xs text-muted-foreground">{w.desc}</p>
+                  <p className="text-xs text-ink-muted">{w.desc}</p>
                 </div>
               </CardContent>
             </Card>

@@ -31,7 +31,7 @@ export function PlatformFee() {
               <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">
                 Platform Fee: 15–25%
               </h2>
-              <p className="text-muted-foreground text-sm sm:text-base">
+              <p className="text-ink-muted text-sm sm:text-base">
                 Our platform fee (25% Rising Pro → 15% All-Star Expert) covers everything that makes PureTask the safest, most transparent cleaning marketplace:
               </p>
             </div>

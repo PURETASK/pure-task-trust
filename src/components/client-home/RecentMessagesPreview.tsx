@@ -37,7 +37,7 @@ export function RecentMessagesPreview({ threads }: Props) {
             </div>
             <div>
               <p className="text-sm font-bold">No active conversations.</p>
-              <p className="text-xs text-muted-foreground">Messages from your cleaners will appear here</p>
+              <p className="text-xs text-ink-muted">Messages from your cleaners will appear here</p>
             </div>
           </CardContent>
         </Card>
@@ -60,17 +60,17 @@ export function RecentMessagesPreview({ threads }: Props) {
                       <p className={`text-sm truncate ${thread.unread ? "font-bold" : "font-medium"}`}>
                         {thread.otherPartyName}
                       </p>
-                      <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                      <span className="text-[10px] text-ink-muted flex-shrink-0">
                         {thread.timestamp
                           ? formatDistanceToNow(new Date(thread.timestamp), { addSuffix: true })
                           : ""}
                       </span>
                     </div>
-                    <p className={`text-xs truncate ${thread.unread ? "text-foreground" : "text-muted-foreground"}`}>
+                    <p className={`text-xs truncate ${thread.unread ? "text-foreground" : "text-ink-muted"}`}>
                       {thread.lastMessagePreview}
                     </p>
                   </div>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                  <ChevronRight className="h-3.5 w-3.5 text-ink-muted flex-shrink-0" />
                 </CardContent>
               </Card>
             </Link>

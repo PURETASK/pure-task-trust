@@ -127,7 +127,7 @@ export function RecentActivityTimeline() {
                   </div>
                   <div className="flex-1 min-w-0 pb-4">
                     <p className="text-sm text-foreground">{activity.text}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
                     </p>
                   </div>

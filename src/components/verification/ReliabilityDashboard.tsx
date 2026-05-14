@@ -60,7 +60,7 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
               <p className={`font-medium ${getScoreColor(currentScore)}`}>
                 {getScoreLabel(currentScore)}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 Based on {score?.total_events || 0} jobs (last 90 days)
               </p>
             </div>
@@ -130,7 +130,7 @@ export function ReliabilityDashboard({ cleanerId }: ReliabilityDashboardProps) {
                     ) : event.weight < 0 ? (
                       <TrendingDown className="h-4 w-4 text-destructive" />
                     ) : (
-                      <Minus className="h-4 w-4 text-muted-foreground" />
+                      <Minus className="h-4 w-4 text-ink-muted" />
                     )}
                     <span className="text-sm capitalize">
                       {event.event_type.replace(/_/g, ' ')}
@@ -170,16 +170,16 @@ function ScoreMetric({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-muted-foreground" />
+          <Icon className="h-4 w-4 text-ink-muted" />
           <span className="text-sm font-medium">{label}</span>
-          <span className="text-xs text-muted-foreground">({weight}%)</span>
+          <span className="text-xs text-ink-muted">({weight}%)</span>
         </div>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-ink-muted">
           {showPercentage ? `${Math.round(value)}%` : description}
         </span>
       </div>
       <Progress value={value} className="h-2" />
-      <p className="text-xs text-muted-foreground">{description}</p>
+      <p className="text-xs text-ink-muted">{description}</p>
     </div>
   );
 }

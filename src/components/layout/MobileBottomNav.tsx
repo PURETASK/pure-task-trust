@@ -129,7 +129,7 @@ export function MobileBottomNav() {
                   "h-[18px] w-[18px] transition-all duration-150",
                   active
                     ? cn(config.accent, "stroke-[2.5]")
-                    : "text-muted-foreground stroke-[1.5]"
+                    : "text-ink-muted stroke-[1.5]"
                 )} />
                 {badge > 0 && (
                   <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
@@ -141,7 +141,7 @@ export function MobileBottomNav() {
               {/* Label */}
               <span className={cn(
                 "text-[9px] font-semibold transition-colors duration-150 leading-none",
-                active ? config.accent : "text-muted-foreground"
+                active ? config.accent : "text-ink-muted"
               )}>
                 {item.label}
               </span>

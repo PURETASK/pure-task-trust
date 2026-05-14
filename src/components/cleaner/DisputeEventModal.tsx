@@ -81,7 +81,7 @@ export function DisputeEventModal({ open, onOpenChange, event }: DisputeEventMod
                 {isNegative ? "" : "+"}{event.weight || 0} pts
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-ink-muted">
               {format(new Date(event.created_at), "EEE, MMM d yyyy")}
               {event.job_id && ` · Job ${event.job_id.slice(0, 8)}...`}
             </p>
@@ -97,7 +97,7 @@ export function DisputeEventModal({ open, onOpenChange, event }: DisputeEventMod
               rows={4}
               className="resize-none"
             />
-            <p className="text-xs text-muted-foreground">Be specific — include any supporting details or context.</p>
+            <p className="text-xs text-ink-muted">Be specific — include any supporting details or context.</p>
           </div>
 
           <div className="flex gap-2 pt-1">

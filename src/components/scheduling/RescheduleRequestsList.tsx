@@ -20,7 +20,7 @@ const bucketLabels: Record<string, { label: string; color: string }> = {
   same_day: { label: 'Same Day', color: 'bg-warning/10 text-warning' },
   next_day: { label: 'Next Day', color: 'bg-primary/10 text-primary' },
   within_week: { label: 'Within Week', color: 'bg-success/10 text-success' },
-  future: { label: 'Future', color: 'bg-muted/10 text-muted-foreground' },
+  future: { label: 'Future', color: 'bg-muted/10 text-ink-muted' },
 };
 
 const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
@@ -66,7 +66,7 @@ function RescheduleCard({ event, isIncoming }: RescheduleCardProps) {
             </div>
             
             <div className="space-y-1 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-2 text-ink-muted">
                 <Clock className="h-3 w-3" />
                 <span>Original: {format(parseISO(event.t_start_original), 'MMM d, h:mm a')}</span>
               </div>
@@ -74,7 +74,7 @@ function RescheduleCard({ event, isIncoming }: RescheduleCardProps) {
                 <CalendarClock className="h-3 w-3" />
                 <span>Requested: {format(parseISO(event.t_start_new), 'MMM d, h:mm a')}</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-ink-muted mt-2">
                 Requested {format(parseISO(event.t_request), 'MMM d, h:mm a')} • 
                 {event.hours_before_original}h before original
               </p>
@@ -175,7 +175,7 @@ export function RescheduleRequestsList({ jobId }: { jobId?: string }) {
       </CardHeader>
       <CardContent>
         {!events || events.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-ink-muted">
             <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p className="mb-4">No reschedule requests</p>
             <p className="text-sm mb-6">When a cleaner requests to reschedule your booking, it will appear here.</p>
@@ -190,7 +190,7 @@ export function RescheduleRequestsList({ jobId }: { jobId?: string }) {
           <div className="space-y-6">
             {pendingEvents.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                <h4 className="text-sm font-medium text-ink-muted mb-3">
                   Pending ({pendingEvents.length})
                 </h4>
                 <div className="space-y-3">
@@ -207,7 +207,7 @@ export function RescheduleRequestsList({ jobId }: { jobId?: string }) {
 
             {pastEvents.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                <h4 className="text-sm font-medium text-ink-muted mb-3">
                   History ({pastEvents.length})
                 </h4>
                 <div className="space-y-3">

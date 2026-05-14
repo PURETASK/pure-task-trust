@@ -73,7 +73,7 @@ export default function Referral() {
               <h1 className="text-4xl md:text-5xl font-poppins font-bold text-gradient-aero bg-gradient-to-r from-primary to-[hsl(var(--pt-purple))] bg-clip-text text-transparent">
                 Invite & Earn
               </h1>
-              <p className="text-muted-foreground mt-3 text-lg">
+              <p className="text-ink-muted mt-3 text-lg">
                 Share the love. Get rewarded.
               </p>
               <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
@@ -81,7 +81,7 @@ export default function Referral() {
                   <Sparkles className="h-4 w-4 mr-2 text-warning" />
                   Give ${referralCode?.referee_credits || 25}
                 </Badge>
-                <span className="text-muted-foreground">→</span>
+                <span className="text-ink-muted">→</span>
                 <Badge variant="secondary" className="text-base px-4 py-1.5">
                   <Star className="h-4 w-4 mr-2 text-warning" />
                   Get ${referralCode?.reward_credits || 25}
@@ -124,7 +124,7 @@ export default function Referral() {
                         {stat.value}
                       </motion.div>
                     )}
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-sm text-ink-muted">{stat.label}</div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -143,7 +143,7 @@ export default function Referral() {
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold">Reward Progress</p>
-                    <p className="text-xs text-muted-foreground">{stats.completedReferrals}/3 friends joined</p>
+                    <p className="text-xs text-ink-muted">{stats.completedReferrals}/3 friends joined</p>
                   </div>
                   <div className="w-full bg-secondary rounded-full h-2.5 overflow-hidden">
                     <div
@@ -152,7 +152,7 @@ export default function Referral() {
                     />
                   </div>
                   {stats.completedReferrals < 3 && (
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-ink-muted mt-2">
                       {3 - stats.completedReferrals} more friend{3 - stats.completedReferrals !== 1 ? 's' : ''} needed to unlock your next reward 🎁
                     </p>
                   )}
@@ -170,14 +170,14 @@ export default function Referral() {
                   </div>
                   <div>
                     <h2 className="font-bold text-lg">Your Referral Link</h2>
-                    <p className="text-sm text-muted-foreground">Share to earn credits when friends sign up</p>
+                    <p className="text-sm text-ink-muted">Share to earn credits when friends sign up</p>
                   </div>
                 </div>
               </div>
               <CardContent className="p-6 space-y-6">
                 {/* Referral Code */}
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">Your Unique Code</label>
+                  <label className="text-sm font-medium text-ink-muted mb-2 block">Your Unique Code</label>
                   <div className="flex gap-3">
                     <div className="flex-1 bg-gradient-to-r from-destructive/5 to-accent/5 border-2 border-dashed border-destructive/30 rounded-xl px-6 py-4 text-center">
                       {isLoadingCode ? (
@@ -212,7 +212,7 @@ export default function Referral() {
 
                 {/* Full Link */}
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">Full Referral Link</label>
+                  <label className="text-sm font-medium text-ink-muted mb-2 block">Full Referral Link</label>
                   <div className="flex gap-2">
                     <Input 
                       value={referralLink} 
@@ -271,7 +271,7 @@ export default function Referral() {
                         {item.step}
                       </div>
                       <h3 className="font-semibold mb-2">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      <p className="text-sm text-ink-muted">{item.desc}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -317,7 +317,7 @@ export default function Referral() {
                             <p className="font-medium">
                               {t.referee_role === 'cleaner' ? 'New Cleaner' : 'New Client'}
                             </p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-ink-muted">
                               Joined {format(new Date(t.created_at), 'MMM d, yyyy')}
                             </p>
                           </div>
@@ -349,9 +349,9 @@ export default function Referral() {
             >
               <Card className="text-center py-12">
                 <CardContent>
-                  <Gift className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                  <Gift className="h-16 w-16 mx-auto text-ink-muted mb-4" />
                   <h3 className="font-semibold text-lg mb-2">No referrals yet</h3>
-                  <p className="text-muted-foreground max-w-sm mx-auto">
+                  <p className="text-ink-muted max-w-sm mx-auto">
                     Share your referral link with friends and family to start earning credits!
                   </p>
                 </CardContent>

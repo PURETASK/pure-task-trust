@@ -44,7 +44,7 @@ export default function PropertyProfiles() {
             <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero flex items-center gap-2">
               <Home className="h-6 w-6 text-primary" /> Property Profiles
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">Detailed property info for better cleaning service</p>
+            <p className="text-ink-muted text-sm mt-1">Detailed property info for better cleaning service</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -71,7 +71,7 @@ export default function PropertyProfiles() {
         {isLoading ? (
           <div className="space-y-3">{[1,2].map(i => <Skeleton key={i} className="h-40 rounded-xl" />)}</div>
         ) : properties.length === 0 ? (
-          <Card><CardContent className="py-12 text-center text-muted-foreground">No properties yet. Add one to give cleaners helpful info about your space.</CardContent></Card>
+          <Card><CardContent className="py-12 text-center text-ink-muted">No properties yet. Add one to give cleaners helpful info about your space.</CardContent></Card>
         ) : (
           <div className="space-y-4">
             {properties.map(prop => (
@@ -88,8 +88,8 @@ export default function PropertyProfiles() {
                   </div>
                   {prop.pet_info && <p className="text-sm"><PawPrint className="h-3.5 w-3.5 inline mr-1 text-warning" />{prop.pet_info}</p>}
                   {prop.access_instructions && <p className="text-sm"><Key className="h-3.5 w-3.5 inline mr-1 text-primary" />{prop.access_instructions}</p>}
-                  {prop.parking_notes && <p className="text-sm"><Car className="h-3.5 w-3.5 inline mr-1 text-muted-foreground" />{prop.parking_notes}</p>}
-                  {prop.special_notes && <p className="text-sm text-muted-foreground">{prop.special_notes}</p>}
+                  {prop.parking_notes && <p className="text-sm"><Car className="h-3.5 w-3.5 inline mr-1 text-ink-muted" />{prop.parking_notes}</p>}
+                  {prop.special_notes && <p className="text-sm text-ink-muted">{prop.special_notes}</p>}
                 </CardContent>
               </Card>
             ))}

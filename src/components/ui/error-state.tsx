@@ -51,7 +51,7 @@ export function ErrorState({
         <Icon className="h-8 w-8 text-destructive" />
       </div>
       <h3 className="text-lg font-semibold mb-2">{title || config.title}</h3>
-      <p className="text-muted-foreground max-w-sm mb-6">{description || config.description}</p>
+      <p className="text-ink-muted max-w-sm mb-6">{description || config.description}</p>
       {onRetry && (
         <Button variant="outline" onClick={onRetry} className="gap-2">
           <RefreshCw className="h-4 w-4" />

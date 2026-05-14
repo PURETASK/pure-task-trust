@@ -76,12 +76,12 @@ export default function ResetPassword() {
                 <ShieldCheck className="h-8 w-8 text-primary" />
               </div>
               <h1 className="text-2xl md:text-3xl font-poppins font-bold text-gradient-aero">Reset Password</h1>
-              <p className="text-muted-foreground text-sm mt-1">
+              <p className="text-ink-muted text-sm mt-1">
                 {isReset ? 'Your password has been updated' : 'Create a new secure password'}
               </p>
             </div>
 
-            <Card className="shadow-card border-border/60">
+            <Card className="shadow-card border-hairline-soft">
               <CardContent className="p-7">
                 {isReset ? (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-4">
@@ -89,7 +89,7 @@ export default function ResetPassword() {
                       <CheckCircle2 className="h-7 w-7 text-success" />
                     </div>
                     <h3 className="font-semibold text-lg mb-2">Password Updated!</h3>
-                    <p className="text-sm text-muted-foreground mb-1">Redirecting you to sign in...</p>
+                    <p className="text-sm text-ink-muted mb-1">Redirecting you to sign in...</p>
                   </motion.div>
                 ) : !isValidSession ? (
                   <div className="text-center py-4">
@@ -97,7 +97,7 @@ export default function ResetPassword() {
                       <Lock className="h-6 w-6 text-destructive" />
                     </div>
                     <h3 className="font-semibold mb-2">Link Expired</h3>
-                    <p className="text-sm text-muted-foreground mb-5">This reset link may have expired or is invalid.</p>
+                    <p className="text-sm text-ink-muted mb-5">This reset link may have expired or is invalid.</p>
                     <Button onClick={() => navigate('/forgot-password')} className="rounded-xl w-full">
                       Request New Link <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -107,10 +107,10 @@ export default function ResetPassword() {
                     <div className="space-y-1.5">
                       <Label htmlFor="password" className="text-sm font-medium">New Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
                         <Input id="password" type={showPass ? "text" : "password"} placeholder="Min. 8 characters"
                           className="pl-10 pr-10 rounded-xl h-11" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
-                        <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                        <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-foreground transition-colors">
                           {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
@@ -126,10 +126,10 @@ export default function ResetPassword() {
                     <div className="space-y-1.5">
                       <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
                         <Input id="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Repeat your password"
                           className="pl-10 pr-10 rounded-xl h-11" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-                        <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                        <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-foreground transition-colors">
                           {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>

@@ -36,7 +36,7 @@ export default function RecurringCleaning() {
               A clean home,{" "}
               <span className="bg-gradient-to-r from-success to-primary bg-clip-text text-transparent">every week</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+            <p className="text-lg sm:text-xl text-ink-muted max-w-2xl mx-auto mb-8">
               Set up recurring cleaning with the same trusted, verified cleaner. GPS-tracked, photo-documented, and escrow-protected on every visit.
             </p>
             <Button size="lg" asChild className="rounded-2xl h-14 px-8 shadow-elevated">
@@ -58,7 +58,7 @@ export default function RecurringCleaning() {
                       <b.icon className="h-6 w-6 text-success" />
                     </div>
                     <h3 className="font-bold text-lg mb-2">{b.title}</h3>
-                    <p className="text-sm text-muted-foreground">{b.desc}</p>
+                    <p className="text-sm text-ink-muted">{b.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -80,7 +80,7 @@ export default function RecurringCleaning() {
             ].map((step, i) => (
               <li key={i} className="flex gap-4 items-start">
                 <span className="text-2xl font-poppins font-bold text-success/40 leading-none mt-0.5">{i + 1}.</span>
-                <p className="text-muted-foreground">{step}</p>
+                <p className="text-ink-muted">{step}</p>
               </li>
             ))}
           </ol>
@@ -90,7 +90,7 @@ export default function RecurringCleaning() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-success/5 via-background to-background">
         <div className="container text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Start your recurring plan</h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Same cleaner, same day, same trust. GPS verified. Photo proof. Escrow protection on every visit.</p>
+          <p className="text-ink-muted mb-8 max-w-lg mx-auto">Same cleaner, same day, same trust. GPS verified. Photo proof. Escrow protection on every visit.</p>
           <Button size="lg" asChild className="rounded-2xl h-14 px-10 shadow-elevated">
             <Link to="/book">Get Started <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>

@@ -167,7 +167,7 @@ export default function ClientProfileEdit() {
           </Button>
           <div>
             <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero">Edit Profile</h1>
-            <p className="text-muted-foreground mt-1">Update your personal information</p>
+            <p className="text-ink-muted mt-1">Update your personal information</p>
           </div>
         </div>
 
@@ -221,7 +221,7 @@ export default function ClientProfileEdit() {
                 disabled
                 className="bg-muted"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-ink-muted">
                 Contact support to change your email address
               </p>
             </div>
@@ -335,7 +335,7 @@ export default function ClientProfileEdit() {
                 <div className="h-20 bg-muted rounded-lg" />
               </div>
             ) : !addresses || addresses.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="text-center py-8 text-ink-muted">
                 <Home className="h-10 w-10 mx-auto mb-2 opacity-50" />
                 <p>No addresses saved yet</p>
               </div>
@@ -360,7 +360,7 @@ export default function ClientProfileEdit() {
                           <Badge variant="secondary" className="text-xs">Default</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground truncate">
+                      <p className="text-sm text-ink-muted truncate">
                         {address.line1}, {address.city}{address.state ? `, ${address.state}` : ""}
                       </p>
                     </div>
@@ -402,10 +402,10 @@ export default function ClientProfileEdit() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
               <div className="flex items-center gap-3">
-                <Key className="h-5 w-5 text-muted-foreground" />
+                <Key className="h-5 w-5 text-ink-muted" />
                 <div>
                   <p className="font-medium">Password</p>
-                  <p className="text-sm text-muted-foreground">Last changed: Unknown</p>
+                  <p className="text-sm text-ink-muted">Last changed: Unknown</p>
                 </div>
               </div>
               <Button variant="outline" size="sm" asChild>
@@ -428,7 +428,7 @@ export default function ClientProfileEdit() {
             <div className="flex items-center justify-between p-4 rounded-lg bg-destructive/10">
               <div>
                 <p className="font-medium">Delete Account</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-ink-muted">
                   Permanently delete your account and all data
                 </p>
               </div>

@@ -46,7 +46,7 @@ export function ReferralCard({
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm">Your Referral Code</h3>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-ink-muted">
                 Share to earn ${referralCode?.reward_credits || 25}
               </p>
             </div>
@@ -95,11 +95,11 @@ export function ReferralCard({
           
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1 text-muted-foreground">
+              <span className="flex items-center gap-1 text-ink-muted">
                 <Users className="h-3.5 w-3.5" />
                 {isLoadingReferrals ? <Skeleton className="h-4 w-6" /> : stats.totalReferrals}
               </span>
-              <span className="flex items-center gap-1 text-muted-foreground">
+              <span className="flex items-center gap-1 text-ink-muted">
                 <DollarSign className="h-3.5 w-3.5" />
                 {isLoadingReferrals ? <Skeleton className="h-4 w-8" /> : stats.totalCreditsEarned}
               </span>
@@ -123,7 +123,7 @@ export function ReferralCard({
           </div>
           <div>
             <h2 className="font-bold text-xl">Referral Program</h2>
-            <p className="text-muted-foreground">
+            <p className="text-ink-muted">
               Give ${referralCode?.referee_credits || 25}, Get ${referralCode?.reward_credits || 25}
             </p>
           </div>
@@ -131,7 +131,7 @@ export function ReferralCard({
       </div>
       <CardContent className="p-6 space-y-6">
         <div>
-          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+          <label className="text-sm font-medium text-ink-muted mb-2 block">
             Your Unique Code
           </label>
           <div className="flex gap-3">
@@ -174,11 +174,11 @@ export function ReferralCard({
             { label: "Credits Earned", value: `$${stats.totalCreditsEarned}`, icon: DollarSign },
           ].map((stat) => (
             <div key={stat.label} className="text-center p-3 bg-muted/30 rounded-lg">
-              <stat.icon className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
+              <stat.icon className="h-5 w-5 mx-auto mb-1 text-ink-muted" />
               <div className="font-bold text-lg">
                 {isLoadingReferrals ? <Skeleton className="h-6 w-8 mx-auto" /> : stat.value}
               </div>
-              <div className="text-xs text-muted-foreground">{stat.label}</div>
+              <div className="text-xs text-ink-muted">{stat.label}</div>
             </div>
           ))}
         </div>

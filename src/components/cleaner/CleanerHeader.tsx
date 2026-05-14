@@ -93,7 +93,7 @@ export function CleanerHeader() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      : "text-ink-muted hover:text-foreground hover:bg-muted"
                   }`}
                 >
                   <item.icon className="h-4 w-4" />
@@ -109,7 +109,7 @@ export function CleanerHeader() {
           <div
             className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium ${
               showLoading
-                ? "bg-muted border-border text-muted-foreground"
+                ? "bg-muted border-border text-ink-muted"
                 : "bg-success/10 border-success/30 text-success"
             }`}
           >
@@ -137,7 +137,7 @@ export function CleanerHeader() {
                 <span className="hidden md:inline text-sm font-medium">
                   {user?.name || "User"}
                 </span>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 text-ink-muted" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-52">
@@ -145,7 +145,7 @@ export function CleanerHeader() {
               <div className="px-2 py-2 md:hidden">
                 <div
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${
-                    showLoading ? "bg-muted text-muted-foreground" : "bg-success/10 text-success"
+                    showLoading ? "bg-muted text-ink-muted" : "bg-success/10 text-success"
                   }`}
                 >
                   {showLoading ? (

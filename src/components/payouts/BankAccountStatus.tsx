@@ -96,8 +96,8 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
       <Card className="border-muted">
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
-            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            <span className="text-muted-foreground">Checking bank account status...</span>
+            <Loader2 className="h-5 w-5 animate-spin text-ink-muted" />
+            <span className="text-ink-muted">Checking bank account status...</span>
           </div>
         </CardContent>
       </Card>
@@ -116,7 +116,7 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
                 <p className="font-medium text-foreground">
                   Connect your bank account
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-ink-muted">
                   Link your bank account to receive payouts for completed jobs
                 </p>
               </div>
@@ -170,7 +170,7 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
                     Pending
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-ink-muted">
                   {hasPendingRequirements 
                     ? 'Additional information is needed to complete verification'
                     : 'Your bank account is being verified. This usually takes 1-2 business days.'
@@ -208,7 +208,7 @@ export default function BankAccountStatus({ onStatusChange }: BankAccountStatusP
             <CheckCircle className="h-5 w-5 text-success" />
             <div>
               <p className="font-medium text-success">Bank Account Connected</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 You're all set to receive payouts
               </p>
             </div>

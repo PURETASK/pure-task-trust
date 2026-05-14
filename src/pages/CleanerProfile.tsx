@@ -49,9 +49,9 @@ const TIER: Record<string, {
     label: "Proven Specialist", icon: "🛡️",
     gradient: "from-muted via-muted to-muted",
     bar: "from-muted to-muted",
-    badge: "bg-muted/15 text-muted-foreground border-border/40",
+    badge: "bg-muted/15 text-ink-muted border-hairline-soft",
     ring: "ring-border/30",
-    accent: "text-muted-foreground",
+    accent: "text-ink-muted",
   },
   bronze: {
     label: "Rising Pro", icon: "📈",
@@ -106,7 +106,7 @@ function MetricRing({
       </div>
       <div className="text-center">
         <p className="text-sm sm:text-base font-poppins font-bold">{value}%</p>
-        <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight text-center">{label}</p>
+        <p className="text-[10px] sm:text-xs text-ink-muted leading-tight text-center">{label}</p>
       </div>
     </motion.div>
   );
@@ -118,7 +118,7 @@ function StarRow({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }
   return (
     <div className="flex">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`${px} ${i < rating ? "fill-warning text-warning" : "text-muted-foreground/25"}`} />
+        <Star key={i} className={`${px} ${i < rating ? "fill-warning text-warning" : "text-ink-muted/25"}`} />
       ))}
     </div>
   );
@@ -302,7 +302,7 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Calendar */}
-        <Card className="rounded-2xl border-border/60 overflow-hidden">
+        <Card className="rounded-2xl border-hairline-soft overflow-hidden">
           <div className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
             <button onClick={prevMonth} className="p-1 hover:bg-primary-foreground/10 rounded-lg transition-colors">
               <ChevronLeft className="h-5 w-5" />
@@ -315,7 +315,7 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
           <CardContent className="p-4">
             <div className="grid grid-cols-7 gap-1 mb-2">
               {dayNames.map(d => (
-                <div key={d} className="text-center text-xs font-semibold text-muted-foreground py-1">{d}</div>
+                <div key={d} className="text-center text-xs font-semibold text-ink-muted py-1">{d}</div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
@@ -336,13 +336,13 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
                     onClick={() => setSelectedDate(new Date(currentYear, currentMonth, day))}
                     className={`
                       relative h-10 rounded-lg text-sm font-medium transition-all border-2
-                      ${past ? "text-muted-foreground/30 cursor-not-allowed border-transparent" : ""}
+                      ${past ? "text-ink-muted/30 cursor-not-allowed border-transparent" : ""}
                       ${blacked && !past ? "border-destructive/50 text-destructive/40 cursor-not-allowed line-through bg-destructive/5" : ""}
                       ${selected ? "bg-primary text-primary-foreground shadow-md border-primary" : ""}
                       ${todayDay && !selected ? "border-primary text-primary font-bold bg-primary/5" : ""}
                       ${booked && !selected && !blacked && !past ? "border-warning bg-warning/5 hover:bg-warning/10 text-foreground" : ""}
                       ${available && !selected && !todayDay && !booked && !blacked && !past ? "border-success bg-success/5 hover:bg-success/10 text-foreground" : ""}
-                      ${unavailable && !blacked && !selected && !past ? "border-transparent text-muted-foreground/50" : ""}
+                      ${unavailable && !blacked && !selected && !past ? "border-transparent text-ink-muted/50" : ""}
                     `}
                   >
                     {day}
@@ -351,7 +351,7 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
               })}
             </div>
             {/* Legend */}
-            <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-ink-muted">
               <span className="flex items-center gap-1.5">
                 <span className="h-3 w-3 rounded border-2 border-success bg-success/10" /> Available
               </span>
@@ -369,7 +369,7 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
         </Card>
 
         {/* Booking Form */}
-        <Card className="rounded-2xl border-border/60 overflow-hidden">
+        <Card className="rounded-2xl border-hairline-soft overflow-hidden">
           <div className="bg-primary text-primary-foreground p-4 flex items-center gap-2">
             <Calendar className="h-5 w-5" />
             <h3 className="font-bold text-lg">Book Your Cleaning</h3>
@@ -487,8 +487,8 @@ function InlineBookingSection({ cleaner }: { cleaner: any }) {
             {/* Estimated Total */}
             <div className="flex items-center justify-between pt-3 border-t border-border">
               <div>
-                <p className="text-sm font-semibold text-muted-foreground">Estimated Total:</p>
-                <p className="text-xs text-muted-foreground">{hours} hours × ${rate}/hr</p>
+                <p className="text-sm font-semibold text-ink-muted">Estimated Total:</p>
+                <p className="text-xs text-ink-muted">{hours} hours × ${rate}/hr</p>
               </div>
               <p className="text-3xl font-poppins font-bold">${total}</p>
             </div>
@@ -546,7 +546,7 @@ export default function CleanerProfile() {
     <main className="flex-1 flex items-center justify-center py-16">
       <div className="text-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
-        <p className="text-muted-foreground text-sm">Loading profile…</p>
+        <p className="text-ink-muted text-sm">Loading profile…</p>
       </div>
     </main>
   );
@@ -554,7 +554,7 @@ export default function CleanerProfile() {
   if (error || !cleaner) return (
     <main className="flex-1 flex items-center justify-center py-16">
       <div className="text-center">
-        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <AlertCircle className="h-12 w-12 text-ink-muted mx-auto mb-4" />
         <h1 className="text-2xl font-bold mb-2">Profile not found</h1>
         <Button asChild><Link to="/discover">Browse Cleaners</Link></Button>
       </div>
@@ -778,7 +778,7 @@ export default function CleanerProfile() {
         {/* ── BIO ─────────────────────────────────────────────────── */}
         {cleaner.bio && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <div className="relative bg-muted/40 border border-border/60 rounded-2xl p-5 sm:p-6">
+            <div className="relative bg-muted/40 border border-hairline-soft rounded-2xl p-5 sm:p-6">
               <Quote className="absolute top-4 left-4 h-8 w-8 text-primary/10" />
               <p className="text-sm sm:text-base text-foreground/80 leading-relaxed pl-2 italic">
                 "{cleaner.bio}"
@@ -790,7 +790,7 @@ export default function CleanerProfile() {
         {/* ── SERVICES ─────────────────────────────────────────────── */}
         {cleaner.services.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Services Offered</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-ink-muted mb-3">Services Offered</h2>
             <div className="flex flex-wrap gap-2">
               {cleaner.services.map((s: string) => (
                 <span
@@ -809,13 +809,13 @@ export default function CleanerProfile() {
 
         {/* ── RELIABILITY RINGS ─────────────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <div className="bg-card border border-border/60 rounded-2xl p-5 sm:p-6">
+          <div className="bg-card border border-hairline-soft rounded-2xl p-5 sm:p-6">
             <div className="flex items-center justify-between mb-5 sm:mb-6">
               <div>
                 <h2 className="font-bold text-base sm:text-lg flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-primary" /> Reliability Score
                 </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Based on last {metrics?.total_jobs_window || 0} jobs</p>
+                <p className="text-xs text-ink-muted mt-0.5">Based on last {metrics?.total_jobs_window || 0} jobs</p>
               </div>
               {/* Big score badge */}
               <div className={`flex flex-col items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br ${tier.gradient} shadow-lg`}>
@@ -838,7 +838,7 @@ export default function CleanerProfile() {
 
             {/* Score bar */}
             <div className="mt-5 sm:mt-6 space-y-1.5">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center justify-between text-xs text-ink-muted">
                 <span>0 Rising</span>
                 <span>50 Proven</span>
                 <span>70 Top</span>
@@ -884,7 +884,7 @@ export default function CleanerProfile() {
                     <span className="font-bold">{avgRating.toFixed(1)}</span>
                   </div>
                 )}
-                <span className="text-muted-foreground text-sm">({reviews.length})</span>
+                <span className="text-ink-muted text-sm">({reviews.length})</span>
               </div>
             )}
           </div>
@@ -899,7 +899,7 @@ export default function CleanerProfile() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + i * 0.07 }}
-                  className="relative bg-card border border-border/60 rounded-2xl p-4 sm:p-5 overflow-hidden group hover:border-primary/30 hover:shadow-soft transition-all"
+                  className="relative bg-card border border-hairline-soft rounded-2xl p-4 sm:p-5 overflow-hidden group hover:border-primary/30 hover:shadow-soft transition-all"
                 >
                   <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-warning/60 via-warning/30 to-transparent" />
                   <div className="flex items-start justify-between mb-3">
@@ -909,13 +909,13 @@ export default function CleanerProfile() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold leading-none mb-0.5">Verified Client</p>
-                        <p className="text-[11px] text-muted-foreground">{format(new Date(review.created_at), "MMM d, yyyy")}</p>
+                        <p className="text-[11px] text-ink-muted">{format(new Date(review.created_at), "MMM d, yyyy")}</p>
                       </div>
                     </div>
                     <StarRow rating={review.rating} />
                   </div>
                   {review.review_text && (
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    <p className="text-sm text-ink-muted leading-relaxed line-clamp-3">
                       "{review.review_text}"
                     </p>
                   )}
@@ -923,10 +923,10 @@ export default function CleanerProfile() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 border border-dashed border-border/60 rounded-2xl bg-muted/20">
-              <Star className="h-10 w-10 text-muted-foreground/30 mb-3" />
-              <p className="font-semibold text-muted-foreground text-sm">No reviews yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Be the first to book and leave a review!</p>
+            <div className="flex flex-col items-center justify-center py-10 border border-dashed border-hairline-soft rounded-2xl bg-muted/20">
+              <Star className="h-10 w-10 text-ink-muted/30 mb-3" />
+              <p className="font-semibold text-ink-muted text-sm">No reviews yet</p>
+              <p className="text-xs text-ink-muted mt-1">Be the first to book and leave a review!</p>
             </div>
           )}
         </motion.div>

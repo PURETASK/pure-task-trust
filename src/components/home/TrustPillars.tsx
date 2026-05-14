@@ -44,7 +44,7 @@ export function TrustPillars() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Built on Trust</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-ink-muted text-lg max-w-2xl mx-auto">
             We believe you should only pay for work you're happy with. That's why we built these safeguards into every booking.
           </p>
         </motion.div>
@@ -73,7 +73,7 @@ export function TrustPillars() {
                   <pillar.icon className={`h-7 w-7 ${pillar.iconColor}`} />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{pillar.title}</h3>
-                <p className="text-muted-foreground">{pillar.description}</p>
+                <p className="text-ink-muted">{pillar.description}</p>
               </div>
             </motion.div>
           ))}

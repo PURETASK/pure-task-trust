@@ -56,7 +56,7 @@ export function NotificationHistory() {
       <CardContent>
         <ScrollArea className="h-[400px] pr-4">
           {!notifications || notifications.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-ink-muted">
               <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No notifications yet</p>
             </div>
@@ -80,7 +80,7 @@ export function NotificationHistory() {
                             {notification.subject}
                           </p>
                         )}
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-ink-muted">
                           {notification.type.replace(/_/g, ' ')}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
@@ -91,7 +91,7 @@ export function NotificationHistory() {
                             {status.icon}
                             {notification.status}
                           </Badge>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-ink-muted">
                             {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                           </span>
                         </div>

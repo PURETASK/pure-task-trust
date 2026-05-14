@@ -37,7 +37,7 @@ function MetricRow({ icon: Icon, label, weight, value, displayValue, colorClass,
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${colorClass}`} />
           <span className="font-medium text-xs sm:text-sm">{label}</span>
-          <span className="text-[10px] sm:text-xs text-muted-foreground hidden xs:inline">({weight}%)</span>
+          <span className="text-[10px] sm:text-xs text-ink-muted hidden xs:inline">({weight}%)</span>
         </div>
         <span className={`font-semibold text-xs sm:text-sm ${colorClass}`}>{displayValue}</span>
       </div>
@@ -175,7 +175,7 @@ export function ReliabilityScoreWidget() {
       <CardContent className="p-3.5 sm:p-5 space-y-3 sm:space-y-4">
         {/* 5 Metrics */}
         <div>
-          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 sm:mb-3">Score Breakdown</p>
+          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-ink-muted mb-2.5 sm:mb-3">Score Breakdown</p>
           <div className="space-y-2.5 sm:space-y-3">
             {metrics5.map((m, i) => (
               <MetricRow key={m.label} {...m} delay={i * 0.06} />

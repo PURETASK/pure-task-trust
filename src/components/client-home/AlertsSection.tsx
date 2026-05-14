@@ -51,7 +51,7 @@ export function AlertsSection({ alerts }: Props) {
             </div>
             <div>
               <p className="text-sm font-bold">You're all caught up.</p>
-              <p className="text-xs text-muted-foreground">No pending actions right now</p>
+              <p className="text-xs text-ink-muted">No pending actions right now</p>
             </div>
           </CardContent>
         </Card>
@@ -101,7 +101,7 @@ function AlertCard({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold truncate">{alert.title}</p>
-          <p className="text-xs text-muted-foreground truncate">{alert.description}</p>
+          <p className="text-xs text-ink-muted truncate">{alert.description}</p>
         </div>
         {alert.actionLabel && (
           <span className={`text-xs font-bold flex items-center gap-0.5 flex-shrink-0 px-2.5 py-1 ${style.action}`}>

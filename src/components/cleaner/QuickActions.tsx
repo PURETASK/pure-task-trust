@@ -56,7 +56,7 @@ export function FeatureCard({
             <Icon className={`h-5 w-5 ${iconColor}`} />
           </div>
           <h3 className="font-semibold mb-1">{title}</h3>
-          <p className="text-sm text-muted-foreground mb-3">{description}</p>
+          <p className="text-sm text-ink-muted mb-3">{description}</p>
           <div className="flex items-center gap-1 text-sm font-medium text-primary">
             Open <ChevronRight className="h-4 w-4" />
           </div>

@@ -43,13 +43,13 @@ export function DevToolsWidget() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-ink-muted hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <p className="text-[11px] text-muted-foreground leading-snug">
+          <p className="text-[11px] text-ink-muted leading-snug">
             Preview-only. Disables auth/role/setup redirects so you can view any page.
           </p>
 

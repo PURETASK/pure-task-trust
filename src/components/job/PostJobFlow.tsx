@@ -157,7 +157,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
         {step !== 3 && (
           <button
             onClick={step === 1 ? handleSkipTip : handleSkipReview}
-            className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground z-10"
+            className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-ink-muted hover:text-foreground z-10"
           >
             <X className="h-4 w-4" />
           </button>
@@ -181,7 +181,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
                     <Gift className="h-8 w-8 text-warning" />
                   </motion.div>
                   <h2 className="text-xl font-bold mb-1">Leave a Tip?</h2>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-ink-muted">
                     100% goes directly to <span className="font-semibold text-foreground">{cleanerName}</span>
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
 
                 {/* Custom */}
                 <div className="relative mb-6">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">cr</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted text-sm font-medium">cr</span>
                   <input
                     type="number"
                     min={1}
@@ -231,7 +231,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
                     <>Continue<ChevronRight className="h-5 w-5 ml-1" /></>
                   )}
                 </Button>
-                <button onClick={handleSkipTip} className="w-full text-center text-sm text-muted-foreground hover:text-foreground py-1 transition-colors">
+                <button onClick={handleSkipTip} className="w-full text-center text-sm text-ink-muted hover:text-foreground py-1 transition-colors">
                   Skip for now
                 </button>
               </motion.div>
@@ -245,7 +245,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
                     <Star className="h-8 w-8 text-primary" />
                   </div>
                   <h2 className="text-xl font-bold mb-1">Rate {cleanerName}</h2>
-                  <p className="text-sm text-muted-foreground">Your review helps the whole community</p>
+                  <p className="text-sm text-ink-muted">Your review helps the whole community</p>
                 </div>
 
                 {/* Overall stars */}
@@ -266,7 +266,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
 
                 {/* Sub-category ratings */}
                 <div className="rounded-2xl border-2 border-border/50 bg-muted/20 p-4 mb-4 space-y-3">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Category Ratings</p>
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-1">Category Ratings</p>
                   {SUB_RATINGS.map(({ id, label, icon: Icon, color, bg }) => (
                     <div key={id} className="flex items-center gap-3">
                       <div className={cn("h-7 w-7 rounded-xl flex items-center justify-center flex-shrink-0 border border-current/20", bg)}>
@@ -314,7 +314,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
                     <><Star className="h-5 w-5 mr-2" />Submit Review</>
                   )}
                 </Button>
-                <button onClick={handleSkipReview} className="w-full text-center text-sm text-muted-foreground hover:text-foreground py-1 transition-colors">
+                <button onClick={handleSkipReview} className="w-full text-center text-sm text-ink-muted hover:text-foreground py-1 transition-colors">
                   Skip for now
                 </button>
               </motion.div>
@@ -332,7 +332,7 @@ export function PostJobFlow({ jobId, cleanerId, cleanerName, clientId, onDone }:
                   <CheckCircle className="h-10 w-10 text-success" />
                 </motion.div>
                 <h2 className="text-2xl font-bold mb-2">All Done! 🎉</h2>
-                <p className="text-muted-foreground mb-2 max-w-xs">
+                <p className="text-ink-muted mb-2 max-w-xs">
                   Thank you for using PureTask. Your feedback makes the community stronger.
                 </p>
                 <p className="text-sm text-success font-semibold mb-8">Credits have been released to {cleanerName}</p>

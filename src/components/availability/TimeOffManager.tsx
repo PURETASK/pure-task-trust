@@ -95,7 +95,7 @@ export function TimeOffManager() {
           </div>
           <div>
             <p className="font-poppins font-bold text-base text-warning">Common Holidays</p>
-            <p className="text-xs text-muted-foreground">Tap any holiday to block that day off — tap again to remove</p>
+            <p className="text-xs text-ink-muted">Tap any holiday to block that day off — tap again to remove</p>
           </div>
         </div>
         <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -152,7 +152,7 @@ export function TimeOffManager() {
             </div>
             <div>
               <p className="font-poppins font-bold text-base text-primary">Days I Don't Work</p>
-              <p className="text-xs text-muted-foreground">Mark specific dates you won't be available</p>
+              <p className="text-xs text-ink-muted">Mark specific dates you won't be available</p>
             </div>
           </div>
 
@@ -205,7 +205,7 @@ export function TimeOffManager() {
                 >
                   <div>
                     <p className="font-bold text-sm">All Day</p>
-                    <p className="text-xs text-muted-foreground">Block the entire day</p>
+                    <p className="text-xs text-ink-muted">Block the entire day</p>
                   </div>
                   <Switch
                     checked={newTimeOff.all_day}
@@ -265,7 +265,7 @@ export function TimeOffManager() {
 
         <div className="p-4">
           {upcomingTimeOff.length === 0 && pastTimeOff.length === 0 ? (
-            <div className="text-center py-10 text-muted-foreground">
+            <div className="text-center py-10 text-ink-muted">
               <Calendar className="h-12 w-12 mx-auto mb-3 opacity-30" />
               <p className="font-semibold">No days off added yet</p>
               <p className="text-sm mt-1">Use the Add button or tap a holiday shortcut above</p>
@@ -274,7 +274,7 @@ export function TimeOffManager() {
             <div className="space-y-5">
               {upcomingTimeOff.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Upcoming</p>
+                  <p className="text-xs font-bold text-ink-muted uppercase tracking-wide mb-2">Upcoming</p>
                   <div className="space-y-2">
                     {upcomingTimeOff.map((t) => (
                       <motion.div
@@ -294,12 +294,12 @@ export function TimeOffManager() {
                             {t.all_day ? (
                               <Badge className="bg-primary/15 text-primary border border-primary/30 text-xs rounded-full">All Day</Badge>
                             ) : (
-                              <Badge className="bg-muted text-muted-foreground border border-border/40 text-xs rounded-full">
+                              <Badge className="bg-muted text-ink-muted border border-border/40 text-xs rounded-full">
                                 {t.start_time} – {t.end_time}
                               </Badge>
                             )}
                           </div>
-                          {t.reason && <p className="text-xs text-muted-foreground mt-0.5">{t.reason}</p>}
+                          {t.reason && <p className="text-xs text-ink-muted mt-0.5">{t.reason}</p>}
                         </div>
                         <button
                           onClick={() => deleteTimeOff.mutate(t.id)}
@@ -315,11 +315,11 @@ export function TimeOffManager() {
 
               {pastTimeOff.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Past</p>
+                  <p className="text-xs font-bold text-ink-muted uppercase tracking-wide mb-2">Past</p>
                   <div className="space-y-1.5">
                     {pastTimeOff.slice(0, 4).map((t) => (
                       <div key={t.id} className="flex items-center justify-between p-2.5 rounded-xl border border-border/40 bg-muted/20">
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-ink-muted">
                           {format(parseISO(t.start_date), "MMM d")}
                           {t.start_date !== t.end_date && <> – {format(parseISO(t.end_date), "MMM d")}</>}
                           {t.reason && <span className="ml-2 text-xs">· {t.reason}</span>}

@@ -24,9 +24,9 @@ export function TicketList() {
   if (!tickets || tickets.length === 0) {
     return (
       <Card className="p-10 text-center">
-        <Inbox className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+        <Inbox className="h-10 w-10 text-ink-muted mx-auto mb-3" />
         <p className="font-semibold">No tickets yet</p>
-        <p className="text-sm text-muted-foreground mt-1">When you open a ticket, you'll see it here.</p>
+        <p className="text-sm text-ink-muted mt-1">When you open a ticket, you'll see it here.</p>
       </Card>
     );
   }
@@ -45,8 +45,8 @@ export function TicketList() {
                   <h3 className="font-semibold text-sm truncate">{t.subject}</h3>
                   {t.unread_by_user && <span className="h-2 w-2 rounded-full bg-primary shrink-0" />}
                 </div>
-                <p className="text-xs text-muted-foreground line-clamp-1">{t.description}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                <p className="text-xs text-ink-muted line-clamp-1">{t.description}</p>
+                <div className="flex items-center gap-3 mt-2 text-xs text-ink-muted">
                   <span>{formatDistanceToNow(new Date(t.created_at), { addSuffix: true })}</span>
                   {t.priority && <span className="capitalize">· {t.priority}</span>}
                 </div>

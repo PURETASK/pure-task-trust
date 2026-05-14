@@ -84,7 +84,7 @@ export function OnboardingTooltips({
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">
+                <span className="text-xs font-medium text-ink-muted">
                   Step {currentStep + 1} of {steps.length}
                 </span>
               </div>
@@ -94,7 +94,7 @@ export function OnboardingTooltips({
             </div>
             <div>
               <h4 className="font-semibold text-sm">{step.title}</h4>
-              <p className="text-xs text-muted-foreground mt-1">{step.description}</p>
+              <p className="text-xs text-ink-muted mt-1">{step.description}</p>
             </div>
             <div className="flex items-center justify-between">
               <Button

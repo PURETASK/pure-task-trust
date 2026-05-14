@@ -36,7 +36,7 @@ function StarRating({ value, onChange, label }: { value: number; onChange: (v: n
               className={`h-7 w-7 transition-colors ${
                 star <= (hovered || value)
                   ? "fill-warning text-warning"
-                  : "text-muted-foreground"
+                  : "text-ink-muted"
               }`}
             />
           </button>
@@ -88,7 +88,7 @@ export function ClientRatingForm({
         <DialogHeader>
           <DialogTitle>Rate Your Client</DialogTitle>
           {clientFirstName && (
-            <p className="text-sm text-muted-foreground">How was working with {clientFirstName}?</p>
+            <p className="text-sm text-ink-muted">How was working with {clientFirstName}?</p>
           )}
         </DialogHeader>
 

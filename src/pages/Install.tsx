@@ -81,7 +81,7 @@ export default function Install() {
           <CheckCircle2 className="h-12 w-12 text-white" />
         </motion.div>
         <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-2">You're all set!</h1>
-        <p className="text-muted-foreground mb-6 max-w-xs">
+        <p className="text-ink-muted mb-6 max-w-xs">
           PureTask is on your home screen. Open it anytime for the full app experience.
         </p>
         <Button asChild className="rounded-full px-8">
@@ -113,7 +113,7 @@ export default function Install() {
           </div>
 
           <h1 className="text-4xl font-poppins font-bold tracking-tight mb-2">PureTask</h1>
-          <p className="text-muted-foreground text-base max-w-xs mb-1">
+          <p className="text-ink-muted text-base max-w-xs mb-1">
             Professional cleaning, right on your home screen
           </p>
 
@@ -122,7 +122,7 @@ export default function Install() {
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="h-4 w-4 fill-warning text-warning" />
             ))}
-            <span className="text-xs text-muted-foreground ml-1.5 mt-0.5">2,400+ users</span>
+            <span className="text-xs text-ink-muted ml-1.5 mt-0.5">2,400+ users</span>
           </div>
 
           {/* THE BIG INSTALL BUTTON */}
@@ -162,7 +162,7 @@ export default function Install() {
               )}
             </button>
 
-            <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1.5">
+            <p className="text-xs text-ink-muted mt-3 flex items-center justify-center gap-1.5">
               <span className="inline-flex h-1.5 w-1.5 rounded-full bg-success" />
               Free · No App Store · Works offline
             </p>
@@ -174,7 +174,7 @@ export default function Install() {
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             className="mt-5"
           >
-            <ArrowDown className="h-5 w-5 text-muted-foreground/50" />
+            <ArrowDown className="h-5 w-5 text-ink-muted/50" />
           </motion.div>
         </motion.div>
       </div>
@@ -189,7 +189,7 @@ export default function Install() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 + i * 0.06 }}
             >
-              <Card className="border border-border/60 rounded-2xl">
+              <Card className="border border-hairline-soft rounded-2xl">
                 <CardContent className="p-3 flex flex-col items-center text-center gap-1.5">
                   <div className="h-9 w-9 rounded-xl bg-muted flex items-center justify-center">
                     <f.icon className={cn("h-4.5 w-4.5", f.color)} />
@@ -234,7 +234,7 @@ export default function Install() {
                 onClick={() => setShowIOSSheet(false)}
                 className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
               >
-                <X className="h-4 w-4 text-muted-foreground" />
+                <X className="h-4 w-4 text-ink-muted" />
               </button>
 
               <div className="px-6 pt-2 pb-6">
@@ -244,7 +244,7 @@ export default function Install() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Add to Home Screen</h3>
-                    <p className="text-sm text-muted-foreground">3 quick steps in Safari</p>
+                    <p className="text-sm text-ink-muted">3 quick steps in Safari</p>
                   </div>
                 </div>
 
@@ -278,11 +278,11 @@ export default function Install() {
                         "h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0",
                         s.highlight ? "gradient-brand" : "bg-muted"
                       )}>
-                        <s.icon className={cn("h-5 w-5", s.highlight ? "text-white" : "text-muted-foreground")} />
+                        <s.icon className={cn("h-5 w-5", s.highlight ? "text-white" : "text-ink-muted")} />
                       </div>
                       <div className="pt-0.5">
                         <p className={cn("font-semibold text-sm", s.highlight && "text-primary")}>{s.title}</p>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                        <p className="text-xs text-ink-muted leading-relaxed">{s.desc}</p>
                       </div>
                     </div>
                   ))}

@@ -45,7 +45,7 @@ export function BookingSummary({
             <div className="space-y-2.5 text-sm">
               {lines.map((l, i) => (
                 <div key={i} className="flex items-start justify-between gap-3">
-                  <span className="text-muted-foreground">{l.label}</span>
+                  <span className="text-ink-muted">{l.label}</span>
                   <span className={cn("text-right font-semibold", l.highlight && "text-warning")}>
                     {l.value}
                   </span>
@@ -54,7 +54,7 @@ export function BookingSummary({
             </div>
             <div className="my-4 border-t border-border" />
             <div className="space-y-1.5 text-sm">
-              <div className="flex justify-between text-muted-foreground">
+              <div className="flex justify-between text-ink-muted">
                 <span>Subtotal</span>
                 <span className="font-semibold tabular-nums">${subtotal}</span>
               </div>
@@ -111,7 +111,7 @@ export function BookingSummary({
           <div className="px-4 py-3 max-h-[40vh] overflow-y-auto border-b border-border space-y-2 text-sm">
             {lines.map((l, i) => (
               <div key={i} className="flex justify-between gap-3">
-                <span className="text-muted-foreground">{l.label}</span>
+                <span className="text-ink-muted">{l.label}</span>
                 <span className="font-semibold text-right">{l.value}</span>
               </div>
             ))}
@@ -128,7 +128,7 @@ export function BookingSummary({
             onClick={() => setMobileOpen((v) => !v)}
             className="flex flex-col items-start min-w-0"
           >
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-bold flex items-center gap-1">
               Total {mobileOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
             </span>
             <span className="text-2xl font-poppins font-bold tabular-nums" style={{ color: "hsl(var(--pt-green-deep))" }}>

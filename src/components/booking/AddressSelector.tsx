@@ -113,7 +113,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="h-5 w-5 text-primary" />
         <h3 className="font-semibold">Select Address</h3>
-        {showLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+        {showLoading && <Loader2 className="h-4 w-4 animate-spin text-ink-muted" />}
       </div>
 
       {addresses && addresses.length > 0 ? (
@@ -151,18 +151,18 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
                       <Star className="h-3.5 w-3.5 text-warning fill-warning" />
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground truncate">
+                  <p className="text-sm text-ink-muted truncate">
                     {address.line1}
                     {address.line2 && `, ${address.line2}`}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-ink-muted">
                     {address.city}{address.state && `, ${address.state}`} {address.postal_code}
                   </p>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="flex-shrink-0 text-muted-foreground hover:text-destructive"
+                  className="flex-shrink-0 text-ink-muted hover:text-destructive"
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteAddress(address.id);
@@ -178,8 +178,8 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
       ) : (
         <Card>
           <CardContent className="py-8 text-center">
-            <MapPin className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground mb-4">No saved addresses yet</p>
+            <MapPin className="h-10 w-10 mx-auto text-ink-muted mb-3" />
+            <p className="text-ink-muted mb-4">No saved addresses yet</p>
           </CardContent>
         </Card>
       )}
@@ -275,7 +275,7 @@ export function AddressSelector({ selectedAddressId, onSelect }: AddressSelector
             </Button>
 
             {!canSave && (newAddress.line1.length > 0 || newAddress.city.length > 0) && (
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-xs text-ink-muted text-center">
                 Please fill in both street address and city to save.
               </p>
             )}

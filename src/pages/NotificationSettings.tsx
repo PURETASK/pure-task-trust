@@ -25,7 +25,7 @@ export default function NotificationSettings() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-poppins font-bold">Notifications</h1>
-              <p className="text-muted-foreground text-sm">Manage how and when you receive alerts</p>
+              <p className="text-ink-muted text-sm">Manage how and when you receive alerts</p>
             </div>
           </div>
         </motion.div>
@@ -33,9 +33,9 @@ export default function NotificationSettings() {
         <div className="space-y-6">
           {/* Preferences */}
           <motion.div {...f(0.04)}>
-            <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
+            <div className="rounded-3xl border-2 border-hairline-soft p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Bell className="h-4 w-4 text-muted-foreground" />
+                <Bell className="h-4 w-4 text-ink-muted" />
                 <h2 className="font-poppins font-bold">Notification Preferences</h2>
               </div>
               <NotificationPreferencesForm />
@@ -44,9 +44,9 @@ export default function NotificationSettings() {
 
           {/* Push setup */}
           <motion.div {...f(0.08)}>
-            <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
+            <div className="rounded-3xl border-2 border-hairline-soft p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
+                <Smartphone className="h-4 w-4 text-ink-muted" />
                 <h2 className="font-poppins font-bold">Push Notifications</h2>
               </div>
               <PushNotificationSetup />
@@ -55,9 +55,9 @@ export default function NotificationSettings() {
 
           {/* History */}
           <motion.div {...f(0.12)}>
-            <div className="rounded-3xl border-2 border-border/40 p-5 sm:p-6">
+            <div className="rounded-3xl border-2 border-hairline-soft p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
-                <History className="h-4 w-4 text-muted-foreground" />
+                <History className="h-4 w-4 text-ink-muted" />
                 <h2 className="font-poppins font-bold">Recent Notifications</h2>
               </div>
               <NotificationHistory />

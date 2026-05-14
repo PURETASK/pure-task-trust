@@ -53,12 +53,12 @@ export function JobTimeline({
           currentStatus === 'cancelled' ? "bg-muted-foreground/20" : "bg-destructive/20"
         )}>
           <XCircle className={cn("h-5 w-5",
-            currentStatus === 'cancelled' ? "text-muted-foreground" : "text-destructive"
+            currentStatus === 'cancelled' ? "text-ink-muted" : "text-destructive"
           )} />
         </div>
         <div>
           <p className="font-medium capitalize">{currentStatus}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-ink-muted">
             {currentStatus === 'cancelled' ? 'This job was cancelled' : 'This job is under dispute'}
           </p>
         </div>
@@ -82,7 +82,7 @@ export function JobTimeline({
                     "h-8 w-8 rounded-full flex items-center justify-center text-xs",
                     isCompleted && "bg-primary text-primary-foreground",
                     isCurrent && "bg-primary text-primary-foreground ring-4 ring-primary/20",
-                    !isCompleted && !isCurrent && "bg-border text-muted-foreground"
+                    !isCompleted && !isCurrent && "bg-border text-ink-muted"
                   )}
                 >
                   {isCompleted ? (
@@ -93,7 +93,7 @@ export function JobTimeline({
                 </div>
                 <span className={cn(
                   "text-xs mt-1 whitespace-nowrap",
-                  isCurrent ? "font-medium" : "text-muted-foreground"
+                  isCurrent ? "font-medium" : "text-ink-muted"
                 )}>
                   {step.label}
                 </span>
@@ -128,7 +128,7 @@ export function JobTimeline({
                   "h-8 w-8 rounded-full flex items-center justify-center",
                   isCompleted && "bg-primary text-primary-foreground",
                   isCurrent && "bg-primary text-primary-foreground",
-                  isPending && "bg-border text-muted-foreground"
+                  isPending && "bg-border text-ink-muted"
                 )}
               >
                 {isCompleted ? (
@@ -151,12 +151,12 @@ export function JobTimeline({
             <div className="pb-8">
               <p className={cn(
                 "font-medium",
-                isPending && "text-muted-foreground"
+                isPending && "text-ink-muted"
               )}>
                 {step.label}
               </p>
               {time && (
-                <p className="text-sm text-muted-foreground">{time}</p>
+                <p className="text-sm text-ink-muted">{time}</p>
               )}
             </div>
           </div>

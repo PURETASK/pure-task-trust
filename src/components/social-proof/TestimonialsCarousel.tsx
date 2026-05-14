@@ -119,7 +119,7 @@ export function TestimonialsCarousel() {
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3">
               Loved by Clients &amp; Cleaners
             </h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-ink-muted max-w-2xl mx-auto">
               See why clients and cleaners love the PureTask experience
             </p>
           </motion.div>

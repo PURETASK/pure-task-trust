@@ -178,16 +178,16 @@ function ChecklistView({ list }: { list: ChecklistDef }) {
             transition={{ type: 'spring', stiffness: 100 }}
           />
         </div>
-        <span className="text-sm font-semibold text-muted-foreground min-w-[48px] text-right">{percent}%</span>
+        <span className="text-sm font-semibold text-ink-muted min-w-[48px] text-right">{percent}%</span>
         {completedCount > 0 && (
-          <button onClick={() => setChecked({})} className="text-xs text-muted-foreground hover:text-foreground underline">Reset</button>
+          <button onClick={() => setChecked({})} className="text-xs text-ink-muted hover:text-foreground underline">Reset</button>
         )}
       </div>
 
       {list.items.map((room) => (
-        <Card key={room.room} className="border-border/60">
+        <Card key={room.room} className="border-hairline-soft">
           <CardHeader className="pb-2 pt-4 px-4">
-            <CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-wide">{room.room}</CardTitle>
+            <CardTitle className="text-sm font-bold text-ink-muted uppercase tracking-wide">{room.room}</CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4 space-y-2">
             {room.tasks.map((task, i) => {
@@ -202,7 +202,7 @@ function ChecklistView({ list }: { list: ChecklistDef }) {
                   <div className={`h-5 w-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-all ${done ? 'bg-success border-success' : 'border-border'}`}>
                     {done && <Check className="h-3 w-3 text-white" />}
                   </div>
-                  <span className={`text-sm leading-relaxed ${done ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{task}</span>
+                  <span className={`text-sm leading-relaxed ${done ? 'line-through text-ink-muted' : 'text-foreground'}`}>{task}</span>
                 </button>
               );
             })}
@@ -270,7 +270,7 @@ export default function CleaningChecklists() {
             <h1 className="text-5xl font-bold mb-4 leading-tight">
               Free Cleaning Checklists
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-ink-muted max-w-2xl mx-auto">
               Interactive, printable checklists for every clean type — tick off tasks as you go, print for your cleaner, or copy and share.
             </p>
           </motion.div>
@@ -288,13 +288,13 @@ export default function CleaningChecklists() {
                 <button
                   key={c.key}
                   onClick={() => setActive(c.key)}
-                  className={`text-left p-4 rounded-2xl border transition-all ${isActive ? 'border-primary bg-primary/5 shadow-soft' : 'border-border/60 bg-card hover:border-primary/30'}`}
+                  className={`text-left p-4 rounded-2xl border transition-all ${isActive ? 'border-primary bg-primary/5 shadow-soft' : 'border-hairline-soft bg-card hover:border-primary/30'}`}
                 >
                   <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center bg-gradient-to-br ${c.color}`}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
                   <p className="font-bold text-sm">{c.title.split(' Checklist')[0].split(' Cleaning')[0]}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{c.time}</p>
+                  <p className="text-xs text-ink-muted mt-1">{c.time}</p>
                   <Badge className="mt-2 text-xs" variant="outline">{c.badge}</Badge>
                 </button>
               );
@@ -315,8 +315,8 @@ export default function CleaningChecklists() {
                 <h2 className="text-2xl font-bold">{current.title}</h2>
                 <Badge className={`bg-gradient-to-r ${current.color} text-white border-0 text-xs`}>{current.badge}</Badge>
               </div>
-              <p className="text-muted-foreground text-sm">{current.subtitle}</p>
-              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <p className="text-ink-muted text-sm">{current.subtitle}</p>
+              <p className="text-xs text-ink-muted mt-1 flex items-center gap-1">
                 <span>⏱ Estimated time: {current.time}</span>
               </p>
             </div>
@@ -345,11 +345,11 @@ export default function CleaningChecklists() {
               { icon: '🤝', title: 'Clear client expectations', desc: 'When clients and cleaners agree on a checklist upfront, disputes drop dramatically. Everyone knows what\'s included and what\'s not.' },
               { icon: '📈', title: 'Better reviews', desc: 'Cleaners who use checklists consistently earn higher star ratings. Systematic cleaning signals professionalism to clients.' },
             ].map(({ icon, title, desc }) => (
-              <Card key={title} className="border-border/60">
+              <Card key={title} className="border-hairline-soft">
                 <CardContent className="p-5">
                   <div className="text-3xl mb-3">{icon}</div>
                   <h3 className="font-bold mb-2">{title}</h3>
-                  <p className="text-sm text-muted-foreground">{desc}</p>
+                  <p className="text-sm text-ink-muted">{desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -365,10 +365,10 @@ export default function CleaningChecklists() {
               { title: 'Cost Estimator', desc: 'Find out how much a professional clean for your home should cost.', href: '/cost-estimator', cta: 'Get my estimate →' },
               { title: 'Reliability Score Guide', desc: 'For cleaners: how photo compliance and checklists impact your score.', href: '/reliability-score', cta: 'Learn about scoring →' },
             ].map(({ title, desc, href, cta }) => (
-              <Card key={title} className="border-border/60 hover:shadow-soft transition-all">
+              <Card key={title} className="border-hairline-soft hover:shadow-soft transition-all">
                 <CardContent className="p-5">
                   <h3 className="font-bold mb-2">{title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{desc}</p>
+                  <p className="text-sm text-ink-muted mb-4">{desc}</p>
                   <Link to={href} className="text-sm font-semibold text-primary hover:underline">{cta}</Link>
                 </CardContent>
               </Card>
@@ -382,7 +382,7 @@ export default function CleaningChecklists() {
             <CardContent className="py-10">
               <CheckSquare className="h-12 w-12 mx-auto mb-4 text-success" />
               <h2 className="text-2xl font-bold mb-2">Share These Checklists</h2>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              <p className="text-ink-muted mb-6 max-w-md mx-auto">
                 These checklists are free to share, print, and use. Link to this page if you reference them — it helps others find them too.
               </p>
               <div className="flex flex-wrap gap-3 justify-center">

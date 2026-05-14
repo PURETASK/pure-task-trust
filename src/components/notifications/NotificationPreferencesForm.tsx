@@ -81,7 +81,7 @@ export function NotificationPreferencesForm() {
               </div>
               <div>
                 <Label className="font-medium">{channel.label}</Label>
-                <p className="text-sm text-muted-foreground">{channel.description}</p>
+                <p className="text-sm text-ink-muted">{channel.description}</p>
               </div>
             </div>
             <Switch

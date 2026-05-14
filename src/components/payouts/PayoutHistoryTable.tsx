@@ -88,9 +88,9 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
   if (payouts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <Package className="h-16 w-16 text-muted-foreground/30 mb-4" />
-        <p className="text-muted-foreground">No payouts to display</p>
-        <p className="text-sm text-muted-foreground mt-1">
+        <Package className="h-16 w-16 text-ink-muted/30 mb-4" />
+        <p className="text-ink-muted">No payouts to display</p>
+        <p className="text-sm text-ink-muted mt-1">
           Payouts are processed every Friday or on-demand with instant payout
         </p>
       </div>
@@ -111,7 +111,7 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
                   {getTypeIcon(payout.payout_type)}
                   <div className="min-w-0">
                     <p className="font-medium text-sm capitalize truncate">{payout.payout_type || 'Weekly'}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       {format(new Date(payout.requested_at), 'MMM d, yyyy')}
                     </p>
                   </div>
@@ -120,15 +120,15 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
               </div>
               <div className="grid grid-cols-3 gap-2 text-sm pt-2 border-t border-border">
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase">Amount</p>
+                  <p className="text-[10px] text-ink-muted uppercase">Amount</p>
                   <p className="font-medium">${payout.amount_credits.toFixed(2)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase">Fee</p>
-                  <p className="text-muted-foreground">{fee > 0 ? `-$${fee.toFixed(2)}` : '—'}</p>
+                  <p className="text-[10px] text-ink-muted uppercase">Fee</p>
+                  <p className="text-ink-muted">{fee > 0 ? `-$${fee.toFixed(2)}` : '—'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase">Net</p>
+                  <p className="text-[10px] text-ink-muted uppercase">Net</p>
                   <p className="font-semibold text-success">${net.toFixed(2)}</p>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function PayoutHistoryTable({ payouts, isLoading }: PayoutHistory
                     </div>
                   </TableCell>
                   <TableCell>${grossAmount.toFixed(2)}</TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-ink-muted">
                     {fee > 0 ? `-$${fee.toFixed(2)}` : '-'}
                   </TableCell>
                   <TableCell className="font-semibold text-success">

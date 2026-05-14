@@ -101,7 +101,7 @@ export function AdminCommandPalette() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-muted/50 text-sm text-muted-foreground hover:bg-muted transition-colors"
+        className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-muted/50 text-sm text-ink-muted hover:bg-muted transition-colors"
       >
         <span>Search...</span>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-background px-1.5 font-mono text-xs font-medium">
@@ -120,7 +120,7 @@ export function AdminCommandPalette() {
             />
             <CommandEmpty>
               {isUserSearch && userQuery.length < 2
-                ? <p className="py-4 text-center text-sm text-muted-foreground flex items-center justify-center gap-2"><AtSign className="h-4 w-4" />Type at least 2 characters to search users</p>
+                ? <p className="py-4 text-center text-sm text-ink-muted flex items-center justify-center gap-2"><AtSign className="h-4 w-4" />Type at least 2 characters to search users</p>
                 : "No results found."}
             </CommandEmpty>
 
@@ -165,7 +165,7 @@ export function AdminCommandPalette() {
                         <route.icon className="h-4 w-4 text-primary" />
                       </div>
                       <span>{route.label}</span>
-                      <ChevronRight className="h-3 w-3 ml-auto text-muted-foreground" />
+                      <ChevronRight className="h-3 w-3 ml-auto text-ink-muted" />
                     </CommandItem>
                   ))}
                   {gi < groups.length - 1 && <CommandSeparator />}

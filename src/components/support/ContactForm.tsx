@@ -52,7 +52,7 @@ export function ContactForm({ defaultBookingId }: { defaultBookingId?: string })
     <Card className="p-6 space-y-4 max-w-2xl">
       <div>
         <h2 className="font-bold text-lg">Open a ticket</h2>
-        <p className="text-sm text-muted-foreground">A human will reply within 2 hours.</p>
+        <p className="text-sm text-ink-muted">A human will reply within 2 hours.</p>
       </div>
 
       <div className="space-y-2">

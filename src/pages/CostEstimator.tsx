@@ -81,7 +81,7 @@ const CLEAN_TYPES: Record<CleanType, CleanTypeConfig> = {
 };
 
 const FREQUENCY_DISCOUNTS: { label: string; value: string; discount: number; color: string; activeClass: string }[] = [
-  { label: 'One-time', value: 'once', discount: 0, color: 'text-muted-foreground', activeClass: 'border-primary bg-primary/10 text-primary' },
+  { label: 'One-time', value: 'once', discount: 0, color: 'text-ink-muted', activeClass: 'border-primary bg-primary/10 text-primary' },
   { label: 'Monthly', value: 'monthly', discount: 0.05, color: 'text-success', activeClass: 'border-success bg-success/10 text-success' },
   { label: 'Bi-weekly', value: 'biweekly', discount: 0.10, color: 'text-warning', activeClass: 'border-warning bg-warning/10 text-warning' },
   { label: 'Weekly', value: 'weekly', discount: 0.15, color: 'text-[hsl(var(--pt-purple))]', activeClass: 'border-[hsl(var(--pt-purple))] bg-[hsl(var(--pt-purple))]/10 text-[hsl(var(--pt-purple))]' },
@@ -192,7 +192,7 @@ export default function CostEstimator() {
               What Will My House<br />
               <span className="text-primary">Cleaning Cost?</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-ink-muted max-w-2xl mx-auto">
               Get an instant estimate in seconds. Adjust your home size, clean type, and frequency to see real pricing.
             </p>
           </motion.div>
@@ -223,7 +223,7 @@ export default function CostEstimator() {
                     <Icon className={`h-5 w-5 ${ct.iconClass}`} />
                   </div>
                   <p className="font-bold text-sm mb-1">{ct.label}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed mb-2">{ct.desc}</p>
+                  <p className="text-xs text-ink-muted leading-relaxed mb-2">{ct.desc}</p>
                   <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border ${ct.badgeClass}`}>{ct.badge}</span>
                 </button>
               );
@@ -238,7 +238,7 @@ export default function CostEstimator() {
             className="lg:col-span-3 space-y-5"
           >
             {/* Home details */}
-            <div className="rounded-3xl border-2 border-border/60 bg-card p-5 sm:p-6 space-y-7">
+            <div className="rounded-3xl border-2 border-hairline-soft bg-card p-5 sm:p-6 space-y-7">
               <div className="flex items-center gap-2 mb-1">
                 <span className="h-7 w-7 rounded-xl bg-success/10 border-2 border-success/30 flex items-center justify-center text-xs font-bold text-success">2</span>
                 <h2 className="text-base font-bold">Tell us about your home</h2>
@@ -247,42 +247,42 @@ export default function CostEstimator() {
               {/* Bedrooms */}
               <div>
                 <div className="flex justify-between items-end mb-3">
-                  <label className="font-semibold text-sm text-muted-foreground">Bedrooms</label>
+                  <label className="font-semibold text-sm text-ink-muted">Bedrooms</label>
                   <span className="text-3xl font-poppins font-bold text-primary leading-none">{bedrooms}</span>
                 </div>
                 <div className="rounded-2xl bg-primary/5 border-2 border-primary/20 p-4">
                   <Slider min={0} max={7} step={1} value={[bedrooms]} onValueChange={([v]) => setBedrooms(v)} className="py-1" />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2"><span>Studio</span><span>7 beds</span></div>
+                  <div className="flex justify-between text-xs text-ink-muted mt-2"><span>Studio</span><span>7 beds</span></div>
                 </div>
               </div>
 
               {/* Bathrooms */}
               <div>
                 <div className="flex justify-between items-end mb-3">
-                  <label className="font-semibold text-sm text-muted-foreground">Bathrooms</label>
+                  <label className="font-semibold text-sm text-ink-muted">Bathrooms</label>
                   <span className="text-3xl font-poppins font-bold text-success leading-none">{bathrooms}</span>
                 </div>
                 <div className="rounded-2xl bg-success/5 border-2 border-success/20 p-4">
                   <Slider min={1} max={5} step={1} value={[bathrooms]} onValueChange={([v]) => setBathrooms(v)} className="py-1" />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2"><span>1 bath</span><span>5 baths</span></div>
+                  <div className="flex justify-between text-xs text-ink-muted mt-2"><span>1 bath</span><span>5 baths</span></div>
                 </div>
               </div>
 
               {/* Sqft */}
               <div>
                 <div className="flex justify-between items-end mb-3">
-                  <label className="font-semibold text-sm text-muted-foreground">Home size</label>
-                  <span className="text-3xl font-poppins font-bold text-warning leading-none">{sqft.toLocaleString()} <span className="text-base font-semibold text-muted-foreground">sqft</span></span>
+                  <label className="font-semibold text-sm text-ink-muted">Home size</label>
+                  <span className="text-3xl font-poppins font-bold text-warning leading-none">{sqft.toLocaleString()} <span className="text-base font-semibold text-ink-muted">sqft</span></span>
                 </div>
                 <div className="rounded-2xl bg-warning/5 border-2 border-warning/20 p-4">
                   <Slider min={300} max={4000} step={50} value={[sqft]} onValueChange={([v]) => setSqft(v)} className="py-1" />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2"><span>300 sqft (studio)</span><span>4,000 sqft (large home)</span></div>
+                  <div className="flex justify-between text-xs text-ink-muted mt-2"><span>300 sqft (studio)</span><span>4,000 sqft (large home)</span></div>
                 </div>
               </div>
             </div>
 
             {/* Frequency */}
-            <div className="rounded-3xl border-2 border-border/60 bg-card p-5 sm:p-6">
+            <div className="rounded-3xl border-2 border-hairline-soft bg-card p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="h-7 w-7 rounded-xl bg-warning/10 border-2 border-warning/30 flex items-center justify-center text-xs font-bold text-warning">3</span>
                 <h2 className="text-base font-bold">How often?</h2>
@@ -295,7 +295,7 @@ export default function CostEstimator() {
                     className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all duration-200 ${
                       frequency === f.value
                         ? f.activeClass + ' shadow-sm'
-                        : 'border-border/50 text-muted-foreground hover:border-border bg-card'
+                        : 'border-border/50 text-ink-muted hover:border-border bg-card'
                     }`}
                   >
                     {f.label}
@@ -310,7 +310,7 @@ export default function CostEstimator() {
             </div>
 
             {/* Add-ons */}
-            <div className="rounded-3xl border-2 border-border/60 bg-card p-5 sm:p-6">
+            <div className="rounded-3xl border-2 border-hairline-soft bg-card p-5 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="h-7 w-7 rounded-xl bg-[hsl(var(--pt-purple))]/10 border-2 border-[hsl(var(--pt-purple))]/30 flex items-center justify-center text-xs font-bold text-[hsl(var(--pt-purple))]">4</span>
                 <h2 className="text-base font-bold">Optional add-ons</h2>
@@ -323,7 +323,7 @@ export default function CostEstimator() {
                       key={a.id}
                       onClick={() => toggleAddOn(a.id)}
                       className={`flex items-center justify-between p-3 rounded-2xl border-2 text-sm font-medium transition-all duration-200 ${
-                        active ? a.activeBg + ' shadow-sm' : 'border-border/50 text-muted-foreground hover:border-border bg-card'
+                        active ? a.activeBg + ' shadow-sm' : 'border-border/50 text-ink-muted hover:border-border bg-card'
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -350,7 +350,7 @@ export default function CostEstimator() {
                   <config.icon className={`h-4 w-4 ${config.iconClass}`} />
                   <span className={`text-xs font-bold ${config.iconClass}`}>{config.label}</span>
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">Estimated cost per clean</p>
+                <p className="text-sm text-ink-muted mb-1">Estimated cost per clean</p>
                 <motion.p
                   key={results.total}
                   initial={{ scale: 0.88, opacity: 0.5 }}
@@ -360,7 +360,7 @@ export default function CostEstimator() {
                 >
                   ${Math.round(results.total).toLocaleString()}
                 </motion.p>
-                <p className="text-xs text-muted-foreground">~{results.hours} hours estimated</p>
+                <p className="text-xs text-ink-muted">~{results.hours} hours estimated</p>
                 {freqConfig.discount > 0 && (
                   <div className="mt-3 rounded-2xl border-2 border-success/30 bg-success/10 px-3 py-2 inline-block">
                     <p className="text-xs font-bold text-success">
@@ -373,12 +373,12 @@ export default function CostEstimator() {
               {/* Breakdown */}
               <div className="p-5 space-y-4">
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-muted-foreground">
+                  <div className="flex justify-between text-ink-muted">
                     <span>Base price ({results.rooms} rooms)</span>
                     <span className="font-semibold">${Math.round(results.subtotal - addOnTotal).toLocaleString()}</span>
                   </div>
                   {selectedAddOns.length > 0 && (
-                    <div className="flex justify-between text-muted-foreground">
+                    <div className="flex justify-between text-ink-muted">
                       <span>Add-ons ({selectedAddOns.length})</span>
                       <span className="font-semibold text-[hsl(var(--pt-purple))]">+${addOnTotal}</span>
                     </div>
@@ -389,7 +389,7 @@ export default function CostEstimator() {
                       <span>−${Math.round(results.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-poppins font-bold text-base border-t-2 border-border/40 pt-2 mt-2">
+                  <div className="flex justify-between font-poppins font-bold text-base border-t-2 border-hairline-soft pt-2 mt-2">
                     <span>Total per clean</span>
                     <span className={config.iconClass}>${Math.round(results.total)}</span>
                   </div>
@@ -400,7 +400,7 @@ export default function CostEstimator() {
                   <div className="rounded-2xl border-2 border-success/30 bg-success/5 p-4">
                     <p className="font-bold text-success text-sm mb-2">📅 Annual overview</p>
                     <div className="space-y-1.5 text-sm">
-                      <div className="flex justify-between text-muted-foreground">
+                      <div className="flex justify-between text-ink-muted">
                         <span>{results.timesPerYear} cleans/year</span>
                         <span className="font-bold text-foreground">${Math.round(results.annualCost).toLocaleString()}/yr</span>
                       </div>
@@ -435,7 +435,7 @@ export default function CostEstimator() {
                   {icon}
                 </div>
                 <h3 className="font-bold mb-2">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                <p className="text-sm text-ink-muted leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -458,13 +458,13 @@ export default function CostEstimator() {
               <details key={q} className={`group p-4 rounded-2xl border-2 ${color}`}>
                 <summary className="font-semibold cursor-pointer list-none flex items-center justify-between">
                   {q}
-                  <ChevronRight className="h-4 w-4 text-muted-foreground group-open:rotate-90 transition-transform flex-shrink-0" />
+                  <ChevronRight className="h-4 w-4 text-ink-muted group-open:rotate-90 transition-transform flex-shrink-0" />
                 </summary>
-                <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{a}</p>
+                <p className="text-sm text-ink-muted mt-3 leading-relaxed">{a}</p>
               </details>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground mt-4">
+          <p className="text-sm text-ink-muted mt-4">
             For full details, see our <Link to="/cleaning-scope" className="text-primary hover:underline font-semibold">Cleaning Scope guide</Link> and <Link to="/pricing" className="text-primary hover:underline font-semibold">Pricing page</Link>.
           </p>
         </motion.section>
@@ -475,7 +475,7 @@ export default function CostEstimator() {
         >
           <div className="rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/6 via-background to-success/5 p-8 sm:p-12 text-center">
             <h2 className="text-2xl font-bold mb-2">Found this helpful?</h2>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            <p className="text-ink-muted mb-6 max-w-md mx-auto">
               Share this free cost estimator with friends, family, or in Facebook groups — it takes 10 seconds and helps people make smarter decisions.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">

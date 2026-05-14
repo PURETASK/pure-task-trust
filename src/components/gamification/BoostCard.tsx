@@ -87,7 +87,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
     <Card>
       <CardHeader className={compact ? "pb-2" : undefined}>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Rocket className={`h-5 w-5 ${activeBoost ? 'text-primary' : 'text-muted-foreground'}`} />
+          <Rocket className={`h-5 w-5 ${activeBoost ? 'text-primary' : 'text-ink-muted'}`} />
           Profile Boost
         </CardTitle>
       </CardHeader>
@@ -101,7 +101,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
                 </div>
                 <div>
                   <p className="font-medium capitalize">{activeBoost.boost_type} Boost</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-ink-muted">
                     {activeBoost.multiplier}x visibility
                   </p>
                 </div>
@@ -109,7 +109,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
               <Badge className="bg-primary hover:bg-primary">Active</Badge>
             </div>
             
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-ink-muted">
               <Clock className="h-4 w-4" />
               <span>Expires {formatDistanceToNow(new Date(activeBoost.ends_at), { addSuffix: true })}</span>
             </div>
@@ -122,7 +122,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
           </div>
         ) : (
           <div className="text-center py-2">
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-ink-muted mb-3">
               Boost your profile to get more job offers
             </p>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -151,7 +151,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
                           </div>
                           <div>
                             <p className="font-medium">{option.name}</p>
-                            <p className="text-sm text-muted-foreground">{option.description}</p>
+                            <p className="text-sm text-ink-muted">{option.description}</p>
                           </div>
                           <Badge variant="secondary" className="ml-auto">
                             {option.multiplier}
@@ -173,7 +173,7 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
                                 <span className="font-medium">
                                   {dur.hours < 24 ? `${dur.hours}h` : `${dur.hours / 24}d`}
                                 </span>
-                                <span className={`text-xs ${canAfford ? 'text-muted-foreground' : 'text-destructive'}`}>
+                                <span className={`text-xs ${canAfford ? 'text-ink-muted' : 'text-destructive'}`}>
                                   ${dur.credits}
                                 </span>
                               </Button>
@@ -198,12 +198,12 @@ export function BoostCard({ cleanerId, compact = false }: BoostCardProps) {
         {/* Recent Boosts History */}
         {!compact && boosts.length > 1 && (
           <div className="mt-4 pt-4 border-t">
-            <p className="text-xs text-muted-foreground mb-2">Recent boosts</p>
+            <p className="text-xs text-ink-muted mb-2">Recent boosts</p>
             <div className="space-y-2">
               {boosts.slice(1, 4).map((boost) => (
                 <div key={boost.id} className="flex items-center justify-between text-sm">
                   <span className="capitalize">{boost.boost_type}</span>
-                  <span className="text-muted-foreground">
+                  <span className="text-ink-muted">
                     {format(new Date(boost.created_at), 'MMM d')} • {boost.jobs_during} jobs
                   </span>
                 </div>

@@ -47,7 +47,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
     <Card>
       <CardHeader className={compact ? "pb-2" : undefined}>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Flame className={`h-5 w-5 ${currentStreakCount > 0 ? 'text-warning' : 'text-muted-foreground'}`} />
+          <Flame className={`h-5 w-5 ${currentStreakCount > 0 ? 'text-warning' : 'text-ink-muted'}`} />
           Weekly Streak
         </CardTitle>
       </CardHeader>
@@ -58,7 +58,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
             <div className={`h-14 w-14 rounded-full flex items-center justify-center ${
               currentStreakCount > 0 
                 ? 'bg-gradient-to-br from-warning to-destructive text-white' 
-                : 'bg-muted text-muted-foreground'
+                : 'bg-muted text-ink-muted'
             }`}>
               <span className="text-2xl font-bold">{currentStreakCount}</span>
             </div>
@@ -66,7 +66,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
               <p className="font-semibold">
                 {currentStreakCount} Week{currentStreakCount !== 1 ? 's' : ''}
               </p>
-              <p className="text-sm text-muted-foreground">Current Streak</p>
+              <p className="text-sm text-ink-muted">Current Streak</p>
             </div>
           </div>
           
@@ -85,7 +85,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
         {/* Week Visualization */}
         {!compact && (
           <div className="space-y-2">
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <p className="text-xs text-ink-muted flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               Last 8 weeks
             </p>
@@ -98,7 +98,7 @@ export function StreakCard({ cleanerId, compact = false }: StreakCardProps) {
                       ? 'bg-gradient-to-br from-warning to-destructive text-white' 
                       : week.isCurrent 
                         ? 'bg-muted border-2 border-dashed border-muted-foreground/30' 
-                        : 'bg-muted text-muted-foreground'
+                        : 'bg-muted text-ink-muted'
                   }`}
                   title={`Week of ${format(week.weekStart, 'MMM d')}`}
                 >

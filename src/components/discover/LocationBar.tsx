@@ -18,7 +18,7 @@ export function LocationBar({ location, onChange }: Props) {
       <div className="container px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm min-w-0">
           <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-          <span className="text-muted-foreground truncate">
+          <span className="text-ink-muted truncate">
             Showing cleaners near{" "}
             <span className="font-semibold text-foreground">{label}</span>
           </span>

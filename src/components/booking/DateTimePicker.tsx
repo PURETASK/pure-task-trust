@@ -73,7 +73,7 @@ export function DateTimePicker({
               <Zap className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-sm text-warning">Same-Day Booking</p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-ink-muted mt-1">
                   A ${rushFeeCredits} credit rush fee applies. 
                   Requires {sameDayMinNoticeHours} hours notice. 
                   Move-out cleaning not available same-day.
@@ -106,7 +106,7 @@ export function DateTimePicker({
           </CardContent>
         </Card>
         {selectedDate && (
-          <p className="text-sm text-muted-foreground mt-2 text-center">
+          <p className="text-sm text-ink-muted mt-2 text-center">
             Selected: <span className="font-medium">{format(selectedDate, 'EEEE, MMMM d, yyyy')}</span>
             {isSameDay && <Badge variant="secondary" className="ml-2">Today</Badge>}
           </p>
@@ -119,7 +119,7 @@ export function DateTimePicker({
           <Clock className="h-5 w-5 text-primary" />
           <h3 className="font-semibold">Select Time</h3>
           {isSameDay && availableTimeSlots.length < allTimeSlots.length && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-ink-muted">
               (Some times unavailable due to {sameDayMinNoticeHours}hr notice)
             </span>
           )}
@@ -130,7 +130,7 @@ export function DateTimePicker({
             <CardContent className="p-6 text-center">
               <AlertTriangle className="h-8 w-8 text-warning mx-auto mb-3" />
               <p className="font-medium text-sm">No time slots available</p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-ink-muted mt-1">
                 Same-day bookings require {sameDayMinNoticeHours} hours notice. 
                 Please select tomorrow or a future date.
               </p>
@@ -167,7 +167,7 @@ export function DateTimePicker({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Scheduled for</p>
+                <p className="text-sm text-ink-muted">Scheduled for</p>
                 <p className="font-semibold">
                   {format(selectedDate, 'EEE, MMM d')} at {formatTimeLabel(selectedTime)}
                 </p>

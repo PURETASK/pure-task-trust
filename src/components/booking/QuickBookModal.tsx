@@ -188,23 +188,23 @@ export function QuickBookModal({
           {/* Price summary */}
           <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+              <p className="text-xs text-ink-muted font-semibold uppercase tracking-wide">
                 Estimated total
               </p>
               <p className="text-2xl font-poppins font-bold text-primary mt-0.5">
                 ${total}
-                <span className="text-sm text-muted-foreground font-medium ml-1">
+                <span className="text-sm text-ink-muted font-medium ml-1">
                   · {hours}h × ${cleaner.hourlyRate}/hr
                 </span>
               </p>
             </div>
             {date && (
               <div className="text-right">
-                <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+                <p className="text-xs text-ink-muted font-semibold uppercase tracking-wide">
                   When
                 </p>
                 <p className="text-sm font-bold mt-0.5">{format(date, "EEE, MMM d")}</p>
-                <p className="text-xs text-muted-foreground">{time}</p>
+                <p className="text-xs text-ink-muted">{time}</p>
               </div>
             )}
           </div>
@@ -233,7 +233,7 @@ export function QuickBookModal({
               if (zip) params.set("zip", zip);
               navigate(`/book?${params.toString()}`);
             }}
-            className="text-sm text-muted-foreground hover:text-primary transition-colors mx-auto"
+            className="text-sm text-ink-muted hover:text-primary transition-colors mx-auto"
           >
             Need more options? Use the full booking flow →
           </button>

@@ -91,7 +91,7 @@ export default function ForAirbnbHosts() {
 
             <motion.p
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
-              className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
+              className="text-xl text-ink-muted mb-10 max-w-xl leading-relaxed"
             >
               Photo-documented, same-day cleaning that protects your 5-star rating. Verified cleaners who know exactly what short-term rental hosts need.
             </motion.p>
@@ -126,7 +126,7 @@ export default function ForAirbnbHosts() {
               >
                 <p className="text-4xl md:text-5xl font-poppins font-bold text-[hsl(var(--pt-amber))] mb-1">{s.value}</p>
                 <p className="text-sm font-bold text-foreground">{s.label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{s.sub}</p>
+                <p className="text-xs text-ink-muted mt-0.5">{s.sub}</p>
               </div>
             ))}
           </motion.div>
@@ -143,7 +143,7 @@ export default function ForAirbnbHosts() {
             <p className="text-[hsl(var(--pt-amber))] font-bold text-sm tracking-widest uppercase mb-3">Why Hosts Choose PureTask</p>
             <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Built for Airbnb.<br />
-              <span className="text-muted-foreground font-light">Not for everyone.</span>
+              <span className="text-ink-muted font-light">Not for everyone.</span>
             </h2>
           </motion.div>
 
@@ -177,7 +177,7 @@ export default function ForAirbnbHosts() {
                     <f.icon className="h-5 w-5" />
                   </div>
                   <h3 className="font-bold text-lg mb-3">{f.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{f.description}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{f.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -220,7 +220,7 @@ export default function ForAirbnbHosts() {
                   </div>
                   <div className="text-xs font-poppins font-bold tracking-widest mb-2 text-[hsl(var(--pt-amber))]">STEP {step.num}</div>
                   <h3 className="font-bold text-base mb-2">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{step.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -274,7 +274,7 @@ export default function ForAirbnbHosts() {
                 <h2 className="text-4xl md:text-5xl font-poppins font-bold leading-tight mb-5">
                   More guests.<br />Zero cleanup stress.
                 </h2>
-                <p className="text-muted-foreground leading-relaxed text-lg">
+                <p className="text-ink-muted leading-relaxed text-lg">
                   PureTask was designed specifically for hosts managing multiple properties, tight turnover windows, and guests who expect hotel-quality cleanliness.
                 </p>
               </div>
@@ -287,7 +287,7 @@ export default function ForAirbnbHosts() {
                 ].map((item) => (
                   <div key={item.t} className="rounded-2xl p-5 border border-[hsl(var(--pt-amber)/0.2)] bg-[hsl(var(--pt-amber)/0.04)]">
                     <p className="text-3xl font-poppins font-bold text-[hsl(var(--pt-amber))] mb-1">{item.n}</p>
-                    <p className="text-xs text-muted-foreground">{item.t}</p>
+                    <p className="text-xs text-ink-muted">{item.t}</p>
                   </div>
                 ))}
               </div>
@@ -324,7 +324,7 @@ export default function ForAirbnbHosts() {
                 Your guests deserve<br />
                 <span className="text-[hsl(var(--pt-amber))]">a spotless welcome.</span>
               </h2>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              <p className="text-ink-muted text-lg mb-8 leading-relaxed">
                 Join thousands of Airbnb hosts who trust PureTask for every single turnover — documented, verified, and on time.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

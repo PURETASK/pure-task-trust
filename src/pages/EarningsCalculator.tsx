@@ -19,8 +19,8 @@ const TIERS = [
     badge: 'bg-warning/10 text-warning border-warning/30',
     bar: 'from-warning to-warning' },
   { name: 'Proven Specialist',   range: [50, 69],  fee: 0.18, icon: '🛡️', keep: '82%',
-    accent: 'border-border/40 bg-muted/8', dot: 'bg-muted',
-    badge: 'bg-muted/10 text-muted-foreground border-border/30',
+    accent: 'border-hairline-soft bg-muted/8', dot: 'bg-muted',
+    badge: 'bg-muted/10 text-ink-muted border-border/30',
     bar: 'from-muted to-muted' },
   { name: 'Top Performer',     range: [70, 89],  fee: 0.17, icon: '🏆', keep: '83%',
     accent: 'border-warning/40 bg-warning/8', dot: 'bg-warning',
@@ -53,7 +53,7 @@ function SliderRow({
   onChange: (v: number) => void; minLabel: string; maxLabel: string;
 }) {
   return (
-    <div className="rounded-2xl border-2 border-border/60 bg-card p-4">
+    <div className="rounded-2xl border-2 border-hairline-soft bg-card p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className={cn('h-8 w-8 rounded-xl flex items-center justify-center', iconClass.replace('text-', 'bg-').replace(/text-[\w-]+/, '') + ' bg-opacity-10')}>
@@ -64,7 +64,7 @@ function SliderRow({
         <span className={cn('text-2xl font-poppins font-bold', iconClass)}>{display}</span>
       </div>
       <Slider min={min} max={max} step={step} value={[value]} onValueChange={([v]) => onChange(v)} className="py-1" />
-      <div className="flex justify-between text-[11px] text-muted-foreground mt-1.5">
+      <div className="flex justify-between text-[11px] text-ink-muted mt-1.5">
         <span>{minLabel}</span><span>{maxLabel}</span>
       </div>
     </div>
@@ -131,7 +131,7 @@ export default function EarningsCalculator() {
               How Much Can You Earn<br />
               <span className="text-success">as a Cleaner?</span>
             </h1>
-            <p className="text-muted-foreground text-lg max-w-xl">
+            <p className="text-ink-muted text-lg max-w-xl">
               Move the sliders and watch your income update live. No sign-up needed.
             </p>
           </motion.div>
@@ -142,7 +142,7 @@ export default function EarningsCalculator() {
 
         {/* ── SCENARIOS ── */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+          <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-3">
             Quick-start scenarios
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -150,10 +150,10 @@ export default function EarningsCalculator() {
               <button
                 key={s.label}
                 onClick={() => applyScenario(s)}
-                className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-2xl border-2 border-border/60 bg-card hover:border-primary/40 hover:bg-primary/5 transition-all text-left group"
+                className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-2xl border-2 border-hairline-soft bg-card hover:border-primary/40 hover:bg-primary/5 transition-all text-left group"
               >
                 <span className="font-bold text-sm group-hover:text-primary transition-colors">{s.label}</span>
-                <span className="text-[11px] text-muted-foreground">{s.desc}</span>
+                <span className="text-[11px] text-ink-muted">{s.desc}</span>
               </button>
             ))}
           </div>
@@ -197,7 +197,7 @@ export default function EarningsCalculator() {
             />
 
             {/* Reliability score — custom UI */}
-            <div className="rounded-2xl border-2 border-border/60 bg-card p-4">
+            <div className="rounded-2xl border-2 border-hairline-soft bg-card p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="h-8 w-8 rounded-xl bg-warning/10 flex items-center justify-center">
@@ -220,7 +220,7 @@ export default function EarningsCalculator() {
                     onClick={() => setScore(t.range[0] + 5)}
                     className={cn(
                       'text-xs py-1.5 rounded-xl border-2 font-semibold transition-all',
-                      tier.name === t.name ? t.accent + ' ' + t.badge : 'border-border/50 text-muted-foreground hover:border-border'
+                      tier.name === t.name ? t.accent + ' ' + t.badge : 'border-border/50 text-ink-muted hover:border-border'
                     )}
                   >
                     {t.icon} {t.name}
@@ -238,7 +238,7 @@ export default function EarningsCalculator() {
             {/* Big annual card */}
             <div className="rounded-2xl border-2 border-success/40 bg-gradient-to-br from-success/12 via-success/6 to-background overflow-hidden">
               <div className="p-5 text-center">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Est. annual take-home</p>
+                <p className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-1">Est. annual take-home</p>
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={Math.round(calc.annualNet)}
@@ -251,7 +251,7 @@ export default function EarningsCalculator() {
                     ${Math.round(calc.annualNet).toLocaleString()}
                   </motion.p>
                 </AnimatePresence>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-ink-muted">
                   after {(tier.fee * 100).toFixed(0)}% fee · {tier.icon} {tier.name} tier
                 </p>
               </div>
@@ -259,7 +259,7 @@ export default function EarningsCalculator() {
               <div className="px-5 pb-4">
                 <div className="flex justify-between text-[11px] font-semibold mb-1.5">
                   <span className="text-success">You keep {tier.keep}</span>
-                  <span className="text-muted-foreground">Platform {(tier.fee * 100).toFixed(0)}%</span>
+                  <span className="text-ink-muted">Platform {(tier.fee * 100).toFixed(0)}%</span>
                 </div>
                 <div className="h-2.5 rounded-full bg-border/50 overflow-hidden">
                   <motion.div
@@ -282,7 +282,7 @@ export default function EarningsCalculator() {
                   <div className={cn('h-8 w-8 rounded-xl flex items-center justify-center', iconBg)}>
                     <Icon className={cn('h-4 w-4', iconColor)} />
                   </div>
-                  <span className="text-sm text-muted-foreground font-medium">{label}</span>
+                  <span className="text-sm text-ink-muted font-medium">{label}</span>
                 </div>
                 <motion.span
                   key={value}
@@ -296,10 +296,10 @@ export default function EarningsCalculator() {
             ))}
 
             {/* Fee breakdown */}
-            <div className="rounded-2xl border-2 border-border/50 bg-muted/30 p-4 text-sm space-y-2">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Weekly breakdown</p>
+            <div className="rounded-2xl border border-hairline-soft/50 bg-muted/30 p-4 text-sm space-y-2">
+              <p className="text-xs font-bold text-ink-muted uppercase tracking-widest">Weekly breakdown</p>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Gross earnings</span>
+                <span className="text-ink-muted">Gross earnings</span>
                 <span className="font-bold">${Math.round(calc.weeklyGross).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-destructive/80">
@@ -339,14 +339,14 @@ export default function EarningsCalculator() {
                 >
                   <div className={cn('h-1 w-10 rounded-full bg-gradient-to-r mb-3', t.bar)} />
                   <p className="font-poppins font-bold text-base mb-0.5">{t.icon} {t.name}</p>
-                  <p className="text-[11px] text-muted-foreground mb-2">Score {t.range[0]}–{t.range[1]} · Keep {t.keep}</p>
+                  <p className="text-[11px] text-ink-muted mb-2">Score {t.range[0]}–{t.range[1]} · Keep {t.keep}</p>
                   <p className="text-2xl font-poppins font-bold text-success">${Math.round(annualEst).toLocaleString()}</p>
-                  <p className="text-[11px] text-muted-foreground">est. annual</p>
+                  <p className="text-[11px] text-ink-muted">est. annual</p>
                 </button>
               );
             })}
           </div>
-          <p className="text-xs text-muted-foreground mt-3">
+          <p className="text-xs text-ink-muted mt-3">
             * Based on your current hours ({hoursPerWeek}h/wk) and rate (${ratePerHour}/hr). Actual earnings depend on job availability and additional services.
           </p>
         </motion.section>
@@ -364,7 +364,7 @@ export default function EarningsCalculator() {
             <div key={title} className={cn('rounded-2xl border-2 p-5', border)}>
               <span className="text-3xl mb-3 block">{emoji}</span>
               <h3 className="font-poppins font-bold text-base mb-2">{title}</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{desc}</p>
+              <p className="text-sm text-ink-muted mb-4 leading-relaxed">{desc}</p>
               <Button asChild variant="outline" size="sm" className="rounded-xl border-2 font-semibold w-full">
                 <Link to={link}>{cta} <ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Link>
               </Button>

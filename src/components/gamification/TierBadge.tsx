@@ -14,7 +14,7 @@ const tierConfig: Record<string, {
   standard: {
     label: 'Standard',
     icon: Shield,
-    color: 'text-muted-foreground',
+    color: 'text-ink-muted',
     bgColor: 'bg-muted',
     description: 'Starting tier for all cleaners',
   },
@@ -92,7 +92,7 @@ export function TierBadge({ tier: tierProp, cleanerId, showTooltip = true, size 
       </TooltipTrigger>
       <TooltipContent>
         <p className="font-medium">{config.label} Tier</p>
-        <p className="text-xs text-muted-foreground">{config.description}</p>
+        <p className="text-xs text-ink-muted">{config.description}</p>
       </TooltipContent>
     </Tooltip>
   );
@@ -129,9 +129,9 @@ export function TierProgress({ cleanerId }: TierProgressProps) {
                       : 'bg-muted'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${isFuture ? 'text-muted-foreground' : config.color}`} />
+                <Icon className={`h-5 w-5 ${isFuture ? 'text-ink-muted' : config.color}`} />
               </div>
-              <span className={`text-xs ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
+              <span className={`text-xs ${isCurrent ? 'font-medium' : 'text-ink-muted'}`}>
                 {config.label}
               </span>
             </div>

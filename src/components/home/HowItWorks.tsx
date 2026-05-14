@@ -43,7 +43,7 @@ export function HowItWorks() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-ink-muted text-lg max-w-2xl mx-auto">
             Simple, transparent, and fair for everyone.
           </p>
         </motion.div>
@@ -76,7 +76,7 @@ export function HowItWorks() {
                     {step.number}
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
+                  <p className="text-ink-muted">{step.description}</p>
                 </div>
               </motion.div>
             ))}

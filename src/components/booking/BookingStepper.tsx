@@ -38,7 +38,7 @@ export function BookingStepper({ steps, current, onStepClick }: Props) {
                 disabled={!clickable}
                 className={cn(
                   "h-9 w-9 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-all",
-                  reached ? p.step : "border-border bg-muted text-muted-foreground",
+                  reached ? p.step : "border-border bg-muted text-ink-muted",
                   active && "ring-4 ring-ring/10 scale-110",
                   clickable && "cursor-pointer hover:scale-105"
                 )}
@@ -47,7 +47,7 @@ export function BookingStepper({ steps, current, onStepClick }: Props) {
               </button>
               <span className={cn(
                 "text-[10px] sm:text-xs font-bold hidden sm:block whitespace-nowrap",
-                reached ? p.label : "text-muted-foreground"
+                reached ? p.label : "text-ink-muted"
               )}>
                 {s.label}
               </span>

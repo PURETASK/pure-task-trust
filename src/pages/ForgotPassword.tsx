@@ -40,7 +40,7 @@ export default function ForgotPassword() {
       <main className="flex-1 flex items-center justify-center py-20 pt-28 px-4">
         <div className="w-full max-w-md">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Link to="/auth" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 group">
+            <Link to="/auth" className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-foreground mb-8 group">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />Back to sign in
             </Link>
 
@@ -52,15 +52,15 @@ export default function ForgotPassword() {
                       <Lock className="h-10 w-10 text-white" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-2">Reset Password</h1>
-                    <p className="text-muted-foreground">Enter your email and we'll send you a reset link</p>
+                    <p className="text-ink-muted">Enter your email and we'll send you a reset link</p>
                   </div>
 
-                  <div className="bg-card border border-border/60 rounded-2xl p-6 sm:p-8 shadow-soft">
+                  <div className="bg-card border border-hairline-soft rounded-2xl p-6 sm:p-8 shadow-soft">
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-sm font-semibold">Email Address</Label>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
                           <Input id="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </div>
                       </div>
@@ -69,7 +69,7 @@ export default function ForgotPassword() {
                       </Button>
                     </form>
 
-                    <p className="text-center text-sm text-muted-foreground mt-6">
+                    <p className="text-center text-sm text-ink-muted mt-6">
                       Remember your password?{' '}
                       <Link to="/auth" className="text-primary font-semibold hover:underline">Sign in</Link>
                     </p>
@@ -82,9 +82,9 @@ export default function ForgotPassword() {
                       <CheckCircle2 className="h-12 w-12 text-success" />
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Check Your Email!</h2>
-                    <p className="text-muted-foreground mb-2">We sent a reset link to</p>
+                    <p className="text-ink-muted mb-2">We sent a reset link to</p>
                     <p className="font-bold text-lg text-primary mb-6">{email}</p>
-                    <p className="text-sm text-muted-foreground mb-8">Didn't get it? Check your spam folder or try again.</p>
+                    <p className="text-sm text-ink-muted mb-8">Didn't get it? Check your spam folder or try again.</p>
                     <div className="space-y-3">
                       <Button className="w-full" asChild><Link to="/auth">Back to Sign In</Link></Button>
                       <Button variant="ghost" className="w-full" onClick={() => { setIsEmailSent(false); setEmail(''); }}>Try a different email</Button>

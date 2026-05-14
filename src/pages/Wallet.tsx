@@ -135,7 +135,7 @@ export default function Wallet() {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-poppins font-bold">My Wallet</h1>
-                <p className="text-muted-foreground text-sm">Credits power your bookings</p>
+                <p className="text-ink-muted text-sm">Credits power your bookings</p>
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function Wallet() {
                 <span className="palette-label-green font-poppins font-bold text-xs uppercase tracking-widest">Available Balance</span>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger><Info className="h-3 w-3 text-muted-foreground" /></TooltipTrigger>
+                    <TooltipTrigger><Info className="h-3 w-3 text-ink-muted" /></TooltipTrigger>
                     <TooltipContent><p className="text-xs max-w-[220px]">Credits you can spend on new bookings right now.</p></TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -189,7 +189,7 @@ export default function Wallet() {
 
               {/* Primary action: Quick Top-Up */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
                   Quick Top-Up
                 </p>
                 <div className="grid grid-cols-4 gap-2 mb-3">
@@ -230,10 +230,10 @@ export default function Wallet() {
             <div className="palette-card palette-card-amber p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Clock className="h-3.5 w-3.5 palette-label-amber" />
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">In Escrow</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-ink-muted">In Escrow</span>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger><Info className="h-3 w-3 text-muted-foreground" /></TooltipTrigger>
+                    <TooltipTrigger><Info className="h-3 w-3 text-ink-muted" /></TooltipTrigger>
                     <TooltipContent><p className="text-xs max-w-[220px]">Held for upcoming or in-progress jobs. Released after completion or auto-returned if unused.</p></TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -243,7 +243,7 @@ export default function Wallet() {
             <div className="palette-card palette-card-green p-4">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="h-3.5 w-3.5 palette-label-green" />
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Lifetime Spent</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-ink-muted">Lifetime Spent</span>
               </div>
               <p className="text-2xl font-poppins font-bold palette-label-green tabular-nums">${lifetimeSpent}</p>
             </div>
@@ -282,7 +282,7 @@ export default function Wallet() {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 pb-4">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-muted" />
                       <Input
                         placeholder="Search..."
                         value={txSearch}
@@ -292,7 +292,7 @@ export default function Wallet() {
                       {txSearch && (
                         <button
                           onClick={() => setTxSearch('')}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted hover:text-foreground"
                         >
                           <X className="h-3.5 w-3.5" />
                         </button>
@@ -324,11 +324,11 @@ export default function Wallet() {
                     </div>
                   ) : filteredLedger.length === 0 ? (
                     <div className="py-12 text-center">
-                      <WalletIcon className="h-14 w-14 mx-auto mb-4 text-muted-foreground/30" />
-                      <p className="font-bold text-muted-foreground">
+                      <WalletIcon className="h-14 w-14 mx-auto mb-4 text-ink-muted/30" />
+                      <p className="font-bold text-ink-muted">
                         {ledger.length === 0 ? 'No transactions yet' : 'No matching transactions'}
                       </p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-sm text-ink-muted mt-1">
                         {ledger.length === 0 ? 'Top up your wallet to get started.' : 'Try adjusting your filters.'}
                       </p>
                     </div>
@@ -347,18 +347,18 @@ export default function Wallet() {
                           >
                             <div className={cn(
                               "h-11 w-11 rounded-xl border-2 flex items-center justify-center flex-shrink-0",
-                              isPositive ? "palette-icon-green" : "bg-muted border-border/40",
+                              isPositive ? "palette-icon-green" : "bg-muted border-hairline-soft",
                             )}>
                               {isPositive
                                 ? <ArrowDownLeft className="h-5 w-5" />
-                                : <ArrowUpRight className="h-5 w-5 text-muted-foreground" />
+                                : <ArrowUpRight className="h-5 w-5 text-ink-muted" />
                               }
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-bold text-sm truncate">
                                 {reasonLabels[entry.reason] || entry.reason}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-ink-muted">
                                 {format(new Date(entry.created_at), 'MMM d, yyyy · h:mm a')}
                               </p>
                             </div>
@@ -367,7 +367,7 @@ export default function Wallet() {
                                 <button
                                   onClick={() => generateReceipt({ type: 'credit_purchase', transactionId: entry.id })}
                                   disabled={isGenerating}
-                                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                  className="p-1.5 rounded-lg hover:bg-muted text-ink-muted hover:text-foreground transition-colors"
                                   title="Download receipt"
                                 >
                                   <FileText className="h-3.5 w-3.5" />
@@ -408,7 +408,7 @@ export default function Wallet() {
                   </div>
                   <div className="flex-1">
                     <h2 className="text-lg font-poppins font-bold">Auto Top-Up</h2>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       Never run out of credits. We'll add funds automatically when your balance gets low.
                     </p>
                   </div>
@@ -435,7 +435,7 @@ export default function Wallet() {
                     className="grid grid-cols-2 gap-3"
                   >
                     <div>
-                      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-1.5 block">
                         When below
                       </Label>
                       <div className="relative">
@@ -446,11 +446,11 @@ export default function Wallet() {
                           className="palette-input palette-input-purple pr-16 h-10"
                           min="5"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">credits</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">credits</span>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-1.5 block">
                         Add this much
                       </Label>
                       <div className="relative">
@@ -461,7 +461,7 @@ export default function Wallet() {
                           className="palette-input palette-input-purple pr-16 h-10"
                           min="10"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">credits</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">credits</span>
                       </div>
                     </div>
                   </motion.div>
@@ -469,7 +469,7 @@ export default function Wallet() {
 
                 {!autoTopUpEnabled && (
                   <div className="text-center py-6">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-ink-muted">
                       Turn on auto top-up to skip the manual refills.
                     </p>
                   </div>
@@ -492,7 +492,7 @@ export default function Wallet() {
               <RotateCcw className="h-3.5 w-3.5" /> Easy Refunds
             </div>
           </div>
-          <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1.5">
+          <p className="text-xs text-ink-muted text-center flex items-center justify-center gap-1.5">
             <Shield className="h-3 w-3" />
             1 credit = $1 USD · Credits are non-refundable to cash · Used exclusively for PureTask bookings
           </p>

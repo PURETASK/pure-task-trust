@@ -17,7 +17,7 @@ export function MFASetup() {
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-muted-foreground">Loading security settings…</CardContent>
+        <CardContent className="py-8 text-center text-ink-muted">Loading security settings…</CardContent>
       </Card>
     );
   }
@@ -51,7 +51,7 @@ export function MFASetup() {
               <Smartphone className="h-5 w-5 text-primary" aria-hidden="true" />
               <div>
                 <p className="font-medium text-sm">Authenticator App (TOTP)</p>
-                <p className="text-xs text-muted-foreground">Google Authenticator, Authy, etc.</p>
+                <p className="text-xs text-ink-muted">Google Authenticator, Authy, etc.</p>
               </div>
             </div>
             {isTotpActive ? (
@@ -75,7 +75,7 @@ export function MFASetup() {
               <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
               <div>
                 <p className="font-medium text-sm">Email Verification</p>
-                <p className="text-xs text-muted-foreground">Receive a code via email on login</p>
+                <p className="text-xs text-ink-muted">Receive a code via email on login</p>
               </div>
             </div>
             <Switch
@@ -116,7 +116,7 @@ export function MFASetup() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="p-4 bg-muted/50 rounded-xl">
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-sm text-ink-muted mb-2">
                 Add this key to your authenticator app manually:
               </p>
               <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export function MFASetup() {
                   <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" />
                   <p className="text-sm font-semibold">Save these recovery codes</p>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">
+                <p className="text-xs text-ink-muted mb-3">
                   Store these somewhere safe. Each code can only be used once.
                 </p>
                 <div className="grid grid-cols-2 gap-2" role="list" aria-label="Recovery codes">

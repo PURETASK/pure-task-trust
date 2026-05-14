@@ -58,11 +58,11 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
                           ? "ring-2 ring-primary ring-offset-2 " + TIER_VISUAL[tier].ring
                           : isUnlocked
                           ? TIER_VISUAL[tier].ring
-                          : "bg-muted border-border text-muted-foreground"
+                          : "bg-muted border-border text-ink-muted"
                       }`}>
                         {isUnlocked ? TIER_VISUAL[tier].emoji : <Lock className="h-4 w-4" />}
                       </div>
-                      <span className={`text-xs font-medium capitalize ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
+                      <span className={`text-xs font-medium capitalize ${isActive ? "text-foreground" : "text-ink-muted"}`}>
                         {tier}
                       </span>
                     </div>
@@ -72,7 +72,7 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
                     <ul className="text-xs space-y-0.5">
                       {TIER_BENEFITS[tier].map(b => <li key={b}>• {b}</li>)}
                     </ul>
-                    {!isUnlocked && <p className="text-xs mt-1 text-muted-foreground">Requires {TIER_MIN_SCORE[tier]}+ reliability score</p>}
+                    {!isUnlocked && <p className="text-xs mt-1 text-ink-muted">Requires {TIER_MIN_SCORE[tier]}+ reliability score</p>}
                   </TooltipContent>
                 </Tooltip>
                 {idx < TIER_ORDER.length - 1 && (
@@ -87,11 +87,11 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
         {nextTier ? (
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Progress to <span className="capitalize font-medium text-foreground">{nextTier}</span></span>
+              <span className="text-ink-muted">Progress to <span className="capitalize font-medium text-foreground">{nextTier}</span></span>
               <span className="font-semibold">{reliabilityScore} / {nextTierMinScore}</span>
             </div>
             <Progress value={progressToNext} className="h-2" />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-ink-muted">
               {nextTierMinScore! - reliabilityScore} more reliability points needed to unlock {TIER_VISUAL[nextTier].emoji} {nextTier}
             </p>
           </div>
@@ -104,7 +104,7 @@ export function TierProgressMap({ currentTier, reliabilityScore, jobsCompleted }
 
         {/* Current active perks summary */}
         <div className="pt-1 border-t border-border">
-          <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Your Active Perks</p>
+          <p className="text-xs font-semibold text-ink-muted mb-2 uppercase tracking-wide">Your Active Perks</p>
           <div className="flex flex-wrap gap-1.5">
             {TIER_BENEFITS[currentTier].map(b => (
               <Badge key={b} variant="secondary" className="text-xs">{b}</Badge>

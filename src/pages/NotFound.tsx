@@ -62,10 +62,10 @@ export default function NotFound() {
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <h1 className="text-3xl md:text-4xl font-poppins font-bold text-gradient-aero mb-3">Page Not Found</h1>
-          <p className="text-muted-foreground mb-2">
+          <p className="text-ink-muted mb-2">
             The page you're looking for doesn't exist or has been moved.
           </p>
-          <code className="text-xs bg-muted px-2.5 py-1.5 rounded-lg text-muted-foreground font-mono block w-fit mx-auto mb-8">
+          <code className="text-xs bg-muted px-2.5 py-1.5 rounded-lg text-ink-muted font-mono block w-fit mx-auto mb-8">
             {location.pathname}
           </code>
         </motion.div>
@@ -80,14 +80,14 @@ export default function NotFound() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-          <div className="border border-border rounded-2xl p-4 bg-card/50 backdrop-blur-sm">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Quick Navigation</p>
+          <div className="border border-hairline-soft rounded-2xl p-4 bg-card/50 backdrop-blur-sm">
+            <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">Quick Navigation</p>
             <div className="grid grid-cols-3 gap-2">
               {suggestions.map(({ label, href, icon: Icon, color }, i) => (
                 <motion.div key={href} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.05 }}>
                   <Link to={href} className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-muted transition-colors text-center">
                     <Icon className={`h-5 w-5 ${color}`} />
-                    <span className="text-xs text-muted-foreground font-medium leading-tight">{label}</span>
+                    <span className="text-xs text-ink-muted font-medium leading-tight">{label}</span>
                   </Link>
                 </motion.div>
               ))}

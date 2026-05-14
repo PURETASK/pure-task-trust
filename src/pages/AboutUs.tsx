@@ -105,7 +105,7 @@ export default function AboutUs() {
                 trust.
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-ink-muted leading-relaxed max-w-2xl mx-auto mb-8">
               PureTask is a brand-new cleaning marketplace where every job is GPS-verified, photo-documented, and payment is held in escrow until you approve. Built by a cleaner, for cleaners and clients alike.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -143,7 +143,7 @@ export default function AboutUs() {
                 <Quote className="h-3 w-3 mr-1" /> From the Founder
               </Badge>
               <h2 className="text-4xl sm:text-5xl font-bold mb-2">Meet Nathan Chiaratti</h2>
-              <p className="text-lg text-muted-foreground">Founder & CEO of PureTask</p>
+              <p className="text-lg text-ink-muted">Founder & CEO of PureTask</p>
             </motion.div>
 
             <motion.div
@@ -172,7 +172,7 @@ export default function AboutUs() {
                     </div>
                     <div>
                       <p className="font-bold text-foreground">Nathan Chiaratti</p>
-                      <p className="text-sm text-muted-foreground">Founder & CEO · Former Cleaner · Builder</p>
+                      <p className="text-sm text-ink-muted">Founder & CEO · Former Cleaner · Builder</p>
                     </div>
                   </div>
                 </CardContent>
@@ -205,7 +205,7 @@ export default function AboutUs() {
               <Target className="h-3 w-3 mr-1" /> The Problem
             </Badge>
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">The cleaning industry was broken</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">These are the problems Nathan experienced first-hand — and the reason PureTask exists.</p>
+            <p className="text-xl text-ink-muted max-w-2xl mx-auto">These are the problems Nathan experienced first-hand — and the reason PureTask exists.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
@@ -219,7 +219,7 @@ export default function AboutUs() {
                     <item.icon className={`h-6 w-6 ${item.iconColor}`} />
                   </div>
                   <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -251,7 +251,7 @@ export default function AboutUs() {
               <Wrench className="h-3 w-3 mr-1" /> The Solution
             </Badge>
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">What we built to fix it</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Every feature in PureTask was designed to solve a real problem — not to pad a feature list.</p>
+            <p className="text-xl text-ink-muted max-w-2xl mx-auto">Every feature in PureTask was designed to solve a real problem — not to pad a feature list.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
@@ -262,7 +262,7 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="flex items-center gap-3 bg-card rounded-xl p-4 border border-border"
+                className="flex items-center gap-3 bg-card rounded-xl p-4 border border-hairline-soft"
               >
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <item.icon className="h-5 w-5 text-primary" />
@@ -293,7 +293,7 @@ export default function AboutUs() {
         <div className="container px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">Built for both sides</h2>
-            <p className="text-xl text-muted-foreground">Whether you're booking or cleaning, PureTask was built for you.</p>
+            <p className="text-xl text-ink-muted">Whether you're booking or cleaning, PureTask was built for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -375,7 +375,7 @@ export default function AboutUs() {
                     <v.icon className={`h-6 w-6 ${v.iconColor}`} />
                   </div>
                   <h3 className="text-lg font-bold mb-2">{v.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed">{v.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -393,7 +393,7 @@ export default function AboutUs() {
               <Rocket className="h-8 w-8 text-primary" />
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold mb-5">Be part of something new</h2>
-            <p className="text-xl text-muted-foreground mb-8">PureTask is just getting started. Join us as one of the first clients or cleaners on the platform that's changing how cleaning works.</p>
+            <p className="text-xl text-ink-muted mb-8">PureTask is just getting started. Join us as one of the first clients or cleaners on the platform that's changing how cleaning works.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="h-14 px-10 rounded-2xl text-base">
                 <Link to="/discover">Find a Cleaner Near You <ArrowRight className="ml-2 h-5 w-5" /></Link>

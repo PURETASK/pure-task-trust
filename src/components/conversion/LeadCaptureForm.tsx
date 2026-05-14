@@ -89,7 +89,7 @@ export function LeadCaptureForm({
       <div className="text-center py-4">
         <CheckCircle2 className="h-12 w-12 text-pt-green mx-auto mb-3" />
         <p className="font-semibold text-foreground">You're all set!</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-ink-muted">
           Check your email for your exclusive discount code.
         </p>
       </div>
@@ -158,7 +158,7 @@ export function LeadCaptureForm({
           )}
         </Button>
 
-        <p className="text-xs text-center text-muted-foreground">
+        <p className="text-xs text-center text-ink-muted">
           No spam, ever. Unsubscribe anytime.
         </p>
       </form>

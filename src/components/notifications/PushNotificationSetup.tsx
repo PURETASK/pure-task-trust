@@ -79,13 +79,13 @@ export function PushNotificationSetup() {
             {hasActiveTokens ? (
               <Bell className="h-5 w-5 text-success" />
             ) : (
-              <BellOff className="h-5 w-5 text-muted-foreground" />
+              <BellOff className="h-5 w-5 text-ink-muted" />
             )}
             <div>
               <p className="font-medium">
                 {hasActiveTokens ? 'Push notifications enabled' : 'Push notifications disabled'}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 {hasActiveTokens 
                   ? `${tokens.length} device${tokens.length > 1 ? 's' : ''} registered` 
                   : 'Enable to receive instant updates'}
@@ -105,19 +105,19 @@ export function PushNotificationSetup() {
         {/* Registered devices */}
         {hasActiveTokens && (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">Registered Devices</p>
+            <p className="text-sm font-medium text-ink-muted">Registered Devices</p>
             {tokens.map(token => (
               <div 
                 key={token.id} 
                 className="flex items-center justify-between p-3 rounded-lg border"
               >
                 <div className="flex items-center gap-3">
-                  <Smartphone className="h-4 w-4 text-muted-foreground" />
+                  <Smartphone className="h-4 w-4 text-ink-muted" />
                   <div>
                     <p className="text-sm font-medium">
                       {token.device_name || token.platform}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       {token.last_used_at 
                         ? `Last used ${formatDistanceToNow(new Date(token.last_used_at), { addSuffix: true })}`
                         : `Added ${formatDistanceToNow(new Date(token.created_at), { addSuffix: true })}`

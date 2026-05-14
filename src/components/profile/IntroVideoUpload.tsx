@@ -151,7 +151,7 @@ export function IntroVideoUpload({ cleanerId, currentVideoUrl }: IntroVideoUploa
             "Tell clients what they can expect when booking you",
             "Smile and speak naturally — authenticity builds trust!",
           ].map(tip => (
-            <div key={tip} className="flex items-start gap-2 text-xs text-muted-foreground">
+            <div key={tip} className="flex items-start gap-2 text-xs text-ink-muted">
               <CheckCircle className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
               {tip}
             </div>
@@ -238,7 +238,7 @@ export function IntroVideoUpload({ cleanerId, currentVideoUrl }: IntroVideoUploa
               </div>
               <div className="text-center">
                 <p className="font-semibold text-sm">Tap to upload your intro video</p>
-                <p className="text-xs text-muted-foreground mt-1">MP4, MOV, WebM · max 2 min · up to 100MB</p>
+                <p className="text-xs text-ink-muted mt-1">MP4, MOV, WebM · max 2 min · up to 100MB</p>
               </div>
               <Button variant="outline" size="sm" className="gap-2 pointer-events-none">
                 <Upload className="h-4 w-4" /> Choose Video

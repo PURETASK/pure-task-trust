@@ -83,7 +83,7 @@ export default function Messages() {
       <main className="flex-1 flex items-center justify-center py-12">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm">Loading messages...</p>
+          <p className="text-ink-muted text-sm">Loading messages...</p>
         </div>
       </main>
     );
@@ -102,7 +102,7 @@ export default function Messages() {
             </div>
             <div>
               <h1 className="text-2xl font-poppins font-bold">Messages</h1>
-              {totalUnread > 0 && <p className="text-sm text-muted-foreground">{totalUnread} unread message{totalUnread !== 1 ? 's' : ''}</p>}
+              {totalUnread > 0 && <p className="text-sm text-ink-muted">{totalUnread} unread message{totalUnread !== 1 ? 's' : ''}</p>}
             </div>
           </div>
 
@@ -113,7 +113,7 @@ export default function Messages() {
                   <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-[hsl(var(--pt-purple))]" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">No conversations yet</h3>
-                <p className="text-muted-foreground text-sm max-w-sm mx-auto">Messages from your booked cleaners will appear here.</p>
+                <p className="text-ink-muted text-sm max-w-sm mx-auto">Messages from your booked cleaners will appear here.</p>
               </CardContent>
             </Card>
           ) : (
@@ -124,13 +124,13 @@ export default function Messages() {
                 {/* Search */}
                 <div className="p-3 border-b">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
                     <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search conversations..." className="pl-9 h-9 text-sm bg-muted/50 border-0" />
                   </div>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                   {(filteredThreads || []).length === 0 ? (
-                    <div className="p-6 text-center text-sm text-muted-foreground">No conversations found</div>
+                    <div className="p-6 text-center text-sm text-ink-muted">No conversations found</div>
                   ) : (filteredThreads || []).map((thread) => (
                     <button
                       key={thread.id}
@@ -157,11 +157,11 @@ export default function Messages() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-0.5">
                             <p className={cn("font-medium text-sm truncate", thread.unreadCount > 0 && "font-semibold")}>{getOtherPartyName(thread)}</p>
-                            <span className="text-[11px] text-muted-foreground flex-shrink-0 ml-2">
+                            <span className="text-[11px] text-ink-muted flex-shrink-0 ml-2">
                               {thread.lastMessage ? formatMessageTime(thread.lastMessage.created_at) : ''}
                             </span>
                           </div>
-                          <p className={cn("text-xs truncate", thread.unreadCount > 0 ? "text-foreground" : "text-muted-foreground")}>
+                          <p className={cn("text-xs truncate", thread.unreadCount > 0 ? "text-foreground" : "text-ink-muted")}>
                             {thread.lastMessage?.body || 'No messages yet'}
                           </p>
                           {thread.job_id && (
@@ -193,7 +193,7 @@ export default function Messages() {
                         <p className="font-semibold truncate">{getOtherPartyName(selectedThread)}</p>
                         <div className="flex items-center gap-1.5">
                           <Circle className="h-2 w-2 fill-success text-success" />
-                          <span className="text-xs text-muted-foreground">{selectedThread.job_id ? 'Booking conversation' : 'Direct message'}</span>
+                          <span className="text-xs text-ink-muted">{selectedThread.job_id ? 'Booking conversation' : 'Direct message'}</span>
                         </div>
                       </div>
                       {selectedThread.job_id && (
@@ -207,7 +207,7 @@ export default function Messages() {
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       {messagesLoading ? (
                         <div className="flex items-center justify-center h-full">
-                          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                          <Loader2 className="h-6 w-6 animate-spin text-ink-muted" />
                         </div>
                       ) : messages && messages.length > 0 ? (
                         messages.map((msg, i) => {
@@ -217,7 +217,7 @@ export default function Messages() {
                             <div key={msg.id}>
                               {showTime && (
                                 <div className="text-center mb-3">
-                                  <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+                                  <span className="text-[10px] text-ink-muted bg-muted px-2.5 py-1 rounded-full">
                                     {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
                                   </span>
                                 </div>
@@ -232,7 +232,7 @@ export default function Messages() {
                                   isMine ? "bg-primary text-primary-foreground rounded-br-md" : "bg-secondary rounded-bl-md"
                                 )}>
                                   <p className="text-sm leading-relaxed">{msg.body}</p>
-                                  <div className={cn("flex items-center gap-1 mt-1 justify-end", isMine ? "text-primary-foreground/60" : "text-muted-foreground")}>
+                                  <div className={cn("flex items-center gap-1 mt-1 justify-end", isMine ? "text-primary-foreground/60" : "text-ink-muted")}>
                                     <span className="text-[10px]">{format(new Date(msg.created_at), 'h:mm a')}</span>
                                     {isMine && <CheckCheck className="h-3 w-3" />}
                                   </div>
@@ -243,8 +243,8 @@ export default function Messages() {
                         })
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full text-center">
-                          <MessageCircle className="h-12 w-12 text-muted-foreground/30 mb-3" />
-                          <p className="text-muted-foreground text-sm">Start the conversation!</p>
+                          <MessageCircle className="h-12 w-12 text-ink-muted/30 mb-3" />
+                          <p className="text-ink-muted text-sm">Start the conversation!</p>
                         </div>
                       )}
                       <div ref={messagesEndRef} />
@@ -275,10 +275,10 @@ export default function Messages() {
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
                     <div className="h-20 w-20 rounded-3xl bg-muted flex items-center justify-center mb-5">
-                      <MessageCircle className="h-10 w-10 text-muted-foreground/50" />
+                      <MessageCircle className="h-10 w-10 text-ink-muted/50" />
                     </div>
-                    <p className="font-medium text-muted-foreground">Select a conversation</p>
-                    <p className="text-sm text-muted-foreground/70 mt-1">Choose a thread from the left to start messaging</p>
+                    <p className="font-medium text-ink-muted">Select a conversation</p>
+                    <p className="text-sm text-ink-muted/70 mt-1">Choose a thread from the left to start messaging</p>
                   </div>
                 )}
               </Card>

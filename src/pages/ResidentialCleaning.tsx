@@ -51,7 +51,7 @@ export default function ResidentialCleaning() {
               Professional house cleaning{" "}
               <span className="text-gradient-aero">you can trust</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+            <p className="text-lg sm:text-xl text-ink-muted max-w-2xl mx-auto mb-8">
               Verified cleaners, GPS-tracked arrivals, photo documentation, and escrow protection on every booking. Pay only when you're satisfied.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -70,13 +70,13 @@ export default function ResidentialCleaning() {
       <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">What's included in every clean</h2>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+          <p className="text-ink-muted text-center max-w-xl mx-auto mb-12">
             Our standard residential cleaning covers all essential tasks. Need more? Add deep cleaning or special requests at booking.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {INCLUDES.map((item, i) => (
               <motion.div key={item} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                <Card className="border-2 border-border/50 rounded-2xl">
+                <Card className="border border-hairline-soft/50 rounded-2xl">
                   <CardContent className="p-5 flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
                     <span className="text-sm font-medium">{item}</span>
@@ -106,7 +106,7 @@ export default function ResidentialCleaning() {
                       <t.icon className={`h-6 w-6 text-${t.color}`} />
                     </div>
                     <h3 className="font-bold text-lg mb-2">{t.title}</h3>
-                    <p className="text-sm text-muted-foreground">{t.desc}</p>
+                    <p className="text-sm text-ink-muted">{t.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -119,7 +119,7 @@ export default function ResidentialCleaning() {
       <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Transparent pricing</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+          <p className="text-ink-muted max-w-xl mx-auto mb-8">
             1 credit = $1 USD. Cleaners set their own rates (typically $25–$60/hr). You pay only for hours worked. No hidden fees.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -133,7 +133,7 @@ export default function ResidentialCleaning() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-primary/5 via-background to-background">
         <div className="container text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready for a spotless home?</h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Book online in under 60 seconds. Background-checked cleaners. GPS verification. Photo proof. Escrow protection.</p>
+          <p className="text-ink-muted mb-8 max-w-lg mx-auto">Book online in under 60 seconds. Background-checked cleaners. GPS verification. Photo proof. Escrow protection.</p>
           <Button size="lg" asChild className="rounded-2xl h-14 px-10 shadow-elevated">
             <Link to="/book">Book Your Cleaning <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>

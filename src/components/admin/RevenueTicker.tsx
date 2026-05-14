@@ -9,7 +9,7 @@ function Ticker({ label, value, change, live }: { label: string; value: number; 
   const up = change >= 0;
   return (
     <div className="flex flex-col items-center min-w-[140px]">
-      <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+      <div className="flex items-center gap-1 text-xs text-ink-muted mb-1">
         {live && <span className="relative flex h-1.5 w-1.5 mr-0.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" /></span>}
         {label}
       </div>
@@ -94,7 +94,7 @@ export function RevenueTicker() {
         <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
           <Zap className="h-4 w-4 text-primary" />
         </div>
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Live Revenue</span>
+        <span className="text-xs font-semibold text-ink-muted uppercase tracking-wide">Live Revenue</span>
       </div>
       <div className="flex items-center gap-6 divide-x divide-border/50">
         <Ticker label="Today" value={liveRevenue || data?.today || 0} change={data?.todayChange || 0} live />

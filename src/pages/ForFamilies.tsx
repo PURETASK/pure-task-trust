@@ -79,7 +79,7 @@ export default function ForFamilies() {
 
               <motion.p
                 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
-                className="text-xl text-muted-foreground mb-10 max-w-lg leading-relaxed"
+                className="text-xl text-ink-muted mb-10 max-w-lg leading-relaxed"
               >
                 Background-checked cleaners who understand homes with children and pets. Child-safe products, GPS verification, and complete peace of mind.
               </motion.p>
@@ -113,13 +113,13 @@ export default function ForFamilies() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4 + i * 0.1 }}
-                  className="rounded-2xl p-6 border border-border/60 bg-card flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow"
+                  className="rounded-2xl p-6 border border-hairline-soft bg-card flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow"
                 >
                   <div className="h-12 w-12 rounded-2xl flex items-center justify-center" style={{ background: `hsl(var(--${item.color})/0.15)`, color: `hsl(var(--${item.color}))` }}>
                     <item.icon className="h-6 w-6" />
                   </div>
                   <p className="text-2xl font-poppins font-bold" style={{ color: `hsl(var(--${item.color}))` }}>{item.val}</p>
-                  <p className="text-xs text-muted-foreground font-medium">{item.label}</p>
+                  <p className="text-xs text-ink-muted font-medium">{item.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -137,7 +137,7 @@ export default function ForFamilies() {
             <p className="text-[hsl(var(--pt-green))] font-bold text-sm tracking-widest uppercase mb-3">Safety First, Always</p>
             <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               When kids are involved,<br />
-              <span className="text-muted-foreground font-light italic">there are no shortcuts.</span>
+              <span className="text-ink-muted font-light italic">there are no shortcuts.</span>
             </h2>
           </motion.div>
 
@@ -174,7 +174,7 @@ export default function ForFamilies() {
                     <pillar.icon className="h-6 w-6" />
                   </div>
                   <h3 className="font-bold text-lg mb-3">{pillar.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{pillar.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -223,7 +223,7 @@ export default function ForFamilies() {
                     </div>
                     <div>
                       <p className="font-bold">{t.name}</p>
-                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                      <p className="text-xs text-ink-muted">{t.role}</p>
                     </div>
                   </div>
                 </div>
@@ -243,7 +243,7 @@ export default function ForFamilies() {
                 Your family<br />
                 <span className="text-[hsl(var(--pt-green))]">deserves better.</span>
               </h2>
-              <p className="text-muted-foreground leading-relaxed text-lg mb-8">
+              <p className="text-ink-muted leading-relaxed text-lg mb-8">
                 We know how hard it is to balance work, kids, and keeping a clean home. That's why we've built every feature around what parents actually need: trust, transparency, and reliability.
               </p>
               <ul className="space-y-3">
@@ -276,7 +276,7 @@ export default function ForFamilies() {
                     <Leaf className="h-8 w-8 text-[hsl(var(--pt-green))]" />
                   </div>
                   <h3 className="text-2xl font-poppins font-bold mb-3">The Family-First Guarantee</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-6">
+                  <p className="text-ink-muted leading-relaxed mb-6">
                     If you're ever unsatisfied with a cleaning, we'll send another cleaner at no extra cost. Your family deserves the best — and we mean it, every single time.
                   </p>
                   <div className="grid grid-cols-2 gap-3 mb-8">
@@ -288,7 +288,7 @@ export default function ForFamilies() {
                     ].map((item) => (
                       <div key={item.t} className="rounded-xl p-4 bg-card/80 border border-[hsl(var(--pt-green)/0.2)]">
                         <p className="text-xl font-poppins font-bold text-[hsl(var(--pt-green))]">{item.n}</p>
-                        <p className="text-xs text-muted-foreground">{item.t}</p>
+                        <p className="text-xs text-ink-muted">{item.t}</p>
                       </div>
                     ))}
                   </div>
@@ -323,7 +323,7 @@ export default function ForFamilies() {
                 Your family deserves<br />
                 <span className="text-[hsl(var(--pt-green))]">a spotless, safe home.</span>
               </h2>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              <p className="text-ink-muted text-lg mb-8 leading-relaxed">
                 Trusted by thousands of families. Background-checked cleaners. Child-safe options. Peace of mind guaranteed.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

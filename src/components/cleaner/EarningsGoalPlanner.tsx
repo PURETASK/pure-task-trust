@@ -89,7 +89,7 @@ export function EarningsGoalPlanner({ cleanerId, currentGoal, earnings }: Earnin
       <CardContent className="space-y-4">
         {editing ? (
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">$</span>
+            <span className="text-ink-muted text-sm">$</span>
             <Input
               type="number"
               value={inputVal}
@@ -108,7 +108,7 @@ export function EarningsGoalPlanner({ cleanerId, currentGoal, earnings }: Earnin
         ) : goal === 0 ? (
           <button
             onClick={() => setEditing(true)}
-            className="w-full text-center py-4 border-2 border-dashed border-primary/30 rounded-xl text-sm text-muted-foreground hover:border-primary/60 hover:text-foreground transition-colors"
+            className="w-full text-center py-4 border-2 border-dashed border-primary/30 rounded-xl text-sm text-ink-muted hover:border-primary/60 hover:text-foreground transition-colors"
           >
             + Set a monthly earnings goal
           </button>
@@ -117,7 +117,7 @@ export function EarningsGoalPlanner({ cleanerId, currentGoal, earnings }: Earnin
             <div className="flex items-end justify-between">
               <div>
                 <span className="text-3xl font-bold">${mtdEarnings.toFixed(0)}</span>
-                <span className="text-muted-foreground text-sm ml-1">/ ${goal} goal</span>
+                <span className="text-ink-muted text-sm ml-1">/ ${goal} goal</span>
               </div>
               {trajectory && (
                 <Badge variant="secondary" className={`gap-1 ${trajectory.color}`}>
@@ -127,7 +127,7 @@ export function EarningsGoalPlanner({ cleanerId, currentGoal, earnings }: Earnin
               )}
             </div>
             <Progress value={progress} className="h-2.5" />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-ink-muted">
               {progress >= 100
                 ? "🎉 Goal reached this month — amazing work!"
                 : `$${(goal - mtdEarnings).toFixed(0)} remaining to reach your goal`}

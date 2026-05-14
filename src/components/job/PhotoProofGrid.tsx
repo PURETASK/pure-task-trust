@@ -43,7 +43,7 @@ export function PhotoProofGrid({ photos, className }: PhotoProofGridProps) {
   if (!photos.length) {
     return (
       <div className={cn("p-8 bg-secondary/50 rounded-xl text-center", className)}>
-        <p className="text-muted-foreground">No photos available</p>
+        <p className="text-ink-muted">No photos available</p>
       </div>
     );
   }
@@ -94,7 +94,7 @@ export function PhotoProofGrid({ photos, className }: PhotoProofGridProps) {
 
         {/* Photo label if provided */}
         {currentPair.label && (
-          <p className="text-xs text-center text-muted-foreground mt-2">
+          <p className="text-xs text-center text-ink-muted mt-2">
             {currentPair.label}
           </p>
         )}

@@ -111,7 +111,7 @@ export function MilestoneTracker() {
           </div>
           <div>
             <h2 className="font-bold text-base">Milestones & Achievements</h2>
-            <p className="text-xs text-muted-foreground">Track your progress and earn rewards</p>
+            <p className="text-xs text-ink-muted">Track your progress and earn rewards</p>
           </div>
         </div>
         <Badge className="bg-warning/15 text-warning border-warning/40 border text-xs font-bold">
@@ -141,7 +141,7 @@ export function MilestoneTracker() {
                 }`}>
                   {m.unlocked
                     ? <Icon className={`h-5 w-5 ${m.color.icon}`} />
-                    : <Lock className="h-4 w-4 text-muted-foreground/50" />
+                    : <Lock className="h-4 w-4 text-ink-muted/50" />
                   }
                 </div>
 
@@ -152,12 +152,12 @@ export function MilestoneTracker() {
                       <Badge className={`text-[10px] h-4 px-1.5 border ${m.color.badge}`}>✓ Unlocked</Badge>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">{m.description}</p>
+                  <p className="text-xs text-ink-muted mb-2">{m.description}</p>
 
                   {!m.unlocked && (
                     <div className="space-y-1 mb-2">
                       <Progress value={progress} className="h-1.5" />
-                      <p className="text-[11px] text-muted-foreground">{m.current} / {m.target}</p>
+                      <p className="text-[11px] text-ink-muted">{m.current} / {m.target}</p>
                     </div>
                   )}
 

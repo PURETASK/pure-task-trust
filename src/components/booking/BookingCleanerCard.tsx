@@ -58,7 +58,7 @@ export function BookingCleanerCard({
             </Badge>
           )}
         </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap mt-0.5">
+        <div className="flex items-center gap-2 text-xs text-ink-muted flex-wrap mt-0.5">
           {rating != null && (
             <span className="flex items-center gap-0.5">
               <Star className="h-3 w-3 text-warning fill-warning" />

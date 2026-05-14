@@ -75,7 +75,7 @@ function BlockRow({ block, onUpdate, onDelete }: {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-muted-foreground text-sm font-medium">to</span>
+          <span className="text-ink-muted text-sm font-medium">to</span>
           <Select
             value={draft.end_time}
             onValueChange={(v) => setDraft((d) => ({ ...d, end_time: v }))}
@@ -100,7 +100,7 @@ function BlockRow({ block, onUpdate, onDelete }: {
           onClick={handleCancel}
           className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors shrink-0"
         >
-          <X className="h-4 w-4 text-muted-foreground" />
+          <X className="h-4 w-4 text-ink-muted" />
         </button>
       </motion.div>
     );
@@ -118,7 +118,7 @@ function BlockRow({ block, onUpdate, onDelete }: {
         />
         <div className={cn(
           "flex items-center gap-1.5 text-sm font-medium",
-          !block.is_active && "text-muted-foreground line-through"
+          !block.is_active && "text-ink-muted line-through"
         )}>
           <Clock className="h-3.5 w-3.5 text-primary" />
           {to12h(block.start_time)} – {to12h(block.end_time)}
@@ -184,7 +184,7 @@ export function AvailabilityEditor() {
           </div>
           <div>
             <p className="font-poppins font-bold text-base text-primary">Weekly Hours</p>
-            <p className="text-xs text-muted-foreground">Tap ✏️ to edit times on any row</p>
+            <p className="text-xs text-ink-muted">Tap ✏️ to edit times on any row</p>
           </div>
         </div>
 
@@ -291,12 +291,12 @@ export function AvailabilityEditor() {
             )}>
               <span className={cn(
                 "font-bold text-sm",
-                blocks.length > 0 ? "text-success" : "text-muted-foreground"
+                blocks.length > 0 ? "text-success" : "text-ink-muted"
               )}>
                 {day}
               </span>
               {blocks.length === 0 ? (
-                <Badge className="bg-muted text-muted-foreground border border-border/40 rounded-full text-xs">
+                <Badge className="bg-muted text-ink-muted border border-border/40 rounded-full text-xs">
                   Not Available
                 </Badge>
               ) : (

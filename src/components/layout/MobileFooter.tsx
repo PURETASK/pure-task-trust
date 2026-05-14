@@ -24,7 +24,7 @@ export function MobileFooter() {
 
   return (
     <footer className="md:hidden py-4 px-4 border-t border-border bg-background/95 text-center">
-      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground flex-wrap">
+      <div className="flex items-center justify-center gap-4 text-xs text-ink-muted flex-wrap">
         <span>© {currentYear} PureTask</span>
         <FooterLink to="/legal" className={cn("hover:text-foreground transition-colors", roleColor + "/70 hover:" + roleColor)}>
           Privacy

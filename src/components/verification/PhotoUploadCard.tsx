@@ -54,7 +54,7 @@ export function PhotoUploadCard({ jobId, type, title }: PhotoUploadCardProps) {
       <CardContent className="space-y-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-32">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-ink-muted" />
           </div>
         ) : (
           <>
@@ -88,8 +88,8 @@ export function PhotoUploadCard({ jobId, type, title }: PhotoUploadCardProps) {
             {/* Empty state */}
             {typePhotos.length === 0 && !preview && (
               <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-lg">
-                <ImageIcon className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground mb-4">
+                <ImageIcon className="h-10 w-10 text-ink-muted mb-2" />
+                <p className="text-sm text-ink-muted mb-4">
                   No {type} photos yet
                 </p>
               </div>

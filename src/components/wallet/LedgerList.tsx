@@ -34,7 +34,7 @@ export function LedgerList({
     return onBuyCredits ? (
       <EmptyTransactions onBuy={onBuyCredits} />
     ) : (
-      <div className="py-8 text-center text-muted-foreground">
+      <div className="py-8 text-center text-ink-muted">
         No transactions yet
       </div>
     );
@@ -83,7 +83,7 @@ function TransactionItem({ transaction }: { transaction: Transaction }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-medium truncate">{description}</p>
-        <p className="text-sm text-muted-foreground">{date}</p>
+        <p className="text-sm text-ink-muted">{date}</p>
       </div>
       <div className="text-right">
         <p

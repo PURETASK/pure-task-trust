@@ -64,8 +64,8 @@ export function TrustQueueItem({ item, onResolve, onDismiss, isActing }: TrustQu
           <Badge variant="outline" className="text-xs capitalize">{item.subject_role}</Badge>
         </div>
         <p className="text-sm font-medium">{item.subject_name}</p>
-        {item.description && <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>}
-        <p className="text-xs text-muted-foreground mt-1">
+        {item.description && <p className="text-xs text-ink-muted mt-0.5">{item.description}</p>}
+        <p className="text-xs text-ink-muted mt-1">
           {format(new Date(item.created_at), "MMM d, yyyy 'at' HH:mm")}
         </p>
       </div>
@@ -90,7 +90,7 @@ export function TrustQueueItem({ item, onResolve, onDismiss, isActing }: TrustQu
         <Button
           size="sm"
           variant="ghost"
-          className="gap-1 text-xs text-muted-foreground"
+          className="gap-1 text-xs text-ink-muted"
           onClick={() => onDismiss(item.id)}
           disabled={isActing}
         >

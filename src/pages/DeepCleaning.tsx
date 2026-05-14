@@ -44,7 +44,7 @@ export default function DeepCleaning() {
               Top-to-bottom{" "}
               <span className="bg-gradient-to-r from-[hsl(var(--pt-purple))] to-primary bg-clip-text text-transparent">deep clean</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+            <p className="text-lg sm:text-xl text-ink-muted max-w-2xl mx-auto mb-8">
               Everything in a standard clean plus inside appliances, baseboards, light fixtures, grout scrubbing, and every hard-to-reach surface. Verified cleaners with photo proof.
             </p>
             <Button size="lg" asChild className="rounded-2xl h-14 px-8 shadow-elevated">
@@ -57,13 +57,13 @@ export default function DeepCleaning() {
       <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">What deep cleaning covers</h2>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+          <p className="text-ink-muted text-center max-w-xl mx-auto mb-12">
             Deep cleaning includes every standard clean task plus detailed attention to areas that accumulate grime over time.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {DEEP_TASKS.map((task, i) => (
               <motion.div key={task} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}>
-                <Card className="border-2 border-border/50 rounded-2xl">
+                <Card className="border border-hairline-soft/50 rounded-2xl">
                   <CardContent className="p-4 flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-[hsl(var(--pt-purple))] flex-shrink-0 mt-0.5" />
                     <span className="text-sm font-medium">{task}</span>
@@ -99,7 +99,7 @@ export default function DeepCleaning() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-[hsl(var(--pt-purple)/0.05)] via-background to-background">
         <div className="container text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Book your deep clean today</h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Verified cleaners. GPS check-ins. Photo proof of every surface. Escrow protection until you approve.</p>
+          <p className="text-ink-muted mb-8 max-w-lg mx-auto">Verified cleaners. GPS check-ins. Photo proof of every surface. Escrow protection until you approve.</p>
           <Button size="lg" asChild className="rounded-2xl h-14 px-10 shadow-elevated">
             <Link to="/book">Get Started <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>

@@ -96,7 +96,7 @@ export default function ForProfessionals() {
 
             <motion.p
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.18 }}
-              className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
+              className="text-xl text-ink-muted mb-10 max-w-xl leading-relaxed"
             >
               You work hard. Let verified, reliable cleaners handle your home so you can focus on your career, your family, and actually enjoying your life.
             </motion.p>
@@ -141,7 +141,7 @@ export default function ForProfessionals() {
                   </div>
                   <p className="text-3xl font-poppins font-bold mb-1" style={{ color: `hsl(var(--${f.accent}))` }}>{f.stat}</p>
                   <p className="font-bold text-sm mb-1">{f.title}</p>
-                  <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
+                  <p className="text-ink-muted text-xs leading-relaxed">{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -160,7 +160,7 @@ export default function ForProfessionals() {
             <p className="text-[hsl(var(--pt-cyan))] font-bold text-sm tracking-widest uppercase mb-3">We Get It</p>
             <h2 className="text-4xl md:text-6xl font-poppins font-bold leading-tight max-w-2xl">
               Your current reality<br />
-              <span className="text-muted-foreground font-light italic">vs. life with PureTask.</span>
+              <span className="text-ink-muted font-light italic">vs. life with PureTask.</span>
             </h2>
           </motion.div>
 
@@ -172,15 +172,15 @@ export default function ForProfessionals() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="grid grid-cols-2 rounded-3xl overflow-hidden border border-border/60"
+                className="grid grid-cols-2 rounded-3xl overflow-hidden border border-hairline-soft"
               >
                 {/* Problem side */}
-                <div className="p-6 bg-destructive/5 border-r border-border/60">
+                <div className="p-6 bg-destructive/5 border-r border-hairline-soft">
                   <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
                     <card.front.icon className="h-4 w-4 text-destructive" />
                   </div>
                   <p className="text-xs font-poppins font-bold uppercase tracking-widest text-destructive mb-3">{card.front.label}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{card.front.text}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed">{card.front.text}</p>
                 </div>
                 {/* Solution side */}
                 <div className="p-6 bg-[hsl(var(--pt-cyan)/0.04)]">
@@ -206,7 +206,7 @@ export default function ForProfessionals() {
                 Get <span className="text-[hsl(var(--pt-cyan))]">4+ hours</span><br />
                 back every week.
               </h2>
-              <p className="text-muted-foreground leading-relaxed text-lg mb-8">
+              <p className="text-ink-muted leading-relaxed text-lg mb-8">
                 The average professional spends 4-6 hours a week on housework. Imagine what you could do with that time back — every single week.
               </p>
               <ul className="space-y-4">
@@ -242,7 +242,7 @@ export default function ForProfessionals() {
                   <div className="relative pt-8">
                     <p className="text-6xl md:text-8xl font-poppins font-bold text-[hsl(var(--pt-cyan))] mb-2">4+</p>
                     <p className="text-2xl font-bold mb-1">Hours Saved</p>
-                    <p className="text-muted-foreground mb-8">Every single week</p>
+                    <p className="text-ink-muted mb-8">Every single week</p>
                     <div className="grid grid-cols-3 gap-3 text-center">
                       {[
                         { n: '208+', t: 'hrs/year' },
@@ -251,7 +251,7 @@ export default function ForProfessionals() {
                       ].map((item) => (
                         <div key={item.t} className="rounded-2xl p-4 bg-card/60 border border-[hsl(var(--pt-cyan)/0.2)]">
                           <p className="text-2xl font-poppins font-bold text-[hsl(var(--pt-cyan))]">{item.n}</p>
-                          <p className="text-xs text-muted-foreground">{item.t}</p>
+                          <p className="text-xs text-ink-muted">{item.t}</p>
                         </div>
                       ))}
                     </div>
@@ -283,7 +283,7 @@ export default function ForProfessionals() {
                 Ready to reclaim<br />
                 <span className="text-[hsl(var(--pt-cyan))]">your weekends?</span>
               </h2>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              <p className="text-ink-muted text-lg mb-8 leading-relaxed">
                 Verified, reliable home cleaning that fits your schedule. Book in 60 seconds, cancel any time.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

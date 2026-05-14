@@ -29,10 +29,10 @@ export function GPSCheckinCard({ jobId, jobLat, jobLng, jobAddress }: GPSCheckin
       <CardContent className="space-y-4">
         {/* Job location */}
         <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-          <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+          <MapPin className="h-5 w-5 text-ink-muted mt-0.5" />
           <div>
             <p className="text-sm font-medium">Job Location</p>
-            <p className="text-sm text-muted-foreground">{jobAddress}</p>
+            <p className="text-sm text-ink-muted">{jobAddress}</p>
           </div>
         </div>
 
@@ -48,7 +48,7 @@ export function GPSCheckinCard({ jobId, jobLat, jobLng, jobAddress }: GPSCheckin
                 <Badge variant={lastCheckin.is_within_radius ? 'success' : 'secondary'} className="text-xs">
                   {lastCheckin.is_within_radius ? 'Verified' : `${lastCheckin.distance_from_job_meters}m away`}
                 </Badge>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-ink-muted mt-1">
                   {format(new Date(lastCheckin.created_at), 'h:mm a')}
                 </p>
               </div>
@@ -77,7 +77,7 @@ export function GPSCheckinCard({ jobId, jobLat, jobLng, jobAddress }: GPSCheckin
                 <Badge variant={lastCheckout.is_within_radius ? 'success' : 'secondary'} className="text-xs">
                   {lastCheckout.is_within_radius ? 'Verified' : `${lastCheckout.distance_from_job_meters}m away`}
                 </Badge>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-ink-muted mt-1">
                   {format(new Date(lastCheckout.created_at), 'h:mm a')}
                 </p>
               </div>
