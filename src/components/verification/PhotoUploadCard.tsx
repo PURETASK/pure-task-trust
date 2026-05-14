@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
-import { Camera, Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Camera, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PhotoBox, SectionLabel } from '@/components/wf';
 import { useJobPhotos, useUploadJobPhoto } from '@/hooks/useJobPhotos';
 
 interface PhotoUploadCardProps {
@@ -39,87 +39,70 @@ export function PhotoUploadCard({ jobId, type, title }: PhotoUploadCardProps) {
   }) || [];
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Camera className="h-5 w-5" />
-            {title || `${type === 'before' ? 'Before' : 'After'} Photos`}
-          </CardTitle>
-          {typePhotos.length > 0 && (
-            <Badge variant="success">{typePhotos.length} uploaded</Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <Loader2 className="h-6 w-6 animate-spin text-ink-muted" />
-          </div>
-        ) : (
-          <>
-            {/* Photo grid */}
-            {(typePhotos.length > 0 || preview) && (
-              <div className="grid grid-cols-2 gap-2">
-                {typePhotos.map((photo) => (
-                  <div key={photo.id} className="relative aspect-square rounded-lg overflow-hidden">
-                    <img 
-                      src={photo.photo_url} 
-                      alt={`${type} photo`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-                {preview && (
-                  <div className="relative aspect-square rounded-lg overflow-hidden">
-                    <img 
-                      src={preview} 
-                      alt="Uploading..."
-                      className="w-full h-full object-cover opacity-50"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Loader2 className="h-8 w-8 animate-spin" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {typePhotos.length === 0 && !preview && (
-              <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-lg">
-                <ImageIcon className="h-10 w-10 text-ink-muted mb-2" />
-                <p className="text-sm text-ink-muted mb-4">
-                  No {type} photos yet
-                </p>
-              </div>
-            )}
-
-            {/* Upload button */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-            />
-            <Button 
-              variant="outline" 
-              className="w-full gap-2"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploadPhoto.isPending}
-            >
-              {uploadPhoto.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="h-4 w-4" />
-              )}
-              Upload Photo
-            </Button>
-          </>
+    <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf p-4 sm:p-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <SectionLabel className="!mb-0 flex items-center gap-2">
+          <Camera className="h-3.5 w-3.5" />
+          {title || `${type === 'before' ? 'Before' : 'After'} Photos`}
+        </SectionLabel>
+        {typePhotos.length > 0 && (
+          <Badge variant="success">{typePhotos.length} uploaded</Badge>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-32">
+          <Loader2 className="h-6 w-6 animate-spin text-ink-muted" />
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-3 gap-2">
+            {typePhotos.map((photo) => (
+              <PhotoBox
+                key={photo.id}
+                state="done"
+                src={photo.photo_url}
+                onClick={() => window.open(photo.photo_url, '_blank')}
+              />
+            ))}
+            {preview && (
+              <div className="relative">
+                <PhotoBox src={preview} state="default" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-md">
+                  <Loader2 className="h-6 w-6 animate-spin text-white" />
+                </div>
+              </div>
+            )}
+            <PhotoBox
+              state={typePhotos.length === 0 ? 'dashed' : 'default'}
+              label="Add"
+              onClick={() => fileInputRef.current?.click()}
+            />
+          </div>
+
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+          />
+          <Button
+            variant="outline"
+            className="w-full gap-2 rounded-xl"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadPhoto.isPending}
+          >
+            {uploadPhoto.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            Upload Photo
+          </Button>
+        </>
+      )}
+    </div>
   );
 }
