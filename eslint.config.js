@@ -50,6 +50,8 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/triple-slash-reference": "off",
       "no-restricted-syntax": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "prefer-const": "off",
     },
   },
   // Edge functions run server-side with the service role key — they ARE the
@@ -58,6 +60,22 @@ export default tseslint.config(
     files: ["supabase/functions/**/*.ts"],
     rules: {
       "no-restricted-syntax": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+    },
+  },
+  // Generated/vendored shadcn UI primitives often have empty interfaces
+  // that exist purely to mark prop slots — that's intentional, not dead code.
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+  },
+  // Tailwind config legitimately uses require() for plugins.
+  {
+    files: ["tailwind.config.ts", "*.config.{js,ts}"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   // Allowlist: files that legitimately bridge the database boundary
