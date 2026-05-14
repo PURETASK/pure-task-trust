@@ -35,16 +35,16 @@ export function StepCleaner({ cleaners, isLoading, selectedCleanerId, onSelect }
 
   if (!top.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-aero p-8 text-center">
+      <div className="rounded-2xl border border-dashed border-hairline-soft p-8 text-center">
         <p className="text-sm font-medium text-foreground">No cleaners available right now</p>
-        <p className="text-xs text-aero-soft mt-1">Try a different date or time.</p>
+        <p className="text-xs text-ink-muted mt-1">Try a different date or time.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-aero-soft">
+      <p className="text-xs text-ink-muted">
         Hand-picked from {cleaners?.length || 0} pros — ranked by reliability and reviews.
       </p>
       {top.map((c, idx) => {
@@ -64,8 +64,8 @@ export function StepCleaner({ cleaners, isLoading, selectedCleanerId, onSelect }
             className={cn(
               "w-full text-left rounded-2xl border p-4 transition-all flex items-start gap-4",
               selected
-                ? "border-aero-cyan bg-aero-bg shadow-aero ring-2 ring-aero-cyan/20"
-                : "border-aero bg-aero-card hover:border-aero-cyan/40 hover:shadow-sm"
+                ? "border-hairline-soft-cyan bg-aero-bg shadow-wf ring-2 ring-aero-cyan/20"
+                : "border-hairline-soft bg-app-surface hover:border-hairline-soft-cyan/40 hover:shadow-sm"
             )}
           >
             <div className="relative flex-shrink-0">
@@ -73,7 +73,7 @@ export function StepCleaner({ cleaners, isLoading, selectedCleanerId, onSelect }
                 <img
                   src={c.profilePhotoUrl}
                   alt={c.name}
-                  className="h-14 w-14 rounded-full object-cover border-2 border-aero-card shadow-sm"
+                  className="h-14 w-14 rounded-full object-cover border-2 border-hairline-soft-card shadow-sm"
                 />
               ) : (
                 <div className="h-14 w-14 rounded-full bg-gradient-aero text-white font-poppins font-semibold flex items-center justify-center text-base shadow-sm">
@@ -102,9 +102,9 @@ export function StepCleaner({ cleaners, isLoading, selectedCleanerId, onSelect }
                 )}
               </div>
               {c.professionalHeadline && (
-                <p className="text-xs text-aero-soft mt-0.5 line-clamp-1">{c.professionalHeadline}</p>
+                <p className="text-xs text-ink-muted mt-0.5 line-clamp-1">{c.professionalHeadline}</p>
               )}
-              <div className="mt-2 flex items-center gap-3 text-xs text-aero-soft flex-wrap">
+              <div className="mt-2 flex items-center gap-3 text-xs text-ink-muted flex-wrap">
                 {c.avgRating != null && (
                   <span className="inline-flex items-center gap-1">
                     <Star className="h-3 w-3 fill-aero-cyan text-aero-cyan" />

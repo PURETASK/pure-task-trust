@@ -32,7 +32,7 @@ export function RecurringUpsellModal({ storageKey = "puretask:show-recurring-ups
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md rounded-3xl border-aero">
+      <DialogContent className="sm:max-w-md rounded-3xl border-hairline-soft">
         <DialogHeader className="items-center text-center">
           <div className="relative h-24 w-24 mb-2">
             <img
@@ -45,7 +45,7 @@ export function RecurringUpsellModal({ storageKey = "puretask:show-recurring-ups
           <DialogTitle className="font-poppins text-xl">
             Make it a regular thing?
           </DialogTitle>
-          <DialogDescription className="text-aero-soft">
+          <DialogDescription className="text-ink-muted">
             Set up recurring cleanings and save on every visit. Skip or cancel anytime.
           </DialogDescription>
         </DialogHeader>
@@ -58,8 +58,8 @@ export function RecurringUpsellModal({ storageKey = "puretask:show-recurring-ups
               onClick={() => setFrequency(f.id)}
               className={`w-full text-left rounded-2xl border p-4 flex items-center justify-between transition-all ${
                 frequency === f.id
-                  ? "border-aero-cyan bg-aero-bg shadow-aero ring-2 ring-aero-cyan/20"
-                  : "border-aero bg-aero-card hover:border-aero-cyan/40"
+                  ? "border-hairline-soft-cyan bg-aero-bg shadow-wf ring-2 ring-aero-cyan/20"
+                  : "border-hairline-soft bg-app-surface hover:border-hairline-soft-cyan/40"
               }`}
             >
               <div className="flex items-center gap-3">

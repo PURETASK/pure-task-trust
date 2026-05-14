@@ -44,13 +44,13 @@ export function StepDateTime({
   return (
     <div className="space-y-6">
       {sameDay && (
-        <div className="flex items-start gap-3 rounded-2xl border border-aero-cyan/40 bg-aero-bg p-4">
+        <div className="flex items-start gap-3 rounded-2xl border border-hairline-soft-cyan/40 bg-aero-bg p-4">
           <div className="h-9 w-9 rounded-xl bg-gradient-aero flex items-center justify-center text-white flex-shrink-0">
             <Zap className="h-4 w-4" />
           </div>
           <div className="text-sm">
             <p className="font-medium text-foreground">Same-day booking</p>
-            <p className="text-aero-soft text-xs mt-0.5 leading-relaxed">
+            <p className="text-ink-muted text-xs mt-0.5 leading-relaxed">
               A +${rushFeeCredits} rush fee applies. Requires {sameDayMinNoticeHours}h notice.
             </p>
           </div>
@@ -58,7 +58,7 @@ export function StepDateTime({
       )}
 
       <FlowField label="Pick a date">
-        <div className="rounded-2xl border border-aero bg-aero-card p-2 sm:p-3 flex justify-center">
+        <div className="rounded-2xl border border-hairline-soft bg-app-surface p-2 sm:p-3 flex justify-center">
           <Calendar
             mode="single"
             selected={date}
@@ -78,7 +78,7 @@ export function StepDateTime({
             : undefined}
         >
           {availableSlots.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-aero p-6 text-center text-sm text-aero-soft">
+            <div className="rounded-2xl border border-dashed border-hairline-soft p-6 text-center text-sm text-ink-muted">
               No times available today. Please pick a future date.
             </div>
           ) : (
@@ -102,25 +102,25 @@ export function StepDateTime({
         </FlowField>
       )}
 
-      <label className="flex items-start gap-3 p-3 rounded-2xl border border-aero bg-aero-card cursor-pointer hover:border-aero-cyan/40 transition-colors">
+      <label className="flex items-start gap-3 p-3 rounded-2xl border border-hairline-soft bg-app-surface cursor-pointer hover:border-hairline-soft-cyan/40 transition-colors">
         <input
           type="checkbox"
           checked={flexible}
           onChange={(e) => onFlexibleChange(e.target.checked)}
-          className="mt-1 h-4 w-4 rounded border-aero text-aero-trust focus:ring-aero-cyan"
+          className="mt-1 h-4 w-4 rounded border-hairline-soft text-aero-trust focus:ring-aero-cyan"
         />
         <div className="text-sm">
           <p className="font-medium text-foreground">I'm flexible on timing</p>
-          <p className="text-xs text-aero-soft mt-0.5">
+          <p className="text-xs text-ink-muted mt-0.5">
             Cleaners may suggest a slot ±2 hours from your preferred time.
           </p>
         </div>
       </label>
 
       {date && time && (
-        <div className="rounded-2xl border border-aero-cyan/30 bg-gradient-to-br from-aero-bg to-transparent p-4 flex items-center justify-between">
+        <div className="rounded-2xl border border-hairline-soft-cyan/30 bg-gradient-to-br from-aero-bg to-transparent p-4 flex items-center justify-between">
           <div>
-            <p className="text-xs text-aero-soft">Scheduled for</p>
+            <p className="text-xs text-ink-muted">Scheduled for</p>
             <p className="font-poppins font-semibold text-foreground">
               {format(date, "EEE, MMM d")} at {formatTime(time)}
             </p>

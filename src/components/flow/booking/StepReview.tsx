@@ -30,12 +30,12 @@ function ReviewBlock({
   icon: Icon, label, value, onEdit,
 }: { icon: typeof MapPin; label: string; value: React.ReactNode; onEdit: () => void }) {
   return (
-    <div className="flex items-start gap-3 py-3 border-b border-aero last:border-0">
+    <div className="flex items-start gap-3 py-3 border-b border-hairline-soft last:border-0">
       <div className="h-9 w-9 rounded-xl bg-aero-bg text-aero-trust flex items-center justify-center flex-shrink-0">
         <Icon className="h-4 w-4" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs uppercase tracking-wide text-aero-soft font-medium">{label}</p>
+        <p className="text-xs uppercase tracking-wide text-ink-muted font-medium">{label}</p>
         <div className="text-sm font-medium text-foreground mt-0.5">{value}</div>
       </div>
       <button
@@ -59,14 +59,14 @@ export function StepReview({
   return (
     <div className="space-y-5">
       {hasContact && (
-        <div className="rounded-2xl border border-aero bg-aero-card p-4 flex items-start gap-3">
+        <div className="rounded-2xl border border-hairline-soft bg-app-surface p-4 flex items-start gap-3">
           <div className="h-9 w-9 rounded-xl bg-aero-bg text-aero-trust flex items-center justify-center flex-shrink-0">
             <UserCheck className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0 text-sm">
-            <p className="text-xs uppercase tracking-wide text-aero-soft font-medium">Booking as</p>
+            <p className="text-xs uppercase tracking-wide text-ink-muted font-medium">Booking as</p>
             <p className="font-medium text-foreground mt-0.5 truncate">{clientName || "—"}</p>
-            <p className="text-xs text-aero-soft mt-0.5 truncate">
+            <p className="text-xs text-ink-muted mt-0.5 truncate">
               {[clientEmail, clientPhone].filter(Boolean).join(" · ") || "—"}
             </p>
           </div>
@@ -79,7 +79,7 @@ export function StepReview({
         </div>
       )}
 
-      <div className="rounded-2xl border border-aero bg-aero-card overflow-hidden">
+      <div className="rounded-2xl border border-hairline-soft bg-app-surface overflow-hidden">
         <div className="px-5 py-1">
           <ReviewBlock
             icon={Sparkles}
@@ -120,7 +120,7 @@ export function StepReview({
                     return a ? (
                       <span
                         key={id}
-                        className="text-xs px-2 py-0.5 rounded-full bg-aero-bg text-foreground border border-aero"
+                        className="text-xs px-2 py-0.5 rounded-full bg-aero-bg text-foreground border border-hairline-soft"
                       >
                         {a.icon} {a.name}
                       </span>
@@ -147,11 +147,11 @@ export function StepReview({
         />
       </FlowField>
 
-      <div className="flex items-start gap-3 rounded-2xl border border-aero-cyan/30 bg-gradient-to-br from-aero-bg to-transparent p-4">
+      <div className="flex items-start gap-3 rounded-2xl border border-hairline-soft-cyan/30 bg-gradient-to-br from-aero-bg to-transparent p-4">
         <Shield className="h-5 w-5 text-aero-trust flex-shrink-0 mt-0.5" />
         <div className="text-sm">
           <p className="font-medium text-foreground">Held in escrow until you approve</p>
-          <p className="text-xs text-aero-soft mt-1 leading-relaxed">
+          <p className="text-xs text-ink-muted mt-1 leading-relaxed">
             Your credits are held securely. We only release them after the job is complete and you approve.
             Final charge reflects actual hours worked — unused credits are returned automatically.
           </p>
