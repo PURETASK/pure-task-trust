@@ -222,9 +222,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       return {};
-    } catch (err: any) {
+    } catch (err: unknown) {
       localStorage.removeItem('pendingOAuthRole');
-      return { error: err?.message || 'Google login failed' };
+      return { error: err instanceof Error ? err.message : 'Google login failed' };
     }
   };
 
