@@ -26,6 +26,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { MessageJobButton } from "@/components/messaging/MessageJobButton";
 import type { CleanerJobWithClient } from "@/hooks/useCleanerProfile";
+import { Pill, SectionLabel } from "@/components/wf";
 
 const TYPE_EMOJI: Record<string, string> = {
   standard: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
@@ -369,21 +370,21 @@ function CompactJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border-2 border-border/60 overflow-hidden transition-all hover:shadow-md" style={{ background: "hsl(var(--card))" }}>
+      className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf overflow-hidden transition-all hover:shadow-wf-hover">
       <div className="p-4 flex items-center gap-3">
-        <div className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0 border-2 border-border/60 bg-muted/40">{emoji}</div>
+        <div className="h-11 w-11 rounded-2xl flex items-center justify-center text-xl shrink-0 border border-hairline-soft bg-app-sunken">{emoji}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-bold text-sm capitalize">{(job.cleaning_type || "standard").replace(/_/g, " ")} Clean</span>
           </div>
-          <div className="flex flex-wrap gap-2 mt-1 text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-2 mt-1 text-xs text-ink-muted">
             {date && <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{format(date, "EEE, MMM d")}</span>}
             {date && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{format(date, "h:mm a")}</span>}
-            <span className="flex items-center gap-1 text-success font-semibold"><DollarSign className="h-3 w-3" />${net}</span>
+            <span className="flex items-center gap-1 text-state-success-fg font-semibold"><DollarSign className="h-3 w-3" />${net}</span>
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
-            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-            <span className="text-xs text-muted-foreground truncate">{address}</span>
+            <MapPin className="h-3 w-3 text-ink-muted shrink-0" />
+            <span className="text-xs text-ink-muted truncate">{address}</span>
           </div>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
@@ -406,12 +407,12 @@ function CompactJobCard({ job, tier }: { job: CleanerJobWithClient; tier: string
 // ─── Empty state ─────────────────────────────────────────────────────────────
 function EmptyTab({ icon: Icon, title, subtitle }: { icon: React.ElementType; title: string; subtitle: string }) {
   return (
-    <div className="rounded-3xl border-2 border-dashed border-muted-foreground/20 py-16 text-center">
-      <div className="h-16 w-16 rounded-3xl bg-muted flex items-center justify-center mx-auto mb-4">
-        <Icon className="h-8 w-8 text-muted-foreground/30" />
+    <div className="rounded-3xl border border-dashed border-hairline-soft bg-app-surface py-16 text-center">
+      <div className="h-16 w-16 rounded-3xl bg-app-sunken flex items-center justify-center mx-auto mb-4">
+        <Icon className="h-8 w-8 text-ink-muted/40" />
       </div>
-      <p className="font-bold text-muted-foreground mb-1">{title}</p>
-      <p className="text-sm text-muted-foreground">{subtitle}</p>
+      <p className="font-bold mb-1">{title}</p>
+      <p className="text-sm text-ink-muted">{subtitle}</p>
     </div>
   );
 }
@@ -440,16 +441,18 @@ export default function CleanerJobs() {
   return (
     <CleanerLayout>
       <Helmet><title>Jobs | PureTask</title></Helmet>
-      <div className="space-y-5 max-w-3xl">
+      <div className="space-y-6 max-w-3xl">
 
         {/* HEADER */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center justify-between gap-4 flex-wrap">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf p-6">
+          <SectionLabel>Cleaner</SectionLabel>
+          <div className="flex items-center justify-between gap-4 flex-wrap mt-2">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-poppins font-bold flex items-center gap-2">
-                <Briefcase className="h-7 w-7 text-success" /> Jobs
+              <h1 className="text-3xl sm:text-4xl font-poppins font-bold tracking-tight flex items-center gap-2">
+                <Briefcase className="h-7 w-7 text-primary" /> Jobs
               </h1>
-              <p className="text-muted-foreground text-sm mt-0.5">Accept, execute, and track your cleaning jobs</p>
+              <p className="text-ink-muted text-sm mt-1">Accept, execute, and track your cleaning jobs</p>
             </div>
           </div>
         </motion.div>
@@ -460,7 +463,7 @@ export default function CleanerJobs() {
           </div>
         ) : (
           <Tabs defaultValue={defaultTab} className="space-y-4">
-            <TabsList className="w-full grid grid-cols-5 h-auto p-1 gap-1">
+            <TabsList className="w-full grid grid-cols-5 h-auto p-1 gap-1 bg-app-surface border border-hairline-soft rounded-2xl">
               <TabsTrigger value="offers" className="text-xs sm:text-sm py-2 gap-1 data-[state=active]:bg-warning/10 data-[state=active]:text-warning">
                 <Bell className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Offers</span>
@@ -529,15 +532,15 @@ export default function CleanerJobs() {
               ) : (
                 awaitingApproval.map(job => (
                   <motion.div key={job.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    className="rounded-2xl border-2 border-primary/40 overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+                    className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf overflow-hidden">
                     <div className="p-4 flex items-center gap-3">
-                      <div className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0 border-2 border-primary/30 bg-primary/8">⏳</div>
+                      <div className="h-11 w-11 rounded-2xl flex items-center justify-center text-xl shrink-0 border border-primary/30 bg-primary/10">⏳</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm capitalize">{(job.cleaning_type || "standard").replace(/_/g, " ")} Clean</span>
-                          <Badge className="bg-primary/10 text-primary border-primary/30 text-xs">Awaiting Approval</Badge>
+                          <Pill variant="info">Awaiting Approval</Pill>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-xs text-ink-muted mt-1">
                           {job.client?.first_name && `${job.client.first_name} · `}
                           Submitted — payment releases upon client approval
                         </p>
