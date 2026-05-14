@@ -44,40 +44,33 @@ export default function CleanerDashboard() {
   const tip = TIPS[tipIdx];
 
   return (
-    <main className="flex-1 bg-background min-h-screen">
+    <main className="flex-1 bg-app-canvas min-h-screen">
       <Helmet><title>Cleaner Dashboard | PureTask</title></Helmet>
-      <div className={`relative overflow-hidden bg-gradient-to-br ${tierStyle.gradient} border-b border-border/50`}>
-        <div className="absolute inset-0 opacity-[0.03]">
-          <img src={cleanerHeroImg} alt="" className="w-full h-full object-cover object-top" loading="lazy" />
-        </div>
+      <div className="relative bg-app-surface border-b border-hairline-soft">
         <div className="relative container px-4 sm:px-6 py-5 sm:py-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-5">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
               <div className="flex items-center gap-2.5 sm:gap-3 mb-2">
-                <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-2xl ${tierStyle.bg} flex items-center justify-center font-poppins font-bold text-lg sm:text-xl ${tierStyle.text} flex-shrink-0`}>
+                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-[10px] bg-app-canvas border border-hairline flex items-center justify-center font-semibold text-base sm:text-lg text-ink flex-shrink-0">
                   {displayName.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium">Welcome back 👋</p>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-poppins font-bold tracking-tight">
-                    Hey, <span className="text-gradient-aero">{displayName}!</span>
+                  <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.08em] uppercase text-ink-faint">Welcome back</p>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-ink">
+                    Hey, {displayName}!
                   </h1>
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge className={`${tierStyle.bg} ${tierStyle.text} ${tierStyle.border} capitalize border font-semibold text-xs`}>
-                  <Award className="h-3 w-3 mr-1" />{tier} Tier
-                </Badge>
+                <Pill variant="gold" className="capitalize"><Award className="h-3 w-3" />{tier} Tier</Pill>
                 {profile?.reliability_score && (
-                  <Badge variant="outline" className="border-border/60 text-xs">
-                    <Shield className="h-3 w-3 mr-1 text-success" />{profile.reliability_score}% Reliable
-                  </Badge>
+                  <Pill variant="success"><Shield className="h-3 w-3" />{profile.reliability_score}% Reliable</Pill>
                 )}
               </div>
             </motion.div>
 
             <div className="flex gap-2 sm:gap-3">
-              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none bg-gradient-aero shadow-aero hover:shadow-aero-lg border-0 font-semibold">
+              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
                 <Link to="/cleaner/jobs"><Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />My Jobs</Link>
               </Button>
             </div>
@@ -92,7 +85,7 @@ export default function CleanerDashboard() {
 
           {/* Stats Grid */}
           <section>
-            <h2 className="text-[10px] sm:text-xs font-bold mb-3 sm:mb-4 text-muted-foreground uppercase tracking-wide">This Week</h2>
+            <SectionLabel>This Week</SectionLabel>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
               {isLoadingStats ? (
                 [1,2,3,4].map(i => <Skeleton key={i} className="h-20 sm:h-24 rounded-2xl" />)
@@ -143,22 +136,20 @@ export default function CleanerDashboard() {
 
           {/* Tip of the day */}
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Card className="bg-gradient-to-r from-aero-trust/5 via-aero-electric/5 to-aero-cyan/10 border-aero-electric/20 rounded-3xl shadow-aero">
-              <CardContent className="p-3.5 sm:p-5 flex items-start gap-3 sm:gap-4">
-                <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>
-                <div>
-                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-primary mb-1 flex items-center gap-1">
-                    <Lightbulb className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Tip of the Day
-                  </p>
-                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{tip.text}</p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
+              <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.08em] uppercase text-ink-faint mb-1 flex items-center gap-1">
+                  <Lightbulb className="h-3 w-3" /> Tip of the Day
+                </p>
+                <p className="text-xs sm:text-sm text-ink leading-relaxed">{tip.text}</p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Gamification */}
           <section>
-            <h2 className="text-lg sm:text-xl font-poppins font-bold mb-3 sm:mb-4">🎯 Goals & Rewards</h2>
+            <SectionLabel>Goals & Rewards</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <GoalsCard />
               <StreakCard />
@@ -169,23 +160,19 @@ export default function CleanerDashboard() {
           {/* Smart Scheduling Suggestions */}
           {scheduleSuggestions && scheduleSuggestions.length > 0 && (
             <motion.section initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-base sm:text-xl font-poppins font-bold mb-3 sm:mb-4 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-warning" />Schedule Suggestions
-              </h2>
+              <SectionLabel>Schedule Suggestions</SectionLabel>
               <div className="space-y-2">
                 {scheduleSuggestions.slice(0, 3).map(s => (
-                  <Card key={s.dayOfWeek} className="border-warning/20 bg-warning/5">
-                    <CardContent className="p-3 sm:p-4 flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-warning/15 flex items-center justify-center flex-shrink-0">
-                        <Zap className="h-5 w-5 text-warning" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm">{s.dayName} · {s.startTime}–{s.endTime}</p>
-                        <p className="text-xs text-muted-foreground">{s.reason}</p>
-                      </div>
-                      <Badge variant="outline" className="text-xs border-warning/30 text-warning">{s.demandScore}% demand</Badge>
-                    </CardContent>
-                  </Card>
+                  <div key={s.dayOfWeek} className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf p-3 sm:p-4 flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-md bg-app-canvas border border-hairline flex items-center justify-center flex-shrink-0 text-state-warning-fg">
+                      <Zap className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-ink">{s.dayName} · {s.startTime}–{s.endTime}</p>
+                      <p className="text-xs text-ink-muted">{s.reason}</p>
+                    </div>
+                    <Pill variant="warning">{s.demandScore}% demand</Pill>
+                  </div>
                 ))}
                 <Button variant="outline" size="sm" asChild className="w-full rounded-xl mt-2">
                   <Link to="/cleaner/availability">Manage Availability</Link>
@@ -204,22 +191,18 @@ export default function CleanerDashboard() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: si * 0.05 }}
             >
-              <h2 className="text-base sm:text-xl font-poppins font-bold mb-3 sm:mb-4">{section.title}</h2>
+              <SectionLabel>{section.title}</SectionLabel>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
                 {section.items.map((item) => (
-                  <motion.div key={item.label} whileHover={{ y: -3, scale: 1.01 }} transition={{ type: "spring", stiffness: 400 }}>
-                    <Link to={item.href}>
-                      <Card className={`border ${section.color} hover:shadow-elevated transition-all duration-200 cursor-pointer h-full`}>
-                        <CardContent className="p-3 sm:p-4">
-                          <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${section.iconBg} flex items-center justify-center mb-2 sm:mb-3`}>
-                            <item.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${section.iconColor}`} />
-                          </div>
-                          <p className="font-semibold text-xs sm:text-sm leading-tight">{item.label}</p>
-                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-snug">{item.desc}</p>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  </motion.div>
+                  <Link key={item.label} to={item.href} className="group">
+                    <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf hover:shadow-wf-hover transition-shadow p-3 sm:p-4 h-full">
+                      <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-md bg-app-canvas border border-hairline flex items-center justify-center mb-2 sm:mb-3 text-ink-muted">
+                        <item.icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </div>
+                      <p className="font-semibold text-xs sm:text-sm leading-tight text-ink">{item.label}</p>
+                      <p className="text-[10px] sm:text-xs text-ink-muted mt-0.5 sm:mt-1 leading-snug">{item.desc}</p>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </motion.section>
