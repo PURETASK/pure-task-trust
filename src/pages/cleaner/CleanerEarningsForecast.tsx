@@ -12,7 +12,7 @@ export default function CleanerEarningsForecast() {
 
   const trendIcon = forecast?.trend === 'up' ? TrendingUp : forecast?.trend === 'down' ? TrendingDown : Minus;
   const TrendIcon = trendIcon;
-  const trendColor = forecast?.trend === 'up' ? 'text-success' : forecast?.trend === 'down' ? 'text-destructive' : 'text-muted-foreground';
+  const trendColor = forecast?.trend === 'up' ? 'text-success' : forecast?.trend === 'down' ? 'text-destructive' : 'text-ink-muted';
 
   const chartData = forecast ? [
     ...forecast.monthlyHistory.map(m => ({ ...m, type: 'actual' })),
@@ -26,7 +26,7 @@ export default function CleanerEarningsForecast() {
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">📊 Earnings Forecast</h1>
-            <p className="text-muted-foreground">AI-powered predictions based on your history and availability</p>
+            <p className="text-ink-muted">AI-powered predictions based on your history and availability</p>
           </div>
 
           {isLoading ? (
@@ -44,7 +44,7 @@ export default function CleanerEarningsForecast() {
                         <Target className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Predicted Next Month</p>
+                        <p className="text-xs text-ink-muted">Predicted Next Month</p>
                         <p className="text-2xl font-bold">${forecast.predictedNextMonth}</p>
                       </div>
                     </div>
@@ -61,7 +61,7 @@ export default function CleanerEarningsForecast() {
                         <DollarSign className="h-5 w-5 text-success" />
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Next 3 Months</p>
+                        <p className="text-xs text-ink-muted">Next 3 Months</p>
                         <p className="text-2xl font-bold">${forecast.predictedNext3Months}</p>
                       </div>
                     </div>
@@ -75,7 +75,7 @@ export default function CleanerEarningsForecast() {
                         <TrendIcon className={`h-5 w-5 ${trendColor}`} />
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Trend</p>
+                        <p className="text-xs text-ink-muted">Trend</p>
                         <p className="text-2xl font-bold capitalize">{forecast.trend}</p>
                       </div>
                     </div>
@@ -130,7 +130,7 @@ export default function CleanerEarningsForecast() {
                   <CardContent>
                     <div className="space-y-3">
                       {forecast.insights.map((insight, i) => (
-                        <p key={i} className="text-sm text-muted-foreground">{insight}</p>
+                        <p key={i} className="text-sm text-ink-muted">{insight}</p>
                       ))}
                     </div>
                   </CardContent>

@@ -288,7 +288,7 @@ export default function CleanerServiceAreas() {
         ) : !profile ? (
           <div className="rounded-3xl border-2 border-warning/40 bg-warning/5 p-6 text-center">
             <p className="font-semibold mb-1">Complete onboarding first</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-ink-muted">
               You need to finish your cleaner profile before setting service areas.
             </p>
           </div>
@@ -298,14 +298,14 @@ export default function CleanerServiceAreas() {
               className={`rounded-3xl border-2 ${rc.border} overflow-hidden`}
               style={{ background: "hsl(var(--card))" }}
             >
-              <div className="p-5 border-b border-border/40">
+              <div className="p-5 border-b border-hairline-soft">
                 <div className="flex items-center gap-3">
                   <div className={`h-10 w-10 rounded-xl ${rc.bg} flex items-center justify-center`}>
                     <Navigation className={`h-5 w-5 ${rc.text}`} />
                   </div>
                   <div>
                     <h2 className="font-bold text-base">Set Your Coverage Area</h2>
-                    <p className="text-xs text-muted-foreground">Enter a location and choose your travel radius</p>
+                    <p className="text-xs text-ink-muted">Enter a location and choose your travel radius</p>
                   </div>
                 </div>
               </div>
@@ -313,17 +313,17 @@ export default function CleanerServiceAreas() {
               <div className="p-5 space-y-5">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">City</Label>
+                    <Label className="text-xs font-semibold uppercase tracking-wide text-ink-muted">City</Label>
                     <Input placeholder="e.g., Austin" value={city} onChange={e => setCity(e.target.value)} className="rounded-xl" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">State</Label>
+                    <Label className="text-xs font-semibold uppercase tracking-wide text-ink-muted">State</Label>
                     <Input placeholder="e.g., TX" value={stateVal} onChange={e => setStateVal(e.target.value)} className="rounded-xl" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Zip Code <span className="text-muted-foreground/50 normal-case font-normal">(optional)</span>
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+                    Zip Code <span className="text-ink-muted/50 normal-case font-normal">(optional)</span>
                   </Label>
                   <Input placeholder="e.g., 78701" value={zipCode} onChange={e => setZipCode(e.target.value)} className="rounded-xl" />
                 </div>
@@ -336,7 +336,7 @@ export default function CleanerServiceAreas() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-3xl font-poppins font-bold ${rc.text}`}>{radiusMi}</span>
-                      <span className="text-sm text-muted-foreground">mi</span>
+                      <span className="text-sm text-ink-muted">mi</span>
                       <Badge variant="secondary" className="text-xs">{getRadiusLabel(radiusMi)}</Badge>
                     </div>
                   </div>
@@ -347,15 +347,15 @@ export default function CleanerServiceAreas() {
                     max={50}
                     step={5}
                   />
-                  <div className="flex justify-between text-[11px] text-muted-foreground">
+                  <div className="flex justify-between text-[11px] text-ink-muted">
                     <span>5 mi</span><span>50 mi</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Map className="h-3.5 w-3.5 text-muted-foreground" />
-                    <Label className="text-xs text-muted-foreground">
+                    <Map className="h-3.5 w-3.5 text-ink-muted" />
+                    <Label className="text-xs text-ink-muted">
                       Coverage preview — shaded area = your {radiusMi}-mile zone
                     </Label>
                   </div>
@@ -368,7 +368,7 @@ export default function CleanerServiceAreas() {
                   className={`w-full h-12 font-bold rounded-xl gap-2 transition-all ${
                     canSave
                       ? "bg-success hover:bg-success/90 text-white border-0 shadow-lg shadow-success/30"
-                      : "bg-muted/60 text-muted-foreground hover:bg-muted border-0"
+                      : "bg-muted/60 text-ink-muted hover:bg-muted border-0"
                   }`}
                   onClick={handleSave}
                   disabled={!canSave}
@@ -418,7 +418,7 @@ export default function CleanerServiceAreas() {
                           <div className={`h-14 w-14 rounded-full border-4 ${rc2.border} flex items-center justify-center ${rc2.bg} shrink-0`}>
                             <div className="text-center">
                               <p className={`text-sm font-poppins font-bold leading-none ${rc2.text}`}>{area.radius_miles || 10}</p>
-                              <p className="text-[9px] text-muted-foreground">mi</p>
+                              <p className="text-[9px] text-ink-muted">mi</p>
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
@@ -431,7 +431,7 @@ export default function CleanerServiceAreas() {
                             </p>
                             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                               <Badge variant="outline" className="text-[11px] h-5 border-success/40 text-success">Active</Badge>
-                              <span className="text-xs text-muted-foreground">{getRadiusLabel(area.radius_miles || 10)}</span>
+                              <span className="text-xs text-ink-muted">{getRadiusLabel(area.radius_miles || 10)}</span>
                             </div>
                           </div>
                         </div>

@@ -44,7 +44,7 @@ function PillSelect({
           className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
             selected.includes(o.value)
               ? `${color} shadow-sm`
-              : "bg-muted/50 text-muted-foreground border-border/50 hover:border-border"
+              : "bg-muted/50 text-ink-muted border-border/50 hover:border-border"
           }`}
         >
           {selected.includes(o.value) && <Check className="inline h-3 w-3 mr-1" />}
@@ -338,27 +338,27 @@ export default function CleanerProfile() {
             {/* Bottom: rate + fee stats */}
             <div className="grid grid-cols-3 divide-x divide-border/60 px-0">
               <div className="px-5 py-4 text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Rate Range</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mb-1">Rate Range</p>
                 <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>${hourlyRateRange.min}–${hourlyRateRange.max}</p>
-                <p className="text-xs text-muted-foreground font-medium">per hour</p>
+                <p className="text-xs text-ink-muted font-medium">per hour</p>
               </div>
               <div className="px-5 py-4 text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Platform Fee</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mb-1">Platform Fee</p>
                 <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>{tierConfig.platformFeePercent}%</p>
-                <p className="text-xs text-muted-foreground font-medium">you keep {100 - tierConfig.platformFeePercent}%</p>
+                <p className="text-xs text-ink-muted font-medium">you keep {100 - tierConfig.platformFeePercent}%</p>
               </div>
               <div className="px-5 py-4 text-center">
                 {tier === "platinum" ? (
                   <>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Status</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mb-1">Status</p>
                     <p className="text-2xl font-poppins font-bold text-foreground">🏆</p>
-                    <p className="text-xs text-muted-foreground font-medium">Max tier!</p>
+                    <p className="text-xs text-ink-muted font-medium">Max tier!</p>
                   </>
                 ) : (
                   <>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Next Tier</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mb-1">Next Tier</p>
                     <p className={`text-2xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>{Math.max(0, TIER_VISUAL[tier].nextMin - reliabilityScore)}</p>
-                    <p className="text-xs text-muted-foreground font-medium">pts to {TIER_VISUAL[tier].next}</p>
+                    <p className="text-xs text-ink-muted font-medium">pts to {TIER_VISUAL[tier].next}</p>
                   </>
                 )}
               </div>
@@ -391,7 +391,7 @@ export default function CleanerProfile() {
               <span className="text-2xl flex-shrink-0 mt-0.5">📸</span>
               <div>
                 <p className="text-sm font-semibold text-foreground mb-0.5">Pro tip: Smile into the camera!</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs text-ink-muted leading-relaxed">
                   Cleaners with a warm, natural smile looking directly at the camera get <span className="font-semibold text-foreground">up to 40% more bookings</span>. Use a close-up face shot with good lighting — no sunglasses, hats, or group photos.
                 </p>
               </div>
@@ -420,9 +420,9 @@ export default function CleanerProfile() {
           <CardContent className="space-y-5">
 
             {/* How it works explainer */}
-            <div className="rounded-xl border border-border/60 overflow-hidden">
-              <div className="bg-muted/50 px-4 py-2.5 border-b border-border/60">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rate Range by Tier & Reliability Score</p>
+            <div className="rounded-xl border border-hairline-soft overflow-hidden">
+              <div className="bg-muted/50 px-4 py-2.5 border-b border-hairline-soft">
+                <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Rate Range by Tier & Reliability Score</p>
               </div>
               <div className="divide-y divide-border/40">
                 {(["bronze", "silver", "gold", "platinum"] as const).map((t) => {
@@ -436,20 +436,20 @@ export default function CleanerProfile() {
                       <span className="text-xl w-7 text-center flex-shrink-0">{TIER_VISUAL[t].emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`text-sm font-bold capitalize ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
+                          <span className={`text-sm font-bold capitalize ${isCurrentTier ? TIER_VISUAL[t].text : "text-ink-muted"}`}>
                             {tc.label}
                           </span>
-                          <span className="text-xs text-muted-foreground">Score {tc.minScore}–{tc.maxScore}</span>
+                          <span className="text-xs text-ink-muted">Score {tc.minScore}–{tc.maxScore}</span>
                           {isCurrentTier && (
                             <Badge className={`${TIER_VISUAL[t].badge} text-[10px] h-4 px-1.5`}>You are here</Badge>
                           )}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <span className={`text-base font-poppins font-bold ${isCurrentTier ? TIER_VISUAL[t].text : "text-muted-foreground"}`}>
+                        <span className={`text-base font-poppins font-bold ${isCurrentTier ? TIER_VISUAL[t].text : "text-ink-muted"}`}>
                           ${tc.hourlyRateRange.min}–${tc.hourlyRateRange.max}
                         </span>
-                        <p className="text-[10px] text-muted-foreground">/hr</p>
+                        <p className="text-[10px] text-ink-muted">/hr</p>
                       </div>
                     </div>
                   );
@@ -463,7 +463,7 @@ export default function CleanerProfile() {
                 <Label className="text-sm font-semibold">Set Your Rate</Label>
                 <div className="text-right">
                   <span className={`text-3xl font-poppins font-bold ${TIER_VISUAL[tier].text}`}>${hourlyRate}</span>
-                  <span className="text-sm text-muted-foreground ml-1">/ hr</span>
+                  <span className="text-sm text-ink-muted ml-1">/ hr</span>
                 </div>
               </div>
               <Slider
@@ -473,7 +473,7 @@ export default function CleanerProfile() {
                 max={hourlyRateRange.max}
                 step={1}
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
+              <div className="flex justify-between text-xs text-ink-muted">
                 <span>${hourlyRateRange.min} min</span>
                 <span className="text-center text-foreground font-medium">
                   Your {tier} range: <span className={TIER_VISUAL[tier].text}>${hourlyRateRange.min}–${hourlyRateRange.max}</span>
@@ -482,7 +482,7 @@ export default function CleanerProfile() {
               </div>
               <div className={`flex items-start gap-2.5 p-3 rounded-xl ${TIER_VISUAL[tier].bg} border ${TIER_VISUAL[tier].border}`}>
                 <TrendingUp className={`h-4 w-4 shrink-0 mt-0.5 ${TIER_VISUAL[tier].text}`} />
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs text-ink-muted leading-relaxed">
                   <span className={`font-semibold ${TIER_VISUAL[tier].text}`}>Want to charge more? </span>
                   Increase your reliability score to unlock the next tier.
                   {tier !== "platinum" && (
@@ -502,7 +502,7 @@ export default function CleanerProfile() {
                 </div>
                 <div className="w-20 text-center">
                   <span className="text-xl font-bold">{travelRadius}</span>
-                  <span className="text-sm text-muted-foreground ml-1">mi</span>
+                  <span className="text-sm text-ink-muted ml-1">mi</span>
                 </div>
               </div>
             </div>
@@ -535,7 +535,7 @@ export default function CleanerProfile() {
                 <span className="ml-auto text-xl font-poppins font-bold text-success">{yearsExperience} yr{yearsExperience !== 1 ? "s" : ""}</span>
               </Label>
               <Slider value={[yearsExperience]} onValueChange={([v]) => setYearsExperience(v)} min={0} max={20} step={1} />
-              <div className="flex justify-between text-xs text-muted-foreground mt-1"><span>New</span><span>20+ years</span></div>
+              <div className="flex justify-between text-xs text-ink-muted mt-1"><span>New</span><span>20+ years</span></div>
             </div>
 
             <Separator />
@@ -552,7 +552,7 @@ export default function CleanerProfile() {
             <div>
               <Label className="text-sm font-semibold flex items-center gap-2 mb-3">
                 <Star className="h-4 w-4 text-warning" />Specialties
-                <span className="text-xs text-muted-foreground font-normal">(pick 2+ for boost)</span>
+                <span className="text-xs text-ink-muted font-normal">(pick 2+ for boost)</span>
               </Label>
               <PillSelect options={SPECIALTY_OPTIONS} selected={specialties} onChange={setSpecialties} color="bg-warning/10 text-warning border-warning/30" />
             </div>
@@ -590,7 +590,7 @@ export default function CleanerProfile() {
                 { icon: Car, label: "Has Vehicle", value: hasVehicle, set: setHasVehicle, color: "text-primary" },
                 { icon: Dog, label: "Pet Friendly", value: petFriendly, set: setPetFriendly, color: "text-destructive" },
               ].map(t => (
-                <div key={t.label} className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/50">
+                <div key={t.label} className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-hairline-soft/50">
                   <div className="flex items-center gap-2">
                     <t.icon className={`h-4 w-4 ${t.color}`} />
                     <span className="text-sm font-medium">{t.label}</span>
@@ -603,15 +603,15 @@ export default function CleanerProfile() {
             <Separator />
 
             {/* Score Improvement Tips */}
-            <div className="rounded-xl bg-muted/30 p-4 border border-border/50">
-              <p className="text-xs font-semibold text-muted-foreground mb-3">PROFILE SCORE BREAKDOWN</p>
+            <div className="rounded-xl bg-muted/30 p-4 border border-hairline-soft/50">
+              <p className="text-xs font-semibold text-ink-muted mb-3">PROFILE SCORE BREAKDOWN</p>
               <div className="space-y-2">
                 {scoreImprovements.map(item => (
                   <div key={item.label} className="flex items-center gap-2 text-xs">
                     {item.done
                       ? <CheckCircle className="h-3.5 w-3.5 text-success shrink-0" />
                       : <div className="h-3.5 w-3.5 rounded-full border border-muted-foreground shrink-0" />}
-                    <span className={item.done ? "text-muted-foreground line-through" : "text-foreground"}>{item.label}</span>
+                    <span className={item.done ? "text-ink-muted line-through" : "text-foreground"}>{item.label}</span>
                     {!item.done && <Badge variant="outline" className="ml-auto text-success border-success/30 text-xs h-4 px-1">{item.boost}</Badge>}
                   </div>
                 ))}
@@ -653,7 +653,7 @@ export default function CleanerProfile() {
                   </div>
                   {manualBioEdit ? (
                     <textarea
-                      className="w-full min-h-[180px] rounded-lg bg-background border border-border/60 p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-success/30"
+                      className="w-full min-h-[180px] rounded-lg bg-background border border-hairline-soft p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-success/30"
                       value={bioText}
                       onChange={e => setBioText(e.target.value)}
                     />

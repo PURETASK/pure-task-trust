@@ -21,7 +21,7 @@ import {
 
 const TIER_CONFIG: Record<string, { gradient: string; badge: string; icon: string; color: string }> = {
   bronze: { gradient: "from-warning/20 to-warning/5", badge: "bg-warning/10 text-warning border-warning/30", icon: "🥉", color: "hsl(38 95% 55%)" },
-  silver: { gradient: "from-muted/20 to-muted/5", badge: "bg-muted/10 text-muted-foreground border-border/30", icon: "🥈", color: "hsl(220 15% 55%)" },
+  silver: { gradient: "from-muted/20 to-muted/5", badge: "bg-muted/10 text-ink-muted border-border/30", icon: "🥈", color: "hsl(220 15% 55%)" },
   gold:   { gradient: "from-warning/20 to-warning/5", badge: "bg-warning/10 text-warning border-warning/30", icon: "🥇", color: "hsl(45 95% 55%)" },
   platinum: { gradient: "from-primary/20 to-primary/5", badge: "bg-primary/10 text-primary border-primary/30", icon: "💎", color: "hsl(190 90% 50%)" },
 };
@@ -65,7 +65,7 @@ export default function CleanerProfileView() {
             <XCircle className="h-8 w-8 text-destructive" />
           </div>
           <h2 className="text-xl font-bold">Unable to load profile</h2>
-          <p className="text-muted-foreground text-sm">Please check your connection and try again.</p>
+          <p className="text-ink-muted text-sm">Please check your connection and try again.</p>
           <Button onClick={() => window.location.reload()} variant="outline" className="gap-2">
             Try Again
           </Button>
@@ -139,9 +139,9 @@ export default function CleanerProfileView() {
                     )}
                   </div>
                   {profile?.professional_headline && (
-                    <p className="text-muted-foreground text-sm mb-2 truncate">{profile.professional_headline}</p>
+                    <p className="text-ink-muted text-sm mb-2 truncate">{profile.professional_headline}</p>
                   )}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+                  <div className="flex items-center gap-4 text-sm text-ink-muted flex-wrap">
                     {user?.email && (
                       <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{user.email}</span>
                     )}
@@ -189,9 +189,9 @@ export default function CleanerProfileView() {
                   className="rounded-2xl p-3 bg-card text-center transition-all hover:-translate-y-0.5"
                   style={{ border: `2px solid ${s.borderColor}`, boxShadow: `0 4px 16px 0 ${s.shadowColor}` }}
                 >
-                  <s.icon className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
+                  <s.icon className="h-4 w-4 mx-auto mb-1 text-ink-muted" />
                   <p className="font-bold text-sm">{s.value}</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-xs text-ink-muted">{s.label}</p>
                 </div>
               </motion.div>
             ))}
@@ -213,7 +213,7 @@ export default function CleanerProfileView() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm">Reliability Score</h3>
-                <p className="text-xs text-muted-foreground">Your trust metric with clients</p>
+                <p className="text-xs text-ink-muted">Your trust metric with clients</p>
               </div>
             </div>
             <div className="flex items-center gap-3 mb-3">
@@ -221,13 +221,13 @@ export default function CleanerProfileView() {
               <div className="flex-1">
                 <Progress value={reliabilityScore} className="h-3 rounded-full" />
               </div>
-              <span className="text-sm text-muted-foreground font-medium">/ 100</span>
+              <span className="text-sm text-ink-muted font-medium">/ 100</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
+              <span className="text-ink-muted">
                 Current tier: <span className="font-semibold text-foreground capitalize">{tier}</span>
-                <span className="text-muted-foreground"> · </span>
-                <span className="text-muted-foreground">Fee: {tierConfig.platformFeePercent}%</span>
+                <span className="text-ink-muted"> · </span>
+                <span className="text-ink-muted">Fee: {tierConfig.platformFeePercent}%</span>
               </span>
               {tier !== "platinum" && (
                 <Button variant="link" asChild className="h-auto p-0 text-xs text-success">
@@ -267,7 +267,7 @@ export default function CleanerProfileView() {
                   </div>
                 )}
               </div>
-              <pre className="text-sm text-muted-foreground leading-relaxed font-sans whitespace-pre-wrap">
+              <pre className="text-sm text-ink-muted leading-relaxed font-sans whitespace-pre-wrap">
                 {profile?.ai_bio || profile?.bio}
               </pre>
             </div>
@@ -289,7 +289,7 @@ export default function CleanerProfileView() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm">Service Capabilities</h3>
-                <p className="text-xs text-muted-foreground">Your cleaning specialties &amp; skills</p>
+                <p className="text-xs text-ink-muted">Your cleaning specialties &amp; skills</p>
               </div>
             </div>
 
@@ -298,7 +298,7 @@ export default function CleanerProfileView() {
               <div className="space-y-3">
                 {(profile?.cleaning_types?.length ?? 0) > 0 && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Cleaning Types</p>
+                    <p className="text-xs text-ink-muted mb-2 font-medium uppercase tracking-wide">Cleaning Types</p>
                     <div className="flex flex-wrap gap-2">
                       {profile!.cleaning_types!.map((t) => (
                         <Badge key={t} variant="outline" className="gap-1.5 px-3 py-1 rounded-xl font-medium text-xs border bg-success/10 text-success border-success/30 capitalize">
@@ -310,7 +310,7 @@ export default function CleanerProfileView() {
                 )}
                 {(profile?.specialties?.length ?? 0) > 0 && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">Specialties</p>
+                    <p className="text-xs text-ink-muted mb-2 font-medium uppercase tracking-wide">Specialties</p>
                     <div className="flex flex-wrap gap-2">
                       {profile!.specialties!.map((s) => (
                         <Badge key={s} variant="outline" className="gap-1.5 px-3 py-1 rounded-xl font-medium text-xs border bg-warning/10 text-warning border-warning/30 capitalize">
@@ -363,7 +363,7 @@ export default function CleanerProfileView() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-sm">Verification & Trust</h3>
-                  <p className="text-xs text-muted-foreground">Your credentials</p>
+                  <p className="text-xs text-ink-muted">Your credentials</p>
                 </div>
               </div>
               <Button variant="outline" size="sm" asChild className="rounded-xl text-xs gap-1 border-success/30 text-success hover:bg-success/5">
@@ -378,7 +378,7 @@ export default function CleanerProfileView() {
               ].map(v => (
                 <div
                   key={v.label}
-                  className="flex items-center gap-3 p-3 rounded-2xl bg-muted/30 border border-border/50"
+                  className="flex items-center gap-3 p-3 rounded-2xl bg-muted/30 border border-hairline-soft/50"
                 >
                   <div className="h-9 w-9 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
                     <v.icon className="h-4 w-4 text-success" />
@@ -410,7 +410,7 @@ export default function CleanerProfileView() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-sm">Account & Settings</h3>
-                  <p className="text-xs text-muted-foreground">Manage your private settings</p>
+                  <p className="text-xs text-ink-muted">Manage your private settings</p>
                 </div>
               </div>
               <div className="divide-y divide-border/40">
@@ -429,10 +429,10 @@ export default function CleanerProfileView() {
                       </div>
                       <div>
                         <p className="font-medium text-sm">{link.label}</p>
-                        <p className="text-xs text-muted-foreground">{link.desc}</p>
+                        <p className="text-xs text-ink-muted">{link.desc}</p>
                       </div>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-ink-muted group-hover:text-foreground transition-colors flex-shrink-0" />
                   </Link>
                 ))}
               </div>
@@ -445,7 +445,7 @@ export default function CleanerProfileView() {
                     </div>
                     <div>
                       <p className="font-semibold text-sm">Refer & Earn $25</p>
-                      <p className="text-xs text-muted-foreground">Invite friends, earn cash rewards</p>
+                      <p className="text-xs text-ink-muted">Invite friends, earn cash rewards</p>
                     </div>
                   </div>
                   <ChevronRight className="h-4 w-4 text-success group-hover:translate-x-0.5 transition-transform" />

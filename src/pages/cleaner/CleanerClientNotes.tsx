@@ -28,13 +28,13 @@ export default function CleanerClientNotes() {
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <StickyNote className="h-6 w-6 text-primary" /> Client Notes
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">Private notes about client preferences and property details</p>
+          <p className="text-ink-muted text-sm mt-1">Private notes about client preferences and property details</p>
         </div>
 
         {isLoading ? (
           <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-32 rounded-xl" />)}</div>
         ) : notes.length === 0 ? (
-          <Card><CardContent className="py-12 text-center text-muted-foreground">
+          <Card><CardContent className="py-12 text-center text-ink-muted">
             No notes yet. Notes will appear here as you save them from job detail pages.
           </CardContent></Card>
         ) : (
@@ -46,7 +46,7 @@ export default function CleanerClientNotes() {
                 <Card key={note.id}>
                   <CardContent className="p-4 space-y-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-ink-muted">
                         Client: {note.client_id.slice(0, 8)}... • Updated {format(new Date(note.updated_at), 'MMM d, yyyy')}
                       </p>
                       <Button

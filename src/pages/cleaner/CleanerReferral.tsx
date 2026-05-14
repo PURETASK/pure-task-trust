@@ -82,7 +82,7 @@ export default function CleanerReferral() {
                 Your code.<br />
                 <span className="text-primary">Your credit.</span>
               </h1>
-              <p className="text-muted-foreground text-lg mb-5">
+              <p className="text-ink-muted text-lg mb-5">
                 Every person who signs up with <strong>your unique code</strong> earns you both
                 <strong className="text-success"> ${rewardAmt} in credits</strong>. No cap. No expiry.
               </p>
@@ -102,7 +102,7 @@ export default function CleanerReferral() {
             {/* Right: code spotlight */}
             <div className="flex-shrink-0 w-full md:w-72">
               <div className="rounded-2xl border-2 border-primary/60 bg-background/80 backdrop-blur p-6 shadow-xl shadow-primary/10">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 text-center">Your Personal Code</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-widest mb-3 text-center">Your Personal Code</p>
                 {isLoadingCode ? (
                   <Skeleton className="h-14 w-full rounded-xl mb-4" />
                 ) : (
@@ -136,7 +136,7 @@ export default function CleanerReferral() {
                   </AnimatePresence>
                   {copied === 'code' ? 'Copied!' : 'Copy My Code'}
                 </Button>
-                <p className="text-center text-xs text-muted-foreground mt-2">
+                <p className="text-center text-xs text-ink-muted mt-2">
                   This code is tied to your account forever
                 </p>
               </div>
@@ -164,7 +164,7 @@ export default function CleanerReferral() {
                 </div>
                 <div>
                   {isLoadingReferrals ? <Skeleton className="h-7 w-12 mb-0.5" /> : <p className={`text-2xl font-poppins font-bold font-mono ${s.val_c}`}>{s.value}</p>}
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-xs text-ink-muted">{s.label}</p>
                 </div>
               </div>
             </motion.div>
@@ -182,14 +182,14 @@ export default function CleanerReferral() {
                 </div>
                 <div>
                   <h2 className="font-bold text-lg">Share Your Link</h2>
-                  <p className="text-xs text-muted-foreground">One tap — instant credit when they join</p>
+                  <p className="text-xs text-ink-muted">One tap — instant credit when they join</p>
                 </div>
               </div>
 
               {/* Link bar */}
-              <div className="flex items-center gap-2 bg-background/70 border border-border rounded-xl px-4 py-2.5">
-                <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                <p className="text-xs text-muted-foreground truncate flex-1">{referralLink || 'Loading your link...'}</p>
+              <div className="flex items-center gap-2 bg-background/70 border border-hairline-soft rounded-xl px-4 py-2.5">
+                <Link2 className="h-4 w-4 text-ink-muted shrink-0" />
+                <p className="text-xs text-ink-muted truncate flex-1">{referralLink || 'Loading your link...'}</p>
                 <Button variant="ghost" size="sm" className="shrink-0 h-7 gap-1" onClick={copyLink} disabled={!referralCode}>
                   {copied === 'link' ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied === 'link' ? 'Copied' : 'Copy'}
@@ -216,7 +216,7 @@ export default function CleanerReferral() {
                 ))}
               </div>
 
-              <p className="text-xs text-muted-foreground text-center pt-1">
+              <p className="text-xs text-ink-muted text-center pt-1">
                 When they sign up using your link, <strong>your code is automatically applied</strong> — no extra steps needed.
               </p>
             </div>
@@ -231,7 +231,7 @@ export default function CleanerReferral() {
                 </div>
                 <div>
                   <h2 className="font-bold text-lg">Milestone Rewards</h2>
-                  <p className="text-xs text-muted-foreground">Bonus credits at every milestone</p>
+                  <p className="text-xs text-ink-muted">Bonus credits at every milestone</p>
                 </div>
               </div>
 
@@ -244,7 +244,7 @@ export default function CleanerReferral() {
                   </Badge>
                 </div>
                 <Progress value={milestoneProgress} className="h-3 mb-1" />
-                <p className="text-xs text-muted-foreground">{nextMilestone - stats.completedReferrals} more to unlock your next bonus</p>
+                <p className="text-xs text-ink-muted">{nextMilestone - stats.completedReferrals} more to unlock your next bonus</p>
               </div>
 
               {/* Milestone steps */}
@@ -259,12 +259,12 @@ export default function CleanerReferral() {
                   return (
                     <div key={count} className={`flex items-center justify-between rounded-xl px-4 py-2.5 border ${done ? 'border-success/50 bg-success/15' : 'border-border bg-muted/30'}`}>
                       <div className="flex items-center gap-3">
-                        <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold ${done ? 'bg-success text-white' : 'bg-muted-foreground/20 text-muted-foreground'}`}>
+                        <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold ${done ? 'bg-success text-white' : 'bg-muted-foreground/20 text-ink-muted'}`}>
                           {done ? <Check className="h-3.5 w-3.5" /> : count}
                         </div>
                         <span className={`text-sm font-medium ${done ? 'text-success' : ''}`}>{count} referrals · {label}</span>
                       </div>
-                      <span className={`text-sm font-bold ${done ? 'text-success' : 'text-muted-foreground'}`}>+${bonus}</span>
+                      <span className={`text-sm font-bold ${done ? 'text-success' : 'text-ink-muted'}`}>+${bonus}</span>
                     </div>
                   );
                 })}
@@ -290,8 +290,8 @@ export default function CleanerReferral() {
                 <div key={n} className={`rounded-xl border-2 ${color} p-4 relative`}>
                   <div className={`h-8 w-8 rounded-full ${num_c} flex items-center justify-center font-bold text-sm mb-3`}>{n}</div>
                   <p className="font-semibold text-sm mb-1">{title}</p>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
-                  {n !== "4" && <ArrowRight className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />}
+                  <p className="text-xs text-ink-muted">{desc}</p>
+                  {n !== "4" && <ArrowRight className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted z-10" />}
                 </div>
               ))}
             </div>
@@ -321,7 +321,7 @@ export default function CleanerReferral() {
                       </div>
                       <div>
                         <p className="font-medium text-sm">{t.referee_role === 'cleaner' ? '🧹 New Cleaner' : '🏠 New Client'}</p>
-                        <p className="text-xs text-muted-foreground">Joined {format(new Date(t.created_at), 'MMM d, yyyy')}</p>
+                        <p className="text-xs text-ink-muted">Joined {format(new Date(t.created_at), 'MMM d, yyyy')}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -330,7 +330,7 @@ export default function CleanerReferral() {
                       ) : (
                         <div>
                           <Badge variant="secondary" className="text-xs mb-0.5">{t.jobs_completed}/{t.jobs_required} jobs</Badge>
-                          <p className="text-xs text-muted-foreground">Pending</p>
+                          <p className="text-xs text-ink-muted">Pending</p>
                         </div>
                       )}
                     </div>
@@ -342,15 +342,15 @@ export default function CleanerReferral() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.04 }}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 border border-border bg-muted/30"
+                    className="flex items-center justify-between rounded-xl px-4 py-3 border border-hairline-soft bg-muted/30"
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center">
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <Users className="h-4 w-4 text-ink-muted" />
                       </div>
                       <div>
                         <p className="font-medium text-sm">Referral</p>
-                        <p className="text-xs text-muted-foreground">{format(new Date(r.created_at), 'MMM d, yyyy')}</p>
+                        <p className="text-xs text-ink-muted">{format(new Date(r.created_at), 'MMM d, yyyy')}</p>
                       </div>
                     </div>
                     <Badge variant={r.status === 'completed' ? 'default' : 'secondary'} className="text-xs capitalize">{r.status}</Badge>
@@ -369,7 +369,7 @@ export default function CleanerReferral() {
                 <Gift className="h-8 w-8 text-primary" />
               </div>
               <h3 className="font-bold text-lg mb-2">Start earning now</h3>
-              <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">
+              <p className="text-ink-muted text-sm max-w-sm mx-auto mb-6">
                 Copy your code above and share it. Once your friend signs up and completes <strong>3 cleanings</strong>, you both receive ${rewardAmt} in credits.
               </p>
               <Button onClick={copyCode} className="gap-2" disabled={!referralCode}>

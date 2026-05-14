@@ -166,7 +166,7 @@ function EmailModal({ checklist, onClose }: { checklist: typeof CHECKLISTS[0] | 
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-card rounded-3xl border-2 border-border/60 shadow-xl p-6 w-full max-w-md"
+        className="bg-card rounded-3xl border-2 border-hairline-soft shadow-xl p-6 w-full max-w-md"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 mb-4">
@@ -175,7 +175,7 @@ function EmailModal({ checklist, onClose }: { checklist: typeof CHECKLISTS[0] | 
           </div>
           <div>
             <h3 className="font-bold">Send to Email</h3>
-            <p className="text-xs text-muted-foreground">{checklist.title}</p>
+            <p className="text-xs text-ink-muted">{checklist.title}</p>
           </div>
         </div>
         <Input
@@ -215,19 +215,19 @@ function ChecklistCard({ item, onEmail, onPrint }: {
                 <h3 className="font-bold text-sm leading-snug">{item.title}</h3>
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${item.badgeColor} flex-shrink-0`}>{item.badge}</span>
               </div>
-              <p className="text-xs text-muted-foreground">{item.desc}</p>
+              <p className="text-xs text-ink-muted">{item.desc}</p>
             </div>
           </div>
 
           {/* Rooms preview */}
           <div className="flex flex-wrap gap-1.5 mb-4">
             {item.rooms.map(r => (
-              <span key={r} className="text-xs bg-muted/60 rounded-full px-2 py-0.5 text-muted-foreground">{r}</span>
+              <span key={r} className="text-xs bg-muted/60 rounded-full px-2 py-0.5 text-ink-muted">{r}</span>
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-border/40">
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="flex items-center justify-between pt-3 border-t border-hairline-soft">
+            <span className="flex items-center gap-1.5 text-xs text-ink-muted">
               <Clock className="h-3.5 w-3.5" />{item.pages}
             </span>
             <div className="flex gap-2">
@@ -288,7 +288,7 @@ export default function CleanerResources() {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold">Resources & Education</h1>
-                <p className="text-sm text-muted-foreground">Checklists, growth guides, and partner perks</p>
+                <p className="text-sm text-ink-muted">Checklists, growth guides, and partner perks</p>
               </div>
             </div>
             <div className="grid grid-cols-4 gap-3 mt-5">
@@ -301,7 +301,7 @@ export default function CleanerResources() {
                 <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
                   <div className={`rounded-2xl border-2 ${s.bg} p-3 text-center`}>
                     <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+                    <p className="text-xs text-ink-muted mt-0.5">{s.label}</p>
                   </div>
                 </motion.div>
               ))}
@@ -311,7 +311,7 @@ export default function CleanerResources() {
 
         {/* ── Tabs ── */}
         <Tabs defaultValue="checklists" className="w-full">
-          <TabsList className="w-full sm:w-auto mb-6 rounded-2xl border-2 border-border/50 bg-muted/50 p-1.5 h-auto flex flex-wrap gap-1">
+          <TabsList className="w-full sm:w-auto mb-6 rounded-2xl border border-hairline-soft/50 bg-muted/50 p-1.5 h-auto flex flex-wrap gap-1">
             <TabsTrigger value="checklists" className="flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-semibold data-[state=active]:bg-success data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
               <FileText className="h-4 w-4 mr-1.5" />Checklists
             </TabsTrigger>
@@ -347,7 +347,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Documents & Checklists</h2>
-                  <p className="text-xs text-muted-foreground">Email or print any checklist instantly</p>
+                  <p className="text-xs text-ink-muted">Email or print any checklist instantly</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -362,7 +362,7 @@ export default function CleanerResources() {
               </div>
               <div className="mt-4 rounded-2xl border-2 border-success/20 bg-success/5 p-4 flex items-start gap-3">
                 <Shield className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-muted-foreground">All checklists are aligned with PureTask quality standards. Using them consistently helps maintain your reliability score.</p>
+                <p className="text-sm text-ink-muted">All checklists are aligned with PureTask quality standards. Using them consistently helps maintain your reliability score.</p>
               </div>
             </motion.div>
           </TabsContent>
@@ -376,7 +376,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Cleaning Scope Guide</h2>
-                  <p className="text-xs text-muted-foreground">What's included in each service type</p>
+                  <p className="text-xs text-ink-muted">What's included in each service type</p>
                 </div>
               </div>
 
@@ -400,7 +400,7 @@ export default function CleanerResources() {
                     </div>
                     <ul className="space-y-1.5">
                       {s.tasks.map(t => (
-                        <li key={t} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <li key={t} className="flex items-start gap-2 text-xs text-ink-muted">
                           <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
                           {t}
                         </li>
@@ -428,7 +428,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Earnings Calculator</h2>
-                  <p className="text-xs text-muted-foreground">Estimate your income at a glance</p>
+                  <p className="text-xs text-ink-muted">Estimate your income at a glance</p>
                 </div>
               </div>
 
@@ -444,8 +444,8 @@ export default function CleanerResources() {
                   return (
                     <div key={s.label} className={`rounded-2xl border-2 p-3.5 ${s.color}`}>
                       <p className="font-bold text-sm mb-1">{s.label}</p>
-                      <p className="text-xs text-muted-foreground mb-2">{s.hrs}h/wk · ${s.rate}/hr · keep {s.keep}</p>
-                      <p className="text-xl font-poppins font-bold text-success">${annual.toLocaleString()}<span className="text-xs text-muted-foreground font-normal">/yr</span></p>
+                      <p className="text-xs text-ink-muted mb-2">{s.hrs}h/wk · ${s.rate}/hr · keep {s.keep}</p>
+                      <p className="text-xl font-poppins font-bold text-success">${annual.toLocaleString()}<span className="text-xs text-ink-muted font-normal">/yr</span></p>
                     </div>
                   );
                 })}
@@ -472,7 +472,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Cost Estimator</h2>
-                  <p className="text-xs text-muted-foreground">Understand what clients see when they price a job</p>
+                  <p className="text-xs text-ink-muted">Understand what clients see when they price a job</p>
                 </div>
               </div>
 
@@ -492,7 +492,7 @@ export default function CleanerResources() {
                       </div>
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${s.badge}`}>{s.note}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mb-1">{s.per} base rate</p>
+                    <p className="text-xs text-ink-muted mb-1">{s.per} base rate</p>
                     <p className="text-sm font-poppins font-bold text-foreground">{s.ex}</p>
                   </div>
                 ))}
@@ -503,14 +503,14 @@ export default function CleanerResources() {
                 <p className="font-bold text-warning text-sm mb-2">💡 Frequency discounts clients can earn</p>
                 <div className="grid grid-cols-4 gap-2">
                   {[
-                    { label: 'One-time', disc: '—', color: 'text-muted-foreground' },
+                    { label: 'One-time', disc: '—', color: 'text-ink-muted' },
                     { label: 'Monthly', disc: '−5%', color: 'text-success' },
                     { label: 'Bi-weekly', disc: '−10%', color: 'text-warning' },
                     { label: 'Weekly', disc: '−15%', color: 'text-[hsl(var(--pt-purple))]' },
                   ].map(f => (
-                    <div key={f.label} className="rounded-xl border-2 border-border/50 bg-card p-2 text-center">
+                    <div key={f.label} className="rounded-xl border border-hairline-soft/50 bg-card p-2 text-center">
                       <p className={`text-sm font-poppins font-bold ${f.color}`}>{f.disc}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{f.label}</p>
+                      <p className="text-xs text-ink-muted mt-0.5">{f.label}</p>
                     </div>
                   ))}
                 </div>
@@ -534,7 +534,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Industry Statistics</h2>
-                  <p className="text-xs text-muted-foreground">Key market data & trends for 2025</p>
+                  <p className="text-xs text-ink-muted">Key market data & trends for 2025</p>
                 </div>
               </div>
 
@@ -548,7 +548,7 @@ export default function CleanerResources() {
                 ].map(s => (
                   <div key={s.value} className={`rounded-2xl border-2 ${s.border} ${s.bg} p-4`}>
                     <p className={`text-2xl font-poppins font-bold ${s.color}`}>{s.value}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+                    <p className="text-xs text-ink-muted mt-0.5">{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -564,7 +564,7 @@ export default function CleanerResources() {
                   ].map(i => (
                     <div key={i.pct} className="flex items-center gap-3 text-sm">
                       <span className="font-poppins font-bold text-[hsl(var(--pt-purple))] w-10 flex-shrink-0">{i.pct}</span>
-                      <span className="text-muted-foreground">{i.txt}</span>
+                      <span className="text-ink-muted">{i.txt}</span>
                     </div>
                   ))}
                 </div>
@@ -587,7 +587,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Growth & Advancement</h2>
-                  <p className="text-xs text-muted-foreground">Strategies from our top-earning cleaners</p>
+                  <p className="text-xs text-ink-muted">Strategies from our top-earning cleaners</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -604,9 +604,9 @@ export default function CleanerResources() {
                               <h3 className="font-bold text-sm leading-snug">{item.title}</h3>
                               <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${item.tagColor}`}>{item.tag}</span>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-3">{item.desc}</p>
+                            <p className="text-xs text-ink-muted mb-3">{item.desc}</p>
                             <div className="flex items-center justify-between">
-                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1 text-xs text-ink-muted">
                                 <Clock className="h-3.5 w-3.5" />{item.time}
                               </span>
                               <ChevronRight className={`h-4 w-4 ${item.iconColor} opacity-0 group-hover:opacity-100 transition-opacity`} />
@@ -630,7 +630,7 @@ export default function CleanerResources() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold">Pro Tips from Top Cleaners</h2>
-                  <p className="text-xs text-muted-foreground">Collected from our highest-rated professionals</p>
+                  <p className="text-xs text-ink-muted">Collected from our highest-rated professionals</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -663,14 +663,14 @@ export default function CleanerResources() {
                 </motion.div>
                 <Badge className="mb-4 px-4 py-1 rounded-full border-2 border-primary/30 bg-primary/10 text-primary font-bold text-sm">Coming Soon</Badge>
                 <h2 className="text-2xl font-bold mb-3">Partner Discounts</h2>
-                <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
+                <p className="text-ink-muted max-w-md mx-auto mb-8 leading-relaxed">
                   We're partnering with top cleaning supply brands to bring you exclusive discounts on products and equipment. Check back soon for special deals just for PureTask cleaners.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto">
                   {["Cleaning Supplies", "Equipment & Tools", "Eco Products", "Safety Gear"].map((cat, i) => (
-                    <div key={cat} className="rounded-2xl border-2 border-border/50 bg-muted/30 p-3 text-center">
-                      <Lock className="h-4 w-4 text-muted-foreground mx-auto mb-1.5" />
-                      <p className="text-xs text-muted-foreground font-medium">{cat}</p>
+                    <div key={cat} className="rounded-2xl border border-hairline-soft/50 bg-muted/30 p-3 text-center">
+                      <Lock className="h-4 w-4 text-ink-muted mx-auto mb-1.5" />
+                      <p className="text-xs text-ink-muted font-medium">{cat}</p>
                     </div>
                   ))}
                 </div>
@@ -680,11 +680,11 @@ export default function CleanerResources() {
         </Tabs>
 
         {/* ── Help Footer ── */}
-        <Card className="rounded-3xl border-2 border-border/50 bg-gradient-to-r from-primary/4 to-muted/20">
+        <Card className="rounded-3xl border border-hairline-soft/50 bg-gradient-to-r from-primary/4 to-muted/20">
           <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-bold mb-0.5">Need more help?</h3>
-              <p className="text-sm text-muted-foreground">Our support team is available 7 days a week</p>
+              <p className="text-sm text-ink-muted">Our support team is available 7 days a week</p>
             </div>
             <Button variant="outline" className="rounded-2xl border-2 gap-2 flex-shrink-0">
               <HeartHandshake className="h-4 w-4" />Contact Support

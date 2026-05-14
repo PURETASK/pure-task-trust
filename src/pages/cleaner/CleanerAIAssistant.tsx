@@ -108,12 +108,12 @@ export default function CleanerAIAssistant() {
             </div>
             <div>
               <h1 className="text-2xl font-poppins font-bold text-foreground tracking-tight">AI Business Advisor</h1>
-              <p className="text-sm text-muted-foreground">Personalized insights powered by your real data</p>
+              <p className="text-sm text-ink-muted">Personalized insights powered by your real data</p>
             </div>
           </div>
           {messages.length > 0 && (
             <Button variant="outline" size="sm" onClick={clearMessages}
-              className="gap-2 rounded-xl border-border/60">
+              className="gap-2 rounded-xl border-hairline-soft">
               <Trash2 className="h-4 w-4" />Clear Chat
             </Button>
           )}
@@ -142,14 +142,14 @@ export default function CleanerAIAssistant() {
                     <Sparkles className="h-10 w-10 text-primary" />
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-2">How can I help you today?</h3>
-                  <p className="text-muted-foreground max-w-md mb-5 text-sm leading-relaxed">
+                  <p className="text-ink-muted max-w-md mb-5 text-sm leading-relaxed">
                     I have access to your real performance data, upcoming jobs, and earnings.
                     Ask me anything about growing your cleaning business!
                   </p>
                   <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                     {CAPABILITY_BADGES.map((badge) => (
                       <Badge key={badge} variant="outline"
-                        className="text-xs bg-card/80 border-border/60 text-foreground">
+                        className="text-xs bg-card/80 border-hairline-soft text-foreground">
                         {badge}
                       </Badge>
                     ))}
@@ -173,7 +173,7 @@ export default function CleanerAIAssistant() {
                           "rounded-2xl px-4 py-3 max-w-[80%] text-sm whitespace-pre-wrap leading-relaxed",
                           message.role === "user"
                             ? "bg-primary text-primary-foreground"
-                            : "bg-card/95 border border-border/60 text-foreground shadow-sm"
+                            : "bg-card/95 border border-hairline-soft text-foreground shadow-sm"
                         )}>
                           {message.content}
                         </div>
@@ -186,9 +186,9 @@ export default function CleanerAIAssistant() {
                       <div className="h-9 w-9 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0">
                         <Bot className="h-4 w-4 text-primary" />
                       </div>
-                      <div className="rounded-2xl px-4 py-3 bg-card/95 border border-border/60 flex items-center gap-2">
+                      <div className="rounded-2xl px-4 py-3 bg-card/95 border border-hairline-soft flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                        <span className="text-xs text-muted-foreground">Thinking…</span>
+                        <span className="text-xs text-ink-muted">Thinking…</span>
                       </div>
                     </motion.div>
                   )}
@@ -213,7 +213,7 @@ export default function CleanerAIAssistant() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Ask me anything about your cleaning business…"
-                  className="min-h-[56px] max-h-[120px] resize-none rounded-2xl bg-card/90 border-border/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/40"
+                  className="min-h-[56px] max-h-[120px] resize-none rounded-2xl bg-card/90 border-hairline-soft text-foreground placeholder:text-ink-muted focus-visible:ring-primary/40"
                   disabled={isLoading}
                 />
                 <Button
@@ -225,7 +225,7 @@ export default function CleanerAIAssistant() {
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2 pl-1">Enter to send · Shift+Enter for new line</p>
+              <p className="text-xs text-ink-muted mt-2 pl-1">Enter to send · Shift+Enter for new line</p>
             </div>
           </motion.div>
 
@@ -244,7 +244,7 @@ export default function CleanerAIAssistant() {
               }}
             >
               {/* Panel header */}
-              <div className="px-4 pt-4 pb-3 border-b border-border/40 flex items-center gap-2">
+              <div className="px-4 pt-4 pb-3 border-b border-hairline-soft flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-success" />
                 <span className="font-bold text-sm text-foreground">Quick Actions</span>
               </div>
@@ -275,14 +275,14 @@ export default function CleanerAIAssistant() {
                       <span className="text-sm font-medium text-foreground leading-snug flex-1 whitespace-normal">
                         {item.label}
                       </span>
-                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                      <ChevronRight className="h-3.5 w-3.5 text-ink-muted flex-shrink-0" />
                     </motion.button>
                   );
                 })}
 
                 {QUICK_PROMPTS.length > 6 && (
                   <button
-                    className="w-full text-xs text-muted-foreground hover:text-foreground py-2 transition-colors font-medium"
+                    className="w-full text-xs text-ink-muted hover:text-foreground py-2 transition-colors font-medium"
                     onClick={() => setShowAllPrompts(v => !v)}
                   >
                     {showAllPrompts ? "Show less ↑" : `Show ${QUICK_PROMPTS.length - 6} more…`}
@@ -302,12 +302,12 @@ export default function CleanerAIAssistant() {
                 background: "hsl(var(--card))",
               }}
             >
-              <div className="px-4 pt-4 pb-3 border-b border-border/40 flex items-center gap-2">
+              <div className="px-4 pt-4 pb-3 border-b border-hairline-soft flex items-center gap-2">
                 <Shield className="h-4 w-4 text-warning" />
                 <span className="font-bold text-sm text-foreground">Your Data</span>
               </div>
               <div className="p-4">
-                <p className="text-xs text-muted-foreground mb-3">I can see your real-time data including:</p>
+                <p className="text-xs text-ink-muted mb-3">I can see your real-time data including:</p>
                 <div className="space-y-2">
                   {DATA_ITEMS.map(({ dot, label }) => (
                     <div key={label} className="flex items-center gap-2.5">

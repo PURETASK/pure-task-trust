@@ -44,7 +44,7 @@ const PROVIDERS = [
     gradient: "from-muted/20 to-muted/10",
     border: "border-border/50",
     icon: "🍎",
-    accentColor: "text-muted-foreground",
+    accentColor: "text-ink-muted",
     badgeBg: "bg-muted/15 border-border/30",
   },
 ];
@@ -54,7 +54,7 @@ function getRelativeDay(dateStr: string) {
   if (isToday(d))     return { label: "Today",    cls: "text-success font-bold" };
   if (isTomorrow(d))  return { label: "Tomorrow", cls: "text-warning font-semibold" };
   if (isThisWeek(d))  return { label: format(d, "EEEE"), cls: "text-primary" };
-  return { label: format(d, "MMM d"), cls: "text-muted-foreground" };
+  return { label: format(d, "MMM d"), cls: "text-ink-muted" };
 }
 
 // ── Calendar event card ───────────────────────────────────────────────────────
@@ -66,13 +66,13 @@ function EventCard({ event }: { event: any }) {
     job?.status === "completed"  ? "bg-success/15 border-success/40 text-success"   :
     job?.status === "confirmed"  ? "bg-primary/15 border-primary/40 text-primary"   :
     job?.status === "in_progress"? "bg-warning/15 border-warning/40 text-warning"   :
-                                   "bg-muted border-border text-muted-foreground";
+                                   "bg-muted border-border text-ink-muted";
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      className="flex items-start gap-3 p-3 rounded-2xl border-2 border-border/40 bg-card/50 hover:border-primary/30 transition-colors"
+      className="flex items-start gap-3 p-3 rounded-2xl border-2 border-hairline-soft bg-card/50 hover:border-primary/30 transition-colors"
     >
       <div className="h-10 w-10 rounded-xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center shrink-0">
         <Briefcase className="h-4 w-4 text-primary" />
@@ -81,7 +81,7 @@ function EventCard({ event }: { event: any }) {
         <div className="flex items-center gap-2 mb-0.5">
           {day && <span className={`text-xs ${day.cls}`}>{day.label}</span>}
           {job?.scheduled_start_at && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-ink-muted">
               {format(parseISO(job.scheduled_start_at), "h:mm a")}
             </span>
           )}
@@ -92,12 +92,12 @@ function EventCard({ event }: { event: any }) {
           )}
         </div>
         <p className="text-sm font-medium truncate">{job?.title || `Job #${event.job_id?.slice(0, 8)}`}</p>
-        <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+        <p className="text-xs text-ink-muted mt-0.5 flex items-center gap-1">
           <Clock className="h-3 w-3" />
           {event.event_type} · synced {format(parseISO(event.synced_at), "MMM d")}
         </p>
       </div>
-      <ChevronRight className="h-4 w-4 text-muted-foreground/40 shrink-0 mt-1" />
+      <ChevronRight className="h-4 w-4 text-ink-muted/40 shrink-0 mt-1" />
     </motion.div>
   );
 }
@@ -153,11 +153,11 @@ function ConnectedCalendarCard({
                   </Badge>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-ink-muted mt-0.5">
                 {connection.email || connection.external_id}
               </p>
               {connection.last_synced_at && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-ink-muted">
                   Last sync: {format(new Date(connection.last_synced_at), "MMM d 'at' h:mm a")}
                 </p>
               )}
@@ -167,9 +167,9 @@ function ConnectedCalendarCard({
           {/* Controls */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground hidden sm:block">Auto-sync</span>
+              <span className="text-xs text-ink-muted hidden sm:block">Auto-sync</span>
               {isSyncing
-                ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                ? <Loader2 className="h-4 w-4 animate-spin text-ink-muted" />
                 : <Switch
                     checked={connection.sync_enabled}
                     onCheckedChange={checked => onToggle(connection.id, checked)}
@@ -179,7 +179,7 @@ function ConnectedCalendarCard({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl"
+              className="h-8 w-8 text-ink-muted hover:text-destructive hover:bg-destructive/10 rounded-xl"
               onClick={() => onDisconnect(connection.id)}
               disabled={isDisconnecting}
             >
@@ -198,7 +198,7 @@ function ConnectedCalendarCard({
             <div key={s.label} className="flex-1 rounded-xl bg-card/40 border border-white/10 p-2 text-center backdrop-blur-sm">
               <s.icon className={`h-3.5 w-3.5 mx-auto mb-1 ${s.color}`} />
               <p className="text-base font-poppins font-bold leading-none">{s.value}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{s.label}</p>
+              <p className="text-[10px] text-ink-muted mt-0.5 leading-tight">{s.label}</p>
             </div>
           ))}
         </div>
@@ -211,11 +211,11 @@ function ConnectedCalendarCard({
           onClick={() => setExpanded(!expanded)}
         >
           <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <Eye className="h-4 w-4 text-ink-muted" />
             <span className="text-sm font-semibold">Synced Calendar Events</span>
             <Badge variant="secondary" className="text-[11px]">{events.length}</Badge>
           </div>
-          <ChevronRight className={`h-4 w-4 text-muted-foreground transition-transform ${expanded ? "rotate-90" : ""}`} />
+          <ChevronRight className={`h-4 w-4 text-ink-muted transition-transform ${expanded ? "rotate-90" : ""}`} />
         </button>
 
         <AnimatePresence>
@@ -235,10 +235,10 @@ function ConnectedCalendarCard({
                   {events.map(ev => <EventCard key={ev.id} event={ev} />)}
                 </div>
               ) : (
-                <div className="rounded-2xl border-2 border-dashed border-border/40 py-8 text-center">
-                  <Calendar className="h-8 w-8 mx-auto text-muted-foreground/30 mb-2" />
-                  <p className="text-sm text-muted-foreground">No events synced yet</p>
-                  <p className="text-xs text-muted-foreground mt-1">Events will appear here once the next sync runs</p>
+                <div className="rounded-2xl border-2 border-dashed border-hairline-soft py-8 text-center">
+                  <Calendar className="h-8 w-8 mx-auto text-ink-muted/30 mb-2" />
+                  <p className="text-sm text-ink-muted">No events synced yet</p>
+                  <p className="text-xs text-ink-muted mt-1">Events will appear here once the next sync runs</p>
                 </div>
               )}
             </motion.div>
@@ -333,7 +333,7 @@ export default function CleanerCalendarSync() {
                 </div>
                 <div>
                   <h2 className="font-bold">Connect a Calendar</h2>
-                  <p className="text-xs text-muted-foreground">Choose your provider — we'll import your events automatically</p>
+                  <p className="text-xs text-ink-muted">Choose your provider — we'll import your events automatically</p>
                 </div>
               </div>
             </div>
@@ -347,7 +347,7 @@ export default function CleanerCalendarSync() {
                   >
                     <div className="text-2xl mb-2">{provider.icon}</div>
                     <p className={`font-bold text-sm ${provider.accentColor}`}>{provider.name}</p>
-                    <p className="text-[11px] text-muted-foreground mt-1 leading-tight">{provider.description}</p>
+                    <p className="text-[11px] text-ink-muted mt-1 leading-tight">{provider.description}</p>
                     <div className={`mt-3 inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-semibold ${provider.badgeBg}`}>
                       <Zap className="h-2.5 w-2.5" /> Connect
                     </div>
@@ -393,7 +393,7 @@ export default function CleanerCalendarSync() {
               </div>
               <div>
                 <h2 className="font-bold">How Calendar Sync Works</h2>
-                <p className="text-xs text-muted-foreground">Three steps to a perfectly managed schedule</p>
+                <p className="text-xs text-ink-muted">Three steps to a perfectly managed schedule</p>
               </div>
             </div>
 
@@ -435,7 +435,7 @@ export default function CleanerCalendarSync() {
                     <span className={`text-3xl font-poppins font-bold ${item.numColor}`}>{item.step}</span>
                   </div>
                   <h4 className="font-bold mb-1">{item.title}</h4>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-ink-muted leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>

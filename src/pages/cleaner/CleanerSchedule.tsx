@@ -163,7 +163,7 @@ export default function CleanerSchedule() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{s.value}</p>
-                <p className="text-xs text-muted-foreground">{s.label}</p>
+                <p className="text-xs text-ink-muted">{s.label}</p>
               </div>
             </div>
           ))}
@@ -202,7 +202,7 @@ export default function CleanerSchedule() {
                 <Button variant="ghost" size="icon" onClick={() => navigateCalendar("prev")}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-ink-muted">
                   {format(twoWeeksDays[0], "MMM d")} – {format(twoWeeksDays[13], "MMM d, yyyy")}
                 </span>
                 <Button variant="ghost" size="icon" onClick={() => navigateCalendar("next")}>
@@ -214,7 +214,7 @@ export default function CleanerSchedule() {
             {/* Week Day Headers */}
             <div className="grid grid-cols-7 gap-2 mb-2">
               {weekDays.map((day) => (
-                <div key={day} className="text-center text-sm text-muted-foreground py-2">{day}</div>
+                <div key={day} className="text-center text-sm text-ink-muted py-2">{day}</div>
               ))}
             </div>
 
@@ -230,7 +230,7 @@ export default function CleanerSchedule() {
                       ${isSelected(date) && !isToday(date) ? "border-primary" : "border-border"}
                     `}
                   >
-                    <span className="text-xs text-muted-foreground">{format(date, "EEE")}</span>
+                    <span className="text-xs text-ink-muted">{format(date, "EEE")}</span>
                     <span className="text-lg font-semibold">{format(date, "d")}</span>
                     {hasJobs(date) && (
                       <div className="absolute bottom-1 h-1.5 w-1.5 rounded-full bg-success" />
@@ -277,7 +277,7 @@ export default function CleanerSchedule() {
                   <h3 className="text-lg font-semibold mb-0.5">
                     {format(selectedDate, "EEEE, MMMM d")}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-ink-muted">
                     {pendingJobs.length} request{pendingJobs.length !== 1 ? 's' : ''} · {acceptedJobs.length} accepted
                   </p>
                 </div>
@@ -309,7 +309,7 @@ export default function CleanerSchedule() {
               <Skeleton className="h-32 rounded-xl" />
             ) : pendingJobs.length === 0 ? (
               <Card className="border-2 border-warning/30 rounded-2xl">
-                <CardContent className="p-8 text-center text-muted-foreground">
+                <CardContent className="p-8 text-center text-ink-muted">
                   No job requests for this day.
                 </CardContent>
               </Card>
@@ -324,14 +324,14 @@ export default function CleanerSchedule() {
                             {job.cleaning_type === 'deep' ? 'Deep Clean' : 
                              job.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-ink-muted">
                             Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                           </p>
                         </div>
                         {getStatusBadge(job.status)}
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-3 text-sm text-ink-muted">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
@@ -367,7 +367,7 @@ export default function CleanerSchedule() {
               <Skeleton className="h-32 rounded-xl" />
             ) : acceptedJobs.length === 0 ? (
               <Card className="border-2 border-success/30 rounded-2xl">
-                <CardContent className="p-8 text-center text-muted-foreground">
+                <CardContent className="p-8 text-center text-ink-muted">
                   No accepted jobs for this day.
                 </CardContent>
               </Card>
@@ -382,14 +382,14 @@ export default function CleanerSchedule() {
                             {job.cleaning_type === 'deep' ? 'Deep Clean' : 
                              job.cleaning_type === 'move_out' ? 'Move-out Clean' : 'Standard Clean'}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-ink-muted">
                             Client {job.client?.first_name ? `${job.client.first_name.charAt(0)}.` : '(Private)'}
                           </p>
                         </div>
                         {getStatusBadge(job.status)}
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-3 text-sm text-ink-muted">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), 'h:mm a') : 'TBD'}
@@ -435,7 +435,7 @@ export default function CleanerSchedule() {
                       <p className="font-medium text-sm">
                         {gap.gapHours}h gap — {format(gap.gapStart, "h:mm a")} to {format(gap.gapEnd, "h:mm a")}
                       </p>
-                      <p className="text-xs text-muted-foreground">You could fit a job in this window</p>
+                      <p className="text-xs text-ink-muted">You could fit a job in this window</p>
                     </div>
                   </div>
                   <Button size="sm" variant="outline" className="gap-1.5 flex-shrink-0" asChild>
@@ -458,7 +458,7 @@ export default function CleanerSchedule() {
             </div>
             <div>
               <p className="font-poppins font-bold text-base text-warning">Reschedule Requests</p>
-              <p className="text-xs text-muted-foreground">Accept or decline client reschedule requests</p>
+              <p className="text-xs text-ink-muted">Accept or decline client reschedule requests</p>
             </div>
           </div>
           <div className="p-4">
