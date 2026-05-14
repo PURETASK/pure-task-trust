@@ -52,6 +52,14 @@ export default tseslint.config(
       "no-restricted-syntax": "off",
     },
   },
+  // Edge functions run server-side with the service role key — they ARE the
+  // system. They legitimately read/write the raw money columns.
+  {
+    files: ["supabase/functions/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
   // Allowlist: files that legitimately bridge the database boundary
   // (useJobMoney owns the math; the rest select / type / aggregate the
   // raw column for Supabase queries or hand it off to useJobMoney).
