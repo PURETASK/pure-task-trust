@@ -25,6 +25,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const AUTH_PROFILE_TIMEOUT_MS = 8000;
+
+async function withAuthTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
+  let timeoutId: ReturnType<typeof window.setTimeout> | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new Error(timeoutMessage)), AUTH_PROFILE_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(operation), timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -32,33 +48,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    let requestId = 0;
 
-    // 1. Restore session from localStorage synchronously so the UI unblocks fast.
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      if (!mounted) return;
-      setSession(initialSession);
-      if (initialSession?.user) {
-        await fetchUserProfile(initialSession.user);
-      } else {
+    const hydrateSession = (currentSession: Session | null) => {
+      const currentRequestId = ++requestId;
+
+      setSession(currentSession);
+      if (!currentSession?.user) {
         setUser(null);
+        setIsLoading(false);
+        return;
       }
-      if (mounted) setIsLoading(false);
-    });
 
-    // 2. Listen for subsequent auth changes (sign-in, sign-out, token refresh).
+      setIsLoading(true);
+      void fetchUserProfile(currentSession.user).finally(() => {
+        if (mounted && currentRequestId === requestId) {
+          setIsLoading(false);
+        }
+      });
+    };
+
+    // 1. Restore session from localStorage first so role/profile queries have a token.
+    supabase.auth.getSession()
+      .then(({ data: { session: initialSession } }) => {
+        if (mounted) hydrateSession(initialSession);
+      })
+      .catch((error) => {
+        console.error('Failed to restore auth session:', error);
+        if (!mounted) return;
+        setSession(null);
+        setUser(null);
+        setIsLoading(false);
+      });
+
+    // 2. Listen for subsequent auth changes. Do not await inside this callback;
+    // Supabase warns that async work here can deadlock auth initialization.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
         if (!mounted) return;
         // Skip INITIAL_SESSION — already handled by getSession() above.
         if (event === 'INITIAL_SESSION') return;
 
-        setSession(currentSession);
-        if (currentSession?.user) {
-          await fetchUserProfile(currentSession.user);
-        } else {
-          setUser(null);
-        }
-        if (mounted) setIsLoading(false);
+        hydrateSession(currentSession);
       },
     );
 
