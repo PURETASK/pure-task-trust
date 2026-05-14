@@ -1,0 +1,4 @@
+UPDATE public.help_articles
+SET body = E'No-show protection for clients.\n\nIf your cleaner is more than **30 minutes late** past your scheduled start time without communication and hasn''t checked in:\n\n1. A **Report no-show** button will appear on your job screen.\n2. Tap it to cancel the booking and receive a **full refund** of the credits held in escrow.\n3. We''ll prioritize matching you with another cleaner ASAP.\n\nIf the cleaner is between 30 and 45 minutes late and still hasn''t arrived or messaged you, you can also offer them a reschedule instead of a refund.',
+    updated_at = now()
+WHERE slug = 'cleaner-no-show';

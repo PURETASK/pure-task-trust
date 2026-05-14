@@ -195,7 +195,7 @@ export function NoShowDecisionCard({
                   <Badge className="bg-warning/20 text-warning border-warning/30 text-xs">Action Required</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  It's been over 45 minutes past your scheduled time. Choose what happens next.
+                  It's been over 30 minutes past your scheduled time and your cleaner hasn't checked in. Choose what happens next.
                 </p>
               </div>
             </div>

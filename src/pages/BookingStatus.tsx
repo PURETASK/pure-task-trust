@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; bg
   accepted: { icon: CheckCircle, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Booking Confirmed!", desc: "Your cleaner has accepted and is ready for your job" },
   active: { icon: Zap, color: "text-primary", bg: "bg-primary/15", border: "border-primary/50", label: "Cleaning In Progress", desc: "Your home is being cleaned right now" },
   completed: { icon: Check, color: "text-success", bg: "bg-success/15", border: "border-success/50", label: "Job Complete!", desc: "Your home is sparkling — review and we'll release payment automatically" },
-  no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 45 minutes — choose to reschedule or get a full refund" },
+  no_show_pending: { icon: AlertTriangle, color: "text-warning", bg: "bg-warning/15", border: "border-warning/50", label: "Cleaner Hasn't Arrived", desc: "It's been over 30 minutes and your cleaner hasn't checked in — report a no-show for a full refund" },
   declined: { icon: X, color: "text-destructive", bg: "bg-destructive/15", border: "border-destructive/50", label: "Booking Cancelled", desc: "This booking was cancelled or could not be fulfilled" },
 };
 
@@ -83,8 +83,18 @@ export default function BookingStatus() {
   }
 
   const statusKey = getStatusKey(job.status);
-  const config = STATUS_CONFIG[statusKey] || STATUS_CONFIG.pending;
-  const timelineStep = getTimelineStep(statusKey);
+  // Detect no-show window: 30+ min past scheduled start, cleaner has not checked in,
+  // and job is still in a pre-active state (not in_progress / completed / cancelled).
+  const minutesPastStart = job.scheduled_start_at
+    ? (Date.now() - new Date(job.scheduled_start_at).getTime()) / 60000
+    : 0;
+  const isNoShowEligible =
+    !(job as any).check_in_at &&
+    minutesPastStart >= 30 &&
+    ["pending", "created", "confirmed", "accepted"].includes(job.status);
+  const effectiveStatusKey = isNoShowEligible ? "no_show_pending" : statusKey;
+  const config = STATUS_CONFIG[effectiveStatusKey] || STATUS_CONFIG.pending;
+  const timelineStep = getTimelineStep(effectiveStatusKey);
   const StatusIcon = config.icon;
 
   const participants = useJobParticipants(job ?? null);
@@ -138,7 +148,7 @@ export default function BookingStatus() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
 
           {/* Status Hero — Aero celebration for confirmed/completed */}
-          {(statusKey === "accepted" || statusKey === "completed") ? (
+          {(effectiveStatusKey === "accepted" || effectiveStatusKey === "completed") ? (
             <div className="rounded-3xl bg-aero border-2 border-aero p-6 shadow-aero">
               <DashCelebration
                 title={config.label}
@@ -146,7 +156,7 @@ export default function BookingStatus() {
                 size="md"
               />
               {/* Live escrow countdown — only on completed jobs in review window */}
-              {statusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
+              {effectiveStatusKey === "completed" && escrow.isReviewable && escrow.releaseAt && (
                 <div className="mt-4 rounded-2xl bg-background/60 border border-aero-cyan/30 p-3">
                   <div className="flex items-center justify-between mb-2 gap-2">
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -160,7 +170,7 @@ export default function BookingStatus() {
                   <Progress value={escrow.progressPct} className="h-1.5" />
                 </div>
               )}
-              {statusKey === "completed" && escrow.isExpired && (
+              {effectiveStatusKey === "completed" && escrow.isExpired && (
                 <div className="mt-4 inline-flex items-center gap-1.5 text-sm text-success">
                   <Check className="h-4 w-4" />
                   Escrow released
@@ -175,7 +185,7 @@ export default function BookingStatus() {
                 transition={{ type: "spring", stiffness: 200 }}
                 className={`h-20 w-20 rounded-3xl ${config.bg} border-2 ${config.border} flex items-center justify-center mx-auto mb-4`}
               >
-                <StatusIcon className={`h-10 w-10 ${config.color} ${statusKey === "active" ? "animate-pulse" : ""}`} />
+                <StatusIcon className={`h-10 w-10 ${config.color} ${effectiveStatusKey === "active" ? "animate-pulse" : ""}`} />
               </motion.div>
               <h1 className="text-2xl font-poppins font-bold mb-2">{config.label}</h1>
               <p className="text-muted-foreground max-w-xs mx-auto">{config.desc}</p>
@@ -183,7 +193,7 @@ export default function BookingStatus() {
           )}
 
           {/* Progress Timeline */}
-          {statusKey !== "declined" && statusKey !== "no_show_pending" && (
+          {effectiveStatusKey !== "declined" && effectiveStatusKey !== "no_show_pending" && (
             <div className="rounded-3xl border-2 border-border/40 p-4 overflow-hidden">
               <div className="flex items-center">
                 {TIMELINE_STEPS.map((step, i) => {
@@ -212,7 +222,7 @@ export default function BookingStatus() {
           )}
 
           {/* No-Show Decision Card */}
-          {statusKey === "no_show_pending" && (
+          {effectiveStatusKey === "no_show_pending" && (
             <NoShowDecisionCard
               jobId={job.id}
               clientId={job.client_id || ""}
