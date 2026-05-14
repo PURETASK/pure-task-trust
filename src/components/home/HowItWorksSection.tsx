@@ -48,7 +48,7 @@ export function HowItWorksSection() {
                 For Clients
               </span>
               <h3 className="text-xl sm:text-2xl font-bold text-foreground">Book a Cleaner</h3>
-              <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+              <p className="text-ink-muted mt-2 text-sm sm:text-base">
                 Learn how to find, book, and work with verified cleaning professionals on our platform
               </p>
             </div>
@@ -94,7 +94,7 @@ export function HowItWorksSection() {
                 For Cleaners
               </span>
               <h3 className="text-xl sm:text-2xl font-bold text-foreground">Become a Cleaner</h3>
-              <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+              <p className="text-ink-muted mt-2 text-sm sm:text-base">
                 Discover how to build your cleaning business with flexible hours and fair pay
               </p>
             </div>

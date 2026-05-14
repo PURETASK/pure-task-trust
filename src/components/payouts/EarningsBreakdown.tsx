@@ -52,9 +52,9 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
   if (earnings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <Package className="h-16 w-16 text-muted-foreground/30 mb-4" />
-        <p className="text-muted-foreground">No earnings to display</p>
-        <p className="text-sm text-muted-foreground mt-1">Complete jobs to start earning!</p>
+        <Package className="h-16 w-16 text-ink-muted/30 mb-4" />
+        <p className="text-ink-muted">No earnings to display</p>
+        <p className="text-sm text-ink-muted mt-1">Complete jobs to start earning!</p>
       </div>
     );
   }
@@ -77,8 +77,8 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
                   {earning.job?.cleaning_type || 'standard'}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">{clientName}</p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <p className="text-sm text-ink-muted">{clientName}</p>
+              <div className="flex items-center gap-2 text-xs text-ink-muted">
                 <span>{format(new Date(earning.created_at), 'MMM d, yyyy')}</span>
                 {isPaidOut ? (
                   <Badge variant="outline" className="bg-success/10 text-success border-success/20 gap-1 text-xs">
@@ -98,7 +98,7 @@ export default function EarningsBreakdown({ earnings, isLoading }: EarningsBreak
                 +${earning.net_credits.toFixed(2)}
               </p>
               {earning.platform_fee_credits > 0 && (
-                <div className="text-xs text-muted-foreground space-y-0.5">
+                <div className="text-xs text-ink-muted space-y-0.5">
                   <p>Gross: ${earning.gross_credits.toFixed(2)}</p>
                   <p>Fee: -${earning.platform_fee_credits.toFixed(2)}</p>
                 </div>

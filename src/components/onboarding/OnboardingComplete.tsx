@@ -84,7 +84,7 @@ export function OnboardingComplete({ onComplete, isCompleting }: OnboardingCompl
           <p className="font-medium text-warning-foreground">
             ID Verification Pending
           </p>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-ink-muted mt-1">
             Your ID is being reviewed. You can start accepting jobs while we verify your identity.
           </p>
         </motion.div>

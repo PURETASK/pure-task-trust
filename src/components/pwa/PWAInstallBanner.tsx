@@ -86,7 +86,7 @@ export function PWAInstallBanner() {
 
             <div className="flex-1 min-w-0">
               <p className="font-bold text-sm text-foreground">Install PureTask</p>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs text-ink-muted truncate">
                 {isIOS ? "Add to Home Screen for the best experience" : "Install for offline access & notifications"}
               </p>
             </div>
@@ -110,7 +110,7 @@ export function PWAInstallBanner() {
               )}
               <button
                 onClick={handleDismiss}
-                className="h-8 w-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="h-8 w-8 rounded-xl flex items-center justify-center text-ink-muted hover:text-foreground hover:bg-muted transition-colors"
                 aria-label="Dismiss"
               >
                 <X className="h-4 w-4" />

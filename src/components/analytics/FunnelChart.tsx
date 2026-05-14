@@ -41,7 +41,7 @@ export function FunnelChart({ steps, title }: FunnelChartProps) {
                     {step.name.replace(/_/g, " ")}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-muted-foreground">
+                <div className="flex items-center gap-3 text-ink-muted">
                   <span className="font-medium text-foreground">
                     {step.count.toLocaleString()}
                   </span>
@@ -78,7 +78,7 @@ export function FunnelChart({ steps, title }: FunnelChartProps) {
       {steps.length > 1 && (
         <div className="pt-4 border-t border-border">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Overall Conversion</span>
+            <span className="text-ink-muted">Overall Conversion</span>
             <span className="font-semibold text-foreground">
               {((steps[steps.length - 1].count / steps[0].count) * 100).toFixed(1)}%
             </span>

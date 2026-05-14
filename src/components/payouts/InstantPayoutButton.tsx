@@ -78,11 +78,11 @@ export default function InstantPayoutButton({
         <Card className="border-warning bg-warning dark:bg-warning/20 dark:border-warning">
           <CardContent className="p-4 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Available Balance</span>
+              <span className="text-ink-muted">Available Balance</span>
               <span className="font-medium">${availableBalance.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Instant Payout Fee ({feePercentage}%)</span>
+              <span className="text-ink-muted">Instant Payout Fee ({feePercentage}%)</span>
               <span className="text-destructive">-${fee.toFixed(2)}</span>
             </div>
             <div className="border-t border-warning dark:border-warning pt-3 flex justify-between">
@@ -92,7 +92,7 @@ export default function InstantPayoutButton({
           </CardContent>
         </Card>
 
-        <div className="flex items-start gap-2 text-sm text-muted-foreground">
+        <div className="flex items-start gap-2 text-sm text-ink-muted">
           <AlertTriangle className="h-4 w-4 text-warning mt-0.5 shrink-0" />
           <p>
             Instant payouts are typically processed within a few hours. Regular weekly payouts

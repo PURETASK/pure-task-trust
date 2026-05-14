@@ -45,7 +45,7 @@ const TIER_CFG: Record<string, { label: string; chip: string }> = {
   gold: { label: "Pro", chip: "bg-warning/10 text-warning border-warning/30" },
   silver: { label: "Proven", chip: "bg-muted/40 text-foreground border-border" },
   bronze: { label: "Rising", chip: "bg-warning/10 text-warning border-warning/30" },
-  standard: { label: "Basic", chip: "bg-muted/40 text-muted-foreground border-border" },
+  standard: { label: "Basic", chip: "bg-muted/40 text-ink-muted border-border" },
 };
 
 function getInitials(name: string) {
@@ -172,7 +172,7 @@ export function CleanerShowcaseCard({
                     <Heart
                       className={cn(
                         "h-4 w-4 transition-all",
-                        isFavorite ? "fill-destructive text-destructive scale-110" : "text-muted-foreground",
+                        isFavorite ? "fill-destructive text-destructive scale-110" : "text-ink-muted",
                       )}
                     />
                   </button>
@@ -204,7 +204,7 @@ export function CleanerShowcaseCard({
                       ? "bg-success/15 border-success/40 text-success"
                       : score >= 70
                         ? "bg-warning/15 border-warning/40 text-warning"
-                        : "bg-muted border-border text-muted-foreground",
+                        : "bg-muted border-border text-ink-muted",
                   )}
                 >
                   <span className="text-base font-poppins font-bold leading-none">{score}</span>
@@ -215,7 +215,7 @@ export function CleanerShowcaseCard({
                     <Shield className="h-3 w-3 mr-1" />
                     {tier.label}
                   </Badge>
-                  <p className="text-xs text-muted-foreground mt-1 font-medium">
+                  <p className="text-xs text-ink-muted mt-1 font-medium">
                     {score >= 90
                       ? "Excellent Reliability"
                       : score >= 70
@@ -234,18 +234,18 @@ export function CleanerShowcaseCard({
                     <Star className="h-4 w-4 fill-warning text-warning" />
                     <span className="font-bold">{rating.toFixed(1)}</span>
                     {cleaner.reviewCount != null && (
-                      <span className="text-muted-foreground">({cleaner.reviewCount} reviews)</span>
+                      <span className="text-ink-muted">({cleaner.reviewCount} reviews)</span>
                     )}
                   </span>
                 ) : (
-                  <span className="text-muted-foreground font-medium">New cleaner</span>
+                  <span className="text-ink-muted font-medium">New cleaner</span>
                 )}
-                <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">{cleaner.jobsCompleted ?? 0} jobs</span>
+                <span className="text-ink-muted">·</span>
+                <span className="text-ink-muted">{cleaner.jobsCompleted ?? 0} jobs</span>
               </div>
 
               {/* Bio */}
-              <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{bio}</p>
+              <p className="text-sm text-ink-muted leading-snug line-clamp-2">{bio}</p>
 
               {/* Trust rows */}
               <div className="space-y-1.5 text-sm">
@@ -277,7 +277,7 @@ export function CleanerShowcaseCard({
                     </span>
                   ))}
                   {cleaner.services.length > 3 && (
-                    <span className="text-xs px-2.5 py-1 rounded-md bg-muted text-muted-foreground font-semibold">
+                    <span className="text-xs px-2.5 py-1 rounded-md bg-muted text-ink-muted font-semibold">
                       +{cleaner.services.length - 3}
                     </span>
                   )}
@@ -290,7 +290,7 @@ export function CleanerShowcaseCard({
                   <span className="text-2xl font-poppins font-bold text-primary">
                     ${cleaner.hourlyRate}
                   </span>
-                  <span className="text-xs text-muted-foreground">/hour</span>
+                  <span className="text-xs text-ink-muted">/hour</span>
                 </div>
                 <Button
                   size="sm"

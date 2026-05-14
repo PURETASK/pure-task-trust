@@ -33,7 +33,7 @@ export function AdminAlertsBadge() {
             to="/admin/disputes"
             className="relative inline-flex items-center justify-center h-9 w-9 rounded-lg hover:bg-secondary transition-colors"
           >
-            <Bell className="h-5 w-5 text-muted-foreground" />
+            <Bell className="h-5 w-5 text-ink-muted" />
             {count > 0 && (
               <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
                 {count > 9 ? "9+" : count}

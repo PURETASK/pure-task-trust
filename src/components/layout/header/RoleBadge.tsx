@@ -14,7 +14,7 @@ const ROLE_CONFIG: Record<string, { label: string; className: string }> = {
  * Small role indicator pill shown in the user dropdown header.
  */
 export function RoleBadge({ role }: RoleBadgeProps) {
-  const config = ROLE_CONFIG[role] ?? { label: role, className: "bg-muted text-muted-foreground border-border" };
+  const config = ROLE_CONFIG[role] ?? { label: role, className: "bg-muted text-ink-muted border-border" };
 
   return (
     <span

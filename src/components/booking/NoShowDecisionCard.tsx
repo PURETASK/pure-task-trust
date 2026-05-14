@@ -194,14 +194,14 @@ export function NoShowDecisionCard({
                   <h3 className="font-bold text-foreground">Your Cleaner Hasn't Arrived</h3>
                   <Badge className="bg-warning/20 text-warning border-warning/30 text-xs">Action Required</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground mt-0.5">
+                <p className="text-sm text-ink-muted mt-0.5">
                   It's been over 30 minutes past your scheduled time and your cleaner hasn't checked in. Choose what happens next.
                 </p>
               </div>
             </div>
 
             {/* Deadline */}
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-card rounded-xl px-3 py-2 border border-border/50">
+            <div className="flex items-center gap-2 text-xs text-ink-muted bg-card rounded-xl px-3 py-2 border border-border/50">
               <Clock className="h-3.5 w-3.5 text-warning flex-shrink-0" />
               <span>Decide by <strong className="text-foreground">{deadlineText}</strong> — after that we'll auto-cancel and refund you.</span>
             </div>
@@ -218,7 +218,7 @@ export function NoShowDecisionCard({
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-foreground text-sm">Offer a New Date & Time</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Give your cleaner a chance to make it right — propose a future appointment
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export function NoShowDecisionCard({
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-foreground text-sm">Cancel & Get Full Refund</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     <span className="text-success font-medium">{escrowCredits} credits</span> returned to your account immediately
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function NoShowDecisionCard({
           <div className="space-y-4 py-2">
             {/* Date Options */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Select Date</p>
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-2">Select Date</p>
               <div className="grid grid-cols-2 gap-2">
                 {RESCHEDULE_OPTIONS.map((opt) => {
                   const d = opt.getValue();
@@ -282,7 +282,7 @@ export function NoShowDecisionCard({
                       }`}
                     >
                       <p className="font-semibold">{opt.label}</p>
-                      <p className="text-xs text-muted-foreground font-normal">{format(d, "EEE, MMM d")}</p>
+                      <p className="text-xs text-ink-muted font-normal">{format(d, "EEE, MMM d")}</p>
                     </button>
                   );
                 })}
@@ -291,7 +291,7 @@ export function NoShowDecisionCard({
 
             {/* Time Options */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Select Time</p>
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-2">Select Time</p>
               <div className="flex flex-wrap gap-2">
                 {TIME_OPTIONS.map((t) => (
                   <button
@@ -315,7 +315,7 @@ export function NoShowDecisionCard({
             {/* Summary */}
             {selectedDate && (
               <div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 text-sm">
-                <span className="text-muted-foreground">Proposing: </span>
+                <span className="text-ink-muted">Proposing: </span>
                 <span className="font-semibold text-foreground">
                   {format(selectedDate, "EEEE, MMMM d")} at{" "}
                   {format(

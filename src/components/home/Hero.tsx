@@ -51,7 +51,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-lg"
+            className="text-base sm:text-lg md:text-xl text-ink-muted mb-6 sm:mb-8 max-w-lg"
           >
             Book independent cleaners, track every job with GPS and photos, and review and approve within 24 hours — or payment releases automatically.
           </motion.p>
@@ -77,7 +77,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground"
+            className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm text-ink-muted"
           >
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-pt-green" />

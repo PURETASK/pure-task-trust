@@ -188,7 +188,7 @@ export function AISupportChat({ contextPage, contextBookingId, compact, accentVa
             </div>
             <div>
               <p className="font-semibold">Hi {user?.name?.split(" ")[0] || "there"}, how can I help?</p>
-              <p className="text-sm text-muted-foreground mt-1">I can answer questions about bookings, payments, and policies.</p>
+              <p className="text-sm text-ink-muted mt-1">I can answer questions about bookings, payments, and policies.</p>
             </div>
             <div className="flex flex-wrap gap-2 justify-center max-w-md">
               {suggestions.map(s => (
@@ -240,7 +240,7 @@ export function AISupportChat({ contextPage, contextBookingId, compact, accentVa
                 <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                   <Loader2 className="h-4 w-4 animate-spin" />
                 </div>
-                <div className="rounded-2xl px-4 py-2.5 bg-muted text-sm text-muted-foreground">Thinking…</div>
+                <div className="rounded-2xl px-4 py-2.5 bg-muted text-sm text-ink-muted">Thinking…</div>
               </div>
             )}
           </div>

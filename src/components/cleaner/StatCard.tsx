@@ -23,7 +23,7 @@ export function StatCard({
           <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${iconColor}`} />
         </div>
         <div className="text-xl sm:text-2xl font-bold">{value}</div>
-        <div className="text-xs sm:text-sm text-muted-foreground">{label}</div>
+        <div className="text-xs sm:text-sm text-ink-muted">{label}</div>
       </CardContent>
     </Card>
   );

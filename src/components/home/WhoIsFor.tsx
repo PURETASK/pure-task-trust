@@ -62,7 +62,7 @@ export function WhoIsFor() {
           className="text-center mb-8 sm:mb-12"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Who PureTask Is For</h2>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto">
+          <p className="text-ink-muted text-base sm:text-lg max-w-xl mx-auto">
             Perfect cleaning solutions for every lifestyle
           </p>
         </motion.div>
@@ -91,7 +91,7 @@ export function WhoIsFor() {
                   <audience.icon className={`h-5 w-5 sm:h-7 sm:w-7 ${audience.iconColor}`} />
                 </div>
                 <h3 className="font-bold text-sm sm:text-lg mb-1.5 sm:mb-2">{audience.title}</h3>
-                <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
+                <p className="text-ink-muted text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
                   {audience.description}
                 </p>
                 <Link

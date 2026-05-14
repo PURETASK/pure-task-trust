@@ -86,7 +86,7 @@ export function ZipGate({ onResolved, initialZip = "", variant = "full" }: ZipGa
         <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">
           Change your location
         </h2>
-        <p className="text-sm text-muted-foreground text-center mb-6">
+        <p className="text-sm text-ink-muted text-center mb-6">
           Enter a new ZIP code to update which cleaners we show you.
         </p>
         <div className="space-y-3">

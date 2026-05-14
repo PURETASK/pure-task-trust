@@ -89,7 +89,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
           <Shield className="h-6 w-6 text-primary" />
           <h2 className="text-2xl font-bold">Address Verification</h2>
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-ink-muted">
           Please confirm your cleaning location for security purposes
         </p>
         <Badge variant="secondary" className="mt-2 gap-1">
@@ -115,18 +115,18 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p className="text-sm text-muted-foreground">Address</p>
+            <p className="text-sm text-ink-muted">Address</p>
             <p className="font-medium">{fullAddress}</p>
           </div>
           
           {coordinates && (
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted-foreground">Latitude</p>
+                <p className="text-ink-muted">Latitude</p>
                 <p className="font-mono">{coordinates.lat.toFixed(6)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground">Longitude</p>
+                <p className="text-ink-muted">Longitude</p>
                 <p className="font-mono">{coordinates.lng.toFixed(6)}</p>
               </div>
             </div>
@@ -156,13 +156,13 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
         <CardContent>
           {isGeocoding ? (
             <div className="h-64 rounded-lg bg-muted flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-8 w-8 animate-spin text-ink-muted" />
             </div>
           ) : coordinates ? (
             <div className="h-64 rounded-lg overflow-hidden border">
               <Suspense fallback={
                 <div className="h-full flex items-center justify-center bg-muted">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  <Loader2 className="h-8 w-8 animate-spin text-ink-muted" />
                 </div>
               }>
                 <LeafletMap 
@@ -174,7 +174,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
             </div>
           ) : (
             <div className="h-64 rounded-lg bg-muted flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-ink-muted">
                 <MapPin className="h-10 w-10 mx-auto mb-2 opacity-50" />
                 <p>Map preview unavailable</p>
               </div>
@@ -204,7 +204,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
               <Label htmlFor="addressCorrect" className="font-medium cursor-pointer">
                 Address is correct
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 I confirm this is the correct address for the cleaning service
               </p>
             </div>
@@ -222,7 +222,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
               <Label htmlFor="accessInstructions" className="font-medium cursor-pointer">
                 Access instructions ready
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 I will provide clear entry instructions (gate codes, key location, etc.)
               </p>
             </div>
@@ -240,7 +240,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
               <Label htmlFor="parkingAcknowledged" className="font-medium cursor-pointer">
                 Parking available
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 I acknowledge parking is available or will provide alternatives
               </p>
             </div>
@@ -258,7 +258,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
               <Label htmlFor="homeSecure" className="font-medium cursor-pointer">
                 Property is safe
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 The property is secure and safe for a professional to enter
               </p>
             </div>
@@ -267,7 +267,7 @@ export function AddressVerification({ address, onConfirm, onBack }: AddressVerif
       </Card>
 
       {/* Trust Badges */}
-      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+      <div className="flex items-center justify-center gap-4 text-xs text-ink-muted">
         <span className="flex items-center gap-1">
           <Shield className="h-3 w-3" />
           GPS Verified

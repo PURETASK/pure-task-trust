@@ -47,7 +47,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
                 </motion.div>
               ))}
             </div>
-            <p className="text-sm text-muted-foreground line-clamp-3 mb-3">"{quote}"</p>
+            <p className="text-sm text-ink-muted line-clamp-3 mb-3">"{quote}"</p>
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarImage src={avatarUrl ?? undefined} alt={authorName} />
@@ -77,7 +77,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
               >
                 <Star
                   className={`h-6 w-6 drop-shadow-sm ${
-                    i < rating ? "fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5]" : "fill-muted/40 text-muted-foreground/20 stroke-[1.5]"
+                    i < rating ? "fill-[hsl(45,100%,58%)] text-[hsl(40,100%,50%)] stroke-[1.5]" : "fill-muted/40 text-ink-muted/20 stroke-[1.5]"
                   }`}
                 />
               </motion.div>
@@ -97,7 +97,7 @@ export const TestimonialCard = forwardRef<HTMLDivElement, TestimonialCardProps>(
             </Avatar>
             <div>
               <p className="font-semibold text-foreground">{authorName}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 {[authorRole, authorLocation].filter(Boolean).join(" • ")}
               </p>
             </div>

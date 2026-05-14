@@ -62,7 +62,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
         {/* Balance display */}
         <div className="flex-1">
           <div className="mb-1">
-            <span className="text-xs text-muted-foreground font-medium">Available</span>
+            <span className="text-xs text-ink-muted font-medium">Available</span>
             <p className="text-3xl font-poppins font-bold tracking-tight">
               ${availableBalance.toLocaleString()}
             </p>
@@ -73,7 +73,7 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1 cursor-help">
+                    <span className="text-xs text-ink-muted flex items-center gap-1 cursor-help">
                       Held <Info className="h-3 w-3" />
                     </span>
                   </TooltipTrigger>
@@ -84,12 +84,12 @@ export function WalletSnapshotCard({ availableBalance, heldBalance, walletState 
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <span className="text-sm font-bold text-muted-foreground">${heldBalance.toLocaleString()}</span>
+              <span className="text-sm font-bold text-ink-muted">${heldBalance.toLocaleString()}</span>
             </div>
           )}
         </div>
 
-        <p className="text-[11px] text-muted-foreground mt-3 mb-4">
+        <p className="text-[11px] text-ink-muted mt-3 mb-4">
           Unused held credits are returned automatically.
         </p>
 

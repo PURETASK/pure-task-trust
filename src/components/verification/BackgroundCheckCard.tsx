@@ -38,7 +38,7 @@ export function BackgroundCheckCard() {
                     </div>
                     <div>
                       <p className="font-medium">Verified</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-ink-muted">
                         {latestCheck.provider} background check passed
                       </p>
                     </div>
@@ -50,7 +50,7 @@ export function BackgroundCheckCard() {
                     </div>
                     <div>
                       <p className="font-medium">In Progress</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-ink-muted">
                         Background check is being processed
                       </p>
                     </div>
@@ -62,7 +62,7 @@ export function BackgroundCheckCard() {
                     </div>
                     <div>
                       <p className="font-medium">Action Required</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-ink-muted">
                         Please complete your background check
                       </p>
                     </div>
@@ -75,7 +75,7 @@ export function BackgroundCheckCard() {
             </div>
 
             {latestCheck.expires_at && isVerified && (
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-ink-muted">
                 Expires: {format(new Date(latestCheck.expires_at), 'MMM d, yyyy')}
               </div>
             )}
@@ -91,8 +91,8 @@ export function BackgroundCheckCard() {
           </>
         ) : (
           <div className="text-center py-4">
-            <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground mb-4">
+            <Shield className="h-12 w-12 mx-auto text-ink-muted mb-3" />
+            <p className="text-ink-muted mb-4">
               Complete a background check to build trust with clients
             </p>
             <Button 

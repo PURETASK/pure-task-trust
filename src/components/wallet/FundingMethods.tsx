@@ -31,7 +31,7 @@ export function FundingMethods() {
             </div>
             <div>
               <h2 className="text-lg font-poppins font-bold">Funding Methods</h2>
-              <p className="text-xs text-muted-foreground">Manage your saved payment methods</p>
+              <p className="text-xs text-ink-muted">Manage your saved payment methods</p>
             </div>
           </div>
           <Button size="sm" variant="outline" className="gap-1.5 text-xs rounded-xl h-9">
@@ -44,8 +44,8 @@ export function FundingMethods() {
             <div className="palette-icon palette-icon-purple h-14 w-14 mx-auto mb-4">
               <CreditCard className="h-7 w-7" />
             </div>
-            <p className="font-bold text-muted-foreground">No payment methods saved</p>
-            <p className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
+            <p className="font-bold text-ink-muted">No payment methods saved</p>
+            <p className="text-sm text-ink-muted mt-1 max-w-xs mx-auto">
               Add a card to buy credits faster and enable auto top-up.
             </p>
             <Button size="sm" className="mt-4 gap-1.5">
@@ -68,22 +68,22 @@ export function FundingMethods() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm capitalize">{method.brand}</p>
-                      <span className="text-sm text-muted-foreground">•••• {method.last4}</span>
+                      <span className="text-sm text-ink-muted">•••• {method.last4}</span>
                       {method.is_default && (
                         <Badge className="palette-pill-blue text-[10px] h-5 px-2 font-bold">Default</Badge>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       Expires {method.exp_month.toString().padStart(2, "0")}/{method.exp_year}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     {!method.is_default && (
-                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-primary" title="Set as default">
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-ink-muted hover:text-primary" title="Set as default">
                         <Star className="h-3.5 w-3.5" />
                       </Button>
                     )}
-                    <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive" title="Remove">
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-ink-muted hover:text-destructive" title="Remove">
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -93,7 +93,7 @@ export function FundingMethods() {
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground text-center mt-4 flex items-center justify-center gap-1.5">
+        <p className="text-xs text-ink-muted text-center mt-4 flex items-center justify-center gap-1.5">
           <Shield className="h-3 w-3" />
           Card details are securely stored by Stripe. PureTask never sees your full card number.
         </p>

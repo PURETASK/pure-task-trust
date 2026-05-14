@@ -55,7 +55,7 @@ export function StatsSection() {
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3">
             Better service through smarter technology
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+          <p className="text-ink-muted text-sm sm:text-base max-w-2xl mx-auto">
             We're not just another cleaning app. PureTask is built from scratch with AI, transparency, and trust at its core.
           </p>
         </motion.div>
@@ -77,7 +77,7 @@ export function StatsSection() {
             >
               <item.icon className={`h-7 w-7 sm:h-8 sm:w-8 ${item.iconColor}`} />
               <h3 className="text-sm sm:text-base font-semibold text-foreground">{item.title}</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+              <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{item.description}</p>
             </motion.div>
           ))}
         </div>

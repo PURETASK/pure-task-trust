@@ -199,7 +199,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                             </Avatar>
                             <div className="flex flex-col min-w-0">
                               <span className="font-semibold text-sm truncate">{user.name}</span>
-                              <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                              <span className="text-xs text-ink-muted truncate">{user.email}</span>
                               <RoleBadge role={user.role} />
                             </div>
                           </div>

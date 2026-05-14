@@ -98,7 +98,7 @@ export function ExitIntentPopup({ forceShow, onClose }: ExitIntentPopupProps) {
                 <div className="mt-4 text-center">
                   <button
                     onClick={handleClose}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-ink-muted hover:text-foreground transition-colors"
                   >
                     No thanks, I'll pay full price
                   </button>
@@ -106,7 +106,7 @@ export function ExitIntentPopup({ forceShow, onClose }: ExitIntentPopupProps) {
               </div>
 
               {/* Trust badges */}
-              <div className="px-6 pb-6 flex justify-center gap-4 text-xs text-muted-foreground">
+              <div className="px-6 pb-6 flex justify-center gap-4 text-xs text-ink-muted">
                 <span>✓ Background checked cleaners</span>
                 <span>✓ Satisfaction guaranteed</span>
               </div>

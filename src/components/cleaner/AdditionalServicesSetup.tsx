@@ -70,7 +70,7 @@ const COLOR_CARD: Record<ServiceColor, { border: string; bg: string; icon: strin
 const DISABLED_CARD = {
   border: 'border-2 border-border/40',
   bg:     '',
-  icon:   'bg-muted text-muted-foreground',
+  icon:   'bg-muted text-ink-muted',
   badge:  '',
 };
 
@@ -131,8 +131,8 @@ function ServiceBlock({
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground leading-snug">{description}</p>
-            <p className="text-[11px] text-muted-foreground/70 mt-1">Range: ${min} – ${max}</p>
+            <p className="text-xs text-ink-muted leading-snug">{description}</p>
+            <p className="text-[11px] text-ink-muted/70 mt-1">Range: ${min} – ${max}</p>
           </div>
 
           {/* Toggle */}
@@ -199,7 +199,7 @@ function CustomServiceBlock({
 
           <div className="flex-1 min-w-0">
             <h4 className="font-semibold text-sm">{name}</h4>
-            {description && <p className="text-xs text-muted-foreground">{description}</p>}
+            {description && <p className="text-xs text-ink-muted">{description}</p>}
           </div>
 
           <div className="flex items-center gap-2">
@@ -293,7 +293,7 @@ export function AdditionalServicesSetup() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8 text-muted-foreground">Loading services…</div>;
+    return <div className="text-center py-8 text-ink-muted">Loading services…</div>;
   }
 
   const serviceIds = Object.keys(ADDITIONAL_SERVICE_LABELS);
@@ -304,7 +304,7 @@ export function AdditionalServicesSetup() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-xl font-bold">Additional Services</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-ink-muted">
             All cleaners can offer any add-on service — set your own price within the platform range
           </p>
         </div>
@@ -316,7 +316,7 @@ export function AdditionalServicesSetup() {
       {/* Color legend */}
       <div className="flex flex-wrap gap-3">
         {LEGEND.map(l => (
-          <span key={l.label} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span key={l.label} className="flex items-center gap-1.5 text-xs text-ink-muted">
             <span className={`h-2.5 w-2.5 rounded-full ${l.color}`} />
             {l.label}
           </span>
@@ -355,7 +355,7 @@ export function AdditionalServicesSetup() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-lg font-semibold">Custom Services</h3>
-            <p className="text-sm text-muted-foreground">Add your own specialty services</p>
+            <p className="text-sm text-ink-muted">Add your own specialty services</p>
           </div>
           <Button variant="outline" onClick={() => setShowAddCustom(!showAddCustom)} className="rounded-xl">
             <Plus className="h-4 w-4 mr-2" />Add Custom
@@ -404,7 +404,7 @@ export function AdditionalServicesSetup() {
         </div>
 
         {(!customServices || customServices.length === 0) && !showAddCustom && (
-          <p className="text-center text-muted-foreground py-4">No custom services yet. Add your specialty services above.</p>
+          <p className="text-center text-ink-muted py-4">No custom services yet. Add your specialty services above.</p>
         )}
       </div>
     </div>

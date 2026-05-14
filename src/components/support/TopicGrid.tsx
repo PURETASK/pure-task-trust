@@ -65,7 +65,7 @@ export function TopicGrid({ role }: TopicGridProps) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="font-semibold text-sm capitalize">{cat.replace(/-/g, " ")}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">{items.length} article{items.length !== 1 ? "s" : ""}</p>
+                  <p className="text-xs text-ink-muted mt-0.5">{items.length} article{items.length !== 1 ? "s" : ""}</p>
                 </div>
               </div>
             </Card>

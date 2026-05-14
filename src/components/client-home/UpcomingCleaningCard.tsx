@@ -84,7 +84,7 @@ function EmptyState() {
           <Sparkles className="h-8 w-8" />
         </div>
         <h2 className="text-xl sm:text-2xl font-bold mb-2">No cleaning booked yet</h2>
-        <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
+        <p className="text-sm text-ink-muted mb-8 max-w-md mx-auto">
           Book a trusted cleaner in minutes.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
@@ -95,7 +95,7 @@ function EmptyState() {
                     <s.icon className="h-5 w-5" />
                 </div>
                 <p className="font-semibold text-sm">{s.label}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">{s.desc}</p>
+                <p className="text-[11px] text-ink-muted mt-0.5">{s.desc}</p>
               </div>
             </Link>
           ))}
@@ -114,10 +114,10 @@ function FutureState({ job }: { job: JobWithDetails }) {
       <div className="h-1 w-full gradient-brand" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          <p className="text-xs text-ink-muted font-medium">Next Cleaning</p>
           {statusPill("Confirmed", "default")}
         </div>
-        <p className="text-sm text-muted-foreground mb-5">Your next cleaning is booked and ready.</p>
+        <p className="text-sm text-ink-muted mb-5">Your next cleaning is booked and ready.</p>
 
         <JobDetails job={job} address={address} />
 
@@ -134,7 +134,7 @@ function FutureState({ job }: { job: JobWithDetails }) {
           <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl" asChild>
             <Link to={`/my-cleanings/${job.id}`}>Reschedule</Link>
           </Button>
-          <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl text-muted-foreground" asChild>
+          <Button size="sm" variant="ghost" className="text-xs h-9 rounded-xl text-ink-muted" asChild>
             <Link to={`/my-cleanings/${job.id}`}>Cancel</Link>
           </Button>
         </div>
@@ -156,7 +156,7 @@ function UrgentState({ job }: { job: JobWithDetails }) {
       <div className="h-1 w-full bg-warning" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          <p className="text-xs text-ink-muted font-medium">Next Cleaning</p>
           {statusPill("Confirmed", "warning")}
         </div>
 
@@ -201,7 +201,7 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
       <div className="h-1 w-full bg-destructive" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-xs text-muted-foreground font-medium">Next Cleaning</p>
+          <p className="text-xs text-ink-muted font-medium">Next Cleaning</p>
           {statusPill("Needs Top-Up", "destructive")}
         </div>
 
@@ -211,7 +211,7 @@ function NeedsTopUpState({ job }: { job: JobWithDetails }) {
           </div>
           <div>
             <p className="text-sm font-semibold text-destructive">Insufficient balance</p>
-            <p className="text-xs text-muted-foreground">Top up to keep your booking confirmed.</p>
+            <p className="text-xs text-ink-muted">Top up to keep your booking confirmed.</p>
           </div>
         </div>
 
@@ -240,7 +240,7 @@ function OnTheWayState({ job }: { job: JobWithDetails }) {
       <div className="h-1 w-full gradient-brand" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs text-muted-foreground font-medium">Active Cleaning</p>
+          <p className="text-xs text-ink-muted font-medium">Active Cleaning</p>
           {statusPill("On The Way", "default")}
         </div>
 
@@ -259,14 +259,14 @@ function OnTheWayState({ job }: { job: JobWithDetails }) {
           </motion.div>
           <div>
             <p className="font-bold text-lg">{cleanerName(job)} is on the way</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-ink-muted">
               Arriving soon • {serviceLabel(job.cleaning_type)}
             </p>
           </div>
         </div>
 
         {job.scheduled_start_at && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 pl-[74px]">
+          <div className="flex items-center gap-2 text-xs text-ink-muted mb-4 pl-[74px]">
             <Clock className="h-3 w-3" />
             Scheduled for {format(new Date(job.scheduled_start_at), "h:mm a")}
           </div>
@@ -303,7 +303,7 @@ function InProgressState({ job }: { job: JobWithDetails }) {
       <div className="h-1 w-full bg-success" />
       <CardContent className="p-5 sm:p-7">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs text-muted-foreground font-medium">Active Cleaning</p>
+          <p className="text-xs text-ink-muted font-medium">Active Cleaning</p>
           {statusPill("In Progress", "success")}
         </div>
 
@@ -318,7 +318,7 @@ function InProgressState({ job }: { job: JobWithDetails }) {
             </motion.div>
             <div>
               <p className="font-bold text-lg">Your cleaner is currently on-site</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-ink-muted">
                 {cleanerName(job)} • {serviceLabel(job.cleaning_type)}
               </p>
             </div>
@@ -331,7 +331,7 @@ function InProgressState({ job }: { job: JobWithDetails }) {
         </div>
 
         {escrowHeld(job) > 0 && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 pl-[74px]">
+          <div className="flex items-center gap-2 text-xs text-ink-muted mb-4 pl-[74px]">
             <CreditCard className="h-3 w-3" />
             <span>${escrowHeld(job)} held for this job</span>
           </div>
@@ -363,7 +363,7 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
       <div className="h-1.5 w-full bg-warning" />
       <CardContent className="p-5 sm:p-8">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs text-muted-foreground font-medium">Action Required</p>
+          <p className="text-xs text-ink-muted font-medium">Action Required</p>
           {statusPill("Awaiting Approval", "warning")}
         </div>
 
@@ -373,7 +373,7 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
           </div>
           <div>
             <h2 className="font-bold text-lg">Cleaning Complete — Approval Needed</h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-ink-muted">
               Your cleaning is complete. Review photos before payment is released.
             </p>
           </div>
@@ -386,12 +386,12 @@ function AwaitingApprovalState({ job }: { job: JobWithDetails }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm">{cleanerName(job)}</p>
-            <p className="text-xs text-muted-foreground capitalize">{serviceLabel(job.cleaning_type)}</p>
+            <p className="text-xs text-ink-muted capitalize">{serviceLabel(job.cleaning_type)}</p>
           </div>
           {escrowHeld(job) > 0 && (
             <div className="text-right">
               <p className="text-lg font-bold">${escrowHeld(job)}</p>
-              <p className="text-[10px] text-muted-foreground">credits held</p>
+              <p className="text-[10px] text-ink-muted">credits held</p>
             </div>
           )}
         </div>
@@ -422,7 +422,7 @@ function JobDetails({ job, address }: { job: JobWithDetails; address: string | n
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-base">{cleanerName(job)}</p>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap mt-1">
+        <div className="flex items-center gap-3 text-xs text-ink-muted flex-wrap mt-1">
           <Badge variant="outline" className="text-[10px] h-5 px-2 font-medium capitalize palette-pill palette-pill-blue">
             {serviceLabel(job.cleaning_type)}
           </Badge>
@@ -440,13 +440,13 @@ function JobDetails({ job, address }: { job: JobWithDetails; address: string | n
           )}
         </div>
         {address && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1.5">
+          <div className="flex items-center gap-1 text-xs text-ink-muted mt-1.5">
             <MapPin className="h-3 w-3 flex-shrink-0" />
             <span className="truncate">{address}</span>
           </div>
         )}
         {escrowHeld(job) > 0 && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+          <div className="flex items-center gap-1 text-xs text-ink-muted mt-1">
             <CreditCard className="h-3 w-3" />
             <span>${escrowHeld(job)} credits held</span>
           </div>

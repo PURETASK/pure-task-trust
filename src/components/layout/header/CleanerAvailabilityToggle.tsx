@@ -38,7 +38,7 @@ export function CleanerAvailabilityToggle() {
       className={cn(
         "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold",
         showLoading
-          ? "bg-muted border-border text-muted-foreground"
+          ? "bg-muted border-border text-ink-muted"
           : "bg-success/10 border-success/30 text-success shadow-sm"
       )}
     >

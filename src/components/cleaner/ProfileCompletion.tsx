@@ -59,7 +59,7 @@ export function ProfileCompletion({ profile, hasServiceAreas = false, hasAvailab
             </div>
             <div>
               <p className="font-semibold text-sm">Complete your profile</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-ink-muted">
                 {incomplete.length} item{incomplete.length !== 1 ? "s" : ""} left to unlock full visibility
               </p>
             </div>
@@ -85,7 +85,7 @@ export function ProfileCompletion({ profile, hasServiceAreas = false, hasAvailab
                   <div className="flex items-center gap-2.5">
                     {done
                       ? <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />
-                      : <Circle className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                      : <Circle className="h-4 w-4 text-ink-muted flex-shrink-0" />}
                     <div>
                       <p className="text-sm font-medium">{item.label}</p>
                       {!done && <p className="text-xs text-primary">{item.benefit}</p>}

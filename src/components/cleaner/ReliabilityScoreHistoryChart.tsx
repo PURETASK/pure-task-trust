@@ -58,7 +58,7 @@ function CustomTooltip({ active, payload }: any) {
     <div className="bg-card border border-border rounded-xl p-2.5 sm:p-3 shadow-elevated text-sm min-w-[140px]">
       <p className="font-semibold text-foreground mb-0.5 text-xs sm:text-sm">{data.dateLabel}</p>
       <p className="text-xl sm:text-2xl font-poppins font-bold text-foreground">{data.score}</p>
-      <p className="text-[10px] sm:text-xs text-muted-foreground capitalize">{data.tier || "—"} tier</p>
+      <p className="text-[10px] sm:text-xs text-ink-muted capitalize">{data.tier || "—"} tier</p>
       {data.event && (
         <p className="text-[10px] sm:text-xs mt-1.5 pt-1.5 border-t border-border">
           {EVENT_ICONS[data.event] || "📌"} {data.event.replace(/_/g, " ")}
@@ -145,7 +145,7 @@ function ChartCard({ data, currentScore, scoreDelta, hasHistory }: {
   hasHistory: boolean;
 }) {
   const DeltaIcon = !scoreDelta || scoreDelta === 0 ? Minus : scoreDelta > 0 ? TrendingUp : TrendingDown;
-  const deltaColor = !scoreDelta || scoreDelta === 0 ? "text-muted-foreground" : scoreDelta > 0 ? "text-success" : "text-destructive";
+  const deltaColor = !scoreDelta || scoreDelta === 0 ? "text-ink-muted" : scoreDelta > 0 ? "text-success" : "text-destructive";
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
@@ -164,7 +164,7 @@ function ChartCard({ data, currentScore, scoreDelta, hasHistory }: {
                 </Badge>
               )}
               {!hasHistory && (
-                <Badge variant="outline" className="text-[10px] sm:text-xs text-muted-foreground">
+                <Badge variant="outline" className="text-[10px] sm:text-xs text-ink-muted">
                   Complete jobs to build history
                 </Badge>
               )}
@@ -210,7 +210,7 @@ function ChartCard({ data, currentScore, scoreDelta, hasHistory }: {
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1">
                 <div className="h-1.5 w-2.5 rounded-full opacity-60" style={{ backgroundColor: color }} />
-                <span className="text-[9px] sm:text-xs text-muted-foreground">{label}</span>
+                <span className="text-[9px] sm:text-xs text-ink-muted">{label}</span>
               </div>
             ))}
           </div>
@@ -219,11 +219,11 @@ function ChartCard({ data, currentScore, scoreDelta, hasHistory }: {
             <div className="flex items-center gap-3 sm:gap-4 mt-1.5 flex-wrap">
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-success" />
-                <span className="text-[9px] sm:text-xs text-muted-foreground">Score gain</span>
+                <span className="text-[9px] sm:text-xs text-ink-muted">Score gain</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-destructive" />
-                <span className="text-[9px] sm:text-xs text-muted-foreground">Score drop / No-show</span>
+                <span className="text-[9px] sm:text-xs text-ink-muted">Score drop / No-show</span>
               </div>
             </div>
           )}

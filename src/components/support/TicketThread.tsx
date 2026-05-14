@@ -65,7 +65,7 @@ export function TicketThread({ ticketId }: { ticketId: string }) {
               if (meta.align === "center") {
                 return (
                   <div key={m.id} className="flex justify-center">
-                    <div className="text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <div className="text-xs text-ink-muted bg-muted/50 px-3 py-1.5 rounded-full flex items-center gap-1.5">
                       <Icon className="h-3 w-3" />
                       {m.body}
                     </div>
@@ -78,7 +78,7 @@ export function TicketThread({ ticketId }: { ticketId: string }) {
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className={cn("max-w-[80%]", meta.align === "right" && "text-right")}>
-                    <div className="flex items-baseline gap-2 mb-1 text-xs text-muted-foreground">
+                    <div className="flex items-baseline gap-2 mb-1 text-xs text-ink-muted">
                       <span className="font-medium">{meta.label}</span>
                       <span>{formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}</span>
                     </div>
@@ -93,7 +93,7 @@ export function TicketThread({ ticketId }: { ticketId: string }) {
             })}
           </div>
         ) : (
-          <p className="text-center text-sm text-muted-foreground py-8">No messages yet.</p>
+          <p className="text-center text-sm text-ink-muted py-8">No messages yet.</p>
         )}
       </ScrollArea>
 

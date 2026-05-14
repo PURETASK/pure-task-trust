@@ -51,7 +51,7 @@ export function LoyaltyTracker() {
           </div>
           <div>
             <h3 className="font-semibold text-sm">Loyalty Rewards</h3>
-            <p className="text-xs text-muted-foreground">{completedCount} bookings completed</p>
+            <p className="text-xs text-ink-muted">{completedCount} bookings completed</p>
           </div>
           {isMaxTier && <Badge className="ml-auto bg-warning/20 text-warning border-warning/30">VIP 🥇</Badge>}
         </div>
@@ -65,10 +65,10 @@ export function LoyaltyTracker() {
                 <div className={`mx-auto h-8 w-8 rounded-full flex items-center justify-center text-base mb-1 border-2 transition-all ${
                   reached ? "border-warning bg-warning/10" : "border-border bg-muted"
                 }`}>
-                  {reached ? m.emoji : <Lock className="h-3 w-3 text-muted-foreground" />}
+                  {reached ? m.emoji : <Lock className="h-3 w-3 text-ink-muted" />}
                 </div>
-                <p className="text-[10px] font-medium text-muted-foreground">{m.bookings} jobs</p>
-                <p className="text-[10px] text-muted-foreground line-clamp-1">{m.reward}</p>
+                <p className="text-[10px] font-medium text-ink-muted">{m.bookings} jobs</p>
+                <p className="text-[10px] text-ink-muted line-clamp-1">{m.reward}</p>
               </div>
             );
           })}
@@ -77,7 +77,7 @@ export function LoyaltyTracker() {
         {!isMaxTier && (
           <>
             <Progress value={progressPct} className="h-1.5 mb-1.5" />
-            <p className="text-xs text-muted-foreground text-center">
+            <p className="text-xs text-ink-muted text-center">
               <span className="font-semibold text-foreground">{nextMilestone.bookings - completedCount} more bookings</span> to unlock {nextMilestone.reward}
             </p>
           </>

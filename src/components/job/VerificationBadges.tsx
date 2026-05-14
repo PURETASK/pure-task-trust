@@ -89,12 +89,12 @@ function VerificationItem({
         {verified ? (
           <Check className="h-5 w-5 text-success" />
         ) : (
-          <Icon className="h-5 w-5 text-muted-foreground" />
+          <Icon className="h-5 w-5 text-ink-muted" />
         )}
       </div>
       <div className="flex-1">
         <p className="font-medium text-sm">{label}</p>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-xs text-ink-muted">{description}</p>
       </div>
       {verified && (
         <Shield className="h-4 w-4 text-success" />
@@ -112,7 +112,7 @@ export function GPSLiveIndicator({ address }: { address: string }) {
       </div>
       <div className="flex-1">
         <p className="font-medium text-sm">GPS Verified Location</p>
-        <p className="text-xs text-muted-foreground">{address}</p>
+        <p className="text-xs text-ink-muted">{address}</p>
       </div>
       <Badge variant="success" className="gap-1">
         <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />

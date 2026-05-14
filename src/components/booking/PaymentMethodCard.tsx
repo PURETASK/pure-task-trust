@@ -56,7 +56,7 @@ export function PaymentMethodCard({
             </span>
           )}
         </div>
-        {subtitle && <div className="text-xs text-muted-foreground mt-0.5">{subtitle}</div>}
+        {subtitle && <div className="text-xs text-ink-muted mt-0.5">{subtitle}</div>}
       </div>
       <div className="text-right flex-shrink-0">
         <p className="text-xl font-poppins font-bold" style={{ color: `hsl(var(--${paletteVar}-deep))` }}>${amount}</p>

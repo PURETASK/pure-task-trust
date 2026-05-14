@@ -72,7 +72,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No goals set for this month yet.</p>
+          <p className="text-sm text-ink-muted">No goals set for this month yet.</p>
         </CardContent>
       </Card>
     );
@@ -102,14 +102,14 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
               <div key={goal.id} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Icon className={`h-4 w-4 ${isComplete ? 'text-success' : 'text-muted-foreground'}`} />
+                    <Icon className={`h-4 w-4 ${isComplete ? 'text-success' : 'text-ink-muted'}`} />
                     <span className="text-sm font-medium">{config.label}</span>
                     {isComplete && (
                       <CheckCircle className="h-4 w-4 text-success" />
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-ink-muted">
                       {goal.current_value}/{goal.target_value}
                     </span>
                     <Badge variant={goal.is_awarded ? "default" : "secondary"} className="text-xs">
@@ -127,7 +127,7 @@ export function GoalsCard({ cleanerId, compact = false }: GoalsCardProps) {
         </div>
         
         {!compact && (
-          <p className="text-xs text-muted-foreground mt-4">
+          <p className="text-xs text-ink-muted mt-4">
             Complete goals to earn bonus rewards. Goals reset monthly.
           </p>
         )}

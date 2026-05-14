@@ -109,13 +109,13 @@ export function BookingServicesPicker({ cleanerId, onServicesChange, hours }: Bo
   const selectedServices = getSelectedServices();
 
   if (isLoading) {
-    return <div className="text-center py-4 text-muted-foreground">Loading services...</div>;
+    return <div className="text-center py-4 text-ink-muted">Loading services...</div>;
   }
 
   if (!additionalServices?.length && !customServices?.length) {
     return (
       <Card>
-        <CardContent className="py-6 text-center text-muted-foreground">
+        <CardContent className="py-6 text-center text-ink-muted">
           This cleaner hasn't set up additional services yet.
         </CardContent>
       </Card>
@@ -126,7 +126,7 @@ export function BookingServicesPicker({ cleanerId, onServicesChange, hours }: Bo
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-2">Add-on Services</h3>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-ink-muted mb-4">
           Select optional add-ons for your cleaning
         </p>
 
@@ -155,7 +155,7 @@ export function BookingServicesPicker({ cleanerId, onServicesChange, hours }: Bo
           <Separator />
           <div>
             <h3 className="text-lg font-semibold mb-2">Special Services</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-ink-muted mb-4">
               Unique services offered by this cleaner
             </p>
 
@@ -193,13 +193,13 @@ export function BookingServicesPicker({ cleanerId, onServicesChange, hours }: Bo
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Hourly Rate ({hours} hrs)</span>
+              <span className="text-ink-muted">Hourly Rate ({hours} hrs)</span>
               <span>${hourlyRate} × {hours} = ${hourlyRate * hours}</span>
             </div>
 
             {selectedServices.map((service) => (
               <div key={service.serviceId} className="flex justify-between">
-                <span className="text-muted-foreground">
+                <span className="text-ink-muted">
                   {service.name} × {service.quantity}
                 </span>
                 <span>${service.price * service.quantity}</span>
@@ -250,7 +250,7 @@ function ServiceQuantityCard({
           
           <div className="flex-1 min-w-0">
             <h4 className="font-medium text-sm truncate">{name}</h4>
-            {unit && <p className="text-xs text-muted-foreground truncate">{unit}</p>}
+            {unit && <p className="text-xs text-ink-muted truncate">{unit}</p>}
           </div>
 
           <div className="flex items-center gap-2 shrink-0">

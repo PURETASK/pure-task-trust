@@ -74,7 +74,7 @@ export function ABTestResults({ testId, testName, variants }: ABTestResultsProps
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-2 text-ink-muted">
                 <span>{variant.participants.toLocaleString()}</span>
                 <span className="text-xs">({variant.percentage.toFixed(1)}%)</span>
               </div>
@@ -84,7 +84,7 @@ export function ABTestResults({ testId, testName, variants }: ABTestResultsProps
         ))}
 
         {totalParticipants < 100 && (
-          <p className="text-xs text-muted-foreground text-center pt-2">
+          <p className="text-xs text-ink-muted text-center pt-2">
             Need more data for statistical significance (min. 100 participants)
           </p>
         )}

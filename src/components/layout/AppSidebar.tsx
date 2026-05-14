@@ -152,7 +152,7 @@ function NavBadge({ label }: { label: string }) {
   return (
     <span className={cn(
       "ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-full border",
-      colorMap[label] ?? "bg-muted text-muted-foreground border-border"
+      colorMap[label] ?? "bg-muted text-ink-muted border-border"
     )}>
       {label}
     </span>
@@ -176,7 +176,7 @@ export function AppSidebar() {
   const navGroups = getNavGroups();
 
   const roleAccent =
-    !isAuthenticated      ? "text-muted-foreground" :
+    !isAuthenticated      ? "text-ink-muted" :
     user?.role === "admin"   ? "text-destructive" :
     user?.role === "cleaner" ? "text-success"     : "text-primary";
 
@@ -220,7 +220,7 @@ export function AppSidebar() {
           {navGroups.map((group) => (
             <SidebarGroup key={group.group}>
               {!collapsed && (
-                <SidebarGroupLabel className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest px-4 mb-0.5">
+                <SidebarGroupLabel className="text-[10px] font-bold text-ink-muted/60 uppercase tracking-widest px-4 mb-0.5">
                   {group.group}
                 </SidebarGroupLabel>
               )}
@@ -243,7 +243,7 @@ export function AppSidebar() {
                                     "flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-all mx-1",
                                     active
                                       ? `${roleBg} ${roleAccent}`
-                                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                      : "text-ink-muted hover:text-foreground hover:bg-muted"
                                   )}
                                 >
                                   <Icon className="h-4 w-4 flex-shrink-0" />
@@ -262,7 +262,7 @@ export function AppSidebar() {
                                 "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all mx-1",
                                 active
                                   ? `${roleBg} ${roleAccent} shadow-sm`
-                                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                                  : "text-ink-muted hover:text-foreground hover:bg-muted/60"
                               )}
                             >
                               <Icon className={cn("h-4 w-4 flex-shrink-0", active && roleAccent)} />

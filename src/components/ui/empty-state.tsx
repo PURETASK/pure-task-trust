@@ -31,11 +31,11 @@ export function EmptyState({
   return (
     <div className={cn("flex flex-col items-center justify-center py-12 px-4 text-center", className)}>
       <div className="h-16 w-16 rounded-2xl bg-secondary flex items-center justify-center mb-4">
-        <Icon className="h-8 w-8 text-muted-foreground" />
+        <Icon className="h-8 w-8 text-ink-muted" />
       </div>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       {description && (
-        <p className="text-muted-foreground max-w-sm mb-6">{description}</p>
+        <p className="text-ink-muted max-w-sm mb-6">{description}</p>
       )}
       <div className="flex flex-col sm:flex-row gap-2 items-center">
         {action && (

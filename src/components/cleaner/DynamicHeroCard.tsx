@@ -211,7 +211,7 @@ export function DynamicHeroCard({ jobs, hasNewOffers, recentPayoutAmount }: Dyna
               <span className="text-2xl">{config.emoji}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
+              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-0.5">
                 {config.title}
               </p>
               {job ? (
@@ -219,7 +219,7 @@ export function DynamicHeroCard({ jobs, hasNewOffers, recentPayoutAmount }: Dyna
                   <p className="font-bold text-lg capitalize">
                     {(job.cleaning_type || "standard").replace(/_/g, " ")} Clean
                   </p>
-                  <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-ink-muted">
                     {job.scheduled_start_at && (
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
@@ -239,7 +239,7 @@ export function DynamicHeroCard({ jobs, hasNewOffers, recentPayoutAmount }: Dyna
               ) : state === "payout_sent" && payoutAmount ? (
                 <p className="font-bold text-lg text-success">${payoutAmount.toFixed(2)} sent to your account</p>
               ) : (
-                <p className="text-sm text-muted-foreground">{config.subtitle}</p>
+                <p className="text-sm text-ink-muted">{config.subtitle}</p>
               )}
             </div>
             <Button size="sm" asChild className="flex-shrink-0 rounded-xl">

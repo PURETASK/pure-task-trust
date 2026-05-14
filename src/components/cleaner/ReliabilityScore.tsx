@@ -8,7 +8,7 @@ interface ReliabilityScoreProps {
 }
 
 const tierConfig: Record<string, { label: string; color: string; textColor: string }> = {
-  standard: { label: "Standard", color: "bg-muted-foreground", textColor: "text-muted-foreground" },
+  standard: { label: "Standard", color: "bg-muted-foreground", textColor: "text-ink-muted" },
   bronze: { label: "Rising Pro", color: "bg-warning", textColor: "text-warning" },
   silver: { label: "Proven Specialist", color: "bg-aero-soft", textColor: "text-aero-soft" },
   gold: { label: "Top Performer", color: "bg-warning", textColor: "text-warning" },
@@ -64,7 +64,7 @@ export function ReliabilityScore({ score, tier }: ReliabilityScoreProps) {
         </div>
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-success" />
-          <span className="text-muted-foreground">Growing & Learning</span>
+          <span className="text-ink-muted">Growing & Learning</span>
         </div>
       </CardContent>
     </Card>

@@ -42,7 +42,7 @@ export function NewUserWelcome() {
                   </span>
                 </div>
                 <p className="text-sm font-semibold">{step.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{step.desc}</p>
+                <p className="text-xs text-ink-muted mt-0.5 leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>

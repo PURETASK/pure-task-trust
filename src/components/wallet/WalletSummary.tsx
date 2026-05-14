@@ -51,11 +51,11 @@ export function WalletSummary({
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-muted-foreground">Held</span>
-            <Clock className="h-5 w-5 text-muted-foreground" />
+            <span className="text-ink-muted">Held</span>
+            <Clock className="h-5 w-5 text-ink-muted" />
           </div>
           <p className="text-4xl font-bold mb-1 text-warning">${heldCredits}</p>
-          <p className="text-sm text-muted-foreground">held for jobs</p>
+          <p className="text-sm text-ink-muted">held for jobs</p>
         </CardContent>
       </Card>
     </div>
@@ -76,7 +76,7 @@ export function BuyCreditsPrompt({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold mb-1">Need more credits?</h3>
-            <p className="text-sm text-muted-foreground">1 credit = $1 USD</p>
+            <p className="text-sm text-ink-muted">1 credit = $1 USD</p>
           </div>
           <Button onClick={onBuy} className="gap-2">
             <Plus className="h-4 w-4" />

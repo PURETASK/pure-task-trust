@@ -109,7 +109,7 @@ export function FAQSection() {
     <div className="space-y-6">
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
         <Input
           placeholder="Search questions..."
           value={search}
@@ -119,7 +119,7 @@ export function FAQSection() {
         {search && (
           <button
             onClick={() => setSearch('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -127,7 +127,7 @@ export function FAQSection() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-10 text-muted-foreground">
+        <div className="text-center py-10 text-ink-muted">
           <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
           <p className="font-medium">No results for "{search}"</p>
           <p className="text-sm mt-1">Try different keywords</p>
@@ -135,7 +135,7 @@ export function FAQSection() {
       ) : (
         filtered.map((category) => (
           <div key={category.category}>
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            <h3 className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-3">
               {category.category}
             </h3>
             <Accordion type="single" collapsible className="w-full">
@@ -144,7 +144,7 @@ export function FAQSection() {
                   <AccordionTrigger className="text-left text-sm sm:text-base">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm">
+                  <AccordionContent className="text-ink-muted text-sm">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>

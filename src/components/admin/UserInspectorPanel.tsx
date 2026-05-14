@@ -133,28 +133,28 @@ export function UserInspectorPanel({ userId, userRole, open, onOpenChange }: Use
                   <div className="p-3 rounded-xl bg-muted/50 text-center">
                     <Star className="h-4 w-4 text-warning mx-auto mb-1" />
                     <p className="text-lg font-bold">{((profile as any).avg_rating || 0).toFixed(1)}</p>
-                    <p className="text-xs text-muted-foreground">Avg Rating</p>
+                    <p className="text-xs text-ink-muted">Avg Rating</p>
                   </div>
                   <div className="p-3 rounded-xl bg-muted/50 text-center">
                     <Briefcase className="h-4 w-4 text-primary mx-auto mb-1" />
                     <p className="text-lg font-bold">{(profile as any).jobs_completed || 0}</p>
-                    <p className="text-xs text-muted-foreground">Jobs Done</p>
+                    <p className="text-xs text-ink-muted">Jobs Done</p>
                   </div>
                   <div className="p-3 rounded-xl bg-muted/50 text-center">
                     <DollarSign className="h-4 w-4 text-success mx-auto mb-1" />
                     <p className="text-lg font-bold">{(profile as any).hourly_rate_credits || 0} cr</p>
-                    <p className="text-xs text-muted-foreground">Hourly Rate</p>
+                    <p className="text-xs text-ink-muted">Hourly Rate</p>
                   </div>
                   <div className="p-3 rounded-xl bg-muted/50 text-center">
                     <ShieldBan className="h-4 w-4 text-primary mx-auto mb-1" />
                     <p className="text-lg font-bold">{(profile as any).reliability_score || 0}</p>
-                    <p className="text-xs text-muted-foreground">Reliability</p>
+                    <p className="text-xs text-ink-muted">Reliability</p>
                   </div>
                 </>
               )}
               <div className="p-3 rounded-xl bg-muted/50 col-span-2">
-                <Calendar className="h-4 w-4 text-muted-foreground mb-1" />
-                <p className="text-xs text-muted-foreground">Joined</p>
+                <Calendar className="h-4 w-4 text-ink-muted mb-1" />
+                <p className="text-xs text-ink-muted">Joined</p>
                 <p className="font-medium text-sm">{format(new Date((profile as any).created_at), "MMM d, yyyy")}</p>
               </div>
             </div>
@@ -165,19 +165,19 @@ export function UserInspectorPanel({ userId, userRole, open, onOpenChange }: Use
             <div>
               <h4 className="font-semibold text-sm mb-3">Recent Jobs</h4>
               {!recentJobs || recentJobs.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No jobs found</p>
+                <p className="text-sm text-ink-muted">No jobs found</p>
               ) : (
                 <div className="space-y-2">
                   {recentJobs.map((job) => (
                     <div key={job.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 text-sm">
                       <div>
                         <p className="font-medium capitalize">{(job.cleaning_type || "").replace(/_/g, " ")} Clean</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-ink-muted">
                           {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "MMM d, yyyy") : "Not scheduled"}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">{job.escrow_credits_reserved || 0} cr</span>
+                        <span className="text-xs text-ink-muted">{job.escrow_credits_reserved || 0} cr</span>
                         <Badge variant="outline" className="text-xs capitalize">{job.status}</Badge>
                       </div>
                     </div>
@@ -208,8 +208,8 @@ export function UserInspectorPanel({ userId, userRole, open, onOpenChange }: Use
           </div>
         ) : (
           <div className="mt-12 text-center">
-            <User className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">User not found</p>
+            <User className="h-12 w-12 mx-auto text-ink-muted/30 mb-3" />
+            <p className="text-ink-muted">User not found</p>
           </div>
         )}
       </SheetContent>

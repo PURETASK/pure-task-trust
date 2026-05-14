@@ -35,7 +35,7 @@ export function RefundsSection() {
             </div>
             <div>
               <h2 className="text-lg font-poppins font-bold">Refunds</h2>
-              <p className="text-xs text-muted-foreground">Track refund requests and credits returned</p>
+              <p className="text-xs text-ink-muted">Track refund requests and credits returned</p>
             </div>
           </div>
         </div>
@@ -45,8 +45,8 @@ export function RefundsSection() {
             <div className="palette-icon palette-icon-amber h-14 w-14 mx-auto mb-4">
               <RotateCcw className="h-7 w-7" />
             </div>
-            <p className="font-bold text-muted-foreground">No refund requests</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="font-bold text-ink-muted">No refund requests</p>
+            <p className="text-sm text-ink-muted mt-1">
               If a cleaning doesn't meet expectations, you can request a refund from the job detail page.
             </p>
           </div>
@@ -68,7 +68,7 @@ export function RefundsSection() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{refund.reason}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-ink-muted">
                       {format(new Date(refund.created_at), "MMM d, yyyy")}
                     </p>
                   </div>
@@ -84,7 +84,7 @@ export function RefundsSection() {
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground text-center mt-4 flex items-center justify-center gap-1.5">
+        <p className="text-xs text-ink-muted text-center mt-4 flex items-center justify-center gap-1.5">
           <Shield className="h-3 w-3" />
           Approved refunds are returned as wallet credits within 24 hours.
         </p>

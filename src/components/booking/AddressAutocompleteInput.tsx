@@ -94,9 +94,9 @@ export function AddressAutocompleteInput({
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <Loader2 className="h-4 w-4 animate-spin text-ink-muted" />
           ) : (
-            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <MapPin className="h-4 w-4 text-ink-muted" />
           )}
         </div>
       </div>
@@ -117,10 +117,10 @@ export function AddressAutocompleteInput({
                 onMouseEnter={() => setHighlightedIndex(index)}
               >
                 <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
+                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-ink-muted" />
                   <div className="min-w-0">
                     <p className="font-medium truncate">{suggestion.line1 || 'Address'}</p>
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs text-ink-muted truncate">
                       {[suggestion.city, suggestion.state, suggestion.postalCode]
                         .filter(Boolean)
                         .join(', ')}
@@ -130,7 +130,7 @@ export function AddressAutocompleteInput({
               </li>
             ))}
           </ul>
-          <div className="border-t px-3 py-1.5 text-xs text-muted-foreground">
+          <div className="border-t px-3 py-1.5 text-xs text-ink-muted">
             Powered by OpenStreetMap
           </div>
         </div>

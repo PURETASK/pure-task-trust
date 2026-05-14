@@ -63,7 +63,7 @@ export function RecentActivityFeed({ limit = 5, showTitle = true }: RecentActivi
                 </div>
                 <div className="flex-grow min-w-0">
                   <p className="text-sm text-foreground truncate">{activity.description}</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2 text-xs text-ink-muted">
                     {activity.location && (
                       <>
                         <MapPin className="h-3 w-3" />

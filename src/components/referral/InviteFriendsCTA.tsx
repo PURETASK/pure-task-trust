@@ -77,7 +77,7 @@ export function InviteFriendsCTA({
           <h3 className="font-bold text-lg mb-1">
             Earn ${rewardAmount}
           </h3>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-sm text-ink-muted mb-4">
             Invite friends and get rewarded when they complete their first job
           </p>
           <Button asChild className="w-full gap-2">

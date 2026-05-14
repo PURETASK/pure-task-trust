@@ -102,7 +102,7 @@ export function BuyCreditsDialog({
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-ink-muted">
                       {pkg.amount} credits
                       {pkg.savings && <span className="text-success ml-1">(Save ${pkg.savings})</span>}
                     </p>
@@ -134,7 +134,7 @@ export function BuyCreditsDialog({
           )}
         </Button>
 
-        <p className="text-xs text-muted-foreground text-center">
+        <p className="text-xs text-ink-muted text-center">
           Secure payment powered by Stripe. Credits are added instantly after payment.
         </p>
       </DialogContent>

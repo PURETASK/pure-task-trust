@@ -13,7 +13,7 @@ export function SatisfactionPulse({ jobId }: SatisfactionPulseProps) {
   if (pulse) {
     return (
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-muted-foreground">You rated:</span>
+        <span className="text-ink-muted">You rated:</span>
         {pulse.rating === 'thumbs_up' ? (
           <span className="text-success flex items-center gap-1"><ThumbsUp className="h-4 w-4" /> Great</span>
         ) : (
@@ -25,7 +25,7 @@ export function SatisfactionPulse({ jobId }: SatisfactionPulseProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-sm text-muted-foreground">How was this clean?</span>
+      <span className="text-sm text-ink-muted">How was this clean?</span>
       <Button
         variant="outline"
         size="sm"

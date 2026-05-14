@@ -65,7 +65,7 @@ export function ApproveDisputeCard({
             )}
             <div>
               <h3 className="font-semibold">{cleanerName}</h3>
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1 text-sm text-ink-muted">
                 <Clock className="h-3.5 w-3.5" />
                 {timeWorked} worked
               </div>
@@ -75,11 +75,11 @@ export function ApproveDisputeCard({
           {/* Credit Breakdown */}
           <div className="space-y-3 p-4 bg-secondary/50 rounded-xl mb-6">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Credits held</span>
+              <span className="text-ink-muted">Credits held</span>
               <span>{creditsHeld}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Time charged</span>
+              <span className="text-ink-muted">Time charged</span>
               <span>-{creditsCharged}</span>
             </div>
             {creditsRefunded > 0 && (
@@ -108,7 +108,7 @@ export function ApproveDisputeCard({
 
           <Button 
             variant="ghost" 
-            className="w-full text-muted-foreground"
+            className="w-full text-ink-muted"
             onClick={() => setDisputeOpen(true)}
             disabled={isLoading}
           >
@@ -170,7 +170,7 @@ export function ApprovalSummary({
   return (
     <div className="flex items-center gap-4 text-sm">
       <div>
-        <span className="text-muted-foreground">Charged: </span>
+        <span className="text-ink-muted">Charged: </span>
         <span className="font-medium">{creditsCharged}</span>
       </div>
       {creditsRefunded > 0 && (

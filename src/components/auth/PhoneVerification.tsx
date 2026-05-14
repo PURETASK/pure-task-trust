@@ -126,7 +126,7 @@ export function PhoneVerification({ onVerified, showSkip, onSkip }: PhoneVerific
         <CardContent className="py-8 text-center">
           <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-4" />
           <h3 className="font-semibold text-lg mb-2">Phone Verified</h3>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-ink-muted text-sm">
             Your phone number has been verified successfully.
           </p>
         </CardContent>
@@ -162,7 +162,7 @@ export function PhoneVerification({ onVerified, showSkip, onSkip }: PhoneVerific
                 onChange={handlePhoneChange}
                 maxLength={14}
               />
-              <p className="text-xs text-muted-foreground">US phone numbers only</p>
+              <p className="text-xs text-ink-muted">US phone numbers only</p>
             </div>
             <div className="flex gap-2">
               <Button
@@ -234,7 +234,7 @@ export function PhoneVerification({ onVerified, showSkip, onSkip }: PhoneVerific
             </div>
             <Button
               variant="link"
-              className="w-full text-muted-foreground"
+              className="w-full text-ink-muted"
               onClick={handleSendOTP}
               disabled={isLoading}
             >

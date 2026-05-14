@@ -141,7 +141,7 @@ export function ProfilePhotoUpload({
         className="hidden"
       />
 
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-ink-muted">
         Click the camera icon to upload a photo
       </p>
     </div>

@@ -53,7 +53,7 @@ export function WhyChoose() {
           className="text-center mb-8 sm:mb-12"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Why Choose PureTask?</h2>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto">
+          <p className="text-ink-muted text-base sm:text-lg max-w-xl mx-auto">
             The most trusted platform for premium cleaning services
           </p>
         </motion.div>
@@ -82,7 +82,7 @@ export function WhyChoose() {
                   <feature.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${feature.iconColor}`} />
                 </div>
                 <h3 className="font-semibold text-base sm:text-lg mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                <p className="text-ink-muted text-sm leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           ))}

@@ -70,10 +70,10 @@ export function ReviewForm({ jobId, cleanerId, cleanerName, onSuccess }: ReviewF
       <CardContent className="space-y-6">
         {/* Overall star rating */}
         <div>
-          <p className="text-sm text-muted-foreground mb-3">Overall rating</p>
+          <p className="text-sm text-ink-muted mb-3">Overall rating</p>
           <StarRow value={rating} hover={hoverRating} onChange={setRating} onHover={setHoverRating} onLeave={() => setHoverRating(0)} />
           {rating > 0 && (
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-ink-muted mt-2">
               {rating === 5 && 'Excellent! 🌟'}{rating === 4 && 'Great! 👍'}{rating === 3 && 'Good'}{rating === 2 && 'Fair'}{rating === 1 && 'Poor'}
             </p>
           )}
@@ -81,11 +81,11 @@ export function ReviewForm({ jobId, cleanerId, cleanerName, onSuccess }: ReviewF
 
         {/* Sub-category ratings */}
         <div className="space-y-4 border rounded-xl p-4 bg-muted/30">
-          <p className="text-sm font-medium">Category ratings <span className="text-muted-foreground font-normal">(optional)</span></p>
+          <p className="text-sm font-medium">Category ratings <span className="text-ink-muted font-normal">(optional)</span></p>
           {SUB_RATINGS.map(({ id, label, icon: Icon }) => (
             <div key={id} className="flex items-center gap-4">
               <div className="flex items-center gap-2 w-36">
-                <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <Icon className="h-4 w-4 text-ink-muted flex-shrink-0" />
                 <span className="text-sm">{label}</span>
               </div>
               <Slider
@@ -101,7 +101,7 @@ export function ReviewForm({ jobId, cleanerId, cleanerName, onSuccess }: ReviewF
 
         {/* Review text */}
         <div>
-          <p className="text-sm text-muted-foreground mb-2">Share your experience (optional)</p>
+          <p className="text-sm text-ink-muted mb-2">Share your experience (optional)</p>
           <Textarea placeholder="Tell others about your experience..." value={reviewText} onChange={(e) => setReviewText(e.target.value)} rows={4} />
         </div>
 

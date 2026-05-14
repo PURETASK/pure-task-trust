@@ -115,7 +115,7 @@ export function CancelAlternativesModal({
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-sm">{format(slot, "EEEE, MMMM d")}</p>
-                    <p className="text-xs text-muted-foreground">{format(slot, "h:mm a")} — same cleaner</p>
+                    <p className="text-xs text-ink-muted">{format(slot, "h:mm a")} — same cleaner</p>
                   </div>
                   <Badge variant="outline" className="text-xs">Reschedule</Badge>
                 </button>

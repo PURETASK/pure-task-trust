@@ -41,12 +41,12 @@ export function ClientBriefCard({
             </div>
             <div>
               <p className="font-semibold text-sm">Client Brief</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-ink-muted">
                 {clientFirstName ? `${clientFirstName}'s preferences & instructions` : "Job instructions"}
               </p>
             </div>
           </div>
-          {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+          {open ? <ChevronUp className="h-4 w-4 text-ink-muted" /> : <ChevronDown className="h-4 w-4 text-ink-muted" />}
         </button>
 
         {open && (
@@ -60,7 +60,7 @@ export function ClientBriefCard({
 
             {notes && (
               <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Special Instructions</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-1">Special Instructions</p>
                 <p className="text-sm bg-background/60 p-2.5 rounded-lg border border-warning/20">{notes}</p>
               </div>
             )}

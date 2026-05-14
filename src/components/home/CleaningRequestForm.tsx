@@ -119,7 +119,7 @@ export function CleaningRequestForm() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
             Request a cleaning
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-ink-muted max-w-xl mx-auto">
             Tell us what you need and we'll match you with a verified cleaner.
           </p>
         </motion.div>
@@ -147,14 +147,14 @@ export function CleaningRequestForm() {
                     }`}
                   >
                     <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-xl flex items-center justify-center ${
-                      selected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                      selected ? "bg-primary text-primary-foreground" : "bg-muted text-ink-muted"
                     }`}>
                       <ct.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                     </div>
                     <span className={`text-sm sm:text-base font-semibold ${selected ? "text-primary" : "text-foreground"}`}>
                       {ct.label}
                     </span>
-                    <span className="text-xs text-muted-foreground leading-tight">{ct.desc}</span>
+                    <span className="text-xs text-ink-muted leading-tight">{ct.desc}</span>
                   </button>
                 );
               })}
@@ -244,7 +244,7 @@ export function CleaningRequestForm() {
                 <div className="flex items-center gap-3">
                   <Switch id="pets" checked={hasPets} onCheckedChange={setHasPets} />
                   <Label htmlFor="pets" className="flex items-center gap-1.5 text-sm cursor-pointer">
-                    <Dog className="h-4 w-4 text-muted-foreground" /> Pets in home
+                    <Dog className="h-4 w-4 text-ink-muted" /> Pets in home
                   </Label>
                 </div>
               </div>
@@ -300,7 +300,7 @@ export function CleaningRequestForm() {
             {!submitting && <ArrowRight className="ml-2 h-5 w-5" />}
           </Button>
 
-          <p className="text-xs text-muted-foreground text-center mt-3">
+          <p className="text-xs text-ink-muted text-center mt-3">
             {isAuthenticated
               ? "Your request will be saved and we'll help you find the perfect cleaner."
               : "You'll be asked to create a free account so we can save your request."}

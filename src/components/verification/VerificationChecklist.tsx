@@ -47,7 +47,7 @@ function getStatusConfig(status: string | null) {
     default:
       return {
         icon: Circle,
-        color: "text-muted-foreground",
+        color: "text-ink-muted",
         bgColor: "bg-muted/50",
         borderColor: "border-muted",
         label: "Not Started",
@@ -99,7 +99,7 @@ function VerificationRow({
           <span className="text-sm font-medium">{title}</span>
           <span className={`text-xs font-medium ${config.color}`}>{config.label}</span>
         </div>
-        <div className="text-xs text-muted-foreground mt-0.5">
+        <div className="text-xs text-ink-muted mt-0.5">
           {completedDate ? (
             <>
               Completed {completedDate}
