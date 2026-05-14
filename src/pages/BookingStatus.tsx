@@ -384,6 +384,20 @@ export default function BookingStatus() {
         currentScheduledAt={job.scheduled_start_at || null}
         onConfirmCancel={handleConfirmCancel}
       />
+      {job.cleaner_id && (
+        <RescheduleModal
+          open={showRescheduleModal}
+          onOpenChange={setShowRescheduleModal}
+          job={{
+            id: job.id,
+            client_id: job.client_id,
+            cleaner_id: job.cleaner_id,
+            cleaning_type: job.cleaning_type,
+            scheduled_start_at: job.scheduled_start_at,
+            cleaner: job.cleaner ? { first_name: job.cleaner.first_name, user_id: job.cleaner.user_id } : null,
+          }}
+        />
+      )}
     </main>
   );
 }
