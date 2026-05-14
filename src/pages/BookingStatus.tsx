@@ -60,6 +60,7 @@ export default function BookingStatus() {
   const { id } = useParams<{ id: string }>();
   const { data: job, isLoading, error } = useJob(id || "");
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const queryClient = useQueryClient();
   const { rebook, isRebooking } = useAutoRebook();
   const { generateReceipt, isGenerating } = useReceipt();
