@@ -61,7 +61,7 @@ export function CleanerDisputeResponseModal({
         resolution_type: resolutionType,
         resolution_notes: response.trim(),
         refund_amount_credits: refundCredits || null,
-        status: "responded",
+        status: "investigating",
       })
       .eq("id", dispute.id);
 
