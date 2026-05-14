@@ -32,7 +32,7 @@ export interface FunnelEventInsert {
 const FLUSH_INTERVAL_MS = 2000;
 const MAX_QUEUE_SIZE = 10;
 
-let queue: FunnelEventInsert[] = [];
+const queue: FunnelEventInsert[] = [];
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
 async function flush(): Promise<void> {
