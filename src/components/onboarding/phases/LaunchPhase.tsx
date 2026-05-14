@@ -37,7 +37,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
       </div>
 
       {/* Profile preview */}
-      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-hairline-soft">
+      <Card className="p-5 bg-gradient-to-br from-app-surface to-app-canvas border-hairline-soft">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16 border-2 border-hairline-soft-cyan">
             <AvatarImage src={photoUrl || undefined} alt={fullName} />

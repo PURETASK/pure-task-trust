@@ -41,7 +41,7 @@ export function PayoutSetupStep({ alreadyOnboarded, onComplete, onBack }: Props)
         </p>
       </div>
 
-      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-hairline-soft space-y-4">
+      <Card className="p-5 bg-gradient-to-br from-app-surface to-app-canvas border-hairline-soft space-y-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 rounded-2xl bg-gradient-aero flex items-center justify-center">
             <Banknote className="h-6 w-6 text-white" />
