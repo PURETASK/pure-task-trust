@@ -36,19 +36,19 @@ export function PayoutSetupStep({ alreadyOnboarded, onComplete, onBack }: Props)
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div>
         <h2 className="font-poppins text-2xl font-semibold text-aero-trust">Set up payouts</h2>
-        <p className="text-sm text-aero-text-soft mt-1.5">
+        <p className="text-sm text-ink-muted mt-1.5">
           We use Stripe to send your weekly earnings directly to your bank account. Required to activate your profile.
         </p>
       </div>
 
-      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-aero-card-border space-y-4">
+      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-hairline-soft space-y-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 rounded-2xl bg-gradient-aero flex items-center justify-center">
             <Banknote className="h-6 w-6 text-white" />
           </div>
           <div>
             <p className="font-poppins font-semibold text-aero-trust text-base">Stripe Connect</p>
-            <p className="text-xs text-aero-text-soft">Trusted by millions of businesses worldwide</p>
+            <p className="text-xs text-ink-muted">Trusted by millions of businesses worldwide</p>
           </div>
         </div>
 
@@ -67,19 +67,19 @@ export function PayoutSetupStep({ alreadyOnboarded, onComplete, onBack }: Props)
         </ul>
       </Card>
 
-      <Card className="p-3 bg-aero-card-border/30 border-aero-card-border flex items-start gap-3">
+      <Card className="p-3 bg-app-surface-border/30 border-hairline-soft flex items-start gap-3">
         <ShieldCheck className="h-5 w-5 text-aero-trust flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-aero-text-soft leading-relaxed">
+        <p className="text-xs text-ink-muted leading-relaxed">
           You'll be redirected to Stripe to verify your identity and add your bank details. Takes about 3–5 minutes. PureTask never sees your bank info.
         </p>
       </Card>
 
       {alreadyOnboarded ? (
-        <Card className="p-4 bg-aero-cyan/10 border-aero-cyan flex items-center gap-3">
+        <Card className="p-4 bg-aero-cyan/10 border-hairline-soft-cyan flex items-center gap-3">
           <CheckCircle2 className="h-6 w-6 text-aero-trust" />
           <div className="flex-1">
             <p className="font-medium text-aero-trust">Payout setup complete</p>
-            <p className="text-xs text-aero-text-soft">Your bank account is connected and verified.</p>
+            <p className="text-xs text-ink-muted">Your bank account is connected and verified.</p>
           </div>
         </Card>
       ) : null}

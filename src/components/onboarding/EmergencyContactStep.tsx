@@ -50,12 +50,12 @@ export function EmergencyContactStep({ initial, onSave, onBack, isSaving }: Prop
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div>
         <h2 className="font-poppins text-2xl font-semibold text-aero-trust">Emergency contact</h2>
-        <p className="text-sm text-aero-text-soft mt-1.5">Someone we can reach if there's ever an issue during a job. Used only in emergencies.</p>
+        <p className="text-sm text-ink-muted mt-1.5">Someone we can reach if there's ever an issue during a job. Used only in emergencies.</p>
       </div>
 
-      <Card className="p-3 bg-aero-card-border/30 border-aero-card-border flex items-start gap-3">
+      <Card className="p-3 bg-app-surface-border/30 border-hairline-soft flex items-start gap-3">
         <LifeBuoy className="h-5 w-5 text-aero-trust flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-aero-text-soft leading-relaxed">
+        <p className="text-xs text-ink-muted leading-relaxed">
           Never shared with clients. Only PureTask Trust & Safety can access this in case of emergency.
         </p>
       </Card>

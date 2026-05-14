@@ -31,21 +31,21 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
     >
       <div>
         <h2 className="font-poppins text-2xl font-semibold text-aero-trust">You're all set, {firstName || 'cleaner'}!</h2>
-        <p className="text-sm text-aero-text-soft mt-1.5">
+        <p className="text-sm text-ink-muted mt-1.5">
           Activate your profile now. Your background check runs in the background — no need to wait.
         </p>
       </div>
 
       {/* Profile preview */}
-      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-aero-card-border">
+      <Card className="p-5 bg-gradient-to-br from-aero-card to-aero-card-border/40 border-hairline-soft">
         <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16 border-2 border-aero-cyan">
+          <Avatar className="h-16 w-16 border-2 border-hairline-soft-cyan">
             <AvatarImage src={photoUrl || undefined} alt={fullName} />
             <AvatarFallback className="bg-aero-cyan/20 text-aero-trust font-bold text-lg">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <h3 className="font-poppins font-semibold text-base text-aero-trust">{fullName}</h3>
-            <p className="text-sm text-aero-text-soft line-clamp-1">{bio || 'No bio yet'}</p>
+            <p className="text-sm text-ink-muted line-clamp-1">{bio || 'No bio yet'}</p>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {hourlyRate && (
                 <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-aero-cyan/20 text-aero-trust">
@@ -63,7 +63,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
       </Card>
 
       {/* What happens next */}
-      <Card className="p-5 space-y-3 border-aero-card-border">
+      <Card className="p-5 space-y-3 border-hairline-soft">
         <p className="font-poppins font-semibold text-aero-trust">What happens after you activate</p>
         <ol className="space-y-3">
           {[
@@ -79,7 +79,7 @@ export function LaunchPhase({ profile, onComplete, onBack, isCompleting }: Launc
                 </div>
                 <div>
                   <p className="text-sm font-medium text-aero-trust">{step.title}</p>
-                  <p className="text-xs text-aero-text-soft">{step.desc}</p>
+                  <p className="text-xs text-ink-muted">{step.desc}</p>
                 </div>
               </li>
             );
