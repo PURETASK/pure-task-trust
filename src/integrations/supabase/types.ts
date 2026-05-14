@@ -4078,9 +4078,11 @@ export type Database = {
           is_rush: boolean | null
           metadata: Json | null
           notes: string | null
+          original_scheduled_start_at: string | null
           payment_mode: string | null
           property_id: number | null
           refund_credits: number | null
+          reschedule_count: number
           rush_fee_credits: number | null
           scheduled_end_at: string | null
           scheduled_start_at: string | null
@@ -4128,9 +4130,11 @@ export type Database = {
           is_rush?: boolean | null
           metadata?: Json | null
           notes?: string | null
+          original_scheduled_start_at?: string | null
           payment_mode?: string | null
           property_id?: number | null
           refund_credits?: number | null
+          reschedule_count?: number
           rush_fee_credits?: number | null
           scheduled_end_at?: string | null
           scheduled_start_at?: string | null
@@ -4178,9 +4182,11 @@ export type Database = {
           is_rush?: boolean | null
           metadata?: Json | null
           notes?: string | null
+          original_scheduled_start_at?: string | null
           payment_mode?: string | null
           property_id?: number | null
           refund_credits?: number | null
+          reschedule_count?: number
           rush_fee_credits?: number | null
           scheduled_end_at?: string | null
           scheduled_start_at?: string | null
@@ -6505,6 +6511,10 @@ export type Database = {
         Args: { _job_id: string; _user_id: string }
         Returns: Json
       }
+      cancel_job_atomic: {
+        Args: { _job_id: string; _reason?: string; _user_id: string }
+        Returns: Json
+      }
       cleaner_has_job_with_client: {
         Args: { cleaner_user_id: string; client_profile_id: string }
         Returns: boolean
@@ -6651,6 +6661,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      reschedule_job_atomic: {
+        Args: { _job_id: string; _new_start: string; _user_id: string }
+        Returns: Json
       }
       set_my_cleaner_availability: {
         Args: { _is_available: boolean }
