@@ -123,6 +123,35 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Wireframe / app-shell hybrid tokens
+        app: {
+          canvas: "hsl(var(--app-canvas))",
+          surface: "hsl(var(--app-surface))",
+          sunken: "hsl(var(--app-surface-sunken))",
+        },
+        ink: {
+          DEFAULT: "hsl(var(--app-ink))",
+          muted: "hsl(var(--app-ink-muted))",
+          faint: "hsl(var(--app-ink-faint))",
+        },
+        hairline: {
+          DEFAULT: "hsl(var(--hairline))",
+          soft: "hsl(var(--hairline-soft))",
+        },
+        state: {
+          "success-fg": "hsl(var(--state-success-fg))",
+          "success-bg": "hsl(var(--state-success-bg))",
+          "warning-fg": "hsl(var(--state-warning-fg))",
+          "warning-bg": "hsl(var(--state-warning-bg))",
+          "danger-fg":  "hsl(var(--state-danger-fg))",
+          "danger-bg":  "hsl(var(--state-danger-bg))",
+          "info-fg":    "hsl(var(--state-info-fg))",
+          "info-bg":    "hsl(var(--state-info-bg))",
+          "purple-fg":  "hsl(var(--state-purple-fg))",
+          "purple-bg":  "hsl(var(--state-purple-bg))",
+          "gold-fg":    "hsl(var(--state-gold-fg))",
+          "gold-bg":    "hsl(var(--state-gold-bg))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -139,6 +168,8 @@ export default {
         "tier-1": "var(--shadow-tier-1)",
         "tier-2": "var(--shadow-tier-2)",
         "tier-3": "var(--shadow-tier-3)",
+        "wf": "var(--shadow-wf-resting)",
+        "wf-hover": "var(--shadow-wf-hover)",
       },
       backgroundImage: {
         "gradient-hero":    "var(--gradient-hero)",

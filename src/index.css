@@ -197,6 +197,46 @@ body {
     --sidebar-ring: 204 92% 52%;
   }
 
+  /* ──────────────────────────────────────
+     APP SHELL — Hybrid (Aero brand colors on a Linen-structured app)
+     Wireframe-aligned tokens. Used by src/components/wf/*.
+     Marketing landing page keeps the Aero gradients/glows above.
+     ────────────────────────────────────── */
+  :root {
+    /* Canvas: 2% navy-tinted off-white (calmer than pure white,
+       on-brand vs the wireframes' pure-linen #f5f5f3) */
+    --app-canvas: 213 33% 97%;        /* ≈ #F4F7FB */
+    --app-surface: 0 0% 100%;
+    --app-surface-sunken: 213 25% 96%; /* widget-field bg */
+
+    /* Ink ramp uses Navy-950 instead of pure black */
+    --app-ink: 213 85% 18%;            /* #072A55 — Navy-950 */
+    --app-ink-muted: 215 18% 40%;      /* helper text */
+    --app-ink-faint: 215 14% 60%;      /* micro labels, captions */
+
+    /* Hairlines */
+    --hairline: 213 25% 89%;
+    --hairline-soft: 213 22% 93%;
+
+    /* Semantic state pairs (wireframe palette, slightly tuned for AA contrast) */
+    --state-success-fg: 162 71% 30%;
+    --state-success-bg: 158 56% 94%;
+    --state-warning-fg: 28 90% 32%;
+    --state-warning-bg: 48 95% 90%;
+    --state-danger-fg:  15 70% 38%;
+    --state-danger-bg:  15 67% 96%;
+    --state-info-fg:    213 70% 35%;
+    --state-info-bg:    213 100% 95%;
+    --state-purple-fg:  261 80% 45%;
+    --state-purple-bg:  261 79% 95%;
+    --state-gold-fg:    40 79% 36%;
+    --state-gold-bg:    45 95% 91%;
+
+    /* Wireframe shadows — flat, almost imperceptible */
+    --shadow-wf-resting: 0 1px 0 rgba(7, 42, 85, 0.03);
+    --shadow-wf-hover:   0 2px 8px rgba(7, 42, 85, 0.05);
+  }
+
   .dark {
     --background: 222 20% 7%;
     --foreground: 210 20% 95%;
