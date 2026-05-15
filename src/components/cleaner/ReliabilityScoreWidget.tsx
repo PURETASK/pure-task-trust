@@ -148,7 +148,10 @@ export function ReliabilityScoreWidget() {
     <Card className="border-border/60 overflow-hidden font-poppins">
       {/* Header with tier gradient — centered shield + score + thermometer */}
       <div className={`bg-gradient-to-br ${tierStyle.gradient} px-4 py-6 sm:py-7 text-white`}>
-        <p className="text-center text-[11px] sm:text-xs font-medium text-white/70 uppercase tracking-[0.2em] mb-3">
+        <p
+          className="text-center text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-3"
+          style={{ color: "#FFE27A", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
+        >
           Reliability Score
         </p>
 
@@ -177,8 +180,13 @@ export function ReliabilityScoreWidget() {
 
         {/* Tier name */}
         <p
-          className="text-center mt-3 font-poppins font-bold capitalize"
-          style={{ fontSize: 22, lineHeight: 1.1 }}
+          className="text-center mt-3 font-poppins font-extrabold capitalize"
+          style={{
+            fontSize: 22,
+            lineHeight: 1.1,
+            color: NEXT_TIER_COLOR[tier],
+            textShadow: "0 2px 6px rgba(0,0,0,0.55)",
+          }}
         >
           {tier} Tier
         </p>
@@ -187,8 +195,11 @@ export function ReliabilityScoreWidget() {
         {tierStyle.next ? (
           <div className="mt-4 max-w-xs mx-auto">
             <div className="flex items-center justify-center gap-1.5 mb-2">
-              <Zap className="h-3.5 w-3.5 text-white" />
-              <span className="text-sm font-semibold text-white">
+              <Zap className="h-3.5 w-3.5" style={{ color: "#FFE27A" }} />
+              <span
+                className="text-sm font-bold"
+                style={{ color: "#FFE27A", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
+              >
                 {pointsToNext} pts to {tierStyle.next}
               </span>
             </div>
