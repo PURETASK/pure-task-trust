@@ -55,12 +55,12 @@ function MetricRow({ icon: Icon, label, weight, value, displayValue, colorClass,
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${colorClass}`} />
-          <span className="font-medium text-xs sm:text-sm">{label}</span>
-          <span className="text-[10px] sm:text-xs text-ink-muted hidden xs:inline">({weight}%)</span>
+          <span className="font-medium text-xs sm:text-sm text-white/90">{label}</span>
+          <span className="text-[10px] sm:text-xs text-white/40 hidden xs:inline">({weight}%)</span>
         </div>
         <span className={`font-semibold text-xs sm:text-sm ${colorClass}`}>{displayValue}</span>
       </div>
-      <div className="relative h-1.5 sm:h-2 rounded-full bg-muted overflow-hidden">
+      <div className="relative h-1.5 sm:h-2 rounded-full bg-white/10 overflow-hidden">
         <motion.div
           className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${
             value >= 80 ? "from-success to-success/80" :
