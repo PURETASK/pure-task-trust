@@ -26,6 +26,14 @@ const SHIELD_SRC: Record<string, string> = {
   platinum: shieldAllstar,
 };
 
+// Next-tier accent color — bar fills toward the color of the tier you're climbing to
+const NEXT_TIER_COLOR: Record<string, string> = {
+  bronze: "#40B4FF",
+  silver: "#F5B428",
+  gold:   "#AA78FF",
+  platinum: "#FFFFFF",
+};
+
 interface MetricRowProps {
   icon: React.ElementType;
   label: string;
@@ -137,67 +145,68 @@ export function ReliabilityScoreWidget() {
   const progressPct = tierStyle.next ? Math.min(100, ((currentScore - tierMin) / tierRange) * 100) : 100;
 
   return (
-    <Card className="border-border/60 overflow-hidden" style={{ fontFamily: '"Comic Sans MS", "Comic Sans", cursive' }}>
-      {/* Header with tier gradient */}
-      <div className={`bg-gradient-to-r ${tierStyle.gradient} p-3.5 sm:p-4 text-white`}>
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div
-              className="relative flex-shrink-0"
-              style={{ width: 76, height: 76, filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.35))" }}
-            >
-              <img
-                src={SHIELD_SRC[tier]}
-                alt=""
-                aria-hidden
-                className="absolute inset-0 w-full h-full select-none pointer-events-none"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span
-                  className="font-poppins font-extrabold text-white leading-none"
-                  style={{ fontSize: 26, textShadow: "0 2px 6px rgba(0,0,0,0.55)" }}
-                >
-                  {currentScore}
-                </span>
-              </div>
+    <Card className="border-border/60 overflow-hidden font-poppins">
+      {/* Header with tier gradient — centered shield + score + thermometer */}
+      <div className={`bg-gradient-to-br ${tierStyle.gradient} px-4 py-6 sm:py-7 text-white`}>
+        <p className="text-center text-[11px] sm:text-xs font-medium text-white/70 uppercase tracking-[0.2em] mb-3">
+          Reliability Score
+        </p>
+
+        {/* Centered shield with score inside */}
+        <div className="flex justify-center">
+          <div
+            className="relative"
+            style={{ width: 132, height: 132, filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.4))" }}
+          >
+            <img
+              src={SHIELD_SRC[tier]}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full select-none pointer-events-none"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                className="font-poppins font-extrabold text-white leading-none"
+                style={{ fontSize: 48, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}
+              >
+                {currentScore}
+              </span>
             </div>
-            <div className="min-w-0">
-              <p style={{ fontSize: 28, lineHeight: 1.1 }} className="font-bold text-white">Reliability Score</p>
-              <p className="text-sm sm:text-base font-semibold text-white/80">{currentScore} / 100</p>
-            </div>
-          </div>
-          <div className="text-right flex-shrink-0">
-            <div
-              className="inline-block px-3 py-1 rounded-xl bg-white/20 border border-white/30 text-white capitalize font-bold mb-1"
-              style={{ fontSize: 28, lineHeight: 1.1 }}
-            >
-              {tier} Tier
-            </div>
-            {tierStyle.next && pointsToNext > 0 && (
-              <p className="text-[10px] sm:text-xs text-white/70">
-                <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 inline mr-0.5" />{pointsToNext} pts to {tierStyle.next}
-              </p>
-            )}
-            {tier === "platinum" && <p className="text-[10px] sm:text-xs text-white/70">🏆 Elite!</p>}
           </div>
         </div>
 
-        {/* Progress to next tier */}
-        {tierStyle.next && (
-          <div className="mt-2.5 sm:mt-3">
-            <div className="flex justify-between text-[10px] sm:text-xs text-white/60 mb-1">
-              <span>{tierMin}</span>
-              <span>{tierStyle.nextMin} pts → {tierStyle.next}</span>
+        {/* Tier name */}
+        <p
+          className="text-center mt-3 font-poppins font-bold capitalize"
+          style={{ fontSize: 22, lineHeight: 1.1 }}
+        >
+          {tier} Tier
+        </p>
+
+        {/* Next-tier thermometer */}
+        {tierStyle.next ? (
+          <div className="mt-4 max-w-xs mx-auto">
+            <div className="flex items-center justify-center gap-1.5 mb-2">
+              <Zap className="h-3.5 w-3.5 text-white" />
+              <span className="text-sm font-semibold text-white">
+                {pointsToNext} pts to {tierStyle.next}
+              </span>
             </div>
-            <div className="h-1.5 sm:h-2 rounded-full bg-white/20 overflow-hidden">
+            <div className="h-2.5 rounded-full bg-black/25 overflow-hidden ring-1 ring-white/20">
               <motion.div
-                className="h-full rounded-full bg-white"
+                className="h-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${NEXT_TIER_COLOR[tier]}99, ${NEXT_TIER_COLOR[tier]})`,
+                  boxShadow: `0 0 10px ${NEXT_TIER_COLOR[tier]}88`,
+                }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPct}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
               />
             </div>
           </div>
+        ) : (
+          <p className="text-center mt-3 text-sm text-white/85">🏆 Elite — top of the ladder</p>
         )}
       </div>
 
