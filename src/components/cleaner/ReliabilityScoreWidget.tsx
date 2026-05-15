@@ -14,6 +14,17 @@ import {
   TrendingUp, ArrowRight, Zap, AlertTriangle
 } from "lucide-react";
 import { getTierFromScore, TIER_VISUAL } from "@/lib/tier-config";
+import shieldRising from "@/assets/shields/shield-rising.png";
+import shieldProven from "@/assets/shields/shield-proven.png";
+import shieldTop from "@/assets/shields/shield-top.png";
+import shieldAllstar from "@/assets/shields/shield-allstar.png";
+
+const SHIELD_SRC: Record<string, string> = {
+  bronze: shieldRising,
+  silver: shieldProven,
+  gold: shieldTop,
+  platinum: shieldAllstar,
+};
 
 interface MetricRowProps {
   icon: React.ElementType;
@@ -131,13 +142,28 @@ export function ReliabilityScoreWidget() {
       <div className={`bg-gradient-to-r ${tierStyle.gradient} p-3.5 sm:p-4 text-white`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <span className="text-xl sm:text-2xl flex-shrink-0">{tierStyle.emoji}</span>
+            <div
+              className="relative flex-shrink-0"
+              style={{ width: 76, height: 76, filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.35))" }}
+            >
+              <img
+                src={SHIELD_SRC[tier]}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full select-none pointer-events-none"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span
+                  className="font-poppins font-extrabold text-white leading-none"
+                  style={{ fontSize: 26, textShadow: "0 2px 6px rgba(0,0,0,0.55)" }}
+                >
+                  {currentScore}
+                </span>
+              </div>
+            </div>
             <div className="min-w-0">
               <p className="text-[10px] sm:text-xs font-medium text-white/70 uppercase tracking-wider">Reliability Score</p>
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-poppins font-bold">{currentScore}</span>
-                <span className="text-white/70 text-xs sm:text-sm">/ 100</span>
-              </div>
+              <p className="text-sm sm:text-base font-semibold text-white">{currentScore} / 100</p>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
