@@ -6,6 +6,8 @@ import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
 import { ShieldedAvatar } from "@/components/cleaner/ShieldedAvatar";
+import { TierFrame } from "@/components/cleaner/TierFrame";
+import { TierButton } from "@/components/cleaner/TierButton";
 import { InviteFriendsCTA } from "@/components/referral";
 import { TierProgressMap } from "@/components/cleaner/TierProgressMap";
 import { ProfileCompletion } from "@/components/cleaner/ProfileCompletion";
@@ -76,9 +78,9 @@ export default function CleanerDashboard() {
             </motion.div>
 
             <div className="flex gap-2 sm:gap-3">
-              <Button asChild className="rounded-xl h-9 sm:h-10 text-xs sm:text-sm flex-1 sm:flex-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
-                <Link to="/cleaner/jobs"><Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />My Jobs</Link>
-              </Button>
+              <TierButton tier={tier} size="md" asChild={false} onClick={() => { window.location.href = "/cleaner/jobs"; }}>
+                <Briefcase className="h-4 w-4" />My Jobs
+              </TierButton>
             </div>
           </div>
         </div>
@@ -117,12 +119,12 @@ export default function CleanerDashboard() {
           {/* Reliability + Tier */}
           <section>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-              <div className="md:col-span-2">
+              <TierFrame tier={tier} tinted className="md:col-span-2 p-0 overflow-hidden">
                 {isLoadingProfile ? <Skeleton className="h-32 sm:h-36 rounded-2xl" /> : (
                   <ReliabilityScoreWidget />
                 )}
-              </div>
-              <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf p-4 sm:p-5 flex flex-col items-center justify-center">
+              </TierFrame>
+              <TierFrame tier={tier} intense tinted className="p-4 sm:p-5 flex flex-col items-center justify-center">
                 <ShieldedAvatar
                   tier={tier}
                   photoUrl={(profile as any)?.profile_photo_url}
@@ -130,7 +132,7 @@ export default function CleanerDashboard() {
                   size={140}
                   showLabel
                 />
-              </div>
+              </TierFrame>
             </div>
           </section>
 
