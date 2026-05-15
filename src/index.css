@@ -282,6 +282,24 @@ body {
     --sidebar-accent-foreground: 177 79% 78%;
     --sidebar-border: 213 25% 18%;
     --sidebar-ring: 204 92% 60%;
+
+    /* App-shell tokens — dark overrides so text/cards remain readable */
+    --app-canvas: 222 28% 7%;          /* page background */
+    --app-surface: 222 22% 11%;        /* cards / surfaces */
+    --app-surface-sunken: 222 22% 9%;
+    --app-ink: 210 20% 96%;            /* primary text */
+    --app-ink-muted: 213 15% 75%;      /* helper text */
+    --app-ink-faint: 213 12% 62%;      /* micro labels */
+    --hairline: 213 20% 24%;
+    --hairline-soft: 213 18% 18%;
+
+    /* Slightly brighten state foregrounds so they pop on dark surfaces */
+    --state-success-fg: 158 65% 60%;
+    --state-warning-fg: 38 95% 66%;
+    --state-danger-fg:  10 80% 65%;
+    --state-info-fg:    204 92% 70%;
+    --state-purple-fg:  267 85% 75%;
+    --state-gold-fg:    42 90% 65%;
   }
 }
 
