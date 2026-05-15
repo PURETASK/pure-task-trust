@@ -137,7 +137,7 @@ export function ReliabilityScoreWidget() {
   const progressPct = tierStyle.next ? Math.min(100, ((currentScore - tierMin) / tierRange) * 100) : 100;
 
   return (
-    <Card className="border-border/60 overflow-hidden">
+    <Card className="border-border/60 overflow-hidden" style={{ fontFamily: '"Comic Sans MS", "Comic Sans", cursive' }}>
       {/* Header with tier gradient */}
       <div className={`bg-gradient-to-r ${tierStyle.gradient} p-3.5 sm:p-4 text-white`}>
         <div className="flex items-center justify-between gap-2">
@@ -162,14 +162,17 @@ export function ReliabilityScoreWidget() {
               </div>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-xs font-medium text-white/70 uppercase tracking-wider">Reliability Score</p>
-              <p className="text-sm sm:text-base font-semibold text-white">{currentScore} / 100</p>
+              <p style={{ fontSize: 28, lineHeight: 1.1 }} className="font-bold text-white">Reliability Score</p>
+              <p className="text-sm sm:text-base font-semibold text-white/80">{currentScore} / 100</p>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
-            <Badge className="bg-white/20 text-white border-white/30 capitalize font-semibold text-[10px] sm:text-xs mb-0.5 sm:mb-1">
+            <div
+              className="inline-block px-3 py-1 rounded-xl bg-white/20 border border-white/30 text-white capitalize font-bold mb-1"
+              style={{ fontSize: 28, lineHeight: 1.1 }}
+            >
               {tier} Tier
-            </Badge>
+            </div>
             {tierStyle.next && pointsToNext > 0 && (
               <p className="text-[10px] sm:text-xs text-white/70">
                 <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 inline mr-0.5" />{pointsToNext} pts to {tierStyle.next}
