@@ -48,7 +48,7 @@ export default function CleanerDashboard() {
   const tip = TIPS[tipIdx];
 
   return (
-    <main className="flex-1 bg-app-canvas min-h-screen">
+    <main className="dark flex-1 bg-app-canvas text-ink min-h-screen">
       <Helmet><title>Cleaner Dashboard | PureTask</title></Helmet>
       <div className="relative bg-app-surface border-b border-hairline-soft">
         <div className="relative container px-4 sm:px-6 py-5 sm:py-8">
