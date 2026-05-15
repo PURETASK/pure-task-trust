@@ -21,7 +21,7 @@ import { useSmartScheduling } from "@/hooks/useSmartScheduling";
 import { TIPS, TIER_COLORS, FEATURE_SECTIONS } from "@/lib/cleaner-dashboard-constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { CleanerTier } from "@/lib/tier-config";
 import { TIER_LABELS } from "@/lib/tier-config";
@@ -36,6 +36,7 @@ import {
 
 export default function CleanerDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { profile, isLoading: isLoadingProfile } = useCleanerProfile();
   const { stats, isLoading: isLoadingStats } = useCleanerStats();
   const { jobs } = useCleanerJobs();
@@ -78,7 +79,7 @@ export default function CleanerDashboard() {
             </motion.div>
 
             <div className="flex gap-2 sm:gap-3">
-              <TierButton tier={tier} size="md" asChild={false} onClick={() => { window.location.href = "/cleaner/jobs"; }}>
+              <TierButton tier={tier} size="md" onClick={() => navigate("/cleaner/jobs")}>
                 <Briefcase className="h-4 w-4" />My Jobs
               </TierButton>
             </div>
