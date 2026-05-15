@@ -55,12 +55,12 @@ function MetricRow({ icon: Icon, label, weight, value, displayValue, colorClass,
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${colorClass}`} />
-          <span className="font-medium text-xs sm:text-sm">{label}</span>
-          <span className="text-[10px] sm:text-xs text-ink-muted hidden xs:inline">({weight}%)</span>
+          <span className="font-medium text-xs sm:text-sm text-white/90">{label}</span>
+          <span className="text-[10px] sm:text-xs text-white/40 hidden xs:inline">({weight}%)</span>
         </div>
         <span className={`font-semibold text-xs sm:text-sm ${colorClass}`}>{displayValue}</span>
       </div>
-      <div className="relative h-1.5 sm:h-2 rounded-full bg-muted overflow-hidden">
+      <div className="relative h-1.5 sm:h-2 rounded-full bg-white/10 overflow-hidden">
         <motion.div
           className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${
             value >= 80 ? "from-success to-success/80" :
@@ -145,9 +145,15 @@ export function ReliabilityScoreWidget() {
   const progressPct = tierStyle.next ? Math.min(100, ((currentScore - tierMin) / tierRange) * 100) : 100;
 
   return (
-    <Card className="border-border/60 overflow-hidden font-poppins">
+    <Card className="overflow-hidden font-poppins border-white/10 bg-[#0B1220] text-white">
       {/* Header with tier gradient — centered shield + score + thermometer */}
-      <div className={`bg-gradient-to-br ${tierStyle.gradient} px-4 py-6 sm:py-7 text-white`}>
+      <div
+        className="px-4 py-6 sm:py-7 text-white relative"
+        style={{
+          background: `radial-gradient(120% 80% at 50% 0%, ${NEXT_TIER_COLOR[tier]}33 0%, rgba(7,16,32,0) 60%), linear-gradient(160deg, #0E1A2E 0%, #060B17 100%)`,
+          borderBottom: `1px solid ${NEXT_TIER_COLOR[tier]}33`,
+        }}
+      >
         <p
           className="text-center text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-3"
           style={{ color: "#FFE27A", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
@@ -203,7 +209,7 @@ export function ReliabilityScoreWidget() {
                 {pointsToNext} pts to {tierStyle.next}
               </span>
             </div>
-            <div className="h-2.5 rounded-full bg-black/25 overflow-hidden ring-1 ring-white/20">
+            <div className="h-2.5 rounded-full bg-white/5 overflow-hidden ring-1 ring-white/10">
               <motion.div
                 className="h-full rounded-full"
                 style={{
@@ -217,14 +223,14 @@ export function ReliabilityScoreWidget() {
             </div>
           </div>
         ) : (
-          <p className="text-center mt-3 text-sm text-white/85">🏆 Elite — top of the ladder</p>
+          <p className="text-center mt-3 text-sm text-white/80">🏆 Elite — top of the ladder</p>
         )}
       </div>
 
-      <CardContent className="p-3.5 sm:p-5 space-y-3 sm:space-y-4">
+      <CardContent className="p-3.5 sm:p-5 space-y-3 sm:space-y-4 bg-[#0B1220]">
         {/* 5 Metrics */}
         <div>
-          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-ink-muted mb-2.5 sm:mb-3">Score Breakdown</p>
+          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-white/50 mb-2.5 sm:mb-3">Score Breakdown</p>
           <div className="space-y-2.5 sm:space-y-3">
             {metrics5.map((m, i) => (
               <MetricRow key={m.label} {...m} delay={i * 0.06} />
@@ -236,11 +242,11 @@ export function ReliabilityScoreWidget() {
         {weakest && weakest.value < 90 && (
           <motion.div
             initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-primary/5 border border-primary/10"
+            className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-white/5 border border-white/10"
           >
-            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-foreground leading-relaxed">
-              <span className="font-semibold text-primary">Tip: </span>{tip}
+            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 mt-0.5" style={{ color: NEXT_TIER_COLOR[tier] }} />
+            <p className="text-xs text-white/85 leading-relaxed">
+              <span className="font-semibold" style={{ color: NEXT_TIER_COLOR[tier] }}>Tip: </span>{tip}
             </p>
           </motion.div>
         )}
@@ -248,16 +254,21 @@ export function ReliabilityScoreWidget() {
         {/* Demotion warning */}
         {profile?.tier_demotion_warning_at && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-destructive/5 border border-destructive/20"
+            className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-destructive/10 border border-destructive/30"
           >
-            <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-destructive leading-relaxed font-medium">
+            <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-400 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-red-300 leading-relaxed font-medium">
               Your tier is at risk — improve your score in the next 3 days to avoid demotion.
             </p>
           </motion.div>
         )}
 
-        <Button variant="outline" size="sm" asChild className="w-full rounded-xl gap-1.5 h-8 sm:h-9 text-xs sm:text-sm">
+        <Button
+          variant="outline"
+          size="sm"
+          asChild
+          className="w-full rounded-xl gap-1.5 h-8 sm:h-9 text-xs sm:text-sm bg-white/5 border-white/15 text-white hover:bg-white/10 hover:text-white"
+        >
           <Link to="/cleaner/reliability">
             View Full Breakdown <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
           </Link>
