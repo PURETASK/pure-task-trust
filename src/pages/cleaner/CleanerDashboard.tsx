@@ -5,7 +5,7 @@ import { ReliabilityScoreWidget } from "@/components/cleaner/ReliabilityScoreWid
 import { GoalsCard } from "@/components/gamification/GoalsCard";
 import { StreakCard } from "@/components/gamification/StreakCard";
 import { BoostCard } from "@/components/gamification/BoostCard";
-import { TierBadge } from "@/components/gamification/TierBadge";
+import { ShieldedAvatar } from "@/components/cleaner/ShieldedAvatar";
 import { InviteFriendsCTA } from "@/components/referral";
 import { TierProgressMap } from "@/components/cleaner/TierProgressMap";
 import { ProfileCompletion } from "@/components/cleaner/ProfileCompletion";
@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { CleanerTier } from "@/lib/tier-config";
+import { TIER_LABELS } from "@/lib/tier-config";
 import { Pill, SectionLabel } from "@/components/wf";
 import {
   Briefcase, Clock, DollarSign, MessageSquare,
@@ -50,10 +51,15 @@ export default function CleanerDashboard() {
         <div className="relative container px-4 sm:px-6 py-5 sm:py-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-5">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-              <div className="flex items-center gap-2.5 sm:gap-3 mb-2">
-                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-[10px] bg-app-canvas border border-hairline flex items-center justify-center font-semibold text-base sm:text-lg text-ink flex-shrink-0">
-                  {displayName.charAt(0)}
-                </div>
+              <div className="flex items-center gap-3 sm:gap-4 mb-2">
+                <ShieldedAvatar
+                  tier={tier}
+                  photoUrl={(profile as any)?.profile_photo_url}
+                  name={displayName}
+                  size={64}
+                  showLabel={false}
+                  className="flex-shrink-0"
+                />
                 <div>
                   <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.08em] uppercase text-ink-faint">Welcome back</p>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-ink">
@@ -62,7 +68,7 @@ export default function CleanerDashboard() {
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Pill variant="gold" className="capitalize"><Award className="h-3 w-3" />{tier} Tier</Pill>
+                <Pill variant="gold"><Award className="h-3 w-3" />{TIER_LABELS[tier]}</Pill>
                 {profile?.reliability_score && (
                   <Pill variant="success"><Shield className="h-3 w-3" />{profile.reliability_score}% Reliable</Pill>
                 )}
@@ -116,7 +122,15 @@ export default function CleanerDashboard() {
                   <ReliabilityScoreWidget />
                 )}
               </div>
-              <TierBadge />
+              <div className="rounded-[10px] bg-app-surface border border-hairline-soft shadow-wf p-4 sm:p-5 flex flex-col items-center justify-center">
+                <ShieldedAvatar
+                  tier={tier}
+                  photoUrl={(profile as any)?.profile_photo_url}
+                  name={displayName}
+                  size={140}
+                  showLabel
+                />
+              </div>
             </div>
           </section>
 
