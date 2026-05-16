@@ -27,6 +27,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AUTH_PROFILE_TIMEOUT_MS = 8000;
 
+// OneSignal v16 web SDK exposes itself via window.OneSignalDeferred (queue) or window.OneSignal
+// after init. Using the deferred queue is safe whether the SDK has finished loading or not.
+function oneSignalLogin(userId: string) {
+  try {
+    const w = window as any;
+    w.OneSignalDeferred = w.OneSignalDeferred || [];
+    w.OneSignalDeferred.push(async (OneSignal: any) => {
+      try { await OneSignal.login(userId); } catch (e) { console.warn('OneSignal.login failed', e); }
+    });
+  } catch { /* no-op in SSR / sandboxes */ }
+}
+
+function oneSignalLogout() {
+  try {
+    const w = window as any;
+    w.OneSignalDeferred = w.OneSignalDeferred || [];
+    w.OneSignalDeferred.push(async (OneSignal: any) => {
+      try { await OneSignal.logout(); } catch (e) { console.warn('OneSignal.logout failed', e); }
+    });
+  } catch { /* no-op */ }
+}
+
 async function withAuthTimeout<T>(operation: PromiseLike<T>, timeoutMessage: string): Promise<T> {
   let timeoutId: number | undefined;
 
@@ -129,6 +151,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role: (roleData?.role as UserRole) || 'client',
         avatar: profileData?.avatar_url || undefined,
       });
+      // Bind this device to the user for OneSignal push delivery
+      oneSignalLogin(supabaseUser.id);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
       setUser({
@@ -138,6 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // SECURITY: never trust user_metadata for role — default to least privilege.
         role: 'client',
       });
+      oneSignalLogin(supabaseUser.id);
     }
   };
 
@@ -178,6 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Clear local state FIRST so the UI reflects logged-out immediately
     setUser(null);
     setSession(null);
+    oneSignalLogout();
 
     try {
       await supabase.auth.signOut({ scope: 'local' });
