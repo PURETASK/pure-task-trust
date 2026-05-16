@@ -3021,6 +3021,7 @@ export type Database = {
           job_completed_at: string | null
           job_id: string
           opened_by_user_id: string | null
+          photo_urls: string[] | null
           reason_code: string | null
           refund_amount_credits: number | null
           resolution_notes: string | null
@@ -3028,6 +3029,7 @@ export type Database = {
           resolved_at: string | null
           resolved_by_user_id: string | null
           status: Database["public"]["Enums"]["dispute_status"]
+          status_updates: Json | null
           updated_at: string
           within_window: boolean | null
         }
@@ -3041,6 +3043,7 @@ export type Database = {
           job_completed_at?: string | null
           job_id: string
           opened_by_user_id?: string | null
+          photo_urls?: string[] | null
           reason_code?: string | null
           refund_amount_credits?: number | null
           resolution_notes?: string | null
@@ -3048,6 +3051,7 @@ export type Database = {
           resolved_at?: string | null
           resolved_by_user_id?: string | null
           status?: Database["public"]["Enums"]["dispute_status"]
+          status_updates?: Json | null
           updated_at?: string
           within_window?: boolean | null
         }
@@ -3061,6 +3065,7 @@ export type Database = {
           job_completed_at?: string | null
           job_id?: string
           opened_by_user_id?: string | null
+          photo_urls?: string[] | null
           reason_code?: string | null
           refund_amount_credits?: number | null
           resolution_notes?: string | null
@@ -3068,6 +3073,7 @@ export type Database = {
           resolved_at?: string | null
           resolved_by_user_id?: string | null
           status?: Database["public"]["Enums"]["dispute_status"]
+          status_updates?: Json | null
           updated_at?: string
           within_window?: boolean | null
         }

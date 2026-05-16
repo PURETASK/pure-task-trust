@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, AlertTriangle, Check } from "lucide-react";
+import { ArrowLeft, AlertTriangle, Check, Camera, X, Loader2 } from "lucide-react";
 import { useJob } from "@/hooks/useJob";
-import { useDisputes } from "@/hooks/useDisputes";
+import { useDisputes, useJobDispute } from "@/hooks/useDisputes";
 import { useJobPhotos } from "@/hooks/useJobPhotos";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import {
@@ -31,12 +31,15 @@ export default function Dispute() {
   const navigate = useNavigate();
   const { data: job, isLoading } = useJob(jobId || "");
   const { data: photos } = useJobPhotos(jobId || "");
-  const { openDispute, isOpeningDispute } = useDisputes();
+  const { openDispute, isOpeningDispute, uploadDisputePhoto } = useDisputes();
+  const { dispute: existingDispute } = useJobDispute(jobId || "");
   const escrow = useEscrowCountdown(job ?? null);
 
   const [reason, setReason] = useState<typeof REASONS[number]["id"]>("quality");
   const [outcome, setOutcome] = useState<typeof OUTCOMES[number]["id"]>("partial");
   const [notes, setNotes] = useState("");
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const cleanerName = useMemo(() => {
     const f = job?.cleaner?.first_name ?? "";
@@ -52,11 +55,28 @@ export default function Dispute() {
         ? "warning"
         : "neutral";
 
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !jobId) return;
+    setUploadingPhoto(true);
+    try {
+      const url = await uploadDisputePhoto(file, jobId);
+      if (url) setUploadedPhotos((prev) => [...prev, url]);
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = "";
+    }
+  };
+
+  const removePhoto = (url: string) => {
+    setUploadedPhotos((prev) => prev.filter((u) => u !== url));
+  };
+
   const handleSubmit = () => {
     if (!job || !notes.trim()) return;
     const payload = `[${REASONS.find(r => r.id === reason)?.title}] [Requested: ${OUTCOMES.find(o => o.id === outcome)?.label}]\n${notes.trim()}`;
     openDispute(
-      { jobId: job.id, clientId: job.client_id, reason: payload },
+      { jobId: job.id, clientId: job.client_id, reason: payload, photoUrls: uploadedPhotos },
       { onSuccess: () => navigate(`/booking/${job.id}`) },
     );
   };
@@ -91,6 +111,36 @@ export default function Dispute() {
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+        {existingDispute && (
+          <section className="bg-app-surface border border-hairline rounded-[14px] p-4 shadow-wf">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[13px] font-semibold text-ink">Dispute status</h3>
+              <Pill variant={existingDispute.status === 'resolved' ? 'success' : existingDispute.status === 'open' ? 'warning' : 'info'}>
+                {existingDispute.status}
+              </Pill>
+            </div>
+            <ol className="space-y-2">
+              {(existingDispute.status_updates ?? []).map((u, i) => (
+                <li key={i} className="flex gap-3 text-[12px]">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-ink">
+                      <strong className="capitalize">{u.by}</strong> · {u.type.replace(/_/g, ' ')}
+                    </div>
+                    {u.note && <div className="text-ink-muted">{u.note}</div>}
+                    <div className="text-ink-faint text-[11px]">{format(new Date(u.at), "MMM d, h:mm a")}</div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            {existingDispute.resolution_notes && (
+              <div className="mt-3 p-2 bg-state-success-bg/30 rounded text-[12px] text-ink">
+                <strong>Resolution:</strong> {existingDispute.resolution_notes}
+              </div>
+            )}
+          </section>
+        )}
+
         {reviewWindowExpired ? (
           <StatusBanner variant="danger" icon={<AlertTriangle />}>
             The 24-hour review window has expired — payment has already released.
@@ -173,6 +223,49 @@ export default function Dispute() {
             </div>
             <p className="text-[11px] text-ink-faint mt-1.5">
               Reference any of these in your description.
+            </p>
+          </section>
+        )}
+
+        {/* Attach evidence photos */}
+        {!existingDispute && (
+          <section>
+            <SectionLabel>Attach evidence photos (optional)</SectionLabel>
+            <div className="grid grid-cols-3 gap-2">
+              {uploadedPhotos.map((url) => (
+                <div key={url} className="relative aspect-square rounded-[10px] overflow-hidden border border-hairline bg-app-canvas">
+                  <img src={url} alt="Dispute evidence" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(url)}
+                    className="absolute top-1 right-1 h-5 w-5 rounded-full bg-app-surface/90 border border-hairline flex items-center justify-center text-ink-muted"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              {uploadedPhotos.length < 6 && (
+                <label className="aspect-square rounded-[10px] border border-dashed border-hairline bg-app-canvas flex items-center justify-center cursor-pointer hover:bg-state-info-bg/20">
+                  {uploadingPhoto ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-ink-muted" />
+                  ) : (
+                    <div className="flex flex-col items-center gap-1 text-ink-muted">
+                      <Camera className="h-5 w-5" />
+                      <span className="text-[10px]">Add photo</span>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={uploadingPhoto}
+                    onChange={handlePhotoSelect}
+                  />
+                </label>
+              )}
+            </div>
+            <p className="text-[11px] text-ink-faint mt-1.5">
+              Photos help your cleaner and our team understand the issue faster.
             </p>
           </section>
         )}

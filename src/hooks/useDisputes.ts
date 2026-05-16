@@ -21,6 +21,13 @@ export interface Dispute {
   resolved_at: string | null;
   resolved_by_user_id: string | null;
   admin_notes: string | null;
+  photo_urls: string[] | null;
+  status_updates: Array<{
+    at: string;
+    by: 'client' | 'cleaner' | 'admin' | 'system';
+    type: string;
+    note?: string;
+  }> | null;
   job?: {
     id: string;
     cleaning_type: string;
@@ -64,15 +71,32 @@ export function useDisputes() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Dispute[];
+      return data as unknown as Dispute[];
     },
     enabled: !!user?.id,
   });
 
   // Open a new dispute
   const openDisputeMutation = useMutation({
-    mutationFn: async ({ jobId, clientId, reason }: { jobId: string; clientId: string; reason: string }) => {
+    mutationFn: async ({
+      jobId,
+      clientId,
+      reason,
+      photoUrls = [],
+    }: {
+      jobId: string;
+      clientId: string;
+      reason: string;
+      photoUrls?: string[];
+    }) => {
       if (!user?.id) throw new Error('Not authenticated');
+
+      const initialUpdate = {
+        at: new Date().toISOString(),
+        by: 'client' as const,
+        type: 'opened',
+        note: reason.slice(0, 280),
+      };
 
       const { data, error } = await supabase
         .from('disputes')
@@ -82,6 +106,8 @@ export function useDisputes() {
           opened_by_user_id: user.id,
           client_notes: reason,
           status: 'open',
+          photo_urls: photoUrls,
+          status_updates: [initialUpdate],
         })
         .select()
         .single();
@@ -147,6 +173,21 @@ export function useDisputes() {
     isOpeningDispute: openDisputeMutation.isPending,
     addNote: addNoteMutation.mutate,
     isAddingNote: addNoteMutation.isPending,
+    uploadDisputePhoto: async (file: File, jobId: string): Promise<string | null> => {
+      if (!user?.id) return null;
+      // Store under userId/<jobId-tmp>/filename so RLS folder[1] matches user
+      const ext = file.name.split('.').pop() || 'jpg';
+      const path = `${user.id}/${jobId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('dispute-photos')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+      if (upErr) {
+        console.error('dispute photo upload failed', upErr);
+        return null;
+      }
+      const { data } = await supabase.storage.from('dispute-photos').createSignedUrl(path, 60 * 60 * 24 * 7);
+      return data?.signedUrl ?? path;
+    },
   };
 }
 
@@ -162,7 +203,7 @@ export function useJobDispute(jobId: string) {
         .maybeSingle();
 
       if (error) throw error;
-      return data as Dispute | null;
+      return data as unknown as Dispute | null;
     },
     enabled: !!jobId,
   });
