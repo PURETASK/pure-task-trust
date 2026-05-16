@@ -136,8 +136,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Auto-complete jobs finished:", results);
 
+    // ── Auto-release escrow for jobs past the 24h review window ──
+    const { data: releaseData, error: releaseError } = await supabase.rpc(
+      "auto_release_expired_jobs",
+      { _window_hours: 24 }
+    );
+    if (releaseError) {
+      console.error("auto_release_expired_jobs failed:", releaseError);
+    } else {
+      console.log("Auto-release results:", releaseData);
+    }
+
     return new Response(
-      JSON.stringify({ success: true, results }),
+      JSON.stringify({ success: true, results, release: releaseData ?? null }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
