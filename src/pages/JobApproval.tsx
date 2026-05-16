@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import {
   Check, Clock, AlertTriangle, ArrowLeft, ArrowRight,
-  Sparkles, Loader2, ImageOff,
+  Sparkles, Loader2, ImageOff, LogIn, LogOut, FileText,
 } from "lucide-react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -291,6 +291,42 @@ export default function JobApproval() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Check-in / Check-out timestamps */}
+                  {(job.check_in_at || job.check_out_at) && (
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="p-3 rounded-2xl bg-app-sunken border border-hairline-soft">
+                        <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-1">
+                          <LogIn className="h-3.5 w-3.5" />Clocked in
+                        </div>
+                        <div className="text-sm font-medium">
+                          {job.check_in_at
+                            ? new Date(job.check_in_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })
+                            : "—"}
+                        </div>
+                      </div>
+                      <div className="p-3 rounded-2xl bg-app-sunken border border-hairline-soft">
+                        <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-1">
+                          <LogOut className="h-3.5 w-3.5" />Clocked out
+                        </div>
+                        <div className="text-sm font-medium">
+                          {job.check_out_at
+                            ? new Date(job.check_out_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })
+                            : "—"}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Cleaner notes / concerns */}
+                  {job.cleaner_notes && (
+                    <div className="mb-4 p-3 rounded-2xl bg-app-sunken border border-hairline-soft">
+                      <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-1.5">
+                        <FileText className="h-3.5 w-3.5" />Notes from {cleanerName}
+                      </div>
+                      <p className="text-sm whitespace-pre-wrap">{job.cleaner_notes}</p>
+                    </div>
+                  )}
 
                   {/* Credit Breakdown */}
                   <div className="space-y-3 p-4 bg-app-sunken border border-hairline-soft rounded-2xl">
