@@ -14,12 +14,22 @@ import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobMoney } from "@/hooks/useJobMoney";
 
 const timelineSteps = [
-  { id: "accepted", label: "Confirmed", desc: "Cleaner accepted your booking", statusMatch: ['confirmed', 'on_way', 'arrived', 'in_progress', 'completed'] },
-  { id: "onway", label: "On the Way", desc: "Cleaner is heading to you", statusMatch: ['on_way', 'arrived', 'in_progress', 'completed'] },
-  { id: "checkedin", label: "Arrived & Checked In", desc: "GPS verified arrival", statusMatch: ['arrived', 'in_progress', 'completed'] },
-  { id: "inprogress", label: "Cleaning in Progress", desc: "Active service underway", statusMatch: ['in_progress', 'completed'] },
-  { id: "complete", label: "Job Complete", desc: "Ready for your review", statusMatch: ['completed'] },
-];
+  { id: "accepted",          label: "Booking Confirmed",     desc: "Cleaner accepted your booking" },
+  { id: "onway",             label: "On the Way",            desc: "Cleaner is heading to you" },
+  { id: "checkedin",         label: "Arrived & Checked In",  desc: "GPS verified arrival" },
+  { id: "inprogress",        label: "Cleaning in Progress",  desc: "Active service underway" },
+  { id: "checkedout",        label: "Checked Out",           desc: "Cleaner finished and left" },
+  { id: "awaiting_approval", label: "Awaiting Your Approval", desc: "Review photos and approve to release payment" },
+  { id: "complete",          label: "Payment Released",      desc: "All set — receipt available" },
+] as const;
+
+function getCurrentStepIndex(j: any) {
+  if (j.status === 'completed' && j.final_charge_credits != null) return 6;
+  if (j.status === 'completed' || j.check_out_at) return 5;
+  if (j.status === 'in_progress' || j.check_in_at) return 3;
+  if (j.status === 'confirmed') return 1;
+  return 0;
+}
 
 export default function JobInProgress() {
   const { id } = useParams<{ id: string }>();
@@ -62,8 +72,13 @@ export default function JobInProgress() {
   );
 
   const cleanerName = participants.cleaner.fullName;
-  const getCurrentStep = () => { for (let i = timelineSteps.length - 1; i >= 0; i--) { if (timelineSteps[i].statusMatch.includes(job.status)) return i; } return 0; };
-  const currentStep = getCurrentStep();
+  const currentStep = getCurrentStepIndex(job);
+  const stepTimes: Record<string, string | undefined> = {
+    checkedin: job.check_in_at ?? undefined,
+    inprogress: job.check_in_at ?? undefined,
+    checkedout: job.check_out_at ?? undefined,
+    awaiting_approval: job.check_out_at ?? undefined,
+  };
   const isCompleted = job.status === 'completed';
   const isInProgress = job.status === 'in_progress';
 
