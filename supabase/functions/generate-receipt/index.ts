@@ -124,8 +124,22 @@ function generateReceiptHtml(data: Record<string, unknown>): string {
 
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>PureTask Receipt</title></head>
+<head>
+  <meta charset="utf-8">
+  <title>PureTask Receipt — ${data.receiptNumber ?? ''}</title>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { margin: 0; }
+    }
+  </style>
+</head>
 <body style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:40px auto;padding:20px;color:#1f2937">
+  <div class="no-print" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px">
+    <button onclick="window.print()" style="background:#0078FF;color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600">
+      Download / Print PDF
+    </button>
+  </div>
   <div style="text-align:center;margin-bottom:32px">
     <h1 style="font-size:24px;color:#7c3aed;margin:0">PureTask</h1>
     <p style="color:#9ca3af;margin:4px 0 0">Receipt — ${data.type || 'Transaction'}</p>
@@ -137,6 +151,10 @@ function generateReceiptHtml(data: Record<string, unknown>): string {
     Thank you for using PureTask. This is an automatically generated receipt.<br>
     © ${new Date().getFullYear()} PureTask. All rights reserved.
   </p>
+  <script>
+    // Auto-open the system print dialog so users can "Save as PDF"
+    window.addEventListener('load', function () { setTimeout(function(){ try { window.print(); } catch(e){} }, 350); });
+  </script>
 </body>
 </html>`;
 }
