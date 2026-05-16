@@ -120,6 +120,13 @@ export function useDisputes() {
         .update({ status: 'disputed' })
         .eq('id', jobId);
 
+      // Fire-and-forget notification dispatch to both parties
+      supabase.functions
+        .invoke('notify-job-event', {
+          body: { event: 'dispute_opened', job_id: jobId, metadata: { reason: reason.slice(0, 200) } },
+        })
+        .catch((e) => console.warn('dispute notify failed', e));
+
       return data;
     },
     onSuccess: () => {

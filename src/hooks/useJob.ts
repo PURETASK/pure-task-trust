@@ -176,6 +176,16 @@ export function useJobActions(jobId: string) {
       });
       if (error) throw new Error(error.message || 'Failed to approve job');
       if (data?.error) throw new Error(data.error);
+      // Notify both client + cleaner that payment was released
+      supabase.functions
+        .invoke('notify-job-event', {
+          body: {
+            event: 'payment_released',
+            job_id: jobId,
+            metadata: { credits_charged: data.credits_charged, refund: data.refund },
+          },
+        })
+        .catch((e) => console.warn('payment_released notify failed', e));
       return {
         creditsCharged: data.credits_charged as number,
         refundAmount: data.refund as number,
@@ -211,6 +221,12 @@ export function useJobActions(jobId: string) {
         .from('jobs')
         .update({ status: 'disputed' })
         .eq('id', jobId);
+
+      supabase.functions
+        .invoke('notify-job-event', {
+          body: { event: 'dispute_opened', job_id: jobId, metadata: { reason: description.slice(0, 200) } },
+        })
+        .catch((e) => console.warn('dispute notify failed', e));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] });

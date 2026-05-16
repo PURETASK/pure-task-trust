@@ -5,6 +5,18 @@ import { toast } from "sonner";
 
 export type NotificationChannel = 'email' | 'sms' | 'push' | 'in_app';
 
+export type NotificationEventKey =
+  | 'booking_accepted'
+  | 'cleaner_checked_in'
+  | 'cleaner_checked_out'
+  | 'job_approved'
+  | 'payment_released'
+  | 'dispute_opened'
+  | 'dispute_status_changed'
+  | 'dispute_resolved';
+
+export type EventPreferences = Partial<Record<NotificationEventKey, boolean>>;
+
 // Matches actual DB schema for notification_preferences
 export interface NotificationPreferences {
   id: string;
@@ -12,6 +24,7 @@ export interface NotificationPreferences {
   email_enabled: boolean;
   push_enabled: boolean;
   sms_enabled: boolean;
+  event_preferences: EventPreferences;
   created_at: string;
   updated_at: string;
 }
@@ -84,7 +97,7 @@ export function useNotificationPreferences() {
   });
 
   const updatePreferences = useMutation({
-    mutationFn: async (updates: Partial<Pick<NotificationPreferences, 'email_enabled' | 'push_enabled' | 'sms_enabled'>>) => {
+    mutationFn: async (updates: Partial<Pick<NotificationPreferences, 'email_enabled' | 'push_enabled' | 'sms_enabled' | 'event_preferences'>>) => {
       if (!user?.id) throw new Error('Not authenticated');
 
       const { error } = await supabase
