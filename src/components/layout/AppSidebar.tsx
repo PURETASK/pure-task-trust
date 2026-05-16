@@ -80,6 +80,7 @@ const cleanerNavGroups: NavGroup[] = [
     items: [
       { title: "Home", url: "/cleaner/dashboard", icon: House },
       { title: "Jobs", url: "/cleaner/jobs", icon: BriefcaseBusiness },
+      { title: "My Schedule", url: "/cleaner/my-schedule", icon: CalendarDays },
       { title: "Availability", url: "/cleaner/availability", icon: CalendarClock },
       { title: "Earnings", url: "/cleaner/earnings", icon: Banknote },
       { title: "Profile", url: "/cleaner/profile/view", icon: UserCircle2 },
