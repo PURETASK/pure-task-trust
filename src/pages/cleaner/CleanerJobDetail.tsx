@@ -701,6 +701,47 @@ export default function CleanerJobDetail() {
           clientFirstName={participants.client.firstName}
         />
       )}
+
+      {/* Decline Offer Dialog */}
+      <Dialog open={declineOpen} onOpenChange={setDeclineOpen}>
+        <DialogContent className="rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Decline this job?</DialogTitle>
+            <DialogDescription>
+              The client's held credits will be released back to their wallet immediately,
+              and they'll be prompted to pick another cleaner.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-ink-muted">Reason (optional)</label>
+            <Textarea
+              placeholder="e.g. Schedule conflict, too far from my service area…"
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              className="rounded-2xl min-h-[80px]"
+              maxLength={500}
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" className="rounded-xl" onClick={() => setDeclineOpen(false)} disabled={declineOffer.isPending}>
+              Keep offer
+            </Button>
+            <Button
+              variant="destructive"
+              className="rounded-xl gap-1.5"
+              onClick={() => declineOffer.mutate(
+                { jobId: job.id, reason: declineReason.trim() || undefined },
+                { onSuccess: () => { setDeclineOpen(false); setDeclineReason(""); navigate("/cleaner/jobs"); } }
+              )}
+              disabled={declineOffer.isPending}
+            >
+              {declineOffer.isPending
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Declining…</>
+                : <><XCircle className="h-4 w-4" /> Confirm decline</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </CleanerLayout>
   );
 }
