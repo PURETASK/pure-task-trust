@@ -67,6 +67,23 @@ export default function CleanerJobDetail() {
   const [declineOpen, setDeclineOpen] = useState(false);
   const [declineReason, setDeclineReason] = useState("");
 
+  // Has this cleaner already rated this client for this job?
+  const { data: existingClientRating } = useQuery({
+    queryKey: ["client-rating", jobId, profile?.id],
+    enabled: !!jobId && !!profile?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_ratings" as any)
+        .select("id")
+        .eq("job_id", jobId!)
+        .eq("cleaner_id", profile!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const hasRatedClient = !!existingClientRating;
+
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
   // Display primitives — safe with undefined job
