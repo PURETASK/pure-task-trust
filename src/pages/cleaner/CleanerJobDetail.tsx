@@ -34,6 +34,7 @@ import {
   Sparkles, Briefcase, Lock, FileText
 } from "lucide-react";
 import { Pill, SectionLabel } from "@/components/wf";
+import { motion } from "framer-motion";
 
 const TYPE_EMOJI: Record<string, string> = {
   standard: "🧹", basic: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
