@@ -28,7 +28,7 @@ import { TIER_LABELS } from "@/lib/tier-config";
 import { Pill, SectionLabel } from "@/components/wf";
 import {
   Briefcase, Clock, DollarSign, MessageSquare,
-  Lightbulb, Shield, Award, Zap,
+  Lightbulb, Shield, Award, Zap, Bell, ArrowRight,
 } from "lucide-react";
 
 
@@ -89,6 +89,34 @@ export default function CleanerDashboard() {
 
       <CleanerLayout>
         <div className="space-y-5 sm:space-y-8">
+          {/* Pending offer alert — pulses until cleaner responds */}
+          {(() => {
+            const pendingOffers = jobs.filter(j => j.status === "pending" || j.status === "created");
+            if (pendingOffers.length === 0) return null;
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                className="rounded-3xl border-2 border-warning/60 bg-warning/[0.08] shadow-wf p-4 sm:p-5 flex items-center gap-3 sm:gap-4"
+              >
+                <div className="relative h-12 w-12 rounded-2xl bg-warning/20 border border-warning/40 flex items-center justify-center shrink-0">
+                  <Bell className="h-5 w-5 text-warning" />
+                  <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-warning animate-pulse" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-sm sm:text-base">
+                    {pendingOffers.length} new job {pendingOffers.length === 1 ? "offer" : "offers"} waiting
+                  </p>
+                  <p className="text-xs text-ink-muted mt-0.5">
+                    Accept or decline to free up the client's held credits
+                  </p>
+                </div>
+                <Button asChild size="sm" className="rounded-xl bg-warning hover:bg-warning/90 text-warning-foreground gap-1.5 shrink-0">
+                  <Link to="/cleaner/jobs">Review <ArrowRight className="h-3.5 w-3.5" /></Link>
+                </Button>
+              </motion.div>
+            );
+          })()}
+
           {/* Dynamic Hero — changes based on job state */}
           <DynamicHeroCard jobs={jobs} />
 
