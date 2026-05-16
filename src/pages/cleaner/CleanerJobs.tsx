@@ -21,6 +21,12 @@ import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { calcJobMoney } from "@/hooks/useJobMoney";
+import { useJobOfferActions } from "@/hooks/useJobOfferActions";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Check, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
