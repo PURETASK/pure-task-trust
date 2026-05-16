@@ -16,6 +16,8 @@ export interface BookingData {
   address?: string;
   scheduledDate?: string;
   notes?: string;
+  squareFootage: number;
+  dirtinessLevel: 'touch_up' | 'average' | 'heavy' | 'very_dirty';
 }
 
 export function useBooking() {
@@ -38,6 +40,8 @@ export function useBooking() {
           totalCredits: booking.totalCredits,
           scheduledDate: booking.scheduledDate ?? null,
           notes: booking.notes ?? null,
+          squareFootage: booking.squareFootage,
+          dirtinessLevel: booking.dirtinessLevel,
         },
       });
       if (error) throw new Error(error.message || 'Failed to create booking');
