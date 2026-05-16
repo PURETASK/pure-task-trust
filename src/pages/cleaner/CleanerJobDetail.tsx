@@ -315,7 +315,12 @@ export default function CleanerJobDetail() {
               <Button
                 size="lg"
                 className="rounded-xl bg-success hover:bg-success/90 text-white gap-1.5"
-                onClick={() => acceptOffer.mutate(job.id)}
+                onClick={() => acceptOffer.mutate(job.id, {
+                  onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ["job", job.id] });
+                    navigate(`/cleaner/jobs/${job.id}`, { replace: true });
+                  },
+                })}
                 disabled={acceptOffer.isPending || declineOffer.isPending}
               >
                 {acceptOffer.isPending
