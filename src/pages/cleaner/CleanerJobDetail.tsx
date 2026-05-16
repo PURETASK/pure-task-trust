@@ -31,13 +31,20 @@ import {
   MapPin, Clock, Calendar, Camera, CheckCircle, Play, ArrowLeft,
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
   Star, DollarSign, Navigation, HelpCircle, Check, XCircle, Zap,
-  Sparkles, Briefcase, Lock, FileText
+  Sparkles, Briefcase, Lock, FileText, Home
 } from "lucide-react";
 import { Pill, SectionLabel } from "@/components/wf";
 import { motion } from "framer-motion";
 
 const TYPE_EMOJI: Record<string, string> = {
   standard: "🧹", basic: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
+};
+
+const DIRTINESS_LABELS: Record<string, { label: string; emoji: string; tone: string }> = {
+  touch_up:   { label: 'Touch-up',   emoji: '✨', tone: 'success' },
+  average:    { label: 'Average',    emoji: '🧽', tone: 'info' },
+  heavy:      { label: 'Heavy',      emoji: '🧹', tone: 'warning' },
+  very_dirty: { label: 'Very dirty', emoji: '🪣', tone: 'destructive' },
 };
 
 export default function CleanerJobDetail() {
