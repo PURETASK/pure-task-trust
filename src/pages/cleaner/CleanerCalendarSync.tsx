@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCalendarSync, getProviderInfo } from "@/hooks/useCalendarSync";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Calendar, Link2, Unlink, RefreshCw, CheckCircle, AlertCircle,
   Loader2, Clock, Briefcase, MapPin, ChevronRight, Zap,
@@ -254,6 +255,34 @@ export default function CleanerCalendarSync() {
   const { toast } = useToast();
   const { connections, isLoading, toggleSync: toggleSyncMutation, disconnectCalendar } = useCalendarSync();
   const [syncingId, setSyncingId]     = useState<number | null>(null);
+  const [connectingProvider, setConnectingProvider] = useState<string | null>(null);
+
+  const handleConnect = async (providerId: string) => {
+    if (providerId === "google") {
+      setConnectingProvider(providerId);
+      try {
+        const { data, error } = await supabase.functions.invoke("google-calendar-initiate", {
+          body: { returnTo: window.location.pathname },
+        });
+        if (error) throw error;
+        if (!data?.url) throw new Error("No auth URL returned");
+        window.location.href = data.url;
+      } catch (err: any) {
+        toast({
+          title: "Couldn't start Google connect",
+          description: err.message || "Please try again",
+          variant: "destructive",
+        });
+        setConnectingProvider(null);
+      }
+      return;
+    }
+
+    toast({
+      title: `${providerId === "outlook" ? "Outlook" : "Apple Calendar"} coming next`,
+      description: "Google is live now — Outlook and Apple are next in the build queue.",
+    });
+  };
 
   const handleToggleSync = async (connectionId: number, enabled: boolean) => {
     setSyncingId(connectionId);
@@ -343,13 +372,16 @@ export default function CleanerCalendarSync() {
                 <motion.div key={provider.id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
                     className={`w-full rounded-2xl border-2 ${provider.border} p-4 text-left bg-gradient-to-br ${provider.gradient} hover:shadow-md transition-all duration-200 group`}
-                    onClick={() => toast({ title: `${provider.name} OAuth coming soon`, description: "Calendar OAuth integration requires backend setup" })}
+                    onClick={() => handleConnect(provider.id)}
+                    disabled={connectingProvider === provider.id}
                   >
                     <div className="text-2xl mb-2">{provider.icon}</div>
                     <p className={`font-bold text-sm ${provider.accentColor}`}>{provider.name}</p>
                     <p className="text-[11px] text-ink-muted mt-1 leading-tight">{provider.description}</p>
                     <div className={`mt-3 inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-semibold ${provider.badgeBg}`}>
-                      <Zap className="h-2.5 w-2.5" /> Connect
+                      {connectingProvider === provider.id
+                        ? <><Loader2 className="h-2.5 w-2.5 animate-spin" /> Connecting…</>
+                        : <><Zap className="h-2.5 w-2.5" /> Connect</>}
                     </div>
                   </button>
                 </motion.div>
