@@ -6,6 +6,7 @@ import {
   FlowNav,
 } from "@/components/flow";
 import type { SetupState } from "@/hooks/useClientSetup";
+import { EnablePushPrompt } from "@/components/notifications/EnablePushPrompt";
 
 interface Props {
   step: number;
@@ -119,6 +120,8 @@ export function StepReview({ step, total, state, saving, onBack, onConfirm, onEd
             everything for you.
           </p>
         </div>
+
+        <EnablePushPrompt />
       </FlowCard>
 
       <FlowNav
