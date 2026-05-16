@@ -666,7 +666,7 @@ export default function CleanerJobs() {
               {offers.length === 0 ? (
                 <EmptyTab icon={Bell} title="No new offers" subtitle="You'll see new job offers here when clients book you" />
               ) : (
-                offers.map(job => <CompactJobCard key={job.id} job={job} tier={tier} />)
+                offers.map(job => <OfferCard key={job.id} job={job} tier={tier} />)
               )}
             </TabsContent>
 
