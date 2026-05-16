@@ -31,6 +31,10 @@ export function useJobOfferActions() {
         _job_id: jobId,
       });
       if (error) throw error;
+      // Best-effort fan-out (push/email/in-app to client)
+      supabase.functions
+        .invoke("notify-job-event", { body: { event: "booking_accepted", job_id: jobId } })
+        .catch((e) => console.warn("notify-job-event accept failed", e));
       return data;
     },
     onSuccess: () => {
