@@ -15,6 +15,11 @@ import { useStatusPresentation } from "@/hooks/useStatusPresentation";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { useJobOfferActions } from "@/hooks/useJobOfferActions";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { PhotoRequirements, useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { ClientBriefCard } from "@/components/cleaner/ClientBriefCard";
 import { JobSupportChat } from "@/components/cleaner/JobSupportChat";
@@ -25,9 +30,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { 
   MapPin, Clock, Calendar, Camera, CheckCircle, Play, ArrowLeft,
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
-  Star, DollarSign, Navigation, HelpCircle
+  Star, DollarSign, Navigation, HelpCircle, Check, XCircle, Zap,
+  Sparkles, Briefcase, Lock, FileText
 } from "lucide-react";
 import { Pill, SectionLabel } from "@/components/wf";
+import { motion } from "framer-motion";
+
+const TYPE_EMOJI: Record<string, string> = {
+  standard: "🧹", basic: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
+};
 
 export default function CleanerJobDetail() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -39,12 +50,15 @@ export default function CleanerJobDetail() {
   const { profile } = useCleanerProfile();
   const uploadPhoto = useUploadJobPhoto(jobId || "");
   const { checkIn, checkOut, hasCheckedIn, hasCheckedOut } = useJobCheckins(jobId);
+  const { acceptOffer, declineOffer } = useJobOfferActions();
   const [selectedPhotoType, setSelectedPhotoType] = useState<"before" | "after">("before");
   const fileInputRef = useState<HTMLInputElement | null>(null);
   const [fileEl, setFileEl] = useState<HTMLInputElement | null>(null);
   const [elapsedMin, setElapsedMin] = useState(0);
   const [supportOpen, setSupportOpen] = useState(false);
   const [ratingOpen, setRatingOpen] = useState(false);
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
@@ -175,6 +189,8 @@ export default function CleanerJobDetail() {
 
   const isInProgress = job.status === "in_progress";
   const isCompleted = job.status === "completed";
+  const isPending = job.status === "pending" || job.status === "created";
+  const isCancelled = job.status === "cancelled";
   // canStart guards "Check In" (confirmed + cleaner-owned); UX still requires !hasCheckedIn
   const canCheckin = auth.canStart && !hasCheckedIn;
   // canComplete guards "Check Out" (in_progress + has check_in); UX still requires !hasCheckedOut
@@ -183,26 +199,140 @@ export default function CleanerJobDetail() {
   // Client data for brief card
   const jobWithAddress = job as any;
   const clientPrefs = jobWithAddress.client?.preferences_json ?? null;
+  const emoji = TYPE_EMOJI[job.cleaning_type as string] || "🧹";
+  const cleaningTypeLabel = (job.cleaning_type || "standard").replace(/_/g, " ");
+  const scheduledDate = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
+  const isRush = !!(job as any).is_rush;
+  const paymentMode = (job as any).payment_mode;
+  const addrFull = (job as any).address_line1
+    ? [(job as any).address_line1, (job as any).address_city, (job as any).address_state, (job as any).address_postal_code].filter(Boolean).join(", ")
+    : (job as any).address || null;
+  const addrCityState = [(job as any).address_city, (job as any).address_state].filter(Boolean).join(", ");
 
   return (
     <CleanerLayout>
       <div className="space-y-5 max-w-2xl relative">
-        {/* Header */}
-        <div className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf p-5 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/cleaner/jobs")}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex-1">
-            <SectionLabel>Job</SectionLabel>
-            <h1 className="text-2xl font-bold capitalize tracking-tight">
-              {(job.cleaning_type || '').replace('_', ' ')} Clean
-            </h1>
-            <p className="text-ink-muted text-sm">
-              {participants.client.fullName}
-            </p>
+        {/* ── HERO HEADER ────────────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-3xl border border-hairline-soft shadow-wf"
+          style={{
+            background: isPending
+              ? "linear-gradient(135deg, hsl(38,95%,18%) 0%, hsl(38,95%,28%) 50%, hsl(210,100%,28%) 100%)"
+              : isCompleted
+              ? "linear-gradient(135deg, hsl(150,60%,18%) 0%, hsl(160,60%,25%) 50%, hsl(210,100%,28%) 100%)"
+              : "linear-gradient(135deg, hsl(210,100%,18%) 0%, hsl(210,100%,28%) 50%, hsl(195,80%,32%) 100%)",
+          }}
+        >
+          <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-25"
+            style={{ background: "hsl(195,90%,60%)" }} />
+          <div className="absolute bottom-0 left-12 w-36 h-36 rounded-full blur-3xl opacity-20"
+            style={{ background: "hsl(180,80%,60%)" }} />
+
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Button
+                variant="ghost" size="icon"
+                className="h-9 w-9 text-white/80 hover:text-white hover:bg-white/10 rounded-xl"
+                onClick={() => navigate("/cleaner/jobs")}
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <span className="text-white/60 text-[10px] font-bold tracking-[0.12em] uppercase">Job · {String(job.id).slice(0, 8)}</span>
+              <span className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/15 border border-white/20 text-white backdrop-blur-sm">
+                {status.label}
+              </span>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-4xl backdrop-blur-sm shrink-0">
+                {emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-poppins font-bold text-white capitalize leading-tight">
+                  {cleaningTypeLabel} Clean
+                </h1>
+                <p className="text-white/70 text-sm mt-1 flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5" />
+                  {participants.client.fullName}
+                </p>
+
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {isRush && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold bg-warning/20 border border-warning/40 text-warning">
+                      <Zap className="h-2.5 w-2.5" /> Rush
+                    </span>
+                  )}
+                  {paymentMode === "direct" && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold bg-white/15 border border-white/20 text-white">
+                      <DollarSign className="h-2.5 w-2.5" /> Direct pay
+                    </span>
+                  )}
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold bg-success/20 border border-success/40 text-success">
+                    <DollarSign className="h-2.5 w-2.5" /> {money.cleanerNet} cr est.
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <Pill variant={status.badgeVariant === 'success' ? 'success' : status.badgeVariant === 'destructive' ? 'danger' : status.badgeVariant === 'outline' ? 'neutral' : 'info'}>{status.label}</Pill>
-        </div>
+        </motion.div>
+
+        {/* ── PENDING OFFER: Accept / Decline ─────────────────────────────── */}
+        {isPending && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            className="rounded-3xl border-2 border-warning/60 bg-warning/[0.06] shadow-wf p-5"
+          >
+            <div className="flex items-start gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-warning/20 border border-warning/40 flex items-center justify-center shrink-0">
+                <Sparkles className="h-5 w-5 text-warning" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base">Respond to this job offer</h3>
+                <p className="text-xs text-ink-muted mt-0.5">
+                  Client credits are on hold. Decide quickly to keep your acceptance rate high.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-xl border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
+                onClick={() => setDeclineOpen(true)}
+                disabled={acceptOffer.isPending || declineOffer.isPending}
+              >
+                <XCircle className="h-4 w-4" /> Decline
+              </Button>
+              <Button
+                size="lg"
+                className="rounded-xl bg-success hover:bg-success/90 text-white gap-1.5"
+                onClick={() => acceptOffer.mutate(job.id)}
+                disabled={acceptOffer.isPending || declineOffer.isPending}
+              >
+                {acceptOffer.isPending
+                  ? <><Loader2 className="h-4 w-4 animate-spin" /> Accepting…</>
+                  : <><Check className="h-4 w-4" /> Accept job</>}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── CANCELLED notice ────────────────────────────────────────────── */}
+        {isCancelled && (
+          <div className="rounded-3xl border border-destructive/30 bg-destructive/[0.06] shadow-wf p-5 flex items-start gap-3">
+            <div className="h-10 w-10 rounded-xl bg-destructive/15 border border-destructive/30 flex items-center justify-center shrink-0">
+              <XCircle className="h-5 w-5 text-destructive" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm">This job was cancelled</h3>
+              <p className="text-xs text-ink-muted mt-0.5">
+                The client's credits have been released back to their wallet.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Client Brief Card — shows for confirmed/in_progress */}
         {(job.status === 'confirmed' || job.status === 'in_progress') && (
@@ -214,7 +344,8 @@ export default function CleanerJobDetail() {
           />
         )}
 
-        {/* Progress Steps */}
+        {/* Progress Steps — only for confirmed+ */}
+        {!isPending && !isCancelled && (
         <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -236,11 +367,14 @@ export default function CleanerJobDetail() {
             </div>
           </CardContent>
         </Card>
+        )}
 
         {/* Job Details */}
         <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Job Details</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-primary" /> Job Details
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -249,10 +383,13 @@ export default function CleanerJobDetail() {
                   <Calendar className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Date</p>
-                  <p className="font-medium text-sm">
-                    {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "EEE, MMM d") : "TBD"}
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Date</p>
+                  <p className="font-bold text-sm">
+                    {scheduledDate ? format(scheduledDate, "EEE, MMM d") : "TBD"}
                   </p>
+                  {scheduledDate && (
+                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "yyyy")}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -260,10 +397,13 @@ export default function CleanerJobDetail() {
                   <Clock className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Start Time</p>
-                  <p className="font-medium text-sm">
-                    {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "h:mm a") : "TBD"}
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Start Time</p>
+                  <p className="font-bold text-sm">
+                    {scheduledDate ? format(scheduledDate, "h:mm a") : "TBD"}
                   </p>
+                  {scheduledDate && (
+                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "zzz")}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -271,8 +411,11 @@ export default function CleanerJobDetail() {
                   <Timer className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Duration</p>
-                  <p className="font-medium text-sm">{job.estimated_hours || 2} hrs est.</p>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Duration</p>
+                  <p className="font-bold text-sm">{job.estimated_hours || 2} hrs est.</p>
+                  {job.actual_hours && (
+                    <p className="text-[11px] text-ink-muted">{job.actual_hours}h actual</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -280,29 +423,41 @@ export default function CleanerJobDetail() {
                   <DollarSign className="h-4 w-4 text-success" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Your Earnings</p>
-                  <p className="font-medium text-sm text-success">{money.cleanerNet} cr</p>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Your Earnings</p>
+                  <p className="font-bold text-sm text-success">{money.cleanerNet} cr</p>
+                  <p className="text-[11px] text-ink-muted">After platform fee</p>
                 </div>
               </div>
             </div>
 
-            {/* Service Address — shown once job is accepted */}
-            {(() => {
-              const addr = (job as any).address_line1
-                ? [(job as any).address_line1, (job as any).address_city, (job as any).address_state].filter(Boolean).join(', ')
-                : (job as any).address || null;
-              return addr ? (
-                <div className="pt-3 border-t border-border flex items-start gap-2.5">
-                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Service Address</p>
-                    <p className="font-medium text-sm">{addr}</p>
-                  </div>
-                </div>
-              ) : null;
-            })()}
+            {/* Service Address — full address revealed once accepted; pending shows city only */}
+            <div className="pt-3 border-t border-border flex items-start gap-2.5">
+              <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isPending ? "bg-muted" : "bg-primary/10"}`}>
+                {isPending ? <Lock className="h-4 w-4 text-ink-muted" /> : <MapPin className="h-4 w-4 text-primary" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Service Address</p>
+                {isPending ? (
+                  <>
+                    <p className="font-bold text-sm">{addrCityState || "Area hidden"}</p>
+                    <p className="text-[11px] text-ink-muted">Full address unlocks when you accept</p>
+                  </>
+                ) : addrFull ? (
+                  <>
+                    <p className="font-bold text-sm break-words">{addrFull}</p>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addrFull)}`}
+                      target="_blank" rel="noreferrer"
+                      className="text-[11px] text-primary inline-flex items-center gap-1 mt-0.5 hover:underline"
+                    >
+                      <Navigation className="h-3 w-3" /> Get directions
+                    </a>
+                  </>
+                ) : (
+                  <p className="font-medium text-sm text-ink-muted">Address not available</p>
+                )}
+              </div>
+            </div>
 
             {isInProgress && job.check_in_at && (
               <div className="mt-3 pt-3 border-t border-border flex items-center gap-3 p-3 rounded-lg bg-primary/5">
@@ -321,8 +476,10 @@ export default function CleanerJobDetail() {
             
             {job.notes && (
               <div className="pt-3 border-t border-border">
-                <p className="text-xs text-muted-foreground mb-1">Client Notes</p>
-                <p className="text-sm bg-muted/50 p-3 rounded-lg">{job.notes}</p>
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5 flex items-center gap-1.5">
+                  <FileText className="h-3 w-3" /> Client Notes
+                </p>
+                <p className="text-sm bg-muted/50 p-3 rounded-xl italic leading-relaxed">"{job.notes}"</p>
               </div>
             )}
           </CardContent>
@@ -544,6 +701,47 @@ export default function CleanerJobDetail() {
           clientFirstName={participants.client.firstName}
         />
       )}
+
+      {/* Decline Offer Dialog */}
+      <Dialog open={declineOpen} onOpenChange={setDeclineOpen}>
+        <DialogContent className="rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Decline this job?</DialogTitle>
+            <DialogDescription>
+              The client's held credits will be released back to their wallet immediately,
+              and they'll be prompted to pick another cleaner.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-ink-muted">Reason (optional)</label>
+            <Textarea
+              placeholder="e.g. Schedule conflict, too far from my service area…"
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              className="rounded-2xl min-h-[80px]"
+              maxLength={500}
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" className="rounded-xl" onClick={() => setDeclineOpen(false)} disabled={declineOffer.isPending}>
+              Keep offer
+            </Button>
+            <Button
+              variant="destructive"
+              className="rounded-xl gap-1.5"
+              onClick={() => declineOffer.mutate(
+                { jobId: job.id, reason: declineReason.trim() || undefined },
+                { onSuccess: () => { setDeclineOpen(false); setDeclineReason(""); navigate("/cleaner/jobs"); } }
+              )}
+              disabled={declineOffer.isPending}
+            >
+              {declineOffer.isPending
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Declining…</>
+                : <><XCircle className="h-4 w-4" /> Confirm decline</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </CleanerLayout>
   );
 }

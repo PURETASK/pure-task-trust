@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +14,7 @@ import { useStatusPresentation } from "@/hooks/useStatusPresentation";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { JobCard, Pill, EmptyState as WfEmptyState, SectionLabel } from "@/components/wf";
+import { RebookFromDeclinedModal } from "@/components/booking/RebookFromDeclinedModal";
 
 type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
@@ -27,6 +28,9 @@ export default function MyCleanings() {
   const inProgress = jobs?.filter(j => j.status === "in_progress") ?? [];
   const completed = jobs?.filter(j => j.status === "completed") ?? [];
   const history = jobs ?? [];
+  const declined = (jobs ?? []).filter(j =>
+    j.status === "cancelled" && (j as any).metadata?.declined_by_cleaner === true
+  );
 
   return (
     <main className="flex-1 bg-app-canvas min-h-screen">
@@ -48,6 +52,15 @@ export default function MyCleanings() {
             <Link to="/book"><Plus className="h-4 w-4" /> Book New</Link>
           </Button>
         </motion.div>
+
+        {/* Declined-by-cleaner banners — credits already released */}
+        {declined.length > 0 && (
+          <div className="space-y-2.5 mb-6">
+            {declined.map(job => (
+              <DeclinedRebookBanner key={job.id} job={job} />
+            ))}
+          </div>
+        )}
 
         <Tabs value={tab} onValueChange={v => setTab(v as TabValue)}>
           <TabsList className="w-full justify-start overflow-x-auto gap-1 bg-app-surface p-1 rounded-[10px] mb-6 border border-hairline-soft shadow-wf">
@@ -94,6 +107,51 @@ export default function MyCleanings() {
         </div>
       </div>
     </main>
+  );
+}
+
+/* ── DECLINED-BY-CLEANER REBOOK BANNER ─────────────────────────── */
+function DeclinedRebookBanner({ job }: { job: any }) {
+  const [open, setOpen] = useState(false);
+  const cleanerName = job.cleaner?.first_name || "Your cleaner";
+  const reason = job.metadata?.decline_reason;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border-2 border-warning/50 bg-warning/[0.07] p-4 sm:p-5 flex items-start gap-3 sm:gap-4"
+    >
+      <div className="h-11 w-11 rounded-xl bg-warning/20 border border-warning/40 flex items-center justify-center shrink-0">
+        <AlertCircle className="h-5 w-5 text-warning" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-sm sm:text-base">
+          {cleanerName} declined your {(job.cleaning_type || "").replace(/_/g, " ")} booking
+        </p>
+        <p className="text-xs text-ink-muted mt-0.5">
+          Your credits have been released back to your wallet. Pick a replacement to get scheduled.
+        </p>
+        {reason && (
+          <p className="text-xs italic text-ink-muted mt-1.5">
+            Reason: "{reason}"
+          </p>
+        )}
+      </div>
+      <Button
+        size="sm"
+        className="rounded-xl bg-warning hover:bg-warning/90 text-warning-foreground gap-1.5 shrink-0"
+        onClick={() => setOpen(true)}
+      >
+        <RefreshCw className="h-3.5 w-3.5" /> Pick replacement
+      </Button>
+      <RebookFromDeclinedModal
+        open={open}
+        onOpenChange={setOpen}
+        jobId={job.id}
+        cleaningType={job.cleaning_type}
+        hours={job.estimated_hours}
+        excludeCleanerId={job.cleaner_id}
+      />
+    </motion.div>
   );
 }
 
