@@ -110,6 +110,51 @@ export default function MyCleanings() {
   );
 }
 
+/* ── DECLINED-BY-CLEANER REBOOK BANNER ─────────────────────────── */
+function DeclinedRebookBanner({ job }: { job: any }) {
+  const [open, setOpen] = useState(false);
+  const cleanerName = job.cleaner?.first_name || "Your cleaner";
+  const reason = job.metadata?.decline_reason;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border-2 border-warning/50 bg-warning/[0.07] p-4 sm:p-5 flex items-start gap-3 sm:gap-4"
+    >
+      <div className="h-11 w-11 rounded-xl bg-warning/20 border border-warning/40 flex items-center justify-center shrink-0">
+        <AlertCircle className="h-5 w-5 text-warning" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-sm sm:text-base">
+          {cleanerName} declined your {(job.cleaning_type || "").replace(/_/g, " ")} booking
+        </p>
+        <p className="text-xs text-ink-muted mt-0.5">
+          Your credits have been released back to your wallet. Pick a replacement to get scheduled.
+        </p>
+        {reason && (
+          <p className="text-xs italic text-ink-muted mt-1.5">
+            Reason: "{reason}"
+          </p>
+        )}
+      </div>
+      <Button
+        size="sm"
+        className="rounded-xl bg-warning hover:bg-warning/90 text-warning-foreground gap-1.5 shrink-0"
+        onClick={() => setOpen(true)}
+      >
+        <RefreshCw className="h-3.5 w-3.5" /> Pick replacement
+      </Button>
+      <RebookFromDeclinedModal
+        open={open}
+        onOpenChange={setOpen}
+        jobId={job.id}
+        cleaningType={job.cleaning_type}
+        hours={job.estimated_hours}
+        excludeCleanerId={job.cleaner_id}
+      />
+    </motion.div>
+  );
+}
+
 /* ── JOB LIST ──────────────────────────────────────────────────── */
 function JobList({ jobs, emptyIcon: EmptyIcon, emptyMessage, emptyDescription, emptyAction, emptyActionLabel }: {
   jobs: any[];
