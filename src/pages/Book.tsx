@@ -24,7 +24,7 @@ import { FlowField } from "@/components/flow/FlowField";
 
 import { StepService, SERVICE_OPTIONS } from "@/components/flow/booking/StepService";
 import { StepDateTime } from "@/components/flow/booking/StepDateTime";
-import { StepScope, ADD_ONS } from "@/components/flow/booking/StepScope";
+import { StepScope, ADD_ONS, type DirtinessLevel } from "@/components/flow/booking/StepScope";
 import { StepCleaner } from "@/components/flow/booking/StepCleaner";
 import { StepReview } from "@/components/flow/booking/StepReview";
 import { StepPayment } from "@/components/flow/booking/StepPayment";
@@ -63,6 +63,8 @@ export default function Book() {
   const [serviceType, setServiceType] = useState<CleaningType | null>(null);
   const [hours, setHours] = useState(3);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [squareFootage, setSquareFootage] = useState<number | null>(null);
+  const [dirtinessLevel, setDirtinessLevel] = useState<DirtinessLevel | null>(null);
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<string | undefined>();
   const [flexible, setFlexible] = useState(false);
@@ -184,7 +186,7 @@ export default function Book() {
   const canContinue = (() => {
     if (step === 1) return !!serviceType;
     if (step === 2) return !!address && !!date && !!time && isCleaningTypeAllowed;
-    if (step === 3) return hours >= 1;
+    if (step === 3) return hours >= 1 && !!squareFootage && squareFootage >= 100 && !!dirtinessLevel;
     if (step === 4) return !!cleanerId && !isDateBlockedByCleaner;
     if (step === 5) return true;
     if (step === 6) return paymentMethod === "credits" ? hasEnoughCredits : true;
@@ -216,6 +218,8 @@ export default function Book() {
         scheduledDate: getScheduledDateTime(),
         address: address ? `${address.line1}, ${address.city}` : undefined,
         notes: notes || undefined,
+        squareFootage: squareFootage!,
+        dirtinessLevel: dirtinessLevel!,
       });
       funnel.trackComplete({
         payment_method: "credits",
@@ -252,6 +256,8 @@ export default function Book() {
           scheduledDate: getScheduledDateTime(),
           address: address ? `${address.line1}, ${address.city}` : null,
           notes: notes || null,
+          squareFootage,
+          dirtinessLevel,
         },
       });
       if (error) throw error;
@@ -379,6 +385,10 @@ export default function Book() {
             onHoursChange={setHours}
             selectedAddOns={selectedAddOns}
             onToggleAddOn={toggleAddOn}
+            squareFootage={squareFootage}
+            onSquareFootageChange={setSquareFootage}
+            dirtinessLevel={dirtinessLevel}
+            onDirtinessChange={setDirtinessLevel}
           />
         )}
 
