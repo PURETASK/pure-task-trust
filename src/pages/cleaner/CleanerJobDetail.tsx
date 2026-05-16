@@ -493,6 +493,32 @@ export default function CleanerJobDetail() {
                 {paymentMode === "direct" ? "Direct pay" : "Escrow"}
               </p>
             </div>
+
+            {(job as any).square_footage && (
+              <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf">
+                <div className="h-10 w-10 rounded-2xl bg-info/20 flex items-center justify-center mb-2.5">
+                  <Home className="h-5 w-5 text-info" />
+                </div>
+                <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Home Size</p>
+                <p className="font-bold text-xl leading-tight mt-0.5">
+                  {(job as any).square_footage.toLocaleString()}
+                </p>
+                <p className="text-xs text-ink-muted mt-0.5">sq ft</p>
+              </div>
+            )}
+
+            {(job as any).dirtiness_level && DIRTINESS_LABELS[(job as any).dirtiness_level] && (
+              <div className="rounded-3xl p-4 bg-gradient-to-br from-warning/15 to-warning/5 border border-warning/25 shadow-wf">
+                <div className="h-10 w-10 rounded-2xl bg-warning/20 flex items-center justify-center mb-2.5 text-2xl">
+                  {DIRTINESS_LABELS[(job as any).dirtiness_level].emoji}
+                </div>
+                <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Condition</p>
+                <p className="font-bold text-xl leading-tight mt-0.5">
+                  {DIRTINESS_LABELS[(job as any).dirtiness_level].label}
+                </p>
+                <p className="text-xs text-ink-muted mt-0.5">client-rated</p>
+              </div>
+            )}
           </div>
 
           {isInProgress && job.check_in_at && (
