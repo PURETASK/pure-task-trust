@@ -163,6 +163,13 @@ export function useJobCheckins(jobId?: string) {
       } else {
         toast.warning(`Check-in recorded but you're ${Math.round(distance)}m from the job location`);
       }
+      // Fan-out check-in notification to client
+      const jid = (arguments as any)[0]?.checkin?.job_id;
+      if (jid) {
+        supabase.functions
+          .invoke('notify-job-event', { body: { event: 'cleaner_checked_in', job_id: jid } })
+          .catch((e) => console.warn('notify check-in failed', e));
+      }
     },
     onError: (error) => {
       if (error instanceof GeolocationPositionError) {
