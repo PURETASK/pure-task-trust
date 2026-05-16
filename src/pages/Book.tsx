@@ -182,10 +182,16 @@ export default function Book() {
     return setDateMinutes(setDateHours(date, parseInt(h)), parseInt(m)).toISOString();
   };
 
+  const isScheduledInFuture = (() => {
+    const iso = getScheduledDateTime();
+    if (!iso) return false;
+    return new Date(iso).getTime() > Date.now();
+  })();
+
   // ── Validation per step ──
   const canContinue = (() => {
     if (step === 1) return !!serviceType;
-    if (step === 2) return !!address && !!date && !!time && isCleaningTypeAllowed;
+    if (step === 2) return !!address && !!date && !!time && isCleaningTypeAllowed && isScheduledInFuture;
     if (step === 3) return hours >= 1 && !!squareFootage && squareFootage >= 100 && !!dirtinessLevel;
     if (step === 4) return !!cleanerId && !isDateBlockedByCleaner;
     if (step === 5) return true;
