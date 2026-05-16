@@ -47,6 +47,17 @@ serve(async (req) => {
       return json({ error: "Dirtiness level is required" }, 400);
     }
 
+    if (!scheduledDate) {
+      return json({ error: "A scheduled date is required" }, 400);
+    }
+    const scheduledMs = Date.parse(scheduledDate);
+    if (Number.isNaN(scheduledMs)) {
+      return json({ error: "Invalid scheduled date" }, 400);
+    }
+    if (scheduledMs <= Date.now()) {
+      return json({ error: "Scheduled date must be in the future" }, 400);
+    }
+
     const adminClient = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
