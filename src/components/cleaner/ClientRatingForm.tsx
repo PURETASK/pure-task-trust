@@ -63,15 +63,18 @@ export function ClientRatingForm({
   const submit = useMutation({
     mutationFn: async () => {
       if (overall === 0) throw new Error("Please give an overall rating");
-      const { error } = await supabase.from("client_ratings" as any).insert({
-        cleaner_id: cleanerId,
-        client_id: clientId,
-        job_id: jobId,
-        rating: overall,
-        description_accuracy: accuracy || null,
-        would_rebook: wouldRebook,
-        notes: notes.trim() || null,
-      });
+      const { error } = await supabase.from("client_ratings" as any).upsert(
+        {
+          cleaner_id: cleanerId,
+          client_id: clientId,
+          job_id: jobId,
+          rating: overall,
+          description_accuracy: accuracy || null,
+          would_rebook: wouldRebook,
+          notes: notes.trim() || null,
+        },
+        { onConflict: "job_id,cleaner_id" }
+      );
       if (error) throw error;
     },
     onSuccess: () => {
