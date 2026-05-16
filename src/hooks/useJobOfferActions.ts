@@ -17,6 +17,10 @@ export function useJobOfferActions() {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["cleaner-jobs"] });
     qc.invalidateQueries({ queryKey: ["jobs"] });
+    qc.invalidateQueries({ queryKey: ["job"] });
+    qc.invalidateQueries({ queryKey: ["job-offers-pending"] });
+    qc.invalidateQueries({ queryKey: ["job-offers-history"] });
+    qc.invalidateQueries({ queryKey: ["job-offer-stats"] });
   };
 
   const acceptOffer = useMutation({
