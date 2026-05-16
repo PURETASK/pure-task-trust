@@ -180,6 +180,9 @@ export default function JobInProgress() {
                         <div>
                           <p className={`font-medium text-sm ${index > currentStep ? 'text-ink-faint' : 'text-ink'}`}>{step.label}</p>
                           {isCurrent && <p className="text-xs text-ink-muted">{step.desc}</p>}
+                          {stepTimes[step.id] && (
+                            <p className="text-[11px] text-ink-faint">{format(new Date(stepTimes[step.id]!), 'MMM d · h:mm a')}</p>
+                          )}
                         </div>
                         {isCurrent && !isCompleted && <Pill variant="info">Now</Pill>}
                       </div>
