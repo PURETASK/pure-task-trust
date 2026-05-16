@@ -423,6 +423,163 @@ function EmptyTab({ icon: Icon, title, subtitle }: { icon: React.ElementType; ti
   );
 }
 
+// ─── Job Offer Card (Accept / Decline) ───────────────────────────────────────
+function OfferCard({ job, tier }: { job: CleanerJobWithClient; tier: string }) {
+  const { acceptOffer, declineOffer } = useJobOfferActions();
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [reason, setReason] = useState("");
+
+  const net = calcJobMoney({
+    escrow_credits_reserved: (job as any).escrow_credits_reserved,
+    estimated_hours: job.estimated_hours,
+    actual_hours: (job as any).actual_hours,
+    final_charge_credits: (job as any).final_charge_credits,
+    rush_fee_credits: (job as any).rush_fee_credits,
+    cleaner_tier: tier,
+  }).cleanerNet;
+
+  const address = formatAddress(job);
+  const emoji = TYPE_EMOJI[job.cleaning_type] || "🧹";
+  const date = job.scheduled_start_at ? new Date(job.scheduled_start_at) : null;
+  const isPending = acceptOffer.isPending || declineOffer.isPending;
+
+  const handleAccept = () => acceptOffer.mutate(job.id);
+  const handleDeclineConfirm = () => {
+    declineOffer.mutate(
+      { jobId: job.id, reason: reason.trim() || undefined },
+      { onSuccess: () => { setDeclineOpen(false); setReason(""); } }
+    );
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-3xl border-2 border-warning/50 bg-warning/[0.04] shadow-wf overflow-hidden"
+    >
+      <div className="p-4 sm:p-5">
+        <div className="flex items-start gap-3">
+          <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 border border-warning/40 bg-warning/10">
+            {emoji}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold capitalize">
+                {(job.cleaning_type || "standard").replace(/_/g, " ")} Clean
+              </span>
+              <Pill variant="warning"><Bell className="h-3 w-3" /> New offer</Pill>
+              {(job as any).is_rush && <Pill variant="warning"><Zap className="h-3 w-3" /> Rush</Pill>}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 text-xs">
+              {date && (
+                <div className="flex items-center gap-1.5 text-ink-muted">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span>{format(date, "EEE, MMM d")}</span>
+                </div>
+              )}
+              {date && (
+                <div className="flex items-center gap-1.5 text-ink-muted">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>{format(date, "h:mm a")}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5 text-state-success-fg font-semibold">
+                <DollarSign className="h-3.5 w-3.5" /> ${net} estimated
+              </div>
+              {job.estimated_hours && (
+                <div className="flex items-center gap-1.5 text-ink-muted">
+                  <Timer className="h-3.5 w-3.5" />
+                  <span>{job.estimated_hours}h estimated</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-start gap-1.5 mt-2.5">
+              <MapPin className="h-3.5 w-3.5 text-ink-muted shrink-0 mt-0.5" />
+              <span className="text-xs text-ink-muted">{address}</span>
+            </div>
+
+            {job.notes && (
+              <p className="text-xs text-ink-muted mt-2 italic line-clamp-2">"{job.notes}"</p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 mt-4">
+          <Button
+            variant="outline"
+            className="rounded-xl border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
+            onClick={() => setDeclineOpen(true)}
+            disabled={isPending}
+          >
+            <XCircle className="h-4 w-4" /> Decline
+          </Button>
+          <Button
+            className="rounded-xl bg-success hover:bg-success/90 text-white gap-1.5"
+            onClick={handleAccept}
+            disabled={isPending}
+          >
+            {acceptOffer.isPending
+              ? <><Loader2 className="h-4 w-4 animate-spin" /> Accepting…</>
+              : <><Check className="h-4 w-4" /> Accept job</>}
+          </Button>
+        </div>
+
+        <div className="flex justify-between items-center mt-3 pt-3 border-t border-hairline-soft">
+          <Link to={`/cleaner/jobs/${job.id}`} className="text-xs text-ink-muted hover:text-ink underline-offset-2 hover:underline">
+            View full details
+          </Link>
+          <MessageJobButton
+            jobId={job.id}
+            otherPartyId={(job as any).client_id}
+            iconOnly
+            className="rounded-xl h-8 w-8 p-0"
+            aria-label="Message client"
+          />
+        </div>
+      </div>
+
+      <Dialog open={declineOpen} onOpenChange={setDeclineOpen}>
+        <DialogContent className="rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Decline this job?</DialogTitle>
+            <DialogDescription>
+              The client's held credits will be released back to their wallet immediately, and
+              they'll be prompted to pick another cleaner. This won't count against your
+              reliability score, but frequent declines reduce future offers.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-ink-muted">Reason (optional)</label>
+            <Textarea
+              placeholder="e.g. Schedule conflict, too far from my service area…"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="rounded-2xl min-h-[80px]"
+              maxLength={500}
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" className="rounded-xl" onClick={() => setDeclineOpen(false)} disabled={declineOffer.isPending}>
+              Keep offer
+            </Button>
+            <Button
+              variant="destructive"
+              className="rounded-xl gap-1.5"
+              onClick={handleDeclineConfirm}
+              disabled={declineOffer.isPending}
+            >
+              {declineOffer.isPending
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Declining…</>
+                : <><XCircle className="h-4 w-4" /> Confirm decline</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </motion.div>
+  );
+}
+
 // ─── Main page ───────────────────────────────────────────────────────────────
 export default function CleanerJobs() {
   const { jobs, isLoading } = useCleanerJobs();
