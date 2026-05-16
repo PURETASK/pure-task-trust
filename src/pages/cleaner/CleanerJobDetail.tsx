@@ -426,12 +426,12 @@ export default function CleanerJobDetail() {
 
           {/* Stat bubbles */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/25 shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/25 shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-primary/30 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Date</span>
               <div className="h-10 w-10 rounded-2xl bg-primary/20 flex items-center justify-center mb-2.5">
                 <Calendar className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Date</p>
-              <p className="font-bold text-xl leading-tight mt-0.5">
+              <p className="font-bold text-xl leading-tight">
                 {scheduledDate ? format(scheduledDate, "MMM d") : "TBD"}
               </p>
               <p className="text-xs text-ink-muted mt-0.5">
@@ -439,12 +439,12 @@ export default function CleanerJobDetail() {
               </p>
             </div>
 
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-info/30 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Start Time</span>
               <div className="h-10 w-10 rounded-2xl bg-info/20 flex items-center justify-center mb-2.5">
                 <Clock className="h-5 w-5 text-info" />
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Start Time</p>
-              <p className="font-bold text-xl leading-tight mt-0.5">
+              <p className="font-bold text-xl leading-tight">
                 {scheduledDate ? format(scheduledDate, "h:mm a") : "TBD"}
               </p>
               <p className="text-xs text-ink-muted mt-0.5">
@@ -452,41 +452,41 @@ export default function CleanerJobDetail() {
               </p>
             </div>
 
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-aqua/20 to-aqua/5 border border-aqua/30 shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-aqua/20 to-aqua/5 border border-aqua/30 shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-aqua/40 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Duration</span>
               <div className="h-10 w-10 rounded-2xl bg-aqua/25 flex items-center justify-center mb-2.5">
                 <Timer className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Duration</p>
-              <p className="font-bold text-xl leading-tight mt-0.5">{job.estimated_hours || 2} hrs</p>
+              <p className="font-bold text-xl leading-tight">{job.estimated_hours || 2} hrs</p>
               <p className="text-xs text-ink-muted mt-0.5">
                 {job.actual_hours ? `${job.actual_hours}h actual` : "estimated"}
               </p>
             </div>
 
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-success/20 to-success/5 border border-success/30 shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-success/20 to-success/5 border border-success/30 shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-success/40 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">You Earn</span>
               <div className="h-10 w-10 rounded-2xl bg-success/25 flex items-center justify-center mb-2.5">
                 <DollarSign className="h-5 w-5 text-success" />
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">You Earn</p>
-              <p className="font-bold text-xl leading-tight mt-0.5 text-success">{money.cleanerNet} cr</p>
+              <p className="font-bold text-xl leading-tight text-success">{money.cleanerNet} cr</p>
               <p className="text-xs text-ink-muted mt-0.5">after fee</p>
             </div>
 
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-hairline-soft bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Service</span>
               <div className="h-10 w-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-2.5 text-2xl">
                 {emoji}
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Service</p>
-              <p className="font-bold text-xl leading-tight mt-0.5 capitalize">{cleaningTypeLabel}</p>
+              <p className="font-bold text-xl leading-tight capitalize">{cleaningTypeLabel}</p>
               <p className="text-xs text-ink-muted mt-0.5">cleaning</p>
             </div>
 
-            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf flex flex-col items-center text-center">
+              <span className="inline-block px-2.5 py-1 rounded-full border border-hairline-soft bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Client</span>
               <div className="h-10 w-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-2.5">
                 <User className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Client</p>
-              <p className="font-bold text-xl leading-tight mt-0.5 truncate">
+              <p className="font-bold text-xl leading-tight truncate max-w-full">
                 {participants.client.firstName || "Client"}
               </p>
               <p className="text-xs text-ink-muted mt-0.5">
@@ -495,12 +495,12 @@ export default function CleanerJobDetail() {
             </div>
 
             {(job as any).square_footage && (
-              <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf">
+              <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf flex flex-col items-center text-center">
+                <span className="inline-block px-2.5 py-1 rounded-full border border-info/30 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Home Size</span>
                 <div className="h-10 w-10 rounded-2xl bg-info/20 flex items-center justify-center mb-2.5">
                   <Home className="h-5 w-5 text-info" />
                 </div>
-                <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Home Size</p>
-                <p className="font-bold text-xl leading-tight mt-0.5">
+                <p className="font-bold text-xl leading-tight">
                   {(job as any).square_footage.toLocaleString()}
                 </p>
                 <p className="text-xs text-ink-muted mt-0.5">sq ft</p>
@@ -508,12 +508,12 @@ export default function CleanerJobDetail() {
             )}
 
             {(job as any).dirtiness_level && DIRTINESS_LABELS[(job as any).dirtiness_level] && (
-              <div className="rounded-3xl p-4 bg-gradient-to-br from-warning/15 to-warning/5 border border-warning/25 shadow-wf">
+              <div className="rounded-3xl p-4 bg-gradient-to-br from-warning/15 to-warning/5 border border-warning/25 shadow-wf flex flex-col items-center text-center">
+                <span className="inline-block px-2.5 py-1 rounded-full border border-warning/30 bg-background/60 text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-3">Condition</span>
                 <div className="h-10 w-10 rounded-2xl bg-warning/20 flex items-center justify-center mb-2.5 text-2xl">
                   {DIRTINESS_LABELS[(job as any).dirtiness_level].emoji}
                 </div>
-                <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Condition</p>
-                <p className="font-bold text-xl leading-tight mt-0.5">
+                <p className="font-bold text-xl leading-tight">
                   {DIRTINESS_LABELS[(job as any).dirtiness_level].label}
                 </p>
                 <p className="text-xs text-ink-muted mt-0.5">client-rated</p>
