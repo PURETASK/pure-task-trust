@@ -182,10 +182,16 @@ export default function Book() {
     return setDateMinutes(setDateHours(date, parseInt(h)), parseInt(m)).toISOString();
   };
 
+  const isScheduledInFuture = (() => {
+    const iso = getScheduledDateTime();
+    if (!iso) return false;
+    return new Date(iso).getTime() > Date.now();
+  })();
+
   // ── Validation per step ──
   const canContinue = (() => {
     if (step === 1) return !!serviceType;
-    if (step === 2) return !!address && !!date && !!time && isCleaningTypeAllowed;
+    if (step === 2) return !!address && !!date && !!time && isCleaningTypeAllowed && isScheduledInFuture;
     if (step === 3) return hours >= 1 && !!squareFootage && squareFootage >= 100 && !!dirtinessLevel;
     if (step === 4) return !!cleanerId && !isDateBlockedByCleaner;
     if (step === 5) return true;
@@ -374,6 +380,11 @@ export default function Book() {
             {sameDay && !isCleaningTypeAllowed && (
               <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
                 Move-Out cleaning is not available same-day. Please pick a future date.
+              </div>
+            )}
+            {date && time && !isScheduledInFuture && (
+              <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                That time has already passed. Please choose a future date and time.
               </div>
             )}
           </div>
