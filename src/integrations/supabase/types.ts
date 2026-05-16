@@ -4068,6 +4068,7 @@ export type Database = {
           created_at: string | null
           credit_charge_credits: number | null
           deleted_at: string | null
+          dirtiness_level: string | null
           discount_cents: number | null
           escrow_credits_reserved: number
           estimated_hours: number | null
@@ -4089,6 +4090,7 @@ export type Database = {
           snapshot_addon_rate_cph: number | null
           snapshot_base_rate_cph: number | null
           snapshot_total_rate_cph: number | null
+          square_footage: number | null
           status: Database["public"]["Enums"]["job_status"]
           tasks_completed_json: Json | null
           team_id: number | null
@@ -4120,6 +4122,7 @@ export type Database = {
           created_at?: string | null
           credit_charge_credits?: number | null
           deleted_at?: string | null
+          dirtiness_level?: string | null
           discount_cents?: number | null
           escrow_credits_reserved?: number
           estimated_hours?: number | null
@@ -4141,6 +4144,7 @@ export type Database = {
           snapshot_addon_rate_cph?: number | null
           snapshot_base_rate_cph?: number | null
           snapshot_total_rate_cph?: number | null
+          square_footage?: number | null
           status?: Database["public"]["Enums"]["job_status"]
           tasks_completed_json?: Json | null
           team_id?: number | null
@@ -4172,6 +4176,7 @@ export type Database = {
           created_at?: string | null
           credit_charge_credits?: number | null
           deleted_at?: string | null
+          dirtiness_level?: string | null
           discount_cents?: number | null
           escrow_credits_reserved?: number
           estimated_hours?: number | null
@@ -4193,6 +4198,7 @@ export type Database = {
           snapshot_addon_rate_cph?: number | null
           snapshot_base_rate_cph?: number | null
           snapshot_total_rate_cph?: number | null
+          square_footage?: number | null
           status?: Database["public"]["Enums"]["job_status"]
           tasks_completed_json?: Json | null
           team_id?: number | null
@@ -6531,9 +6537,11 @@ export type Database = {
         Args: {
           _cleaner_id: string
           _cleaning_type: Database["public"]["Enums"]["cleaning_type"]
+          _dirtiness_level?: string
           _hours: number
           _notes: string
           _scheduled_start: string
+          _square_footage?: number
           _total_credits: number
           _user_id: string
         }
