@@ -744,9 +744,15 @@ export default function CleanerJobDetail() {
                 </div>
               )}
               {profile?.id && job.client_id && (
-                <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
-                  <Star className="h-4 w-4" /> Rate this client
-                </Button>
+                hasRatedClient ? (
+                  <div className="flex items-center gap-2 text-sm text-ink-muted">
+                    <Star className="h-4 w-4 fill-warning text-warning" /> You've rated this client
+                  </div>
+                ) : (
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
+                    <Star className="h-4 w-4" /> Rate this client
+                  </Button>
+                )
               )}
             </CardContent>
           </Card>
