@@ -42,6 +42,19 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ error: 'Job not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
 
+      const estimatedHours = Number(job.estimated_hours ?? 0);
+      const actualHours =
+        Number(job.actual_hours ?? 0) ||
+        (job.actual_minutes ? Number(job.actual_minutes) / 60 : 0) ||
+        (job.check_in_at && job.check_out_at
+          ? (new Date(job.check_out_at).getTime() - new Date(job.check_in_at).getTime()) / 3_600_000
+          : 0);
+      const escrowHeld = Number(job.escrow_credits_reserved ?? 0);
+      const finalCharge = Number(job.final_charge_credits ?? escrowHeld);
+      const refund = Math.max(0, escrowHeld - finalCharge);
+      const hourlyRate =
+        estimatedHours > 0 ? Math.round((escrowHeld / estimatedHours) * 100) / 100 : 0;
+
       receiptData = {
         receiptNumber: `PT-JOB-${job.id.slice(0, 8).toUpperCase()}`,
         date: new Date(job.check_out_at || job.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
@@ -49,10 +62,12 @@ Deno.serve(async (req) => {
         clientName: `${job.client?.first_name || ''} ${job.client?.last_name || ''}`.trim(),
         cleanerName: `${job.cleaner?.first_name || ''} ${job.cleaner?.last_name || ''}`.trim(),
         cleaningType: job.cleaning_type?.replace('_', ' ') || 'Standard',
-        hours: job.estimated_hours || 0,
-        actualMinutes: job.actual_minutes || null,
-        totalCredits: job.escrow_credits_reserved || 0,
-        finalCharge: job.final_charge_credits || job.escrow_credits_reserved || 0,
+        estimatedHours: `${estimatedHours.toFixed(2)} hrs`,
+        actualHours: `${actualHours.toFixed(2)} hrs`,
+        hourlyRate: `${hourlyRate} credits/hr`,
+        escrowHeld: `${escrowHeld} credits`,
+        releasedToCleaner: `${finalCharge} credits`,
+        refundedToClient: `${refund} credits`,
         status: job.status,
       };
     } else if (type === 'credit_purchase' && transactionId) {
