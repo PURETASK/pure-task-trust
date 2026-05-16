@@ -15,7 +15,6 @@ interface PushNotificationRequest {
 }
 
 serve(async (req: Request) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -34,9 +33,7 @@ serve(async (req: Request) => {
       );
     }
 
-    // Get target user IDs
     const targetUserIds = user_ids || (user_id ? [user_id] : []);
-    
     if (targetUserIds.length === 0) {
       return new Response(
         JSON.stringify({ error: "user_id or user_ids required" }),
@@ -44,64 +41,59 @@ serve(async (req: Request) => {
       );
     }
 
-    // Fetch device tokens for target users
-    const { data: tokens, error: tokensError } = await supabase
-      .from("device_tokens")
-      .select("token, platform, user_id")
-      .in("user_id", targetUserIds)
-      .eq("is_active", true);
-
-    if (tokensError) {
-      console.error("Error fetching tokens:", tokensError);
-      throw tokensError;
+    // Always write in-app notifications row so the bell icon shows it
+    try {
+      await supabase.from("notifications").insert(
+        targetUserIds.map((uid) => ({
+          user_id: uid,
+          title,
+          message: body,
+          type: (data?.type as string) ?? "system",
+          metadata: data ?? {},
+        }))
+      );
+    } catch (e) {
+      console.error("in-app notification insert failed", e);
     }
 
-    if (!tokens || tokens.length === 0) {
-      console.log("No device tokens found for users:", targetUserIds);
+    // Deliver via OneSignal REST API using external_user_id (= Supabase user id)
+    const appId = Deno.env.get("ONESIGNAL_APP_ID");
+    const apiKey = Deno.env.get("ONESIGNAL_REST_API_KEY");
+    if (!appId || !apiKey) {
+      console.warn("OneSignal not configured — push skipped");
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: "No device tokens found",
-          sent: 0 
-        }),
+        JSON.stringify({ success: true, push_delivered: false, in_app: targetUserIds.length }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log(`Found ${tokens.length} device tokens for ${targetUserIds.length} users`);
+    const osRes = await fetch("https://onesignal.com/api/v1/notifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${apiKey}`,
+      },
+      body: JSON.stringify({
+        app_id: appId,
+        include_external_user_ids: targetUserIds,
+        channel_for_external_user_ids: "push",
+        headings: { en: title },
+        contents: { en: body },
+        data: data ?? {},
+      }),
+    });
 
-    // For now, log the notification that would be sent
-    // In production, integrate with FCM, APNs, or Expo Push Notifications
-    const notifications = tokens.map(token => ({
-      user_id: token.user_id,
-      platform: token.platform,
-      token: token.token.substring(0, 20) + "...",
-      title,
-      body,
-      data,
-      sent_at: new Date().toISOString(),
-    }));
-
-    console.log("Notifications to send:", JSON.stringify(notifications, null, 2));
-
-    // TODO: Implement actual push notification sending via:
-    // - Firebase Cloud Messaging (FCM) for Android/Web
-    // - Apple Push Notification service (APNs) for iOS
-    // - Expo Push Notifications for React Native apps
-    
-    // For now, we'll just log and return success
-    // When you have FCM_SERVER_KEY or EXPO_ACCESS_TOKEN, uncomment the relevant section
+    const osBody = await osRes.json().catch(() => ({}));
+    if (!osRes.ok) {
+      console.error("OneSignal error:", osRes.status, osBody);
+    }
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Push notification queued for ${tokens.length} devices`,
-        sent: tokens.length,
-        notifications: notifications.map(n => ({
-          user_id: n.user_id,
-          platform: n.platform,
-          sent_at: n.sent_at,
-        })),
+        push_delivered: osRes.ok,
+        recipients: osBody?.recipients ?? 0,
+        in_app: targetUserIds.length,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
