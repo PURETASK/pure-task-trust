@@ -27,6 +27,7 @@ serve(async (req) => {
     const body = await req.json();
     const {
       cleanerId, cleaningType, hours, totalCredits, scheduledDate, notes,
+      squareFootage, dirtinessLevel,
     } = body ?? {};
 
     if (!cleanerId || !cleaningType || !hours || !totalCredits) {
@@ -37,6 +38,13 @@ serve(async (req) => {
     }
     if (typeof totalCredits !== "number" || totalCredits <= 0) {
       return json({ error: "Invalid totalCredits" }, 400);
+    }
+
+    if (!squareFootage || typeof squareFootage !== "number" || squareFootage < 100 || squareFootage > 20000) {
+      return json({ error: "Square footage is required (100–20000)" }, 400);
+    }
+    if (!dirtinessLevel || !["touch_up","average","heavy","very_dirty"].includes(dirtinessLevel)) {
+      return json({ error: "Dirtiness level is required" }, 400);
     }
 
     const adminClient = createClient(
@@ -52,6 +60,8 @@ serve(async (req) => {
       _total_credits: totalCredits,
       _scheduled_start: scheduledDate ?? null,
       _notes: notes ?? null,
+      _square_footage: squareFootage,
+      _dirtiness_level: dirtinessLevel,
     });
     if (error) return json({ error: error.message }, 400);
 
