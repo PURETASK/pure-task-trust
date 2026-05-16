@@ -372,7 +372,9 @@ export default function CleanerJobDetail() {
         {/* Job Details */}
         <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Job Details</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-primary" /> Job Details
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -381,10 +383,13 @@ export default function CleanerJobDetail() {
                   <Calendar className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Date</p>
-                  <p className="font-medium text-sm">
-                    {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "EEE, MMM d") : "TBD"}
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Date</p>
+                  <p className="font-bold text-sm">
+                    {scheduledDate ? format(scheduledDate, "EEE, MMM d") : "TBD"}
                   </p>
+                  {scheduledDate && (
+                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "yyyy")}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -392,10 +397,13 @@ export default function CleanerJobDetail() {
                   <Clock className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Start Time</p>
-                  <p className="font-medium text-sm">
-                    {job.scheduled_start_at ? format(new Date(job.scheduled_start_at), "h:mm a") : "TBD"}
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Start Time</p>
+                  <p className="font-bold text-sm">
+                    {scheduledDate ? format(scheduledDate, "h:mm a") : "TBD"}
                   </p>
+                  {scheduledDate && (
+                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "zzz")}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -403,8 +411,11 @@ export default function CleanerJobDetail() {
                   <Timer className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Duration</p>
-                  <p className="font-medium text-sm">{job.estimated_hours || 2} hrs est.</p>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Duration</p>
+                  <p className="font-bold text-sm">{job.estimated_hours || 2} hrs est.</p>
+                  {job.actual_hours && (
+                    <p className="text-[11px] text-ink-muted">{job.actual_hours}h actual</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -412,29 +423,41 @@ export default function CleanerJobDetail() {
                   <DollarSign className="h-4 w-4 text-success" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Your Earnings</p>
-                  <p className="font-medium text-sm text-success">{money.cleanerNet} cr</p>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Your Earnings</p>
+                  <p className="font-bold text-sm text-success">{money.cleanerNet} cr</p>
+                  <p className="text-[11px] text-ink-muted">After platform fee</p>
                 </div>
               </div>
             </div>
 
-            {/* Service Address — shown once job is accepted */}
-            {(() => {
-              const addr = (job as any).address_line1
-                ? [(job as any).address_line1, (job as any).address_city, (job as any).address_state].filter(Boolean).join(', ')
-                : (job as any).address || null;
-              return addr ? (
-                <div className="pt-3 border-t border-border flex items-start gap-2.5">
-                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Service Address</p>
-                    <p className="font-medium text-sm">{addr}</p>
-                  </div>
-                </div>
-              ) : null;
-            })()}
+            {/* Service Address — full address revealed once accepted; pending shows city only */}
+            <div className="pt-3 border-t border-border flex items-start gap-2.5">
+              <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isPending ? "bg-muted" : "bg-primary/10"}`}>
+                {isPending ? <Lock className="h-4 w-4 text-ink-muted" /> : <MapPin className="h-4 w-4 text-primary" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Service Address</p>
+                {isPending ? (
+                  <>
+                    <p className="font-bold text-sm">{addrCityState || "Area hidden"}</p>
+                    <p className="text-[11px] text-ink-muted">Full address unlocks when you accept</p>
+                  </>
+                ) : addrFull ? (
+                  <>
+                    <p className="font-bold text-sm break-words">{addrFull}</p>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addrFull)}`}
+                      target="_blank" rel="noreferrer"
+                      className="text-[11px] text-primary inline-flex items-center gap-1 mt-0.5 hover:underline"
+                    >
+                      <Navigation className="h-3 w-3" /> Get directions
+                    </a>
+                  </>
+                ) : (
+                  <p className="font-medium text-sm text-ink-muted">Address not available</p>
+                )}
+              </div>
+            </div>
 
             {isInProgress && job.check_in_at && (
               <div className="mt-3 pt-3 border-t border-border flex items-center gap-3 p-3 rounded-lg bg-primary/5">
@@ -453,8 +476,10 @@ export default function CleanerJobDetail() {
             
             {job.notes && (
               <div className="pt-3 border-t border-border">
-                <p className="text-xs text-muted-foreground mb-1">Client Notes</p>
-                <p className="text-sm bg-muted/50 p-3 rounded-lg">{job.notes}</p>
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5 flex items-center gap-1.5">
+                  <FileText className="h-3 w-3" /> Client Notes
+                </p>
+                <p className="text-sm bg-muted/50 p-3 rounded-xl italic leading-relaxed">"{job.notes}"</p>
               </div>
             )}
           </CardContent>
