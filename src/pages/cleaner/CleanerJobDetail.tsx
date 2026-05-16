@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { CleanerLayout } from "@/components/cleaner/CleanerLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -66,6 +66,23 @@ export default function CleanerJobDetail() {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [declineOpen, setDeclineOpen] = useState(false);
   const [declineReason, setDeclineReason] = useState("");
+
+  // Has this cleaner already rated this client for this job?
+  const { data: existingClientRating } = useQuery({
+    queryKey: ["client-rating", jobId, profile?.id],
+    enabled: !!jobId && !!profile?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_ratings" as any)
+        .select("id")
+        .eq("job_id", jobId!)
+        .eq("cleaner_id", profile!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const hasRatedClient = !!existingClientRating;
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
@@ -727,9 +744,15 @@ export default function CleanerJobDetail() {
                 </div>
               )}
               {profile?.id && job.client_id && (
-                <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
-                  <Star className="h-4 w-4" /> Rate this client
-                </Button>
+                hasRatedClient ? (
+                  <div className="flex items-center gap-2 text-sm text-ink-muted">
+                    <Star className="h-4 w-4 fill-warning text-warning" /> You've rated this client
+                  </div>
+                ) : (
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => setRatingOpen(true)}>
+                    <Star className="h-4 w-4" /> Rate this client
+                  </Button>
+                )
               )}
             </CardContent>
           </Card>
