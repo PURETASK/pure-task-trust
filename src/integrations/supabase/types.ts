@@ -6521,6 +6521,10 @@ export type Database = {
         Args: { _job_id: string; _user_id: string }
         Returns: Json
       }
+      auto_release_expired_jobs: {
+        Args: { _window_hours?: number }
+        Returns: Json
+      }
       cancel_job_atomic: {
         Args: { _job_id: string; _reason?: string; _user_id: string }
         Returns: Json
