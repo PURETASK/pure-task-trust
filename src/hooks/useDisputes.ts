@@ -71,7 +71,7 @@ export function useDisputes() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Dispute[];
+      return data as unknown as Dispute[];
     },
     enabled: !!user?.id,
   });
@@ -203,7 +203,7 @@ export function useJobDispute(jobId: string) {
         .maybeSingle();
 
       if (error) throw error;
-      return data as Dispute | null;
+      return data as unknown as Dispute | null;
     },
     enabled: !!jobId,
   });
