@@ -382,6 +382,11 @@ export default function Book() {
                 Move-Out cleaning is not available same-day. Please pick a future date.
               </div>
             )}
+            {date && time && !isScheduledInFuture && (
+              <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                That time has already passed. Please choose a future date and time.
+              </div>
+            )}
           </div>
         )}
 
