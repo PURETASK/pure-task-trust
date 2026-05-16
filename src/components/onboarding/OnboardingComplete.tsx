@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Loader2, Sparkles, Calendar, DollarSign, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { EnablePushPrompt } from '@/components/notifications/EnablePushPrompt';
 
 interface OnboardingCompleteProps {
   onComplete: () => Promise<void>;
@@ -87,6 +88,14 @@ export function OnboardingComplete({ onComplete, isCompleting }: OnboardingCompl
           <p className="text-ink-muted mt-1">
             Your ID is being reviewed. You can start accepting jobs while we verify your identity.
           </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75 }}
+        >
+          <EnablePushPrompt />
         </motion.div>
 
         <motion.div
