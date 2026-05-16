@@ -369,97 +369,126 @@ export default function CleanerJobDetail() {
         </Card>
         )}
 
-        {/* Job Details */}
-        <Card className="rounded-3xl border border-hairline-soft bg-app-surface shadow-wf">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Briefcase className="h-4 w-4 text-primary" /> Job Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Calendar className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Date</p>
-                  <p className="font-bold text-sm">
-                    {scheduledDate ? format(scheduledDate, "EEE, MMM d") : "TBD"}
-                  </p>
-                  {scheduledDate && (
-                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "yyyy")}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Clock className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Start Time</p>
-                  <p className="font-bold text-sm">
-                    {scheduledDate ? format(scheduledDate, "h:mm a") : "TBD"}
-                  </p>
-                  {scheduledDate && (
-                    <p className="text-[11px] text-ink-muted">{format(scheduledDate, "zzz")}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Timer className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Duration</p>
-                  <p className="font-bold text-sm">{job.estimated_hours || 2} hrs est.</p>
-                  {job.actual_hours && (
-                    <p className="text-[11px] text-ink-muted">{job.actual_hours}h actual</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-success/10 flex items-center justify-center">
-                  <DollarSign className="h-4 w-4 text-success" />
-                </div>
-                <div>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Your Earnings</p>
-                  <p className="font-bold text-sm text-success">{money.cleanerNet} cr</p>
-                  <p className="text-[11px] text-ink-muted">After platform fee</p>
-                </div>
-              </div>
-            </div>
+        {/* Job Details — accent bubbles */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 px-1">
+            <Briefcase className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted">Job Details</h2>
+          </div>
 
-            {/* Service Address — full address revealed once accepted; pending shows city only */}
-            <div className="pt-3 border-t border-border flex items-start gap-2.5">
-              <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isPending ? "bg-muted" : "bg-primary/10"}`}>
-                {isPending ? <Lock className="h-4 w-4 text-ink-muted" /> : <MapPin className="h-4 w-4 text-primary" />}
+          {/* Address bubble — full width, prominent */}
+          <div className={`relative overflow-hidden rounded-3xl p-5 border-2 shadow-wf ${
+            isPending
+              ? "bg-muted/40 border-dashed border-hairline"
+              : "bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border-primary/30"
+          }`}>
+            <div className="flex items-start gap-3">
+              <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 ${
+                isPending ? "bg-muted" : "bg-primary/20"
+              }`}>
+                {isPending
+                  ? <Lock className="h-6 w-6 text-ink-muted" />
+                  : <MapPin className="h-6 w-6 text-primary" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold">Service Address</p>
+                <p className="text-[11px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-1">
+                  Service Address
+                </p>
                 {isPending ? (
                   <>
-                    <p className="font-bold text-sm">{addrCityState || "Area hidden"}</p>
-                    <p className="text-[11px] text-ink-muted">Full address unlocks when you accept</p>
+                    <p className="font-bold text-xl leading-tight">{addrCityState || "Area hidden"}</p>
+                    <p className="text-xs text-ink-muted mt-1">🔒 Full address unlocks when you accept</p>
                   </>
                 ) : addrFull ? (
                   <>
-                    <p className="font-bold text-sm break-words">{addrFull}</p>
+                    <p className="font-bold text-xl leading-snug break-words">{addrFull}</p>
                     <a
                       href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addrFull)}`}
                       target="_blank" rel="noreferrer"
-                      className="text-[11px] text-primary inline-flex items-center gap-1 mt-0.5 hover:underline"
+                      className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors"
                     >
-                      <Navigation className="h-3 w-3" /> Get directions
+                      <Navigation className="h-3.5 w-3.5" /> Get directions
                     </a>
                   </>
                 ) : (
-                  <p className="font-medium text-sm text-ink-muted">Address not available</p>
+                  <p className="font-medium text-base text-ink-muted">Address not available</p>
                 )}
               </div>
             </div>
+          </div>
 
-            {isInProgress && job.check_in_at && (
+          {/* Stat bubbles */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/25 shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-primary/20 flex items-center justify-center mb-2.5">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Date</p>
+              <p className="font-bold text-xl leading-tight mt-0.5">
+                {scheduledDate ? format(scheduledDate, "MMM d") : "TBD"}
+              </p>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {scheduledDate ? format(scheduledDate, "EEEE") : "—"}
+              </p>
+            </div>
+
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-info/15 to-info/5 border border-info/25 shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-info/20 flex items-center justify-center mb-2.5">
+                <Clock className="h-5 w-5 text-info" />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Start Time</p>
+              <p className="font-bold text-xl leading-tight mt-0.5">
+                {scheduledDate ? format(scheduledDate, "h:mm a") : "TBD"}
+              </p>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {scheduledDate ? format(scheduledDate, "zzz") : "—"}
+              </p>
+            </div>
+
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-aqua/20 to-aqua/5 border border-aqua/30 shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-aqua/25 flex items-center justify-center mb-2.5">
+                <Timer className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Duration</p>
+              <p className="font-bold text-xl leading-tight mt-0.5">{job.estimated_hours || 2} hrs</p>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {job.actual_hours ? `${job.actual_hours}h actual` : "estimated"}
+              </p>
+            </div>
+
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-success/20 to-success/5 border border-success/30 shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-success/25 flex items-center justify-center mb-2.5">
+                <DollarSign className="h-5 w-5 text-success" />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">You Earn</p>
+              <p className="font-bold text-xl leading-tight mt-0.5 text-success">{money.cleanerNet} cr</p>
+              <p className="text-xs text-ink-muted mt-0.5">after fee</p>
+            </div>
+
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-2.5 text-2xl">
+                {emoji}
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Service</p>
+              <p className="font-bold text-xl leading-tight mt-0.5 capitalize">{cleaningTypeLabel}</p>
+              <p className="text-xs text-ink-muted mt-0.5">cleaning</p>
+            </div>
+
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-secondary/40 to-secondary/10 border border-hairline-soft shadow-wf">
+              <div className="h-10 w-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-2.5">
+                <User className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-ink-muted">Client</p>
+              <p className="font-bold text-xl leading-tight mt-0.5 truncate">
+                {participants.client.firstName || "Client"}
+              </p>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {paymentMode === "direct" ? "Direct pay" : "Escrow"}
+              </p>
+            </div>
+          </div>
+
+          {isInProgress && job.check_in_at && (
               <div className="mt-3 pt-3 border-t border-border flex items-center gap-3 p-3 rounded-lg bg-primary/5">
                 <Timer className="h-4 w-4 text-primary" />
                 <div>
@@ -475,15 +504,14 @@ export default function CleanerJobDetail() {
             )}
             
             {job.notes && (
-              <div className="pt-3 border-t border-border">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5 flex items-center gap-1.5">
-                  <FileText className="h-3 w-3" /> Client Notes
-                </p>
-                <p className="text-sm bg-muted/50 p-3 rounded-xl italic leading-relaxed">"{job.notes}"</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            <div className="rounded-3xl p-4 bg-gradient-to-br from-warning/10 to-warning/5 border border-warning/25 shadow-wf">
+              <p className="text-[11px] uppercase tracking-[0.14em] font-bold text-ink-muted mb-2 flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5" /> Client Notes
+              </p>
+              <p className="text-base italic leading-relaxed">"{job.notes}"</p>
+            </div>
+          )}
+        </div>
 
         {/* Check-in Action */}
         {canCheckin && (
