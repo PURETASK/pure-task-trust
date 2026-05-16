@@ -765,6 +765,7 @@ export default function CleanerJobDetail() {
           cleanerId={profile.id}
           clientId={job.client_id}
           clientFirstName={participants.client.firstName}
+          onSubmitted={() => navigate("/cleaner/jobs")}
         />
       )}
 
