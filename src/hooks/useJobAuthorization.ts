@@ -119,18 +119,18 @@ export function useJobAuthorization(job?: JobAuthInput | null): JobAuthorization
       else if (!job.check_in_at) reasons.canComplete = "Check-in required before completing";
     }
 
-    // Approve
-    const canApprove = isClient && ["in_progress", "completed"].includes(status) && !approved && inReviewWindow;
+    // Approve — client can approve any unsettled in_progress/completed job.
+    // The review window only controls auto-release, NOT manual approval.
+    const canApprove = isClient && ["in_progress", "completed"].includes(status) && !approved;
     if (!canApprove) {
       if (!isClient) reasons.canApprove = "Only the client can approve";
       else if (approved) reasons.canApprove = "Already approved";
-      else if (!inReviewWindow) reasons.canApprove = "Review window expired";
       else reasons.canApprove = "Job not ready for approval";
     }
 
     // Dispute
-    const canDispute = isParty && ["in_progress", "completed", "disputed"].includes(status) && inReviewWindow;
-    if (!canDispute) reasons.canDispute = inReviewWindow ? "Not eligible for dispute" : "Dispute window expired";
+    const canDispute = isParty && ["in_progress", "completed", "disputed"].includes(status) && !approved;
+    if (!canDispute) reasons.canDispute = approved ? "Job already settled" : "Not eligible for dispute";
 
     // Tip / Review (client, post-approval)
     const canTip = isClient && status === "completed" && approved;
@@ -178,7 +178,7 @@ export function getJobAuthorization(
     canReschedule: (isClient || isCleaner) && ["pending", "confirmed"].includes(status),
     canStart: isCleaner && status === "confirmed",
     canComplete: isCleaner && status === "in_progress" && !!job.check_in_at,
-    canApprove: isClient && ["in_progress", "completed"].includes(status) && !approved && inReviewWindow,
-    canDispute: (isClient || isCleaner) && ["in_progress", "completed", "disputed"].includes(status) && inReviewWindow,
+    canApprove: isClient && ["in_progress", "completed"].includes(status) && !approved,
+    canDispute: (isClient || isCleaner) && ["in_progress", "completed", "disputed"].includes(status) && !approved,
   };
 }
