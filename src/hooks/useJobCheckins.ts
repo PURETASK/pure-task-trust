@@ -154,7 +154,7 @@ export function useJobCheckins(jobId?: string) {
 
       return { checkin: data, isWithinRadius, distance };
     },
-    onSuccess: ({ isWithinRadius, distance }) => {
+    onSuccess: ({ isWithinRadius, distance, checkin }) => {
       queryClient.invalidateQueries({ queryKey: ['job-checkins'] });
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
       
@@ -163,8 +163,7 @@ export function useJobCheckins(jobId?: string) {
       } else {
         toast.warning(`Check-in recorded but you're ${Math.round(distance)}m from the job location`);
       }
-      // Fan-out check-in notification to client
-      const jid = (arguments as any)[0]?.checkin?.job_id;
+      const jid = (checkin as any)?.job_id;
       if (jid) {
         supabase.functions
           .invoke('notify-job-event', { body: { event: 'cleaner_checked_in', job_id: jid } })
