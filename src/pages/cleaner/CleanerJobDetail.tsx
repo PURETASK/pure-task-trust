@@ -15,6 +15,11 @@ import { useStatusPresentation } from "@/hooks/useStatusPresentation";
 import { useJobPhotos, useUploadJobPhoto } from "@/hooks/useJobPhotos";
 import { useJobCheckins } from "@/hooks/useJobCheckins";
 import { useCleanerProfile } from "@/hooks/useCleanerProfile";
+import { useJobOfferActions } from "@/hooks/useJobOfferActions";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { PhotoRequirements, useJobPhotoValidation } from "@/components/job/PhotoRequirements";
 import { ClientBriefCard } from "@/components/cleaner/ClientBriefCard";
 import { JobSupportChat } from "@/components/cleaner/JobSupportChat";
@@ -25,9 +30,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { 
   MapPin, Clock, Calendar, Camera, CheckCircle, Play, ArrowLeft,
   User, Image, Loader2, Upload, AlertTriangle, Timer, MessageCircle,
-  Star, DollarSign, Navigation, HelpCircle
+  Star, DollarSign, Navigation, HelpCircle, Check, XCircle, Zap,
+  Sparkles, Briefcase, Lock, FileText
 } from "lucide-react";
 import { Pill, SectionLabel } from "@/components/wf";
+
+const TYPE_EMOJI: Record<string, string> = {
+  standard: "🧹", basic: "🧹", deep: "✨", move_out: "📦", airbnb: "🏠", office: "🏢",
+};
 
 export default function CleanerJobDetail() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -39,12 +49,15 @@ export default function CleanerJobDetail() {
   const { profile } = useCleanerProfile();
   const uploadPhoto = useUploadJobPhoto(jobId || "");
   const { checkIn, checkOut, hasCheckedIn, hasCheckedOut } = useJobCheckins(jobId);
+  const { acceptOffer, declineOffer } = useJobOfferActions();
   const [selectedPhotoType, setSelectedPhotoType] = useState<"before" | "after">("before");
   const fileInputRef = useState<HTMLInputElement | null>(null);
   const [fileEl, setFileEl] = useState<HTMLInputElement | null>(null);
   const [elapsedMin, setElapsedMin] = useState(0);
   const [supportOpen, setSupportOpen] = useState(false);
   const [ratingOpen, setRatingOpen] = useState(false);
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
 
   const { beforeCount, afterCount, canCheckout, missingBefore, missingAfter } = useJobPhotoValidation(photos);
 
