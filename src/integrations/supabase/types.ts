@@ -6507,6 +6507,10 @@ export type Database = {
       }
     }
     Functions: {
+      accept_job_offer_atomic: {
+        Args: { _job_id: string; _user_id: string }
+        Returns: Json
+      }
       approve_job_atomic: {
         Args: { _job_id: string; _user_id: string }
         Returns: Json
@@ -6534,6 +6538,10 @@ export type Database = {
           _user_id: string
         }
         Returns: string
+      }
+      decline_job_offer_atomic: {
+        Args: { _job_id: string; _reason?: string; _user_id: string }
+        Returns: Json
       }
       delete_email: {
         Args: { message_id: number; queue_name: string }
