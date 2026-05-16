@@ -25,6 +25,8 @@ import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { Progress } from "@/components/ui/progress";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { Pill, SectionLabel } from "@/components/wf";
+import { useReceipt } from "@/hooks/useReceipt";
+import { Download } from "lucide-react";
 
 export default function JobApproval() {
   const { id } = useParams<{ id: string }>();
@@ -41,6 +43,7 @@ export default function JobApproval() {
   const { approveJob, isApproving, reportIssue, isReportingIssue } = useJobActions(id || "");
   const { data: jobPhotos, isLoading: loadingPhotos } = useJobPhotos(id || "");
   const { data: existingReview } = useJobReview(id || "");
+  const { generateReceipt, isGenerating } = useReceipt();
 
   // Live escrow countdown — replaces hardcoded "24 hours" copy
   const escrow = useEscrowCountdown(job ?? null);
@@ -374,6 +377,18 @@ export default function JobApproval() {
                   <><Check className="h-5 w-5 mr-2" />Approve & Release Credits</>
                 )}
               </Button>
+
+              {job.status === "completed" && (
+                <Button
+                  variant="outline"
+                  className="w-full mb-3 gap-2 rounded-xl"
+                  onClick={() => generateReceipt({ type: 'job_completion', jobId: id! })}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                  Download receipt (PDF)
+                </Button>
+              )}
 
               <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
                 <DialogTrigger asChild>
