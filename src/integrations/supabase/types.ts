@@ -4716,6 +4716,7 @@ export type Database = {
         Row: {
           created_at: string
           email_enabled: boolean
+          event_preferences: Json
           id: string
           push_enabled: boolean
           sms_enabled: boolean
@@ -4725,6 +4726,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email_enabled?: boolean
+          event_preferences?: Json
           id?: string
           push_enabled?: boolean
           sms_enabled?: boolean
@@ -4734,6 +4736,7 @@ export type Database = {
         Update: {
           created_at?: string
           email_enabled?: boolean
+          event_preferences?: Json
           id?: string
           push_enabled?: boolean
           sms_enabled?: boolean
