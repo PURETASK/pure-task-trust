@@ -15,6 +15,7 @@ interface ClientRatingFormProps {
   cleanerId: string;
   clientId: string;
   clientFirstName?: string | null;
+  onSubmitted?: () => void;
 }
 
 function StarRating({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) {
@@ -53,6 +54,7 @@ export function ClientRatingForm({
   cleanerId,
   clientId,
   clientFirstName,
+  onSubmitted,
 }: ClientRatingFormProps) {
   const queryClient = useQueryClient();
   const [overall, setOverall] = useState(0);
@@ -81,6 +83,7 @@ export function ClientRatingForm({
       toast.success("Rating submitted — thanks for your feedback!");
       queryClient.invalidateQueries({ queryKey: ["cleaner-jobs"] });
       onOpenChange(false);
+      onSubmitted?.();
     },
     onError: (e: Error) => toast.error(e.message || "Failed to submit rating"),
   });
