@@ -593,7 +593,12 @@ export default function CleanerJobs() {
     .filter(j => j.status === "confirmed")
     .sort((a, b) => new Date(a.scheduled_start_at || 0).getTime() - new Date(b.scheduled_start_at || 0).getTime());
   const liveJobs = jobs.filter(j => j.status === "in_progress");
-  const awaitingApproval = jobs.filter(j => j.status === "completed");
+  // Only show jobs that are completed AND not yet settled (no final charge recorded).
+  // Once approved (by client) or auto-released after the 24h window, final_charge_credits
+  // is set and the job leaves this tab.
+  const awaitingApproval = jobs.filter(
+    j => j.status === "completed" && (j as any).final_charge_credits == null
+  );
   const history = jobs
     .filter(j => j.status === "cancelled" || j.status === "disputed")
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
