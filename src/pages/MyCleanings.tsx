@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle2, History, Sparkles, ArrowRight, Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +14,7 @@ import { useStatusPresentation } from "@/hooks/useStatusPresentation";
 import { useEscrowCountdown } from "@/hooks/useEscrowCountdown";
 import { useJobMoney } from "@/hooks/useJobMoney";
 import { JobCard, Pill, EmptyState as WfEmptyState, SectionLabel } from "@/components/wf";
+import { RebookFromDeclinedModal } from "@/components/booking/RebookFromDeclinedModal";
 
 type TabValue = "upcoming" | "in_progress" | "completed" | "history";
 
@@ -27,6 +28,9 @@ export default function MyCleanings() {
   const inProgress = jobs?.filter(j => j.status === "in_progress") ?? [];
   const completed = jobs?.filter(j => j.status === "completed") ?? [];
   const history = jobs ?? [];
+  const declined = (jobs ?? []).filter(j =>
+    j.status === "cancelled" && (j as any).metadata?.declined_by_cleaner === true
+  );
 
   return (
     <main className="flex-1 bg-app-canvas min-h-screen">
@@ -48,6 +52,15 @@ export default function MyCleanings() {
             <Link to="/book"><Plus className="h-4 w-4" /> Book New</Link>
           </Button>
         </motion.div>
+
+        {/* Declined-by-cleaner banners — credits already released */}
+        {declined.length > 0 && (
+          <div className="space-y-2.5 mb-6">
+            {declined.map(job => (
+              <DeclinedRebookBanner key={job.id} job={job} />
+            ))}
+          </div>
+        )}
 
         <Tabs value={tab} onValueChange={v => setTab(v as TabValue)}>
           <TabsList className="w-full justify-start overflow-x-auto gap-1 bg-app-surface p-1 rounded-[10px] mb-6 border border-hairline-soft shadow-wf">
