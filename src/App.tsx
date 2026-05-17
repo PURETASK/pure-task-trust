@@ -83,6 +83,7 @@ const PhotoEtiquette = lazy(() => import("./pages/cleaner/PhotoEtiquette"));
 
 // Internal dev preview — wireframe component kit
 const WireframeKit = lazy(() => import("./pages/_dev/WireframeKit"));
+const VisualCatalog = lazy(() => import("./pages/_dev/VisualCatalog"));
 
 // Cleaner pages
 const CleanerDashboard = lazy(() => import("./pages/cleaner/CleanerDashboard"));
@@ -219,6 +220,7 @@ const App = () => (
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/_dev/wireframe-kit" element={<WireframeKit />} />
+                    <Route path="/_dev/visual-catalog" element={<VisualCatalog />} />
                     <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
                     <Route path="/cancellationpolicy" element={<Navigate to="/cancellation-policy" replace />} />
                     <Route path="/reliability-score" element={<ReliabilityScoreExplained />} />
