@@ -71,6 +71,7 @@ export default function CleaningDetail() {
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [hasApproved, setHasApproved] = useState(false);
 
   // Hooks must be called unconditionally — provide null-safe inputs.
   const status = useStatusPresentation(job?.status ?? "pending");
