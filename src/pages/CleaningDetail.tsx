@@ -21,7 +21,7 @@ import {
   FileText, Sparkles
 } from "lucide-react";
 import { useJob, useJobActions } from "@/hooks/useJob";
-import { useRequestReschedule } from "@/hooks/useRescheduling";
+import { useRequestReschedule, useRescheduleEvents, useCancelRescheduleRequest } from "@/hooks/useRescheduling";
 import { useCreateReview, useJobReview } from "@/hooks/useReviews";
 import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
@@ -57,6 +57,8 @@ export default function CleaningDetail() {
   const { generateReceipt, isGenerating } = useReceipt();
   const { graceRemaining } = useGraceCancellations();
   const reschedule = useRequestReschedule();
+  const { data: rescheduleEvents } = useRescheduleEvents(id || '');
+  const cancelReschedule = useCancelRescheduleRequest();
   const createReview = useCreateReview();
 
   const [issueText, setIssueText] = useState("");
@@ -131,6 +133,7 @@ export default function CleaningDetail() {
   const needsApproval = auth.canApprove;
   const canReschedule = auth.canReschedule;
   const canCancel = auth.canCancel;
+  const pendingReschedule = (rescheduleEvents || []).find(e => e.status === 'pending') || null;
   const canReview = isApproved && !existingReview && auth.canReview;
   const hasReview = !!existingReview;
 
