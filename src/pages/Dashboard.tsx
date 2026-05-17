@@ -68,20 +68,18 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* ── ROW 2: REBOOK (60%) + WALLET (40%) ──────────────────────── */}
+        {/* ── ROW 2: QUICK REBOOK (Full Width, horizontal scroll) ──────── */}
         <motion.div {...fade(0.1)} className="mb-6 sm:mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-5 sm:gap-6">
-            <div className="md:col-span-3">
-              <QuickRebookSection candidates={rebookCandidates} isNewUser={isNewUser} />
-            </div>
-            <div className="md:col-span-2">
-              <WalletSnapshotCard
-                availableBalance={availableBalance}
-                heldBalance={heldBalance}
-                walletState={walletState}
-              />
-            </div>
-          </div>
+          <QuickRebookSection candidates={rebookCandidates} isNewUser={isNewUser} />
+        </motion.div>
+
+        {/* ── ROW 2b: WALLET (Full Width) ──────────────────────────────── */}
+        <motion.div {...fade(0.12)} className="mb-6 sm:mb-8">
+          <WalletSnapshotCard
+            availableBalance={availableBalance}
+            heldBalance={heldBalance}
+            walletState={walletState}
+          />
         </motion.div>
 
         {/* ── ROW 3: ALERTS (desktop) + MESSAGES ──────────────────────── */}

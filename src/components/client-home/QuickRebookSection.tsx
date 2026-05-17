@@ -58,7 +58,7 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
   return (
     <section>
       <SectionHeader />
-      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:-mx-1 sm:px-1 no-scrollbar snap-x snap-mandatory">
+      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar snap-x snap-mandatory">
         {candidates.map((job, i) => {
           const name = job.cleaner
             ? `${job.cleaner.first_name || ""} ${job.cleaner.last_name || ""}`.trim() || "Cleaner"
@@ -74,10 +74,10 @@ export function QuickRebookSection({ candidates, isNewUser }: Props) {
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="flex-shrink-0 snap-start w-[78vw] max-w-[300px] sm:w-auto"
+              className="flex-shrink-0 snap-start w-[78vw] max-w-[300px] sm:w-[280px]"
             >
               <Link to={`/book?cleaner=${job.cleaner_id}&type=${job.cleaning_type}`}>
-                <div className={`w-full sm:w-60 h-full rounded-3xl ${color.card} p-4 sm:p-5 group`}>
+                <div className={`w-full h-full rounded-3xl ${color.card} p-4 sm:p-5 group`}>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`h-11 w-11 rounded-xl ${color.icon} font-bold text-base group-hover:scale-105 transition-transform flex-shrink-0 flex items-center justify-center`}>
