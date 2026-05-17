@@ -38,6 +38,7 @@ const Book = lazy(() => import("./pages/Book"));
 const BookingStatus = lazy(() => import("./pages/BookingStatus"));
 const JobInProgress = lazy(() => import("./pages/JobInProgress"));
 const JobApproval = lazy(() => import("./pages/JobApproval"));
+const PaymentReleased = lazy(() => import("./pages/PaymentReleased"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Help = lazy(() => import("./pages/Help"));
@@ -295,6 +296,7 @@ const App = () => (
                     <Route path="/booking/:id" element={<RequireClient><RequireSetup><BookingStatus /></RequireSetup></RequireClient>} />
                     <Route path="/job/:id" element={<RequireClient><RequireSetup><JobInProgress /></RequireSetup></RequireClient>} />
                     <Route path="/job/:id/approve" element={<RequireClient><RequireSetup><JobApproval /></RequireSetup></RequireClient>} />
+                    <Route path="/job/:id/payment-released" element={<RequireClient><RequireSetup><PaymentReleased /></RequireSetup></RequireClient>} />
                     <Route path="/dispute/:id" element={<RequireClient><RequireSetup><Dispute /></RequireSetup></RequireClient>} />
                     <Route path="/privacy" element={<RequireAuth><Privacy /></RequireAuth>} />
                     {/* Legacy alias → canonical path */}
