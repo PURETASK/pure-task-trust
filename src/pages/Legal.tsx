@@ -120,6 +120,9 @@ export default function Legal() {
             { title: 'Accessibility Statement', desc: 'Our WCAG 2.1 AA commitments', href: '/legal/accessibility', icon: CheckCircle },
             { title: 'LLC Operating Agreement', desc: 'PureTask LLC single-member agreement', href: '/legal/operating-agreement', icon: FileText },
             { title: 'Data Processing Addendum', desc: 'Template DPA for vendors & processors', href: '/legal/dpa', icon: Lock },
+            { title: 'DMCA Policy', desc: 'Copyright takedown notice procedure', href: '/legal/dmca', icon: Scale },
+            { title: 'Pre-Adverse Action Notice', desc: 'FCRA notice sent before any background-check-based denial', href: '/legal/pre-adverse-action-notice', icon: AlertTriangle },
+            { title: 'Adverse Action Notice', desc: 'FCRA notice sent when denying based on a consumer report', href: '/legal/adverse-action-notice', icon: AlertTriangle },
           ].map((item, idx) => {
             const Icon = item.icon;
             return (
