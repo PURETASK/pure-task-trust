@@ -4370,6 +4370,39 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_acceptances: {
+        Row: {
+          accepted_at: string
+          created_at: string
+          document_type: string
+          document_version: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string
+          created_at?: string
+          document_type: string
+          document_version?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string
+          created_at?: string
+          document_type?: string
+          document_version?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       match_recommendations: {
         Row: {
           breakdown: Json | null
@@ -5362,6 +5395,60 @@ export type Database = {
           rule_name?: string
           rule_type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      privacy_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          details: string | null
+          email: string
+          full_name: string
+          id: string
+          ip_address: string | null
+          jurisdiction: string | null
+          request_type: Database["public"]["Enums"]["privacy_request_type"]
+          status: Database["public"]["Enums"]["privacy_request_status"]
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          details?: string | null
+          email: string
+          full_name: string
+          id?: string
+          ip_address?: string | null
+          jurisdiction?: string | null
+          request_type: Database["public"]["Enums"]["privacy_request_type"]
+          status?: Database["public"]["Enums"]["privacy_request_status"]
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          details?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          ip_address?: string | null
+          jurisdiction?: string | null
+          request_type?: Database["public"]["Enums"]["privacy_request_type"]
+          status?: Database["public"]["Enums"]["privacy_request_status"]
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -6781,6 +6868,21 @@ export type Database = {
         | "no_show"
       notification_channel: "email" | "sms" | "push" | "in_app"
       payout_status: "pending" | "processing" | "completed" | "failed"
+      privacy_request_status:
+        | "received"
+        | "verifying"
+        | "in_progress"
+        | "completed"
+        | "denied"
+        | "cancelled"
+      privacy_request_type:
+        | "access"
+        | "deletion"
+        | "correction"
+        | "opt_out"
+        | "limit_sensitive"
+        | "portability"
+        | "other"
       reliability_event_type:
         | "on_time"
         | "late"
@@ -7004,6 +7106,23 @@ export const Constants = {
       ],
       notification_channel: ["email", "sms", "push", "in_app"],
       payout_status: ["pending", "processing", "completed", "failed"],
+      privacy_request_status: [
+        "received",
+        "verifying",
+        "in_progress",
+        "completed",
+        "denied",
+        "cancelled",
+      ],
+      privacy_request_type: [
+        "access",
+        "deletion",
+        "correction",
+        "opt_out",
+        "limit_sensitive",
+        "portability",
+        "other",
+      ],
       reliability_event_type: [
         "on_time",
         "late",
