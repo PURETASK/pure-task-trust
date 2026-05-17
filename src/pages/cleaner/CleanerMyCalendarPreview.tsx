@@ -5,9 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   ChevronLeft, ChevronRight, Clock, MapPin, Navigation, Zap,
   TrendingUp, Calendar as CalendarIcon, DollarSign, Timer, Route,
+  CheckCircle2, XCircle, MessageSquare, RotateCcw, Camera, PlayCircle, StopCircle, Upload, Check, X,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -17,9 +19,22 @@ const MOCK_JOBS = [
   { id: "1", day: 4, time: "9:00 AM", end: "11:30 AM", type: "Standard", status: "confirmed", addr: "902 Riverstone Dr", client: "Sarah J.", credits: 70 },
   { id: "2", day: 4, time: "1:00 PM", end: "3:30 PM", type: "Deep Clean", status: "in_progress", addr: "14 Sky Ridge", client: "TechCorp HQ", credits: 120 },
   { id: "3", day: 6, time: "10:00 AM", end: "12:00 PM", type: "Standard", status: "confirmed", addr: "782 Bluebell Ave", client: "Marcus T.", credits: 65 },
-  { id: "4", day: 8, time: "2:00 PM", end: "4:30 PM", type: "Move-out", status: "pending", addr: "12 Ocean View Dr", client: "Linda K.", credits: 95 },
-  { id: "5", day: 10, time: "9:00 AM", end: "11:00 AM", type: "Standard", status: "confirmed", addr: "55 Pine St", client: "Jen M.", credits: 70 },
+  { id: "4", day: 8, time: "2:00 PM", end: "4:30 PM", type: "Move-out", status: "confirmed", addr: "12 Ocean View Dr", client: "Linda K.", credits: 95 },
+  { id: "5", day: 10, time: "9:00 AM", end: "11:00 AM", type: "Airbnb", status: "confirmed", addr: "55 Pine St", client: "Jen M.", credits: 70 },
 ];
+
+const MOCK_REQUESTS = [
+  { id: "r1", time: "Tue · 2:00 PM", type: "Deep Clean", addr: "221 Maple Crest", client: "Alex P.", credits: 130, expires: "expires in 4h" },
+  { id: "r2", time: "Thu · 10:00 AM", type: "Airbnb", addr: "9 Harbor Loft", client: "Bayside Stays", credits: 85, expires: "expires in 22h" },
+];
+
+/* Service-type color key (PureTask palette) */
+const TYPE_KEY: Record<string, { dot: string; chip: string; label: string }> = {
+  Standard:    { dot: "bg-pt-blue",          chip: "bg-pt-blue/10 text-pt-blue",          label: "Standard" },
+  "Deep Clean":{ dot: "bg-orange-500",       chip: "bg-orange-500/10 text-orange-600",    label: "Deep Clean" },
+  "Move-out":  { dot: "bg-purple-500",       chip: "bg-purple-500/10 text-purple-600",    label: "Move-out" },
+  Airbnb:      { dot: "bg-emerald-500",      chip: "bg-emerald-500/10 text-emerald-600",  label: "Airbnb" },
+};
 
 const STATUS_DOT: Record<string, string> = {
   confirmed: "bg-primary",
@@ -32,6 +47,13 @@ const STATUS_DOT: Record<string, string> = {
 /* VERSION A — Command Center                                          */
 /* ------------------------------------------------------------------ */
 function VersionA() {
+  const [openJob, setOpenJob] = useState<typeof MOCK_JOBS[number] | null>(null);
+  const weekDays = [
+    { d: 3, n: "Sun" }, { d: 4, n: "Mon" }, { d: 5, n: "Tue" }, { d: 6, n: "Wed" },
+    { d: 7, n: "Thu" }, { d: 8, n: "Fri" }, { d: 9, n: "Sat" },
+  ];
+  const acceptedJobs = MOCK_JOBS.filter(j => j.status === "confirmed" || j.status === "in_progress");
+
   return (
     <div className="space-y-6">
       {/* Stat strip */}
@@ -51,7 +73,7 @@ function VersionA() {
         ))}
       </div>
 
-      {/* Today focus + mini cal */}
+      {/* Today focus + horizontal week */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 rounded-3xl bg-pt-blue text-white border-0 overflow-hidden relative">
           <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-aero-aqua/20 blur-2xl" />
@@ -76,48 +98,189 @@ function VersionA() {
           </CardContent>
         </Card>
 
+        {/* Weekly summary card */}
         <Card className="rounded-3xl">
           <CardContent className="p-4">
-            <div className="text-xs font-bold uppercase text-ink-muted mb-3">May 2026</div>
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {["S","M","T","W","T","F","S"].map((d,i)=>(<div key={i} className="text-[10px] text-ink-muted py-1">{d}</div>))}
-              {Array.from({length:31}).map((_,i)=>{
-                const day=i+1;
-                const dayJobs=MOCK_JOBS.filter(j=>j.day===day);
-                const isToday=day===4;
-                return (
-                  <div key={i} className={`aspect-square rounded-md text-xs flex flex-col items-center justify-center relative ${isToday?"bg-primary text-primary-foreground font-bold":"text-foreground hover:bg-muted"}`}>
-                    {day}
-                    {dayJobs.length>0 && (
-                      <div className="flex gap-0.5 absolute bottom-1">
-                        {dayJobs.slice(0,3).map((j,idx)=>(<div key={idx} className={`w-1 h-1 rounded-full ${isToday?"bg-white":STATUS_DOT[j.status]}`} />))}
-                      </div>
-                    )}
-                    {dayJobs.length>1 && <div className="absolute -top-0.5 -right-0.5 text-[8px] bg-aero-aqua text-pt-blue rounded-full w-3 h-3 flex items-center justify-center font-bold">+{dayJobs.length-1}</div>}
-                  </div>
-                );
-              })}
-            </div>
+            <div className="text-xs font-bold uppercase text-ink-muted mb-3">This Week</div>
+            <div className="text-3xl font-bold">5 jobs</div>
+            <div className="text-sm text-ink-muted mb-3">$420 projected</div>
+            <div className="text-[11px] text-ink-muted">Mon, May 4 – Sun, May 10</div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Upcoming list compact */}
+      {/* Horizontal week strip with color-coded dots */}
       <Card className="rounded-3xl">
-        <CardContent className="p-4 space-y-2">
-          <div className="text-xs font-bold uppercase text-ink-muted mb-2">Upcoming</div>
-          {MOCK_JOBS.map(j=>(
-            <div key={j.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted">
-              <div className={`w-2 h-10 rounded-full ${STATUS_DOT[j.status]}`} />
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-sm">{j.type} · {j.time}</div>
-                <div className="text-xs text-ink-muted truncate">{j.addr} · {j.client}</div>
-              </div>
-              <Badge variant="secondary" className="font-semibold">${j.credits}</Badge>
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-xs font-bold uppercase text-ink-muted">Schedule · This Week</div>
+              <div className="text-sm font-semibold">May 3 – 9, 2026</div>
             </div>
-          ))}
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon"><ChevronLeft className="h-4 w-4" /></Button>
+              <Button variant="outline" size="sm">Today</Button>
+              <Button variant="ghost" size="icon"><ChevronRight className="h-4 w-4" /></Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-7 gap-2">
+            {weekDays.map(({ d, n }) => {
+              const dayJobs = MOCK_JOBS.filter(j => j.day === d);
+              const isToday = d === 4;
+              return (
+                <div
+                  key={d}
+                  className={`rounded-2xl p-3 border text-center min-h-[100px] flex flex-col ${
+                    isToday ? "bg-primary text-primary-foreground border-primary shadow-tier-2"
+                            : "bg-app-surface border-hairline-soft hover:border-primary/30 transition-colors"
+                  }`}
+                >
+                  <div className={`text-[10px] font-bold uppercase ${isToday ? "opacity-80" : "text-ink-muted"}`}>{n}</div>
+                  <div className="text-2xl font-bold leading-none mt-0.5">{d}</div>
+                  <div className="flex flex-wrap gap-1 justify-center mt-auto pt-2">
+                    {dayJobs.map(j => (
+                      <span key={j.id} className={`w-2 h-2 rounded-full ${TYPE_KEY[j.type]?.dot ?? "bg-muted"}`} />
+                    ))}
+                  </div>
+                  {dayJobs.length > 0 && (
+                    <div className={`text-[10px] mt-1 ${isToday ? "opacity-90" : "text-ink-muted"}`}>
+                      {dayJobs.length} job{dayJobs.length > 1 ? "s" : ""}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Color key legend */}
+          <div className="flex flex-wrap items-center gap-4 mt-5 pt-4 border-t border-border">
+            <span className="text-[10px] font-bold uppercase text-ink-muted">Key:</span>
+            {Object.values(TYPE_KEY).map(t => (
+              <div key={t.label} className="flex items-center gap-1.5">
+                <span className={`w-2.5 h-2.5 rounded-full ${t.dot}`} />
+                <span className="text-xs font-medium">{t.label}</span>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
+
+      {/* Pending Requests */}
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-bold">Pending Requests</h2>
+          <Badge className="bg-warning/15 text-warning hover:bg-warning/20">{MOCK_REQUESTS.length} new</Badge>
+        </div>
+        <div className="space-y-3">
+          {MOCK_REQUESTS.map(r => (
+            <Card key={r.id} className="rounded-2xl border-l-4 border-l-warning">
+              <CardContent className="p-4 flex flex-wrap items-center gap-3">
+                <div className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${TYPE_KEY[r.type]?.chip ?? "bg-muted"}`}>{r.type}</div>
+                <div className="flex-1 min-w-[200px]">
+                  <div className="font-semibold text-sm">{r.time} · {r.client}</div>
+                  <div className="text-xs text-ink-muted flex items-center gap-1"><MapPin className="h-3 w-3" />{r.addr}</div>
+                  <div className="text-[10px] text-warning font-semibold mt-1">⏱ {r.expires}</div>
+                </div>
+                <Badge variant="secondary" className="font-semibold">${r.credits}</Badge>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline"><X className="h-4 w-4 mr-1" />Decline</Button>
+                  <Button size="sm"><Check className="h-4 w-4 mr-1" />Accept</Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Accepted Jobs */}
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-bold">Accepted Jobs</h2>
+          <Badge className="bg-primary/10 text-primary hover:bg-primary/15">{acceptedJobs.length} upcoming</Badge>
+        </div>
+        <div className="space-y-3">
+          {acceptedJobs.map(j => (
+            <button
+              key={j.id}
+              onClick={() => setOpenJob(j)}
+              className="w-full text-left"
+            >
+              <Card className="rounded-2xl hover:shadow-wf-hover transition-shadow cursor-pointer">
+                <CardContent className="p-4 flex items-center gap-3">
+                  <div className={`w-2 h-12 rounded-full ${TYPE_KEY[j.type]?.dot ?? "bg-muted"}`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm">{j.type}</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${TYPE_KEY[j.type]?.chip}`}>{j.type}</span>
+                      {j.status === "in_progress" && <Badge className="bg-aero-aqua/20 text-pt-blue text-[10px]">In Progress</Badge>}
+                    </div>
+                    <div className="text-xs text-ink-muted truncate mt-0.5">
+                      {j.time} – {j.end} · {j.addr} · {j.client}
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="font-semibold">${j.credits}</Badge>
+                </CardContent>
+              </Card>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Job Modal */}
+      <Dialog open={!!openJob} onOpenChange={(o) => !o && setOpenJob(null)}>
+        <DialogContent className="max-w-xl rounded-3xl">
+          {openJob && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${TYPE_KEY[openJob.type]?.chip}`}>{openJob.type}</span>
+                  {openJob.status === "in_progress" && <Badge className="bg-aero-aqua/20 text-pt-blue">In Progress</Badge>}
+                </div>
+                <DialogTitle>{openJob.type} · {openJob.time}</DialogTitle>
+                <DialogDescription className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> {openJob.addr} · {openJob.client}
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* Primary action flow */}
+              <div className="space-y-2">
+                <div className="text-[11px] font-bold uppercase text-ink-muted">Job Flow</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button className="w-full"><Navigation className="h-4 w-4 mr-1" />On My Way</Button>
+                  <Button variant="outline" className="w-full"><PlayCircle className="h-4 w-4 mr-1" />Clock In</Button>
+                </div>
+
+                {/* Photo upload */}
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <button className="aspect-video rounded-xl border-2 border-dashed border-border hover:border-primary/40 flex flex-col items-center justify-center gap-1 text-ink-muted hover:text-primary transition-colors">
+                    <Camera className="h-5 w-5" />
+                    <span className="text-xs font-semibold">Before photos</span>
+                  </button>
+                  <button className="aspect-video rounded-xl border-2 border-dashed border-border hover:border-primary/40 flex flex-col items-center justify-center gap-1 text-ink-muted hover:text-primary transition-colors">
+                    <Upload className="h-5 w-5" />
+                    <span className="text-xs font-semibold">After photos</span>
+                  </button>
+                </div>
+
+                <Button variant="success" className="w-full mt-2">
+                  <StopCircle className="h-4 w-4 mr-1" />Finalize · Clock Out & Send to Client
+                </Button>
+              </div>
+
+              {/* Secondary actions */}
+              <div className="pt-3 border-t border-border space-y-2">
+                <div className="text-[11px] font-bold uppercase text-ink-muted">Manage</div>
+                <div className="grid grid-cols-3 gap-2">
+                  <Button variant="outline" size="sm"><MessageSquare className="h-4 w-4 mr-1" />Message</Button>
+                  <Button variant="outline" size="sm"><RotateCcw className="h-4 w-4 mr-1" />Reschedule</Button>
+                  <Button variant="destructive" size="sm"><XCircle className="h-4 w-4 mr-1" />Cancel</Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
