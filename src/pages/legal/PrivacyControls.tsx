@@ -12,12 +12,24 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCurrentProfile } from "@/hooks/useCurrentProfile";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PrivacyControls() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
-  const { data: profile, refetch } = useCurrentProfile();
+  const { data: profile, refetch } = useQuery({
+    queryKey: ["privacy-controls-profile", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("created_at, arbitration_opted_out, arbitration_optout_at, closure_initiated_at, account_status")
+        .eq("id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
   const [closureReason, setClosureReason] = useState("");
   const [busy, setBusy] = useState(false);
 
