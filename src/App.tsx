@@ -229,6 +229,8 @@ const App = () => (
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/legal/privacy-requests" element={<PrivacyRequests />} />
                     <Route path="/legal/:slug" element={<LegalDoc />} />
+                    <Route path="/do-not-sell-or-share" element={<DoNotSellOrShare />} />
+                    <Route path="/limit-use-of-spi" element={<LimitUseOfSPI />} />
                     <Route path="/_dev/wireframe-kit" element={<WireframeKit />} />
                     <Route path="/_dev/visual-catalog" element={<VisualCatalog />} />
                     <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
