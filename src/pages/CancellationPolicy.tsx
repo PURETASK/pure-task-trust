@@ -72,27 +72,13 @@ export default function CancellationPolicy() {
           <div className="flex items-start justify-between p-6 rounded-lg border border-hairline-soft bg-background">
             <div>
               <h3 className="text-xl font-bold text-success mb-1">Free Cancellation</h3>
-              <p className="text-success mb-2">More than 24 hours before booking</p>
+              <p className="text-success mb-2">6 hours or more before booking</p>
               <p className="text-ink-muted text-sm">
                 Full refund of escrowed credits back to your account
               </p>
             </div>
             <Badge className="bg-success text-white shrink-0">0% Fee</Badge>
           </div>
-
-          {/* Light Fee */}
-          <Card className="bg-warning/40 dark:bg-warning/20 border-warning/50">
-            <CardContent className="p-6 flex items-start justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-warning mb-1">Light Fee</h3>
-                <p className="text-warning mb-2">6–24 hours before booking</p>
-                <p className="text-ink-muted text-sm">
-                  25% of booking amount charged, remaining 75% refunded
-                </p>
-              </div>
-              <Badge className="bg-warning text-white shrink-0">25% Fee</Badge>
-            </CardContent>
-          </Card>
 
           {/* Partial Fee */}
           <Card className="bg-warning dark:bg-warning/30 border-warning dark:border-warning">
