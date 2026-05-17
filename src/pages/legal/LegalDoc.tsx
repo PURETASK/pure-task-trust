@@ -10,12 +10,23 @@ import termsMd from "../../../docs/legal/terms-of-service.md?raw";
 import privacyMd from "../../../docs/legal/privacy-policy.md?raw";
 import cookiesMd from "../../../docs/legal/cookie-policy.md?raw";
 import aupMd from "../../../docs/legal/acceptable-use-policy.md?raw";
+import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
+
+const STUB = (title: string) => `# ${title}\n\n*Full text is being finalized. For questions, contact ${LEGAL_CONSTANTS.LEGAL_EMAIL}.*`;
+const cancellationMd = `# Cancellation Policy\n\nSee the full interactive policy at [/cancellation-policy](/cancellation-policy).\n\n**Summary:** Cancellations 6+ hours before the original start time receive a full refund. 2–6 hours before = 50% refund. Less than 2 hours = no refund. Pro no-shows result in a full refund plus credit.`;
 
 const DOCS = {
   terms: { md: termsMd, title: "Terms of Service", desc: "The agreement that governs your use of PureTask.", file: "terms-of-service" },
   privacy: { md: privacyMd, title: "Privacy Policy", desc: "How we collect, use, and protect your information.", file: "privacy-policy" },
   cookies: { md: cookiesMd, title: "Cookie Policy", desc: "How we use cookies and similar technologies.", file: "cookie-policy" },
   "acceptable-use": { md: aupMd, title: "Acceptable Use Policy", desc: "Rules for using the PureTask platform.", file: "acceptable-use-policy" },
+  aup: { md: aupMd, title: "Acceptable Use Policy", desc: "Rules for using the PureTask platform.", file: "acceptable-use-policy" },
+  cancellation: { md: cancellationMd, title: "Cancellation Policy", desc: "How cancellations, refunds, and reschedules work.", file: "cancellation-policy" },
+  "pro-agreement": { md: STUB("Pro Independent Contractor Agreement"), title: "Pro IC Agreement", desc: "Independent contractor agreement for cleaning professionals.", file: "pro-ic-agreement" },
+  fcra: { md: STUB("FCRA Disclosure"), title: "FCRA Disclosure", desc: "Background check disclosure under the Fair Credit Reporting Act.", file: "fcra-disclosure" },
+  "sms-consent": { md: STUB("SMS Consent"), title: "SMS Consent", desc: "How we handle text-message consent.", file: "sms-consent" },
+  accessibility: { md: STUB("Accessibility Statement"), title: "Accessibility Statement", desc: "Our commitment to WCAG 2.1 AA accessibility.", file: "accessibility" },
+  dmca: { md: STUB("DMCA Policy"), title: "DMCA Policy", desc: "How to submit copyright takedown notices.", file: "dmca" },
 } as const;
 
 type Slug = keyof typeof DOCS;

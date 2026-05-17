@@ -16,6 +16,7 @@ import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 import { DevToolsWidget } from "@/components/dev/DevToolsWidget";
 import CookieConsent from "@/components/legal/CookieConsent";
+import { GpcDetector } from "@/components/legal/GpcDetector";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
@@ -56,6 +57,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Legal = lazy(() => import("./pages/Legal"));
 const LegalDoc = lazy(() => import("./pages/legal/LegalDoc"));
 const PrivacyRequests = lazy(() => import("./pages/legal/PrivacyRequests"));
+const DoNotSellOrShare = lazy(() => import("./pages/legal/DoNotSellOrShare"));
+const LimitUseOfSPI = lazy(() => import("./pages/legal/LimitUseOfSPI"));
 const CancellationPolicyPage = lazy(() => import("./pages/CancellationPolicy"));
 const ReliabilityScoreExplained = lazy(() => import("./pages/ReliabilityScoreExplained"));
 const ForAirbnbHosts = lazy(() => import("./pages/ForAirbnbHosts"));
@@ -194,6 +197,7 @@ const App = () => (
               <ExitIntentPopup />
               <PWAInstallBanner />
               <CookieConsent />
+              <GpcDetector />
               <DevToolsWidget />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
@@ -225,6 +229,8 @@ const App = () => (
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/legal/privacy-requests" element={<PrivacyRequests />} />
                     <Route path="/legal/:slug" element={<LegalDoc />} />
+                    <Route path="/do-not-sell-or-share" element={<DoNotSellOrShare />} />
+                    <Route path="/limit-use-of-spi" element={<LimitUseOfSPI />} />
                     <Route path="/_dev/wireframe-kit" element={<WireframeKit />} />
                     <Route path="/_dev/visual-catalog" element={<VisualCatalog />} />
                     <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
