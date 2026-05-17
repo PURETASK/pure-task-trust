@@ -38,6 +38,7 @@ export default function JobApproval() {
   const [issueOpen, setIssueOpen] = useState(false);
   const [issueDescription, setIssueDescription] = useState("");
   const [showPostJobFlow, setShowPostJobFlow] = useState(false);
+  const [hasApproved, setHasApproved] = useState(false);
 
   const { data: job, isLoading, error } = useJob(id || "");
   const { approveJob, isApproving, reportIssue, isReportingIssue } = useJobActions(id || "");
@@ -111,14 +112,23 @@ export default function JobApproval() {
   const refundAmount = money.refund;
 
   const handleApprove = async () => {
+    if (isApproving || hasApproved) return;
+    setHasApproved(true);
     try {
-      await approveJob();
+      const result = await approveJob();
       toast({
         title: "Payment released!",
         description: `$${creditsCharged} released to ${cleanerName}${refundAmount > 0 ? ` · $${refundAmount} refunded` : ""}`,
       });
-      setShowPostJobFlow(true);
+      navigate(`/job/${id}/payment-released`, {
+        state: {
+          creditsCharged: result?.creditsCharged ?? creditsCharged,
+          refundAmount: result?.refundAmount ?? refundAmount,
+        },
+        replace: true,
+      });
     } catch (err: any) {
+      setHasApproved(false);
       toast({ title: "Error", description: err.message || "Failed to approve job", variant: "destructive" });
     }
   };
@@ -368,10 +378,10 @@ export default function JobApproval() {
                 size="lg"
                 className="w-full mb-3"
                 onClick={handleApprove}
-                disabled={isApproving || !auth.canApprove}
+                disabled={isApproving || hasApproved || !auth.canApprove}
                 title={!auth.canApprove ? auth.reasons.canApprove : undefined}
               >
-                {isApproving ? (
+                {(isApproving || hasApproved) ? (
                   <><Loader2 className="h-5 w-5 mr-2 animate-spin" />Processing...</>
                 ) : (
                   <><Check className="h-5 w-5 mr-2" />Approve & Release Credits</>

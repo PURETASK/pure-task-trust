@@ -71,6 +71,7 @@ export default function CleaningDetail() {
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [hasApproved, setHasApproved] = useState(false);
 
   // Hooks must be called unconditionally — provide null-safe inputs.
   const status = useStatusPresentation(job?.status ?? "pending");
@@ -145,10 +146,22 @@ export default function CleaningDetail() {
   const estimatedFee = Math.round(money.escrowHeld * (feePercent / 100));
 
   const handleApprove = async () => {
+    if (isApproving || hasApproved) return;
+    setHasApproved(true);
     try {
       const result = await approveJob();
       toast.success(`Job approved! ${result.creditsCharged} credits charged${result.refundAmount > 0 ? `, $${result.refundAmount} returned` : ''}.`);
-    } catch (e: any) { toast.error(e.message || 'Failed to approve'); }
+      navigate(`/job/${id}/payment-released`, {
+        state: {
+          creditsCharged: result.creditsCharged,
+          refundAmount: result.refundAmount,
+        },
+        replace: true,
+      });
+    } catch (e: any) {
+      setHasApproved(false);
+      toast.error(e.message || 'Failed to approve');
+    }
   };
 
   const handleReportIssue = async () => {
@@ -294,9 +307,9 @@ export default function CleaningDetail() {
                 </div>
               )}
               <div className="flex gap-3">
-                <Button className="flex-1 rounded-xl" size="lg" onClick={handleApprove} disabled={isApproving}>
-                  {isApproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                  Approve & Pay
+                <Button className="flex-1 rounded-xl" size="lg" onClick={handleApprove} disabled={isApproving || hasApproved}>
+                  {(isApproving || hasApproved) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+                  {hasApproved && !isApproving ? "Processing…" : "Approve & Pay"}
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild>
