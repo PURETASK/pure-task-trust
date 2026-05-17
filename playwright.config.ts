@@ -29,6 +29,24 @@ export default defineConfig({
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
     },
+    {
+      // Visual regression — pixel diffs against committed baselines.
+      // Run with: npm run test:visual  /  npm run test:visual:update
+      name: 'visual',
+      testDir: './tests/visual',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 800 },
+        deviceScaleFactor: 1,
+      },
+      expect: {
+        toHaveScreenshot: {
+          maxDiffPixelRatio: 0.02,
+          animations: 'disabled',
+          caret: 'hide',
+        },
+      },
+    },
   ],
   webServer: {
     command: 'npm run dev',
