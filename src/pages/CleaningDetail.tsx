@@ -533,7 +533,7 @@ export default function CleaningDetail() {
               <Button
                 variant="outline"
                 className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2"
-                onClick={() => generateReceipt({ type: 'job_completion', transactionId: job.id })}
+                onClick={() => generateReceipt({ type: 'job_completion', jobId: job.id })}
                 disabled={isGenerating}
               >
                 <FileText className="h-5 w-5" /><span className="text-xs font-bold">Receipt</span>
