@@ -39,15 +39,31 @@ export default function Dashboard() {
         <meta name="description" content="Your PureTask client command center — manage cleanings, wallet, and messages." />
       </Helmet>
 
+      {/* Layered Aero glow background — adds depth without competing with content */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div
+          className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full blur-3xl opacity-40"
+          style={{ background: "radial-gradient(circle, hsl(var(--primary)/0.25) 0%, transparent 70%)" }}
+        />
+        <div
+          className="absolute top-1/3 -right-40 w-[520px] h-[520px] rounded-full blur-3xl opacity-30"
+          style={{ background: "radial-gradient(circle, hsl(var(--pt-aqua,var(--primary))/0.22) 0%, transparent 70%)" }}
+        />
+        <div className="absolute inset-0 bg-app-canvas/40" />
+      </div>
+
       <div className="container px-4 sm:px-6 py-5 sm:py-8 max-w-5xl relative z-10">
 
         {/* ── GREETING ─────────────────────────────────────────────────── */}
         <motion.div {...fade(0)} className="mb-6 sm:mb-8">
-          <p className="text-[10px] font-bold tracking-[0.08em] uppercase text-ink-faint mb-1">
+          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-ink-faint mb-1">
             Welcome back
           </p>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
-            Hello, {firstName}
+          <h1 className="text-3xl sm:text-4xl font-poppins font-bold tracking-tight text-ink">
+            Hello,{" "}
+            <span className="bg-gradient-aero bg-clip-text text-transparent">
+              {firstName}
+            </span>
           </h1>
         </motion.div>
 
