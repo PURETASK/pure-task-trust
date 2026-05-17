@@ -150,6 +150,7 @@ const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
 const AdminRefundQueue = lazy(() => import("./pages/admin/AdminRefundQueue"));
 const AdminWebhookLog = lazy(() => import("./pages/admin/AdminWebhookLog"));
 const AdminHealthDashboard = lazy(() => import("./pages/admin/AdminHealthDashboard"));
+const AdminPrivacyRequests = lazy(() => import("./pages/admin/AdminPrivacyRequests"));
 
 // New feature pages
 const SessionManagement = lazy(() => import("./pages/SessionManagement"));
@@ -287,6 +288,7 @@ const App = () => (
                     <Route path="/admin/refund-queue" element={<RequireAdmin><AdminRefundQueue /></RequireAdmin>} />
                     <Route path="/admin/webhook-log" element={<RequireAdmin><AdminWebhookLog /></RequireAdmin>} />
                     <Route path="/admin/health" element={<RequireAdmin><AdminHealthDashboard /></RequireAdmin>} />
+                    <Route path="/admin/privacy-requests" element={<RequireAdmin><AdminPrivacyRequests /></RequireAdmin>} />
 
                     {/* Client routes — new 5-tab IA */}
                     <Route path="/home" element={<RequireClient><Dashboard /></RequireClient>} />

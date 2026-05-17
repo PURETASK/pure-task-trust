@@ -56,6 +56,7 @@ const SECTIONS: DashSection[] = [
       { icon: Users, title: "Client Risk", desc: "Risk scoring by client", href: "/admin/client-risk" },
       { icon: CheckCircle, title: "ID Verifications", desc: "Pending & expired IDs", href: "/admin/id-verifications" },
       { icon: Flag, title: "Safety Reports", desc: "Trust & safety incident log", href: "/admin/trust-safety-reports" },
+      { icon: FileText, title: "Privacy Requests", desc: "CCPA / CPRA / GDPR DSRs", href: "/admin/privacy-requests" },
     ],
   },
   {
