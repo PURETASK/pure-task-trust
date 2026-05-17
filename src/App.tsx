@@ -16,6 +16,7 @@ import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 import { DevToolsWidget } from "@/components/dev/DevToolsWidget";
 import CookieConsent from "@/components/legal/CookieConsent";
+import { useGpcDetection } from "@/hooks/useGpcDetection";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
@@ -56,6 +57,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Legal = lazy(() => import("./pages/Legal"));
 const LegalDoc = lazy(() => import("./pages/legal/LegalDoc"));
 const PrivacyRequests = lazy(() => import("./pages/legal/PrivacyRequests"));
+const DoNotSellOrShare = lazy(() => import("./pages/legal/DoNotSellOrShare"));
+const LimitUseOfSPI = lazy(() => import("./pages/legal/LimitUseOfSPI"));
 const CancellationPolicyPage = lazy(() => import("./pages/CancellationPolicy"));
 const ReliabilityScoreExplained = lazy(() => import("./pages/ReliabilityScoreExplained"));
 const ForAirbnbHosts = lazy(() => import("./pages/ForAirbnbHosts"));
@@ -194,6 +197,7 @@ const App = () => (
               <ExitIntentPopup />
               <PWAInstallBanner />
               <CookieConsent />
+              <GpcDetector />
               <DevToolsWidget />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
