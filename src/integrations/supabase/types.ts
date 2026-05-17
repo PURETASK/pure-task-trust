@@ -6448,6 +6448,78 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_messages: {
+        Row: {
+          body: string
+          consent_type: string | null
+          created_at: string
+          direction: string
+          error_message: string | null
+          from_e164: string | null
+          id: string
+          status: string
+          suppression_reason: string | null
+          to_e164: string | null
+          twilio_sid: string | null
+          user_id: string | null
+        }
+        Insert: {
+          body: string
+          consent_type?: string | null
+          created_at?: string
+          direction: string
+          error_message?: string | null
+          from_e164?: string | null
+          id?: string
+          status?: string
+          suppression_reason?: string | null
+          to_e164?: string | null
+          twilio_sid?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string
+          consent_type?: string | null
+          created_at?: string
+          direction?: string
+          error_message?: string | null
+          from_e164?: string | null
+          id?: string
+          status?: string
+          suppression_reason?: string | null
+          to_e164?: string | null
+          twilio_sid?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      sms_suppressions: {
+        Row: {
+          created_at: string
+          id: string
+          phone_e164: string
+          source: string | null
+          suppression_type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          phone_e164: string
+          source?: string | null
+          suppression_type?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          phone_e164?: string
+          source?: string | null
+          suppression_type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       support_conversations: {
         Row: {
           context: Json | null
