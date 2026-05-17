@@ -150,6 +150,7 @@ const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
 const AdminRefundQueue = lazy(() => import("./pages/admin/AdminRefundQueue"));
 const AdminWebhookLog = lazy(() => import("./pages/admin/AdminWebhookLog"));
 const AdminHealthDashboard = lazy(() => import("./pages/admin/AdminHealthDashboard"));
+const AdminPrivacyRequests = lazy(() => import("./pages/admin/AdminPrivacyRequests"));
 
 // New feature pages
 const SessionManagement = lazy(() => import("./pages/SessionManagement"));
