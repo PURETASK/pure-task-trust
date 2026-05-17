@@ -18,6 +18,8 @@ import accessibilityMd from "../../../docs/legal/accessibility.md?raw";
 import llcOpAgrMd from "../../../docs/legal/llc-operating-agreement.md?raw";
 import dpaMd from "../../../docs/legal/dpa.md?raw";
 import dmcaMd from "../../../docs/legal/dmca.md?raw";
+import preAdverseMd from "../../../docs/legal/pre-adverse-action-notice.md?raw";
+import adverseMd from "../../../docs/legal/adverse-action-notice.md?raw";
 import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
 
 const STUB = (title: string) => `# ${title}\n\n*Full text is being finalized. For questions, contact ${LEGAL_CONSTANTS.LEGAL_EMAIL}.*`;
@@ -38,6 +40,8 @@ const DOCS = {
   "llc-operating-agreement": { md: llcOpAgrMd, title: "LLC Operating Agreement", desc: "PureTask LLC single-member operating agreement.", file: "llc-operating-agreement" },
   dpa: { md: dpaMd, title: "Data Processing Addendum", desc: "Template DPA for PureTask vendors and processors.", file: "dpa" },
   dmca: { md: dmcaMd, title: "DMCA Policy", desc: "How to submit copyright takedown notices.", file: "dmca" },
+  "pre-adverse-action-notice": { md: preAdverseMd, title: "Pre-Adverse Action Notice", desc: "FCRA pre-adverse action template sent before any background-check-based denial.", file: "pre-adverse-action-notice" },
+  "adverse-action-notice": { md: adverseMd, title: "Adverse Action Notice", desc: "FCRA adverse action template sent when denying based on a consumer report.", file: "adverse-action-notice" },
 } as const;
 
 type Slug = keyof typeof DOCS;
