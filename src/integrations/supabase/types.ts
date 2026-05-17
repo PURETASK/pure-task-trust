@@ -390,13 +390,23 @@ export type Database = {
       }
       background_checks: {
         Row: {
+          adverse_action_sent_at: string | null
+          applicant_response_received_at: string | null
+          applicant_response_text: string | null
+          checkr_candidate_id: string | null
+          checkr_report_id: string | null
           cleaner_id: string
           completed_at: string | null
           created_at: string
           expires_at: string | null
           expiry_warning_sent_at: string | null
           id: string
+          individualized_assessment_notes: string | null
+          initiated_at: string
+          is_ongoing_monitoring: boolean
           metadata: Json | null
+          next_recheck_due_date: string | null
+          pre_adverse_sent_at: string | null
           provider: string
           provider_id: string | null
           report_url: string | null
@@ -404,13 +414,23 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          adverse_action_sent_at?: string | null
+          applicant_response_received_at?: string | null
+          applicant_response_text?: string | null
+          checkr_candidate_id?: string | null
+          checkr_report_id?: string | null
           cleaner_id: string
           completed_at?: string | null
           created_at?: string
           expires_at?: string | null
           expiry_warning_sent_at?: string | null
           id?: string
+          individualized_assessment_notes?: string | null
+          initiated_at?: string
+          is_ongoing_monitoring?: boolean
           metadata?: Json | null
+          next_recheck_due_date?: string | null
+          pre_adverse_sent_at?: string | null
           provider?: string
           provider_id?: string | null
           report_url?: string | null
@@ -418,13 +438,23 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          adverse_action_sent_at?: string | null
+          applicant_response_received_at?: string | null
+          applicant_response_text?: string | null
+          checkr_candidate_id?: string | null
+          checkr_report_id?: string | null
           cleaner_id?: string
           completed_at?: string | null
           created_at?: string
           expires_at?: string | null
           expiry_warning_sent_at?: string | null
           id?: string
+          individualized_assessment_notes?: string | null
+          initiated_at?: string
+          is_ongoing_monitoring?: boolean
           metadata?: Json | null
+          next_recheck_due_date?: string | null
+          pre_adverse_sent_at?: string | null
           provider?: string
           provider_id?: string | null
           report_url?: string | null
@@ -2679,6 +2709,90 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_audit_log: {
+        Row: {
+          action: string
+          actor_type: string
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_type: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_type?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      consent_records: {
+        Row: {
+          consent_given: boolean
+          consent_method: string
+          created_at: string
+          document_type: string
+          document_version: string
+          exact_text_shown: string
+          geolocation_country: string | null
+          geolocation_region: string | null
+          id: string
+          ip_address: unknown
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          consent_given: boolean
+          consent_method: string
+          created_at?: string
+          document_type: string
+          document_version: string
+          exact_text_shown: string
+          geolocation_country?: string | null
+          geolocation_region?: string | null
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          consent_given?: boolean
+          consent_method?: string
+          created_at?: string
+          document_type?: string
+          document_version?: string
+          exact_text_shown?: string
+          geolocation_country?: string | null
+          geolocation_region?: string | null
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       credit_accounts: {
         Row: {
           created_at: string
@@ -4403,6 +4517,39 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_documents: {
+        Row: {
+          content_html: string
+          content_markdown: string
+          created_at: string
+          effective_date: string
+          id: string
+          is_current: boolean
+          slug: string
+          version: string
+        }
+        Insert: {
+          content_html?: string
+          content_markdown: string
+          created_at?: string
+          effective_date: string
+          id?: string
+          is_current?: boolean
+          slug: string
+          version: string
+        }
+        Update: {
+          content_html?: string
+          content_markdown?: string
+          created_at?: string
+          effective_date?: string
+          id?: string
+          is_current?: boolean
+          slug?: string
+          version?: string
+        }
+        Relationships: []
+      }
       match_recommendations: {
         Row: {
           breakdown: Json | null
@@ -5452,41 +5599,146 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_credentials: {
+        Row: {
+          cgl_additional_insured_confirmed: boolean | null
+          cgl_aggregate_amount: number | null
+          cgl_per_occurrence_amount: number | null
+          created_at: string
+          credential_type: string
+          document_number_encrypted: string | null
+          document_url: string | null
+          effective_date: string | null
+          expiration_date: string | null
+          id: string
+          issuing_authority: string | null
+          reminder_sent_at: string | null
+          updated_at: string
+          user_id: string
+          verified: boolean
+          verified_at: string | null
+        }
+        Insert: {
+          cgl_additional_insured_confirmed?: boolean | null
+          cgl_aggregate_amount?: number | null
+          cgl_per_occurrence_amount?: number | null
+          created_at?: string
+          credential_type: string
+          document_number_encrypted?: string | null
+          document_url?: string | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          id?: string
+          issuing_authority?: string | null
+          reminder_sent_at?: string | null
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+          verified_at?: string | null
+        }
+        Update: {
+          cgl_additional_insured_confirmed?: boolean | null
+          cgl_aggregate_amount?: number | null
+          cgl_per_occurrence_amount?: number | null
+          created_at?: string
+          credential_type?: string
+          document_number_encrypted?: string | null
+          document_url?: string | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          id?: string
+          issuing_authority?: string | null
+          reminder_sent_at?: string | null
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          account_status: string
+          age_verified: boolean
+          age_verified_at: string | null
+          arbitration_opted_out: boolean
+          arbitration_optout_at: string | null
           avatar_url: string | null
+          ccpa_opted_out_of_sale_share: boolean
+          ccpa_optout_at: string | null
+          closure_initiated_at: string | null
+          closure_reason: string | null
           created_at: string
           deleted_at: string | null
+          deletion_eligible_after: string | null
           email: string | null
           full_name: string | null
+          gpc_signal_detected: boolean
           id: string
+          marketing_email_opt_in: boolean
+          marketing_sms_opt_in: boolean
+          operating_state: string | null
           phone: string | null
           phone_number: string | null
           phone_verified: boolean | null
+          sanctions_screened: boolean
+          sanctions_screened_at: string | null
           updated_at: string
         }
         Insert: {
+          account_status?: string
+          age_verified?: boolean
+          age_verified_at?: string | null
+          arbitration_opted_out?: boolean
+          arbitration_optout_at?: string | null
           avatar_url?: string | null
+          ccpa_opted_out_of_sale_share?: boolean
+          ccpa_optout_at?: string | null
+          closure_initiated_at?: string | null
+          closure_reason?: string | null
           created_at?: string
           deleted_at?: string | null
+          deletion_eligible_after?: string | null
           email?: string | null
           full_name?: string | null
+          gpc_signal_detected?: boolean
           id: string
+          marketing_email_opt_in?: boolean
+          marketing_sms_opt_in?: boolean
+          operating_state?: string | null
           phone?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null
+          sanctions_screened?: boolean
+          sanctions_screened_at?: string | null
           updated_at?: string
         }
         Update: {
+          account_status?: string
+          age_verified?: boolean
+          age_verified_at?: string | null
+          arbitration_opted_out?: boolean
+          arbitration_optout_at?: string | null
           avatar_url?: string | null
+          ccpa_opted_out_of_sale_share?: boolean
+          ccpa_optout_at?: string | null
+          closure_initiated_at?: string | null
+          closure_reason?: string | null
           created_at?: string
           deleted_at?: string | null
+          deletion_eligible_after?: string | null
           email?: string | null
           full_name?: string | null
+          gpc_signal_detected?: boolean
           id?: string
+          marketing_email_opt_in?: boolean
+          marketing_sms_opt_in?: boolean
+          operating_state?: string | null
           phone?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null
+          sanctions_screened?: boolean
+          sanctions_screened_at?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -6120,6 +6372,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sms_consent_records: {
+        Row: {
+          consent_given: boolean
+          consent_method: string
+          consent_type: string
+          effective_at: string
+          exact_consent_text: string
+          id: string
+          ip_address: unknown
+          phone_number: string
+          revocation_method: string | null
+          revoked_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          consent_given: boolean
+          consent_method: string
+          consent_type: string
+          effective_at?: string
+          exact_consent_text: string
+          id?: string
+          ip_address?: unknown
+          phone_number: string
+          revocation_method?: string | null
+          revoked_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          consent_given?: boolean
+          consent_method?: string
+          consent_type?: string
+          effective_at?: string
+          exact_consent_text?: string
+          id?: string
+          ip_address?: unknown
+          phone_number?: string
+          revocation_method?: string | null
+          revoked_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       support_conversations: {
         Row: {
