@@ -65,4 +65,6 @@ export const LEGAL_PAGES = [
   { slug: "operating-agreement", label: "LLC Operating Agreement" },
   { slug: "dpa", label: "Data Processing Addendum" },
   { slug: "dmca", label: "DMCA Policy" },
+  { slug: "pre-adverse-action-notice", label: "Pre-Adverse Action Notice" },
+  { slug: "adverse-action-notice", label: "Adverse Action Notice" },
 ] as const;
