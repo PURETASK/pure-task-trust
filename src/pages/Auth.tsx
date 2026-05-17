@@ -17,6 +17,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useReferrals } from "@/hooks/useReferrals";
 import { useFunnel } from "@/hooks/useFunnel";
+import { useLegalAcceptance } from "@/hooks/useLegalAcceptance";
+import { Checkbox } from "@/components/ui/checkbox";
 import authSplitImg from "@/assets/auth-split.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
@@ -54,10 +56,12 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
+  const [legalAccepted, setLegalAccepted] = useState(false);
 
   const navigate = useNavigate();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
+  const { recordAcceptance } = useLegalAcceptance();
   const { checkLimit, isLocked, remainingSeconds } = useRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 30_000 });
   const signupFunnel = useFunnel("signup", SIGNUP_FUNNEL_STEPS);
   const loginFunnel = useFunnel("login", LOGIN_FUNNEL_STEPS);
@@ -85,6 +89,10 @@ export default function AuthPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSignUp && !legalAccepted) {
+      toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
+      return;
+    }
     if (!checkLimit()) {
       (isSignUp ? signupFunnel : loginFunnel).trackEvent("funnel.rate_limited", {
         remaining_seconds: remainingSeconds,
@@ -110,9 +118,10 @@ export default function AuthPage() {
           });
           toast.error(`Sign up failed: ${result.error}`);
         } else {
-          if (referralCode) {
-            const { data: { user: newUser } } = await supabase.auth.getUser();
-            if (newUser) applyReferral({ code: referralCode, refereeId: newUser.id, role });
+          const { data: { user: newUser } } = await supabase.auth.getUser();
+          if (newUser) {
+            try { await recordAcceptance(newUser.id); } catch (err) { console.warn("Legal acceptance log failed", err); }
+            if (referralCode) applyReferral({ code: referralCode, refereeId: newUser.id, role });
           }
           setSignupEmail(email);
           setSignupComplete(true);
@@ -149,6 +158,10 @@ export default function AuthPage() {
       toast.error("Select a role first");
       return;
     }
+    if (isSignUp && !legalAccepted) {
+      toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       const f = isSignUp ? signupFunnel : loginFunnel;
@@ -168,6 +181,10 @@ export default function AuthPage() {
   const handleAppleLogin = async () => {
     if (isSignUp && !role) {
       toast.error("Select a role first");
+      return;
+    }
+    if (isSignUp && !legalAccepted) {
+      toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
       return;
     }
     setIsSubmitting(true);
@@ -444,7 +461,25 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting}>
+              {isSignUp && (
+                <label htmlFor="legal-accept" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                  <Checkbox
+                    id="legal-accept"
+                    checked={legalAccepted}
+                    onCheckedChange={(c) => setLegalAccepted(c === true)}
+                    className="mt-0.5"
+                  />
+                  <span className="text-xs text-ink-muted leading-relaxed">
+                    I have read and agree to the{" "}
+                    <Link to="/legal/terms" target="_blank" className="text-primary font-medium hover:underline">Terms of Service</Link>,{" "}
+                    <Link to="/legal/privacy" target="_blank" className="text-primary font-medium hover:underline">Privacy Policy</Link>,{" "}
+                    <Link to="/legal/cookies" target="_blank" className="text-primary font-medium hover:underline">Cookie Policy</Link>, and{" "}
+                    <Link to="/legal/acceptable-use" target="_blank" className="text-primary font-medium hover:underline">Acceptable Use Policy</Link>.
+                  </span>
+                </label>
+              )}
+
+              <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting || (isSignUp && !legalAccepted)}>
                 {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isSignUp ? "Creating account…" : "Signing in…"}</> : isSignUp ? "Create Account" : "Sign In"}
               </Button>
             </form>

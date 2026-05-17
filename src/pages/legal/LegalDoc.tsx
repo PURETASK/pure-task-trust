@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText, FileType2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/seo";
 
 import termsMd from "../../../docs/legal/terms-of-service.md?raw";
@@ -11,10 +12,10 @@ import cookiesMd from "../../../docs/legal/cookie-policy.md?raw";
 import aupMd from "../../../docs/legal/acceptable-use-policy.md?raw";
 
 const DOCS = {
-  terms: { md: termsMd, title: "Terms of Service", desc: "The agreement that governs your use of PureTask." },
-  privacy: { md: privacyMd, title: "Privacy Policy", desc: "How we collect, use, and protect your information." },
-  cookies: { md: cookiesMd, title: "Cookie Policy", desc: "How we use cookies and similar technologies." },
-  "acceptable-use": { md: aupMd, title: "Acceptable Use Policy", desc: "Rules for using the PureTask platform." },
+  terms: { md: termsMd, title: "Terms of Service", desc: "The agreement that governs your use of PureTask.", file: "terms-of-service" },
+  privacy: { md: privacyMd, title: "Privacy Policy", desc: "How we collect, use, and protect your information.", file: "privacy-policy" },
+  cookies: { md: cookiesMd, title: "Cookie Policy", desc: "How we use cookies and similar technologies.", file: "cookie-policy" },
+  "acceptable-use": { md: aupMd, title: "Acceptable Use Policy", desc: "Rules for using the PureTask platform.", file: "acceptable-use-policy" },
 } as const;
 
 type Slug = keyof typeof DOCS;
@@ -38,6 +39,22 @@ export default function LegalDoc() {
       </header>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Button asChild variant="outline" size="sm" className="rounded-full">
+            <a href={`/legal/${doc.file}.pdf`} download>
+              <FileText className="h-4 w-4 mr-2" /> Download PDF
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="rounded-full">
+            <a href={`/legal/${doc.file}.docx`} download>
+              <FileType2 className="h-4 w-4 mr-2" /> Download DOCX
+            </a>
+          </Button>
+          <Button asChild variant="ghost" size="sm" className="rounded-full ml-auto">
+            <Link to="/legal/privacy-requests">Submit a privacy request →</Link>
+          </Button>
+        </div>
+
         <div
           className="
             prose prose-slate max-w-none
