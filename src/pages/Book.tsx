@@ -231,6 +231,14 @@ export default function Book() {
         squareFootage: squareFootage!,
         dirtinessLevel: dirtinessLevel!,
       });
+      void logConsent({
+        documentType: "cancellation_policy",
+        documentVersion: LEGAL_VERSIONS.cancellation_policy,
+        consentGiven: true,
+        exactTextShown:
+          "I confirm I'm booking for a property I'm authorized to access, I understand the cancellation policy and the 24-hour review window, and I agree to the Terms of Service for this booking.",
+        method: "signup_clickwrap",
+      });
       funnel.trackComplete({
         payment_method: "credits",
         total_credits: totalCredits,
@@ -272,6 +280,14 @@ export default function Book() {
       });
       if (error) throw error;
       if (data?.url) {
+        void logConsent({
+          documentType: "cancellation_policy",
+          documentVersion: LEGAL_VERSIONS.cancellation_policy,
+          consentGiven: true,
+          exactTextShown:
+            "I confirm I'm booking for a property I'm authorized to access, I understand the cancellation policy and the 24-hour review window, and I agree to the Terms of Service for this booking.",
+          method: "signup_clickwrap",
+        });
         funnel.trackComplete({
           payment_method: "card",
           total_credits: totalCredits,
