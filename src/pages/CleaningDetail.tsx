@@ -338,7 +338,22 @@ export default function CleaningDetail() {
             )}
 
             {/* Reschedule */}
-            {canReschedule && (
+            {canReschedule && pendingReschedule && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm('Withdraw your pending reschedule request?')) {
+                    cancelReschedule.mutate(pendingReschedule.id);
+                  }
+                }}
+                disabled={cancelReschedule.isPending}
+                className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2 border-amber-400/60 bg-amber-50/40 dark:bg-amber-950/20"
+              >
+                <Clock className="h-5 w-5 text-amber-600" />
+                <span className="text-[10px] font-bold leading-tight text-amber-700 dark:text-amber-400">Pending · Withdraw</span>
+              </Button>
+            )}
+            {canReschedule && !pendingReschedule && (
               <Dialog open={rescheduleOpen} onOpenChange={setRescheduleOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2">
