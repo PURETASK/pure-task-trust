@@ -13,8 +13,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test"
-    ,"lint:design": "node scripts/lint-design-tokens.js",
-    "lint:design:strict": "node scripts/lint-design-tokens.js --strict",
+    ,"lint:design": "node scripts/lint-design-tokens.cjs",
+    "lint:design:strict": "node scripts/lint-design-tokens.cjs --strict",
     "test:visual": "playwright test --project=visual",
     "test:visual:update": "playwright test --project=visual --update-snapshots"
   },
