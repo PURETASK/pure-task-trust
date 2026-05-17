@@ -102,7 +102,7 @@ export default function AuthPage() {
       toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
       return;
     }
-    if (isSignUp && role === "client") {
+    if (isSignUp && (role === "client" || role === "cleaner")) {
       if (!ageAttested) {
         toast.error("You must confirm you are 18 or older to use PureTask.");
         return;
@@ -144,7 +144,7 @@ export default function AuthPage() {
           const { data: { user: newUser } } = await supabase.auth.getUser();
           if (newUser) {
             try { await recordAcceptance(newUser.id); } catch (err) { console.warn("Legal acceptance log failed", err); }
-            if (role === "client") {
+            if (role === "client" || role === "cleaner") {
               try {
                 await logConsent({
                   documentType: "age_18_plus",
@@ -153,13 +153,15 @@ export default function AuthPage() {
                   exactTextShown: `I confirm I am at least ${LEGAL_CONSTANTS.MIN_AGE} years old and legally able to enter into this agreement.`,
                   method: "signup_clickwrap",
                 });
-                await logConsent({
-                  documentType: "sms_marketing",
-                  documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
-                  consentGiven: smsMarketingOptIn,
-                  exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
-                  method: "signup_clickwrap",
-                });
+                if (role === "client") {
+                  await logConsent({
+                    documentType: "sms_marketing",
+                    documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
+                    consentGiven: smsMarketingOptIn,
+                    exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
+                    method: "signup_clickwrap",
+                  });
+                }
               } catch (err) { console.warn("Consent log failed", err); }
             }
             if (referralCode) applyReferral({ code: referralCode, refereeId: newUser.id, role });
@@ -520,7 +522,7 @@ export default function AuthPage() {
                 </label>
               )}
 
-              {isSignUp && role === "client" && (
+              {isSignUp && (role === "client" || role === "cleaner") && (
                 <>
                   <div className="space-y-1.5">
                     <Label htmlFor="signup-state" className="text-sm font-medium">State</Label>
@@ -549,6 +551,7 @@ export default function AuthPage() {
                     </span>
                   </label>
 
+                  {role === "client" && (
                   <label htmlFor="sms-marketing" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
                     <Checkbox
                       id="sms-marketing"
@@ -561,6 +564,19 @@ export default function AuthPage() {
                       <Link to="/legal/sms-consent" target="_blank" className="text-primary font-medium hover:underline">SMS Consent</Link> terms. <em>Booking and account texts are sent separately under our Terms.</em>
                     </span>
                   </label>
+                  )}
+
+                  {role === "cleaner" && (
+                    <div className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken">
+                      <Briefcase className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+                      <span className="text-xs text-ink-muted leading-relaxed">
+                        After signup, you'll complete a Pro onboarding flow that includes our{" "}
+                        <Link to="/legal/pro-agreement" target="_blank" className="text-primary font-medium hover:underline">Independent Contractor Agreement</Link>,{" "}
+                        a standalone <Link to="/legal/fcra-disclosure" target="_blank" className="text-primary font-medium hover:underline">FCRA background check disclosure</Link>,
+                        and identity verification.
+                      </span>
+                    </div>
+                  )}
                 </>
               )}
 
