@@ -461,7 +461,25 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting}>
+              {isSignUp && (
+                <label htmlFor="legal-accept" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                  <Checkbox
+                    id="legal-accept"
+                    checked={legalAccepted}
+                    onCheckedChange={(c) => setLegalAccepted(c === true)}
+                    className="mt-0.5"
+                  />
+                  <span className="text-xs text-ink-muted leading-relaxed">
+                    I have read and agree to the{" "}
+                    <Link to="/legal/terms" target="_blank" className="text-primary font-medium hover:underline">Terms of Service</Link>,{" "}
+                    <Link to="/legal/privacy" target="_blank" className="text-primary font-medium hover:underline">Privacy Policy</Link>,{" "}
+                    <Link to="/legal/cookies" target="_blank" className="text-primary font-medium hover:underline">Cookie Policy</Link>, and{" "}
+                    <Link to="/legal/acceptable-use" target="_blank" className="text-primary font-medium hover:underline">Acceptable Use Policy</Link>.
+                  </span>
+                </label>
+              )}
+
+              <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting || (isSignUp && !legalAccepted)}>
                 {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isSignUp ? "Creating account…" : "Signing in…"}</> : isSignUp ? "Create Account" : "Sign In"}
               </Button>
             </form>
