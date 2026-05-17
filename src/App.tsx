@@ -59,6 +59,7 @@ const LegalDoc = lazy(() => import("./pages/legal/LegalDoc"));
 const PrivacyRequests = lazy(() => import("./pages/legal/PrivacyRequests"));
 const DoNotSellOrShare = lazy(() => import("./pages/legal/DoNotSellOrShare"));
 const LimitUseOfSPI = lazy(() => import("./pages/legal/LimitUseOfSPI"));
+const PrivacyControls = lazy(() => import("./pages/legal/PrivacyControls"));
 const CancellationPolicyPage = lazy(() => import("./pages/CancellationPolicy"));
 const ReliabilityScoreExplained = lazy(() => import("./pages/ReliabilityScoreExplained"));
 const ForAirbnbHosts = lazy(() => import("./pages/ForAirbnbHosts"));
@@ -228,6 +229,7 @@ const App = () => (
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/legal/privacy-requests" element={<PrivacyRequests />} />
+                    <Route path="/settings/privacy" element={<PrivacyControls />} />
                     <Route path="/legal/:slug" element={<LegalDoc />} />
                     <Route path="/do-not-sell-or-share" element={<DoNotSellOrShare />} />
                     <Route path="/limit-use-of-spi" element={<LimitUseOfSPI />} />
