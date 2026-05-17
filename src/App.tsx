@@ -15,6 +15,7 @@ import { usePostSignup } from "@/hooks/usePostSignup";
 import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 import { DevToolsWidget } from "@/components/dev/DevToolsWidget";
+import CookieConsent from "@/components/legal/CookieConsent";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
@@ -191,6 +192,7 @@ const App = () => (
               <ScrollToTop />
               <ExitIntentPopup />
               <PWAInstallBanner />
+              <CookieConsent />
               <DevToolsWidget />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
