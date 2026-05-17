@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ArrowLeft } from "lucide-react";
 import { SEO } from "@/components/seo";
 
@@ -53,7 +54,7 @@ export default function LegalDoc() {
             prose-em:text-ink-muted
           "
         >
-          <ReactMarkdown>{doc.md}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{doc.md}</ReactMarkdown>
         </div>
       </article>
     </main>
