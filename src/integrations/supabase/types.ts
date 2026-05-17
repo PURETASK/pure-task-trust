@@ -7177,6 +7177,8 @@ export type Database = {
           read_ct: number
         }[]
       }
+      request_account_closure: { Args: { _reason?: string }; Returns: Json }
+      request_arbitration_optout: { Args: never; Returns: Json }
       reschedule_job_atomic: {
         Args: { _job_id: string; _new_start: string; _user_id: string }
         Returns: Json
