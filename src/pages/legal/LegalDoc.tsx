@@ -17,6 +17,7 @@ import smsMd from "../../../docs/legal/sms-consent.md?raw";
 import accessibilityMd from "../../../docs/legal/accessibility.md?raw";
 import llcOpAgrMd from "../../../docs/legal/llc-operating-agreement.md?raw";
 import dpaMd from "../../../docs/legal/dpa.md?raw";
+import dmcaMd from "../../../docs/legal/dmca.md?raw";
 import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
 
 const STUB = (title: string) => `# ${title}\n\n*Full text is being finalized. For questions, contact ${LEGAL_CONSTANTS.LEGAL_EMAIL}.*`;
@@ -36,7 +37,7 @@ const DOCS = {
   "operating-agreement": { md: llcOpAgrMd, title: "LLC Operating Agreement", desc: "PureTask LLC single-member operating agreement.", file: "llc-operating-agreement" },
   "llc-operating-agreement": { md: llcOpAgrMd, title: "LLC Operating Agreement", desc: "PureTask LLC single-member operating agreement.", file: "llc-operating-agreement" },
   dpa: { md: dpaMd, title: "Data Processing Addendum", desc: "Template DPA for PureTask vendors and processors.", file: "dpa" },
-  dmca: { md: STUB("DMCA Policy"), title: "DMCA Policy", desc: "How to submit copyright takedown notices.", file: "dmca" },
+  dmca: { md: dmcaMd, title: "DMCA Policy", desc: "How to submit copyright takedown notices.", file: "dmca" },
 } as const;
 
 type Slug = keyof typeof DOCS;
