@@ -19,6 +19,9 @@ import { useReferrals } from "@/hooks/useReferrals";
 import { useFunnel } from "@/hooks/useFunnel";
 import { useLegalAcceptance } from "@/hooks/useLegalAcceptance";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ServiceAreaGate, isInServiceArea } from "@/components/legal/ServiceAreaGate";
+import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
 import authSplitImg from "@/assets/auth-split.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
@@ -57,6 +60,10 @@ export default function AuthPage() {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [legalAccepted, setLegalAccepted] = useState(false);
+  const [ageAttested, setAgeAttested] = useState(false);
+  const [signupState, setSignupState] = useState<string>("");
+  const [smsMarketingOptIn, setSmsMarketingOptIn] = useState(false);
+  const [showAreaGate, setShowAreaGate] = useState(false);
 
   const navigate = useNavigate();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
@@ -92,6 +99,20 @@ export default function AuthPage() {
     if (isSignUp && !legalAccepted) {
       toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
       return;
+    }
+    if (isSignUp && role === "client") {
+      if (!ageAttested) {
+        toast.error("You must confirm you are 18 or older to use PureTask.");
+        return;
+      }
+      if (!signupState) {
+        toast.error("Please select your state.");
+        return;
+      }
+      if (!isInServiceArea(signupState)) {
+        setShowAreaGate(true);
+        return;
+      }
     }
     if (!checkLimit()) {
       (isSignUp ? signupFunnel : loginFunnel).trackEvent("funnel.rate_limited", {
