@@ -133,9 +133,9 @@ export default function CancellationPolicy() {
               </li>
               <li className="flex items-center gap-2 text-warning">
                 <span>• Cancel on</span>
-                <strong>Friday 8:00 PM</strong>
-                <span>(14h notice) →</span>
-                <span className="font-medium">$37.50 fee (25%)</span>
+                <strong>Saturday 6:00 AM</strong>
+                <span>(4h notice) →</span>
+                <span className="font-medium">$75 fee (50%)</span>
               </li>
               <li className="flex items-center gap-2 text-destructive">
                 <span>• Cancel on</span>
@@ -175,7 +175,7 @@ export default function CancellationPolicy() {
               </div>
               <ul className="space-y-2 text-warning">
                 <li>• Use when you need to cancel with short notice</li>
-                <li>• Waives the 25%, 50% or 100% cancellation fee</li>
+                <li>• Waives the 50% or 100% cancellation fee</li>
                 <li>• Automatically offered when applicable during cancellation</li>
                 <li>• Tracked in your account settings</li>
               </ul>
@@ -275,7 +275,7 @@ export default function CancellationPolicy() {
             If a cleaner doesn't arrive within 30 minutes of scheduled time:
           </p>
           <ul className="space-y-2 text-warning">
-            <li>• Client receives <strong>full refund + $50 bonus</strong></li>
+            <li>• Client receives a <strong>full refund</strong></li>
             <li>• Serious reliability score penalty for cleaner</li>
             <li>• Account suspension after multiple no-shows</li>
             <li>• We'll help find a backup cleaner if possible</li>
@@ -395,8 +395,7 @@ export default function CancellationPolicy() {
           {/* Mobile cards */}
           <div className="sm:hidden divide-y divide-border">
             {[
-              { notice: 'More than 24 hours', fee: '0% (Free)', feeClass: 'text-success', grace: 'N/A', graceClass: 'text-ink-muted' },
-              { notice: '6–24 hours', fee: '25%', feeClass: 'text-warning', grace: 'Yes', graceClass: 'text-success' },
+              { notice: '6 hours or more', fee: '0% (Free)', feeClass: 'text-success', grace: 'N/A', graceClass: 'text-ink-muted' },
               { notice: '2–6 hours', fee: '50%', feeClass: 'text-warning', grace: 'Yes', graceClass: 'text-success' },
               { notice: 'Less than 2 hours', fee: '100%', feeClass: 'text-destructive', grace: 'Yes', graceClass: 'text-success' },
               { notice: 'No-Show', fee: '100%', feeClass: 'text-destructive', grace: 'No', graceClass: 'text-destructive' },
@@ -426,14 +425,9 @@ export default function CancellationPolicy() {
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-medium">More than 24 hours</TableCell>
+                  <TableCell className="font-medium">6 hours or more</TableCell>
                   <TableCell className="text-success font-medium">0% (Free)</TableCell>
                   <TableCell className="text-ink-muted">N/A</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">6–24 hours</TableCell>
-                  <TableCell className="text-warning font-medium">25%</TableCell>
-                  <TableCell className="text-success">Yes</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">2–6 hours</TableCell>
