@@ -89,7 +89,7 @@ export default function PrivacyControls() {
         {/* CCPA links */}
         <section className="space-y-2 mb-6">
           <h2 className="text-xs font-bold uppercase tracking-wide text-ink-muted px-1">California Privacy Rights</h2>
-          <Link to="/legal/do-not-sell" className="block">
+          <Link to="/do-not-sell-or-share" className="block">
             <div className="palette-card palette-card-blue p-4 flex items-center gap-4 hover:shadow-elevated transition-all">
               <div className="palette-icon palette-icon-blue h-11 w-11"><EyeOff className="h-5 w-5" /></div>
               <div className="flex-1 min-w-0">
@@ -99,7 +99,7 @@ export default function PrivacyControls() {
               <ChevronRight className="h-4 w-4 text-ink-muted flex-shrink-0" />
             </div>
           </Link>
-          <Link to="/legal/limit-use-spi" className="block">
+          <Link to="/limit-use-of-spi" className="block">
             <div className="palette-card palette-card-blue p-4 flex items-center gap-4 hover:shadow-elevated transition-all">
               <div className="palette-icon palette-icon-blue h-11 w-11"><Shield className="h-5 w-5" /></div>
               <div className="flex-1 min-w-0">
