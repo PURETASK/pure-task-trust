@@ -18,6 +18,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { useReferrals } from "@/hooks/useReferrals";
 import { useFunnel } from "@/hooks/useFunnel";
 import { useLegalAcceptance } from "@/hooks/useLegalAcceptance";
+import { useConsentLogger } from "@/hooks/useConsentLogger";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ServiceAreaGate, isInServiceArea } from "@/components/legal/ServiceAreaGate";
@@ -69,6 +70,7 @@ export default function AuthPage() {
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
   const { recordAcceptance } = useLegalAcceptance();
+  const logConsent = useConsentLogger();
   const { checkLimit, isLocked, remainingSeconds } = useRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 30_000 });
   const signupFunnel = useFunnel("signup", SIGNUP_FUNNEL_STEPS);
   const loginFunnel = useFunnel("login", LOGIN_FUNNEL_STEPS);
@@ -142,6 +144,24 @@ export default function AuthPage() {
           const { data: { user: newUser } } = await supabase.auth.getUser();
           if (newUser) {
             try { await recordAcceptance(newUser.id); } catch (err) { console.warn("Legal acceptance log failed", err); }
+            if (role === "client") {
+              try {
+                await logConsent({
+                  documentType: "age_18_plus",
+                  documentVersion: "1.0",
+                  consentGiven: ageAttested,
+                  exactTextShown: `I confirm I am at least ${LEGAL_CONSTANTS.MIN_AGE} years old and legally able to enter into this agreement.`,
+                  method: "signup_clickwrap",
+                });
+                await logConsent({
+                  documentType: "sms_marketing",
+                  documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
+                  consentGiven: smsMarketingOptIn,
+                  exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
+                  method: "signup_clickwrap",
+                });
+              } catch (err) { console.warn("Consent log failed", err); }
+            }
             if (referralCode) applyReferral({ code: referralCode, refereeId: newUser.id, role });
           }
           setSignupEmail(email);
