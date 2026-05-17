@@ -4439,6 +4439,36 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          notify_marketing_opt_in: boolean
+          state: string | null
+          user_agent: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          notify_marketing_opt_in?: boolean
+          state?: string | null
+          user_agent?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          notify_marketing_opt_in?: boolean
+          state?: string | null
+          user_agent?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           converted_at: string | null
