@@ -109,6 +109,7 @@ const CleanerCertifications = lazy(() => import("./pages/cleaner/CleanerCertific
 const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientNotes"));
 const CleanerEarningsForecast = lazy(() => import("./pages/cleaner/CleanerEarningsForecast"));
 const CleanerMyCalendar = lazy(() => import("./pages/cleaner/CleanerMyCalendar"));
+const CleanerMyCalendarPreview = lazy(() => import("./pages/cleaner/CleanerMyCalendarPreview"));
 const ClientSetup = lazy(() => import("./pages/ClientSetup"));
 import { RequireSetup } from "@/components/flow/RequireSetup";
 
@@ -319,6 +320,7 @@ const App = () => (
                     <Route path="/cleaner/dashboard" element={<RequireCleaner><CleanerDashboard /></RequireCleaner>} />
                     <Route path="/cleaner/schedule" element={<Navigate to="/cleaner/availability" replace />} />
                     <Route path="/cleaner/my-schedule" element={<RequireCleaner><CleanerMyCalendar /></RequireCleaner>} />
+                    <Route path="/cleaner/my-schedule/preview" element={<RequireCleaner><CleanerMyCalendarPreview /></RequireCleaner>} />
                     <Route path="/cleaner/earnings" element={<RequireCleaner><CleanerEarnings /></RequireCleaner>} />
                     <Route path="/cleaner/referral" element={<RequireCleaner><CleanerReferral /></RequireCleaner>} />
                     <Route path="/cleaner/messages" element={<RequireCleaner><CleanerMessages /></RequireCleaner>} />
