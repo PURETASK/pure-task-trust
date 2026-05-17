@@ -16,7 +16,7 @@ import { useCleaningRequestSync } from "@/hooks/useCleaningRequest";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 import { DevToolsWidget } from "@/components/dev/DevToolsWidget";
 import CookieConsent from "@/components/legal/CookieConsent";
-import { useGpcDetection } from "@/hooks/useGpcDetection";
+import { GpcDetector } from "@/components/legal/GpcDetector";
 
 // Eagerly load the most critical pages
 import Index from "./pages/Index";
