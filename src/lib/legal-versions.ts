@@ -5,6 +5,7 @@ export const LEGAL_VERSIONS = {
   privacy: "2026-05-17",
   cookies: "2026-05-17",
   acceptable_use: "2026-05-17",
+  cancellation_policy: "2026-05-17",
 } as const;
 
 export type LegalDocType = keyof typeof LEGAL_VERSIONS;
@@ -14,4 +15,5 @@ export const LEGAL_DOC_LABELS: Record<LegalDocType, { label: string; href: strin
   privacy: { label: "Privacy Policy", href: "/legal/privacy" },
   cookies: { label: "Cookie Policy", href: "/legal/cookies" },
   acceptable_use: { label: "Acceptable Use Policy", href: "/legal/acceptable-use" },
+  cancellation_policy: { label: "Cancellation Policy", href: "/legal/cancellation" },
 };

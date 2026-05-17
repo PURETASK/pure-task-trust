@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { usePlatformConfig } from "@/hooks/usePlatformConfig";
 import { useFunnel } from "@/hooks/useFunnel";
+import { useConsentLogger } from "@/hooks/useConsentLogger";
+import { LEGAL_VERSIONS } from "@/lib/legal-versions";
 
 import { FlowShell } from "@/components/flow/FlowShell";
 import { FlowProgress } from "@/components/flow/FlowProgress";
@@ -74,6 +76,7 @@ export default function Book() {
   const [notesAutofilled, setNotesAutofilled] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"credits" | "card">("credits");
   const [isDirectPaying, setIsDirectPaying] = useState(false);
+  const [bookingTermsAccepted, setBookingTermsAccepted] = useState(false);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -82,6 +85,7 @@ export default function Book() {
   const { account, isLoadingAccount } = useWallet();
   const { rushFeeCredits, directChargeFeePct } = usePlatformConfig();
   const funnel = useFunnel("booking", BOOKING_FUNNEL_STEPS);
+  const logConsent = useConsentLogger();
   const lastTrackedStep = useRef<number>(0);
   const { data: allCleaners, isLoading: cleanersLoading } = useCleaners({ onlyAvailable: true });
   const { data: selectedCleaner } = useCleaner(cleanerId || "");
@@ -195,7 +199,7 @@ export default function Book() {
     if (step === 3) return hours >= 1 && !!squareFootage && squareFootage >= 100 && !!dirtinessLevel;
     if (step === 4) return !!cleanerId && !isDateBlockedByCleaner;
     if (step === 5) return true;
-    if (step === 6) return paymentMethod === "credits" ? hasEnoughCredits : true;
+    if (step === 6) return bookingTermsAccepted && (paymentMethod === "credits" ? hasEnoughCredits : true);
     return true;
   })();
 
@@ -226,6 +230,14 @@ export default function Book() {
         notes: notes || undefined,
         squareFootage: squareFootage!,
         dirtinessLevel: dirtinessLevel!,
+      });
+      void logConsent({
+        documentType: "cancellation_policy",
+        documentVersion: LEGAL_VERSIONS.cancellation_policy,
+        consentGiven: true,
+        exactTextShown:
+          "I confirm I'm booking for a property I'm authorized to access, I understand the cancellation policy and the 24-hour review window, and I agree to the Terms of Service for this booking.",
+        method: "signup_clickwrap",
       });
       funnel.trackComplete({
         payment_method: "credits",
@@ -268,6 +280,14 @@ export default function Book() {
       });
       if (error) throw error;
       if (data?.url) {
+        void logConsent({
+          documentType: "cancellation_policy",
+          documentVersion: LEGAL_VERSIONS.cancellation_policy,
+          consentGiven: true,
+          exactTextShown:
+            "I confirm I'm booking for a property I'm authorized to access, I understand the cancellation policy and the 24-hour review window, and I agree to the Terms of Service for this booking.",
+          method: "signup_clickwrap",
+        });
         funnel.trackComplete({
           payment_method: "card",
           total_credits: totalCredits,
@@ -450,6 +470,8 @@ export default function Book() {
             availableCredits={availableCredits}
             hasEnoughCredits={hasEnoughCredits}
             isLoadingAccount={isLoadingAccount}
+            bookingTermsAccepted={bookingTermsAccepted}
+            onBookingTermsChange={setBookingTermsAccepted}
           />
         )}
 
