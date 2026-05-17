@@ -55,6 +55,7 @@ const ClientProfileEdit = lazy(() => import("./pages/ClientProfileEdit"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Legal = lazy(() => import("./pages/Legal"));
 const LegalDoc = lazy(() => import("./pages/legal/LegalDoc"));
+const PrivacyRequests = lazy(() => import("./pages/legal/PrivacyRequests"));
 const CancellationPolicyPage = lazy(() => import("./pages/CancellationPolicy"));
 const ReliabilityScoreExplained = lazy(() => import("./pages/ReliabilityScoreExplained"));
 const ForAirbnbHosts = lazy(() => import("./pages/ForAirbnbHosts"));
@@ -222,6 +223,7 @@ const App = () => (
                     {/* Public routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
+                    <Route path="/legal/privacy-requests" element={<PrivacyRequests />} />
                     <Route path="/legal/:slug" element={<LegalDoc />} />
                     <Route path="/_dev/wireframe-kit" element={<WireframeKit />} />
                     <Route path="/_dev/visual-catalog" element={<VisualCatalog />} />
