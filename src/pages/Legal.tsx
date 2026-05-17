@@ -113,6 +113,13 @@ export default function Legal() {
             { title: 'Privacy Policy', desc: 'How we collect, use, and protect your data', href: '/legal/privacy', icon: Shield },
             { title: 'Cookie Policy', desc: 'How we use cookies and similar technologies', href: '/legal/cookies', icon: Eye },
             { title: 'Acceptable Use Policy', desc: 'Rules for using the PureTask platform', href: '/legal/acceptable-use', icon: Scale },
+            { title: 'Cancellation Policy', desc: 'Refunds, reschedules, and no-show rules', href: '/legal/cancellation', icon: Clock },
+            { title: 'Pro IC Agreement', desc: 'Independent contractor agreement for Pros', href: '/legal/pro-agreement', icon: FileText },
+            { title: 'FCRA Disclosure', desc: 'Standalone background check disclosure', href: '/legal/fcra', icon: Shield },
+            { title: 'SMS / TCPA Consent', desc: 'How we handle text-message consent', href: '/legal/sms-consent', icon: Mail },
+            { title: 'Accessibility Statement', desc: 'Our WCAG 2.1 AA commitments', href: '/legal/accessibility', icon: CheckCircle },
+            { title: 'LLC Operating Agreement', desc: 'PureTask LLC single-member agreement', href: '/legal/operating-agreement', icon: FileText },
+            { title: 'Data Processing Addendum', desc: 'Template DPA for vendors & processors', href: '/legal/dpa', icon: Lock },
           ].map((item, idx) => {
             const Icon = item.icon;
             return (

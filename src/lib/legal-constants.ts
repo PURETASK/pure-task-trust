@@ -62,5 +62,7 @@ export const LEGAL_PAGES = [
   { slug: "fcra", label: "FCRA Disclosure" },
   { slug: "sms-consent", label: "SMS Consent" },
   { slug: "accessibility", label: "Accessibility Statement" },
+  { slug: "operating-agreement", label: "LLC Operating Agreement" },
+  { slug: "dpa", label: "Data Processing Addendum" },
   { slug: "dmca", label: "DMCA Policy" },
 ] as const;
