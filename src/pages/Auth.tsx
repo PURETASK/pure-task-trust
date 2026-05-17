@@ -581,6 +581,11 @@ export default function AuthPage() {
           </motion.div>
         </div>
       </div>
+      <ServiceAreaGate
+        open={showAreaGate}
+        state={signupState}
+        onClose={() => setShowAreaGate(false)}
+      />
     </div>
   );
 }
