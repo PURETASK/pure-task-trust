@@ -454,6 +454,8 @@ export default function Book() {
             availableCredits={availableCredits}
             hasEnoughCredits={hasEnoughCredits}
             isLoadingAccount={isLoadingAccount}
+            bookingTermsAccepted={bookingTermsAccepted}
+            onBookingTermsChange={setBookingTermsAccepted}
           />
         )}
 
