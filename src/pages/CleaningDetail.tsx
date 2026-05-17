@@ -342,12 +342,12 @@ export default function CleaningDetail() {
                     <CalendarClock className="h-5 w-5" /><span className="text-xs font-bold">Reschedule</span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="rounded-3xl max-w-lg">
-                  <DialogHeader>
+                <DialogContent className="rounded-3xl max-w-lg max-h-[90dvh] flex flex-col p-0 overflow-hidden">
+                  <DialogHeader className="px-6 pt-6">
                     <DialogTitle className="font-poppins font-bold">Reschedule Cleaning</DialogTitle>
                     <DialogDescription>Pick a new date and time for this cleaning.</DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-4">
+                  <div className="space-y-4 overflow-y-auto px-6 py-2 flex-1 min-h-0">
                     <DateTimePicker
                       selectedDate={rescheduleDate}
                       selectedTime={rescheduleTime}
@@ -376,7 +376,7 @@ export default function CleaningDetail() {
                       </p>
                     </div>
                   </div>
-                  <DialogFooter>
+                  <DialogFooter className="px-6 py-4 border-t border-border bg-background flex-shrink-0">
                     <DialogClose asChild><Button variant="outline" className="rounded-xl">Cancel</Button></DialogClose>
                     <Button className="rounded-xl" onClick={handleReschedule} disabled={!rescheduleDate || !rescheduleTime || reschedule.isPending}>
                       {reschedule.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />}
