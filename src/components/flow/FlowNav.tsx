@@ -34,7 +34,7 @@ export function FlowNav({
     <div
       className={cn(
         "mt-6 flex items-center gap-3",
-        "max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-30",
+        "max-md:fixed max-md:inset-x-0 max-md:bottom-[56px] max-md:z-50",
         "max-md:bg-app-surface/95 max-md:backdrop-blur max-md:border-t max-md:border-hairline-soft",
         "max-md:px-4 max-md:py-3 max-md:pb-safe",
         className
