@@ -500,6 +500,50 @@ export default function AuthPage() {
                 </label>
               )}
 
+              {isSignUp && role === "client" && (
+                <>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="signup-state" className="text-sm font-medium">State</Label>
+                    <Select value={signupState} onValueChange={setSignupState}>
+                      <SelectTrigger id="signup-state" className="h-12 rounded-xl">
+                        <SelectValue placeholder="Select your state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LEGAL_CONSTANTS.OPERATING_STATES.map((s) => (
+                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                        ))}
+                        <SelectItem value="OTHER">Other (join waitlist)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <label htmlFor="age-attest" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                    <Checkbox
+                      id="age-attest"
+                      checked={ageAttested}
+                      onCheckedChange={(c) => setAgeAttested(c === true)}
+                      className="mt-0.5"
+                    />
+                    <span className="text-xs text-ink-muted leading-relaxed">
+                      I confirm I am at least <strong>{LEGAL_CONSTANTS.MIN_AGE} years old</strong> and legally able to enter into this agreement.
+                    </span>
+                  </label>
+
+                  <label htmlFor="sms-marketing" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                    <Checkbox
+                      id="sms-marketing"
+                      checked={smsMarketingOptIn}
+                      onCheckedChange={(c) => setSmsMarketingOptIn(c === true)}
+                      className="mt-0.5"
+                    />
+                    <span className="text-xs text-ink-muted leading-relaxed">
+                      <strong>(Optional)</strong> Send me PureTask marketing texts (max {LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg &amp; data rates may apply. Reply STOP to opt out. See our{" "}
+                      <Link to="/legal/sms-consent" target="_blank" className="text-primary font-medium hover:underline">SMS Consent</Link> terms. <em>Booking and account texts are sent separately under our Terms.</em>
+                    </span>
+                  </label>
+                </>
+              )}
+
               <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting || (isSignUp && !legalAccepted)}>
                 {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isSignUp ? "Creating account…" : "Signing in…"}</> : isSignUp ? "Create Account" : "Sign In"}
               </Button>
