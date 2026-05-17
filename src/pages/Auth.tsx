@@ -18,7 +18,11 @@ import { lovable } from "@/integrations/lovable/index";
 import { useReferrals } from "@/hooks/useReferrals";
 import { useFunnel } from "@/hooks/useFunnel";
 import { useLegalAcceptance } from "@/hooks/useLegalAcceptance";
+import { useConsentLogger } from "@/hooks/useConsentLogger";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ServiceAreaGate, isInServiceArea } from "@/components/legal/ServiceAreaGate";
+import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
 import authSplitImg from "@/assets/auth-split.jpg";
 import cleanerHeroImg from "@/assets/cleaner-hero.jpg";
 import clientHeroImg from "@/assets/client-hero.jpg";
@@ -57,11 +61,16 @@ export default function AuthPage() {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [legalAccepted, setLegalAccepted] = useState(false);
+  const [ageAttested, setAgeAttested] = useState(false);
+  const [signupState, setSignupState] = useState<string>("");
+  const [smsMarketingOptIn, setSmsMarketingOptIn] = useState(false);
+  const [showAreaGate, setShowAreaGate] = useState(false);
 
   const navigate = useNavigate();
   const { login, signup, loginWithGoogle, user, isAuthenticated, isLoading } = useAuth();
   const { applyReferral } = useReferrals();
   const { recordAcceptance } = useLegalAcceptance();
+  const logConsent = useConsentLogger();
   const { checkLimit, isLocked, remainingSeconds } = useRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 30_000 });
   const signupFunnel = useFunnel("signup", SIGNUP_FUNNEL_STEPS);
   const loginFunnel = useFunnel("login", LOGIN_FUNNEL_STEPS);
@@ -93,6 +102,20 @@ export default function AuthPage() {
       toast.error("Please accept our Terms, Privacy, Cookie, and Acceptable Use policies to continue.");
       return;
     }
+    if (isSignUp && role === "client") {
+      if (!ageAttested) {
+        toast.error("You must confirm you are 18 or older to use PureTask.");
+        return;
+      }
+      if (!signupState) {
+        toast.error("Please select your state.");
+        return;
+      }
+      if (!isInServiceArea(signupState)) {
+        setShowAreaGate(true);
+        return;
+      }
+    }
     if (!checkLimit()) {
       (isSignUp ? signupFunnel : loginFunnel).trackEvent("funnel.rate_limited", {
         remaining_seconds: remainingSeconds,
@@ -121,6 +144,24 @@ export default function AuthPage() {
           const { data: { user: newUser } } = await supabase.auth.getUser();
           if (newUser) {
             try { await recordAcceptance(newUser.id); } catch (err) { console.warn("Legal acceptance log failed", err); }
+            if (role === "client") {
+              try {
+                await logConsent({
+                  documentType: "age_18_plus",
+                  documentVersion: "1.0",
+                  consentGiven: ageAttested,
+                  exactTextShown: `I confirm I am at least ${LEGAL_CONSTANTS.MIN_AGE} years old and legally able to enter into this agreement.`,
+                  method: "signup_clickwrap",
+                });
+                await logConsent({
+                  documentType: "sms_marketing",
+                  documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
+                  consentGiven: smsMarketingOptIn,
+                  exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
+                  method: "signup_clickwrap",
+                });
+              } catch (err) { console.warn("Consent log failed", err); }
+            }
             if (referralCode) applyReferral({ code: referralCode, refereeId: newUser.id, role });
           }
           setSignupEmail(email);
@@ -479,6 +520,50 @@ export default function AuthPage() {
                 </label>
               )}
 
+              {isSignUp && role === "client" && (
+                <>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="signup-state" className="text-sm font-medium">State</Label>
+                    <Select value={signupState} onValueChange={setSignupState}>
+                      <SelectTrigger id="signup-state" className="h-12 rounded-xl">
+                        <SelectValue placeholder="Select your state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LEGAL_CONSTANTS.OPERATING_STATES.map((s) => (
+                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                        ))}
+                        <SelectItem value="OTHER">Other (join waitlist)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <label htmlFor="age-attest" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                    <Checkbox
+                      id="age-attest"
+                      checked={ageAttested}
+                      onCheckedChange={(c) => setAgeAttested(c === true)}
+                      className="mt-0.5"
+                    />
+                    <span className="text-xs text-ink-muted leading-relaxed">
+                      I confirm I am at least <strong>{LEGAL_CONSTANTS.MIN_AGE} years old</strong> and legally able to enter into this agreement.
+                    </span>
+                  </label>
+
+                  <label htmlFor="sms-marketing" className="flex items-start gap-3 p-3 rounded-xl border border-hairline-soft bg-app-sunken cursor-pointer hover:bg-app-surface transition-colors">
+                    <Checkbox
+                      id="sms-marketing"
+                      checked={smsMarketingOptIn}
+                      onCheckedChange={(c) => setSmsMarketingOptIn(c === true)}
+                      className="mt-0.5"
+                    />
+                    <span className="text-xs text-ink-muted leading-relaxed">
+                      <strong>(Optional)</strong> Send me PureTask marketing texts (max {LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg &amp; data rates may apply. Reply STOP to opt out. See our{" "}
+                      <Link to="/legal/sms-consent" target="_blank" className="text-primary font-medium hover:underline">SMS Consent</Link> terms. <em>Booking and account texts are sent separately under our Terms.</em>
+                    </span>
+                  </label>
+                </>
+              )}
+
               <Button type="submit" className="w-full h-12 rounded-full text-base font-semibold bg-gradient-aero hover:opacity-95 border-0 shadow-aero" disabled={isSubmitting || (isSignUp && !legalAccepted)}>
                 {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isSignUp ? "Creating account…" : "Signing in…"}</> : isSignUp ? "Create Account" : "Sign In"}
               </Button>
@@ -516,6 +601,11 @@ export default function AuthPage() {
           </motion.div>
         </div>
       </div>
+      <ServiceAreaGate
+        open={showAreaGate}
+        state={signupState}
+        onClose={() => setShowAreaGate(false)}
+      />
     </div>
   );
 }
