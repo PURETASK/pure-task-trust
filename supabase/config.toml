@@ -146,3 +146,9 @@ verify_jwt = true
 
 [functions.google-calendar-callback]
 verify_jwt = false
+
+[functions.twilio-sms-webhook]
+verify_jwt = false
+
+[functions.send-sms]
+verify_jwt = true
