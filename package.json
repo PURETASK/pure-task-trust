@@ -12,8 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
-    ,"lint:design": "node scripts/lint-design-tokens.cjs",
+    "test:e2e": "playwright test",
+    "lint:design": "node scripts/lint-design-tokens.cjs",
     "lint:design:strict": "node scripts/lint-design-tokens.cjs --strict",
     "test:visual": "playwright test --project=visual",
     "test:visual:update": "playwright test --project=visual --update-snapshots"
@@ -79,6 +79,7 @@
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

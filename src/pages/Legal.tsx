@@ -108,6 +108,49 @@ export default function Legal() {
 
         {/* Quick Links Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12">
+          {[
+            { title: 'Terms of Service', desc: 'Full agreement governing your use of PureTask', href: '/legal/terms', icon: FileText },
+            { title: 'Privacy Policy', desc: 'How we collect, use, and protect your data', href: '/legal/privacy', icon: Shield },
+            { title: 'Cookie Policy', desc: 'How we use cookies and similar technologies', href: '/legal/cookies', icon: Eye },
+            { title: 'Acceptable Use Policy', desc: 'Rules for using the PureTask platform', href: '/legal/acceptable-use', icon: Scale },
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={`full-${idx}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+              >
+                <Link to={item.href}>
+                  <Card className="h-full hover:shadow-lg transition-all cursor-pointer border-primary/30 hover:border-primary/60">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <div className="p-2.5 sm:p-3 rounded-xl bg-primary/10 flex-shrink-0">
+                          <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-foreground text-sm sm:text-base">{item.title}</h3>
+                            <Badge variant="secondary" className="text-[10px]">Full</Badge>
+                          </div>
+                          <p className="text-xs sm:text-sm text-ink-muted mb-2 sm:mb-3">{item.desc}</p>
+                          <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-1">
+                            Read full document
+                            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Plain-language summaries */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12">
           {quickLinks.map((item, idx) => {
             const Icon = item.icon;
             const content = (
