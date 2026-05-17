@@ -136,14 +136,47 @@ export function useRequestReschedule() {
           is_reasonable: hoursBefore >= 24,
         });
 
-      if (error) throw error;
+      if (error) {
+        // Unique partial index violation → another pending request already exists
+        if ((error as any).code === '23505') {
+          throw new Error('A reschedule request is already pending for this cleaning. Withdraw it before sending a new one.');
+        }
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reschedule-events'] });
       toast.success('Reschedule request sent');
     },
-    onError: (error) => {
-      toast.error('Failed to send reschedule request');
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to send reschedule request');
+      console.error(error);
+    },
+  });
+}
+
+export function useCancelRescheduleRequest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (eventId: number) => {
+      const { error } = await supabase
+        .from('reschedule_events')
+        .update({
+          status: 'cancelled',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', eventId)
+        .eq('status', 'pending');
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reschedule-events'] });
+      toast.success('Reschedule request withdrawn');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to withdraw request');
       console.error(error);
     },
   });

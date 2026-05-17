@@ -21,7 +21,7 @@ import {
   FileText, Sparkles
 } from "lucide-react";
 import { useJob, useJobActions } from "@/hooks/useJob";
-import { useRequestReschedule } from "@/hooks/useRescheduling";
+import { useRequestReschedule, useRescheduleEvents, useCancelRescheduleRequest } from "@/hooks/useRescheduling";
 import { useCreateReview, useJobReview } from "@/hooks/useReviews";
 import { useGraceCancellations, useFeeBucket } from "@/hooks/useCancellations";
 import { useReceipt } from "@/hooks/useReceipt";
@@ -57,6 +57,8 @@ export default function CleaningDetail() {
   const { generateReceipt, isGenerating } = useReceipt();
   const { graceRemaining } = useGraceCancellations();
   const reschedule = useRequestReschedule();
+  const { data: rescheduleEvents } = useRescheduleEvents(id || '');
+  const cancelReschedule = useCancelRescheduleRequest();
   const createReview = useCreateReview();
 
   const [issueText, setIssueText] = useState("");
@@ -131,6 +133,7 @@ export default function CleaningDetail() {
   const needsApproval = auth.canApprove;
   const canReschedule = auth.canReschedule;
   const canCancel = auth.canCancel;
+  const pendingReschedule = (rescheduleEvents || []).find(e => e.status === 'pending') || null;
   const canReview = isApproved && !existingReview && auth.canReview;
   const hasReview = !!existingReview;
 
@@ -335,7 +338,22 @@ export default function CleaningDetail() {
             )}
 
             {/* Reschedule */}
-            {canReschedule && (
+            {canReschedule && pendingReschedule && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm('Withdraw your pending reschedule request?')) {
+                    cancelReschedule.mutate(pendingReschedule.id);
+                  }
+                }}
+                disabled={cancelReschedule.isPending}
+                className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2 border-amber-400/60 bg-amber-50/40 dark:bg-amber-950/20"
+              >
+                <Clock className="h-5 w-5 text-amber-600" />
+                <span className="text-[10px] font-bold leading-tight text-amber-700 dark:text-amber-400">Pending · Withdraw</span>
+              </Button>
+            )}
+            {canReschedule && !pendingReschedule && (
               <Dialog open={rescheduleOpen} onOpenChange={setRescheduleOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="gap-2 h-auto py-3.5 flex-col rounded-2xl border-2">

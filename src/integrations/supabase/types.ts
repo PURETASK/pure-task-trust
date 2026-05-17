@@ -6792,7 +6792,12 @@ export type Database = {
         | "negative_rating"
         | "cancellation"
       reschedule_bucket: "same_day" | "next_day" | "within_week" | "future"
-      reschedule_status: "pending" | "accepted" | "declined" | "expired"
+      reschedule_status:
+        | "pending"
+        | "accepted"
+        | "declined"
+        | "expired"
+        | "cancelled"
       sender_type: "client" | "cleaner" | "admin" | "system"
     }
     CompositeTypes: {
@@ -7011,7 +7016,13 @@ export const Constants = {
         "cancellation",
       ],
       reschedule_bucket: ["same_day", "next_day", "within_week", "future"],
-      reschedule_status: ["pending", "accepted", "declined", "expired"],
+      reschedule_status: [
+        "pending",
+        "accepted",
+        "declined",
+        "expired",
+        "cancelled",
+      ],
       sender_type: ["client", "cleaner", "admin", "system"],
     },
   },
