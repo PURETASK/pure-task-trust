@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { UserCircle2, Bell, Gift, Shield, CircleHelp, ChevronRight, LogOut, Settings } from "lucide-react";
+import { UserCircle2, Bell, Gift, Shield, CircleHelp, ChevronRight, LogOut, Settings, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
@@ -34,6 +34,13 @@ const sections = [
     description: "Password, sessions, and login activity",
     href: "/sessions",
     palette: "green" as const,
+  },
+  {
+    icon: Lock,
+    title: "Privacy Controls",
+    description: "CCPA opt-outs, arbitration opt-out, close account",
+    href: "/settings/privacy",
+    palette: "blue" as const,
   },
   {
     icon: CircleHelp,
