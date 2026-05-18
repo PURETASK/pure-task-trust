@@ -158,7 +158,7 @@ export default function AuthPage() {
                     documentType: "sms_marketing",
                     documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
                     consentGiven: smsMarketingOptIn,
-                    exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
+                    exactTextShown: `(Optional) By checking this box, I provide my express written consent for ${LEGAL_CONSTANTS.COMPANY_NAME} to send me recurring marketing text messages (including via automated technology) to the mobile number I provide, with a maximum of ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH} messages per month. Msg & data rates may apply. Reply STOP to cancel, HELP for help. Consent is not a condition of purchasing any goods or services.`,
                     method: "signup_clickwrap",
                   });
                 }
