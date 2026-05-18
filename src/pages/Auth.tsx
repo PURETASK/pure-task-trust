@@ -158,7 +158,7 @@ export default function AuthPage() {
                     documentType: "sms_marketing",
                     documentVersion: LEGAL_CONSTANTS.DOCUMENT_VERSIONS.SMS_CONSENT,
                     consentGiven: smsMarketingOptIn,
-                    exactTextShown: `(Optional) Send me PureTask marketing texts (max ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg & data rates may apply. Reply STOP to opt out.`,
+                    exactTextShown: `(Optional) By checking this box, I provide my express written consent for ${LEGAL_CONSTANTS.COMPANY_NAME} to send me recurring marketing text messages (including via automated technology) to the mobile number I provide, with a maximum of ${LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH} messages per month. Msg & data rates may apply. Reply STOP to cancel, HELP for help. Consent is not a condition of purchasing any goods or services.`,
                     method: "signup_clickwrap",
                   });
                 }
@@ -560,8 +560,9 @@ export default function AuthPage() {
                       className="mt-0.5"
                     />
                     <span className="text-xs text-ink-muted leading-relaxed">
-                      <strong>(Optional)</strong> Send me PureTask marketing texts (max {LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH}/month). Msg &amp; data rates may apply. Reply STOP to opt out. See our{" "}
-                      <Link to="/legal/sms-consent" target="_blank" className="text-primary font-medium hover:underline">SMS Consent</Link> terms. <em>Booking and account texts are sent separately under our Terms.</em>
+                      <strong>(Optional)</strong> By checking this box, I provide my express written consent for <strong>{LEGAL_CONSTANTS.COMPANY_NAME}</strong> to send me recurring marketing text messages (including via automated technology) to the mobile number I provide, with a maximum of <strong>{LEGAL_CONSTANTS.MARKETING_SMS_MAX_PER_MONTH} messages per month</strong>. Msg &amp; data rates may apply. Reply <strong>STOP</strong> to cancel, <strong>HELP</strong> for help. <strong>Consent is not a condition of purchasing any goods or services.</strong> See our{" "}
+                      <Link to="/legal/sms-consent" target="_blank" className="text-primary font-medium hover:underline">SMS Consent</Link>{" "}and{" "}
+                      <Link to="/legal/privacy" target="_blank" className="text-primary font-medium hover:underline">Privacy Policy</Link>. <em>Transactional booking and account texts are sent separately under our Terms.</em>
                     </span>
                   </label>
                   )}

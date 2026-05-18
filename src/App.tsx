@@ -119,6 +119,7 @@ const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientN
 const CleanerEarningsForecast = lazy(() => import("./pages/cleaner/CleanerEarningsForecast"));
 const CleanerMyCalendar = lazy(() => import("./pages/cleaner/CleanerMyCalendar"));
 const CleanerMyCalendarPreview = lazy(() => import("./pages/cleaner/CleanerMyCalendarPreview"));
+const CleanerReviewsPage = lazy(() => import("./pages/cleaner/CleanerReviewsPage"));
 const ClientSetup = lazy(() => import("./pages/ClientSetup"));
 import { RequireSetup } from "@/components/flow/RequireSetup";
 
@@ -364,6 +365,7 @@ const App = () => (
                     <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
                     <Route path="/cleaner/earnings-forecast" element={<RequireCleaner><CleanerEarningsForecast /></RequireCleaner>} />
                     <Route path="/cleaner/photo-etiquette" element={<RequireCleaner><PhotoEtiquette /></RequireCleaner>} />
+                    <Route path="/cleaner/reviews" element={<RequireCleaner><CleanerReviewsPage /></RequireCleaner>} />
 
                     <Route path="*" element={<NotFound />} />
                   </Route>

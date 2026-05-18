@@ -6324,6 +6324,8 @@ export type Database = {
           deleted_at: string | null
           id: string
           job_id: string
+          pro_response: string | null
+          pro_response_at: string | null
           rating: number
           review_text: string | null
         }
@@ -6334,6 +6336,8 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           job_id: string
+          pro_response?: string | null
+          pro_response_at?: string | null
           rating: number
           review_text?: string | null
         }
@@ -6344,6 +6348,8 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           job_id?: string
+          pro_response?: string | null
+          pro_response_at?: string | null
           rating?: number
           review_text?: string | null
         }

@@ -919,6 +919,12 @@ export default function CleanerProfile() {
                       "{review.review_text}"
                     </p>
                   )}
+                  {review.pro_response && (
+                    <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-3">
+                      <p className="text-[11px] font-semibold text-primary mb-1">Response from cleaner</p>
+                      <p className="text-sm text-foreground/90 leading-relaxed line-clamp-3">{review.pro_response}</p>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </div>
