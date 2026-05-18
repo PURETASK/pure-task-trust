@@ -365,6 +365,7 @@ const App = () => (
                     <Route path="/cleaner/client-notes" element={<RequireCleaner><CleanerClientNotesPage /></RequireCleaner>} />
                     <Route path="/cleaner/earnings-forecast" element={<RequireCleaner><CleanerEarningsForecast /></RequireCleaner>} />
                     <Route path="/cleaner/photo-etiquette" element={<RequireCleaner><PhotoEtiquette /></RequireCleaner>} />
+                    <Route path="/cleaner/reviews" element={<RequireCleaner><CleanerReviewsPage /></RequireCleaner>} />
 
                     <Route path="*" element={<NotFound />} />
                   </Route>
