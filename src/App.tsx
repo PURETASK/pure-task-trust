@@ -119,6 +119,7 @@ const CleanerClientNotesPage = lazy(() => import("./pages/cleaner/CleanerClientN
 const CleanerEarningsForecast = lazy(() => import("./pages/cleaner/CleanerEarningsForecast"));
 const CleanerMyCalendar = lazy(() => import("./pages/cleaner/CleanerMyCalendar"));
 const CleanerMyCalendarPreview = lazy(() => import("./pages/cleaner/CleanerMyCalendarPreview"));
+const CleanerReviewsPage = lazy(() => import("./pages/cleaner/CleanerReviewsPage"));
 const ClientSetup = lazy(() => import("./pages/ClientSetup"));
 import { RequireSetup } from "@/components/flow/RequireSetup";
 
