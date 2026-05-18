@@ -60,6 +60,7 @@ const PrivacyRequests = lazy(() => import("./pages/legal/PrivacyRequests"));
 const DoNotSellOrShare = lazy(() => import("./pages/legal/DoNotSellOrShare"));
 const LimitUseOfSPI = lazy(() => import("./pages/legal/LimitUseOfSPI"));
 const PrivacyControls = lazy(() => import("./pages/legal/PrivacyControls"));
+const AlternativeFormatRequest = lazy(() => import("./pages/legal/AlternativeFormatRequest"));
 const CancellationPolicyPage = lazy(() => import("./pages/CancellationPolicy"));
 const ReliabilityScoreExplained = lazy(() => import("./pages/ReliabilityScoreExplained"));
 const ForAirbnbHosts = lazy(() => import("./pages/ForAirbnbHosts"));
@@ -152,6 +153,8 @@ const AdminRefundQueue = lazy(() => import("./pages/admin/AdminRefundQueue"));
 const AdminWebhookLog = lazy(() => import("./pages/admin/AdminWebhookLog"));
 const AdminHealthDashboard = lazy(() => import("./pages/admin/AdminHealthDashboard"));
 const AdminPrivacyRequests = lazy(() => import("./pages/admin/AdminPrivacyRequests"));
+const AdminComplianceCalendar = lazy(() => import("./pages/admin/AdminComplianceCalendar"));
+const AdminIncidentRunbook = lazy(() => import("./pages/admin/AdminIncidentRunbook"));
 
 // New feature pages
 const SessionManagement = lazy(() => import("./pages/SessionManagement"));
@@ -231,6 +234,7 @@ const App = () => (
                     <Route path="/" element={<Index />} />
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/legal/privacy-requests" element={<PrivacyRequests />} />
+                    <Route path="/legal/alternative-format" element={<AlternativeFormatRequest />} />
                     <Route path="/settings/privacy" element={<PrivacyControls />} />
                     <Route path="/legal/:slug" element={<LegalDoc />} />
                     <Route path="/do-not-sell-or-share" element={<DoNotSellOrShare />} />
@@ -290,6 +294,8 @@ const App = () => (
                     <Route path="/admin/webhook-log" element={<RequireAdmin><AdminWebhookLog /></RequireAdmin>} />
                     <Route path="/admin/health" element={<RequireAdmin><AdminHealthDashboard /></RequireAdmin>} />
                     <Route path="/admin/privacy-requests" element={<RequireAdmin><AdminPrivacyRequests /></RequireAdmin>} />
+                    <Route path="/admin/compliance-calendar" element={<RequireAdmin><AdminComplianceCalendar /></RequireAdmin>} />
+                    <Route path="/admin/incident-runbook" element={<RequireAdmin><AdminIncidentRunbook /></RequireAdmin>} />
 
                     {/* Client routes — new 5-tab IA */}
                     <Route path="/home" element={<RequireClient><Dashboard /></RequireClient>} />
