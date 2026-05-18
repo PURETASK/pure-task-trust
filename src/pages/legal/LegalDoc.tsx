@@ -20,6 +20,8 @@ import dpaMd from "../../../docs/legal/dpa.md?raw";
 import dmcaMd from "../../../docs/legal/dmca.md?raw";
 import preAdverseMd from "../../../docs/legal/pre-adverse-action-notice.md?raw";
 import adverseMd from "../../../docs/legal/adverse-action-notice.md?raw";
+import appleAddendumMd from "../../../docs/legal/apple-app-store-addendum.md?raw";
+import googlePlayAddendumMd from "../../../docs/legal/google-play-addendum.md?raw";
 import { LEGAL_CONSTANTS } from "@/lib/legal-constants";
 
 const STUB = (title: string) => `# ${title}\n\n*Full text is being finalized. For questions, contact ${LEGAL_CONSTANTS.LEGAL_EMAIL}.*`;
@@ -42,6 +44,8 @@ const DOCS = {
   dmca: { md: dmcaMd, title: "DMCA Policy", desc: "How to submit copyright takedown notices.", file: "dmca" },
   "pre-adverse-action-notice": { md: preAdverseMd, title: "Pre-Adverse Action Notice", desc: "FCRA pre-adverse action template sent before any background-check-based denial.", file: "pre-adverse-action-notice" },
   "adverse-action-notice": { md: adverseMd, title: "Adverse Action Notice", desc: "FCRA adverse action template sent when denying based on a consumer report.", file: "adverse-action-notice" },
+  "apple-app-store-addendum": { md: appleAddendumMd, title: "Apple App Store Terms Addendum", desc: "Apple-specific terms that apply to the PureTask iOS app.", file: "apple-app-store-addendum" },
+  "google-play-addendum": { md: googlePlayAddendumMd, title: "Google Play Terms Addendum", desc: "Google Play-specific terms that apply to the PureTask Android app.", file: "google-play-addendum" },
 } as const;
 
 type Slug = keyof typeof DOCS;
