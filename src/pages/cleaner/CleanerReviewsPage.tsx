@@ -8,7 +8,7 @@ import { useCleanerProfile } from "@/hooks/useCleanerProfile";
 import { ProResponseEditor } from "@/components/reviews/ProResponseEditor";
 
 export default function CleanerReviewsPage() {
-  const { data: profile, isLoading: loadingProfile } = useCleanerProfile();
+  const { profile, isLoading: loadingProfile } = useCleanerProfile();
   const cleanerId = profile?.id ?? "";
   const { data: reviews, isLoading } = useCleanerReviews(cleanerId);
 
