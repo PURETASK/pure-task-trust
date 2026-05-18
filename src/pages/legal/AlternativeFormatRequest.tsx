@@ -36,21 +36,36 @@ export default function AlternativeFormatRequest() {
     }
     setSubmitting(true);
     try {
-      // Log as a support ticket so the accessibility team gets it in the same queue.
-      const { error } = await supabase.from("support_tickets").insert({
-        subject: `[Accessibility] Alternative format request — ${form.document}`,
-        body: [
-          `Name: ${form.name || "(not provided)"}`,
-          `Email: ${form.email}`,
-          `Document: ${form.document}`,
-          `Format requested: ${form.format}`,
-          "",
-          form.details || "(no additional details)",
-        ].join("\n"),
-        category: "accessibility",
-        priority: "high",
-      });
-      if (error) throw error;
+      const body = [
+        `Name: ${form.name || "(not provided)"}`,
+        `Email: ${form.email}`,
+        `Document: ${form.document}`,
+        `Format requested: ${form.format}`,
+        "",
+        form.details || "(no additional details)",
+      ].join("\n");
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        // Log as a support ticket so the accessibility team gets it in the same queue.
+        const { error } = await supabase.from("support_tickets").insert({
+          user_id: user.id,
+          subject: `[Accessibility] Alternative format request — ${form.document}`,
+          description: body,
+          issue_type: "accessibility",
+          category: "accessibility",
+          priority: "high",
+        });
+        if (error) throw error;
+      } else {
+        // Anonymous fallback: open the user's mail client to accessibility@.
+        const mailto = `mailto:accessibility@puretask.co?subject=${encodeURIComponent(
+          `Alternative format request — ${form.document}`
+        )}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+      }
+
       setDone(true);
       toast.success("Request received. We'll reply within 5 business days.");
     } catch (err: any) {
