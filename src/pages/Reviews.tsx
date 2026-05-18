@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import reviewsHeroBg from "@/assets/reviews-hero-bg.png";
 import reviewsBubblesBg from "@/assets/reviews-bubbles-bg.png";
 
-interface Review { id: string; rating: number; review_text: string | null; created_at: string; }
+interface Review { id: string; rating: number; review_text: string | null; created_at: string; pro_response: string | null; pro_response_at: string | null; }
 const RATINGS_FILTER = [5, 4, 3, 2, 1] as const;
 
 export default function Reviews() {
@@ -27,7 +27,7 @@ export default function Reviews() {
   const { data: reviews, isLoading: reviewsLoading } = useQuery({
     queryKey: ["public-reviews", filterRating],
     queryFn: async (): Promise<Review[]> => {
-      let query = supabase.from("reviews").select("id, rating, review_text, created_at").order("created_at", { ascending: false }).limit(50);
+      let query = supabase.from("reviews").select("id, rating, review_text, created_at, pro_response, pro_response_at").order("created_at", { ascending: false }).limit(50);
       if (filterRating) query = query.eq("rating", filterRating);
       const { data, error } = await query;
       if (error) throw error;
@@ -160,6 +160,12 @@ export default function Reviews() {
                         <p className="text-foreground/90 mb-5 line-clamp-4 leading-relaxed">"{review.review_text}"</p>
                       ) : (
                         <p className="text-ink-muted italic mb-5">No written review</p>
+                      )}
+                      {review.pro_response && (
+                        <div className="mb-5 rounded-xl border border-primary/20 bg-primary/5 p-3">
+                          <p className="text-[11px] font-semibold text-primary mb-1">Response from cleaner</p>
+                          <p className="text-sm text-foreground/90 leading-relaxed line-clamp-4">{review.pro_response}</p>
+                        </div>
                       )}
                       <footer className="flex items-center gap-3 pt-4 border-t border-hairline-soft">
                         <Avatar className="h-9 w-9">
