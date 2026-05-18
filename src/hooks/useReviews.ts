@@ -11,6 +11,8 @@ export interface Review {
   rating: number;
   review_text: string | null;
   created_at: string;
+  pro_response: string | null;
+  pro_response_at: string | null;
 }
 
 export function useJobReview(jobId: string) {
@@ -77,7 +79,13 @@ export function useCreateReview() {
         review_text: data.reviewText || null,
       });
 
-      if (error) throw error;
+      if (error) {
+        // One-review-per-booking is enforced by UNIQUE (job_id, client_id)
+        if (error.code === '23505') {
+          throw new Error("You've already reviewed this booking.");
+        }
+        throw error;
+      }
     },
     onSuccess: (_, variables) => {
       toast({
@@ -93,6 +101,46 @@ export function useCreateReview() {
         description: error.message,
         variant: 'destructive',
       });
+    },
+  });
+}
+
+interface RespondToReviewData {
+  reviewId: string;
+  cleanerId: string;
+  response: string;
+}
+
+/**
+ * Cleaner pro-response to a client review.
+ * RLS + trigger restrict updates to the cleaner named on the review and to the
+ * `pro_response` / `pro_response_at` columns only.
+ * Brief: CHG-161.
+ */
+export function useCleanerRespondToReview() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ reviewId, response }: RespondToReviewData) => {
+      const trimmed = response.trim();
+      if (trimmed.length === 0) throw new Error('Response cannot be empty');
+      if (trimmed.length > 1000) throw new Error('Response is too long (max 1,000 characters)');
+
+      const { error } = await supabase
+        .from('reviews')
+        .update({ pro_response: trimmed })
+        .eq('id', reviewId);
+
+      if (error) throw error;
+    },
+    onSuccess: (_data, variables) => {
+      toast({ title: 'Response posted', description: 'Your reply is now visible to clients.' });
+      queryClient.invalidateQueries({ queryKey: ['cleaner-reviews', variables.cleanerId] });
+      queryClient.invalidateQueries({ queryKey: ['review'] });
+    },
+    onError: (error: Error) => {
+      toast({ title: 'Failed to post response', description: error.message, variant: 'destructive' });
     },
   });
 }
